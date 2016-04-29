@@ -16,19 +16,17 @@
         android:id="@+id/ccw_broker_image"
         android:layout_width="@dimen/ccw_image_width_and_height"
         android:layout_height="@dimen/ccw_image_width_and_height"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
         android:contentDescription="@string/identity_img"
-        tools:src="@drawable/person"/>
+        tools:src="@drawable/ic_profile_male"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccw_broker_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/linearLayout2"
+        android:layout_below="@+id/ccw_merchandise_unit"
         android:layout_gravity="center_vertical"
         android:layout_toEndOf="@+id/ccw_broker_image"
-        android:layout_toRightOf="@+id/ccw_broker_image"
         android:singleLine="true"
         android:textColor="@color/broker_name_text"
         android:textSize="@dimen/ccw_subtitle_text"
@@ -38,7 +36,6 @@
         android:id="@+id/ccw_type_of_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/ccw_broker_name"
         android:layout_alignStart="@+id/ccw_broker_name"
         android:layout_below="@+id/ccw_broker_name"
         android:singleLine="true"
@@ -47,61 +44,25 @@
         android:visibility="gone"
         tools:text="Crypto Transfer"/>
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_selling_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ccw_broker_image"
-        android:layout_toRightOf="@+id/ccw_broker_image"
-        android:orientation="horizontal">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/sellingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text"
-            android:layout_marginRight="@dimen/margin_text"
-            android:paddingTop="4dp"
-            android:singleLine="true"
-            android:text="@string/selling"
-            android:textColor="@color/ccw_first_line_item"
-            android:textSize="@dimen/ccw_title_text_size"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_merchandise_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text"
-            android:layout_marginRight="@dimen/margin_text"
-            android:inputType="numberDecimal"
-            android:paddingTop="4dp"
-            android:singleLine="true"
-            android:textColor="@color/ccw_first_line_item"
-            android:textSize="@dimen/ccw_title_text_size"
-            tools:text="400.21"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_merchandise"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text"
-            android:layout_marginRight="@dimen/margin_text"
-            android:paddingTop="4dp"
-            android:singleLine="true"
-            android:textColor="@color/ccw_first_line_item"
-            android:textSize="@dimen/ccw_title_text_size"
-            tools:text="USD"/>
-
-    </LinearLayout>
+        android:paddingTop="4dp"
+        android:singleLine="true"
+        android:textColor="@color/ccw_first_line_item"
+        android:textSize="@dimen/ccw_title_text_size"
+        tools:text="Selling 445.56 USD"
+        android:layout_alignEnd="@+id/ccw_merchandise_unit"
+        android:layout_alignStart="@+id/ccw_merchandise_unit"/>
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/ccw_negotiation_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/linearLayout"
+        android:layout_alignBottom="@+id/ccw_selling_text"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:gravity="end"
         android:paddingTop="4dp"
         android:textColor="@color/waiting_for_text"
@@ -113,78 +74,31 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/ccw_negotiation_status"
-        android:layout_alignRight="@+id/ccw_negotiation_status"
         android:layout_below="@+id/ccw_negotiation_status"
         android:textColor="@color/negotiation_date_text"
         android:textSize="@dimen/ccw_regular_text_size"
         tools:text="03 Feb 2015"/>
 
-    <LinearLayout
-        android:id="@+id/linearLayout2"
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/ccw_merchandise_unit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/linearLayout"
+        android:layout_below="@id/ccw_selling_text"
+        android:layout_marginEnd="@dimen/margin_text"
         android:layout_toEndOf="@+id/ccw_broker_image"
-        android:layout_toLeftOf="@+id/ccw_negotiation_status"
-        android:layout_toRightOf="@+id/ccw_broker_image"
         android:layout_toStartOf="@+id/ccw_negotiation_status"
-        android:orientation="horizontal">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text"
-            android:layout_marginRight="@dimen/margin_text"
-            android:singleLine="true"
-            android:text="@string/ccw_unit_number"
-            android:textColor="@color/ccw_second_line_item"
-            android:textSize="@dimen/ccw_title_text_size"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_merchandise_unit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text"
-            android:layout_marginRight="@dimen/margin_text"
-            android:singleLine="true"
-            android:textColor="@color/ccw_second_line_item"
-            android:textSize="@dimen/ccw_title_text_size"
-            tools:text="USD"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/at"
-            android:textColor="@color/ccw_second_line_item"
-            android:textSize="14sp"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_exchange_rate_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_text"
-            android:layout_marginRight="@dimen/margin_text"
-            android:textColor="@color/ccw_second_line_item"
-            android:textSize="@dimen/ccw_title_text_size"
-            tools:text="0.232"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/ccw_payment_currency"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/ccw_second_line_item"
-            android:textSize="@dimen/ccw_title_text_size"
-            tools:text="BTC"/>
-    </LinearLayout>
+        android:singleLine="true"
+        android:textColor="@color/ccw_second_line_item"
+        android:textSize="@dimen/ccw_title_text_size"
+        tools:text="1 USD @ 0.232 BTC"/>
 
     <ProgressBar
         android:id="@+id/ccw_sending_progress_bar"
         android:layout_width="20dp"
         android:layout_height="20dp"
-        android:indeterminate="true"
-        android:layout_marginTop="8dp"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/ccw_update_date"
-        android:layout_alignParentEnd="true"/>
+        android:layout_marginTop="8dp"
+        android:indeterminate="true"/>
 </RelativeLayout>
 

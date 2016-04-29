@@ -10,6 +10,7 @@
     app:cardBackgroundColor="#f1f1f1"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
     tools:visibility="visible">
 
     <FrameLayout
@@ -18,11 +19,10 @@
 
         <ImageView
             android:id="@+id/cbw_contract_detail_step"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="bottom|start"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="9dp"
             android:scaleType="fitXY"
             android:src="@drawable/bg_detail_number_01"
             tools:ignore="contentDescription"/>
@@ -36,98 +36,80 @@
                 android:id="@+id/cbw_contract_detail_card_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:gravity="center"
                 android:textAllCaps="true"
-                android:textColor="#222"
+                android:textColor="#1271A7"
                 tools:text="Contract Detail Step"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#2e2e2e2e"/>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:id="@+id/cbw_contract_detail_description_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:textColor="@color/description_text_status_confirm"
-                    tools:text="You receive:"/>
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/cbw_contract_detail_text_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_toEndOf="@+id/cbw_contract_detail_description_text"
-                    android:layout_toRightOf="@+id/cbw_contract_detail_description_text"
-                    android:background="@color/option_button_background"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:textAllCaps="false"
-                    android:textColor="#fff"
-                    android:textSize="14sp"
-                    tools:text="8 BTC"/>
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:id="@+id/cbw_contract_detail_description_text_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_toEndOf="@+id/cbw_contract_detail_text_button"
-                    android:layout_toRightOf="@+id/cbw_contract_detail_text_button"
-                    android:layout_centerVertical="true"
-                    android:textColor="@color/description_text_status_confirm"
-                    tools:text="using Cash Delivery"/>
-
-            </RelativeLayout>
-
-
-
+                android:background="#1271A7"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_contract_detail_description_date"
+                android:id="@+id/cbw_contract_detail_action_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
                 android:textColor="@color/description_text_status_confirm"
-                android:layout_marginLeft="10dp"
-                tools:text="on 15 feb. 2016"/>
+                android:textSize="18sp"
+                tools:text="You receive:"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_contract_detail_amount_and_method"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="16dp"
+                android:textColor="@color/description_text_status_confirm"
+                android:textSize="14sp"
+                tools:text="8 BTC, using Cash Delivery"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#2e2e2e2e"/>
+                android:background="#1271A7"/>
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                android:id="@+id/cbw_contract_detail_confirm_button"
-                android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:layout_gravity="end"
-                android:layout_margin="8dp"
-                android:text="@string/status_confirm"
-                android:visibility="invisible"
-                android:textSize="14sp"/>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cbw_contract_detail_description_pending"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textColor="#FF0000"
-                android:layout_marginTop="16dp"
-                android:layout_margin="8dp"
-                android:text="WAITING FOR CUSTOMER"
-                android:visibility="gone"
-                android:textSize="14sp"/>
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_contract_detail_description_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="16dp"
+                    android:textColor="@color/description_text_status_confirm"
+                    tools:text="Done on 15/02/16"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:id="@+id/cbw_contract_detail_confirm_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="8dp"
+                    android:text="@string/status_confirm"
+                    android:textSize="14sp"
+                    android:visibility="invisible"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_contract_detail_description_pending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="16dp"
+                    android:text="WAITING FOR CUSTOMER"
+                    android:textColor="#FF0000"
+                    android:textSize="14sp"
+                    android:visibility="gone"/>
+
+            </FrameLayout>
+
         </LinearLayout>
 
     </FrameLayout>

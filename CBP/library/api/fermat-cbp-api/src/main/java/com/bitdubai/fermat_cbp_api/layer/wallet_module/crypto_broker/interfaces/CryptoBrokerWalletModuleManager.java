@@ -340,7 +340,8 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      * @throws CantGetCryptoBrokerWalletSettingException
      */
     boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall)
-            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
+            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, EarningsSettingsNotRegisteredException,
+            CantListEarningsPairsException, CantLoadEarningSettingsException;
 
     /**
      * @param location

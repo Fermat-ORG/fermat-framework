@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -154,18 +155,17 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
 
     private void bindData() {
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
-
-        String paymentCurrency = data.getPaymentCurrency();
-        Date date = new Date(data.getLastUpdate());
-        double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
-        double amount = getFormattedNumber(data.getAmount());
+        final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
+        final String paymentCurrency = data.getPaymentCurrency();
+        final String merchandise = data.getMerchandise();
+        final double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
+        final Date lastUpdate = new Date(data.getLastUpdate());
 
         brokerImage.setImageDrawable(getImgDrawable(data.getCryptoBrokerImage()));
         brokerName.setText(data.getCryptoBrokerAlias());
-        sellingSummary.setText("SELLING " + data.getMerchandise());
-        detailDate.setText("Date:\n" + formatter.format(date));
-        detailRate.setText("1" + " " + data.getMerchandise() + " @ " + exchangeRateAmount + " " + paymentCurrency);
+        sellingSummary.setText(String.format("SELLING %1$s", merchandise));
+        detailRate.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRateAmount, paymentCurrency));
+        detailDate.setText(String.format("Date: %1$s", formatter.format(lastUpdate)));
     }
 
 
@@ -186,7 +186,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 String merchandiseCurrency = "MK";
                 String merchandiseAmount = "-1";
                 String merchandisePaymentMethod = "MK";
-                MoneyType paymentMethodType = MoneyType.BANK;
+                MoneyType customerPaymentMethodType = MoneyType.BANK;
+                MoneyType brokerPaymentMethodType = MoneyType.BANK;
                 try{
                     Collection<Clause> clauses = moduleManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
 
@@ -210,7 +211,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                             paymentAmount = clause.getValue();
                         if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD){
                             merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                            paymentMethodType = MoneyType.getByCode(clause.getValue());
+                            brokerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
                             try {
@@ -226,7 +227,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                             merchandiseAmount = clause.getValue();
                         if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD){
                             paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                            paymentMethodType = MoneyType.getByCode(clause.getValue());
+                            customerPaymentMethodType = MoneyType.getByCode(clause.getValue());
                         }
 
                     }
@@ -259,7 +260,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentSubmitDate,paymentMethodType);
+                        paymentSubmitDate,customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Payment Reception step
@@ -271,7 +272,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         paymentAmount,
                         paymentPaymentMethod,
                         paymentCurrency,
-                        paymentAckDate,paymentMethodType);
+                        paymentAckDate,customerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Delivery step
@@ -283,7 +284,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseSubmitDate,paymentMethodType);
+                        merchandiseSubmitDate,brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
 
                 //Merchandise Reception step
@@ -295,7 +296,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         merchandiseAmount,
                         merchandisePaymentMethod,
                         merchandiseCurrency,
-                        merchandiseAckDate,paymentMethodType);
+                        merchandiseAckDate,brokerPaymentMethodType);
                 contractDetails.add(contractDetail);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
