@@ -61,6 +61,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -415,12 +416,32 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                         moduleManager.createArtistIdentity(
                                 artistName,
                                 (artistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : artistImageByteArray,
-                                externalIdentityID,externalPlatform,externalUsername);
+                                externalUsername,
+                                exposureLevel,
+                                artistAcceptConnectionsType,
+                                externalIdentityID,
+                                externalPlatform);
                     }else{
                         if(updateProfileImage)
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,externalIdentityID,externalPlatform,externalUsername);
+                            moduleManager.updateArtistIdentity(
+                                    artistName,
+                                    identitySelected.getPublicKey(),
+                                    artistImageByteArray,
+                                    exposureLevel,
+                                    artistAcceptConnectionsType,
+                                    externalIdentityID,
+                                    externalPlatform,
+                                    externalUsername);
                         else
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),externalIdentityID,externalPlatform,externalUsername);
+                            moduleManager.updateArtistIdentity(
+                                    artistName,
+                                    identitySelected.getPublicKey(),
+                                    identitySelected.getProfileImage(),
+                                    exposureLevel,
+                                    artistAcceptConnectionsType,
+                                    externalIdentityID,
+                                    externalPlatform,
+                                    externalUsername);
                     }
                 }catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
