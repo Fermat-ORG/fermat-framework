@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -29,6 +30,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -166,7 +168,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     private final PluginFileSystem pluginFileSystem;
     private final EventManager eventManager;
     private final BitcoinNetworkManager bitcoinNetworkManager                   ;
-
+    private final Broadcaster                   broadcaster                     ;
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -182,7 +184,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
                                            final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
-                                           final EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager) {
+                                           final EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager, Broadcaster broadcaster) {
         super(pluginFileSystem,pluginId);
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
@@ -202,6 +204,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         this.eventManager = eventManager;
 
         this.bitcoinNetworkManager = bitcoinNetworkManager;
+        this.broadcaster = broadcaster;
     }
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;
@@ -220,16 +223,16 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
              * Listener Crypto Network Blockchain Download Up To Date Event
              */
 
-           /* FermatEventListener fermatEventListener;
+            FermatEventListener fermatEventListener;
             FermatEventHandler fermatEventHandler;
 
-            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
-            fermatEventHandler = new BlockchainDownloadUpToDateEventHandler();
+            fermatEventListener = eventManager.getNewListener(EventType.BLOCKCHAIN_DOWNLOAD_UP_TO_DATE);
+            fermatEventHandler = new BlockchainDownloadUpToDateEventHandler(this.broadcaster);
 
             fermatEventListener.setEventHandler(fermatEventHandler);
 
             eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);*/
+            listenersAdded.add(fermatEventListener);
 
         } catch (final CantGetWalletContactRegistryException e) {
 

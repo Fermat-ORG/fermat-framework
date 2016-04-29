@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -101,13 +102,17 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE , plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platformtengo s.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     private String appPublicKey;
 
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
     private BitcoinNetworkManager bitcoinNetworkManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
 
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -200,7 +205,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
                         pluginId,
                         pluginFileSystem,
                         eventManager,
-                        bitcoinNetworkManager);
+                        bitcoinNetworkManager, broadcaster);
 
                 walletModuleCryptoWallet.initialize();
             }

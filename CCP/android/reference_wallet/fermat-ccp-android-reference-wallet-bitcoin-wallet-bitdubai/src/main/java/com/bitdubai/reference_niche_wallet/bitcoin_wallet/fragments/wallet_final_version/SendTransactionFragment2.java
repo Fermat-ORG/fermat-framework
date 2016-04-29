@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -85,6 +86,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -167,7 +169,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         public void run() {
                             try {
                                 getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                            }catch (OutOfMemoryError o){
+                            } catch (OutOfMemoryError o) {
                                 o.printStackTrace();
                             }
                         }
@@ -250,11 +252,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             });
 
             //get Blockchain Download Progress status
-          /*  int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
+         /*  int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
             int progress= moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getProgress();
 
             if(pendingBlocks > 0){
-                makeText(getActivity(), "Bitcoins arrive in progress.", Toast.LENGTH_SHORT).show();
+            //paint toolbar on red
+                getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+                makeText(getActivity(), "Blockchain Update in progress.", Toast.LENGTH_SHORT).show();
             }*/
 
         } catch (Exception ex) {
@@ -854,6 +858,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         }
     }
 
+
+
     private void changeAmountType(){
 
         ShowMoneyType showMoneyType = (referenceWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
@@ -1090,15 +1096,25 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onUpdateViewOnUIThread(String code){
         try {
 
-            //update balance amount
+            if(code.equals("BlockchainDownloadComplete"))
+            {
+                //update toolbar color
+               // getActivity().getActionBar().setBackgroundDrawable(new ColorDrawable(Color.GREEN));
+            }
+            else
+            {
+                //update balance amount
+                final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
-            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
+                changeBalanceType(txt_type_balance, txt_balance_amount);
+                //System.out.println(System.currentTimeMillis());
 
-             changeBalanceType(txt_type_balance, txt_balance_amount);
-            //System.out.println(System.currentTimeMillis());
+                circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                circularProgressBar.setProgressValue2(getBalanceAverage());
+            }
 
-            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-            circularProgressBar.setProgressValue2(getBalanceAverage());
+
+
         }
         catch (Exception e) {
             e.printStackTrace();
