@@ -666,8 +666,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
         BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
 
-        amount = new BigDecimal(BitcoinConverter.convert(amount.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI));
-
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_BANK_ACCOUNT);
         final String bankAccount = NegotiationClauseHelper.getAccountNumberFromString(clauseValue);
 
@@ -679,6 +677,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         //Ejecuto el restock dependiendo del tipo de transferencia a realizar
         switch (paymentMethod) {
             case CRYPTO:
+                amount = new BigDecimal(BitcoinConverter.convert(amount.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI));
                 cryptoMoneyRestockManager.createTransactionRestock(
                         contractSale.getPublicKeyBroker(),
                         CryptoCurrency.getByCode(currencyCode),
