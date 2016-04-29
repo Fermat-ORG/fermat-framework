@@ -209,8 +209,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             // IN_PENDING_MERCHANDISE -> Update Contract Status to CANCELLED for expiration time in merchandise
             changeTransactionStatusFromInPendingMerchandiseToCancelledIfExpirationTimeReached(transactionStatusColumnName, brokerWalletPublicKey);
 
-            // IN_PENDING_MERCHANDISE -> MERCHANDISE_SUBMIT
-            changeTransactionStatusInPendingMerchandiseFromToMerchandiseSubmit(transactionStatusColumnName);
+            // IN_PENDING_MERCHANDISE -> IN_MERCHANDISE_SUBMIT
+            changeTransactionStatusFromInPendingMerchandiseToInMerchandiseSubmitted(transactionStatusColumnName);
 
             // IN_MERCHANDISE_SUBMIT -> COMPLETED
             changeTransactionStatusFromInMerchandiseSubmitToCompleted(transactionStatusColumnName, brokerWalletPublicKey);
@@ -460,7 +460,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      *
      * @throws FermatException
      */
-    private void changeTransactionStatusInPendingMerchandiseFromToMerchandiseSubmit(String transactionStatusColumnName) throws FermatException {
+    private void changeTransactionStatusFromInPendingMerchandiseToInMerchandiseSubmitted(String transactionStatusColumnName) throws FermatException {
         DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), transactionStatusColumnName);
         List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
         Collection<CustomerBrokerContractSale> contractSalesMerchandiseSubmit = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.MERCHANDISE_SUBMIT);
