@@ -163,30 +163,30 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         // Inflate the menu items
         inflater.inflate(R.menu.chat_menu, menu);
         // Locate the search item
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapter.getFilter().filter(s);
-                }
-                return false;
-            }
-        });
-        if (chatSession.getData("filterString") != null) {
-            String filterString = (String) chatSession.getData("filterString");
-            if (filterString.length() > 0) {
-                searchView.setQuery(filterString, true);
-                searchView.setIconified(false);
-            }
-        }
+//        MenuItem searchItem = menu.findItem(R.id.menu_search);
+//        searchView = (SearchView) searchItem.getActionView();
+//        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                if (s.equals(searchView.getQuery().toString())) {
+//                    adapter.getFilter().filter(s);
+//                }
+//                return false;
+//            }
+//        });
+//        if (chatSession.getData("filterString") != null) {
+//            String filterString = (String) chatSession.getData("filterString");
+//            if (filterString.length() > 0) {
+//                searchView.setQuery(filterString, true);
+//                searchView.setIconified(false);
+//            }
+//        }
     }
 
     @Override

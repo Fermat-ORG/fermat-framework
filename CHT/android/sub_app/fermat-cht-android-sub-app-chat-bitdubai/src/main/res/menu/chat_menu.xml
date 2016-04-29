@@ -9,13 +9,13 @@
     <item
         android:id="@+id/menu_block_contact"
         android:title="@string/menu_block_contact"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="collapseActionView"/>
     <item
         android:id="@+id/menu_clean_chat"
         android:title="@string/menu_clean_chat"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="collapseActionView"/>
     <item
        android:id="@+id/menu_send_chat_email"
        android:title="@string/menu_send_chat_email"
-       app:showAsAction="ifRoom"/>
+       app:showAsAction="collapseActionView"/>
 </menu>
