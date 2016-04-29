@@ -362,12 +362,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                         moduleManager.createArtistIdentity(
                                 artistName,
                                 (artistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : artistImageByteArray,
-                                externalIdentityID,externalPlatform);
+                                externalIdentityID,externalPlatform,externalUsername);
                     }else{
                         if(updateProfileImage)
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,externalIdentityID,externalPlatform);
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,externalIdentityID,externalPlatform,externalUsername);
                         else
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),externalIdentityID,externalPlatform);
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),externalIdentityID,externalPlatform,externalUsername);
                     }
                 }catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
