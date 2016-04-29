@@ -165,7 +165,13 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         if (inProcessStatus == PAYMENT_SENDING_IN_PROCESS) {
                             textDescription.setText("You sent:");
                             textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
+
                             itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
+                            stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_changed));
+                            textDescription.setTextColor(res.getColor(R.color.description_text_status_changed));
+                            textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_changed));
+                            amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_changed));
+
                             confirmButton.setVisibility(View.VISIBLE);
                             confirmButton.setText("CONFIRMED");
                             confirmButton.setEnabled(false);
@@ -180,6 +186,10 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("You sent:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                        stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
+                        textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_accepted));
                 }
                 break;
 
@@ -203,6 +213,10 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("Broker received:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                        stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
+                        textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_accepted));
                 }
                 break;
 
@@ -227,6 +241,10 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("Broker sent:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                        stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
+                        textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_accepted));
                 }
                 break;
 
@@ -246,10 +264,16 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         if (inProcessStatus == MERCHANDISE_RECEPTION_IN_PROCESS) {
                             textDescription.setText("You received:");
                             textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
-                            itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
                             confirmButton.setVisibility(View.VISIBLE);
                             confirmButton.setText("CONFIRMED");
                             confirmButton.setEnabled(false);
+
+                            itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
+                            stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_changed));
+                            textDescription.setTextColor(res.getColor(R.color.description_text_status_changed));
+                            textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_changed));
+                            amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_changed));
+
                         } else {
                             textDescription.setText("You receive:");
                             textDescriptionDate.setVisibility(View.INVISIBLE);
@@ -264,6 +288,10 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                         textDescription.setText("You received:");
                         textDescriptionDate.setText("on " + getFormattedDate(itemInfo.getPaymentOrMerchandiseDeliveryDate()));
                         itemView.setBackgroundColor(res.getColor(R.color.card_background_status_accepted));
+                        stepTitle.setTextColor(res.getColor(R.color.card_title_color_status_accepted));
+                        textDescription.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        textDescriptionDate.setTextColor(res.getColor(R.color.description_text_status_accepted));
+                        amountAndMethodTextView.setTextColor(res.getColor(R.color.description_text_status_accepted));
                 }
                 break;
 
