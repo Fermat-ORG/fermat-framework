@@ -512,7 +512,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             if(balanceType.equals(BalanceType.AVAILABLE))
-                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,String.valueOf(exchangeRate));
+                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
 
 
         } catch (CantGetLossProtectedBalanceException e) {
