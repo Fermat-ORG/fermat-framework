@@ -82,7 +82,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",bitcoinWalletSettings.getNotificationEnabled()));
 
-            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getNotificationEnabled()));
+            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getLossProtectedEnabled()));
 
             if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
                 blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
@@ -117,21 +117,28 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             if (cryptoWallet.getExchangeProvider()!=null)
                 exchangeProviderId=  cryptoWallet.getExchangeProvider();
 
-            ArrayList<String> stringsProviders = new ArrayList<>();
+
 
             //Get providers list
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
-
+            String stringsProviders[] = new String[providers.size()];
+            int i = 0;
             for (CurrencyExchangeRateProviderManager provider :  providers)
             {
-                stringsProviders.add(provider.getProviderName());
+                if(cryptoWallet.getExchangeProvider().equals(provider.getProviderId()))
+                    previousSelectedItem = provider.getProviderName();
+
+                stringsProviders[i] = provider.getProviderName();
+
+                i++;
             }
+
 
           //  list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", stringsProviders));
 
             final Bundle providerDialog = new Bundle();
-            providerDialog.putInt("items", stringsProviders.size());
+            providerDialog.putInt("items", stringsProviders.length);
             providerDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
             providerDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
             providerDialog.putString("title", "Select Rate Provider");
@@ -290,6 +297,6 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
     @Override
     public int getBackgroundAlpha() {
-        return 95;
+        return 70;
     }
 }

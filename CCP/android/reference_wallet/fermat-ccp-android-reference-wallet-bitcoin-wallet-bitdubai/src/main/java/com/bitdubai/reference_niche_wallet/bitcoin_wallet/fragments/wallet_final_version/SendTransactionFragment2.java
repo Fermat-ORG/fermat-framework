@@ -180,14 +180,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
-            //errorManager = appSession.getErrorManager();
-
-//            if(lst==null){
-//                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
-//            }
 
             //get wallet settings
-
 
             try {
                 bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
@@ -225,8 +219,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
 
-
-            System.out.println("Network Type" + blockchainNetworkType);
             final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
             _executor.submit(new Runnable() {
@@ -257,6 +249,13 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
+            //get Blockchain Download Progress status
+          /*  int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
+            int progress= moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getProgress();
+
+            if(pendingBlocks > 0){
+                makeText(getActivity(), "Bitcoins arrive in progress.", Toast.LENGTH_SHORT).show();
+            }*/
 
         } catch (Exception ex) {
 //            if (errorManager != null)
@@ -569,7 +568,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private String getWalletAddress(String actorPublicKey) {
         String walletAddres="";
         try {
-            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+
             CryptoAddress cryptoAddress = moduleManager.requestAddressToKnownUser(
                     referenceWalletSession.getIntraUserModuleManager().getPublicKey(),
                     Actors.INTRA_USER,
@@ -906,7 +905,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         long balance = 0;
         try {
             balance = referenceWalletSession.getModuleManager().getBalance(balanceType, referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
-            System.out.println("THE BALANCE IS " + balance);
+
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         } catch (Exception e) {

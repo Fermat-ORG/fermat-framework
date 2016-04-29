@@ -128,7 +128,7 @@ public class OutgoingIntraActorTransactionManager implements IntraActorCryptoTra
                 //TODO: el disponible es en base al exchange rate del momento
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
-                    funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType,""+purchasePrice);
+                    funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType,String.valueOf(purchasePrice));
                     break;
             }
             if (cryptoAmount > funds)
