@@ -40,6 +40,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetA
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantListSpendingException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
@@ -898,14 +899,74 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
 
-            return bitcoinLossProtectedWalletSpendList;
+            if (bitcoinLossProtectedWalletSpendList.size() == 0) {
 
-        } catch(Exception e){
-            throw new CantListLossProtectedSpendingException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+               BitcoinLossProtectedWalletSpend lst1 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return (long) 2;
+                    }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 415.2;
+                    }
+                };
+
+                BitcoinLossProtectedWalletSpend lst2 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return (long) 8;
+                    }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 415.2;
+                    }
+                };
+
+                bitcoinLossProtectedWalletSpendList.add(lst1);
+                bitcoinLossProtectedWalletSpendList.add(lst2);
+            }
+
+                return bitcoinLossProtectedWalletSpendList;
+
+            }catch(CantListSpendingException e){
+                throw new CantListLossProtectedSpendingException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+            }
         }
-    }
 
-    @Override
+        @Override
     public List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey) throws CantListLossProtectedSpendingException, CantLoadWalletException {
         List<BitcoinLossProtectedWalletSpend> allWalletSpendingList = new ArrayList<>();
         try {
@@ -982,238 +1043,238 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                 }
 
 
-//
-//                if(cryptoWalletTransactionList.size() == 0)
-//                {
-//                    Actor actor = new Actor() {
-//                        @Override
-//                        public String getActorPublicKey() {
-//                            return "ActorPublicKey";
-//                        }
-//                        @Override
-//                        public String getName() {
-//                            return "username";
-//                        }
-//                        @Override
-//                        public String getPhrase() {
-//                            return null;
-//                        }
-//                        @Override
-//                        public Actors getType() {
-//                            return Actors.INTRA_USER;
-//                        }
-//                        @Override
-//                        public byte[] getPhoto() {
-//                            return new byte[0];
-//                        }
-//                        @Override
-//                        public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
-//                            return null;
-//                        }
-//                    };
-//
-//                    BitcoinLossProtectedWalletTransaction transaction = new BitcoinLossProtectedWalletTransaction() {
-//                        @Override
-//                        public UUID getTransactionId() {
-//
-//                            return UUID.randomUUID();
-//                        }
-//                        @Override
-//                        public String getTransactionHash() {
-//                            return "transactionhash";
-//                        }
-//                        @Override
-//                        public CryptoAddress getAddressFrom() {
-//                            return new CryptoAddress();
-//                        }
-//                        @Override
-//                        public CryptoAddress getAddressTo() {
-//                            return new CryptoAddress();
-//                        }
-//                        @Override
-//                        public String getActorToPublicKey() {
-//                            return "ActorToPublicKey";
-//                        }
-//                        @Override
-//                        public String getActorFromPublicKey() {
-//                            return "ActorFromPublicKey";
-//                        }
-//                        @Override
-//                        public Actors getActorToType() {
-//                            return Actors.INTRA_USER;
-//                        }
-//                        @Override
-//                        public Actors getActorFromType() {
-//                            return Actors.INTRA_USER;
-//                        }
-//                        @Override
-//                        public BalanceType getBalanceType() {
-//                            return BalanceType.AVAILABLE;
-//                        }
-//                        @Override
-//                        public TransactionType getTransactionType() {
-//                            return TransactionType.DEBIT;
-//                        }
-//                        @Override
-//                        public long getTimestamp() {
-//                            return 0;
-//                        }
-//                        @Override
-//                        public long getAmount() {
-//                            return (long) 10;
-//                        }
-//                        @Override
-//                        public long getRunningBookBalance() {
-//                            return 11;
-//                        }
-//                        @Override
-//                        public long getRunningAvailableBalance() {
-//                            return 25;
-//                        }
-//                        @Override
-//                        public String getMemo() {
-//                            return null;
-//                        }
-//                        @Override
-//                        public TransactionState getTransactionState() {
-//                            return null;
-//                        }
-//                        @Override
-//                        public BlockchainNetworkType getBlockchainNetworkType() {
-//                            return BlockchainNetworkType.REG_TEST;
-//                        }
-//                        @Override
-//                        public double getExchangeRate() {
-//                            return 420;
-//                        }
-//                    };
-//
-//                    Actor actor1 = new Actor() {
-//                        @Override
-//                        public String getActorPublicKey() {
-//                            return "ActorPublicKey";
-//                        }
-//
-//                        @Override
-//                        public String getName() {
-//                            return "username";
-//                        }
-//
-//                        @Override
-//                        public String getPhrase() {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public Actors getType() {
-//                            return Actors.INTRA_USER;
-//                        }
-//
-//                        @Override
-//                        public byte[] getPhoto() {
-//                            return new byte[0];
-//                        }
-//
-//                        @Override
-//                        public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
-//                            return null;
-//                        }
-//                    };
-//
-//                    BitcoinLossProtectedWalletTransaction transaction1 = new BitcoinLossProtectedWalletTransaction() {
-//                        @Override
-//                        public UUID getTransactionId() {return UUID.randomUUID();}
-//
-//                        @Override
-//                        public String getTransactionHash() {
-//                            return "transactionhash";
-//                        }
-//
-//                        @Override
-//                        public CryptoAddress getAddressFrom() {
-//                            return new CryptoAddress();
-//                        }
-//
-//                        @Override
-//                        public CryptoAddress getAddressTo() {
-//                            return new CryptoAddress();
-//                        }
-//
-//                        @Override
-//                        public String getActorToPublicKey() {
-//                            return "ActorToPublicKey";
-//                        }
-//
-//                        @Override
-//                        public String getActorFromPublicKey() {
-//                            return "ActorFromPublicKey";
-//                        }
-//
-//                        @Override
-//                        public Actors getActorToType() {
-//                            return Actors.INTRA_USER;
-//                        }
-//
-//                        @Override
-//                        public Actors getActorFromType() {
-//                            return Actors.INTRA_USER;
-//                        }
-//
-//                        @Override
-//                        public BalanceType getBalanceType() {
-//                            return BalanceType.AVAILABLE;
-//                        }
-//
-//                        @Override
-//                        public TransactionType getTransactionType() {
-//                            return TransactionType.DEBIT;
-//                        }
-//
-//                        @Override
-//                        public long getTimestamp() {
-//                            return 0;
-//                        }
-//
-//                        @Override
-//                        public long getAmount() {
-//                            return 2;
-//                        }
-//
-//                        @Override
-//                        public long getRunningBookBalance() {
-//                            return 10;
-//                        }
-//
-//                        @Override
-//                        public long getRunningAvailableBalance() {
-//                            return 12;
-//                        }
-//
-//                        @Override
-//                        public String getMemo() {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public TransactionState getTransactionState() {
-//                            return null;
-//                        }
-//
-//                        @Override
-//                        public BlockchainNetworkType getBlockchainNetworkType() {
-//                            return BlockchainNetworkType.REG_TEST;
-//                        }
-//
-//                        @Override
-//                        public double getExchangeRate() {
-//                            return 21;
-//                        }
-//                    };
-//
-//                    cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction, null, actor));
-//                    cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction1, null, actor1));
-//
-//                }
+
+                if(cryptoWalletTransactionList.size() == 0)
+                {
+                    Actor actor = new Actor() {
+                        @Override
+                        public String getActorPublicKey() {
+                            return "ActorPublicKey";
+                        }
+                        @Override
+                        public String getName() {
+                            return "username";
+                        }
+                        @Override
+                        public String getPhrase() {
+                            return null;
+                        }
+                        @Override
+                        public Actors getType() {
+                            return Actors.INTRA_USER;
+                        }
+                        @Override
+                        public byte[] getPhoto() {
+                            return new byte[0];
+                        }
+                        @Override
+                        public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
+                            return null;
+                        }
+                    };
+
+                    BitcoinLossProtectedWalletTransaction transaction = new BitcoinLossProtectedWalletTransaction() {
+                        @Override
+                        public UUID getTransactionId() {
+
+                            return UUID.randomUUID();
+                        }
+                        @Override
+                        public String getTransactionHash() {
+                            return "transactionhash";
+                        }
+                        @Override
+                        public CryptoAddress getAddressFrom() {
+                            return new CryptoAddress();
+                        }
+                        @Override
+                        public CryptoAddress getAddressTo() {
+                            return new CryptoAddress();
+                        }
+                        @Override
+                        public String getActorToPublicKey() {
+                            return "ActorToPublicKey";
+                        }
+                        @Override
+                        public String getActorFromPublicKey() {
+                            return "ActorFromPublicKey";
+                        }
+                        @Override
+                        public Actors getActorToType() {
+                            return Actors.INTRA_USER;
+                        }
+                        @Override
+                        public Actors getActorFromType() {
+                            return Actors.INTRA_USER;
+                        }
+                        @Override
+                        public BalanceType getBalanceType() {
+                            return BalanceType.AVAILABLE;
+                        }
+                        @Override
+                        public TransactionType getTransactionType() {
+                            return TransactionType.DEBIT;
+                        }
+                        @Override
+                        public long getTimestamp() {
+                            return 0;
+                        }
+                        @Override
+                        public long getAmount() {
+                            return (long) 10;
+                        }
+                        @Override
+                        public long getRunningBookBalance() {
+                            return 11;
+                        }
+                        @Override
+                        public long getRunningAvailableBalance() {
+                            return 25;
+                        }
+                        @Override
+                        public String getMemo() {
+                            return null;
+                        }
+                        @Override
+                        public TransactionState getTransactionState() {
+                            return null;
+                        }
+                        @Override
+                        public BlockchainNetworkType getBlockchainNetworkType() {
+                            return BlockchainNetworkType.REG_TEST;
+                        }
+                        @Override
+                        public double getExchangeRate() {
+                            return 420;
+                        }
+                    };
+
+                    Actor actor1 = new Actor() {
+                        @Override
+                        public String getActorPublicKey() {
+                            return "ActorPublicKey";
+                        }
+
+                        @Override
+                        public String getName() {
+                            return "username";
+                        }
+
+                        @Override
+                        public String getPhrase() {
+                            return null;
+                        }
+
+                        @Override
+                        public Actors getType() {
+                            return Actors.INTRA_USER;
+                        }
+
+                        @Override
+                        public byte[] getPhoto() {
+                            return new byte[0];
+                        }
+
+                        @Override
+                        public String createMessageSignature(String message) throws CantSignExtraUserMessageException {
+                            return null;
+                        }
+                    };
+
+                    BitcoinLossProtectedWalletTransaction transaction1 = new BitcoinLossProtectedWalletTransaction() {
+                        @Override
+                        public UUID getTransactionId() {return UUID.randomUUID();}
+
+                        @Override
+                        public String getTransactionHash() {
+                            return "transactionhash";
+                        }
+
+                        @Override
+                        public CryptoAddress getAddressFrom() {
+                            return new CryptoAddress();
+                        }
+
+                        @Override
+                        public CryptoAddress getAddressTo() {
+                            return new CryptoAddress();
+                        }
+
+                        @Override
+                        public String getActorToPublicKey() {
+                            return "ActorToPublicKey";
+                        }
+
+                        @Override
+                        public String getActorFromPublicKey() {
+                            return "ActorFromPublicKey";
+                        }
+
+                        @Override
+                        public Actors getActorToType() {
+                            return Actors.INTRA_USER;
+                        }
+
+                        @Override
+                        public Actors getActorFromType() {
+                            return Actors.INTRA_USER;
+                        }
+
+                        @Override
+                        public BalanceType getBalanceType() {
+                            return BalanceType.AVAILABLE;
+                        }
+
+                        @Override
+                        public TransactionType getTransactionType() {
+                            return TransactionType.DEBIT;
+                        }
+
+                        @Override
+                        public long getTimestamp() {
+                            return 0;
+                        }
+
+                        @Override
+                        public long getAmount() {
+                            return 12;
+                        }
+
+                        @Override
+                        public long getRunningBookBalance() {
+                            return 10;
+                        }
+
+                        @Override
+                        public long getRunningAvailableBalance() {
+                            return 12;
+                        }
+
+                        @Override
+                        public String getMemo() {
+                            return null;
+                        }
+
+                        @Override
+                        public TransactionState getTransactionState() {
+                            return null;
+                        }
+
+                        @Override
+                        public BlockchainNetworkType getBlockchainNetworkType() {
+                            return BlockchainNetworkType.REG_TEST;
+                        }
+
+                        @Override
+                        public double getExchangeRate() {
+                            return 425.25;
+                        }
+                    };
+
+                    cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction, null, actor));
+                    cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction1, null, actor1));
+
+                }
 
 
 
@@ -1239,6 +1300,98 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             if(bwt != null)
              cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
+            else{
+                BitcoinLossProtectedWalletTransaction transaction = new BitcoinLossProtectedWalletTransaction() {
+                    @Override
+                    public UUID getTransactionId() {return UUID.randomUUID();}
+
+                    @Override
+                    public String getTransactionHash() {
+                        return "transactionhash";
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressFrom() {
+                        return new CryptoAddress();
+                    }
+
+                    @Override
+                    public CryptoAddress getAddressTo() {
+                        return new CryptoAddress();
+                    }
+
+                    @Override
+                    public String getActorToPublicKey() {
+                        return "ActorToPublicKey";
+                    }
+
+                    @Override
+                    public String getActorFromPublicKey() {
+                        return "ActorFromPublicKey";
+                    }
+
+                    @Override
+                    public Actors getActorToType() {
+                        return Actors.INTRA_USER;
+                    }
+
+                    @Override
+                    public Actors getActorFromType() {
+                        return Actors.INTRA_USER;
+                    }
+
+                    @Override
+                    public BalanceType getBalanceType() {
+                        return BalanceType.AVAILABLE;
+                    }
+
+                    @Override
+                    public TransactionType getTransactionType() {
+                        return TransactionType.DEBIT;
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return 12;
+                    }
+
+                    @Override
+                    public long getRunningBookBalance() {
+                        return 10;
+                    }
+
+                    @Override
+                    public long getRunningAvailableBalance() {
+                        return 12;
+                    }
+
+                    @Override
+                    public String getMemo() {
+                        return null;
+                    }
+
+                    @Override
+                    public TransactionState getTransactionState() {
+                        return null;
+                    }
+
+                    @Override
+                    public BlockchainNetworkType getBlockchainNetworkType() {
+                        return BlockchainNetworkType.REG_TEST;
+                    }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 425.25;
+                    }
+                };
+                cryptoWalletTransaction = enrichTransaction(transaction, walletPublicKey, intraUserLoggedInPublicKey);
+            }
 
             return  cryptoWalletTransaction;
 
