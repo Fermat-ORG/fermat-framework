@@ -440,10 +440,8 @@ public class CloseContractMonitorAgent implements
                 }
 
                 closeContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION);
-                transactionTransmissionManager.confirmReception(transmissionId);
 
                 System.out.println("CLOSE_CONTRACT - checkCloseContractsToConfirm() - Updated Transaction Status to: SUBMIT_CLOSING_CONTRACT_CONFIRMATION");
-                System.out.println("CLOSE_CONTRACT - checkCloseContractsToConfirm() - Reception Confirmed");
             }
         }
 
@@ -502,10 +500,8 @@ public class CloseContractMonitorAgent implements
                 }
 
                 closeContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
-                transactionTransmissionManager.confirmReception(transmissionId);
 
                 System.out.println("CLOSE_CONTRACT - checkCloseContractsToSend() - Updated Transaction Status to: CHECKING_CLOSING_CONTRACT");
-                System.out.println("CLOSE_CONTRACT - checkCloseContractsToSend() - Reception Confirmed");
             }
         }
     }
