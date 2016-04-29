@@ -27,6 +27,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -156,8 +158,8 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             String alias,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform,
-            String externalUsername) throws CantCreateArtistIdentityException {
+            String externalUsername,
+            ArtExternalPlatform artExternalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType) throws CantCreateArtistIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -171,9 +173,12 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     privateKey,
                     loggedUser,
                     profileImage,
+                    exposureLevel,
+                    acceptConnectionsType,
                     externalIdentityID,
                     artExternalPlatform,
                     externalUsername);
+
 
             Thread registerToAns = new Thread(new Runnable() {
                 @Override
@@ -193,6 +198,8 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     pluginFileSystem,
                     pluginId,
                     artExternalPlatform,
+                    exposureLevel ,
+                    acceptConnectionsType,
                     externalUsername);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
@@ -206,13 +213,16 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             String publicKey,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform,
-            String externalUsername) throws CantUpdateArtistIdentityException {
+            String externalUsername,
+            ArtExternalPlatform artExternalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType) throws CantUpdateArtistIdentityException {
+
         try {
             getArtistIdentityDao().updateIdentityArtistUser(
                     publicKey,
                     alias,
                     profileImage,
+                    exposureLevel,
+                    acceptConnectionsType,
                     externalIdentityID,
                     artExternalPlatform,
                     externalUsername);
