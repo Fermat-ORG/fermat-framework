@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.ArtistIdentityPluginRoot;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 
 import java.util.UUID;
 
@@ -26,6 +28,10 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
     private UUID externalIdentityID;
     private ArtExternalPlatform externalPlatform;
     private String externalUsername;
+    private ExposureLevel exposureLevel;
+    private ArtistAcceptConnectionsType artistAcceptConnectionsType;
+
+
     /**
      * DealsWithPluginFileSystem Interface member variables.
      */
@@ -62,35 +68,16 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
     }
 
     /**
-     *
-     * @param alias
-     * @param publicKey
-     * @param imageProfile
-     * @param externalIdentityID
-     */
-    public ArtistIdentityImp(
-            String alias,
-            String publicKey,
-            byte[] imageProfile,
-            UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform,
-            String externalUsername) {
-        this.alias = alias;
-        this.publicKey = publicKey;
-        this.imageProfile = imageProfile;
-        this.externalIdentityID = externalIdentityID;
-        this.externalPlatform = artExternalPlatform;
-        this.externalUsername = externalUsername;
-    }
-
-    /**
-     *
      * @param alias
      * @param publicKey
      * @param imageProfile
      * @param externalIdentityID
      * @param pluginFileSystem
      * @param pluginId
+     * @param artExternalPlatform
+     * @param exposureLevel
+     * @param acceptConnectionsType
+     * @param externalUsername
      */
     public ArtistIdentityImp(
             String alias,
@@ -99,8 +86,7 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
             UUID externalIdentityID,
             PluginFileSystem pluginFileSystem,
             UUID pluginId,
-            ArtExternalPlatform artExternalPlatform,
-            String externalUsername) {
+            ArtExternalPlatform artExternalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, String externalUsername) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
@@ -109,6 +95,8 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
         this.pluginId = pluginId;
         this.externalPlatform = artExternalPlatform;
         this.externalUsername = externalUsername;
+        this.exposureLevel = exposureLevel;
+        this.artistAcceptConnectionsType = acceptConnectionsType;
     }
 
     public ArtistIdentityImp(
@@ -126,9 +114,23 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
         this.externalUsername = externalUsername;
     }
 
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
+    @Override
+    public ExposureLevel getExposureLevel() {
+        return exposureLevel;
+    }
+
+    public void setExposureLevel(ExposureLevel exposureLevel) {
+        this.exposureLevel = exposureLevel;
+    }
+
+    @Override
+    public ArtistAcceptConnectionsType getArtistAcceptConnectionsType() {
+        return artistAcceptConnectionsType;
+    }
+
+    public void setArtistAcceptConnectionsType(ArtistAcceptConnectionsType artistAcceptConnectionsType) {
+        this.artistAcceptConnectionsType = artistAcceptConnectionsType;
+    }
 
     public void setAlias(String alias) {
         this.alias = alias;

@@ -203,16 +203,9 @@ public interface FanCommunityModuleManager extends
             CantGetSelectedActorIdentityException,
             ActorIdentityNotSelectedException;
 
+
     @Override
     void createIdentity(String name, String phrase, byte[] profile_img) throws Exception;
-
-    void createFanaticIdentity(
-            String name,
-            String phrase,
-            byte[] profile_img,
-            UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform,
-            String externalUsername) throws Exception;
 
 
     @Override

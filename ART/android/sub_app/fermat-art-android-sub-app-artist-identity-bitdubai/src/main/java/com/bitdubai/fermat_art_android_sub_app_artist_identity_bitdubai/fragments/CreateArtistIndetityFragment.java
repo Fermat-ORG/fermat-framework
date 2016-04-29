@@ -53,13 +53,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.sub_app.artist_identity.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -96,6 +97,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private boolean isUpdate = false;
     private Spinner mArtistExternalPlatform;
     private Spinner mArtistExternalName;
+    private Spinner mArtistExposureLevel;
+    private Spinner mArtistAcceptConnectionsType;
     private SettingsManager<ArtistIdentitySettings> settingsManager;
     private ArtistIdentitySettings artArtistPreferenceSettings = null;
     private boolean updateProfileImage = false;
@@ -254,6 +257,42 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 }
             }
         }
+        for (int i=0; i<externalPlatforms.length;i++){
+            if(externalPlatforms[i] == identitySelected.getExternalPlatform()){
+                mArtistExternalPlatform.setSelection(i);
+                break;
+            }
+        }
+        if(Validate.isValidString(identitySelected.getExternalUsername())){
+            arraySpinner = new ArrayList<>();
+            arraySpinner.add(identitySelected.getExternalUsername());
+            adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+            mArtistExternalName.setAdapter(adapter);
+        }
+        arraySpinner = ExposureLevel.getArrayItems();
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        mArtistExposureLevel.setAdapter(adapter);
+
+        ExposureLevel[] exposureLevels = ExposureLevel.values();
+        for (int i=0; i<exposureLevels.length;i++){
+            if(exposureLevels[i] == identitySelected.getExposureLevel()){
+                mArtistExposureLevel.setSelection(i);
+                break;
+            }
+        }
+
+        arraySpinner = ArtistAcceptConnectionsType.getArrayItems();
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        mArtistAcceptConnectionsType.setAdapter(adapter);
+
+        ArtistAcceptConnectionsType[] artistAcceptConnectionsTypes = ArtistAcceptConnectionsType.values();
+        for (int i=0; i<artistAcceptConnectionsTypes.length;i++){
+            if(artistAcceptConnectionsTypes[i] == identitySelected.getArtistAcceptConnectionsType()){
+                mArtistAcceptConnectionsType.setSelection(i);
+                break;
+            }
+        }
+
     }
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.create_art_artist_identity);
@@ -261,6 +300,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         artistImage =  (ImageView) layout.findViewById(R.id.aai_artist_image);
         mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.aai_external_platform);
         mArtistExternalName = (Spinner) layout.findViewById(R.id.aai_userIdentityName);
+        mArtistExposureLevel = (Spinner) layout.findViewById(R.id.art_exposureLevel);
+        mArtistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.art_artistAcceptConnectionsType);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.aai_layout_user_image);
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mArtistUserName.requestFocus();
@@ -273,6 +314,14 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
 
         mArtistExternalPlatform.setAdapter(adapter);
+
+        arraySpinner = ExposureLevel.getArrayItems();
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        mArtistExposureLevel.setAdapter(adapter);
+
+        arraySpinner = ArtistAcceptConnectionsType.getArrayItems();
+        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        mArtistAcceptConnectionsType.setAdapter(adapter);
         externalPlatformSpinnerListener();
         mArtistUserName.requestFocus();
         registerForContextMenu(artistImage);
@@ -351,6 +400,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         if(mArtistExternalName.getCount()>1){
             externalUsername = mArtistExternalName.getSelectedItem().toString();
         }
+
+        ExposureLevel exposureLevel = ExposureLevel.getExposureLevelByLabel(mArtistExposureLevel.getSelectedItem().toString());
+        ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.getArtistAcceptConnectionsTypeByLabel(mArtistAcceptConnectionsType.getSelectedItem().toString());
+
         boolean dataIsValid = validateIdentityData(
                 artistName,
                 artistImageByteArray,

@@ -37,6 +37,8 @@ import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.v
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistIdentityImp;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,6 +146,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param privateKey
      * @param deviceUser
      * @param profileImage
+     * @param exposureLevel
+     * @param acceptConnectionsType
      * @param externalIdentityID
      * @throws CantCreateArtistIdentityException
      */
@@ -153,9 +157,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             String privateKey,
             DeviceUser deviceUser,
             byte[] profileImage,
-            UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform,
-            String externalUsername) throws CantCreateArtistIdentityException {
+            ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,String externalUsername) throws CantCreateArtistIdentityException {
 
         try {
             if (aliasExists(alias)) {
@@ -200,6 +203,9 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                     ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
                     externalUsername);
 
+            record.setFermatEnum(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME,exposureLevel);
+            record.setFermatEnum(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME,acceptConnectionsType);
+
 
             table.insertRecord(record);
 
@@ -236,9 +242,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             String publicKey,
             String alias,
             byte[] profileImage,
-            UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform,
-            String externalUsername) throws CantUpdateArtistIdentityException {
+            ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,String externalUsername) throws CantUpdateArtistIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -270,6 +275,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME,
                         alias);
                 //External platform
+                record.setUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,externalIdentityID);
                 if(artExternalPlatform==null){
                     record.setStringValue(
                             ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
@@ -279,9 +285,13 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                             ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
                             artExternalPlatform.getCode());
                 }
+
                 record.setStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
                         externalUsername);
+
+                record.setFermatEnum(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME,exposureLevel);
+                record.setFermatEnum(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME,acceptConnectionsType);
 
                 table.updateRecord(record);
             }
@@ -317,7 +327,6 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
         List<Artist> list = new ArrayList<>(); // Intra User list.
         DatabaseTable table; // Intra User table.
 
-        // Get Redeem Point identities list.
         try {
 
             /**
@@ -336,21 +345,15 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             }
 
 
-            // 2) Find the Redeem Point.
+
             table.addStringFilter(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
 
-            // 3) Get Redeem Point.
+
             for (DatabaseTableRecord record : table.getRecords()) {
 
-                // Add records to list.
-                /*list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getArtistIdentityPrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        pluginFileSystem,
-                        pluginId), );*/
+
                 UUID externalIdentityId;
                 String externalIdentityString = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
@@ -378,7 +381,10 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginFileSystem,
                         pluginId,
                         externalPlatform,
+                        ExposureLevel.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
+                        ArtistAcceptConnectionsType.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME)),
                         externalUsername));
+
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListArtistIdentitiesException(
@@ -423,20 +429,11 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             }
 
 
-            // 2) Find the Identity Issuers.
-
-//            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-            // 3) Get Identity Issuers.
 
             for (DatabaseTableRecord record : table.getRecords()) {
 
-                // Add records to list.
-                /*artist = new IdentityAssetRedeemPointImpl(
-                        record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
                 UUID externalIdentityId;
                 String externalIdentityString = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
@@ -465,6 +462,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginFileSystem,
                         pluginId,
                         externalPlatform,
+                        ExposureLevel.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
+                        ArtistAcceptConnectionsType.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME)),
                         externalUsername);
 
             }
@@ -490,7 +489,6 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
         Artist artist = null;
         DatabaseTable table; // Intra User table.
 
-        // Get Asset Issuers identities list.
         try {
 
             /**
@@ -506,20 +504,13 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             }
 
 
-            // 2) Find the Identity Issuers.
 
             table.addStringFilter(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-            // 3) Get Identity Issuers.
 
             for (DatabaseTableRecord record : table.getRecords()) {
 
-                // Add records to list.
-                /*artist = new IdentityAssetRedeemPointImpl(
-                        record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
                 UUID externalIdentityId;
                 String externalIdentityString = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
@@ -548,6 +539,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginFileSystem,
                         pluginId,
                         externalPlatform,
+                        ExposureLevel.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
+                        ArtistAcceptConnectionsType.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME)),
                         externalUsername);
 
             }
