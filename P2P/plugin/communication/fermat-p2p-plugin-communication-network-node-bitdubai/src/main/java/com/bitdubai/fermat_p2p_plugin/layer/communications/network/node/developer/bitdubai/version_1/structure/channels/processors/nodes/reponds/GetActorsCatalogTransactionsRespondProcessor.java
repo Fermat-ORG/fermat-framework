@@ -13,21 +13,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetActorCatalogTransactionsMsjRequest;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetNodeCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetActorCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetNodeCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.List;
 
+import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 /**
@@ -88,6 +84,8 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                      */
                     List<ActorsCatalogTransaction>  transactionList = messageContent.getActorsCatalogTransaction();
 
+                    LOG.info("transactionList size = "+transactionList.size());
+
                     for (ActorsCatalogTransaction actorsCatalogTransaction : transactionList) {
 
                         /*
@@ -96,10 +94,14 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                         processTransaction(actorsCatalogTransaction);
                     }
 
-
                     long totalRowInDb = getDaoFactory().getActorsCatalogDao().getAllCount();
 
+                    LOG.info("Row in node catalog  = "+totalRowInDb);
+                    LOG.info("Row in catalog seed node = "+messageContent.getCount());
+
                     if (totalRowInDb < messageContent.getCount()){
+
+                        LOG.info("Requesting more transactions.");
 
                         GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest(transactionList.size(), 250);
                         Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
@@ -108,6 +110,10 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                          * Send the respond
                          */
                         session.getAsyncRemote().sendObject(packageRespond);
+
+                    }else {
+
+                        session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Process finish..."));
                     }
 
                 }else {
@@ -118,7 +124,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
             }
 
         } catch (Exception exception){
-
+            exception.printStackTrace();
             LOG.error(exception.getMessage());
 
         }

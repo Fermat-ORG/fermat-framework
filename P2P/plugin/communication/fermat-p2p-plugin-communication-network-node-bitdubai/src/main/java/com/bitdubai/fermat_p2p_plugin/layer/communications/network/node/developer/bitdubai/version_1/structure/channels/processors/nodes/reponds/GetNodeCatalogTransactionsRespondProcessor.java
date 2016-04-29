@@ -16,13 +16,13 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetNodeCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.List;
 
+import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 /**
@@ -83,6 +83,8 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                      */
                     List<NodesCatalogTransaction>  transactionList = messageContent.getNodesCatalogTransactions();
 
+                    LOG.info("transactionList size = "+transactionList.size());
+
                     for (NodesCatalogTransaction nodesCatalogTransaction : transactionList) {
 
                         /*
@@ -94,7 +96,12 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
                     long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
 
+                    LOG.info("Row in node catalog  = "+totalRowInDb);
+                    LOG.info("Row in catalog seed node = "+messageContent.getCount());
+
                     if (totalRowInDb < messageContent.getCount()){
+
+                        LOG.info("Requesting more transactions.");
 
                         GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(transactionList.size(), 250);
                         Package packageRespond = Package.createInstance(nodeCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
@@ -103,6 +110,10 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                          * Send the respond
                          */
                         session.getAsyncRemote().sendObject(packageRespond);
+
+                    }else {
+
+                        session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Process finish..."));
                     }
 
                 }else {
@@ -114,6 +125,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
         } catch (Exception exception){
 
+            exception.printStackTrace();
             LOG.error(exception.getMessage());
 
         }
