@@ -9,8 +9,9 @@
     <ImageView
         android:id="@+id/profile_image"
         android:scaleType="centerCrop"
-        android:layout_height="?android:attr/listPreferredItemHeight"
-        android:layout_width="?android:attr/listPreferredItemHeight"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/cht_comm_bg_circula_friend_list"
         tools:ignore="ContentDescription"
         android:layout_marginLeft="5dp"
@@ -19,7 +20,7 @@
         android:id="@+id/community_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dip"
+        android:layout_marginTop="5dip"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/profile_image"
         android:maxLines="1"
@@ -35,8 +36,8 @@
         android:ellipsize="end"
         android:layout_marginLeft="10dp"
         android:maxLines="3"
-        android:text="desc"
-        android:textColor="#757575"
+        android:text="Online"
+        android:textColor="#0000FF"
         android:textSize="12dip" />
     <!--
     <TextView
@@ -51,4 +52,10 @@
         android:text="desc"
         android:textColor="#757575"
         android:textSize="12dip" />-->
+    <TextView
+        android:layout_below="@+id/profile_image"
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#DBDBDB" />
 </RelativeLayout>

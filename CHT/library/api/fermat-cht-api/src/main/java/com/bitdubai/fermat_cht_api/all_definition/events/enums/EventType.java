@@ -26,10 +26,10 @@ public enum EventType implements FermatEventEnum {
     /**
      * ACTOR CONNECTION
      */
-    CHAT_ACTOR_CONNECTION_REQUEST_NEW("CACNC") {
+    CHAT_ACTOR_CONNECTION_REQUEST_NEW("CACRN") {
         public final FermatEvent getNewEvent() { return new ChatConnectionRequestNewEvent(this); }
     },
-    CHAT_ACTOR_CONNECTION_UPDATE_CONNECTION("CACNC") {
+    CHAT_ACTOR_CONNECTION_UPDATE_CONNECTION("CACUC") {
         public final FermatEvent getNewEvent() { return new ChatConnectionRequestUpdatesEvent(this); }
     },
 

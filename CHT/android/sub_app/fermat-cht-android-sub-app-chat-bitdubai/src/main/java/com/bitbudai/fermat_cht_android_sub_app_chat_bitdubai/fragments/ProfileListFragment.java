@@ -108,8 +108,8 @@ public class ProfileListFragment extends AbstractFermatFragment implements Profi
 
         try{
             chatSession=((ChatSession) appSession);
-            moduleManager= chatSession.getModuleManager();
-            chatManager=moduleManager.getChatManager();
+            chatManager= chatSession.getModuleManager();
+            //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
 //            try {

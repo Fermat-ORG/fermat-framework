@@ -21,8 +21,8 @@
 
             <ImageView
                 android:id="@+id/imageView_avatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
@@ -57,6 +57,7 @@
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText,RtlHardcoded" />
+
         <!-- android:drawableRight="@drawable/ic_profile_connect" -->
 
     </LinearLayout>
@@ -66,5 +67,10 @@
         android:layout_height="1dp"
         android:layout_marginTop="8dp"
         android:background="#ffffff" />
+    <TextView
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#DBDBDB" />
 
 </LinearLayout>
