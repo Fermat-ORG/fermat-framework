@@ -41,6 +41,8 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
         System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         CheckInProfileListMsgRespond checkInProfileListMsgRespond = CheckInProfileListMsgRespond.parseContent(packageReceived.getContent());
 
+        System.out.println(checkInProfileListMsgRespond.toJson());
+
         if(checkInProfileListMsgRespond.getStatus() == CheckInProfileListMsgRespond.STATUS.SUCCESS){
             //raise event
 

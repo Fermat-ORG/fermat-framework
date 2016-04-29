@@ -90,11 +90,12 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                  * Get the parameters to filters
                  */
                 DiscoveryQueryParameters discoveryQueryParameters = messageContent.getDiscoveryQueryParameters();
+                LOG.info(getGson().toJson(discoveryQueryParameters));
 
                 /*
                  * Validate if a network service search
                  */
-                if (discoveryQueryParameters.getNetworkServiceType() != null){
+                if (discoveryQueryParameters.getNetworkServiceType() != null && discoveryQueryParameters.getNetworkServiceType() !=  NetworkServiceType.UNDEFINED){
 
                     /*
                      * Find in the data base
@@ -112,7 +113,8 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                 /*
                  * Apply geolocation
                  */
-                profileList = applyGeoLocationFilter(discoveryQueryParameters.getLocation(), profileList, discoveryQueryParameters.getDistance());
+                if(discoveryQueryParameters.getLocation() != null)
+                    profileList = applyGeoLocationFilter(discoveryQueryParameters.getLocation(), profileList, discoveryQueryParameters.getDistance());
 
                 /*
                  * Apply pagination
@@ -147,10 +149,10 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
             }
 
         }catch (Exception exception){
-
+            exception.printStackTrace();
             try {
 
-                LOG.error(exception.getMessage());
+                //LOG.error(exception.getMessage());
 
                 /*
                  * Respond whit fail message
@@ -218,22 +220,24 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<CheckedInActor> actores = getDaoFactory().getCheckedInActorDao().findAll(filters);
 
-        for (CheckedInActor checkedInActor : actores) {
+        if(actores != null) {
+            for (CheckedInActor checkedInActor : actores) {
 
-            ActorProfile actorProfile = new ActorProfile();
-            actorProfile.setIdentityPublicKey(checkedInActor.getIdentityPublicKey());
-            actorProfile.setAlias(checkedInActor.getAlias());
-            actorProfile.setName(checkedInActor.getName());
-            actorProfile.setActorType(checkedInActor.getActorType());
-            actorProfile.setPhoto(checkedInActor.getPhoto());
-            actorProfile.setExtraData(checkedInActor.getExtraData());
-            actorProfile.setNsIdentityPublicKey(checkedInActor.getNsIdentityPublicKey());
+                ActorProfile actorProfile = new ActorProfile();
+                actorProfile.setIdentityPublicKey(checkedInActor.getIdentityPublicKey());
+                actorProfile.setAlias(checkedInActor.getAlias());
+                actorProfile.setName(checkedInActor.getName());
+                actorProfile.setActorType(checkedInActor.getActorType());
+                actorProfile.setPhoto(checkedInActor.getPhoto());
+                actorProfile.setExtraData(checkedInActor.getExtraData());
+                actorProfile.setNsIdentityPublicKey(checkedInActor.getNsIdentityPublicKey());
 
-            //TODO: SET THE LOCATION
-            //actorProfile.setLocation();
+                //TODO: SET THE LOCATION
+                //actorProfile.setLocation();
 
-            profileList.add(actorProfile);
+                profileList.add(actorProfile);
 
+            }
         }
 
         return profileList;

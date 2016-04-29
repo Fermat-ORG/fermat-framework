@@ -132,12 +132,12 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     @Override
     public DatabaseTableFilter getEmptyTableFilter() {
-        return null;
+        return new DesktopDatabaseTableFilter();
     }
 
     @Override
     public DatabaseTableFilter getNewFilter(String column, DatabaseFilterType type, String value) {
-        return null;
+        return new DesktopDatabaseTableFilter(column, type, value);
     }
 
     @Override
