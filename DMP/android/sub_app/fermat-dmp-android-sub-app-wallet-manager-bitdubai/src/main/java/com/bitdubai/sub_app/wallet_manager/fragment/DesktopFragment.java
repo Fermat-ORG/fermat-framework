@@ -475,7 +475,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
-            item.setIconResource(R.drawable.banner_tky);
+            item.setIconResource(R.drawable.subapp_fan_wallet_icon);
             item.setPosition(9);
             lstItemsWithIcon.add(item);
 
