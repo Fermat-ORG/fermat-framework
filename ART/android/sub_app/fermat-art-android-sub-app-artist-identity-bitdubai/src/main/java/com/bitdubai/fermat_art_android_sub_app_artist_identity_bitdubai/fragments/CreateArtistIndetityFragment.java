@@ -343,9 +343,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         }
         String artistName = mArtistUserName.getText().toString();
         ArtExternalPlatform externalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
+        String externalUsername = "";
         if(mArtistExternalPlatform.isSelected()){
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mArtistExternalPlatform.getSelectedItem().toString());
+        }
+        if(mArtistExternalName.getCount()>1){
+            externalUsername = mArtistExternalName.getSelectedItem().toString();
         }
         boolean dataIsValid = validateIdentityData(
                 artistName,

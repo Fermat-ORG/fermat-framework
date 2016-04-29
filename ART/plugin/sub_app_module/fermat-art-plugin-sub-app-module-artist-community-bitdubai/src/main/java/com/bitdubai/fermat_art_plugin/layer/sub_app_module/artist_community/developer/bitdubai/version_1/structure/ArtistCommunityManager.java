@@ -460,7 +460,8 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             String phrase,
             byte[] profile_img,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws Exception {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws Exception {
         String createdPublicKey = null;
 
         if(name.equals("Fan"))
@@ -491,7 +492,8 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
                         name,
                         profile_img,
                         externalIdentityID,
-                        artExternalPlatform);
+                        artExternalPlatform,
+                        externalUsername);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {

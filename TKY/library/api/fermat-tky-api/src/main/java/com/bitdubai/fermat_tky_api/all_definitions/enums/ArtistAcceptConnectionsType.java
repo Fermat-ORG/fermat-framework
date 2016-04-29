@@ -60,5 +60,13 @@ public enum ArtistAcceptConnectionsType implements FermatEnum {
         }
         return  platformsNames;
     }
+    public static ArtistAcceptConnectionsType getArtistAcceptConnectionsTypeByLabel(String label){
+        for (ArtistAcceptConnectionsType artistAcceptConnectionsType :
+                values()) {
+            if(artistAcceptConnectionsType.name().equals(label.toUpperCase()))
+                return artistAcceptConnectionsType;
+        }
+        return null;
+    }
 }
 

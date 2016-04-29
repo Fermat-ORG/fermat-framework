@@ -56,7 +56,8 @@ public interface ArtistIdentityManager extends FermatManager{
             final String alias,
             final byte[] imageBytes,
             final UUID externalIdentityID,
-            final ArtExternalPlatform artExternalPlatform) throws
+            final ArtExternalPlatform artExternalPlatform,
+            final String externalUsername) throws
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
     /**
@@ -70,7 +71,8 @@ public interface ArtistIdentityManager extends FermatManager{
     void updateArtistIdentity(
             String alias,String publicKey, byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantUpdateArtistIdentityException;
 
     /**

@@ -109,7 +109,7 @@ public class ArtistActorNetworkServiceExternalPlatformInformationRequest
      */
     @Override
     public String getArtistPublicKey() {
-        return this.requesterPublicKey;
+        return this.cryptoBrokerPublicKey;
     }
 
     /**

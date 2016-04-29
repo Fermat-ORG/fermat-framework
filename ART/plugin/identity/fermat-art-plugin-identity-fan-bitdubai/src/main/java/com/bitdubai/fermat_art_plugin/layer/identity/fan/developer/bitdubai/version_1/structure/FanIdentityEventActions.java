@@ -1,15 +1,11 @@
 package com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtArtistExtraData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
@@ -23,6 +19,7 @@ import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.vers
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 
@@ -72,13 +69,13 @@ public class FanIdentityEventActions {
     public void handleArtistUpdateEvent() throws CantHandleNewsEventException {
         try {
             final List<ArtistConnectionRequest> list = artistNetworkService.
-                    listPendingConnectionUpdates();
+                    listCompletedConnections();
             for (final ArtistConnectionRequest request : list) {
-                if (request.getRequestType() == RequestType.RECEIVED  &&
+                if (request.getRequestType() == RequestType.SENT  &&
                         request.getSenderActorType() == PlatformComponentType.ART_FAN) {
                     switch (request.getRequestAction()) {
-                        case ACCEPT:
-                            this.handleConnection();
+                        case NONE:
+                            this.handleConnection(request.getRequestId());
                             break;
                         //Other cases do nothing
                     }
@@ -114,7 +111,7 @@ public class FanIdentityEventActions {
      * @throws CantListArtistsException
      * @throws CantAddNewArtistConnectedException
      */
-    private void handleConnection() throws
+    private void handleConnection(UUID requestId) throws
             CantListFanIdentitiesException,
             CantListArtistsException,
             CantAddNewArtistConnectedException {
@@ -130,7 +127,7 @@ public class FanIdentityEventActions {
             artistExposingDataList = actorSearch.getResult(PlatformComponentType.ART_ARTIST);
             switch (externalPlatform){
                 case TOKENLY:
-                    updateTKYIdentity(fanatic, artistExposingDataList);
+                    updateTKYIdentity(requestId,fanatic, artistExposingDataList);
                     break;
                 case UNDEFINED:
                     //TODO: throw an exception
@@ -147,6 +144,7 @@ public class FanIdentityEventActions {
      * @throws CantAddNewArtistConnectedException
      */
     private void updateTKYIdentity(
+            UUID requestId,
             Fanatic fanatic,
             List<ArtistExposingData> artistExposingDataList) throws
             CantAddNewArtistConnectedException {
@@ -159,9 +157,10 @@ public class FanIdentityEventActions {
             ArtArtistExtraData<ArtistExternalPlatformInformation> artistExternalData;
             for(ArtistExposingData artistExposingData : artistExposingDataList){
                 //Get the remote artist public key
-                remoteArtistPublicKey = artistExposingData.getPublicKey();
+                /*remoteArtistPublicKey = artistExposingData.getPublicKey();
                 //Request the remote artist information
                 artistExternalData=artistNetworkService.requestExternalPlatformInformation(
+                        requestId,
                         fanatic.getPublicKey(),
                         PlatformComponentType.ART_FAN,
                         remoteArtistPublicKey
@@ -172,14 +171,19 @@ public class FanIdentityEventActions {
                 for(ArtistExternalPlatformInformation artistExternalPlatformInformation :
                         listInformation){
                     HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap=
-                            artistExternalPlatformInformation.getExternalPlatformInformationMap();
+                            artistExternalPlatformInformation.getExternalPlatformInformationMap();*/
                     //verify if we got Tokenly information
-                    if(artExternalPlatformStringHashMap.containsKey(ArtExternalPlatform.TOKENLY)){
-                        artistUsername = artExternalPlatformStringHashMap.get(
-                                ArtExternalPlatform.TOKENLY);
-                        //Finally, we can update the TKY identity with the artist username
-                        tkyFan.addNewArtistConnected(artistUsername);
-                    }
+                ArtistExternalPlatformInformation artistExternalPlatformInformation =
+                        artistExposingData.getArtistExternalPlatformInformation();
+                HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap =
+                        artistExternalPlatformInformation.getExternalPlatformInformationMap();
+                if(artExternalPlatformStringHashMap.containsKey(ArtExternalPlatform.TOKENLY)){
+                    artistUsername = artExternalPlatformStringHashMap.get(
+                            ArtExternalPlatform.TOKENLY);
+                    //Finally, we can update the TKY identity with the artist username
+                    tkyFan.addNewArtistConnected(artistUsername);
+                    tokenlyFanIdentityManager.updateFanIdentity(tkyFan);
+
                 }
             }
         } catch (ObjectNotSetException e) {
@@ -192,16 +196,21 @@ public class FanIdentityEventActions {
                     e,
                     "Updating TKY identity",
                     "Identity cannot be found" );
-        } catch (CantRequestExternalPlatformInformationException e) {
+        } /*catch (CantRequestExternalPlatformInformationException e) {
             throw new CantAddNewArtistConnectedException(
                     e,
                     "Updating TKY identity",
                     "Cannot request information to a remote device" );
-        } catch (CantGetFanIdentityException e) {
+        }*/ catch (CantGetFanIdentityException e) {
             throw new CantAddNewArtistConnectedException(
                     e,
                     "Updating TKY identity",
                     "Cannot get a Fan identity" );
+        } catch (CantUpdateFanIdentityException e) {
+            throw new CantAddNewArtistConnectedException(
+                    e,
+                    "Updating TKY identity",
+                    "Cannot update a Fan identity" );
         }
     }
 

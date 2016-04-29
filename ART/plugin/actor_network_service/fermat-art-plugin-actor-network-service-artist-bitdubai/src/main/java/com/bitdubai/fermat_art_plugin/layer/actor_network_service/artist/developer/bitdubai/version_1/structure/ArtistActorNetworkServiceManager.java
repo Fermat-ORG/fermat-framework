@@ -94,7 +94,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
 
             } else {
 
-                final String imageString = Base64.encodeToString(artist.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(artist.getExtraData().getBytes(), Base64.DEFAULT);
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         artist.getPublicKey(),
@@ -128,7 +128,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
         try {
             if (isRegistered()) {
 
-                final String imageString = Base64.encodeToString(actor.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(actor.getExtraData().getBytes(), Base64.DEFAULT);
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
@@ -418,6 +418,31 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     }
 
     /**
+     * This method returns all completed request connections.
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    @Override
+    public final List<ArtistConnectionRequest> listCompletedConnections() throws
+            CantListPendingConnectionRequestsException{
+        try{
+            return artistActorNetworkServiceDao.listCompletedConnections();
+        } catch (final CantListPendingConnectionRequestsException e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw e;
+        } catch (final Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    /**
      * we'll return all the request updates with a pending local action.
      * State : PENDING_LOCAL_ACTION.
      *
@@ -473,19 +498,20 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
      */
     @Override
     public ArtArtistExtraData<ArtistExternalPlatformInformation> requestExternalPlatformInformation(
+            UUID requestId,
             String requesterPublicKey,
             PlatformComponentType requesterActorType,
             String artistPublicKey) throws CantRequestExternalPlatformInformationException {
         try {
 
-            final UUID newId = UUID.randomUUID();
+            //final UUID newId = UUID.randomUUID();
 
             final ProtocolState state  = ProtocolState.PROCESSING_SEND;
             final RequestType type = RequestType.SENT;
 
             ArtistActorNetworkServiceExternalPlatformInformationRequest informationRequest =
                     artistActorNetworkServiceDao.createExternalPlatformInformationRequest(
-                            newId,
+                            requestId,
                             requesterPublicKey,
                             requesterActorType,
                             artistPublicKey,
