@@ -362,7 +362,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         moduleManager.createFanaticIdentity(
                                 fanExternalName,
                                 (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
-                                externalIdentityID, externalPlatform);
+                                externalIdentityID,
+                                externalPlatform,
+                                externalUsername);
                     } else
                         if (updateProfileImage) {
                             moduleManager.updateFanIdentity(
@@ -370,14 +372,17 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                                     identitySelected.getPublicKey(),
                                     fanImageByteArray,
                                     externalIdentityID,
-                                    externalPlatform);
+                                    externalPlatform,
+                                    externalUsername);
 
                         }
                         else
                             moduleManager.updateFanIdentity(fanExternalName,
                                     identitySelected.getPublicKey(),
                                     identitySelected.getProfileImage(),
-                                    externalIdentityID,externalPlatform);
+                                    externalIdentityID,
+                                    externalPlatform,
+                                    externalUsername);
 
                 } catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
