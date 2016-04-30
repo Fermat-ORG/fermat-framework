@@ -42,7 +42,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.exceptions.MissingCustomerBrokerPurchaseDataException;
-import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.utils.CustomerBrokerPurchaseImpl;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
@@ -58,6 +57,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
+
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.*;
 
 
 /**
@@ -76,8 +77,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractPurchaseManager contractPurchaseManager;
     private final CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter;
-    //private final NotificationManagerMiddleware notificationManagerMiddleware;
-    private final UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final Broadcaster broadcaster;
 
@@ -85,7 +84,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     public final int SLEEP_TIME = 5000;
     public final int TIME_BETWEEN_NOTIFICATIONS = 600000; //10min
     private long lastNotificationTime = 0;
-    CustomerBrokerPurchaseImpl customerBrokerPurchase = null;
 
     public UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(ErrorManager errorManager,
                                                                           CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager,
@@ -95,8 +93,6 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                                                                           CloseContractManager closeContractManager,
                                                                           CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
                                                                           CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter,
-                                                                          //NotificationManagerMiddleware notificationManagerMiddleware,
-                                                                          UserLevelBusinessTransactionCustomerBrokerPurchaseManager userLevelBusinessTransactionCustomerBrokerPurchaseManager,
                                                                           CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                                           Broadcaster broadcaster) {
 
@@ -106,10 +102,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
         this.closeContractManager = closeContractManager;
         this.contractPurchaseManager = customerBrokerContractPurchaseManager;
         this.currencyExchangeRateProviderFilter = currencyExchangeRateProviderFilter;
-        //this.notificationManagerMiddleware = notificationManagerMiddleware;
-        this.userLevelBusinessTransactionCustomerBrokerPurchaseManager = userLevelBusinessTransactionCustomerBrokerPurchaseManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.broadcaster = broadcaster;
+
         this.dao = new UserLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao(pluginDatabaseSystem, pluginId);
 
         this.agentThread = new Thread(new Runnable() {
@@ -118,8 +113,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                 while (isRunning())
                     process();
             }
-        }
-                , this.getClass().getSimpleName());
+        }, this.getClass().getSimpleName());
     }
 
     @Override
@@ -173,31 +167,31 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             changeTransactionStatusFromInProcessToInOpenContract(customerWalletPublicKey, transactionStatusColumnName);
 
             // IN_OPEN_CONTRACT -> IN_CONTRACT_SUBMIT
-            changeTransactionStatusFromInOpenContractToInContractSubmitted(transactionStatusColumnName);
+            changeTransactionStatusFromInOpenContractToInContractSubmitted();
 
             // IN_CONTRACT_SUBMIT -> Update Contract Expiration Time and notify
-            updateContractExpirationDateWhitStatusInContractSubmitAndNotify(customerWalletPublicKey, transactionStatusColumnName);
+            updateContractExpirationDateWhitStatusInContractSubmitAndNotify(customerWalletPublicKey);
 
             // IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit
-            changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(customerWalletPublicKey, transactionStatusColumnName);
-
-            // IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in merchandise
-            changeTransactionStatusFromInPaymentSubmitToCancelledIfExpirationTimeReached(customerWalletPublicKey, transactionStatusColumnName);
+            changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(customerWalletPublicKey);
 
             // IN_CONTRACT_SUBMIT -> IN_PAYMENT_SUBMIT
-            changeTransactionStatusFromInContractSubmitToInPaymentSubmit(transactionStatusColumnName);
+            changeTransactionStatusFromInContractSubmitToInPaymentSubmit();
+
+            // IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in merchandise
+            changeTransactionStatusFromInPaymentSubmitToCancelledIfExpirationTimeReached(customerWalletPublicKey);
 
             // IN_PAYMENT_SUBMIT -> IN_PENDING_MERCHANDISE
-            changeTransactionStatusFromInPaymentSubmitToInPendingMerchandise(customerWalletPublicKey, transactionStatusColumnName);
+            changeTransactionStatusFromInPaymentSubmitToInPendingMerchandise(customerWalletPublicKey);
 
             // IN_PENDING_MERCHANDISE -> Update Contract Expiration Time and notify
-            updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(customerWalletPublicKey, transactionStatusColumnName);
+            updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(customerWalletPublicKey);
 
             // IN_PENDING_MERCHANDISE -> IN_MERCHANDISE_SUBMIT
-            changeTransactionStatusFromInPendingMerchandiseToInMerchandiseSubmitted(customerWalletPublicKey, transactionStatusColumnName);
+            changeTransactionStatusFromInPendingMerchandiseToInMerchandiseSubmitted(customerWalletPublicKey);
 
             // IN_MERCHANDISE_SUBMIT -> COMPLETED
-            changeTransactionStatusFromInMerchandiseSubmitToCompleted(customerWalletPublicKey, transactionStatusColumnName);
+            changeTransactionStatusFromInMerchandiseSubmitToCompleted(customerWalletPublicKey);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_PURCHASE,
@@ -209,27 +203,28 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     /* Private methods */
 
     /**
-     * IN_MERCHANDISE_SUBMIT -> COMPLETED
+     * ContractStatus.READY_TO_CLOSE -> TransactionStatus.COMPLETED
      * <p/>
      * Se debe enviar un Broadcast para actualizar la UI
      */
-    private void changeTransactionStatusFromInMerchandiseSubmitToCompleted(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantCloseContractException, MissingCustomerBrokerPurchaseDataException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
-
-        final List<CustomerBrokerPurchase> inMerchandiseSubmittedTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void changeTransactionStatusFromInMerchandiseSubmitToCompleted(String customerWalletPublicKey) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantCloseContractException, MissingCustomerBrokerPurchaseDataException {
+        final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
 
         final Collection<CustomerBrokerContractPurchase> readyToCloseContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.READY_TO_CLOSE);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inMerchandiseSubmittedTransactions) {
-            for (CustomerBrokerContractPurchase contract : readyToCloseContracts) {
+        for (CustomerBrokerContractPurchase contract : readyToCloseContracts) {
+            for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
                 String transactionId = userLevelTransaction.getTransactionId();
                 String negotiationId = contract.getNegotiatiotId();
+                TransactionStatus transactionStatus = userLevelTransaction.getTransactionStatus();
 
-                if (transactionId.equals(negotiationId)) {
+                if (transactionId.equals(negotiationId) && transactionStatus != COMPLETED) {
                     closeContractManager.closePurchaseContract(contract.getContractId());
 
-                    userLevelTransaction.setTransactionStatus(TransactionStatus.COMPLETED);
+                    userLevelTransaction.setTransactionStatus(COMPLETED);
+                    userLevelTransaction.setContractStatus(ContractStatus.READY_TO_CLOSE.getCode());
+
                     dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
@@ -240,27 +235,28 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     }
 
     /**
-     * IN_PENDING_MERCHANDISE -> IN_MERCHANDISE_SUBMIT
+     * ContractStatus.MERCHANDISE_SUBMIT -> TransactionStatus.IN_MERCHANDISE_SUBMIT
      * <p/>
      * Se confirma que se recibio la mercancia
      * <p/>
      * Se debe enviar un Broadcast para actualizar la UI
      */
-    private void changeTransactionStatusFromInPendingMerchandiseToInMerchandiseSubmitted(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), transactionStatusColumnName);
-
-        final List<CustomerBrokerPurchase> inPendingMerchandiseTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void changeTransactionStatusFromInPendingMerchandiseToInMerchandiseSubmitted(String customerWalletPublicKey) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
+        final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
 
         final Collection<CustomerBrokerContractPurchase> merchandiseSubmittedContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.MERCHANDISE_SUBMIT);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inPendingMerchandiseTransactions) {
-            for (CustomerBrokerContractPurchase contract : merchandiseSubmittedContracts) {
+        for (CustomerBrokerContractPurchase contract : merchandiseSubmittedContracts) {
+            for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
                 String transactionId = userLevelTransaction.getTransactionId();
                 String negotiationId = contract.getNegotiatiotId();
+                TransactionStatus transactionStatus = userLevelTransaction.getTransactionStatus();
 
-                if (transactionId.equals(negotiationId)) {
-                    userLevelTransaction.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
+                if (transactionId.equals(negotiationId) && transactionStatus != IN_MERCHANDISE_SUBMIT) {
+                    userLevelTransaction.setTransactionStatus(IN_MERCHANDISE_SUBMIT);
+                    userLevelTransaction.setContractStatus(ContractStatus.MERCHANDISE_SUBMIT.getCode());
+
                     dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
@@ -271,64 +267,53 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     }
 
     /**
-     * IN_PENDING_MERCHANDISE -> Update Contract Expiration Time and notify:
+     * ContractStatus.PENDING_MERCHANDISE -> Update Contract Expiration Time and notify:
      * <p/>
      * Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida,
      * Se notifica si la confirmacion de la recepcion de la mercancia del contrato esta proxima a expirar
      */
-    private void updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantUpdateCustomerBrokerContractPurchaseException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), transactionStatusColumnName);
-
-        final List<CustomerBrokerPurchase> inPendingMerchandiseTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(String customerWalletPublicKey) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantUpdateCustomerBrokerContractPurchaseException {
 
         final Collection<CustomerBrokerContractPurchase> pendingMerchandiseContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inPendingMerchandiseTransactions) {
-            for (CustomerBrokerContractPurchase contract : pendingMerchandiseContracts) {
-                String negotiationId = contract.getNegotiatiotId();
-                String transactionId = userLevelTransaction.getTransactionId();
+        for (CustomerBrokerContractPurchase contract : pendingMerchandiseContracts) {
 
-                if (transactionId.equals(negotiationId)) {
+            long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
 
-                    //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida,
-                    // se eleva un evento de notificación
-                    long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
+            if (timeStampToday <= DELAY_HOURS) {
+                contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
 
-                    if (timeStampToday <= DELAY_HOURS) {
-                        contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
-
-                        if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
-                            lastNotificationTime = new Date().getTime();
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
-                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
-                        }
-                    }
+                if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                    lastNotificationTime = new Date().getTime();
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
                 }
             }
         }
     }
 
     /**
-     * IN_PAYMENT_SUBMIT -> IN_PENDING_MERCHANDISE
+     * ContractStatus.PENDING_MERCHANDISE -> TransactionStatus.IN_PENDING_MERCHANDISE
      * <p/>
      * Se debe enviar un Broadcast para actualizar la UI
      */
-    private void changeTransactionStatusFromInPaymentSubmitToInPendingMerchandise(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), transactionStatusColumnName);
-
-        final List<CustomerBrokerPurchase> inPaymentSubmitTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void changeTransactionStatusFromInPaymentSubmitToInPendingMerchandise(String customerWalletPublicKey) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
+        final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
 
         final Collection<CustomerBrokerContractPurchase> pendingMerchandiseContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inPaymentSubmitTransactions) {
-            for (CustomerBrokerContractPurchase contract : pendingMerchandiseContracts) {
-                String transactionId = userLevelTransaction.getTransactionId();
-                String negotiationId = contract.getNegotiatiotId();
+        for (CustomerBrokerContractPurchase contract : pendingMerchandiseContracts) {
+            for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
+                final String transactionId = userLevelTransaction.getTransactionId();
+                final String negotiationId = contract.getNegotiatiotId();
+                final TransactionStatus transactionStatus = userLevelTransaction.getTransactionStatus();
 
-                if (transactionId.equals(negotiationId)) {
-                    userLevelTransaction.setTransactionStatus(TransactionStatus.IN_PENDING_MERCHANDISE);
+                if (transactionId.equals(negotiationId) && transactionStatus != IN_PENDING_MERCHANDISE) {
+                    userLevelTransaction.setTransactionStatus(IN_PENDING_MERCHANDISE);
+                    userLevelTransaction.setContractStatus(ContractStatus.PENDING_MERCHANDISE.getCode());
+
                     dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
@@ -339,31 +324,29 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     }
 
     /**
-     * IN_CONTRACT_SUBMIT -> IN_PAYMENT_SUBMIT
+     * ContractStatus.PAYMENT_SUBMIT -> TransactionStatus.IN_PAYMENT_SUBMIT
      * <p/>
      * Se verifica el estatus del contrato hasta que se consiga la realización de un pago
      * <p/>
      * Se debe enviar un Broadcast para actualizar la UI
-     *
-     * @param transactionStatusColumnName the transaction status column name
      */
-    private void changeTransactionStatusFromInContractSubmitToInPaymentSubmit(String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), transactionStatusColumnName);
-        final List<CustomerBrokerPurchase> inContractSubmittedTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void changeTransactionStatusFromInContractSubmitToInPaymentSubmit() throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
+        final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
 
         final Collection<CustomerBrokerContractPurchase> paymentSubmittedContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PAYMENT_SUBMIT);
 
-        for (CustomerBrokerPurchase customerBrokerPurchase : inContractSubmittedTransactions) {
-            for (CustomerBrokerContractPurchase contract : paymentSubmittedContracts) {
+        for (CustomerBrokerContractPurchase contract : paymentSubmittedContracts) {
+            for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
                 String negotiationId = contract.getNegotiatiotId();
-                String transactionId = customerBrokerPurchase.getTransactionId();
+                String transactionId = userLevelTransaction.getTransactionId();
+                TransactionStatus transactionStatus = userLevelTransaction.getTransactionStatus();
 
-                if (transactionId.equals(negotiationId)) {
-                    //Si se detecta la realización de un pago se procede actulizar el estatus de la transacción
-                    // y a monitorear la llegada de la mercadería.
-                    customerBrokerPurchase.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
-                    dao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
+                if (transactionId.equals(negotiationId) && transactionStatus != IN_PAYMENT_SUBMIT) {
+                    userLevelTransaction.setTransactionStatus(IN_PAYMENT_SUBMIT);
+                    userLevelTransaction.setContractStatus(ContractStatus.PAYMENT_SUBMIT.getCode());
+                    dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
+
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
                 }
             }
@@ -371,28 +354,30 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     }
 
     /**
-     * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in merchandise:
+     * ContractStatus.PENDING_MERCHANDISE -> TransactionStatus.CANCELLED
      * <p/>
+     * Update Contract Status to CANCELLED for expiration time in merchandise.
      * If Expiration Time is done, Update the contract status to CANCELLED.
      */
-    private void changeTransactionStatusFromInPaymentSubmitToCancelledIfExpirationTimeReached(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantGetListPurchaseNegotiationsException, CantGetListClauseException, CantUpdateCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
-        DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), transactionStatusColumnName);
-        final List<CustomerBrokerPurchase> inPendingMerchandiseTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void changeTransactionStatusFromInPaymentSubmitToCancelledIfExpirationTimeReached(String customerWalletPublicKey) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantGetListPurchaseNegotiationsException, CantGetListClauseException, CantUpdateCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
+        final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
 
         final Collection<CustomerBrokerContractPurchase> pendingMerchandiseContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inPendingMerchandiseTransactions) {
-            for (CustomerBrokerContractPurchase contract : pendingMerchandiseContracts) {
+        for (CustomerBrokerContractPurchase contract : pendingMerchandiseContracts) {
+            for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
                 String negotiationId = contract.getNegotiatiotId();
+                String transactionId = userLevelTransaction.getTransactionId();
+                TransactionStatus transactionStatus = userLevelTransaction.getTransactionStatus();
 
-                if (userLevelTransaction.getTransactionId().equals(negotiationId)) {
+                if (transactionId.equals(negotiationId) && transactionStatus != CANCELLED) {
 
                     long timeToDelivery = 0;
                     long timeStampToday = new Date().getTime();
                     Negotiation negotiation = purchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                    Collection<Clause> negotiationClause = negotiation.getClauses();
-                    String clauseValue = getNegotiationClause(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+                    Collection<Clause> clauses = negotiation.getClauses();
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
@@ -400,12 +385,12 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                     if (timeStampToday >= timeToDelivery) {
 
                         //UPDATE CONTRACT STATUS
-                        contractPurchaseManager.cancelContract(
-                                contract.getContractId(),
+                        contractPurchaseManager.cancelContract(contract.getContractId(),
                                 "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT MERCHANDISE.");
 
                         //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
-                        userLevelTransaction.setTransactionStatus(TransactionStatus.CANCELLED);
+                        userLevelTransaction.setTransactionStatus(CANCELLED);
+                        userLevelTransaction.setContractStatus(ContractStatus.CANCELLED.getCode());
                         dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
                         //BROADCASTER
@@ -419,40 +404,44 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     }
 
     /**
-     * IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit:
+     * ContractStatus.PENDING_PAYMENT -> TransactionStatus.CANCELLED
      * <p/>
+     * Update Contract Status to CANCELLED for expiration time in payment submit.
      * If Expiration Time is done, Update the contract status to CANCELLED.
+     *
+     * @param customerWalletPublicKey customer wallet public key
      */
-    private void changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantGetListPurchaseNegotiationsException, CantGetListClauseException, CantUpdateCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), transactionStatusColumnName);
-        final List<CustomerBrokerPurchase> inContractSubmittedTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(String customerWalletPublicKey) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantGetListPurchaseNegotiationsException, CantGetListClauseException, CantUpdateCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
+        final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
 
         final Collection<CustomerBrokerContractPurchase> pendingPaymentContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inContractSubmittedTransactions) {
-            for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
+        for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
+            for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
                 String negotiationId = contract.getNegotiatiotId();
+                String transactionId = userLevelTransaction.getTransactionId();
+                TransactionStatus transactionStatus = userLevelTransaction.getTransactionStatus();
 
-                if (userLevelTransaction.getTransactionId().equals(negotiationId)) {
+                if (transactionId.equals(negotiationId) && transactionStatus != CANCELLED) {
 
                     long timeToDelivery = 0;
                     long timeStampToday = new Date().getTime();
 
                     Negotiation negotiation = purchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                    Collection<Clause> negotiationClause = negotiation.getClauses();
-                    String clauseValue = getNegotiationClause(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+                    Collection<Clause> clauses = negotiation.getClauses();
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
 
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
                     if (timeStampToday >= timeToDelivery) {
 
-                        //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION//UPDATE CONTRACT STATUS
-                        contractPurchaseManager.cancelContract(contract.getContractId(), "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT PAYMENT.");
+                        contractPurchaseManager.cancelContract(contract.getContractId(),
+                                "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT PAYMENT.");
 
-                        //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
-                        userLevelTransaction.setTransactionStatus(TransactionStatus.CANCELLED);
+                        userLevelTransaction.setTransactionStatus(CANCELLED);
+                        userLevelTransaction.setContractStatus(ContractStatus.CANCELLED.getCode());
                         dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
                         //BROADCASTER
@@ -465,63 +454,54 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
     }
 
     /**
-     * IN_CONTRACT_SUBMIT -> Update Contract Expiration Time and notify:
+     * ContractStatus.PENDING_PAYMENT -> Update Contract Expiration Time and notify:
      * <p/>
      * Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion
      * siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
+     *
+     * @param customerWalletPublicKey customer wallet public key
      */
-    private void updateContractExpirationDateWhitStatusInContractSubmitAndNotify(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantUpdateCustomerBrokerContractPurchaseException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), transactionStatusColumnName);
-        final List<CustomerBrokerPurchase> inContractSubmittedTransaction = dao.getCustomerBrokerPurchases(tableFilter);
+    private void updateContractExpirationDateWhitStatusInContractSubmitAndNotify(String customerWalletPublicKey) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, CantUpdateCustomerBrokerContractPurchaseException {
 
         final Collection<CustomerBrokerContractPurchase> pendingPaymentContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inContractSubmittedTransaction) {
-            for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
-                String negotiationId = contract.getNegotiatiotId();
+        for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
 
-                if (userLevelTransaction.getTransactionId().equals(negotiationId)) {
+            long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
+            if (timeStampToday <= DELAY_HOURS) {
+                contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
 
-                    //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento
-                    // de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
+                if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                    lastNotificationTime = new Date().getTime();
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
-                    long timeStampToday = ((contract.getDateTime() - new Date().getTime()) / 3600000);
-                    if (timeStampToday <= DELAY_HOURS) {
-                        contractPurchaseManager.updateContractNearExpirationDatetime(contract.getContractId(), true);
-
-                        if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
-                            lastNotificationTime = new Date().getTime();
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
-                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
-
-                        }
-                    }
                 }
             }
         }
     }
 
     /**
-     * IN_OPEN_CONTRACT -> IN_CONTRACT_SUBMIT
+     * ContractStatus.PENDING_PAYMENT -> TransactionStatus.IN_CONTRACT_SUBMIT
      * <p/>
      * Se debe enviar un Broadcast para actualizar la UI
      */
-    private void changeTransactionStatusFromInOpenContractToInContractSubmitted(String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_OPEN_CONTRACT.getCode(), transactionStatusColumnName);
-
-        final List<CustomerBrokerPurchase> inOpenContractTransactions = dao.getCustomerBrokerPurchases(tableFilter);
+    private void changeTransactionStatusFromInOpenContractToInContractSubmitted() throws DatabaseOperationException, InvalidParameterException, CantGetListCustomerBrokerContractPurchaseException, MissingCustomerBrokerPurchaseDataException {
+        final List<CustomerBrokerPurchase> userLevelTransactions = dao.getCustomerBrokerPurchases(null);
 
         final Collection<CustomerBrokerContractPurchase> pendingPaymentContracts = contractPurchaseManager.
                 getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT);
 
-        for (CustomerBrokerPurchase userLevelTransaction : inOpenContractTransactions) {
-            for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
+        for (CustomerBrokerContractPurchase contract : pendingPaymentContracts) {
+            for (CustomerBrokerPurchase userLevelTransaction : userLevelTransactions) {
                 String transactionId = userLevelTransaction.getTransactionId();
                 String negotiationId = contract.getNegotiatiotId();
+                TransactionStatus transactionStatus = userLevelTransaction.getTransactionStatus();
 
-                if (transactionId.equals(negotiationId)) {
-                    userLevelTransaction.setTransactionStatus(TransactionStatus.IN_CONTRACT_SUBMIT);
+                if (transactionId.equals(negotiationId) && transactionStatus != IN_CONTRACT_SUBMIT) {
+                    userLevelTransaction.setTransactionStatus(IN_CONTRACT_SUBMIT);
+                    userLevelTransaction.setContractStatus(ContractStatus.PENDING_PAYMENT.getCode());
                     dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
@@ -539,7 +519,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
      * Se envia un Broadcast para actualizar la UI y enviar una notificacion
      */
     private void changeTransactionStatusFromInProcessToInOpenContract(String customerWalletPublicKey, String transactionStatusColumnName) throws DatabaseOperationException, InvalidParameterException, CantGetListPurchaseNegotiationsException, CantGetListClauseException, CantOpenContractException, MissingCustomerBrokerPurchaseDataException {
-        final DatabaseTableFilter tableFilter = getFilterTable(TransactionStatus.IN_PROCESS.getCode(), transactionStatusColumnName);
+        final DatabaseTableFilter tableFilter = getFilterTable(IN_PROCESS.getCode(), transactionStatusColumnName);
 
         final List<CustomerBrokerPurchase> inProgressTransactions = dao.getCustomerBrokerPurchases(tableFilter);
 
@@ -565,7 +545,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             openContractManager.openPurchaseContract(transactionInfo, marketExchangeRate);
 
             //Actualiza el Transaction_Status de la Transaction Customer Broker Purchase a IN_OPEN_CONTRACT
-            userLevelTransaction.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
+            userLevelTransaction.setTransactionStatus(IN_OPEN_CONTRACT);
             dao.saveCustomerBrokerPurchaseTransactionData(userLevelTransaction);
 
             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_NEW_CONTRACT_NOTIFICATION);
@@ -586,13 +566,13 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             UUID negotiationId = negotiation.getNegotiationId();
 
             if (isNegotiationNoRegisteredInUserLevelDatabase(negotiationId)) {
-                customerBrokerPurchase = new CustomerBrokerPurchaseImpl(
+                CustomerBrokerPurchaseImpl customerBrokerPurchase = new CustomerBrokerPurchaseImpl(
                         negotiationId.toString(),
                         negotiationId.toString(),
                         0,
                         null,
                         null,
-                        TransactionStatus.IN_PROCESS,
+                        IN_PROCESS,
                         null,
                         null,
                         null);
@@ -701,19 +681,5 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 
         //Can't do nothing more
         throw new CantGetExchangeRateException();
-    }
-
-    /**
-     * Get Value of Clause
-     *
-     * @param negotiationClause
-     * @param clauseType
-     */
-    private String getNegotiationClause(Collection<Clause> negotiationClause, ClauseType clauseType) {
-
-        for (Clause clause : negotiationClause)
-            if (clause.getType().getCode().equals(clauseType.getCode())) return clause.getValue();
-        return null;
-
     }
 }

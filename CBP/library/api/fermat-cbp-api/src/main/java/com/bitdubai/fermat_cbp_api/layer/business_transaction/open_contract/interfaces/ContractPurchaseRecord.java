@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 
@@ -211,7 +210,6 @@ public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
                 ", publicKeyBroker='" + publicKeyBroker + '\'' +
                 ", publicKeyCustomer='" + publicKeyCustomer + '\'' +
                 ", referenceCurrency=" + referenceCurrency +
-                ", referencePrice=" + referencePrice +
                 ", status=" + status +
                 ", contractHash='" + contractHash + '\'' +
                 ", nearExpirationDatetime=" + nearExpirationDatetime +
