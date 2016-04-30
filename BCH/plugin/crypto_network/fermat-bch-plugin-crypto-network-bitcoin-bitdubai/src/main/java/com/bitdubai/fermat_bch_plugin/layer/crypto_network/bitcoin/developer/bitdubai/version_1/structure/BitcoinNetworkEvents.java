@@ -7,8 +7,10 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.BlockchainDownloadUpToDateEvent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Block;
@@ -61,13 +63,20 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     final Broadcaster broadcaster;
 
     /**
+     * platform variables
+     */
+    final EventManager eventManager;
+
+    /**
      * Constructor
      */
     public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType,
                                 File walletFilename,
                                 Context context,
                                 Broadcaster broadcaster,
-                                Wallet wallet, BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
+                                Wallet wallet,
+                                BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao,
+                                EventManager eventManager) {
         this.NETWORK_TYPE = blockchainNetworkType;
         this.walletFilename = walletFilename;
         this.context = context;
@@ -75,6 +84,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         this.broadcaster = broadcaster;
         this.cryptoNetworkWallet = wallet;
         this.dao = bitcoinCryptoNetworkDatabaseDao;
+        this.eventManager = eventManager;
 
         //define the blockchain download progress class with zero values
         blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 0);
@@ -127,9 +137,20 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
 
                 // disabled the broadcast.
                 broadcasterID = 0;
-            }
 
+
+            }
         }
+
+        /**
+         * Now I will raise the BlockchainDownloadUpToDateEvent to notify that we are updated
+         */
+        if (blocksLeft == 0){
+            BlockchainDownloadUpToDateEvent blockchainDownloadUpToDateEvent = new BlockchainDownloadUpToDateEvent(blockchainDownloadProgress, NETWORK_TYPE);
+            eventManager.raiseEvent(blockchainDownloadUpToDateEvent);
+            System.out.println("***CryptoNetwork*** BlockchainDownloadUpToDateEvent raised. " + blockchainDownloadProgress.toString());
+        }
+
     }
 
 
