@@ -45,7 +45,7 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
     public long getBalance() throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            return bitcoinWalletBasicWalletDao.getAvailableBalance(BlockchainNetworkType.REG_TEST); //TODO red harcoder
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO red harcoder
         } catch(CantCalculateBalanceException exception){
             throw exception;
         } catch(Exception exception){
