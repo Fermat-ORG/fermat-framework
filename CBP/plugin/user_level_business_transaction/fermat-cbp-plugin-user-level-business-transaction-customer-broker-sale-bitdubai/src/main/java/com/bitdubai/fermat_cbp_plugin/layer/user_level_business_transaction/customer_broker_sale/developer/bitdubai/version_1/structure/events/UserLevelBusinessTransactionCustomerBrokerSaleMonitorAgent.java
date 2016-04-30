@@ -597,6 +597,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     closeContractManager.closeSaleContract(contract.getContractId());
 
                     userLevelTransaction.setTransactionStatus(COMPLETED);
+                    userLevelTransaction.setContractStatus(ContractStatus.READY_TO_CLOSE.getCode());
+
                     dao.saveCustomerBrokerSaleTransactionData(userLevelTransaction);
 
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);

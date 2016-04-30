@@ -340,6 +340,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 for (String pendingContractHash : pendingToSubmitCrypto) {
                     businessTransactionRecord = brokerSubmitOnlineMerchandiseBusinessTransactionDao.getBrokerBusinessTransactionRecord(pendingContractHash);
 
+                    System.out.println("*************************************************************************************************");
+                    System.out.println("BROKER_SUBMIT_ONLINE_MERCHANDISE - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
+                    System.out.println("*************************************************************************************************");
                     outgoingCryptoTransactionId = intraActorCryptoTransactionManager.sendCrypto(
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
