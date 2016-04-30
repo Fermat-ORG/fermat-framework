@@ -95,6 +95,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -125,6 +126,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         } catch (Exception e) {
             getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -287,6 +289,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             }else{
 //                Log.i("APP ACTIVITY loadUI", " SESSION NULL");
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_SHORT).show();
+                Log.e(TAG,"ERROR: Session null, please verify this");
                 handleExceptionAndRestart();
             }
         } catch (Exception e) {
@@ -294,6 +297,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Recovering from system error",
                     Toast.LENGTH_LONG).show();
+            e.printStackTrace();
             handleExceptionAndRestart();
         }
     }
@@ -309,6 +313,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 //            getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 //            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
 //                    Toast.LENGTH_LONG).show();
+//            e.printStackTrace();
         }
     }
 
@@ -353,6 +358,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             else {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
                 handleExceptionAndRestart();
             }
         } catch (Throwable throwable) {
@@ -431,6 +437,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectApp"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
