@@ -15,6 +15,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMember
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
@@ -233,8 +235,13 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     }
 
     @Override
-    public void sendWritingStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException {
+    public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException {
+        middlewareChatManager.sendWritingStatus(chatId);
+    }
 
+    @Override
+    public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus {
+        return middlewareChatManager.checkWritingStatus(chatId);
     }
 
     @Override
