@@ -312,6 +312,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 for(String pendingContractHash : pendingToSubmitCrypto){
                     businessTransactionRecord =customerOnlinePaymentBusinessTransactionDao.
                             getCustomerOnlinePaymentRecord(pendingContractHash);
+                    System.out.println("***************************************************************************************");
+                    System.out.println("CUSTOMER_ONLINE_PAYMENT - SENDING CRYPTO TRANSFER USING INTRA_ACTOR_TRANSACTION_MANAGER");
+                    System.out.println("***************************************************************************************");
                     outgoingCryptoTransactionId=intraActorCryptoTransactionManager.sendCrypto(
                             businessTransactionRecord.getExternalWalletPublicKey(),
                             businessTransactionRecord.getCryptoAddress(),
