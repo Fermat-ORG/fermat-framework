@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
@@ -48,6 +51,31 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
 
         } else {
             //there is some wrong
+
+            if(checkInProfileListMsgRespond.getDiscoveryQueryParameters() != null){
+
+                /*
+                 * Validate if it was a network service that did the request
+                 * else is an Actor the responsable of the request
+                 */
+                if (checkInProfileListMsgRespond.getDiscoveryQueryParameters().getNetworkServiceType() != null &&
+                        checkInProfileListMsgRespond.getDiscoveryQueryParameters().getNetworkServiceType() !=  NetworkServiceType.UNDEFINED){
+
+                }else{
+
+                    /*
+                     * we realize the actorTraceDiscoveryQuery
+                     */
+                    try {
+                        getChannel().getNetworkClientCommunicationConnection().actorTraceDiscoveryQuery(checkInProfileListMsgRespond.getDiscoveryQueryParameters());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            }
+
         }
 
     }

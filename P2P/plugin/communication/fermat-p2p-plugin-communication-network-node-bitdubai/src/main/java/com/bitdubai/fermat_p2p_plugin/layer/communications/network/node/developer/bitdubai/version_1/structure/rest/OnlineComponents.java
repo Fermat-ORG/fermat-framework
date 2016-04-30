@@ -9,7 +9,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -102,7 +105,11 @@ public class OnlineComponents implements RestFulServices {
 
         try {
 
-            Boolean online = daoFactory.getCheckedInNetworkServiceDao().exists(identityPublicKey);
+            CheckedInNetworkService checkedInNetworkService = daoFactory.getCheckedInNetworkServiceDao().findEntityByFilter(
+                    CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                    identityPublicKey);
+
+            Boolean online = Boolean.TRUE;
 
             LOG.info("Is online = " + online);
 
@@ -112,7 +119,7 @@ public class OnlineComponents implements RestFulServices {
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
-        } catch (CantReadRecordDataBaseException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
             JsonObject jsonObject = new JsonObject();
@@ -136,8 +143,11 @@ public class OnlineComponents implements RestFulServices {
 
         try {
 
-            Boolean online = daoFactory.getCheckedInActorDao().exists(identityPublicKey);
+            CheckedInActor checkedInActor = daoFactory.getCheckedInActorDao().findEntityByFilter(
+                    CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                    identityPublicKey);
 
+            Boolean online = Boolean.TRUE;
             LOG.info("Is online = " + online);
 
             JsonObject jsonObject = new JsonObject();
@@ -146,7 +156,7 @@ public class OnlineComponents implements RestFulServices {
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
-        } catch (CantReadRecordDataBaseException e) {
+        } catch (Exception e) {
 
             e.printStackTrace();
             JsonObject jsonObject = new JsonObject();

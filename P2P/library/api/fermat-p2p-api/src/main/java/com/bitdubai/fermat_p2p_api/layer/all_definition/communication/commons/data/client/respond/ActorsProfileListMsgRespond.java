@@ -18,7 +18,7 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
     /**
      * Represent the profile list
      */
-    private List<ActorProfile> profileList;
+    private List<ResultDiscoveryTraceActor> profileList;
 
     /**
      * Constructor with parameters
@@ -27,7 +27,7 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
      * @param details
      * @param profileList
      */
-    public ActorsProfileListMsgRespond(STATUS status, String details, List<ActorProfile> profileList) {
+    public ActorsProfileListMsgRespond(STATUS status, String details, List<ResultDiscoveryTraceActor> profileList) {
         super(status, details);
         this.profileList = profileList;
     }
@@ -37,7 +37,7 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
      *
      * @return profileList
      */
-    public List<ActorProfile> getProfileList() {
+    public List<ResultDiscoveryTraceActor> getProfileList() {
         return profileList;
     }
 

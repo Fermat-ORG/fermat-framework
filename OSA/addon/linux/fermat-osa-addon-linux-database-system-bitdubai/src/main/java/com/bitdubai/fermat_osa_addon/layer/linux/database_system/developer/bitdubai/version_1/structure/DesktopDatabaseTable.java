@@ -474,6 +474,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
         );
 
         this.tableFilter.add(filter);
+        DatabaseTableFilterGroup filterGroup = new DesktopDatabaseTableFilterGroup(this.tableFilter, null, null);
+        this.tableFilterGroup = filterGroup;
 
     }
 
@@ -594,31 +596,31 @@ public class DesktopDatabaseTable implements DatabaseTable {
         String filter = "";
         StringBuffer strFilter = new StringBuffer();
 
-        if (this.tableFilter != null) {
-            for (int i = 0; i < tableFilter.size(); ++i) {
+        if (this.tableFilterGroup != null) {
+            for (int i = 0; i < tableFilterGroup.getFilters().size(); ++i) {
 
-                strFilter.append(tableFilter.get(i).getColumn());
+                strFilter.append(tableFilterGroup.getFilters().get(i).getColumn());
 
-                switch (tableFilter.get(i).getType()) {
+                switch (tableFilterGroup.getFilters().get(i).getType()) {
                     case EQUAL:
-                        strFilter.append(" ='" + tableFilter.get(i).getValue() + "'");
+                        strFilter.append(" ='" + tableFilterGroup.getFilters().get(i).getValue() + "'");
                         break;
                     case GREATER_THAN:
-                        strFilter.append(" > " + tableFilter.get(i).getValue());
+                        strFilter.append(" > " + tableFilterGroup.getFilters().get(i).getValue());
                         break;
                     case LESS_THAN:
-                        strFilter.append(" < " + tableFilter.get(i).getValue());
+                        strFilter.append(" < " + tableFilterGroup.getFilters().get(i).getValue());
                         break;
                     case LIKE:
-                        strFilter.append(" Like '%" + tableFilter.get(i).getValue() + "%'");
+                        strFilter.append(" Like '%" + tableFilterGroup.getFilters().get(i).getValue() + "%'");
                         break;
                     default:
                         strFilter.append(" ");
                         break;
                 }
 
-                if (i < tableFilter.size() - 1)
-                    strFilter.append(" AND ");
+                if (i < (tableFilterGroup.getFilters().size() - 1))
+                    strFilter.append(" " + tableFilterGroup.getOperator() + " ");
 
             }
         }

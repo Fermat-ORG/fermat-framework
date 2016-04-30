@@ -3,11 +3,14 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.DistanceCalculator;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -15,7 +18,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.NodesCatalogDao;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -66,7 +71,7 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        List<ActorProfile> profileList = null;
+        List<ResultDiscoveryTraceActor> profileList = null;
 
         try {
 
@@ -97,12 +102,15 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
                      */
                     profileList = filterActors(discoveryQueryParameters);
 
+                    if(profileList != null && profileList.size() == 0)
+                        throw new Exception("Not Found row in the Table");
+
                 }
 
                 /*
                  * Apply geolocation
                  */
-                profileList = applyGeoLocationFilter(discoveryQueryParameters.getLocation(), profileList, discoveryQueryParameters.getDistance());
+                 //profileList = applyGeoLocationFilter(discoveryQueryParameters.getLocation(), profileList, discoveryQueryParameters.getDistance());
 
                 /*
                  * Apply pagination
@@ -172,9 +180,9 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
      * @param discoveryQueryParameters
      * @return List<ActorProfile>
      */
-    private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters) throws CantReadRecordDataBaseException, InvalidParameterException {
+    private List<ResultDiscoveryTraceActor> filterActors(DiscoveryQueryParameters discoveryQueryParameters) throws CantReadRecordDataBaseException, InvalidParameterException {
 
-        List<ActorProfile> profileList = new ArrayList<>();
+        List<ResultDiscoveryTraceActor> profileList = new ArrayList<>();
 
         Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
         List<ActorsCatalog> actors = getDaoFactory().getActorsCatalogDao().findAll(filters);
@@ -192,7 +200,26 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
             //TODO: SET THE LOCATION
             //actorProfile.setLocation();
 
-            profileList.add(actorProfile);
+            NodesCatalog nodesCatalog = null;
+
+            try {
+                nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(actorsCatalog.getNodeIdentityPublicKey());
+            } catch (RecordNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if(nodesCatalog != null) {
+
+                NodeProfile nodeProfile = new NodeProfile();
+                nodeProfile.setIdentityPublicKey(nodesCatalog.getIdentityPublicKey());
+                nodeProfile.setName(nodesCatalog.getName());
+                nodeProfile.setIp(nodesCatalog.getIp());
+                nodeProfile.setDefaultPort(nodesCatalog.getDefaultPort());
+
+                ResultDiscoveryTraceActor resultDiscoveryTraceActor = new ResultDiscoveryTraceActor(nodeProfile, actorProfile);
+                profileList.add(resultDiscoveryTraceActor);
+
+            }
 
         }
 

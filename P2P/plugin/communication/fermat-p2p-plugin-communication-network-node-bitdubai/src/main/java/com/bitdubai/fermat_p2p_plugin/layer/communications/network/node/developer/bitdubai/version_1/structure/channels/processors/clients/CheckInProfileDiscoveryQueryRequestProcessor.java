@@ -71,6 +71,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
         List<Profile> profileList = null;
+        DiscoveryQueryParameters discoveryQueryParameters = null;
 
         try {
 
@@ -89,7 +90,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                 /*
                  * Get the parameters to filters
                  */
-                DiscoveryQueryParameters discoveryQueryParameters = messageContent.getDiscoveryQueryParameters();
+                discoveryQueryParameters = messageContent.getDiscoveryQueryParameters();
                 LOG.info(getGson().toJson(discoveryQueryParameters));
 
                 /*
@@ -109,6 +110,9 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                      */
                     profileList = filterActors(discoveryQueryParameters);
                 }
+
+                if(profileList != null && profileList.size() == 0)
+                    throw new Exception("Not Found row in the Table");
 
                 /*
                  * Apply geolocation
@@ -138,7 +142,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                 /*
                  * If all ok, respond whit success message
                  */
-                CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.SUCCESS, CheckInProfileListMsgRespond.STATUS.SUCCESS.toString(), profileList);
+                CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.SUCCESS, CheckInProfileListMsgRespond.STATUS.SUCCESS.toString(), profileList, discoveryQueryParameters);
                 Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -157,7 +161,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                 /*
                  * Respond whit fail message
                  */
-                CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileList);
+                CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileList, discoveryQueryParameters);
                 Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*

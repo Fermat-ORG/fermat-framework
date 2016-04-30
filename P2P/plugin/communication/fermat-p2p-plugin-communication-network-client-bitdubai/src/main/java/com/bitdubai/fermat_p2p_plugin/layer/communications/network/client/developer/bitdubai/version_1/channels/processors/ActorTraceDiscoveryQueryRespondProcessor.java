@@ -2,8 +2,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.google.gson.Gson;
 
 import javax.websocket.Session;
 
@@ -41,8 +43,17 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
         System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         ActorsProfileListMsgRespond actorsProfileListMsgRespond = ActorsProfileListMsgRespond.parseContent(packageReceived.getContent());
 
+        System.out.println(actorsProfileListMsgRespond.toJson());
+
         if(actorsProfileListMsgRespond.getStatus() == ActorsProfileListMsgRespond.STATUS.SUCCESS){
             //raise event
+
+            if(actorsProfileListMsgRespond.getProfileList() != null) {
+
+                for(ResultDiscoveryTraceActor result : actorsProfileListMsgRespond.getProfileList() )
+                    System.out.println(new Gson().toJson(result));
+
+            }
 
         }else{
             //there is some wrong

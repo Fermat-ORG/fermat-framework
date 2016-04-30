@@ -86,17 +86,16 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
 //            }
             /* test unregister actor and networkservice */
 
-            /* test CheckInProfileDiscoveryQueryRequestProcessor */
+            /* test CheckInProfileDiscoveryQueryRequestProcessor and the ActorTraceDiscoveryQueryRequestProcessor */
 
-           // DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters("intra","Actor",0.0,"extradata","147",null,0,"Intra Actor",null,0);
-//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(null,null,0.0,null,"123456789321654987",null,0,null,NetworkServiceType.INTRA_USER,0);
+//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(null,"alias",0.0,null,"2016",null,0,null,null,0);
 //            try {
 //                getChannel().getNetworkClientCommunicationConnection().registeredProfileDiscoveryQuery(discoveryQueryParameters);
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
 
-            /* test CheckInProfileDiscoveryQueryRequestProcessor */
+            /* test CheckInProfileDiscoveryQueryRequestProcessor and the ActorTraceDiscoveryQueryRequestProcessor */
 
         }else{
             //there is some wrong

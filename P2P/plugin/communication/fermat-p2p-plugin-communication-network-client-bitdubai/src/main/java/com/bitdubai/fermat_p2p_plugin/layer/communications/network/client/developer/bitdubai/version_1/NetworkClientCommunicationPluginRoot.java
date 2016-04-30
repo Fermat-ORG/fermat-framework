@@ -451,7 +451,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
         try {
 
-            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + 9090 + "/fermat/rest/api/v1/availablenodes/listavailablenodesprofile");
+            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + 9090 + "/fermat/rest/api/v1/available/nodes");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
