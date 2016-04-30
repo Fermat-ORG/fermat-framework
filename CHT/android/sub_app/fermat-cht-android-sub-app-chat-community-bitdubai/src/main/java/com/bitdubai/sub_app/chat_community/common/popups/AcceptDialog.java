@@ -72,7 +72,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
         negativeBtn.setOnClickListener(this);
 
         title.setText("Connect");
-        description.setText("Do you want to accept");
+        description.setText("Do you want to accept?");
         userName.setText(chatUserInformation.getAlias());
 
     }
