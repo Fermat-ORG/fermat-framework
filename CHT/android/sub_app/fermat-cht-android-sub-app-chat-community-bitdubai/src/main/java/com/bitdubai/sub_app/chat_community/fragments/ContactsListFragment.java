@@ -147,6 +147,7 @@ public class ContactsListFragment
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
+            showEmpty(true, emptyView);
             onRefresh();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);

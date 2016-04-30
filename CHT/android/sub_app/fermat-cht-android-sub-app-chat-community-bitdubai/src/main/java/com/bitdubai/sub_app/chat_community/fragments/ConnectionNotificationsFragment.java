@@ -176,7 +176,7 @@ public class ConnectionNotificationsFragment
 
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
+            showEmpty(true, emptyView);
             onRefresh();
 
         } catch (Exception ex) {

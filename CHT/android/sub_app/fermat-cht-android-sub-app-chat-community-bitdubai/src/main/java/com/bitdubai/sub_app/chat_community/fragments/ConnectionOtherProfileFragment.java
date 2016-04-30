@@ -196,7 +196,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(chatUserInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
