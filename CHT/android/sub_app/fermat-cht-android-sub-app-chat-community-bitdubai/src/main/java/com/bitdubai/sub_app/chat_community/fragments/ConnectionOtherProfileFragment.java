@@ -219,7 +219,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(chatUserInformation.getAlias());
+                disconnectDialog.setUsername(chatUserInformation.getAlias()+"?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
