@@ -83,8 +83,6 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
     @Override
     public NotificationPainter getNotificationPainter(String code) {
         switch (code){
-            case CBW_CONTRACT_EXPIRATION_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
             case CBW_NEW_NEGOTIATION_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("New Negotiation","You have a new negotiation! Please check your wallet.","");
             case CBW_WAITING_FOR_BROKER_NOTIFICATION:
@@ -96,9 +94,11 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
             case CBW_CONTRACT_CUSTOMER_SUBMITTED_PAYMENT_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Contract Update","You just received a payment.","");
             case CBW_CONTRACT_COMPLETED_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Contract Completed","The contract has been completed.","");
+                return new CryptoBrokerNotificationPainter("Contract Update","The contract has been completed.","");
             case CCW_CONTRACT_CANCELLED_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Contract Cancelled","The contract has been cancellede.","");
+                return new CryptoBrokerNotificationPainter("Contract Update","The contract has been cancelled.","");
+            case CBW_CONTRACT_EXPIRATION_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
             default:
                 return super.getNotificationPainter(code);
         }
