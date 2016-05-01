@@ -1,8 +1,8 @@
-package com.bitdubai.sub_app.fan_community.notifications;
+package com.bitdubai.sub_app_artist_community.notifications;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
-import com.bitdubai.sub_app.fan_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
@@ -16,10 +16,10 @@ public class CommunityNotificationPainterBuilder {
             switch (notificationType) {
                 case CONNECTION_REQUEST_RECEIVED:
                     notification = new CommunityNotificationPainter(
-                            "Fan Community",
-                            "A Fermat Fan wants to connect with you.",
+                            "Artist Community",
+                            "A Fermat Artist wants to connect with you.",
                             "",
-                            "", R.drawable.afc_ic_nav_connections);
+                            "", R.drawable.aac_ic_nav_connections);
                     break;
             }
         } catch (Exception e) {
