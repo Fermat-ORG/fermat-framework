@@ -93,7 +93,6 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                         processTransaction(nodesCatalogTransaction);
                     }
 
-
                     long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
@@ -103,7 +102,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
                         LOG.info("Requesting more transactions.");
 
-                        GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(transactionList.size(), 250);
+                        GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest((int) totalRowInDb, 250);
                         Package packageRespond = Package.createInstance(nodeCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                         /*

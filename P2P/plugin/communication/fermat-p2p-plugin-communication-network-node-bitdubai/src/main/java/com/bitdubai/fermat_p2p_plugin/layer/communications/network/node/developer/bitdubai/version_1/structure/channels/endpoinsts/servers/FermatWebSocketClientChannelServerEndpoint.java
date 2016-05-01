@@ -130,8 +130,10 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
         String cpki = (String) endpointConfig.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
 
         /*
-         * Mach the session with the client public key identity
+         * Configure the session and mach the session with the client public key identity
          */
+        session.setMaxIdleTimeout(FermatWebSocketChannelEndpoint.MAX_IDLE_TIMEOUT);
+        session.setMaxTextMessageBufferSize(FermatWebSocketChannelEndpoint.MAX_MESSAGE_SIZE);
         clientsSessionMemoryCache.add(cpki, session);
 
         /*

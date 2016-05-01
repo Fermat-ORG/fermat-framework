@@ -182,23 +182,21 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     /**
      * Method that list the all entities on the data base.
      *
-     * @param max     number of records to bring
      * @param offset  pointer to start bringing records.
+     * @param max     number of records to bring
      *
      * @return All entities.
      *
      * @throws CantReadRecordDataBaseException if something goes wrong.
      */
-    public final List<E> findAll(final Integer max   ,
-                                 final Integer offset) throws CantReadRecordDataBaseException {
+    public final List<E> findAll(final Integer offset,
+                                 final Integer max ) throws CantReadRecordDataBaseException {
 
         try {
             // load the data base to memory
             DatabaseTable table = getDatabaseTable();
-
-            table.setFilterTop(max.toString());
             table.setFilterOffSet(offset.toString());
-
+            table.setFilterTop(max.toString());
             table.loadToMemory();
 
             final List<DatabaseTableRecord> records = table.getRecords();
