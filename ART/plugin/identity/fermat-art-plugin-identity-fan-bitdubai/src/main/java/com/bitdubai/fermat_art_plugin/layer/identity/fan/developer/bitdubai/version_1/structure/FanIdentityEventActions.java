@@ -75,7 +75,7 @@ public class FanIdentityEventActions {
                         request.getSenderActorType() == PlatformComponentType.ART_FAN) {
                     switch (request.getRequestAction()) {
                         case NONE:
-                            this.handleConnection(request.getRequestId());
+                            this.handleConnection(request.getSenderPublicKey());
                             break;
                         //Other cases do nothing
                     }
@@ -111,7 +111,7 @@ public class FanIdentityEventActions {
      * @throws CantListArtistsException
      * @throws CantAddNewArtistConnectedException
      */
-    private void handleConnection(UUID requestId) throws
+    private void handleConnection(String senderPublicKey) throws
             CantListFanIdentitiesException,
             CantListArtistsException,
             CantAddNewArtistConnectedException {
@@ -127,7 +127,7 @@ public class FanIdentityEventActions {
             artistExposingDataList = actorSearch.getResult(PlatformComponentType.ART_ARTIST);
             switch (externalPlatform){
                 case TOKENLY:
-                    updateTKYIdentity(requestId,fanatic, artistExposingDataList);
+                    updateTKYIdentity(senderPublicKey,fanatic, artistExposingDataList);
                     break;
                 case UNDEFINED:
                     //TODO: throw an exception
@@ -144,7 +144,7 @@ public class FanIdentityEventActions {
      * @throws CantAddNewArtistConnectedException
      */
     private void updateTKYIdentity(
-            UUID requestId,
+            String senderPublicKey,
             Fanatic fanatic,
             List<ArtistExposingData> artistExposingDataList) throws
             CantAddNewArtistConnectedException {
@@ -156,6 +156,11 @@ public class FanIdentityEventActions {
             String remoteArtistPublicKey;
             ArtArtistExtraData<ArtistExternalPlatformInformation> artistExternalData;
             for(ArtistExposingData artistExposingData : artistExposingDataList){
+                remoteArtistPublicKey = artistExposingData.getPublicKey();
+                //If the public key from the search is equals to the actor requester, we going to proceed
+                if(!remoteArtistPublicKey.equals(remoteArtistPublicKey)){
+                    continue;
+                }
                 //Get the remote artist public key
                 /*remoteArtistPublicKey = artistExposingData.getPublicKey();
                 //Request the remote artist information
