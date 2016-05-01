@@ -424,11 +424,12 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                                     getCustomerBrokerContractSaleForContractId(contractHash);
 
                             ObjectChecker.checkArgument(customerBrokerContractSale); //If the contract is null, I cannot handle with this situation
-
-                            customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
-                            customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
-                            raiseAckConfirmationEvent(contractHash);
+                            if(!customerBrokerContractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+                                customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
+                                raiseAckConfirmationEvent(contractHash);
+                            }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
@@ -447,10 +448,14 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
                             if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_MERCHANDISE_ACK.getCode())) {
-                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
-                                customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                                raiseAckConfirmationEvent(contractHash);
+                                CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+                                ObjectChecker.checkArgument(contractPurchase);
+                                if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                    businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
+                                    customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
+                                    customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                    raiseAckConfirmationEvent(contractHash);
+                                }
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -480,7 +485,12 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
-            } catch (CantUpdateRecordException exception) {
+            } catch (CantGetListCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the database");
+            }  catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
                         "Checking pending events",
