@@ -184,7 +184,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 10000; //2000;
+        public final int SLEEP_TIME = 5000; //2000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         int discoverIteration = 0;
         int iterationNumber = 0;
@@ -289,6 +289,7 @@ public class ChatMiddlewareMonitorAgent implements
 
                 if (discoverIteration == 0) {
                     sendChatBroadcasting();
+                    resetWritingStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -482,6 +483,69 @@ public class ChatMiddlewareMonitorAgent implements
                     "Cannot get the message from database"
             );
         } catch (CantSaveMessageException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        }
+    }
+
+    public void resetWritingStatus(){
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    errorManager,
+                    pluginFileSystem);
+
+            List<Chat> chats = chatMiddlewareDatabaseDao.getChatList();
+
+            for(Chat chat : chats){
+                chat.setIsWriting(false);
+                chatMiddlewareDatabaseDao.saveChat(chat);
+            }
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+        }catch(DatabaseOperationException e){
+            e.printStackTrace();
+        } catch (CantGetChatException e) {
+            e.printStackTrace();
+        } catch (CantSaveChatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void checkIncomingWritingStatus(UUID chatId) throws
+            CantGetPendingTransactionException,
+            UnexpectedResultReturnedFromDatabaseException {
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    errorManager,
+                    pluginFileSystem);
+
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            chat.setIsWriting(true);
+            chatMiddlewareDatabaseDao.saveChat(chat);
+
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+        } catch (CantSaveChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (DatabaseOperationException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantGetChatException e) {
             throw new CantGetPendingTransactionException(
                     e,
                     "Checking the incoming status pending transactions",

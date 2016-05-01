@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMember
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -94,7 +96,9 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
      * @param chatId
      * @throws CantSendChatMessageException
      */
-    void sendWritingStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException;
+    void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
+
+    boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
 
     /**
      * This method sends the message through the Chat Network Service for view onlineStatus

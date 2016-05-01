@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
@@ -372,11 +373,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
                     appSession.setData(ChatSession.CONTACT_DATA, contact);
-                    //appSession.setData(ChatSession.CONTACT_DATA, null);
-                    //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getChatActorbyConnectionId(contactId.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-                //} catch (CantGetContactException e) {
-                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch(Exception e)
                 {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -464,10 +461,10 @@ public class ChatListFragment extends AbstractFermatFragment{
         if (id == R.id.menu_search) {
             return true;
         }
-        if (id == R.id.menu_open_chat) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_open_chat) {
+//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
 //        if (id == R.id.menu_create_group) {
 //            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
 //            return true;
@@ -516,8 +513,13 @@ public class ChatListFragment extends AbstractFermatFragment{
         super.onCreateContextMenu(menu, v, menuInfo);
         v.setBackgroundColor(Color.WHITE);
         if (v.getId()==R.id.list) {
-            MenuInflater inflater = new MenuInflater(getContext());
-            inflater.inflate(R.menu.chat_list_context_menu, menu);
+            if (Build.VERSION.SDK_INT < 23) {
+                MenuInflater inflater = new MenuInflater(getActivity());
+                inflater.inflate(R.menu.chat_list_context_menu, menu);
+            }else{
+                MenuInflater inflater = new MenuInflater(getContext());
+                inflater.inflate(R.menu.chat_list_context_menu, menu);
+            }
         }
         // Get the info on which item was selected
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -629,10 +631,10 @@ public class ChatListFragment extends AbstractFermatFragment{
             //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
         }
-        if (id == R.id.menu_block_contact) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_block_contact) {
+//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
         return super.onContextItemSelected(item);
     }
 }
