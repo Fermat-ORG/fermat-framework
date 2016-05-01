@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 import java.util.UUID;

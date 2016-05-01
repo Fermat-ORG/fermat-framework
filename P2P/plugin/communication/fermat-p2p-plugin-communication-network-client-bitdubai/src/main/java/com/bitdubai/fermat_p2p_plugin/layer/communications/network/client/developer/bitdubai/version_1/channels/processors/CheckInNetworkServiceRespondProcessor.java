@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
