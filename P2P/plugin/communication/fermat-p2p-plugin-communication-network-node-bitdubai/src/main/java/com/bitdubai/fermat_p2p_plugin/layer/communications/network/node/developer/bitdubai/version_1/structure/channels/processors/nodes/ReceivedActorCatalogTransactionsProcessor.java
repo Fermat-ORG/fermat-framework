@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
@@ -19,6 +20,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ReceivedActorCatalogTransactionsProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ReceivedActorCatalogTransactionsProcessor.class));
 
     /**
      * Constructor with parameter
@@ -108,6 +110,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
             try {
 
+                exception.printStackTrace();
                 LOG.error(exception.getMessage());
 
                 /*
@@ -132,11 +135,11 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * Process the transaction
      * @param actorsCatalogTransaction
      */
-    private int processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException {
+    private int processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException, InvalidParameterException {
 
         LOG.info("Executing method processTransaction");
 
-        if (exist(actorsCatalogTransaction.getIdentityPublicKey())){
+        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())){
             return 1;
         }else {
 
@@ -156,34 +159,12 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
             }
 
             insertActorsCatalogTransaction(actorsCatalogTransaction);
+            insertActorsCatalogTransaction(actorsCatalogTransaction);
             insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
 
         }
 
         return 0;
-    }
-
-    /**
-     * Validate if the node exist into the catalog
-     *
-     * @param identityPublicKey
-     * @return boolean
-     */
-    private boolean exist(String identityPublicKey) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        LOG.info("Executing method exist");
-
-        /*
-         * Search in the data base
-         */
-        ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(identityPublicKey);
-
-        if (actorsCatalog != null){
-            return Boolean.TRUE;
-        }
-
-        return Boolean.FALSE;
-
     }
 
     /**
@@ -223,7 +204,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * @param actorsCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void updateActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+    private void updateActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
         LOG.info("Executing method updateActorsCatalog");
 
@@ -305,6 +286,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         transaction.setName(actorsCatalogTransaction.getName());
         transaction.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
         transaction.setPhoto(actorsCatalogTransaction.getPhoto());
+        transaction.setTransactionType(actorsCatalogTransaction.getTransactionType());
 
         /*
          * Save into the data base

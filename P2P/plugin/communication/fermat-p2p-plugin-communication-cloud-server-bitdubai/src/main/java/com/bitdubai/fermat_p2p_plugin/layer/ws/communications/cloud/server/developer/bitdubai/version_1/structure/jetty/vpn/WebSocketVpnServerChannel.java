@@ -108,13 +108,9 @@ public class WebSocketVpnServerChannel {
          */
         if (temp_i != null && temp_i != ""){
 
-            String messageContentJsonStringRepresentation =  AsymmetricCryptography.decryptMessagePrivateKey(temp_i, vpnServerIdentity.getPrivateKey());
-
-            LOG.debug("messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
-
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
-            JsonObject contentJsonObject = parser.parse(messageContentJsonStringRepresentation).getAsJsonObject();
+            JsonObject contentJsonObject = parser.parse(temp_i).getAsJsonObject();
 
              /*
              * Get the identity send by the participant

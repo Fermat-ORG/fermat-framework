@@ -4,6 +4,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.NearNodeListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import javax.websocket.Session;
 
@@ -19,6 +22,8 @@ import javax.websocket.Session;
  */
 public class NearNodeListRespondProcessor extends PackageProcessor {
 
+    private EventManager eventManager  ;
+
     /**
      * Constructor whit parameter
      *
@@ -29,6 +34,8 @@ public class NearNodeListRespondProcessor extends PackageProcessor {
                 communicationsNetworkClientChannel,
                 PackageType.NEAR_NODE_LIST_RESPOND
         );
+
+        this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER);
     }
 
     /**

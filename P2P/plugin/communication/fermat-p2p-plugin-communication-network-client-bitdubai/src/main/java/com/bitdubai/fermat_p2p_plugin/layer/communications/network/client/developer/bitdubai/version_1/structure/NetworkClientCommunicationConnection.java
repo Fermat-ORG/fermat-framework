@@ -28,6 +28,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -55,7 +56,7 @@ import javax.websocket.Session;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkClientCommunicationConnection extends Thread implements NetworkClientConnection {
+public class NetworkClientCommunicationConnection  implements NetworkClientConnection {
 
     private URI                    uri                   ;
     private ErrorManager           errorManager          ;
@@ -85,12 +86,37 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
      */
     private String serverIdentity;
 
+    /*
+     * Represent the networkClientCommunicationPluginRoot
+     */
+    private NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot;
+
+    /*
+     * Represent the nodesListPosition
+     */
+    private Integer nodesListPosition;
+
+    /*
+     * Represent the communicationsNetworkClientChannel
+     */
+    private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
+
+    /*
+     * Represent the clientProfile
+     */
+    private ClientProfile clientProfile;
+
+    /*
+     * Constructor
+     */
     public NetworkClientCommunicationConnection(final URI                    uri                   ,
                                                 final ErrorManager           errorManager          ,
                                                 final EventManager           eventManager          ,
                                                 final LocationManager        locationManager       ,
                                                 final ECCKeyPair             clientIdentity        ,
-                                                final PluginVersionReference pluginVersionReference){
+                                                final PluginVersionReference pluginVersionReference,
+                                                NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
+                                                Integer nodesListPosition){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -98,6 +124,9 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
         this.locationManager        = locationManager       ;
         this.clientIdentity         = clientIdentity        ;
         this.pluginVersionReference = pluginVersionReference;
+        this.networkClientCommunicationPluginRoot = networkClientCommunicationPluginRoot;
+        this.nodesListPosition = nodesListPosition;
+        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this);
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
@@ -105,42 +134,85 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
         this.container              = ClientManager.createClient();
     }
 
-    public String getServerIdentity() {
-        return serverIdentity;
-    }
+    /*
+     * initialize And Connect to Network Node
+     */
+    public void initializeAndConnect() {
 
-    @Override
-    public void run() {
+        System.out.println("*****************************************************************");
+        System.out.println("Connecting To Server: " + uri);
+        System.out.println("*****************************************************************");
 
         /*
          * Create a ReconnectHandler
          */
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
 
+            int i = 0;
+
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                System.out.println("##########################################################################");
-                System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
-                System.out.println("##########################################################################");
-                return tryToReconnect;
+                if(nodesListPosition >= 0){
+                    i++;
+
+                    if(i > 4){
+
+                        networkClientCommunicationPluginRoot.intentToConnectToOtherNode(nodesListPosition);
+                        return Boolean.FALSE;
+
+                    }else{
+                        return tryToReconnect;
+                    }
+
+                }else {
+                    System.out.println("##########################################################################");
+                    System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
+                    System.out.println("##########################################################################");
+                    return tryToReconnect;
+                }
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
-                try {
+                if(nodesListPosition >= 0){
+                    i++;
 
-                    //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
-                    // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                    Thread.sleep(5000);
+                    if(i > 4){
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                        networkClientCommunicationPluginRoot.intentToConnectToOtherNode(nodesListPosition);
+                        return Boolean.FALSE;
+
+                    }else{
+
+                        try {
+
+                            //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
+                            // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                            Thread.sleep(5000);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        return tryToReconnect;
+                    }
+
+                }else {
+                    try {
+
+                        //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
+                        // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                        Thread.sleep(5000);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println("###############################################################################");
+                    System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
+                    System.out.println("###############################################################################");
+                    return tryToReconnect;
                 }
-
-                System.out.println("###############################################################################");
-                System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
-                System.out.println("###############################################################################");
-                return tryToReconnect;
             }
 
         };
@@ -151,14 +223,16 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
         container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
 
         try {
-            session = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
+
+            session = container.connectToServer(communicationsNetworkClientChannel, uri);
 
             //validate if is connected
-            if (session.isOpen()) {
-                this.isConnected = Boolean.TRUE;
-                serverIdentity = (String) session.getUserProperties().get("");
-                setCheckInClientRequestProcessor();
-            }
+//            if (session != null && session.isOpen()) {
+//                this.isConnected = Boolean.TRUE;
+//                serverIdentity = (String) session.getUserProperties().get("");
+//                setCheckInClientRequestProcessor();
+//            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -179,13 +253,15 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
     @Override
     public boolean isRegistered() {
 
-        // TODO IMPLEMENT
-        return false;
+        return communicationsNetworkClientChannel.isRegister();
     }
 
-    private void setCheckInClientRequestProcessor(){
+    /*
+     * CheckIn Client Request to Network Node
+     */
+    public void setCheckInClientRequestProcessor(){
 
-        ClientProfile clientProfile = new ClientProfile();
+        clientProfile = new ClientProfile();
         clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
         clientProfile.setDeviceType("");
 
@@ -526,6 +602,25 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
                     "Unhandled error trying to send the message through the session."
             );
         }
+    }
+
+    /*
+     * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
+     */
+    public void setNodesListPosition() {
+        this.nodesListPosition = -1;
+    }
+
+    public void setServerIdentity(String serverIdentity) {
+        this.serverIdentity = serverIdentity;
+    }
+
+    public String getServerIdentity() {
+        return serverIdentity;
+    }
+
+    public ClientProfile getClientProfile() {
+        return clientProfile;
     }
 
 }

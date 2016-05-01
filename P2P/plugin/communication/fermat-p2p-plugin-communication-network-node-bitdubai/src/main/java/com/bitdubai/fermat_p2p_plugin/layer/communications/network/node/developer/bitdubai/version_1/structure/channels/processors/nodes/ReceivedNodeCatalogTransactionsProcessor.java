@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -37,7 +39,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ReceivedNodeCatalogTransactionsProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ReceivedNodeCatalogTransactionsProcessor.class));
 
     /**
      * Constructor with parameter
@@ -131,13 +133,13 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * Process the transaction
      * @param nodesCatalogTransaction
      */
-    private int processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException {
+    private int processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException, InvalidParameterException {
 
         LOG.info("Executing method processTransaction");
 
         int lateNotificationsCounter = 0;
 
-        if (exist(nodesCatalogTransaction.getIdentityPublicKey())){
+        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())){
             lateNotificationsCounter++;
         }else {
 
@@ -162,29 +164,6 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
         }
 
         return lateNotificationsCounter;
-    }
-
-    /**
-     * Validate if the node exist into the catalog
-     *
-     * @param identityPublicKey
-     * @return boolean
-     */
-    private boolean exist(String identityPublicKey) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        LOG.info("Executing method exist");
-
-        /*
-         * Search in the data base
-         */
-        NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(identityPublicKey);
-
-        if (nodesCatalog != null){
-            return Boolean.TRUE;
-        }
-
-        return Boolean.FALSE;
-
     }
 
     /**
@@ -223,7 +202,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void updateNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+    private void updateNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
         LOG.info("Executing method updateNodesCatalog");
 

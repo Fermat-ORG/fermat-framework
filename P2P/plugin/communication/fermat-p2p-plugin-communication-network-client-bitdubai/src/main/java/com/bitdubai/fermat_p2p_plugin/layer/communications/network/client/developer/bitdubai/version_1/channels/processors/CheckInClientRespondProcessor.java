@@ -1,7 +1,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 
@@ -42,6 +46,34 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
         CheckInProfileMsjRespond checkInProfileMsjRespond = CheckInProfileMsjRespond.parseContent(packageReceived.getContent());
 
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
+
+            /*
+             * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
+             */
+            getChannel().getNetworkClientCommunicationConnection().setNodesListPosition();
+
+            /*
+             * set registered
+             */
+            getChannel().setIsRegister(Boolean.TRUE);
+
+            /* Test resgister NetworkServiceType.INTRA_USER */
+
+            NetworkServiceProfile ns = new NetworkServiceProfile();
+            ns.setClientIdentityPublicKey(getChannel().getNetworkClientCommunicationConnection().getClientProfile().getIdentityPublicKey());
+            ns.setNetworkServiceType(NetworkServiceType.INTRA_USER);
+            ns.setIdentityPublicKey("123456789321654987");
+
+            try {
+                getChannel().getNetworkClientCommunicationConnection().registerProfile(ns);
+            } catch (CantRegisterProfileException e) {
+                e.printStackTrace();
+            } catch (ProfileAlreadyRegisteredException e) {
+                e.printStackTrace();
+            }
+
+            /* Test resgister NetworkServiceType.INTRA_USER */
+
             //raise event
 
         }else{

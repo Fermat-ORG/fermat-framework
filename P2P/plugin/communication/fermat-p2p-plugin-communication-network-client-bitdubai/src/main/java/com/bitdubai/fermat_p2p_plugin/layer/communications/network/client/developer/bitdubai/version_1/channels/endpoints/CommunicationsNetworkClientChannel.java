@@ -17,8 +17,10 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NetworkServiceCallRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NetworkServiceCallRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.PackageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ServerHandshakeRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -57,6 +59,8 @@ public class CommunicationsNetworkClientChannel {
      */
     private Map<PackageType, List<PackageProcessor>> packageProcessors;
 
+    private NetworkClientCommunicationConnection networkClientCommunicationConnection;
+
     /**
      * Represent if the client is register with the server
      */
@@ -66,11 +70,13 @@ public class CommunicationsNetworkClientChannel {
     private ErrorManager errorManager  ;
     private EventManager eventManager  ;
 
-    public CommunicationsNetworkClientChannel() {
+    public CommunicationsNetworkClientChannel(NetworkClientCommunicationConnection networkClientCommunicationConnection) {
 
         this.clientIdentity            = (ECCKeyPair)   ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
         this.errorManager              = (ErrorManager) ClientContext.get(ClientContextItem.ERROR_MANAGER  );
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
+
+        this.networkClientCommunicationConnection = networkClientCommunicationConnection;
 
         this.packageProcessors         = new HashMap<>();
         this.isRegister                = Boolean.FALSE;
@@ -93,6 +99,7 @@ public class CommunicationsNetworkClientChannel {
         registerMessageProcessor(new NearNodeListRespondProcessor(this));
         registerMessageProcessor(new NetworkServiceCallRequestProcessor(this));
         registerMessageProcessor(new NetworkServiceCallRespondProcessor(this));
+        registerMessageProcessor(new ServerHandshakeRespondProcessor(this));
 
     }
 
@@ -101,6 +108,12 @@ public class CommunicationsNetworkClientChannel {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" CommunicationsNetworkClientChannel - Starting method onOpen");
+
+
+        /*
+         * set ServerIdentity
+         */
+        networkClientCommunicationConnection.setServerIdentity((String) session.getUserProperties().get(""));
 
     }
 
@@ -174,6 +187,10 @@ public class CommunicationsNetworkClientChannel {
      */
     protected boolean canProcessMessage(PackageType packageType){
         return packageProcessors.containsKey(packageType);
+    }
+
+    public NetworkClientCommunicationConnection getNetworkClientCommunicationConnection() {
+        return networkClientCommunicationConnection;
     }
 
     /**

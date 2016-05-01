@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
 
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class NetworkNodeMainRunner {
     /**
      * Represent the LOG
      */
-    private static final Logger LOG = Logger.getLogger(NetworkNodeMainRunner.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(NetworkNodeMainRunner.class));
 
     /**
      * The main method to start the app

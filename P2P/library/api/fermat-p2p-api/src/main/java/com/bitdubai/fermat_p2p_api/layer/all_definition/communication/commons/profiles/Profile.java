@@ -73,12 +73,4 @@ public abstract class Profile {
      */
     public abstract String toJson();
 
-    /**
-     * Construct this object from json string
-     *
-     * @param string
-     * @return Profile
-     */
-    public abstract Profile fromJson(String string);
-
 }

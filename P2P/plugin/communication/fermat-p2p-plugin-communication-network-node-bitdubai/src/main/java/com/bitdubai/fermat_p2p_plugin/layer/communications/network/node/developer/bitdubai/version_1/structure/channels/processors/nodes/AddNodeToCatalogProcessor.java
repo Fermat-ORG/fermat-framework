@@ -1,10 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -17,7 +14,10 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
+
+import java.sql.Timestamp;
 
 import javax.websocket.Session;
 
@@ -34,7 +34,9 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(AddNodeToCatalogProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(AddNodeToCatalogProcessor.class));
+
+
 
     /**
      * Constructor with parameter
@@ -66,12 +68,12 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
             /*
              * Create the method call history
              */
-            methodCallsHistory(getGson().toJson(messageContent.getNodeProfile()), destinationIdentityPublicKey);
+            methodCallsHistory(messageContent.toJson(), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct
              */
-            if (messageContent.getMessageContentType() == MessageContentType.JSON){
+            if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
                 /*
                  * Obtain the profile of the node
@@ -79,12 +81,12 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                 nodeProfile = messageContent.getNodeProfile();
 
 
-                if (exist(nodeProfile)){
+                if (getDaoFactory().getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())){
 
                     /*
                      * Notify the node already exist
                      */
-                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.FAIL, "The node profile already exist", nodeProfile, Boolean.FALSE);
+                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, "The node profile already exist", nodeProfile, Boolean.TRUE);
 
                 }else {
 
@@ -106,7 +108,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                     /*
                      * If all ok, respond whit success message
                      */
-                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), nodeProfile, Boolean.TRUE);
+                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.SUCCESS, AddNodeToCatalogMsjRespond.STATUS.SUCCESS.toString(), nodeProfile, Boolean.TRUE);
 
                 }
 
@@ -117,13 +119,26 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                  */
                 session.getAsyncRemote().sendObject(packageRespond);
 
+            }else {
+
+                addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, "Invalid content type: "+messageContent.getMessageContentType(), nodeProfile, Boolean.FALSE);
+                Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+
+                /*
+                 * Send the respond
+                 */
+                session.getAsyncRemote().sendObject(packageRespond);
+
             }
+
+            LOG.info("Processing finish");
 
 
         } catch (Exception exception){
 
             try {
 
+                exception.printStackTrace();
                 LOG.error(exception.getMessage());
 
                 /*
@@ -146,27 +161,6 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
     }
 
     /**
-     * Validate if the node exist into the catalog
-     *
-     * @param nodeProfile
-     * @return boolean
-     */
-    private boolean exist(NodeProfile nodeProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        /*
-         * Search in the data base
-         */
-        NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(nodeProfile.getIdentityPublicKey());
-
-        if (nodesCatalog != null){
-            return Boolean.TRUE;
-        }
-
-        return Boolean.FALSE;
-
-    }
-
-    /**
      * Create a new row into the data base
      *
      * @param nodeProfile
@@ -183,6 +177,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         nodeCatalog.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
         nodeCatalog.setName(nodeProfile.getName());
         nodeCatalog.setOfflineCounter(0);
+        nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
@@ -214,6 +209,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         transaction.setName(nodeProfile.getName());
         transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
         transaction.setHashId(transaction.getHashId());
+        transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
@@ -245,6 +241,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         transaction.setName(nodeProfile.getName());
         transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
         transaction.setHashId(transaction.getHashId());
+        transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){

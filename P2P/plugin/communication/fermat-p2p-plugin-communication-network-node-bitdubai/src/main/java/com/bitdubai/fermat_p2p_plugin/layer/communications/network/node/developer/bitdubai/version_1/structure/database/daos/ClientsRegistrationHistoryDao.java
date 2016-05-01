@@ -3,12 +3,20 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.*;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsRegistrationHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationResult;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationType;
 
-import java.sql.Timestamp;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_ID_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TABLE_NAME;
+import static com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.ClientsRegistrationHistoryDao</code>
@@ -49,7 +57,7 @@ public class ClientsRegistrationHistoryDao extends AbstractBaseDao<ClientsRegist
                     record.getDoubleValue(CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME),
                     record.getDoubleValue(CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME),
                     record.getStringValue(CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME),
-                    new Timestamp(record.getLongValue(CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME)),
+                    getTimestampFromLongValue(record.getLongValue(CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME)),
                     RegistrationType.getByCode(record.getStringValue(CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME)),
                     RegistrationResult.getByCode(record.getStringValue(CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME)),
                     record.getStringValue(CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME)
@@ -72,12 +80,17 @@ public class ClientsRegistrationHistoryDao extends AbstractBaseDao<ClientsRegist
 
         databaseTableRecord.setUUIDValue(CLIENTS_REGISTRATION_HISTORY_ID_COLUMN_NAME, entity.getUuid());
         databaseTableRecord.setStringValue(CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
-        if (entity.getLastLatitude() != null)
-            databaseTableRecord.setDoubleValue(CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME      , entity.getLastLatitude()              );
-        if (entity.getLastLongitude() != null)
-            databaseTableRecord.setDoubleValue(CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME     , entity.getLastLongitude()             );
+
+        if (entity.getLastLatitude() != null) {
+            databaseTableRecord.setDoubleValue(CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME, entity.getLastLatitude());
+        }
+
+        if (entity.getLastLongitude() != null) {
+            databaseTableRecord.setDoubleValue(CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
+        }
+
         databaseTableRecord.setStringValue(CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME        , entity.getDeviceType()                );
-        databaseTableRecord.setLongValue  (CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME  , entity.getCheckedTimestamp().getTime());
+        databaseTableRecord.setLongValue  (CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME  , getLongValueFromTimestamp(entity.getCheckedTimestamp()));
         databaseTableRecord.setFermatEnum (CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME               , entity.getType()                      );
         databaseTableRecord.setFermatEnum (CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME             , entity.getResult()                    );
         databaseTableRecord.setStringValue(CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME             , entity.getDetail()                    );
