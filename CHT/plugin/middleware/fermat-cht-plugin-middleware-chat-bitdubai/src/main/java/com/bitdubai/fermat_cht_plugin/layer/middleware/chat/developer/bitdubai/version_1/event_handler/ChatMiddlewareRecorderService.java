@@ -147,6 +147,21 @@ public class ChatMiddlewareRecorderService implements CHTService {
         //LOG.info("CHECK THE DATABASE");
     }
 
+    public void IncomingNewWritingStatusUpdateEventHandler(IncomingNewChatStatusUpdate event) throws CantSaveEventException {
+        try{
+            chatMiddlewareMonitorAgent.checkIncomingWritingStatus(event.getChatId());
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving OutgoingChat event",
+                    "Unexpected Exception");
+        }
+    }
+
     @Override
     public void start() throws CantStartServiceException {
         try {
