@@ -69,22 +69,22 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         if (data != null) {
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg, data);
-//            final String copiedMessage = holder.txtMessage.getText().toString();
-//            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
-//                        clipboard.setPrimaryClip(clip);}
-//                    else{
-//                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//                        clipboard.setText(copiedMessage);
-//                    }
-//                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
-//                    return true;
-//                }
-//            });
+            final String copiedMessage = holder.txtMessage.getText().toString();
+            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
+                        clipboard.setPrimaryClip(clip);}
+                    else{
+                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard.setText(copiedMessage);
+                    }
+                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
         }
     }
 
