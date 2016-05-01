@@ -3,8 +3,6 @@ package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cus
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 
-import java.util.UUID;
-
 /**
  * Created by franklin on 13/12/15.
  */
@@ -39,6 +37,7 @@ public class CustomerBrokerPurchaseImpl implements CustomerBrokerPurchase {
         this.memo                  = memo;
     }
 
+    @Override
     public String getTransactionId() {
         return transactionId;
     }
@@ -48,6 +47,7 @@ public class CustomerBrokerPurchaseImpl implements CustomerBrokerPurchase {
         this.transactionId = transactionId;
     }
 
+    @Override
     public String getContractTransactionId() {
         return contractTransactionId;
     }
@@ -57,18 +57,26 @@ public class CustomerBrokerPurchaseImpl implements CustomerBrokerPurchase {
         this.contractTransactionId = contractTransactionId;
     }
 
+    @Override
     public long getTimestamp() {
         return timestamp;
     }
 
+    @Override
     public String getPurchaseStatus() {
         return purchaseStatus;
     }
 
+    @Override
     public String getContractStatus() {
         return contractStatus;
     }
 
+    public void setContractStatus(String contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
+    @Override
     public TransactionStatus getTransactionStatus() {
         return transactionStatus;
     }
@@ -78,14 +86,17 @@ public class CustomerBrokerPurchaseImpl implements CustomerBrokerPurchase {
         this.transactionStatus = transactionStatus;
     }
 
+    @Override
     public String getCurrencyType() {
         return currencyType;
     }
 
+    @Override
     public String getTransactionType() {
         return transactionType;
     }
 
+    @Override
     public String getMemo() {
         return memo;
     }

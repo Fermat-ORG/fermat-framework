@@ -211,7 +211,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
         return developerDatabaseTableRecordList;
     }
 
-    UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
+    UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent agent;
 
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the bank money restock plugin
@@ -220,8 +220,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
      */
     private void startMonitorAgent() throws CantStartAgentException {
 
-        if (userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent == null) {
-            userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(errorManager,
+        if (agent == null) {
+            agent = new UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent(
+                    errorManager,
                     customerBrokerPurchaseNegotiationManager,
                     pluginDatabaseSystem,
                     pluginId,
@@ -229,13 +230,11 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
                     closeContractManager,
                     customerBrokerContractPurchaseManager,
                     currencyExchangeRateProviderFilter,
-                    //notificationManagerMiddleware,
-                    customerBrokerPurchaseManager,
                     cryptoBrokerWalletManager,
-                    broadcaster
-                    );
-            userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
-        } else userLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent.start();
+                    broadcaster);
+        }
+
+        agent.start();
     }
 
     public EventManager getEventManager() {
