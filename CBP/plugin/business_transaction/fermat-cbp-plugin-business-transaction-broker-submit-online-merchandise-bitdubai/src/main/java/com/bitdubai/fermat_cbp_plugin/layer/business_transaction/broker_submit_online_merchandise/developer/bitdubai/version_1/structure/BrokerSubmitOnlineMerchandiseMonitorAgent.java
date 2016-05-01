@@ -45,7 +45,9 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.excep
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
@@ -556,11 +558,12 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             } else {
                                 CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                                 ObjectChecker.checkArgument(contractPurchase); //If the contract is null, I cannot handle with this situation
-
-                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(contractPurchase);
-                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
-                                raisePaymentConfirmationEvent(contractHash);
+                                //if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                    brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(contractPurchase);
+                                    brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                    customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
+                                    raisePaymentConfirmationEvent(contractHash);
+                                //}
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
@@ -581,11 +584,14 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                                 contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
                                 if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_MERCHANDISE_SUBMITTED.getCode())) {
-                                    businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT);
-                                    brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
-                                    brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                                    customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
-                                    raisePaymentConfirmationEvent(contractHash);
+                                    CustomerBrokerContractSale contractSale= customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+                                    //if(!contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                        businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT);
+                                        brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
+                                        brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                        customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
+                                        raisePaymentConfirmationEvent(contractHash);
+                                    //}
                                 }
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -595,6 +601,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 }
 
                 //TODO: look a better way to deal with this exceptions
+            } catch (CantGetListCustomerBrokerContractSaleException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cannot get sale contract");
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(exception, "Checking pending events", "Cannot update the database");
             } catch (CantConfirmTransactionException exception) {
