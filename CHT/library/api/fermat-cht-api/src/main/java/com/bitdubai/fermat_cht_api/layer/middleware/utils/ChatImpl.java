@@ -34,6 +34,7 @@ public class ChatImpl implements Chat {
     private List<Contact>               contactAssociated;
     private TypeChat                    typeChat;
     private boolean                     scheduledDelivery;
+    private boolean                     isWriting;
 
     /**
      * Constructor without arguments
@@ -284,8 +285,17 @@ public class ChatImpl implements Chat {
         return scheduledDelivery;
     }
 
+    public boolean isWriting() {
+        return isWriting;
+    }
+
+    public void setIsWriting(boolean isWriting) {
+        this.isWriting = isWriting;
+    }
+
     @Override
     public void setScheduledDelivery(boolean scheduledDelivery) {
+
         this.scheduledDelivery = scheduledDelivery;
     }
 

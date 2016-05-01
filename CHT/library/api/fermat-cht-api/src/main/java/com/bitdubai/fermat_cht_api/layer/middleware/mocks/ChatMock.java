@@ -137,6 +137,16 @@ public class ChatMock implements Chat {
     }
 
     @Override
+    public boolean isWriting() {
+        return false;
+    }
+
+    @Override
+    public void setIsWriting(boolean isWriting) {
+
+    }
+
+    @Override
     public String getContactListString() {
         return null;
     }
