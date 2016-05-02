@@ -121,10 +121,14 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
                     sendLocalBroadcast(broadcast);
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
                 } else {
-                    super.toastDefaultError();
+                    Toast.makeText(getContext(), "Can't Send Request Connection - Manager not initialised ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantStartRequestException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "Can't Send Request Connection ", Toast.LENGTH_SHORT).show();
+
+            } catch (Exception e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }

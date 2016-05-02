@@ -172,7 +172,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.contact_detail_main, container, false);
+            rootView = inflater.inflate(R.layout.loss_conctact_list_main, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
@@ -230,6 +230,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button)).setText("External User").build();
         button1.setId(ID_BTN_EXTRA_USER);
+
 
 
         ImageView itemIcon2 = new ImageView(getActivity());

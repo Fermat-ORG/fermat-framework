@@ -30,6 +30,8 @@ import java.util.List;
 import java.util.UUID;
 
 
+import scala.Array;
+
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
 
 /**
@@ -80,7 +82,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",bitcoinWalletSettings.getNotificationEnabled()));
 
-            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getNotificationEnabled()));
+            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getLossProtectedEnabled()));
 
             if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
                 blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
@@ -100,14 +102,14 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             }
 
 
-            final Bundle dataDialog = new Bundle();
-            dataDialog.putInt("items", R.array.items);
-            dataDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
-            dataDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
-            dataDialog.putString("title", getResources().getString(R.string.title_label));
-            dataDialog.putString("mode", "single_option");
-            dataDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
+            final Bundle networkDialog = new Bundle();
+            networkDialog.putInt("items", R.array.items);
+            networkDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            networkDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            networkDialog.putString("title", getResources().getString(R.string.title_label));
+            networkDialog.putString("mode", "single_option");
+            networkDialog.putString("previous_selected_item", previousSelectedItem);
+            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", networkDialog));
 
 
             //Exchange Rate Provider
@@ -115,19 +117,34 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             if (cryptoWallet.getExchangeProvider()!=null)
                 exchangeProviderId=  cryptoWallet.getExchangeProvider();
 
-            List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
+
 
             //Get providers list
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
-            int position = 11;
+            String stringsProviders[] = new String[providers.size()];
+            int i = 0;
             for (CurrencyExchangeRateProviderManager provider :  providers)
             {
-                stringsProviders.add(new PreferenceSettingsTextPlusRadioItem(position,provider.getProviderName(),(provider.getProviderId().equals(exchangeProviderId)) ? true : false));
-                position++;
+                if(cryptoWallet.getExchangeProvider().equals(provider.getProviderId()))
+                    previousSelectedItem = provider.getProviderName();
+
+                stringsProviders[i] = provider.getProviderName();
+
+                i++;
             }
 
-            list.add(new PreferenceSettingsOpenDialogText(10,"Exchange Rate Providers",stringsProviders));
+
+          //  list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", stringsProviders));
+
+            final Bundle providerDialog = new Bundle();
+            providerDialog.putInt("items", stringsProviders.length);
+            providerDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            providerDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            providerDialog.putString("title", "Select Rate Provider");
+            providerDialog.putString("mode", "single_option");
+            providerDialog.putString("previous_selected_item", previousSelectedItem);
+            list.add(new PreferenceSettingsOpenDialogText(6, "Exchange Rate Providers", providerDialog));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -280,6 +297,6 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
     @Override
     public int getBackgroundAlpha() {
-        return 95;
+        return 70;
     }
 }

@@ -49,12 +49,12 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
     /**
      * Session
      */
-    LossProtectedWalletSession referenceWalletSession;
-    String walletPublicKey = "loss_protected_wallet";
+    LossProtectedWalletSession lossWalletSession;
+
     /**
      * MANAGERS
      */
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWallet;
     /**
      * DATA
      */
@@ -73,6 +73,8 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
 
     BlockchainNetworkType blockchainNetworkType;
 
+    private ArrayList openNegotiationList;
+
 
     /**
      * Create a new instance of this fragment
@@ -87,32 +89,19 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
-        referenceWalletSession = (LossProtectedWalletSession)appSession;
+        try {
+       lossWalletSession = (LossProtectedWalletSession)appSession;
 
         lst = new ArrayList<LossProtectedWalletTransaction>();
 
-        lst = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
-        getExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-//                final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        //                      getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-                    }
-                });
-            }
-        });
-        try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+            lossProtectedWallet = lossWalletSession.getModuleManager().getCryptoWallet();
+            settingsManager = lossWalletSession.getModuleManager().getSettingsManager();
 
 
             LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
@@ -125,6 +114,8 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
+
+
     }
 
 
@@ -157,7 +148,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
             lst = new ArrayList<LossProtectedWalletTransaction>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            lossWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
@@ -193,7 +184,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new TransactionsHistoryAdapter(getActivity(), lst,cryptoWallet,referenceWalletSession,this);
+            adapter = new TransactionsHistoryAdapter(getActivity(), lst,lossProtectedWallet,lossWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -216,16 +207,16 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
 
-            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = referenceWalletSession.getIntraUserModuleManager();
+            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossWalletSession.getIntraUserModuleManager();
             if(intraUserLoginIdentity!=null) {
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
-                lst = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                lst = lossProtectedWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
                 offset+=MAX_TRANSACTIONS;
             }
 
 
         } catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+            lossWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             e.printStackTrace();
         }
@@ -279,7 +270,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
 
 
     public void setReferenceWalletSession(LossProtectedWalletSession referenceWalletSession) {
-        this.referenceWalletSession = referenceWalletSession;
+        this.lossWalletSession = referenceWalletSession;
     }
 
 

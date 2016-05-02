@@ -135,13 +135,13 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     /**
      * WalletManager Interface member variables.
      */
-    String deviceUserPublicKey = "";
+    String deviceUserPublicKey = "walletDevice";
     String walletPublicKey = "reference_wallet";
     String lossProtectedwalletPublicKey = "loss_protected_wallet";
 
     List<InstalledWallet> userWallets;
 
-    private Map<String, String> walletIds = new HashMap<>();
+    Map<String, String> walletIds = new HashMap<>();
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
@@ -169,7 +169,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         boolean existWallet = false;
         boolean existWalletLoss = false;
         try {
-            //load user's wallets ids
+
+             //load user's wallets ids
             this.loadUserWallets(deviceUserPublicKey);
 
             Iterator iterator = walletIds.entrySet().iterator();
@@ -189,6 +190,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                 try {
 
                     bitcoinWalletManager.createWallet(walletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), walletPublicKey);
 
 
                     //Save wallet id on file
@@ -214,11 +216,11 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
 
                     bitcoinLossProtectedWalletManager.createWallet(lossProtectedwalletPublicKey);
-
+                      walletIds.put(UUID.randomUUID().toString(), lossProtectedwalletPublicKey);
                     //Save wallet id on file
 
                     try {
-                        this.persistWallet(walletPublicKey);
+                        this.persistWallet(lossProtectedwalletPublicKey);
                     } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
 
@@ -422,26 +424,46 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
          */
-        walletIds.put(deviceUserPublicKey, walletId);
+        String fileContent= "";
 
         PluginTextFile walletIdsFile = null;
 
         try {
-            walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            fileContent = walletIdsFile.getContent();
         } catch (CantCreateFileException cantCreateFileException) {
 
             /**
              * If I can not save this file, then this plugin shouldn't be running at all.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+            System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
 
             throw new CantPersistWalletException();
+        } catch (FileNotFoundException e) {
+            try {
+                walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", DeviceDirectory.LOCAL_WALLETS.getName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            } catch (CantCreateFileException cantCreateFileException) {
+
+                /**
+                 * If I can not save this file, then this plugin shouldn't be running at all.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+
+                throw new CantPersistWalletException();
+            }
         }
+
+
 
         /**
          * I will generate the file content.
          */
-        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
+
+        //fileContent+= deviceUserPublicKey + "," + walletId + ";";
+
+       StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
 
         Iterator iterator = walletIds.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -729,7 +751,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         String[] idPair = stringWalletId.split(",", -1);
 
                         //put wallets of this user
-                        if (idPair[0].equals(deviceUserPublicKey))
+                      //  if (idPair[0].equals(deviceUserPublicKey))
                             walletIds.put(idPair[0], idPair[1]);
 
                         /**

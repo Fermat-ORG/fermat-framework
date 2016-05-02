@@ -50,6 +50,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
@@ -91,7 +92,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     /**
      * Plaform reference
      */
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWallet;
     /**
      * UI
      */
@@ -137,31 +138,28 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         setHasOptionsMenu(true);
         try {
             settingsManager = appSession.getModuleManager().getSettingsManager();
+
+            lossProtectedWallet = appSession.getModuleManager().getCryptoWallet();
+
             LossProtectedWalletSettings bitcoinWalletSettings = null;
             bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
 
             if(bitcoinWalletSettings != null) {
 
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
-                settingsManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
+                lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
             }
 
-            blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            lossProtectedEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getLossProtectedEnabled();
-            System.out.println("Network Type" + blockchainNetworkType);
-            cryptoWallet = appSession.getModuleManager().getCryptoWallet();
+
+
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
             e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
+        }  catch (CantGetCryptoLossProtectedWalletException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
 
@@ -173,7 +171,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.send_form_base, container, false);
+            rootView = inflater.inflate(R.layout.loss_send_form_base, container, false);
             NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus!= null) {
                 switch (networkStatus) {
@@ -605,7 +603,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), cryptoWallet);
+                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWallet);
                 if (validAddress != null) {
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                     String amount = txtAmount.getText().toString();
@@ -640,41 +638,57 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                             }
 
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
-                            BigDecimal operator = new BigDecimal(newAmount);
+                            BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                                if (operator.compareTo(minSatoshis) == 1) {
-                                    if (!lossProtectedEnabled) {
-                                        confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),cryptoWallet,operator.longValueExact(),
-                                                validAddress,
-                                                notes,
-                                                appSession.getAppPublicKey(),
-                                                cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
-                                                Actors.INTRA_USER,
-                                                cryptoWalletWalletContact.getActorPublicKey(),
-                                                cryptoWalletWalletContact.getActorType(),
-                                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                                blockchainNetworkType);
-                                        confirm_dialog.show();
-                                    }else{
-                                        try {
-                                            cryptoWallet.send(
-                                                    operator.longValueExact(),
+                                if (amountDecimal.compareTo(minSatoshis) == 1) {
+                                    //TODO:  esta verificacion de proteccion solo se valida si sabes que va a perder dinero
+
+                                    long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
+
+                                    if(amountDecimal.compareTo(new BigDecimal(availableBalance)) != 1)
+                                    {
+                                        if (!lossProtectedEnabled) {
+                                            confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),lossProtectedWallet,amountDecimal.longValueExact(),
                                                     validAddress,
                                                     notes,
                                                     appSession.getAppPublicKey(),
-                                                    cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                                    lossProtectedWallet.getActiveIdentities().get(0).getPublicKey(),
                                                     Actors.INTRA_USER,
                                                     cryptoWalletWalletContact.getActorPublicKey(),
                                                     cryptoWalletWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                                    blockchainNetworkType
+                                                    blockchainNetworkType,
+                                                    appSession.getActualExchangeRate());
+                                            confirm_dialog.show();
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
+
+                                        }
+                                    }
+                                   else{
+                                        try {
+
+                                            lossProtectedWallet.send(
+                                                    amountDecimal.longValueExact(),
+                                                    validAddress,
+                                                    notes,
+                                                    appSession.getAppPublicKey(),
+                                                    lossProtectedWallet.getActiveIdentities().get(0).getPublicKey(),
+                                                    Actors.INTRA_USER,
+                                                    cryptoWalletWalletContact.getActorPublicKey(),
+                                                    cryptoWalletWalletContact.getActorType(),
+                                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                                    blockchainNetworkType,
+                                                    appSession.getActualExchangeRate()
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                             onBack(null);
 
                                         } catch (LossProtectedInsufficientFundsException e) {
                                         e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Action not allowed,You will lose money,Restricted by LossProtectedWallet " + msg, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 } else {

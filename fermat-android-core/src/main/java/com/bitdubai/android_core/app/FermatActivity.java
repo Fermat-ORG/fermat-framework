@@ -1715,7 +1715,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     public void sendMailExternal(String mailUserTo, String bodyText) throws Exception {
         YourOwnSender yourOwnSender = new YourOwnSender(this);
-        yourOwnSender.send(mailUserTo, bodyText);
+        yourOwnSender.sendPrivateKey(mailUserTo, bodyText);
     }
 
     @Override

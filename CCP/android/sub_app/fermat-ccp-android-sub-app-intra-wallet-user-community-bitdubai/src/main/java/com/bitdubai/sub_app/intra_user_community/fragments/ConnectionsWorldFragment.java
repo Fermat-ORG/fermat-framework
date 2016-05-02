@@ -211,14 +211,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-        try {
-            List list = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+
+            List list = getSuggestionCache();
             if(list!=null) {
                 dataSet.addAll(list);
             }
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        }
+
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
@@ -246,7 +244,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setDescription("The access to the \\n Fermat Network is disabled.");
+        errorConnectingFermatNetworkDialog.setDescription("The access to the Fermat Network is disabled.");
         errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -576,6 +574,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         return dataSet;
     }
 
+
+    private List<IntraUserInformation> getSuggestionCache() {
+
+        List<IntraUserInformation> userCacheList = new ArrayList<>();
+        try {
+
+            userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+            return userCacheList;
+
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userCacheList;
+    }
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {

@@ -9,6 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -22,6 +24,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
@@ -108,6 +113,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.structure.CryptoWalletWalletModuleWalletContact;
+import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.event_handlers.BlockchainDownloadUpToDateEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantCreateOrRegisterActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichTransactionException;
@@ -116,6 +122,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develope
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.apache.commons.collections.CollectionUtils;
 
@@ -157,7 +164,11 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     private final WalletContactsManager          walletContactsManager         ;
     private final UUID pluginId;
     private final PluginFileSystem pluginFileSystem;
+    private final EventManager eventManager;
+    private final BitcoinNetworkManager bitcoinNetworkManager                   ;
 
+
+    private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     public CryptoWalletWalletModuleManager(final BitcoinWalletManager bitcoinWalletManager,
                                            final CryptoAddressBookManager cryptoAddressBookManager,
@@ -170,7 +181,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
-                                           final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
+                                           final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem,
+                                           final EventManager eventManager, BitcoinNetworkManager bitcoinNetworkManager) {
         super(pluginFileSystem,pluginId);
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
@@ -187,7 +199,9 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         this.walletContactsManager          = walletContactsManager         ;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
+        this.eventManager = eventManager;
 
+        this.bitcoinNetworkManager = bitcoinNetworkManager;
     }
 
     private CryptoPaymentRegistry  cryptoPaymentRegistry ;
@@ -201,6 +215,21 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
             cryptoPaymentRegistry  = cryptoPaymentManager .getCryptoPaymentRegistry();
 
             walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+
+            /**
+             * Listener Crypto Network Blockchain Download Up To Date Event
+             */
+
+           /* FermatEventListener fermatEventListener;
+            FermatEventHandler fermatEventHandler;
+
+            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
+            fermatEventHandler = new BlockchainDownloadUpToDateEventHandler();
+
+            fermatEventListener.setEventHandler(fermatEventHandler);
+
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);*/
 
         } catch (final CantGetWalletContactRegistryException e) {
 
@@ -973,12 +1002,12 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, blockchainNetworkType);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType,0);
 
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,0);
 
                     break;
             }
@@ -1118,6 +1147,20 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
     }
+
+    @Override
+    public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
+        try {
+            return this.bitcoinNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
+
+        }
+        catch (CantGetBlockchainDownloadProgress e) {
+            throw new CantGetBlockchainDownloadProgress("ERROR GET Blockchain Download Progress", e,"","Crypto Network error");
+         }
+        catch (Exception e) {
+            throw new CantGetBlockchainDownloadProgress("ERROR GET Blockchain Download Progress", FermatException.wrapException(e),"","Unknow error");
+        }
+  }
 
 
     /**

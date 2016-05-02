@@ -185,6 +185,22 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     }
 
     @Override
+    public List<BitcoinLossProtectedWalletSpend> listAllWalletSpending() throws CantListSpendingException {
+        try {
+            BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
+
+            return BitcoinWalletLossProtectedWalletDao.listAllWalletSpending();
+
+        } catch (CantListTransactionsException exception) {
+            throw new CantListSpendingException(CantListTransactionsException.DEFAULT_MESSAGE, exception, null, null);
+
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            throw new CantListSpendingException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
     public List<BitcoinLossProtectedWalletTransaction> listTransactionsByActor(final String actorPublicKey,
                                                                   final BalanceType balanceType,
                                                                   final int max,

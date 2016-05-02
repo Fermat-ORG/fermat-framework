@@ -76,12 +76,12 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="130dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@drawable/community_banner"
                     tools:ignore="ContentDescription" />
