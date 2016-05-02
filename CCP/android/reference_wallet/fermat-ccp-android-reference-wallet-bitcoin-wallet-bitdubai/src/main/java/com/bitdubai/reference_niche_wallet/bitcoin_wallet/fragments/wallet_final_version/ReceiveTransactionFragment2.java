@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -111,49 +113,80 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
 
         mHandler = new Handler();
-        BitcoinWalletSettings bitcoinWalletSettings = null;
+
+
         try {
             referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             if((moduleManager!=null)) {
-                bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
-                if (bitcoinWalletSettings != null) {
+                getExecutor().submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        BitcoinWalletSettings bitcoinWalletSettings = null;
+                        try {
 
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                        bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                        } catch (CantGetSettingsException e) {
+                            e.printStackTrace();
+                        } catch (SettingsNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (bitcoinWalletSettings != null) {
+
+                            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            }
+                            try {
+                                moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                            } catch (CantPersistSettingsException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+
+                        if (bitcoinWalletSettings != null) {
+                            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            }
+                        }
+                        try {
+                            moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                        } catch (CantPersistSettingsException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        try {
+                            blockchainNetworkType = (moduleManager != null) ? moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType() : BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        } catch (CantGetSettingsException e) {
+                            e.printStackTrace();
+                        } catch (SettingsNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        Log.i(TAG, "Network Type" + blockchainNetworkType);
+
+                        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                     }
-                    moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
-
-                }
+                });
 
 
-                if (bitcoinWalletSettings != null) {
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                        bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                    }
-                }
-                moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+
             }
 
-            } catch (Exception ex) {
+        } catch (Exception ex) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        try {
-            blockchainNetworkType = (moduleManager!=null)?moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType():BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Network Type" + blockchainNetworkType);
 
-        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
     }
 
     @Nullable
@@ -257,6 +290,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
+            if(openNegotiationList==null)openNegotiationList = new ArrayList<>();
             adapter = new ReceivetransactionsExpandableAdapter(getActivity(), openNegotiationList,getResources());
             adapter.setChildItemFermatEventListeners(this);
         }

@@ -29,6 +29,7 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {
 
+
         Log.i(TAG,"object: "+ proxy.getClass().getInterfaces());
         Log.i(TAG,"method: "+ method.getName());
         Log.i(TAG, "args: " + args);

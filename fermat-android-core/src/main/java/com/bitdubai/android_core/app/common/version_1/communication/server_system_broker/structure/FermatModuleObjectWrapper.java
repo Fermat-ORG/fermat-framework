@@ -11,6 +11,12 @@ import java.io.Serializable;
 public class FermatModuleObjectWrapper implements Parcelable {
 
     private Serializable object;
+    private boolean isChunckedData = false;
+
+    public FermatModuleObjectWrapper(Serializable object,boolean isChunckedData) {
+        this.object = object;
+        this.isChunckedData = isChunckedData;
+    }
 
     public FermatModuleObjectWrapper(Serializable object) {
         this.object = object;
@@ -34,6 +40,9 @@ public class FermatModuleObjectWrapper implements Parcelable {
         }
     };
 
+    public boolean isChunckedData() {
+        return isChunckedData;
+    }
 
     public Object getObject() {
         return object;
