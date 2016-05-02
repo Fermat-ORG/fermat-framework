@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -44,7 +43,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestReceiveHistoryFragment extends FermatWalletListFragment<LossProtectedPaymentRequest> implements FermatListItemListeners<LossProtectedPaymentRequest>,onRefreshList {
+public class RequestHistoryReceivedFragment extends FermatWalletListFragment<LossProtectedPaymentRequest> implements FermatListItemListeners<LossProtectedPaymentRequest>,onRefreshList {
 
     /**
      * Session
@@ -78,8 +77,8 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Loss
      *
      * @return InstalledFragment instance object
      */
-    public static RequestReceiveHistoryFragment newInstance() {
-        return new RequestReceiveHistoryFragment();
+    public static RequestHistoryReceivedFragment newInstance() {
+        return new RequestHistoryReceivedFragment();
     }
 
     @Override
