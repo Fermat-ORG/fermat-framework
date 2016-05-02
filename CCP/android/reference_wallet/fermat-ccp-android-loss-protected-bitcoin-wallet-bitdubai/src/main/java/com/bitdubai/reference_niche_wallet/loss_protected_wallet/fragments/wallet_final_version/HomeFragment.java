@@ -183,11 +183,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             }
 
-            //deault btc network
+            //default btc network
             if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
-                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.REG_TEST);
+                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
-
 
             settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 

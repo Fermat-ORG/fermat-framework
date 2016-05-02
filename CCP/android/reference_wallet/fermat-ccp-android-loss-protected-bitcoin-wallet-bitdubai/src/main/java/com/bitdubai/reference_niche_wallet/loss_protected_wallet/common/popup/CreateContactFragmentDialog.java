@@ -302,7 +302,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {
-                    Toast.makeText(activity.getApplicationContext(), "Cannot find an address in the clipboard text.\n\n" + item.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "Cannot find an address in the clipboard text.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // This enables the paste menu item, since the clipboard contains plain text.
