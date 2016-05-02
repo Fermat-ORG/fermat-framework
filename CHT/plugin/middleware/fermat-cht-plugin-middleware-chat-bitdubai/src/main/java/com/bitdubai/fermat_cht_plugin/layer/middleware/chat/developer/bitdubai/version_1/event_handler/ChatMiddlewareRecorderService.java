@@ -192,6 +192,13 @@ public class ChatMiddlewareRecorderService implements CHTService {
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_WRITING_STATUS);
+            fermatEventHandler = new IncomingNewWritingStatusUpdateEventHandler();
+            ((IncomingNewWritingStatusUpdateEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
             throw new CantStartServiceException(
