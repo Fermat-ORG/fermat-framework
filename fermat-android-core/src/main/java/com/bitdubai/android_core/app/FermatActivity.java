@@ -720,9 +720,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-
-                        Log.d(getClass().getSimpleName() + "Clelia", "------------------ verticalOffset = " + verticalOffset);
-
                         if (scrollRange == -1) {
                             scrollRange = appBarLayout.getTotalScrollRange();
                         }

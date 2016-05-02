@@ -5,7 +5,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 
@@ -21,10 +20,7 @@ public class AnimationManager
 
     private View rootView;
     private View emptyListViewsContainer;
-
     private int navigationBarHeight = 0;
-
-    private String TAG = getClass().getSimpleName() + "Clelia";
 
 
     public AnimationManager(View rootView, View emptyListViewsContainer) {
@@ -44,9 +40,6 @@ public class AnimationManager
 
     @Override
     public void startCollapseAnimation(Context context, int verticalOffset) {
-        Log.d(TAG, "------------------ START COLLAPSE ------------------");
-        Log.d(TAG, "------------------ verticalOffset = " + verticalOffset);
-
         Point navigationBarSize = NavigationBarTools.getNavigationBarSize(context);
         if (navigationBarSize != null)
             navigationBarHeight = navigationBarSize.y;
@@ -56,8 +49,6 @@ public class AnimationManager
 
     @Override
     public void startExpandAnimation(Context context, int verticalOffset) {
-        Log.d(TAG, "------------------ START EXPAND ------------------");
-        Log.d(TAG, "------------------ verticalOffset = " + verticalOffset);
         moveViewToOriginalPosition(emptyListViewsContainer);
     }
 
@@ -90,11 +81,6 @@ public class AnimationManager
         float density = displayMetrics.density;
         float screenHeight = displayMetrics.heightPixels;
         float balanceHeight = density * 330;
-        Log.d(TAG, "------------------ density =" + density);
-        Log.d(TAG, "------------------ screenHeight =" + screenHeight);
-        Log.d(TAG, "------------------ balanceHeight =" + balanceHeight);
-        Log.d(TAG, "------------------ navigationBarHeight =" + navigationBarHeight);
-        Log.d(TAG, "------------------ centreY =" + (screenHeight - balanceHeight)/2);
         return (screenHeight - balanceHeight)/2;
     }
 }
