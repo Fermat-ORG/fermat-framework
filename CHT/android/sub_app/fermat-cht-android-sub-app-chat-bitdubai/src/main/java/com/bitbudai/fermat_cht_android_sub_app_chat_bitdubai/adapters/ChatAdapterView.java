@@ -342,7 +342,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if (leftName != null) {
                 toolbar.setTitle(leftName);
-                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape(contactIcon, 80));//in the future, this image should come from chatmanager
+                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape(contactIcon, 100));//in the future, this image should come from chatmanager
                 toolbar.setLogo(contactIconCircular);
             }
         }
