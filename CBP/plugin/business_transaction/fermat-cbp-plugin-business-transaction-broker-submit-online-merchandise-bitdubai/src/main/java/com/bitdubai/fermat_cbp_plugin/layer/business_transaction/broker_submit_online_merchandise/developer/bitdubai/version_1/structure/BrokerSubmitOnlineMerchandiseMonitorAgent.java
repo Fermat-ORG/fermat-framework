@@ -558,12 +558,12 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             } else {
                                 CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                                 ObjectChecker.checkArgument(contractPurchase); //If the contract is null, I cannot handle with this situation
-                                //if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
                                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(contractPurchase);
                                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                     customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
                                     raisePaymentConfirmationEvent(contractHash);
-                                //}
+                                }
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
@@ -585,13 +585,14 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
 
                                 if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_MERCHANDISE_SUBMITTED.getCode())) {
                                     CustomerBrokerContractSale contractSale= customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
-                                    //if(!contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                    ObjectChecker.checkArgument(contractSale);
+                                    if(!contractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
                                         businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT);
                                         brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
                                         brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
                                         customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
                                         raisePaymentConfirmationEvent(contractHash);
-                                    //}
+                                    }
                                 }
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
