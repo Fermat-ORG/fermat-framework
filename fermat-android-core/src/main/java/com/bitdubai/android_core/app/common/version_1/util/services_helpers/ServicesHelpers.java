@@ -24,7 +24,7 @@ public class ServicesHelpers {
         appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
         notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
         clientSideBrokerServiceHelper = new ClientSideBrokerServiceHelper(contextWeakReference);
-        //clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
+        clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
     }
 
     public void bindServices(){
@@ -32,7 +32,7 @@ public class ServicesHelpers {
         appManagerServiceHelper.bindAppManagerService();
         notificationServiceHelper.bindNotificationService();
         clientSideBrokerServiceHelper.clientSideBrokerBoundService();
-        //clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
+        clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
     }
 
     public void unbindServices(){
@@ -40,7 +40,7 @@ public class ServicesHelpers {
         appManagerServiceHelper.unbindAppManagerService();
         notificationServiceHelper.unbindNotificationService();
         clientSideBrokerServiceHelper.unbindClientSideBrokerService();
-        //clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
+        clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
     }
 
     public FermatAppsManagerService getAppManager(){

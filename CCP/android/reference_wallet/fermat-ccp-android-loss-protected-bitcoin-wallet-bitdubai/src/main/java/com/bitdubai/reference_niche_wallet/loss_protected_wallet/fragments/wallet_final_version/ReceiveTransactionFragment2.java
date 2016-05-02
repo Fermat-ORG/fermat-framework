@@ -2,25 +2,21 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 import android.content.DialogInterface;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
-import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -52,6 +48,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -70,7 +67,7 @@ import static android.widget.Toast.makeText;
  * @since 7/10/2015
  */
 public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSession,ResourceProviderManager>
-        implements FermatListItemListeners<LossProtectedWalletTransaction>,ElementsWithAnimation {
+        implements FermatListItemListeners<LossProtectedWalletTransaction> {
 
     private int MAX_TRANSACTIONS = 20;
 
@@ -99,6 +96,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
+
+    private AnimationManager animationManager;
 
     public static ReceiveTransactionFragment2 newInstance() {
         return new ReceiveTransactionFragment2();
@@ -182,9 +181,21 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getPaintActivtyFeactures().addCollapseAnimation(this);
+        //getPaintActivtyFeactures().addCollapseAnimation(this);
     }
 
+    @Override
+    public void onResume() {
+        animationManager = new AnimationManager(rootView, emptyListViewsContainer);
+        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+        super.onStop();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -403,44 +414,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 //                                ? balanceAvailable : bookBalance,
 //                        referenceWalletSession.getTypeAmount())
 //        );
-    }
-
-    @Override
-    public void startCollapseAnimation(int verticalOffset) {
-        moveViewToScreenCenter(emptyListViewsContainer);
-    }
-
-    @Override
-    public void startExpandAnimation(int verticalOffSet) {
-        moveViewToOriginalPosition(emptyListViewsContainer);
-    }
-
-    private void moveViewToOriginalPosition(View view) {
-        if(Build.VERSION.SDK_INT>17) {
-            if(view!=null) {
-                int position[] = new int[2];
-                view.getLocationOnScreen(position);
-                float centreY = rootView.getY() + rootView.getHeight() / 2;
-                TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0, centreY - 250, 0);
-                anim.setDuration(1000);
-                anim.setFillAfter(true);
-                view.startAnimation(anim);
-            }
-        }
-    }
-
-    private void moveViewToScreenCenter( View view ) {
-        if (Build.VERSION.SDK_INT > 17) {
-            if(view!=null) {
-                DisplayMetrics dm = new DisplayMetrics();
-                rootView.getDisplay().getMetrics(dm);
-                float centreY = rootView.getY() + rootView.getHeight() / 2;
-                TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
-                anim.setDuration(1000);
-                anim.setFillAfter(true);
-                view.startAnimation(anim);
-            }
-        }
     }
 
     private void setUpPresentation() {

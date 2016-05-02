@@ -219,7 +219,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     protected ExecutorService executor;
 
-
+    private Context context;
 
 
     /**
@@ -244,6 +244,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
 
         executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
+        context = this;
 
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
@@ -716,28 +717,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             if (appBarLayout != null)
                 appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                    boolean isShow = false;
                     int scrollRange = -1;
+                    boolean alreadyPerform = false;
 
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                         if (scrollRange == -1) {
                             scrollRange = appBarLayout.getTotalScrollRange();
                         }
-                        if (scrollRange + verticalOffset == 0) {
-                            collapsingToolbarLayout.setTitle("");
-                            if(!isShow)
-                                for(ElementsWithAnimation element : elementsWithAnimation){
-                                    element.startCollapseAnimation(scrollRange);
-                                }
-
-                            isShow = true;
-                        } else if (isShow) {
-                            collapsingToolbarLayout.setTitle("");
-                            for(ElementsWithAnimation element : elementsWithAnimation){
-                                element.startExpandAnimation(scrollRange);
-                            }
-                            isShow = false;
+                        if(verticalOffset == 0) {
+                            alreadyPerform = false;
+                            for(ElementsWithAnimation element : elementsWithAnimation)
+                                element.startCollapseAnimation(context, verticalOffset);
+                        } else if (verticalOffset < 0 && !alreadyPerform) {
+                            alreadyPerform = true;
+                            for(ElementsWithAnimation element : elementsWithAnimation)
+                                element.startExpandAnimation(context, verticalOffset);
                         }
                     }
                 });
@@ -1666,6 +1661,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         this.elementsWithAnimation.add(elementsWithAnimation);
     }
 
+    public void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation){
+        this.elementsWithAnimation.remove(elementsWithAnimation);
+    }
 
 
     /**
