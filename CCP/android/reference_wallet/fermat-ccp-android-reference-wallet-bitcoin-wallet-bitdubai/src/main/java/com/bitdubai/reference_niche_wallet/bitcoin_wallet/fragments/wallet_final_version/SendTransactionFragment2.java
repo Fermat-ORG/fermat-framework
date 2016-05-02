@@ -440,9 +440,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
-        //txt_type_balance.setTypeface(tf);
-
-        //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
         // handler for the background updating
         final Handler progressHandler = new Handler() {
             public void handleMessage(Message msg) {
@@ -1103,16 +1100,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public void onUpdateViewOnUIThread(String code){
         try {
+            if(code.equals("BlockchainDownloadComplete"))
+            {
+                //update toolbar color
+                final Toolbar toolBar = getToolbar();
+                toolBar.setBackgroundColor(Color.GREEN);
+            }
+            else
+            {
+                //update balance amount
+                final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
-            //update balance amount
+                changeBalanceType(txt_type_balance, txt_balance_amount);
+                //System.out.println(System.currentTimeMillis());
 
-            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
-
-             changeBalanceType(txt_type_balance, txt_balance_amount);
-            //System.out.println(System.currentTimeMillis());
-
-            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-            circularProgressBar.setProgressValue2(getBalanceAverage());
+                circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                circularProgressBar.setProgressValue2(getBalanceAverage());
+            }
         }
         catch (Exception e) {
             e.printStackTrace();

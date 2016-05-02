@@ -5310,7 +5310,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY.getCode());
         runtimeActivity.setColor("#073487");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CONTACTS);
-
+        runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();

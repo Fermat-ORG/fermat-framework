@@ -645,7 +645,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                     long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
 
-                                    if(amountDecimal.compareTo(new BigDecimal(availableBalance)) == 1)
+                                    if(amountDecimal.compareTo(new BigDecimal(availableBalance)) == -1)
                                     {
                                         if (!lossProtectedEnabled) {
                                             confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),lossProtectedWallet,amountDecimal.longValueExact(),
