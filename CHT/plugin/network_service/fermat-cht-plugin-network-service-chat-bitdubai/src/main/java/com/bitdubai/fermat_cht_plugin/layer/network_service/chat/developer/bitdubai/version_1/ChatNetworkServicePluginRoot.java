@@ -38,6 +38,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocol
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
@@ -476,6 +477,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     private void launcheIncomingChatStatusNotification(ChatMetadata chatMetadata){
         IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getEventManager().getNewEvent(EventType.INCOMING_STATUS);
         event.setChatMetadata(chatMetadata);
+        event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
+        getEventManager().raiseEvent(event);
+    }
+
+    private void launcheIncomingOnlineStatusNotification(UUID chatId){
+        IncomingNewOnlineStatusUpdate event = (IncomingNewOnlineStatusUpdate) getEventManager().getNewEvent(EventType.INCOMING_WRITING_STATUS);
+        event.setChatId(chatId);
         event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
         getEventManager().raiseEvent(event);
     }
