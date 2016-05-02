@@ -836,6 +836,9 @@ public class ChatMiddlewareDatabaseDao {
                 return null;
             }
 
+            System.out.println("12345 MESSAGE = "+message.getCount());
+            System.out.println("12345 COUNT = " + message.getMessage());
+
             return message;
         }
         catch (Exception e) {
@@ -1392,6 +1395,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, message.getType().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, message.getMessageDate().toString());
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID, message.getContactId());
+        record.setLongValue(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, message.getCount());
 
         return record;
     }
