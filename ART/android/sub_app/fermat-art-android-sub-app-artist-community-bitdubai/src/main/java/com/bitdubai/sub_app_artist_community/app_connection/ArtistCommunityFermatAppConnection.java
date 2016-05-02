@@ -53,7 +53,10 @@ public class ArtistCommunityFermatAppConnection extends AppConnections<ArtistSub
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return null;
+        return new ArtistCommunityNavigationViewPainter(
+                getContext(),
+                getActiveIdentity(),
+                getFullyLoadedSession());
     }
 
     @Override
