@@ -105,9 +105,11 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
     }
 
     public synchronized final void startPlugin() throws CantStartPluginException {
-        this.start();
-        this.serviceStatus = ServiceStatus.STARTED;
 
+        if (!this.isStarted()) {
+            this.start();
+            this.serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
     @Override

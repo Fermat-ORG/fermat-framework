@@ -178,7 +178,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     @Override
     public void start() throws CantStartPluginException {
 
-        LOG.info("Calling the method - start() ");
+        LOG.info("Calling method - start()...");
         LOG.info("pluginId = " + pluginId);
 
         /*
@@ -203,7 +203,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Get the server ip
              */
             serverIp = IPAddressHelper.getCurrentIPAddress();
-            LOG.info("Server ip " + serverIp);
+            LOG.info("Server ip: " + serverIp);
 
             /*
              * Initialize the configuration file
