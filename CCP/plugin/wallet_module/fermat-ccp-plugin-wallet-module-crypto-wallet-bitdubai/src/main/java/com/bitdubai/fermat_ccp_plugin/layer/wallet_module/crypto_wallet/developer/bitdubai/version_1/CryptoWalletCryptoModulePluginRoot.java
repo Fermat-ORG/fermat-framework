@@ -102,7 +102,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE , plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
-    @NeededAddonReference(platform = Platformtengo s.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     private String appPublicKey;
@@ -112,7 +112,6 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
-
 
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
