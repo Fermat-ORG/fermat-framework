@@ -828,7 +828,7 @@ public class ChatMiddlewareDatabaseDao {
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
 
             // I will add the message information from the database
-            for (DatabaseTableRecord record : getMessageDataDesceding(filter)) {
+            for (DatabaseTableRecord record : getMessageData(filter)) {
                 final Message message = getMessageTransaction(record);
 
                 messages.add(message);
