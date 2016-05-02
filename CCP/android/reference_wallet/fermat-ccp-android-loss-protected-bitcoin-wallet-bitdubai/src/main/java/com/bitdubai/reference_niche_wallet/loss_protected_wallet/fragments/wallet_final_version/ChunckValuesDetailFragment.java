@@ -101,6 +101,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private TextView txt_chunck_detail_exchangeRate;
     private TextView txt_chunck_detail_amountSpent;
     private TextView txt_percent_spent;
+    private TextView info_into_progress;
     private ProgressBar progressBar_percent;
     private int offset = 0;
 
@@ -167,7 +168,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error: onCreate", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -181,7 +182,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             setUp(inflater);
 
         }catch (Exception e){
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error: onCreateView", Toast.LENGTH_SHORT).show();
         }
         return rootView;
     }
@@ -223,18 +224,19 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
             txt_percent_spent = (TextView) rootView.findViewById(R.id.txt_percentage_spent);
             progressBar_percent = (ProgressBar) rootView.findViewById(R.id.progressBarLine);
+            //info_into_progress = (TextView) rootView.findViewById(R.id.info_into_progress);
 
             chunckAmount          = WalletUtils.formatAmountString(transaction.getAmount());
             chunckExchangeRate    = WalletUtils.formatExchangeRateString(transaction.getExchangeRate());
             chunckAmountSpent     = WalletUtils.formatAmountString(getTotalSpent());
             chunckPercentageSpent = WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction));
 
+            //info_into_progress.setText(chunckPercentageSpent + "%");
+
             progressBar_percent.setProgress(getSpendingPercentage(transaction));
             progressBar_percent.setBackgroundColor(Color.parseColor("#1D85B8"));
-            progressBar_percent.setSecondaryProgress(getSpendingPercentage(transaction) - 100);
+            progressBar_percent.setSecondaryProgress(getSpendingPercentage(transaction)-100);
             progressBar_percent.setBackgroundColor(Color.parseColor("#073487"));
-
-            progressBar_percent.setContentDescription(chunckPercentageSpent + "%");
 
 
             txt_chunck_detail_balance.setText(chunckAmount);
@@ -267,7 +269,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             animationManager = new AnimationManager(rootView,empty);
             getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "Oooops! recovering from system error: onActivityCreated", Toast.LENGTH_SHORT).show();
             lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }

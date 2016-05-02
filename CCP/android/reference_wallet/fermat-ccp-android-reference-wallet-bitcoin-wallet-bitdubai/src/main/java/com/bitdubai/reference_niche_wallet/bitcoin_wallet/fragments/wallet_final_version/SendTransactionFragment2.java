@@ -327,6 +327,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        animationManager = new AnimationManager(rootView, emptyListViewsContainer);
+        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+        super.onStop();
+    }
+
     private void setUp(LayoutInflater inflater){
         try {
             //setUpHeader(inflater);

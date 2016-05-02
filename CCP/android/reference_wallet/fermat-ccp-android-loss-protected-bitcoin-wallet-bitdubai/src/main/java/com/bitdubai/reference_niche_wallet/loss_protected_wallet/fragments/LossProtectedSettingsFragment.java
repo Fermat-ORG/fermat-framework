@@ -118,9 +118,23 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 exchangeProviderId=  cryptoWallet.getExchangeProvider();
 
 
+            List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<>();
 
             //Get providers list
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
+
+            int position = 11;
+            for (CurrencyExchangeRateProviderManager provider :  providers)
+            {
+                stringsProviders.add(new PreferenceSettingsTextPlusRadioItem(position,provider.getProviderName(),(provider.getProviderId().equals(exchangeProviderId)) ? true : false));
+                position++;
+            }
+
+            list.add(new PreferenceSettingsOpenDialogText(10,"Exchange Rate Providers",stringsProviders));
+
+
+            //Get providers list
+          /*  List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
             String stringsProviders[] = new String[providers.size()];
             int i = 0;
@@ -135,7 +149,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             }
 
 
-          //  list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", stringsProviders));
+           list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", stringsProviders));
 
             final Bundle providerDialog = new Bundle();
             providerDialog.putInt("items", stringsProviders.length);
@@ -144,7 +158,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             providerDialog.putString("title", "Select Rate Provider");
             providerDialog.putString("mode", "single_option");
             providerDialog.putString("previous_selected_item", previousSelectedItem);
-            list.add(new PreferenceSettingsOpenDialogText(6, "Exchange Rate Providers", providerDialog));
+            list.add(new PreferenceSettingsOpenDialogText(6, "Exchange Rate Providers", providerDialog));*/
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();

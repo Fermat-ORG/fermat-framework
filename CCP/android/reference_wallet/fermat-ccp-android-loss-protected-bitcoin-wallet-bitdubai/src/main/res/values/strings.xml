@@ -50,7 +50,7 @@
     <!-- fragment_base_bitcoin_wallet_receive.xml -->
     <string name="receive_text">Receive</string>
     <string name="give_me_an_address_address_text">Give me an Address!</string>
-    <!-- fragment_transaction_main_receive.xml -->
+    <!-- loss_fragment_transaction_main_receiveceive.xml -->
     <string name="you_dont_have_transactions_received_text">You don\'t have\n any received transactions</string>
     <!-- chunck_values_fragment_transaction_main.xml -->
     <string name="you_dont_have_chunck_values">You don\'t have\n any Chunck Values yet</string>
@@ -58,7 +58,7 @@
     <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
     <string name="balance_amount_0_bits_text">0 bits</string>
     <string name="notes_text">Notes</string>
-    <!-- fragment_transaction_main.xml -->
+    <!-- loss_fragment_transaction_main_main.xml -->
     <string name="no_history_send_or_receive">No history\nsend or receive\nto fill this!!</string>
     <!-- header.xml -->
     <string name="header_text">Header</string>

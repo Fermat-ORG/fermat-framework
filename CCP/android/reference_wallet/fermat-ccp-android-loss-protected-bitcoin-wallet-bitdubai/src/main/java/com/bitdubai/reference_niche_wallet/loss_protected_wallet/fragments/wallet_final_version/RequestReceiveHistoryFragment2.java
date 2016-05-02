@@ -1,7 +1,6 @@
 
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -220,7 +219,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_transaction_main;
+        return R.layout.loss_fragment_transaction_main;
     }
 
     @Override
