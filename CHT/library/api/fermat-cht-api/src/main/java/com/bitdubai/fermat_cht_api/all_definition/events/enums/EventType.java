@@ -46,6 +46,9 @@ public enum EventType implements FermatEventEnum {
     INCOMING_STATUS("INSTS"){
         public final FermatEvent getNewEvent()  { return new IncomingNewChatStatusUpdate(this);}
         },
+    INCOMING_ONLINE_STATUS("INOSTS"){
+        public final FermatEvent getNewEvent()  { return new IncomingNewWritingStatusUpdate(this);}
+    },
     INCOMING_WRITING_STATUS("INWSTS"){
         public final FermatEvent getNewEvent()  { return new IncomingNewWritingStatusUpdate(this);}
     },

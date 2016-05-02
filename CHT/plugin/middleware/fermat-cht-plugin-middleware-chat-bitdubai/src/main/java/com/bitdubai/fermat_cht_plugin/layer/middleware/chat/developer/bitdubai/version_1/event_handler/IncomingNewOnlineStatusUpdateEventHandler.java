@@ -6,15 +6,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
- * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 28/04/16.
+ * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 02/05/16.
  */
-public class IncomingNewWritingStatusUpdateEventHandler extends AbstractChatMiddlewareEventHandler {
+public class IncomingNewOnlineStatusUpdateEventHandler extends AbstractChatMiddlewareEventHandler {
 
     private ErrorManager errorManager;
 
@@ -23,7 +22,7 @@ public class IncomingNewWritingStatusUpdateEventHandler extends AbstractChatMidd
         if(this.chatMiddlewareRecorderService.getStatus()== ServiceStatus.STARTED) {
 
             try {
-                this.chatMiddlewareRecorderService.IncomingNewWritingStatusUpdateEventHandler((IncomingNewWritingStatusUpdate) fermatEvent);
+                this.chatMiddlewareRecorderService.IncomingNewOnlineStatusUpdateEventHandler((IncomingNewOnlineStatusUpdate) fermatEvent);
             } catch(CantSaveEventException exception){
                 errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantSaveEventException(exception,"Handling the IncomingNewChatStatusUpdate", "Check the cause");
