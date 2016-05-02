@@ -1,6 +1,7 @@
 package com.bitdubai.sup_app.tokenly_fan_user_identity.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -91,7 +92,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private boolean contextMenuInUse = false;
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
-
+    private ProgressDialog tokenlyRequestDialog;
 
     private Handler handler;
 
@@ -263,26 +264,34 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
-
-
-                if(!isWaitingForResponse){
-                    int resultKey = createNewIdentity();
-                    switch (resultKey) {
-                        case CREATE_IDENTITY_SUCCESS:
-//                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                            break;
-                        case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                            Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                            break;
-                        case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                            Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
-                            break;
-                        case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                            Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
-                            break;
+                tokenlyRequestDialog = new ProgressDialog(getContext());
+                tokenlyRequestDialog.setMessage("Please Wait");
+                tokenlyRequestDialog.setTitle("Connecting to Tokenly");
+                tokenlyRequestDialog.show();
+                Thread tokenlyRequest = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(!isWaitingForResponse){
+                            int resultKey = createNewIdentity();
+                            tokenlyRequestDialog.dismiss();
+                            switch (resultKey) {
+                                case CREATE_IDENTITY_SUCCESS:
+                                    break;
+                                case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
+                                    Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                                    break;
+                                case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
+                                    Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                                    break;
+                                case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
+                                    Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
+                        }else
+                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                     }
-                }else
-                    Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                });
+                tokenlyRequest.start();
             }
         });
     }
