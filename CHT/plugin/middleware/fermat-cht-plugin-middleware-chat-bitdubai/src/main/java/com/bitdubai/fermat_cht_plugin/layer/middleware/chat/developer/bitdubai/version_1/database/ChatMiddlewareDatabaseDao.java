@@ -820,7 +820,7 @@ public class ChatMiddlewareDatabaseDao {
         Database database = null;
         try {
             database = openDatabase();
-            List<Message> messages = new ArrayList<>();
+//            List<Message> messages = new ArrayList<>();
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
@@ -828,19 +828,15 @@ public class ChatMiddlewareDatabaseDao {
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
 
             // I will add the message information from the database
-            for (DatabaseTableRecord record : getMessageData(filter)) {
-                final Message message = getMessageTransaction(record);
-
-                messages.add(message);
-            }
+                final Message message = getMessageTransaction(getMessageDataDesceding(filter).get(0));
 
             database.closeDatabase();
 
-            if(messages.isEmpty()){
+            if(message == null){
                 return null;
             }
 
-            return messages.get(0);
+            return message;
         }
         catch (Exception e) {
             if (database != null)
@@ -1451,7 +1447,7 @@ public class ChatMiddlewareDatabaseDao {
 
         //table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
         //TODO: bring code from the other branch where this issue is fixed
-        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.DESCENDING);
 
         table.loadToMemory();
 
