@@ -120,7 +120,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
              */
             List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getOutgoingMessageDao().findByFailCount(countFail, countFailMax);
 
-            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getNetworkServiceProfile().getName()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
+           // System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getNetworkServiceProfile().getName()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
 
             /*
              * For all destination in the message request a new connection
@@ -142,7 +142,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
                                 fermatMessage.getReceiverType()
                         );
 
-                        System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getNetworkServiceProfile().getName()+") - Requesting new connection with "+remoteParticipant.getIdentityPublicKey());
+                       // System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getNetworkServiceProfile().getName()+") - Requesting new connection with "+remoteParticipant.getIdentityPublicKey());
                         networkServiceRoot.getCommunicationNetworkServiceConnectionManager().connectTo(applicantParticipant, networkServiceRoot.getNetworkServiceProfile(), remoteParticipant);
 
                         poolConnectionsWaitingForResponse.put(fermatMessage.getReceiver(), remoteParticipant);
