@@ -66,6 +66,9 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
+import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -102,6 +105,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
     IntraActorCryptoTransactionManager intraActorCryptoTransactionManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
     CryptoMoneyDestockManager cryptoMoneyDeStockManager;
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     public BrokerSubmitOnlineMerchandiseMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
@@ -113,7 +117,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             OutgoingIntraActorManager outgoingIntraActorManager,
-            CryptoMoneyDestockManager cryptoMoneyDeStockManager) throws CantSetObjectException {
+            CryptoMoneyDestockManager cryptoMoneyDeStockManager,IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -125,6 +129,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
         this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
         this.cryptoMoneyDeStockManager = cryptoMoneyDeStockManager;
         setIntraActorCryptoTransactionManager(outgoingIntraActorManager);
+        this.intraWalletUserIdentityManager=intraWalletUserIdentityManager;
     }
 
     private void setIntraActorCryptoTransactionManager(
@@ -350,7 +355,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
-                            businessTransactionRecord.getBrokerPublicKey(),
+                            intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
                             Actors.INTRA_USER,
@@ -457,6 +462,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 for (String eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
+
+            } catch (CantListIntraWalletUsersException e) {
+                throw new CannotSendContractHashException(e, "Sending contract hash", "cannot get list of intra users");
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Unexpected result in database");
