@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitd
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
@@ -10,6 +12,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMet
 
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -57,6 +60,10 @@ public class ChatMetadataRecord implements ChatMetadata{
     private int sentCount;
 
     private String msgXML;
+
+    private TypeChat typeChat;
+
+    private List<GroupMember> groupMembers;
 
     public String getMsgXML() {
         return msgXML;
@@ -291,6 +298,24 @@ public class ChatMetadataRecord implements ChatMetadata{
     @Override
     public DistributionStatus getDistributionStatus() {
         return distributionStatus;
+    }
+
+    public void setTypeChat(TypeChat typeChat) {
+        this.typeChat = typeChat;
+    }
+
+    @Override
+    public TypeChat getTypeChat() {
+        return typeChat;
+    }
+
+    public void setGroupMembers(List<GroupMember> groupMembers) {
+        this.groupMembers = groupMembers;
+    }
+
+    @Override
+    public List<GroupMember> getGroupMembers() {
+        return groupMembers;
     }
 
 

@@ -46,7 +46,7 @@
             android:textSize="14sp"
             android:lineSpacingExtra="5dp"
             app:typeface="CAVIAR_DREAMS"
-            android:text="In Fermat you will find several apps, and many more are being built right now. The difference between Fermat apps and regular\nmobile apps is that:"/>
+            android:text="In Fermat you will find several apps, and many more are being built right now. What makes them different is that:"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:paddingTop="12dp"

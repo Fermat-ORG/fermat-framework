@@ -40,7 +40,7 @@ public interface ChatIdentityManager extends FermatManager {
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     void createNewIdentityChat(String alias,
-                                                 byte[] profileImage) throws CantCreateNewChatIdentityException;
+                                                 byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewChatIdentityException;
 
     /**
      * The method <code>updateIdentityChat</code> change a identity information data
@@ -50,7 +50,7 @@ public interface ChatIdentityManager extends FermatManager {
      * @param profileImage
      * @throws CantUpdateChatIdentityException
      */
-    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException;
+    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException;
 
 
     /**

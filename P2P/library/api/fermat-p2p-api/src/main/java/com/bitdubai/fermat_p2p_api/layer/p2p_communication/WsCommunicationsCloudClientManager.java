@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 /**
@@ -20,11 +21,12 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 public interface WsCommunicationsCloudClientManager extends FermatManager {
 
     /**
-     * Get the CommunicationsClientConnection
+     * Get the CommunicationsClientConnection of the specific NetworkServiceType
+     * provided like argument
      *
      * @return CommunicationsClientConnection
      */
-    public CommunicationsClientConnection getCommunicationsCloudClientConnection();
+    public CommunicationsClientConnection getCommunicationsCloudClientConnection(NetworkServiceType networkServiceType);
 
     /**
      * Get the disable server flag
@@ -55,4 +57,5 @@ public interface WsCommunicationsCloudClientManager extends FermatManager {
      */
      void reloadConnectClient() throws Exception;
 
+    boolean isConnected();
 }

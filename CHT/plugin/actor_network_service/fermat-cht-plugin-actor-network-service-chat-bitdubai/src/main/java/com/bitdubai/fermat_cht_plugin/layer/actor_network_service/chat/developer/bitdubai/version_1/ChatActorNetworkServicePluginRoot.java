@@ -38,6 +38,7 @@ import java.util.List;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
+ * Edited by Miguel Rincon on 19/04/2016
  */
 public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements DatabaseManagerForDevelopers {
 
@@ -54,7 +55,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                 new PluginVersionReference(new Version()),
                 EventSource.ACTOR_NETWORK_SERVICE_CHAT,
                 PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.CHAT,
+                NetworkServiceType.ACTOR_CHAT,
                 "Chat Actor Network Service",
                 null
         );
@@ -81,6 +82,8 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                     errorManager,
                     getPluginVersionReference()
             );
+
+            System.out.println("******* Init Chat Actor Network Service ******");
 
         } catch (final CantInitializeDatabaseException e) {
 
@@ -215,7 +218,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

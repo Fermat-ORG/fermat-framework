@@ -305,13 +305,14 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         List<TransactionType> transactionTypes = new ArrayList<>();
         transactionTypes.add(TransactionType.CREDIT);
         transactionTypes.add(TransactionType.DEBIT);
+        transactionTypes.add(TransactionType.HOLD);
+        transactionTypes.add(TransactionType.UNHOLD);
 
         List<BalanceType> balanceTypes = new ArrayList<>();
-        balanceTypes.add(BalanceType.BOOK);
+        balanceTypes.add(BalanceType.AVAILABLE);
 
         if (moduleManager != null) {
             try {
-                //Add un field de PENDING? para mostrarlas como pending...
                 data.addAll(moduleManager.getPendingTransactions());
                 data.addAll(moduleManager.getTransactions(walletSession.getAppPublicKey(), transactionTypes, balanceTypes, 100, 0));
 

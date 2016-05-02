@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">fermat-cht-android-chat-community-bitdubai</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="description_search">Search</string>
+    <string name="notifications">Notifications</string>
+    <string name="wallet_icon">wallet icon</string>
+    <string name="wallet_installs">Installed</string>
+    <string name="wallet_status_install">INSTALL</string>
+    <string name="wallet_status_installed">INSTALLED</string>
+    <string name="wallet_status_uninstall">UNINSTALL</string>
+    <string name="wallet_status_upgrade">UPGRADE</string>
+    <string name="wallet_status_open">UPGRADE</string>
+    <string name="wallet_more_details_button">READ MORE</string>
+    <string name="no_preview_images">No Preview Images</string>
+    <string name="cht_creation_dialog_sub_title">This app let\'s you find Chat Users in the Fermat Network. \nIt\'s main features are:</string>
+    <string name="cht_creation_dialog_body">* Browse for Chat Users around you.\n* See their profiles.\n* Connect with them.</string>
+    <string name="cht_creation_dialog_footer">Depending on what you are, choose an avatar below.\nYou may change it later.</string>
+    <string name="cht_creation_name_left">Chat</string>
+    <string name="cht_creation_name_right">Users</string>
+</resources>

@@ -141,7 +141,6 @@ public class StockTransactionsCashMoneyDestockPluginRoot extends AbstractPlugin 
         if (stockTransactionsCashMoneyDestockMonitorAgent == null) {
             stockTransactionsCashMoneyDestockMonitorAgent = new StockTransactionsCashMoneyDestockMonitorAgent(
                     errorManager,
-                    stockTransactionCashMoneyDestockManager,
                     cryptoBrokerWalletManager,
                     cashUnholdTransactionManager,
                     pluginDatabaseSystem,

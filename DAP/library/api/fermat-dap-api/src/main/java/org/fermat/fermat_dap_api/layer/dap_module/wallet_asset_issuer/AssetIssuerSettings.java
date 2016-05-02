@@ -8,6 +8,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +24,7 @@ public class AssetIssuerSettings implements WalletSettings {
     private boolean isContactsHelpEnabled;
     private List<BlockchainNetworkType> blockchainNetwork;
     private int blockchainNetworkPosition;
+    private boolean notificationEnabled;
 
     public int getBlockchainNetworkPosition() {
         return blockchainNetworkPosition;
@@ -75,5 +77,13 @@ public class AssetIssuerSettings implements WalletSettings {
     @Override
     public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
+    }
+
+    public boolean getNotificationEnabled() {
+        return this.notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 }

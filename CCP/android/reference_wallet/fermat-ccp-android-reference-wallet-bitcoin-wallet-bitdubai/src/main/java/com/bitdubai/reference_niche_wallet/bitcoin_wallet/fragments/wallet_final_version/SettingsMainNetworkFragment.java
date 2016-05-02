@@ -20,9 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -46,7 +44,6 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
     private FermatEditText ipAdress;
     private Spinner spinner;
 
-    SettingsManager<BitcoinWalletSettings> settingsManager;
 
 
     public static SettingsMainNetworkFragment newInstance() {
@@ -60,7 +57,6 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
         try {
             cryptoWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
@@ -116,12 +112,12 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
 
 
                     System.out.println("NETWORK TYPE SELECTED IS "+text);
-                    System.out.println("NETWORK TYPE TO BE SAVED IS  "+blockchainNetworkType.getCode());
+                    System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
 
-                    BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                    BitcoinWalletSettings bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                     bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
                     bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-                    settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
+                    cryptoWallet.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
                 } catch (CantGetSettingsException e) {
                     e.printStackTrace();
                 } catch (SettingsNotFoundException e) {
