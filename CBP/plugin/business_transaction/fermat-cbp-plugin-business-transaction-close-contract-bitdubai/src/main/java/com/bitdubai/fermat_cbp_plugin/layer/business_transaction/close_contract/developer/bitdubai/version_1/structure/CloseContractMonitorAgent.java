@@ -366,13 +366,16 @@ public class CloseContractMonitorAgent implements
 
                             System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Updated Transaction Status to: CONTRACT_COMPLETED");
                             System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - raised NewContractClosed Event");
+
+
+                            transactionTransmissionManager.confirmReception(record.getTransactionID());
+                            System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Reception Confirmed");
+                            closeContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+                            System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Updated Event Status to: NOTIFIED");
                         }
-                        transactionTransmissionManager.confirmReception(record.getTransactionID());
-                        System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Reception Confirmed");
                     }
 
-                    closeContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
-                    System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - Updated Event Status to: NOTIFIED");
+
                 }
 
             } catch (CantUpdateRecordException exception) {
