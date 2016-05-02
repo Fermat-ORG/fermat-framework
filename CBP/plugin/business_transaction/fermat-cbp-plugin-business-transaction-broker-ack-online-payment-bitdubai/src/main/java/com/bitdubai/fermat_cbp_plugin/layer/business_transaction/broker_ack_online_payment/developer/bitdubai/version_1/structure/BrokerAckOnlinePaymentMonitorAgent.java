@@ -424,14 +424,17 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             //TODO: analyze what we need to do here.
 
                         } else {
+
                             CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
 
                             //If the contract is null, I cannot handle with this situation
                             ObjectChecker.checkArgument(contractPurchase);
-                            brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(contractPurchase);
-                            brokerAckOnlinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
-                            raiseAckConfirmationEvent(contractHash);
+                            if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(contractPurchase);
+                                brokerAckOnlinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
+                                raiseAckConfirmationEvent(contractHash);
+                            }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
@@ -450,10 +453,14 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
                             if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_ACK.getCode())) {
-                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
-                                brokerAckOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
-                                brokerAckOnlinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, new Date().getTime());
-                                raiseAckConfirmationEvent(contractHash);
+                                CustomerBrokerContractSale customerBrokerContractSale= customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+                                ObjectChecker.checkArgument(customerBrokerContractSale);
+                                if(!customerBrokerContractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                    customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.PENDING_MERCHANDISE);
+                                    brokerAckOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
+                                    brokerAckOnlinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, new Date().getTime());
+                                    raiseAckConfirmationEvent(contractHash);
+                                }
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
