@@ -1120,8 +1120,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             if(code.equals("BlockchainDownloadComplete"))
             {
                 //update toolbar color
-                final RelativeLayout container_header_balance = getToolbarHeader();
-                container_header_balance.setBackgroundColor(Color.GREEN);
+                final Toolbar toolBar = getToolbar();
+                toolBar.setBackgroundColor(Color.GREEN);
             }
             else
             {

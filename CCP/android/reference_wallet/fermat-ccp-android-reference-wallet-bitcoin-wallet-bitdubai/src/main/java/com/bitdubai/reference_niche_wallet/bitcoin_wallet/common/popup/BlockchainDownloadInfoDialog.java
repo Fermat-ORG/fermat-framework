@@ -18,14 +18,14 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
-import java.io.ByteArrayOutputStream;
+
 
 /**
  * Created by natalia on 02/05/16.
@@ -138,30 +138,15 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
         int id = v.getId();
 
         if(id == R.id.btn_left){
-            try {
-                getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
-                getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
-            } catch (CantCreateNewIntraWalletUserException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            saveSettings();
+
+
             dismiss();
         }
         else if(id == R.id.btn_right){
             try {
                 final CryptoWallet cryptoWallet = getSession().getModuleManager();
 
-                getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
 
-
-                try {
-                    //Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.img_profile_female);
-                    cryptoWallet.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
-                } catch (CantCreateNewIntraWalletUserException e) {
-                    e.printStackTrace();
-                }
 
             } catch (Exception e) {
                 e.printStackTrace();
