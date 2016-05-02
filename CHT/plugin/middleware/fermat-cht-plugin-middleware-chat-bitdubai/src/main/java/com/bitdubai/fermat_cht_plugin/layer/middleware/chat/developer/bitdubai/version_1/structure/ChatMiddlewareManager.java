@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessage
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
@@ -696,7 +698,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             UUID chatId = message.getChatId();
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             if (chat == null) {
-                return;
+                throw new SendStatusUpdateMessageNotificationException("Chat not found");
             }
 
             String localActorPublicKey = chat.getLocalActorPublicKey();
@@ -723,7 +725,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             UUID chatId = message.getChatId();
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             if (chat == null) {
-                return;
+                throw new SendStatusUpdateMessageNotificationException("Chat not found");
             }
 
             String localActorPublicKey = chat.getLocalActorPublicKey();
@@ -744,6 +746,46 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "");
         }
     }
+
+    public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException {
+        try {
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            if (chat == null) {
+                throw new SendWritingStatusMessageNotificationException("Chat not found");
+            }
+            String localActorPublicKey = chat.getLocalActorPublicKey();
+            String remoteActorPublicKey = chat.getRemoteActorPublicKey();
+            networkServiceChatManager.sendWritingStatus(
+                    localActorPublicKey,
+                    chat.getLocalActorType(),
+                    remoteActorPublicKey,
+                    chat.getRemoteActorType(),
+                    chat.getChatId()
+            );
+        }catch(Exception e){
+            throw new SendWritingStatusMessageNotificationException(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
+    public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus {
+        try {
+            return chatMiddlewareDatabaseDao.getChatByChatId(chatId).isWriting();
+        }catch(CantGetChatException e){
+            throw new CantGetWritingStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        } catch (DatabaseOperationException e) {
+            throw new CantGetWritingStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
 
     /**
      * This method will notify PIP to launch a new notification to user
