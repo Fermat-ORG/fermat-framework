@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleConnectionRequestAcceptedException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
@@ -158,7 +159,7 @@ public class FanIdentityEventActions {
             for(ArtistExposingData artistExposingData : artistExposingDataList){
                 remoteArtistPublicKey = artistExposingData.getPublicKey();
                 //If the public key from the search is equals to the actor requester, we going to proceed
-                if(!remoteArtistPublicKey.equals(remoteArtistPublicKey)){
+                if(!senderPublicKey.equals(remoteArtistPublicKey)){
                     continue;
                 }
                 //Get the remote artist public key
@@ -216,6 +217,33 @@ public class FanIdentityEventActions {
                     e,
                     "Updating TKY identity",
                     "Cannot update a Fan identity" );
+        }
+    }
+
+    /**
+     * This method handles the Connection Request Accepted event
+     * @param artistAcceptedPublicKey
+     * @throws CantHandleConnectionRequestAcceptedException
+     */
+    public void handleArtistRequestConnectionAccepted(String artistAcceptedPublicKey) throws
+            CantHandleConnectionRequestAcceptedException {
+        try {
+            this.handleConnection(artistAcceptedPublicKey);
+        } catch (CantListFanIdentitiesException e) {
+            throw new CantHandleConnectionRequestAcceptedException(
+                    e,
+                    "Handling Artist Connection Request Accepted event",
+                    "Cannot list the fan identities.");
+        } catch (CantAddNewArtistConnectedException e) {
+            throw new CantHandleConnectionRequestAcceptedException(
+                    e,
+                    "Handling Artist Connection Request Accepted event",
+                    "Cannot add new artist to external platform identity.");
+        } catch (CantListArtistsException e) {
+            throw new CantHandleConnectionRequestAcceptedException(
+                    e,
+                    "Handling Artist Connection Request Accepted event",
+                    "Cannot list the artist.");
         }
     }
 

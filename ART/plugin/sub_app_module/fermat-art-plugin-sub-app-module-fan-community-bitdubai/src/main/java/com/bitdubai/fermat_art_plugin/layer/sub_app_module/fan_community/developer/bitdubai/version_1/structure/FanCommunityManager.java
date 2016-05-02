@@ -280,10 +280,10 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
         }    }
 
     @Override
-    public void acceptFan(UUID connectionId) throws CantAcceptRequestException {
+    public void acceptFan(UUID connectionId, String actorPublicKey) throws CantAcceptRequestException {
         try {
             System.out.println("************* im accepting in module the request: "+connectionId);
-            this.fanActorConnectionManager.acceptConnection(connectionId);
+            this.fanActorConnectionManager.acceptConnection(connectionId, actorPublicKey);
         } catch (CantAcceptActorConnectionRequestException | ActorConnectionNotFoundException | UnexpectedConnectionStateException e)
         {
             throw new CantAcceptRequestException("", e, "", "");

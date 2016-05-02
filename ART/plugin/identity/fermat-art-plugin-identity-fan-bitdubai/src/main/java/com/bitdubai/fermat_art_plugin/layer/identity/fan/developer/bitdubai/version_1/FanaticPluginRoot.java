@@ -39,6 +39,7 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanId
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.database.FanaticIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestAcceptedEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanIdentityEventActions;
@@ -144,6 +145,15 @@ public class FanaticPluginRoot extends AbstractPlugin implements
                     EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
             updatesListener.setEventHandler(
                     new ArtistConnectionRequestUpdatesEventHandler(
+                            this.fanIdentityEventActions,
+                            this));
+            eventManager.addListener(updatesListener);
+            listenersAdded.add(updatesListener);
+            //Another listener
+            eventManager.getNewListener(
+                    EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT);
+            updatesListener.setEventHandler(
+                    new ArtistConnectionRequestAcceptedEventHandler(
                             this.fanIdentityEventActions,
                             this));
             eventManager.addListener(updatesListener);

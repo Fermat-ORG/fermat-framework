@@ -97,7 +97,7 @@ public interface FanCommunityModuleManager extends
      * @param connectionId      The id of the connection
      * @throws CantAcceptRequestException
      */
-    void acceptFan(UUID connectionId) throws CantAcceptRequestException;
+    void acceptFan(UUID connectionId, String requesterPublicKey) throws CantAcceptRequestException;
 
     /**
      * The method <code>denyConnection</code> denies a connection request from other fanatic
