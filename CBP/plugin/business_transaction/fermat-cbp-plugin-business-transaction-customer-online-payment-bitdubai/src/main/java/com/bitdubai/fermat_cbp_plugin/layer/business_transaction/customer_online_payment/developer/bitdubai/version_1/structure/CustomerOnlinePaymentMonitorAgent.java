@@ -589,7 +589,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                                                 contractHash);
                                 //If the contract is null, I cannot handle with this situation
                                 ObjectChecker.checkArgument(customerBrokerContractSale);
-                                //if(!customerBrokerContractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                if(!customerBrokerContractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
                                 customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                                         customerBrokerContractSale);
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
@@ -601,7 +601,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
 
                                     customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
                                     raisePaymentConfirmationEvent();
-                                //}
+                                }
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
@@ -624,13 +624,14 @@ public class CustomerOnlinePaymentMonitorAgent implements
                                 contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
                                 if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode())){
                                     CustomerBrokerContractPurchase contractPurchase=customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
-                                    //if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                    ObjectChecker.checkArgument(contractPurchase);
+                                    if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
                                         customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.PAYMENT_SUBMIT);
                                         Date date=new Date();
                                         customerOnlinePaymentBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                                         customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
                                         raisePaymentConfirmationEvent();
-                                    //}
+                                    }
                                 }
                             }
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
