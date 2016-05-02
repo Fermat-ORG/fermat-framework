@@ -164,7 +164,7 @@ public class RequestHistorySendFragment extends FermatWalletListFragment<LossPro
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_transaction_main;
+        return R.layout.loss_fragment_transaction_main;
     }
 
     @Override
