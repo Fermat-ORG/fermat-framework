@@ -44,12 +44,12 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
 
 
     public DisconnectDialog(Activity a,
-                            ArtistSubAppSession cryptoBrokerCommunitySubAppSession,
+                            ArtistSubAppSession artistSubAppSession,
                             SubAppResourcesProviderManager subAppResources,
                             ArtistCommunityInformation artistCommunityInformation,
                             ArtistCommunitySelectableIdentity identity) {
 
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+        super(a, artistSubAppSession, subAppResources);
 
         this.artistCommunityInformation = artistCommunityInformation;
         this.identity = identity;

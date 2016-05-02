@@ -93,45 +93,7 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
 
     }
 
- /*   private class MyPagerAdapter extends FragmentStatePagerAdapter {
 
-        public MyPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int pos) {
-            switch(pos) {
-
-                case 0: songFragment= SongFragment.newInstance();
-                        return songFragment;
-                case 1: followingFragment= FollowingFragment.newInstance();
-                        return followingFragment;
-                default:songFragment= SongFragment.newInstance();
-                        return songFragment;
-            }
-
-
-        }
-
-        @Override
-        public int getCount() {
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            if(position==0){
-
-                return "Songs";
-
-            }else{
-
-                return "Following";
-            }
-
-
-        }*/
     }
 
 

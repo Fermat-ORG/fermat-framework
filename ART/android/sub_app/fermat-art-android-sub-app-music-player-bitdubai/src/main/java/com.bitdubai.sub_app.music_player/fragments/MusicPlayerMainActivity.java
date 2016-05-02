@@ -168,7 +168,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
         if(firstTime) {
-            view=inflater.inflate(R.layout.art_music_player_activity_size,container,false);
+            view=inflater.inflate(R.layout.art_music_player_activity,container,false);
       //      getActivity().getWindow().setBackgroundDrawableResource(R.drawable.musicplayer_background_viewpager);
             bplay = (ImageButton) view.findViewById(R.id.play);
             bbb = (ImageButton) view.findViewById(R.id.back);
@@ -177,6 +177,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             tiempo = (TextView) view.findViewById((R.id.tiempo));
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
             song = (TextView) view.findViewById(R.id.songname);
+
 
 
             pb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -220,8 +221,10 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
             if(items.isEmpty()){
                 recyclerView.setBackgroundResource(R.drawable.nomusic);
+                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
             }else{
                 recyclerView.setBackgroundResource(R.drawable.musicplayer_background_viewpager);
+                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
             }
 
 
@@ -260,17 +263,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         }
 
-        view.post(new Runnable() {
-
-            @Override
-            public void run() {
-                //    System.out.println("TAM:"+view.findViewById(R.id.contents).getWidth());
-                scaleContents(view.findViewById(R.id.contents), view.findViewById(R.id.container));
-
-
-
-            }
-        });
 
         return view;
     }
@@ -345,86 +337,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         }
 
 
-    }
-
-
-
-
-    // Scales the contents of the given view so that it completely fills the given
-// container on one axis (that is, we're scaling isotropically).
-    private void scaleContents(View rootView, View container)    {
-// Compute the scaling ratio
-
-        float xScale = (float)container.getWidth() / rootView.getWidth();
-        float yScale = (float)container.getHeight() / rootView.getHeight();
-        float scale = Math.min(xScale, yScale);
-// Scale our contents
-
-        System.out.println("xScale:"+container.getWidth()+"/"+ rootView.getWidth()+xScale);
-        System.out.println("yScale:"+container.getHeight()+"/"+ rootView.getHeight()+yScale);
-        System.out.println("ESCALE:"+scale);
-        //OTHER CHANGE +0.2F  and contain fill pattern
-        scaleViewAndChildren(rootView, (scale));
-    }
-    // Scale the given view, its contents, and all of its children by the given factor.
-    public static void scaleViewAndChildren(View root, float scale)    {
-// Retrieve the view's layout information
-        ViewGroup.LayoutParams layoutParams = root.getLayoutParams();
-// Scale the view itself
-        if (layoutParams.width != ViewGroup.LayoutParams.MATCH_PARENT &&
-                layoutParams.width != ViewGroup.LayoutParams.WRAP_CONTENT)
-        {
-            layoutParams.width *= scale;
-        }
-        if (layoutParams.height != ViewGroup.LayoutParams.MATCH_PARENT &&
-                layoutParams.height != ViewGroup.LayoutParams.WRAP_CONTENT)
-        {
-            layoutParams.height *= scale;
-        }
-// If this view has margins, scale those too
-        if (layoutParams instanceof ViewGroup.MarginLayoutParams)
-        {
-            ViewGroup.MarginLayoutParams marginParams =
-                    (ViewGroup.MarginLayoutParams)layoutParams;
-            marginParams.leftMargin *= scale;
-            marginParams.rightMargin *= scale;
-            marginParams.topMargin *= scale;
-            marginParams.bottomMargin *= scale;
-        }
-// Set the layout information back into the view
-        root.setLayoutParams(layoutParams);
-// Scale the view's padding
-        root.setPadding(
-                (int) (root.getPaddingLeft() * scale),
-                (int) (root.getPaddingTop() * scale),
-                (int) (root.getPaddingRight() * scale),
-                (int) (root.getPaddingBottom() * scale));
-// If the root view is a TextView, scale the size of its text
-        if (root instanceof TextView)
-        {
-            TextView textView = (TextView)root;
-            if(scale>2){
-                textView.setTextSize(textView.getTextSize() * (scale-1));
-            }else if (scale>1.5F){
-                System.out.println("222");
-                textView.setTextSize(textView.getTextSize() * (1.4F));
-            }else if(scale>0.99 && scale<1.49){
-                System.out.println("333");
-                textView.setTextSize(textView.getTextSize() * (0.70F));
-            }else{
-                System.out.println("444");
-                textView.setTextSize(textView.getTextSize() * scale);
-            }
-
-        }
-
-// If the root view is a ViewGroup, scale all of its children recursively
-        if (root instanceof ViewGroup)
-        {
-            ViewGroup groupView = (ViewGroup)root;
-            for (int cnt = 0; cnt < groupView.getChildCount(); ++cnt)
-                scaleViewAndChildren(groupView.getChildAt(cnt), scale);
-        }
     }
 
 

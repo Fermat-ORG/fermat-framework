@@ -62,7 +62,7 @@ public class ConnectionNotificationsFragment extends
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private FanCommunityInformation cryptoCustomerInformation;
+    private FanCommunityInformation fanCommunityInformation;
     private List<LinkedFanIdentity> linkedFanIdentities;
 
     /**
@@ -78,7 +78,7 @@ public class ConnectionNotificationsFragment extends
         super.onCreate(savedInstanceState);
         // setting up  module
         fanCommunitySubAppSession = appSession;
-        cryptoCustomerInformation = (FanCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        fanCommunityInformation = (FanCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = fanCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         linkedFanIdentities = new ArrayList<>();

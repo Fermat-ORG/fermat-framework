@@ -18,8 +18,12 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_cl
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.events.ArtistConnectionRequestAcceptedEvent;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
@@ -37,6 +41,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.ut
 import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.database.FanActorConnectionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.UUID;
 
@@ -49,6 +54,7 @@ public class ActorConnectionManager implements FanActorConnectionManager {
     private final FanActorConnectionDao dao;
     private final FanManager fanNetworkService;
     private final ErrorManager errorManager;
+    private final EventManager eventManager;
     private final PluginVersionReference pluginVersionReference;
 
     /**
@@ -62,12 +68,14 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                                   final FanActorConnectionDao dao,
                                   final ErrorManager errorManager,
                                   final PluginVersionReference pluginVersionReference,
-                                  final FanManager fanNetworkService) {
+                                  final FanManager fanNetworkService,
+                                  final EventManager eventManager) {
         this.artistNetworkService = artistNetworkService;
         this.dao = dao;
         this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
         this.fanNetworkService = fanNetworkService;
+        this.eventManager = eventManager;
     }
 
     /**
@@ -451,6 +459,16 @@ public class ActorConnectionManager implements FanActorConnectionManager {
         }
     }
 
+    @Override
+    public void acceptConnection(UUID connectionId) throws
+            CantAcceptActorConnectionRequestException,
+            ActorConnectionNotFoundException,
+            UnexpectedConnectionStateException {
+        /**
+         * Implemented only for compilation, do nothing for now
+         */
+    }
+
     /**
      * This method accepts a connection.
      * @param connectionId   id of the actor connection to be accepted.
@@ -460,7 +478,9 @@ public class ActorConnectionManager implements FanActorConnectionManager {
      * @throws UnexpectedConnectionStateException
      */
     @Override
-    public void acceptConnection(final UUID connectionId) throws
+    public void acceptConnection(
+            final UUID connectionId,
+            final String artistAcceptedPublicKey) throws
             CantAcceptActorConnectionRequestException,
             ActorConnectionNotFoundException,
             UnexpectedConnectionStateException{
@@ -481,6 +501,8 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                                     connectionId,
                                     ConnectionState.CONNECTED
                             );
+                            //We gonna raise a event indicating the request accepting.
+                            //raiseConnectionRequestEvent(artistAcceptedPublicKey);
                             break;
                         case ART_FAN:
                             fanNetworkService.acceptConnection(connectionId);
@@ -488,6 +510,8 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                                     connectionId,
                                     ConnectionState.CONNECTED
                             );
+                            //We gonna raise a event indicating the request accepting.
+                            raiseConnectionRequestEvent(artistAcceptedPublicKey);
                     }
                     break;
                 default:
@@ -542,6 +566,19 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                     "connectionId: "+connectionId,
                     "Unhandled error.");
         }
+    }
+
+    /**
+     * This method raise an event to indicate that a connection is accepted.
+     * @param artistAcceptedPublicKey
+     */
+    private void raiseConnectionRequestEvent(final String artistAcceptedPublicKey){
+        ArtistConnectionRequestAcceptedEvent eventToRaise =
+                (ArtistConnectionRequestAcceptedEvent) eventManager.getNewEvent(
+                EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT);
+        eventToRaise.setSource(EventSource.ARTIST_ACTOR_CONNECTION);
+        eventToRaise.setArtistAcceptedPublicKey(artistAcceptedPublicKey);
+        eventManager.raiseEvent(eventToRaise);
     }
 }
 

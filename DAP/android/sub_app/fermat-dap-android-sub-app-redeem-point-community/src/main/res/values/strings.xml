@@ -22,8 +22,10 @@
     <string name="dap_other_profile_crypto_currency">CryptoCurrency</string>
     <string name="dap_other_profile_last_connection_date">Last Connection Date</string>
     <string name="dap_other_profile_connection_rejected">Connection Canceled</string>
-    <string name="dap_other_profile_request_send">Request Sent</string>
+    <string name="dap_other_profile_request_send">Connection request Sent</string>
     <string name="dap_other_profile_request_send_toast">The connection request has been sent you need to wait until the user responds</string>
+    <string name="create_before_action">Asset User or Redeem Point Identities must be created before using this app.</string>
+    <string name="before_action_redeem">Asset User Identity must be created before action.</string>
     <string name="dap_other_profile_request_reject_toast">The connection request has been rejected</string>
     <string name="dap_other_profile_disconect">Disconnect</string>
     <string name="dap_other_profile_connect">Connect</string>

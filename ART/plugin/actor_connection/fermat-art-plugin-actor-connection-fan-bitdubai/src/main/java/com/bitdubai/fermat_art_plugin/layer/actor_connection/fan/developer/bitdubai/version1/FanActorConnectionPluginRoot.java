@@ -123,7 +123,8 @@ public class FanActorConnectionPluginRoot extends AbstractPlugin implements Data
                     dao,
                     errorManager,
                     this.getPluginVersionReference(),
-                    fanActorNetworkServiceManager
+                    fanActorNetworkServiceManager,
+                    eventManager
             );
             super.start();
         } catch (final CantInitializeActorConnectionDatabaseException

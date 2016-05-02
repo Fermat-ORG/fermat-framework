@@ -374,6 +374,24 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 //External username
                 String externalUsername = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
+                //Exposure level
+                ExposureLevel exposureLevel;
+                String exposureLevelString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME);
+                if(exposureLevelString==null || exposureLevelString.isEmpty()){
+                    exposureLevel = ExposureLevel.DEFAULT_EXPOSURE_LEVEL;
+                } else{
+                    exposureLevel = ExposureLevel.getByCode(exposureLevelString);
+                }
+                //
+                ArtistAcceptConnectionsType artistAcceptConnectionsType;
+                String artistAcceptConnectionsTypeString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME);
+                if(artistAcceptConnectionsTypeString==null || artistAcceptConnectionsTypeString.isEmpty()){
+                    artistAcceptConnectionsType = ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE;
+                } else{
+                    artistAcceptConnectionsType = ArtistAcceptConnectionsType.getByCode(artistAcceptConnectionsTypeString);
+                }
                 list.add(new ArtistIdentityImp(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
@@ -381,8 +399,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginFileSystem,
                         pluginId,
                         externalPlatform,
-                        ExposureLevel.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
-                        ArtistAcceptConnectionsType.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME)),
+                        exposureLevel,
+                        artistAcceptConnectionsType,
                         externalUsername));
 
             }
@@ -454,6 +472,24 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 //External username
                 String externalUsername = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
+                //Exposure level
+                ExposureLevel exposureLevel;
+                String exposureLevelString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME);
+                if(exposureLevelString==null || exposureLevelString.isEmpty()){
+                    exposureLevel = ExposureLevel.DEFAULT_EXPOSURE_LEVEL;
+                } else{
+                    exposureLevel = ExposureLevel.getByCode(exposureLevelString);
+                }
+                //
+                ArtistAcceptConnectionsType artistAcceptConnectionsType;
+                String artistAcceptConnectionsTypeString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME);
+                if(artistAcceptConnectionsTypeString==null || artistAcceptConnectionsTypeString.isEmpty()){
+                    artistAcceptConnectionsType = ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE;
+                } else{
+                    artistAcceptConnectionsType = ArtistAcceptConnectionsType.getByCode(artistAcceptConnectionsTypeString);
+                }
                 artist = new ArtistIdentityImp(
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
@@ -462,8 +498,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginFileSystem,
                         pluginId,
                         externalPlatform,
-                        ExposureLevel.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
-                        ArtistAcceptConnectionsType.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME)),
+                        exposureLevel,
+                        artistAcceptConnectionsType,
                         externalUsername);
 
             }
@@ -531,6 +567,24 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 //External username
                 String externalUsername = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
+                //Exposure level
+                ExposureLevel exposureLevel;
+                String exposureLevelString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME);
+                if(exposureLevelString==null || exposureLevelString.isEmpty()){
+                    exposureLevel = ExposureLevel.DEFAULT_EXPOSURE_LEVEL;
+                } else{
+                    exposureLevel = ExposureLevel.getByCode(exposureLevelString);
+                }
+                //
+                ArtistAcceptConnectionsType artistAcceptConnectionsType;
+                String artistAcceptConnectionsTypeString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME);
+                if(artistAcceptConnectionsTypeString==null || artistAcceptConnectionsTypeString.isEmpty()){
+                    artistAcceptConnectionsType = ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE;
+                } else{
+                    artistAcceptConnectionsType = ArtistAcceptConnectionsType.getByCode(artistAcceptConnectionsTypeString);
+                }
                 artist = new ArtistIdentityImp(
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
@@ -539,8 +593,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginFileSystem,
                         pluginId,
                         externalPlatform,
-                        ExposureLevel.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
-                        ArtistAcceptConnectionsType.getByCode(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACCEPT_CONNECTIONS_TYPE_COLUMN_NAME)),
+                        exposureLevel,
+                        artistAcceptConnectionsType,
                         externalUsername);
 
             }
