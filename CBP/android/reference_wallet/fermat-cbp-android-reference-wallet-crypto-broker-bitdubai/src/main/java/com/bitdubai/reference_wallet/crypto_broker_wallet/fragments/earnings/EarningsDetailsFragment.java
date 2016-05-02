@@ -12,7 +12,11 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -56,18 +60,17 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View layout = inflater.inflate(R.layout.cbw_fragment_earnings_details, container, false);
 
-        final NumberFormat instance = DecimalFormat.getInstance();
         final EarningsDetailData currentEarning = data.isEmpty() ? null : data.get(0);
-        final EarningsDetailData previousEarning = (!data.isEmpty() && data.size() > 1 ? data.get(1) : null);
+        final EarningsDetailData previousEarning = (!data.isEmpty() && data.size() > 1) ? data.get(1) : null;
 
         final FermatTextView currentEarningValue = (FermatTextView) layout.findViewById(R.id.cbw_current_earning_value);
-        currentEarningValue.setText(currentEarning != null ? instance.format(currentEarning.getAmount()) : "No current earnings");
+        currentEarningValue.setText(getFormattedEarningAmount(currentEarning, "No current earnings"));
 
         final FermatTextView currentEarningText = (FermatTextView) layout.findViewById(R.id.cbw_current_earning_text);
         currentEarningText.setText(getCurrentEarningText(frequency));
 
         final FermatTextView previousEarningValue = (FermatTextView) layout.findViewById(R.id.cbw_previous_earning_value);
-        previousEarningValue.setText(previousEarning != null ? instance.format(previousEarning.getAmount()) : "No previous earnings");
+        previousEarningValue.setText(getFormattedEarningAmount(previousEarning, "No previous earnings"));
 
         final FermatTextView previousEarningText = (FermatTextView) layout.findViewById(R.id.cbw_previous_earning_text);
         previousEarningText.setText(getPreviousEarningText(frequency));
@@ -82,6 +85,23 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
         earningsOverviewRecyclerView.setAdapter(earningsOverviewAdapter);
 
         return layout;
+    }
+
+    private String getFormattedEarningAmount(EarningsDetailData earning, String message) {
+
+        if (earning != null) {
+            final NumberFormat numberFormat = DecimalFormat.getInstance();
+
+            double amount = earning.getAmount();
+            final Currency earningCurrency = earning.getRelationship().getCurrency();
+            final String earningCurrencyCode = earningCurrency.getCode();
+
+            if (earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
+                amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
+
+            return numberFormat.format(amount);
+        }
+        return message;
     }
 
     public void bindData(EarningsPair earningsPair, TimeFrequency frequency) {
