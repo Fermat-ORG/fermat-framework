@@ -238,8 +238,8 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                 }
 
-            }else{
-                communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
+//            }else{
+//                communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
             }
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
