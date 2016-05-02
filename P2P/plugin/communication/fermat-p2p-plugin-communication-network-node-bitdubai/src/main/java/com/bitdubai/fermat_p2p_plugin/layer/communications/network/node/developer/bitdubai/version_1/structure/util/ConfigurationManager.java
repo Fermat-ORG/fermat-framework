@@ -80,9 +80,9 @@ public class ConfigurationManager {
     public static final String PASSWORD = "password";
 
     /**
-     * Represent the value of REGISTER_IN_CATALOG
+     * Represent the value of REGISTERED_IN_CATALOG
      */
-    public static final String REGISTER_IN_CATALOG = "register_in_catalog";
+    public static final String REGISTERED_IN_CATALOG = "register_in_catalog";
 
     /**
      * Represent the value of MONIT_USER
@@ -165,8 +165,8 @@ public class ConfigurationManager {
         newConfigurationFile.getLayout().setComment(PORT, "\n# * SERVER PORT");
         newConfigurationFile.addProperty(PORT, FermatEmbeddedNodeServer.DEFAULT_PORT);
 
-        newConfigurationFile.getLayout().setComment(REGISTER_IN_CATALOG, "\n# * IS THE NODE REGISTER IN THE CATALOG");
-        newConfigurationFile.addProperty(REGISTER_IN_CATALOG, Boolean.FALSE);
+        newConfigurationFile.getLayout().setComment(REGISTERED_IN_CATALOG, "\n# * IS THE NODE REGISTER IN THE CATALOG");
+        newConfigurationFile.addProperty(REGISTERED_IN_CATALOG, Boolean.FALSE);
 
         newConfigurationFile.getLayout().setComment(LAST_REGISTER_NODE_PROFILE, "\n# * THE LAST REGISTER NODE PROFILE IN THE NODES CATALOG (DON'T MODIFY MANUALLY)");
         newConfigurationFile.addProperty(LAST_REGISTER_NODE_PROFILE, "{}");
