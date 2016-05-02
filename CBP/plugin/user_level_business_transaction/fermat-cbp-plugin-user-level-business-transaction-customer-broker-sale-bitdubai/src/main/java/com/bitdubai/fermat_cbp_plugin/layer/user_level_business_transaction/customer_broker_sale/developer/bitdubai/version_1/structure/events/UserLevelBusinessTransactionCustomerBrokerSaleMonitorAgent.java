@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -663,7 +664,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         final BigDecimal priceReference = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
-        final BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+        BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
 
         clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_BANK_ACCOUNT);
         final String bankAccount = NegotiationClauseHelper.getAccountNumberFromString(clauseValue);
@@ -676,6 +677,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         //Ejecuto el restock dependiendo del tipo de transferencia a realizar
         switch (paymentMethod) {
             case CRYPTO:
+                amount = new BigDecimal(BitcoinConverter.convert(amount.doubleValue(), BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI));
                 cryptoMoneyRestockManager.createTransactionRestock(
                         contractSale.getPublicKeyBroker(),
                         CryptoCurrency.getByCode(currencyCode),

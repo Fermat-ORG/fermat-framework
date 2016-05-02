@@ -50,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 
 /**
@@ -154,18 +155,17 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
 
     private void bindData() {
-        SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
-
-        String paymentCurrency = data.getPaymentCurrency();
-        Date date = new Date(data.getLastUpdate());
-        double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
-        double amount = getFormattedNumber(data.getAmount());
+        final SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy", Locale.getDefault());
+        final String paymentCurrency = data.getPaymentCurrency();
+        final String merchandise = data.getMerchandise();
+        final double exchangeRateAmount = getFormattedNumber(data.getExchangeRateAmount());
+        final Date lastUpdate = new Date(data.getLastUpdate());
 
         brokerImage.setImageDrawable(getImgDrawable(data.getCryptoBrokerImage()));
         brokerName.setText(data.getCryptoBrokerAlias());
-        sellingSummary.setText("SELLING " + data.getMerchandise());
-        detailDate.setText("Date:\n" + formatter.format(date));
-        detailRate.setText("1" + " " + data.getMerchandise() + " @ " + exchangeRateAmount + " " + paymentCurrency);
+        sellingSummary.setText(String.format("SELLING %1$s", merchandise));
+        detailRate.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRateAmount, paymentCurrency));
+        detailDate.setText(String.format("Date: %1$s", formatter.format(lastUpdate)));
     }
 
 

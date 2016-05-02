@@ -201,7 +201,10 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
                         cryptoBrokerWalletModuleManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletModuleManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
+                        double doubleValue = DecimalFormat.getInstance().parse(amount).doubleValue();
+                        doubleValue = BitcoinConverter.convert(doubleValue, BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
+
+                        cryptoBrokerWalletModuleManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(doubleValue), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
                     }
                     dismiss();
                     return;
