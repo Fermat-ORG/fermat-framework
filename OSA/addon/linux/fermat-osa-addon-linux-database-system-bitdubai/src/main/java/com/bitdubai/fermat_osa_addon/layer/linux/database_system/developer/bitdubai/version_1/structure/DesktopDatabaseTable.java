@@ -150,19 +150,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public void updateRecord(DatabaseTableRecord record) throws CantUpdateRecordException {
 
         try {
-            List<DatabaseRecord> records = record.getValues();
 
-            //ContentValues recordUpdateList = new ContentValues();
+            List<DatabaseRecord> records = record.getValues();
             Map<String, Object> recordUpdateList = new HashMap<>();
 
-            /**
-             * I update only the fields marked as modified
-             *
-             */
-
-            for (int i = 0; i < records.size(); ++i) {
-                if (records.get(i).isChange())
-                    recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
+            for (DatabaseRecord item: records) {
+                if (item.isChange()){
+                    recordUpdateList.put(item.getName(), item.getValue());
+                }
             }
 
             if (this.tableFilter != null) {
@@ -278,9 +273,13 @@ public class DesktopDatabaseTable implements DatabaseTable {
         this.records = new ArrayList<>();
 
         String topSentence = "";
+        String offsetSentence = "";
 
-        if (this.top.length() > 0)
+        if (!this.top.isEmpty())
             topSentence = " LIMIT " + this.top;
+
+        if (!this.offset.isEmpty())
+            offsetSentence = " OFFSET " + this.offset;
 
         Connection conn = null;
         Statement stmt = null;
@@ -291,7 +290,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
             conn = this.database.getConnection();
             stmt = conn.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence);
+            String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
+
+            System.out.println("QUERY = "+SQL_QUERY);
+
+            rs = stmt.executeQuery(SQL_QUERY);
 
             if(rs.next()) {
 
@@ -534,17 +537,22 @@ public class DesktopDatabaseTable implements DatabaseTable {
             if (!records.isEmpty()) {
                 for (DatabaseRecord record1 : records) {
 
-                    if (queryWhereClause.length() > 0) {
-                        queryWhereClause += " and ";
-                        queryWhereClause += record1.getName();
-                    } else
-                        queryWhereClause += record1.getName();
-                    queryWhereClause += "=";
-                    queryWhereClause += "'" + record1.getValue() + "'";
+                    if(record1.getValue() != null) {
+
+                        if (queryWhereClause.length() > 0) {
+                            queryWhereClause += " and ";
+                            queryWhereClause += record1.getName();
+                        } else
+                            queryWhereClause += record1.getName();
+                        queryWhereClause += "=";
+                        queryWhereClause += "'" + record1.getValue() + "'";
+                    }
                 }
+            }else{
+                queryWhereClause = null;
             }
 
-            String query = "DELETE FROM " + tableName + (!queryWhereClause.isEmpty() ? " WHERE " + queryWhereClause : null);
+            String query = "DELETE FROM " + tableName + (queryWhereClause != null ? " WHERE " + queryWhereClause : "");
 
             System.out.println("*** * *   *   *     *      * Im executing the query: "+query);
             database.execSQL(query);

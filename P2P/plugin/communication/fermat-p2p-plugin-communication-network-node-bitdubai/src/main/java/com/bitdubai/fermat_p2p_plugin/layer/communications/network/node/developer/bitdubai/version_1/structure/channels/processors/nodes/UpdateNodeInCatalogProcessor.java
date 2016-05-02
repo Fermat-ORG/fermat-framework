@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -19,7 +18,10 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
+
+import java.sql.Timestamp;
 
 import javax.websocket.Session;
 
@@ -36,7 +38,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(UpdateNodeInCatalogProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(UpdateNodeInCatalogProcessor.class.getName()));
 
     /**
      * Constructor with parameter
@@ -73,7 +75,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
             /*
              * Validate if content type is the correct
              */
-            if (messageContent.getMessageContentType() == MessageContentType.JSON){
+            if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
                 /*
                  * Obtain the profile of the node
@@ -81,7 +83,9 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                 nodeProfile = messageContent.getNodeProfile();
 
 
-                if (!exist(nodeProfile)){
+                if (!getDaoFactory().getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())){
+
+                    LOG.info("The node profile to update no exist");
 
                     /*
                      * Notify the node already exist
@@ -89,6 +93,8 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                     updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.FAIL, "The node profile to update no exist", nodeProfile, Boolean.FALSE);
 
                 }else {
+
+                    LOG.info("Updating ...");
 
                     /*
                      * Insert NodesCatalog into data base
@@ -108,7 +114,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                     /*
                      * If all ok, respond whit success message
                      */
-                    updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), nodeProfile, Boolean.TRUE);
+                    updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.SUCCESS, UpdateNodeInCatalogMsjRespond.STATUS.SUCCESS.toString(), nodeProfile, Boolean.TRUE);
 
                 }
 
@@ -119,13 +125,25 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                  */
                 session.getAsyncRemote().sendObject(packageRespond);
 
+            }else {
+
+                updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.FAIL, "Invalid content type: "+messageContent.getMessageContentType(), nodeProfile, Boolean.FALSE);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+
+                /*
+                 * Send the respond
+                 */
+                session.getAsyncRemote().sendObject(packageRespond);
+
             }
 
+            LOG.info("Processing finish");
 
         } catch (Exception exception){
 
             try {
 
+                exception.printStackTrace();
                 LOG.error(exception.getMessage());
 
                 /*
@@ -147,26 +165,6 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
 
     }
 
-    /**
-     * Validate if the node exist into the catalog
-     *
-     * @param nodeProfile
-     * @return boolean
-     */
-    private boolean exist(NodeProfile nodeProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        /*
-         * Search in the data base
-         */
-        NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(nodeProfile.getIdentityPublicKey());
-
-        if (nodesCatalog != null){
-            return Boolean.TRUE;
-        }
-
-        return Boolean.FALSE;
-
-    }
 
     /**
      * Update a row into the data base
@@ -174,7 +172,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
      * @param nodeProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void updateNodesCatalog(NodeProfile nodeProfile) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+    private void updateNodesCatalog(NodeProfile nodeProfile) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
         /*
          * Create the NodesCatalog
@@ -185,6 +183,8 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
         nodeCatalog.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
         nodeCatalog.setName(nodeProfile.getName());
         nodeCatalog.setOfflineCounter(0);
+        nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
@@ -216,6 +216,8 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
         transaction.setName(nodeProfile.getName());
         transaction.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
         transaction.setHashId(transaction.getHashId());
+        transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
@@ -247,6 +249,8 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
         transaction.setName(nodeProfile.getName());
         transaction.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
         transaction.setHashId(transaction.getHashId());
+        transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){

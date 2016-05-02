@@ -37,7 +37,7 @@ public class ConfigurationManager {
     /**
      * Represent the value of DIR_NAME
      */
-    public static final String DIR_NAME = "configuration";
+    public static final String DIR_NAME = getExternalStorageDirectory()+"/configuration";
 
     /**
      * Represent the value of FILE_NAME
@@ -157,7 +157,7 @@ public class ConfigurationManager {
         newConfigurationFile.addProperty(IDENTITY_PUBLIC_KEY, identityPublicKey);
 
         newConfigurationFile.getLayout().setComment(NODE_NAME, "\n# * NODE NAME");
-        newConfigurationFile.addProperty(NODE_NAME, "Fermat Node ("+ InetAddress.getLocalHost().getHostName() +")");
+        newConfigurationFile.addProperty(NODE_NAME, "Fermat Node (" + InetAddress.getLocalHost().getHostName() + ")");
 
         newConfigurationFile.getLayout().setComment(IP, "\n# * SERVER IP (Configure 0.0.0.0 to server listen to all network interfaces)");
         newConfigurationFile.addProperty(IP, FermatEmbeddedNodeServer.DEFAULT_IP);
@@ -169,7 +169,7 @@ public class ConfigurationManager {
         newConfigurationFile.addProperty(REGISTER_IN_CATALOG, Boolean.FALSE);
 
         newConfigurationFile.getLayout().setComment(LAST_REGISTER_NODE_PROFILE, "\n# * THE LAST REGISTER NODE PROFILE IN THE NODES CATALOG (DON'T MODIFY MANUALLY)");
-        newConfigurationFile.addProperty(LAST_REGISTER_NODE_PROFILE, null);
+        newConfigurationFile.addProperty(LAST_REGISTER_NODE_PROFILE, "{}");
 
         newConfigurationFile.getLayout().setComment(USER, "\n# * MONITORIG USER");
         newConfigurationFile.addProperty(USER, "fermat");
@@ -213,6 +213,20 @@ public class ConfigurationManager {
     public static void updateValue(String property, String value) throws ConfigurationException {
         configuration.setProperty(property, value);
         configuration.save();
+    }
+
+    /**
+     * Get the path to file system folder
+     * @return String path to file folder
+     **/
+    private static String getExternalStorageDirectory() {
+
+        //User home directory
+        String home = System.getProperty("user.home");
+        File dir = new File(home+"/externalStorage2/files/");
+        dir.mkdirs();
+        return dir.getAbsolutePath();
+
     }
 
 }

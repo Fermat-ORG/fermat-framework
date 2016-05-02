@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -35,7 +37,7 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(CheckOutActorRequestProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(CheckOutActorRequestProcessor.class));
 
     /**
      * Constructor whit parameter
@@ -150,12 +152,17 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
      * @param profileIdentity
      * @throws CantInsertRecordDataBaseException
      */
-    private void deleteCheckedInActor(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
+    private void deleteCheckedInActor(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
 
+        /*
+         * validate if exists
+         */
+        if(getDaoFactory().getCheckedInActorDao().exists(profileIdentity)) {
         /*
          * delete from the data base
          */
-        getDaoFactory().getCheckedInActorDao().delete(profileIdentity);
+            getDaoFactory().getCheckedInActorDao().delete(profileIdentity);
+        }
 
     }
 

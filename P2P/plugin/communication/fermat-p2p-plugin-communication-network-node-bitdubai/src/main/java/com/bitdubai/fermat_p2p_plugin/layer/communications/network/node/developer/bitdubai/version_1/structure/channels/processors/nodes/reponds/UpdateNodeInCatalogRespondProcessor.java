@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
@@ -9,14 +9,16 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.UpdateNodeInCatalogMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.UpdateNodeInCatalogRespondProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.UpdateNodeInCatalogRespondProcessor</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
@@ -28,7 +30,7 @@ public class UpdateNodeInCatalogRespondProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(UpdateNodeInCatalogRespondProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(UpdateNodeInCatalogRespondProcessor.class));
 
     /**
      * Constructor with parameter
@@ -68,7 +70,7 @@ public class UpdateNodeInCatalogRespondProcessor extends PackageProcessor {
 
                     LOG.info("MsgRespond status "+messageContent.getStatus());
                     ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
-                    ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, messageContent.getNodeProfileAdded().toJson());
+                    ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(messageContent.getNodeProfileAdded().toJson().getBytes("UTF-8")));
 
                 }else if (messageContent.getStatus() == MsgRespond.STATUS.FAIL) {
 
@@ -77,7 +79,7 @@ public class UpdateNodeInCatalogRespondProcessor extends PackageProcessor {
 
                     if (!messageContent.getAlreadyExists()){
                         ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.FALSE));
-                        ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, null);
+                        ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, "{}");
                     }
 
                 } else {

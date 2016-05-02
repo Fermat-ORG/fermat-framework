@@ -22,6 +22,11 @@ public class HeadersAttName {
     public static final String NPKI_ATT_HEADER_NAME = "NPKI";
 
     /**
+     * Represent the name of the attribute header for the remote node identity public key identity
+     */
+    public static final String REMOTE_NPKI_ATT_HEADER_NAME = "RNPKI";
+
+    /**
      * Represent the name of the attribute header for the client identity public key identity
      */
     public static final String CPKI_ATT_HEADER_NAME = "CPKI";

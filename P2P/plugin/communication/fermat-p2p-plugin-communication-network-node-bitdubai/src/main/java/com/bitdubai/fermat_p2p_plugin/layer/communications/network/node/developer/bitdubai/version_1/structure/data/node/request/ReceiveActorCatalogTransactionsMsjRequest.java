@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
-import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -22,6 +22,13 @@ public class ReceiveActorCatalogTransactionsMsjRequest extends PackageContent {
     private List<ActorsCatalogTransaction> actorsCatalogTransactions;
 
     /**
+     * Constructor
+     */
+    public ReceiveActorCatalogTransactionsMsjRequest(){
+        super();
+    }
+
+    /**
      * Constructor with parameters
      * @param actorsCatalogTransactions
      */
@@ -39,8 +46,22 @@ public class ReceiveActorCatalogTransactionsMsjRequest extends PackageContent {
         return actorsCatalogTransactions;
     }
 
-    public static ReceiveActorCatalogTransactionsMsjRequest parseContent(String content) {
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
 
-        return new Gson().fromJson(content, ReceiveActorCatalogTransactionsMsjRequest.class);
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static ReceiveActorCatalogTransactionsMsjRequest parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, ReceiveActorCatalogTransactionsMsjRequest.class);
     }
 }

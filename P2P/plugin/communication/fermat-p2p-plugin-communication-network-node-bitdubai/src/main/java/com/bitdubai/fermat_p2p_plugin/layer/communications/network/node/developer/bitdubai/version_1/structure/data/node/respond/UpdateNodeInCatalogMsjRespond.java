@@ -2,7 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.node.respond.UpdateNodeInCatalogMsjRespond</code>
@@ -54,8 +54,22 @@ public class UpdateNodeInCatalogMsjRespond extends MsgRespond {
         return alreadyExists;
     }
 
-    public static UpdateNodeInCatalogMsjRespond parseContent(String content) {
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
 
-        return new Gson().fromJson(content, UpdateNodeInCatalogMsjRespond.class);
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static UpdateNodeInCatalogMsjRespond parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, UpdateNodeInCatalogMsjRespond.class);
     }
 }

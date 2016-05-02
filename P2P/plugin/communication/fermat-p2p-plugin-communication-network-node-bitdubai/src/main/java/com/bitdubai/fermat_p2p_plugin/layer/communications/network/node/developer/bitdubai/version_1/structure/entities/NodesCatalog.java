@@ -34,8 +34,10 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	public NodesCatalog() {
 		super();
-		this.registeredTimestamp     = new Timestamp(System.currentTimeMillis());
-		this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
+		this.registeredTimestamp      = new Timestamp(System.currentTimeMillis());
+		this.lastConnectionTimestamp  = new Timestamp(System.currentTimeMillis());
+		this.offlineCounter           = null;
+		this.lateNotificationsCounter = null;
 	}
 
 	public String getIdentityPublicKey() {

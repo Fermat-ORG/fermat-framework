@@ -1,10 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 import java.util.List;
 
@@ -44,21 +41,22 @@ public class CheckInProfileListMsgRespond extends MsgRespond {
         return profileList;
     }
 
+    /**
+     * Generate the json representation
+     * @return String
+     */
     @Override
     public String toJson() {
-
-        return getGsonInstance().toJson(this, getClass());
+        return GsonProvider.getGson().toJson(this, getClass());
     }
 
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
     public static CheckInProfileListMsgRespond parseContent(String content) {
-
-        return getGsonInstance().fromJson(content, CheckInProfileListMsgRespond.class);
-    }
-
-    private static Gson getGsonInstance() {
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
-        return builder.create();
+        return GsonProvider.getGson().fromJson(content, CheckInProfileListMsgRespond.class);
     }
 }

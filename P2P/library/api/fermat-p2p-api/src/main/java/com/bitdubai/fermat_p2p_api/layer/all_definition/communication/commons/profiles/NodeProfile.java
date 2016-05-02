@@ -1,9 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile</code>
@@ -36,8 +33,6 @@ public class NodeProfile extends Profile {
     public NodeProfile(){
         super();
     }
-
-
 
     /**
      * Gets the value of defaultPort and returns
@@ -94,30 +89,28 @@ public class NodeProfile extends Profile {
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#toJson()
+     * Return this object in json string
+     *
+     * @return json string
      */
-    @Override
-    public String toJson() {
-        return getGsonInstance().toJson(this);
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, NodeProfile.class);
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#fromJson(String)
+     * Get the object
+     *
+     * @param jsonString
+     * @return NodeProfile
      */
-    public NodeProfile fromJson(String jsonString) {
-        return getGsonInstance().fromJson(jsonString, this.getClass());
+    public static NodeProfile fromJson(String jsonString) {
+        return GsonProvider.getGson().fromJson(jsonString, NodeProfile.class);
     }
 
-    private static Gson getGsonInstance() {
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Profile.class, new InterfaceAdapter<Profile>());
-        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
-        return builder.create();
-    }
-
+    /**
+     * (non-javadoc)
+     * @see Object#toString()
+     */
     @Override
     public String toString() {
         return "NodeProfile{" +
@@ -125,5 +118,36 @@ public class NodeProfile extends Profile {
                 ", ip='" + ip + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    /**
+     * (non-javadoc)
+     * @see Object#equals(Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NodeProfile)) return false;
+
+        NodeProfile that = (NodeProfile) o;
+
+        if (!getIdentityPublicKey().equals(that.getIdentityPublicKey())) return false;
+        if ((!getLocation().getLatitude().equals(that.getLocation().getLatitude())) || !getLocation().getLongitude().equals(that.getLocation().getLongitude())) return false;
+        if (!getDefaultPort().equals(that.getDefaultPort())) return false;
+        if (!getIp().equals(that.getIp())) return false;
+        return getName().equals(that.getName());
+
+    }
+
+    /**
+     * (non-javadoc)
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = getDefaultPort().hashCode();
+        result = 31 * result + getIp().hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
     }
 }

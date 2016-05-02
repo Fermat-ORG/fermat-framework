@@ -41,6 +41,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	public NodesCatalogTransaction() {
         super();
+        this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
         this.registeredTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
