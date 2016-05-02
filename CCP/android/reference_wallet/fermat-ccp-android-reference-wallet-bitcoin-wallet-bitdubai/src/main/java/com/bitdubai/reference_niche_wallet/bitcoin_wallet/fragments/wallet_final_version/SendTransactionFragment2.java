@@ -14,6 +14,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -257,8 +258,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             if(pendingBlocks > 0){
             //paint toolbar on red
-                final RelativeLayout container_header_balance = getToolbarHeader();
-                container_header_balance.setBackgroundColor(Color.RED);
+                final Toolbar toolBar = getToolbar();
+                toolBar.setBackgroundColor(Color.RED);
 
                 makeText(getActivity(), "Blockchain Update in progress.", Toast.LENGTH_SHORT).show();
             }
