@@ -602,8 +602,9 @@ public class ChatMiddlewareMonitorAgent implements
             CantGetMessageException, SendStatusUpdateMessageNotificationException {
         UUID messageId = chatMetadata.getMessageId();
         System.out.println("12345 SAVING MESSAGE");
-        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
-        if (messageRecorded == null) {
+//        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+                Message messageRecorded = null;
+//        if (messageRecorded == null) {
             /**
              * In this case, the message is not created in database, so, is an incoming message,
              * I need to create a new message
@@ -611,7 +612,7 @@ public class ChatMiddlewareMonitorAgent implements
             messageRecorded = getMessageFromChatMetadata(
                     chatMetadata);
             if (messageRecorded == null) return;
-        }
+//        }
 
         messageRecorded.setStatus(MessageStatus.RECEIVE);
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);

@@ -89,4 +89,14 @@ public class MessageMock implements Message {
     public void setContactId(UUID contactId) {
         //Not implemented in this mock.
     }
+
+    @Override
+    public long getCount() {
+        return 0;
+    }
+
+    @Override
+    public void setCount(long count) {
+
+    }
 }
