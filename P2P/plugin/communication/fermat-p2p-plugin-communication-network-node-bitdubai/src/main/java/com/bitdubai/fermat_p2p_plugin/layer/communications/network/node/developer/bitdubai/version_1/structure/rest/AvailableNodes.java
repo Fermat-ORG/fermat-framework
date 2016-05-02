@@ -6,9 +6,16 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+
+import org.apache.commons.lang.ClassUtils;
+import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +35,29 @@ import javax.ws.rs.core.MediaType;
  */
 @Path("/available/nodes")
 public class AvailableNodes implements RestFulServices {
+
+    /**
+     * Represent the LOG
+     */
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(AvailableNodes.class));
+
+    /**
+     * Represent the daoFactory
+     */
+    private DaoFactory daoFactory;
+
+    /**
+     * Represent the gson
+     */
+    private Gson gson;
+
+    /**
+     * Constructor
+     */
+    public AvailableNodes(){
+        daoFactory = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
+        gson = new Gson();
+    }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
@@ -52,7 +82,6 @@ public class AvailableNodes implements RestFulServices {
         listnode.add(nodeProfile2);
 
         JsonObject jsonObject = new JsonObject();
-        Gson gson = new Gson();
 
         jsonObject.addProperty("success", Boolean.TRUE);
         jsonObject.addProperty("data", gson.toJson(listnode));

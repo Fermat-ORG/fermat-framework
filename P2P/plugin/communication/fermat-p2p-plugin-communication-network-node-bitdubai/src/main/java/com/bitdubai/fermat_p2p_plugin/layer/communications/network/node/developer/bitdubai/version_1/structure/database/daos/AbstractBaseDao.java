@@ -117,6 +117,44 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     }
 
     /**
+     * Method that find a entity by its columnName and  columnValue in the data base.
+     *
+     * @param columnName entity.
+     * @param columnValue entity.
+     *
+     * @return FermatMessage found.
+     *
+     * @throws CantReadRecordDataBaseException   if something goes wrong.
+     * @throws RecordNotFoundException           if i can't find the record.
+     */
+    public final E findEntityByFilter(final String columnName, final String columnValue) throws CantReadRecordDataBaseException, RecordNotFoundException {
+
+        if (columnName == null || columnName.isEmpty() || columnValue == null || columnValue.isEmpty())
+            throw new IllegalArgumentException("The filter are required, can not be null or empty.");
+
+        try {
+
+            final DatabaseTable table = getDatabaseTable();
+            table.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            if(!records.isEmpty())
+                return getEntityFromDatabaseTableRecord(records.get(0));
+            else
+                throw new RecordNotFoundException("columnValue: " + columnValue, "Cannot find an entity with that columnName in the table "+tableName);
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "Invalid parameter found, maybe the enum is wrong.");
+        }
+    }
+
+    /**
      * Method that checks if an entity exists in database.
      *
      * @param id entity.

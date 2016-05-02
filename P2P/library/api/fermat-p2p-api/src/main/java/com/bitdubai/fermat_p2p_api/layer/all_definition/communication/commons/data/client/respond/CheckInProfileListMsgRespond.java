@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
@@ -21,15 +22,21 @@ public class CheckInProfileListMsgRespond extends MsgRespond {
     private List<Profile> profileList;
 
     /**
+     * Represent the discoveryQueryParameters
+     */
+    private DiscoveryQueryParameters discoveryQueryParameters;
+
+    /**
      * Constructor with parameters
      *
      * @param status
      * @param details
      * @param profileList
      */
-    public CheckInProfileListMsgRespond(STATUS status, String details, List<Profile> profileList) {
+    public CheckInProfileListMsgRespond(STATUS status, String details, List<Profile> profileList, DiscoveryQueryParameters discoveryQueryParameters) {
         super(status, details);
         this.profileList = profileList;
+        this.discoveryQueryParameters = discoveryQueryParameters;
     }
 
     /**
@@ -39,6 +46,15 @@ public class CheckInProfileListMsgRespond extends MsgRespond {
      */
     public List<Profile> getProfileList() {
         return profileList;
+    }
+
+    /**
+     * Gets the value of discoveryQueryParameters to validate if it was NETWORK_SERVICE or Actor
+     * when occurs an fails to realize the ActorTraceDiscoveryQueryRequestProcessor
+     * @return discoveryQueryParameters
+     */
+    public DiscoveryQueryParameters getDiscoveryQueryParameters() {
+        return discoveryQueryParameters;
     }
 
     /**
