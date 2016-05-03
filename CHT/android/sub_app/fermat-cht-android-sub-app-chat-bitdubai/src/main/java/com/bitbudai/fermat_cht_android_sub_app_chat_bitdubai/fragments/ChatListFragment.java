@@ -27,6 +27,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAd
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -378,11 +379,12 @@ public class ChatListFragment extends AbstractFermatFragment{
                 try{
                     appSession.setData("whocallme", "chatlist");
                     //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+                    int newPosition= Utils.safeLongToInt(adapter.getItemId(position));
                     Contact contact=new ContactImpl();
-                    contact.setRemoteActorPublicKey(contactId.get(position));
-                    contact.setAlias(contactName.get(position));
+                    contact.setRemoteActorPublicKey(contactId.get(newPosition));
+                    contact.setAlias(contactName.get(newPosition));
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    imgId.get(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    imgId.get(newPosition).compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
                     appSession.setData(ChatSession.CONTACT_DATA, contact);
@@ -426,7 +428,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
-        if(code.equals("13")){
+        if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
@@ -449,6 +451,8 @@ public class ChatListFragment extends AbstractFermatFragment{
            @Override
            public boolean onQueryTextChange(String s) {
                if (s.equals(searchView.getQuery().toString())) {
+                   updatevalues();
+                   adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
                    adapter.getFilter().filter(s);
                }
                return false;
@@ -520,11 +524,12 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        v.setBackgroundColor(Color.WHITE);
+        //v.setBackgroundColor(Color.WHITE);
         if (v.getId()==R.id.list) {
             if (Build.VERSION.SDK_INT < 23) {
                 MenuInflater inflater = new MenuInflater(getActivity());
                 inflater.inflate(R.menu.chat_list_context_menu, menu);
+
             }else{
                 MenuInflater inflater = new MenuInflater(getContext());
                 inflater.inflate(R.menu.chat_list_context_menu, menu);
@@ -582,8 +587,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-//                            updatevalues();
-//                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                            updatevalues();
+                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
