@@ -107,6 +107,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private TextView info_into_progress;
     private ProgressBar progressBar_percent;
     private int offset = 0;
+    private int MAX_PORCENTAGE = 100;
 
     private ErrorManager errorManager;
 
@@ -239,7 +240,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
             progressBar_percent.setProgress(getSpendingPercentage(transaction));
             progressBar_percent.setBackgroundColor(Color.parseColor("#1D85B8"));
-            progressBar_percent.setSecondaryProgress(getSpendingPercentage(transaction)-100);
+            progressBar_percent.setSecondaryProgress(getSpendingPercentage(transaction)-MAX_PORCENTAGE);
             progressBar_percent.setBackgroundColor(Color.parseColor("#073487"));
 
 
