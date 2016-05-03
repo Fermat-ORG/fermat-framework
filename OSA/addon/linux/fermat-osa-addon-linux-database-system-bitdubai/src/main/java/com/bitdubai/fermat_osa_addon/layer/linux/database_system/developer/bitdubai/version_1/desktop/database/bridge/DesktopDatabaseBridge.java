@@ -59,7 +59,7 @@ public class DesktopDatabaseBridge {
         try {
             return DriverManager.getConnection("jdbc:sqlite:" + databasePath);
         } catch (Exception e) {
-            System.out.println("database does not exist?"+e.getMessage());
+            System.out.println("database does not exist?" + e.getMessage());
             return null;
         }
     }
@@ -121,12 +121,24 @@ public class DesktopDatabaseBridge {
      */
     public void execSQL(final String sql) throws SQLException {
 
-        Connection conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+        Connection conn = null;
+        Statement statement = null;
 
-        Statement statement = conn.createStatement();
-        statement.executeUpdate(sql);
-        statement.close();
-        conn.close();
+        try {
+            conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+
+            statement = conn.createStatement();
+            statement.executeUpdate(sql);
+        } finally {
+
+            try {
+                if (statement != null)
+                    statement.close();
+            } finally {
+                if (conn != null)
+                    conn.close();
+            }
+        }
     }
 
     /**
@@ -249,14 +261,12 @@ public class DesktopDatabaseBridge {
 
             stmt = c.createStatement();
             stmt.executeUpdate("UPDATE " + tableName + " SET " + setVariables + whereClause);
-            stmt.close();
+
             c.commit();
 
         }catch(SQLException ex){
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
-            if (c != null)
-                close();
+            close();
 
             throw new RuntimeException(ex);
         }

@@ -25,13 +25,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Reg
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VpnSuccessReconnectNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteRequestListComponentRegisteredNotificationEventListener;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteUpdateActorNotificationEventListener;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.FailureComponentConnectionRequestNotificationEventListener;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.RegisterServerRequestNotificationEventListener;
 
 /**
  * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType</code>
@@ -40,8 +33,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  * Update by Roberto Requena (rart3001@gmail.com) on 17/09/2015.
  *
+ * @author  Rart3001
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public enum P2pEventType implements FermatEventEnum {
 
@@ -50,7 +44,7 @@ public enum P2pEventType implements FermatEventEnum {
      */
     COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION("CL_CRCN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentRegistrationNotificationEventListener(this, eventMonitor);
+            return new GenericEventListener<>(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteComponentRegistrationNotificationEvent(this);
@@ -71,7 +65,7 @@ public enum P2pEventType implements FermatEventEnum {
 
     COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION("CL_CCRCN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteClientComponentRegistrationNotificationEventListener(this, eventMonitor);
+            return new GenericEventListener<>(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteClientComponentRegistrationNotificationEvent(this);
@@ -80,7 +74,7 @@ public enum P2pEventType implements FermatEventEnum {
 
     REGISTER_SERVER_REQUEST_NOTIFICATION("REG_SER_REN"){
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new RegisterServerRequestNotificationEventListener(this, eventMonitor);
+            return new GenericEventListener<>(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new RegisterServerRequestNotificationEvent(this);
@@ -89,7 +83,7 @@ public enum P2pEventType implements FermatEventEnum {
 
     COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteRequestListComponentRegisteredNotificationEventListener(this, eventMonitor);
+            return new GenericEventListener<>(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteRequestListComponentRegisteredNotificationEvent(this);
@@ -104,7 +98,7 @@ public enum P2pEventType implements FermatEventEnum {
 
     COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("CL_CCCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteComponentConnectionRequestNotificationEventListener(this, eventMonitor);
+            return new GenericEventListener<>(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteComponentConnectionRequestNotificationEvent(this);
@@ -113,7 +107,7 @@ public enum P2pEventType implements FermatEventEnum {
 
     COMPLETE_UPDATE_ACTOR_NOTIFICATION("CL_UPDACT") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new CompleteUpdateActorNotificationEventListener(this, eventMonitor);
+            return new GenericEventListener<>(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteUpdateActorNotificationEvent(this);
@@ -122,7 +116,7 @@ public enum P2pEventType implements FermatEventEnum {
 
     FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("F_CCCRN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new FailureComponentConnectionRequestNotificationEventListener(this, eventMonitor);
+            return new GenericEventListener<>(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new FailureComponentConnectionRequestNotificationEvent(this);
