@@ -34,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
@@ -163,52 +164,57 @@ public class ChatListFragment extends AbstractFermatFragment{
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
-                        Message mess = chatManager.getMessageByChatId(chatidtemp);
-                        if (mess != null) {
-                            noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
-                            contactId.add(chat.getRemoteActorPublicKey());
-                            //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
-                            //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                            //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
-                            if(chatIdentity!= null) {
-                                for (ChatActorCommunityInformation cont : chatManager
-                                        .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
-                                    String pk1 = cont.getPublicKey();
-                                    String pk2 = chat.getRemoteActorPublicKey();
-                                    if (pk2.equals(pk1)) {
-                                        contactName.add(cont.getAlias());
+                        noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
+                        contactId.add(chat.getRemoteActorPublicKey());
+                        //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
+                        //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
+                        if(chatIdentity!= null) {
+                            for (ChatActorCommunityInformation cont : chatManager
+                                    .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
+                                String pk1 = cont.getPublicKey();
+                                String pk2 = chat.getRemoteActorPublicKey();
+                                if (pk2.equals(pk1)) {
+                                    contactName.add(cont.getAlias());
+                                    Message mess = chatManager.getMessageByChatId(chatidtemp);
+                                    if (mess != null) {
                                         message.add(mess.getMessage());
                                         status.add(mess.getStatus().toString());
                                         typeMessage.add(mess.getType().toString());
-                                        long timemess = chat.getLastMessageDate().getTime();
-                                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                        long milliseconds = timemess + nanos;
-                                        Date dated = new java.util.Date(milliseconds);
-                                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                                        formatter.setTimeZone(TimeZone.getDefault());
-                                        String datef = formatter.format(new java.util.Date(milliseconds));
-                                        if (Validate.isDateToday(dated)) {
-                                            formatter = new SimpleDateFormat("HH:mm");
-                                            formatter.setTimeZone(TimeZone.getDefault());
-                                            datef = formatter.format(new java.util.Date(milliseconds));
-                                        } else {
-                                            Date old = new Date(datef);
-                                            Date today = new Date();
-                                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                            if (dias == 1) {
-                                                datef = "YESTERDAY";
-                                            }
-                                        }
-                                        dateMessage.add(datef);
-                                        chatId.add(chatidtemp);
-                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                        imgId.add(bmd.getBitmap());
-                                        break;
+                                    }else{
+                                        message.add("");
+                                        status.add("");
+                                        typeMessage.add("");
                                     }
+                                    long timemess = chat.getLastMessageDate().getTime();
+                                    long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                    long milliseconds = timemess + nanos;
+                                    Date dated = new java.util.Date(milliseconds);
+                                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                    formatter.setTimeZone(TimeZone.getDefault());
+                                    String datef = formatter.format(new java.util.Date(milliseconds));
+                                    if (Validate.isDateToday(dated)) {
+                                        formatter = new SimpleDateFormat("HH:mm");
+                                        formatter.setTimeZone(TimeZone.getDefault());
+                                        datef = formatter.format(new java.util.Date(milliseconds));
+                                    } else {
+                                        Date old = new Date(datef);
+                                        Date today = new Date();
+                                        long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                        if (dias == 1) {
+                                            datef = "YESTERDAY";
+                                        }
+                                    }
+                                    dateMessage.add(datef);
+                                    chatId.add(chatidtemp);
+                                    ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                    imgId.add(bmd.getBitmap());
+                                    break;
                                 }
-                            }else setUpHelpChat(false);
-                        }
+                            }
+                        }else setUpHelpChat(false);
+
                     }
                 }
             }
@@ -282,18 +288,25 @@ public class ChatListFragment extends AbstractFermatFragment{
     void updatevalues(){
         try{
             if(!chatManager.getChats().isEmpty()) {
-                chatlistview();
-                ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-                layout.setBackground(bgcolor);
+                layout.setBackgroundResource(R.drawable.cht_background_white);
                 noData.setVisibility(View.GONE);
                 noDatalabel.setVisibility(View.GONE);
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
+                chatlistview();
             }else{
-                layout.setBackgroundResource(R.drawable.fondo);
+                layout.setBackgroundResource(R.drawable.cht_background_color);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
-                //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
+                contactName.clear();
+                message.clear();
+                chatId.clear();
+                dateMessage.clear();
+                contactId.clear();
+                status.clear();
+                typeMessage.clear();
+                noReadMsgs.clear();
+                imgId.clear();//text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -478,18 +491,14 @@ public class ChatListFragment extends AbstractFermatFragment{
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
                 alert.setTextTitle("Delete All Chats");
                 alert.setTextBody("Do you want to delete all chats? All chats will be erased");
-                alert.setType("delete-chat");
+                alert.setType("delete-chats");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            // Delete chats and refresh view
-                            chatManager.deleteChats();
                             updatevalues();
                             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteChatException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -548,17 +557,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            // Get the info of chat selected from session
-                            Chat chat = chatSession.getSelectedChat();
-                            // Delete chat and refresh view
-                            chatManager.deleteMessagesByChatId(chat.getChatId());
-                            chatManager.deleteChat(chat);
                             updatevalues();
                             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteChatException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        } catch (CantDeleteMessageException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -576,20 +576,14 @@ public class ChatListFragment extends AbstractFermatFragment{
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
                 alert.setTextTitle("Clean Chat");
                 alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
-                alert.setType("delete-chat");
+                alert.setType("clean-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            // Get the info of chat selected from session
-                            Chat chat = chatSession.getSelectedChat();
-                            // Delete chat and refresh view
-                            chatManager.deleteMessagesByChatId(chat.getChatId());
-                            updatevalues();
-                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteMessageException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                            updatevalues();
+//                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -605,18 +599,14 @@ public class ChatListFragment extends AbstractFermatFragment{
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
                 alert.setTextTitle("Delete All Chats");
                 alert.setTextBody("Do you want to delete all chats? All chats will be erased");
-                alert.setType("delete-chat");
+                alert.setType("delete-chats");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            // Delete chats and refresh view
-                            chatManager.deleteChats();
                             updatevalues();
                             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteChatException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -627,10 +617,10 @@ public class ChatListFragment extends AbstractFermatFragment{
             }
             return true;
         }
-        if (id == R.id.menu_delete_contact) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_delete_contact) {
+//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
 //        if (id == R.id.menu_block_contact) {
 //            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
 //            return true;
