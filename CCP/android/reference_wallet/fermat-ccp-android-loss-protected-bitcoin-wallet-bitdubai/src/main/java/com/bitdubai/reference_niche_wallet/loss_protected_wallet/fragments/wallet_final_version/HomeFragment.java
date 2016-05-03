@@ -358,7 +358,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 }
             });
 
-         
+
 
             //Event Click For change the balance type
             txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
@@ -508,7 +508,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = moduleManager.requestAddressToKnownUser(
+            CryptoAddress cryptoAddress = lossProtectedWallet.requestAddressToKnownUser(
                     lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey(),
                     Actors.INTRA_USER,
                     actorPublicKey,
@@ -516,7 +516,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     Platforms.CRYPTO_CURRENCY_PLATFORM,
                     VaultType.CRYPTO_CURRENCY_VAULT,
                     "BITV",
-                    appSession.getAppPublicKey(),
+                    lossProtectedWalletSession.getAppPublicKey(),
                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                     blockchainNetworkType
             );
@@ -537,7 +537,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     public void GET(String url, final Context context){
         final Handler mHandler = new Handler();
         try {
-            if(moduleManager.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType)<500000000L) {
+            if(lossProtectedWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType)<500000000L) {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -570,7 +570,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                             CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
                             LossProtectedWalletContact cryptoWalletWalletContact = null;
                             try {
-                                cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
+                                cryptoWalletWalletContact = lossProtectedWallet.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
 
                             } catch (Exception e) {
 

@@ -47,7 +47,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@drawable/cbw_divider_shape"
+        android:background="#6666"
         android:id="@+id/navigation_row_divider"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
