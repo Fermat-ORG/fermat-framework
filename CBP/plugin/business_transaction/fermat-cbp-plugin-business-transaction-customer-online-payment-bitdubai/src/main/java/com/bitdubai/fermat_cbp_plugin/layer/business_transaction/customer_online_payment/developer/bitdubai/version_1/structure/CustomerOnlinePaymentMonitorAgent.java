@@ -573,34 +573,30 @@ public class CustomerOnlinePaymentMonitorAgent implements
                     for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
                         businessTransactionMetadata=record.getInformation();
                         contractHash=businessTransactionMetadata.getContractHash();
-                        if(customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            contractTransactionStatus=customerOnlinePaymentBusinessTransactionDao.
-                                    getContractTransactionStatus(contractHash);
-                            //TODO: analyze what we need to do here.
-                        }else{
-                            CustomerBrokerContractSale customerBrokerContractSale=
-                                    customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
-                                    contractHash);
-                            //If the contract is null, I cannot handle with this situation
-                            ObjectChecker.checkArgument(customerBrokerContractSale);
-                            customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
-                                    customerBrokerContractSale);
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
-                                    contractHash,
-                                    ContractStatus.PAYMENT_SUBMIT);
-                            Date date=new Date();
-                            customerOnlinePaymentBusinessTransactionDao.
-                                    setCompletionDateByContractHash(contractHash, date.getTime());
-                            customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
-                            raisePaymentConfirmationEvent();
-
-                            /*BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
-                            record1.setContractTransactionStatus(businessTransactionMetadata.getContractTransactionStatus());
-                            //TODO:fix this with the incomingintraactor.
-                            record1.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
-                            customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);*/
+                        if(businessTransactionMetadata.getRemoteBusinessTransaction() == Plugins.CUSTOMER_ONLINE_PAYMENT){
+                            if(customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
+                                contractTransactionStatus=customerOnlinePaymentBusinessTransactionDao.
+                                        getContractTransactionStatus(contractHash);
+                                //TODO: analyze what we need to do here.
+                            }else{
+                                CustomerBrokerContractSale customerBrokerContractSale=
+                                        customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
+                                                contractHash);
+                                //If the contract is null, I cannot handle with this situation
+                                ObjectChecker.checkArgument(customerBrokerContractSale);
+                                customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
+                                        customerBrokerContractSale);
+                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+                                        contractHash,
+                                        ContractStatus.PAYMENT_SUBMIT);
+                                Date date=new Date();
+                                customerOnlinePaymentBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
+                                customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
+                                raisePaymentConfirmationEvent();
+                            }
+                            transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
-                        transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
                     customerOnlinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
@@ -612,23 +608,25 @@ public class CustomerOnlinePaymentMonitorAgent implements
                     for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
                         businessTransactionMetadata=record.getInformation();
                         contractHash=businessTransactionMetadata.getContractHash();
-                        if(customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            businessTransactionRecord =
+                        if(businessTransactionMetadata.getRemoteBusinessTransaction()==Plugins.CUSTOMER_ONLINE_PAYMENT){
+                            if(customerOnlinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash)){
+                                businessTransactionRecord =
+                                        customerOnlinePaymentBusinessTransactionDao.
+                                                getCustomerOnlinePaymentRecord(contractHash);
+                                contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
+                                if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode())){
+                                    customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+                                            contractHash,
+                                            ContractStatus.PAYMENT_SUBMIT);
+                                    Date date=new Date();
                                     customerOnlinePaymentBusinessTransactionDao.
-                                            getCustomerOnlinePaymentRecord(contractHash);
-                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
-                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode())){
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
-                                        contractHash,
-                                        ContractStatus.PAYMENT_SUBMIT);
-                                Date date=new Date();
-                                customerOnlinePaymentBusinessTransactionDao.
-                                        setCompletionDateByContractHash(contractHash, date.getTime());
-                                customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
-                                raisePaymentConfirmationEvent();
+                                            setCompletionDateByContractHash(contractHash, date.getTime());
+                                    customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT);
+                                    raisePaymentConfirmationEvent();
+                                }
                             }
+                            transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
-                        transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
                     customerOnlinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }

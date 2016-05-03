@@ -1,239 +1,87 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
-
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatBouncyCastleCipher;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatCipher;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatSpongyCastleCipher;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.util.OperatingSystemCheck;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.util.RandomBigIntegerGenerator;
 
+import org.bitcoinj.core.ECKey;
 
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Security;
-import java.security.Signature;
+import java.math.BigInteger;
 
 public class AsymmetricCryptography {
 
-    static {
+	private final static AsymmetricCipher cipher = new AsymmetricCipher();
+	private final static AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
+	private final static RandomBigIntegerGenerator randomizer = new RandomBigIntegerGenerator();
+	
+	public static String createMessageSignature(final String messageHash, final String hexPrivateKey) throws IllegalArgumentException{
+		/*checkStringArgument(messageHash);
+		checkStringArgument(hexPrivateKey);
+		PrivateKey privateKey = new AsymmetricPrivateKey(new BigInteger(hexPrivateKey,16));
+		BigInteger message = new BigInteger(messageHash, 16);
 
-        if (OperatingSystemCheck.getOperatingSystemType() == OperatingSystemCheck.OperatingSystemType.Android){
+		Signature signature = new AsymmetricSignature(privateKey, message, randomizer.generateRandom());*/
+		return "";
+	}
+	
+	public static boolean verifyMessageSignature(final String signature, final String encryptedMessage, final String hexPublicKey) throws IllegalArgumentException{
+		/*checkStringArgument(signature);
+		checkStringArgument(encryptedMessage);
+		checkStringArgument(hexPublicKey);
+		Signature ecSignature = new AsymmetricSignature(signature);
+		BigInteger messageHash = new BigInteger(encryptedMessage, 16);
+		PublicKey publicKey = new AsymmetricPublicKey(hexPublicKey);
+		return ecSignature.verifyMessageSignature(messageHash, publicKey);	*/
+		return true;
+	}
+	
+	public static String encryptMessagePublicKey(final String plainMessage, final String hexPublicKey) throws IllegalArgumentException{
+		/*checkStringArgument(plainMessage);
+		checkStringArgument(hexPublicKey);
+		AsymmetricPublicKey publicKey = new AsymmetricPublicKey(hexPublicKey);
+		return cipher.encryptWithPublicKey(plainMessage, publicKey);*/
+		return plainMessage;
+	}
+	
+	public static String decryptMessagePrivateKey(final String encryptedMessage, final String hexPrivateKey) throws IllegalArgumentException{
+		/*checkStringArgument(encryptedMessage);
+		checkStringArgument(hexPrivateKey);
+		AsymmetricPrivateKey privateKey = new AsymmetricPrivateKey(new BigInteger(hexPrivateKey,16));
+		try{
+			return cipher.decryptWithPrivateKey(encryptedMessage, privateKey);
+		} catch(Exception ex){
 
-            Security.addProvider(new org.spongycastle.jce.provider.BouncyCastleProvider());
-            Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
-
-        }else {
-
-            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-            Security.insertProviderAt(new org.bouncycastle.jce.provider.BouncyCastleProvider(), 1);
-        }
-
-    }
-
-
-    /**
-     * Represent the fermatCipher
-     */
-    private FermatCipher fermatCipher;
-
-    /**
-     * Represent the instance
-     */
-    final static private AsymmetricCryptography instance = new AsymmetricCryptography();
-
-    /**
-     * Constructor
-     */
-    private AsymmetricCryptography(){
-        super();
-
-        try {
-
-            if (OperatingSystemCheck.getOperatingSystemType() == OperatingSystemCheck.OperatingSystemType.Android){
-                fermatCipher = new FermatBouncyCastleCipher();
-            }else {
-                fermatCipher =  new FermatSpongyCastleCipher();
-            }
-
-            System.out.println("AsymmetricCryptography - SecurityProvider Loaded = "+ Security.getProviders()[0]);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    /**
-     * Get the FermatCipher
-     * @return FermatCipher
-     */
-    public static FermatCipher getFermatCipher(){
-        return instance.fermatCipher;
-    }
-
-    /**
-     * Get a private key object from string key base64 encode
-     * @param keyStringBase64
-     * @return PrivateKey
-     * @throws Exception
-     */
-    public static PrivateKey getPrivateKeyFromString(String keyStringBase64) throws Exception {
-        return getFermatCipher().readPrivateKey(keyStringBase64);
-    }
-
-    /**
-     * Get a public key object from string key base64 encode
-     * @param keyStringBase64
-     * @return PublicKey
-     * @throws Exception
-     */
-    public static PublicKey getPublicKeyFromString(String keyStringBase64) throws Exception {
-        return getFermatCipher().readPublicKey(keyStringBase64);
-    }
-
-    /**
-     * Create a private key
-     * @return String
-     */
-    public static String createPrivateKey(){
-
-        try {
-
-            java.security.KeyPair keyPair = getFermatCipher().generateKeyPair();
-            return getFermatCipher().encode(keyPair.getPrivate().getEncoded());
-
-        }catch (Exception e){
-            throw new IllegalArgumentException(e);
-        }
-
-    }
-
-
-    /**
-     * Create a public key derived from private key
-     * @param privateKeyString
-     * @return String
-     * @throws IllegalArgumentException
-     */
-    public static String derivePublicKey(final String privateKeyString) throws IllegalArgumentException {
-
-        try {
-
-            checkStringArgument(privateKeyString);
-            return getFermatCipher().createPublicKeyFromPrivateKey(getFermatCipher().readPrivateKey(privateKeyString));
-
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    /**
-     * Create a message signature
-     *
-     * @param privateKey
-     * @param message
-     * @return String
-     * @throws IllegalArgumentException
-     */
-    public static String createMessageSignature(final String privateKey, final String message) throws IllegalArgumentException {
-
-        checkStringArgument(privateKey);
-        checkStringArgument(message);
-
-        try {
-
-            Signature signature = Signature.getInstance(FermatCipher.DIGEST_SHA1);
-            signature.initSign(getPrivateKeyFromString(privateKey));
-            signature.update(getFermatCipher().decode(message));
-            return getFermatCipher().encode(signature.sign());
-
-        }catch (Exception e) {
-
-            e.printStackTrace();
-            throw new IllegalArgumentException(e);
-
-        }
-    }
-
-    /**
-     * Verify is a message signature are valid
-     *
-     * @param signatureString
-     * @param encryptedMessage
-     * @param publicKey
-     *
-     * @return boolean
-     * @throws IllegalArgumentException
-     */
-	public static boolean verifyMessageSignature(final String signatureString, final String encryptedMessage, final String publicKey){
-
-        checkStringArgument(signatureString);
-        checkStringArgument(encryptedMessage);
-        checkStringArgument(publicKey);
-
-        try {
-
-            Signature signer = Signature.getInstance(FermatCipher.DIGEST_SHA1);
-            signer.initVerify(getPublicKeyFromString(publicKey));
-            signer.update(getFermatCipher().decode(encryptedMessage));
-            return (signer.verify(getFermatCipher().decode(signatureString)));
-
-        } catch (Exception e){
-            e.printStackTrace();
-            throw new IllegalArgumentException(e);
-        }
+            System.out.println("ex = "+ex);
+			throw new IllegalArgumentException(ex.getMessage());
+		}*/
+		return encryptedMessage;
+	}
+	
+	public static String createPrivateKey(){
+		return keyCreator.createPrivateKey().toString();
+	}
+	
+	public static String derivePublicKey(final String hexPrivateKey) throws IllegalArgumentException{
+		checkStringArgument(hexPrivateKey);
+		//AsymmetricPrivateKey privateKey = new AsymmetricPrivateKey(new BigInteger(hexPrivateKey, 16));
+		//AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
+		//return keyCreator.createPublicKey(privateKey).toString();
+		ECKey key = ECKey.fromPrivate(new BigInteger(hexPrivateKey, 16), false);
+		return key.getPublicKeyAsHex().toUpperCase();
 	}
 
-    /**
-     * Method that encrypt a plaint text and return a
-     *  encrypted string
-     *
-     * @param plainMessage
-     * @param publicKey
-     * @return String encrypted hexadecimal format
-     * @throws Exception
-     */
-	public static String encryptMessagePublicKey(final String plainMessage, final String publicKey) throws IllegalArgumentException {
+	public static String generatePublicAddress(final String hexPublicKey) throws IllegalArgumentException {
+		checkStringArgument(hexPublicKey);
+		AsymmetricPublicKey publicKey = new AsymmetricPublicKey(hexPublicKey);
 
-        try {
-
-            checkStringArgument(plainMessage);
-            checkStringArgument(publicKey);
-            return getFermatCipher().encrypt(publicKey, plainMessage);
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+		return keyCreator.createPublicAddress(publicKey);
 	}
 
-    /**
-     *  Method that receive a encrypted hexadecimal format string to
-     *  decrypted.
-     *
-     * @param encryptedMessage
-     * @param privateKey
-     * @return String
-     * @throws Exception
-     */
-	public static String decryptMessagePrivateKey(final  String encryptedMessage, final String privateKey) throws IllegalArgumentException {
-
-        try {
-
-            checkStringArgument(encryptedMessage);
-            checkStringArgument(privateKey);
-           return getFermatCipher().decrypt(privateKey, encryptedMessage);
-
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
+	public static String generateTestAddress(final String hexPublicKey) throws IllegalArgumentException {
+		checkStringArgument(hexPublicKey);
+		AsymmetricPublicKey publicKey = new AsymmetricPublicKey(hexPublicKey);
+		return keyCreator.createTestAddress(publicKey);
 	}
-
-    /**
-     *
-     * @param argument
-     */
+	
 	private static void checkStringArgument(final String argument){
 		if(argument == null || argument.isEmpty())
 			throw new IllegalArgumentException();
@@ -246,26 +94,18 @@ public class AsymmetricCryptography {
      *
      * @return ECCKeyPair
      */
-	public static ECCKeyPair generateECCKeyPair() throws IllegalArgumentException {
+	public static ECCKeyPair generateECCKeyPair(){
 
-        try {
+        String privateKey = createPrivateKey();
+        String publicKey  = derivePublicKey(privateKey);
 
-            java.security.KeyPair keyPair = getFermatCipher().generateKeyPair();
-            return new ECCKeyPair(getFermatCipher().encode(keyPair.getPrivate().getEncoded()), getFermatCipher().encode(keyPair.getPublic().getEncoded()));
-
-        }catch (Exception e){
-            throw new IllegalArgumentException(e);
-        }
+        return new ECCKeyPair(privateKey, publicKey);
     }
 
-    /**
-     *
-     * @param privateKey
-     * @return KeyPair
-     */
-	public static KeyPair createKeyPair(final String privateKey) throws IllegalArgumentException {
+	public static KeyPair createKeyPair(final String privateKey){
 		checkStringArgument(privateKey);
 		String publicKey  = derivePublicKey(privateKey);
 		return new ECCKeyPair(privateKey, publicKey);
 	}
+	
 }

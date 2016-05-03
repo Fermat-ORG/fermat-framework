@@ -115,4 +115,9 @@ public class JsonAttNamesConstants {
      */
     public static final String RECONNECTED = "rc";
 
+    /*
+     * Represent the value of IPSERVER
+     */
+    public static final String IPSERVER = "ipserver";
+
 }

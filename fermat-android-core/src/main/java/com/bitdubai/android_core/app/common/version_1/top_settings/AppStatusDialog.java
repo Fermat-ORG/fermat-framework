@@ -38,13 +38,13 @@ public class AppStatusDialog extends Dialog{
         this.appStatusCallbackChanges = appStatusCallbackChanges;
         this.androidCoreModule = androidCoreModule;
         try {
-            androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
+            androidCoreSettings = androidCoreModule.loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
             androidCoreSettings = new AndroidCoreSettings(AppsStatus.ALPHA);
             try {
-                androidCoreModule.getSettingsManager().persistSettings(ApplicationConstants.SETTINGS_CORE, androidCoreSettings);
+                androidCoreModule.persistSettings(ApplicationConstants.SETTINGS_CORE, androidCoreSettings);
             } catch (CantPersistSettingsException e1) {
                 e1.printStackTrace();
             }
@@ -178,7 +178,7 @@ public class AppStatusDialog extends Dialog{
                 uncheckAllExcept();
                 appStatusCallbackChanges.appSoftwareStatusChanges(androidCoreSettings.getAppsStatus());
                 try {
-                    androidCoreModule.getSettingsManager().persistSettings(ApplicationConstants.SETTINGS_CORE, androidCoreSettings);
+                    androidCoreModule.persistSettings(ApplicationConstants.SETTINGS_CORE, androidCoreSettings);
                 } catch (CantPersistSettingsException e) {
                     e.printStackTrace();
                 }

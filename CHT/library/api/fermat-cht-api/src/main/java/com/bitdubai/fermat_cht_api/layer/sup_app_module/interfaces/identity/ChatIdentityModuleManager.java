@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
@@ -47,7 +48,7 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatIdentityPre
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     void createNewIdentityChat(String alias,
-                                       byte[] profileImage) throws CantCreateNewChatIdentityException;
+                                       byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewChatIdentityException;
 
     /**
      * The method <code>updateIdentityChat</code> change a identity information data
@@ -57,5 +58,14 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatIdentityPre
      * @param profileImage
      * @throws CantUpdateChatIdentityException
      */
-    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException;
+    void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException;
+
+    /**
+     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
+     * settings class parametrized.
+     *
+     * @return a new instance of the settings manager for the specified fermat settings object.
+     */
+    @Override
+    SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager();
 }

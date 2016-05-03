@@ -81,7 +81,7 @@ public class ChatFermatAppConnection extends AppConnections {
             String usersend = code.split("@#@#")[0];
             String message = code.split("@#@#")[1];
             //find last transaction
-            notification = new ChatNotificationPainter("New Message Recive", usersend+" : "+message ,"","");
+            notification = new ChatNotificationPainter("New Message Receive", usersend+" : "+message ,"","", android.R.drawable.ic_notification_overlay);
 
         }
         catch(Exception e)

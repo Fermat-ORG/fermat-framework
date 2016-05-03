@@ -23,14 +23,14 @@
         android:name="com.bitdubai.android_core.app.ApplicationSession"
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         >
 
 
         <activity
             android:name="com.bitdubai.android_core.app.StartActivity"
 
-            android:icon="@drawable/ic_launcher"
+            android:icon="@mipmap/ic_launcher"
             android:theme="@style/AppTheme.NoActionBarStart"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
@@ -133,6 +133,17 @@
             </intent-filter>
 
         </receiver>
+
+        <receiver android:name="com.bitdubai.android_core.app.FermatSystemRunningReceiver">
+
+            <intent-filter>
+                <action android:name="org.fermat.SYSTEM_RUNNING">
+                </action>
+            </intent-filter>
+
+        </receiver>
+
+
 
         <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"
             android:label="CommService"

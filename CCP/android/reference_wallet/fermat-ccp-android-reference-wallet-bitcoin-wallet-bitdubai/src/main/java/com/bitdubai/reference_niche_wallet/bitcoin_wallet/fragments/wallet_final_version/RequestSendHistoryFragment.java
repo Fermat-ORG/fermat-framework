@@ -19,7 +19,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -65,7 +64,6 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     private View rootView;
     private LinearLayout empty;
 
-    SettingsManager<BitcoinWalletSettings> settingsManager;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -102,12 +100,11 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             cryptoWallet = referenceWalletSession.getModuleManager();
 
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 
 
             BitcoinWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = cryptoWallet.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                 this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
@@ -217,8 +214,13 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
+        if(lstPaymentRequest!=null){
+            return lstPaymentRequest;
+        }else{
+            return  new ArrayList<>();
+        }
 
-        return lstPaymentRequest;
+
     }
 
     @Override

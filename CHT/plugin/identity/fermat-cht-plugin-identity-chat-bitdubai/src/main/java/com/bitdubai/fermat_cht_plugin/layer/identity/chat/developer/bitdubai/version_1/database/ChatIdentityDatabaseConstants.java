@@ -22,6 +22,10 @@ public class ChatIdentityDatabaseConstants {
     public static final String CHAT_ALIAS_COLUMN_NAME                  = "alias"                 ;
     public static final String CHAT_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
     public static final String CHAT_EXPOSURE_LEVEL_COLUMN_NAME         = "exposure_level"        ;
+    public static final String CHAT_COUNTRY_COLUMN_NAME                = "country"               ;
+    public static final String CHAT_STATE_COLUMN_NAME                  = "state"                 ;
+    public static final String CHAT_CONNECTION_STATE_COLUMN_NAME       = "connection_state"      ;
+    public static final String CHAT_CITY_COLUMN_NAME                   = "city"                   ;
 
     public static final String CHAT_FIRST_KEY_COLUMN                   = "public_key"            ;
 

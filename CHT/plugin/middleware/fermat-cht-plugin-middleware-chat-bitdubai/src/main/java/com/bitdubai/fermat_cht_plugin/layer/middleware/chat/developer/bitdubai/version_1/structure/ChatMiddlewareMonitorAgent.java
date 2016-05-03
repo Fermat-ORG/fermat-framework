@@ -3,7 +3,9 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -46,6 +48,10 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
@@ -108,6 +114,7 @@ public class ChatMiddlewareMonitorAgent implements
     private PluginFileSystem pluginFileSystem;
     ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     public final String BROADCAST_CODE = "13";
+    ChatActorConnectionManager chatActorConnectionManager;
 
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
@@ -115,7 +122,10 @@ public class ChatMiddlewareMonitorAgent implements
                                       ErrorManager errorManager,
                                       EventManager eventManager,
                                       UUID pluginId,
-                                      NetworkServiceChatManager chatNetworkServiceManager, MiddlewareChatManager chatMiddlewareManager, Broadcaster broadcaster, PluginFileSystem pluginFileSystem) throws CantSetObjectException {
+                                      NetworkServiceChatManager chatNetworkServiceManager,
+                                      MiddlewareChatManager chatMiddlewareManager,
+                                      Broadcaster broadcaster, PluginFileSystem pluginFileSystem,
+                                      ChatActorConnectionManager chatActorConnectionManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -125,6 +135,7 @@ public class ChatMiddlewareMonitorAgent implements
         this.chatMiddlewareManager = chatMiddlewareManager;
         this.broadcaster = broadcaster;
         this.pluginFileSystem = pluginFileSystem;
+        this.chatActorConnectionManager = chatActorConnectionManager;
     }
 
     @Override
@@ -341,16 +352,36 @@ public class ChatMiddlewareMonitorAgent implements
 
                     if (tsTime1 >= tsTime2)
                     {
-                        if (chat.getScheduledDelivery()) {
-                            //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
-                            //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
-                            List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
-                            chat.setMessagesAsociated(messages);
-                            //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
-                            List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
-                            chat.setGroupMembersAssociated(groupMembers);
-                            //Enviar el mensaje
+                        //if (chat.getScheduledDelivery()) {
+                        //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
+                        //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
+                        List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
+                        chat.setMessagesAsociated(messages);
+                        //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
+                        List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
+                        //Enviar el mensaje
+                        for (GroupMember groupMember : groupMembers) {
+                            chat.setRemoteActorPublicKey(groupMember.getActorPublicKey());
+                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
+                            chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);
+                            System.out.println("ChatMetadata to send:\n" + constructChatMetadata(chat, messages.get(0)));
+                            try {
+                                chatNetworkServiceManager.sendChatMetadata(
+                                        chat.getLocalActorPublicKey(),
+                                        chat.getRemoteActorPublicKey(),
+                                        constructChatMetadata(chat, messages.get(0))
+                                );
+                            }catch (IllegalArgumentException e) {
+                                /**
+                                 * In this case, any argument in chat or message was null or not properly set.
+                                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
+                                 */
+                                messages.get(0).setStatus(MessageStatus.CANNOT_SEND);
+                            }
                         }
+                        messages.get(0).setStatus(MessageStatus.SEND);
+                        chatMiddlewareDatabaseDao.saveMessage(messages.get(0));
+                        //}
                     }
                 }
             }
@@ -359,6 +390,10 @@ public class ChatMiddlewareMonitorAgent implements
         } catch (CantGetChatException e) {
             e.printStackTrace();
         } catch (CantGetMessageException e) {
+            e.printStackTrace();
+        } catch (CantSendChatMessageMetadataException e) {
+            e.printStackTrace();
+        } catch (CantSaveMessageException e) {
             e.printStackTrace();
         }
     }
@@ -384,7 +419,9 @@ public class ChatMiddlewareMonitorAgent implements
 
                     saveMessage(chatMetadata);
 
-                    //TODO TEST NOTIFICATION TO PIP
+                    //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
+                    //broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, BROADCAST_CODE);
+                    //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, BROADCAST_CODE);
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {
@@ -587,38 +624,59 @@ public class ChatMiddlewareMonitorAgent implements
 //                UUID chatId = chatMetadata.getChatId();
             Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 //                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
-            //TODO:Vilchez revisar esta logica ya no aplica, los contactos son los actor connections
-            Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
+//            String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
+            ChatLinkedActorIdentity chatLinkedActorIdentity = new ChatLinkedActorIdentity(
+                chatFromDatabase.getLocalActorPublicKey(),
+                Actors.CHAT
+                );
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(chatLinkedActorIdentity);
+            List<ChatActorConnection> chatActorConnections = search.getResult();
+            ChatActorConnection actorConnection = null;
+
+            for(ChatActorConnection chatActorConnection : chatActorConnections){
+                if(chatActorConnection.getPublicKey().equals(chatFromDatabase.getRemoteActorPublicKey())) {
+                    actorConnection = chatActorConnection;
+                    break;
+                }
+            }
+            if(actorConnection == null){
+                return null;
+            }
+
+//            Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
 //            if (contact == null) {
-//                //TODO:Vilchez revisar esta logica ya no aplica
 //                //contact = createUnregisteredContact(chatMetadata);
 //                if (contact == null) return null;
 //            }
 
             //I'll associated the contact, message and chat with the following method
 //            addContactToChat(chatFromDatabase, contact);
-            UUID contactId = contact.getContactId();
+
+//            UUID contactId = contact.getContactId();
             Message message = new MessageImpl(
                     chatFromDatabase.getChatId(),
                     chatMetadata,
                     MessageStatus.CREATED,
                     TypeMessage.INCOMMING,
-                    contactId
+                    actorConnection.getConnectionId()//TODO:Revisar esto si afecta el envio ya que el public es un string//UUID.fromString(actorConnection.getPublicKey())
             );
             return message;
         } catch (DatabaseOperationException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Unexpected exception in database");
-        } catch (CantGetContactException e) {
-            throw new CantGetMessageException(e,
-                    "Getting message from ChatMetadata",
-                    "Cannot get the contact");
+//        } catch (CantGetContactException e) {
+//            throw new CantGetMessageException(e,
+//                    "Getting message from ChatMetadata",
+//                    "Cannot get the contact");
         } catch (CantGetChatException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Cannot get the chat");
+        } catch (CantListActorConnectionsException e) {
+            throw new CantGetMessageException(e,
+                    "Getting message from ChatMetadata",
+                    "Cannot get the ActorConnection");
         }
     }
 
@@ -754,22 +812,25 @@ public class ChatMiddlewareMonitorAgent implements
     private ChatMetadata constructChatMetadata(
             Chat chat,
             Message message) {
+        ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        ChatMetadata chatMetadata = new ChatMetadataRecord(
-                chat.getChatId(),
-                chat.getObjectId(),
-                chat.getLocalActorType(),
-                chat.getLocalActorPublicKey(),
-                chat.getRemoteActorType(),
-                chat.getRemoteActorPublicKey(),
-                chat.getChatName(),
-                ChatMessageStatus.READ_CHAT,
-                MessageStatus.SEND,
-                timestamp,
-                message.getMessageId(),
-                message.getMessage(),
-                DistributionStatus.OUTGOING_MSG
-        );
+            chatMetadata = new ChatMetadataRecord(
+                    chat.getChatId(),
+                    chat.getObjectId(),
+                    chat.getLocalActorType(),
+                    chat.getLocalActorPublicKey(),
+                    chat.getRemoteActorType(),
+                    chat.getRemoteActorPublicKey(),
+                    chat.getChatName(),
+                    ChatMessageStatus.READ_CHAT,
+                    MessageStatus.SEND,
+                    timestamp,
+                    message.getMessageId(),
+                    message.getMessage(),
+                    DistributionStatus.OUTGOING_MSG,
+                    chat.getTypeChat(),
+                    chat.getGroupMembersAssociated()
+            );
         return chatMetadata;
     }
 

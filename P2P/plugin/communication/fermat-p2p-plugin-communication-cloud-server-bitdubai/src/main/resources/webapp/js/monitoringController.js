@@ -4,7 +4,7 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
       $scope.series = ['Client Connections', 'Actives VPN'];
       $scope.charData = [[],[]];
       $scope.monitInfo = [];
-
+ 
       var parseJwtToken = function(token) {
                    var base64Url = token.split('.')[1];
                    var base64 = base64Url.replace('-', '+').replace('_', '/');
@@ -88,10 +88,44 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
              });
 
        };
+ 
+       $scope.saveplatformcloudserver = function() {
+
+          if ($scope.networkservicetype && $scope.ipserver) {
+
+               $http({
+                        method: 'POST',
+                        url: '/fermat/api/serverplatform/saveserverconfbyplatform',
+                        data: {networkservicetype:$scope.networkservicetype, ipserver:$scope.ipserver},
+                        transformRequest: function(obj) {
+                            var str = [];
+                            for(var p in obj)
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                            return str.join("&");
+                        },
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                  }).then(function successCallback(response) {
+                      var respond = angular.fromJson(response.data);
+                      var success = respond.success;
+
+                      if(success === true){
+                          alert(respond.data);
+                      }
+
+                  }, function errorCallback(response) {
+                      console.log(response);
+
+                  });
+             
+              $scope.networkservicetype = '';
+              $scope.ipserver = '';
+          }
+
+       };
 
         if(isAuthenticate() === false){
-            alert("Service error: You must authenticate again");
-            $location.url('../index.html');
+             alert("Service error: You must authenticate again");
+             $location.url('../index.html');
         }else{
 
             if(window.localStorage['jwtAuthToke'] !== null){
@@ -103,6 +137,6 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
             $interval(requestMonitoringData, 30000);
             $interval(requestMonitInfo, 30000);
         }
-
+   
 
 }]);

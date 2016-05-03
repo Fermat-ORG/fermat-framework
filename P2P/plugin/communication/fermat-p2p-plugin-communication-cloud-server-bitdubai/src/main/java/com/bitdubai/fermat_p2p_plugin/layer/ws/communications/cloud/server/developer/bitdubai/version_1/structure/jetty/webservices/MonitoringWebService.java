@@ -160,120 +160,88 @@ public class MonitoringWebService {
 
     }
 
+
+
+
+
     @GET
     @Path("/clients/list")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getClientList(){
-
         LOG.info("Starting geClientList");
         JsonObject jsonObjectRespond = new JsonObject();
         List<PlatformComponentProfile> resultList = new ArrayList<>();
-
         try {
-
             if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().isEmpty()){
                 resultList = (List<PlatformComponentProfile>) new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values()).clone();
             }
-
              /*
              * Convert the list to json representation
              */
             String jsonListRepresentation = gson.toJson(resultList, new TypeToken<List<PlatformComponentProfileCommunication>>(){ }.getType());
-
             /*
              * Create the respond
              */
             jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST, jsonListRepresentation);
-
         }catch (Exception e){
-
             LOG.warn("requested list is not available");
             jsonObjectRespond.addProperty(JsonAttNamesConstants.FAILURE, "Requested list is not available");
             e.printStackTrace();
         }
-
         String jsonString = gson.toJson(jsonObjectRespond);
-
         return Response.status(200).entity(jsonString).build();
-
     }
-
-
     @GET
     @Path("/client/components/details")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getClientComponentsDetails(@QueryParam(JsonAttNamesConstants.NAME_IDENTITY) String clientIdentityPublicKey){
-
         LOG.info("Starting getClientComponentsDetails");
-
-
         JsonObject jsonObjectRespond = new JsonObject();
         List<PlatformComponentProfile> resultList = new ArrayList<>();
-
         try {
-
             if (!MemoryCache.getInstance().getRegisteredNetworkServicesCache().isEmpty()){
-
                 Iterator<NetworkServiceType> iteratorNetworkServiceType = MemoryCache.getInstance().getRegisteredNetworkServicesCache().keySet().iterator();
-
                 while (iteratorNetworkServiceType.hasNext()){
-
                     NetworkServiceType networkServiceType = iteratorNetworkServiceType.next();
                     Iterator<PlatformComponentProfile> iterator = MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).iterator();
                     while (iterator.hasNext()){
-
                         PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
                         LOG.info("clientIdentityPublicKey = "+clientIdentityPublicKey);
                         LOG.info("platformComponentProfileRegistered = "+platformComponentProfileRegistered.getCommunicationCloudClientIdentity());
-
                         if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentityPublicKey)){
                             resultList.add(platformComponentProfileRegistered);
                         }
                     }
                 }
-
             }
-
             if (!MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().isEmpty()){
-
                 Iterator<PlatformComponentType> iteratorNetworkServiceType = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().keySet().iterator();
-
                 while (iteratorNetworkServiceType.hasNext()){
-
                     PlatformComponentType platformComponentType = iteratorNetworkServiceType.next();
                     Iterator<PlatformComponentProfile> iterator = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).iterator();
                     while (iterator.hasNext()){
-
                         PlatformComponentProfile platformComponentProfileRegistered = iterator.next();
-
                         if(platformComponentProfileRegistered.getCommunicationCloudClientIdentity().equals(clientIdentityPublicKey)){
                             resultList.add(platformComponentProfileRegistered);
                         }
                     }
                 }
-
             }
-
              /*
              * Convert the list to json representation
              */
             String jsonListRepresentation = gson.toJson(resultList, new TypeToken<List<PlatformComponentProfileCommunication>>(){ }.getType());
-
             /*
              * Create the respond
              */
             jsonObjectRespond.addProperty(JsonAttNamesConstants.RESULT_LIST, jsonListRepresentation);
-
         }catch (Exception e){
-
             LOG.warn("requested list is not available");
             jsonObjectRespond.addProperty(JsonAttNamesConstants.FAILURE, "Requested list is not available");
             e.printStackTrace();
         }
-
         String jsonString = gson.toJson(jsonObjectRespond);
         return Response.status(200).entity(jsonString).build();
-
     }
 
 }
