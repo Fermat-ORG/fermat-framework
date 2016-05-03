@@ -157,7 +157,7 @@ public class JettyEmbeddedAppServer {
         webAppContext.setResourceBase("./webapp");
         webAppContext.addBean(new ServletContainerInitializersStarter(webAppContext), true);
         webAppContext.setWelcomeFiles(new String[]{"index.html"});
-        webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
+     //   webAppContext.addFilter(SecurityFilter.class, "/api/admin/*", EnumSet.of(DispatcherType.REQUEST));
         webAppContext.setInitParameter("org.eclipse.jetty.servlet.Default.dirAllowed", "false");
         server.setHandler(webAppContext);
 
