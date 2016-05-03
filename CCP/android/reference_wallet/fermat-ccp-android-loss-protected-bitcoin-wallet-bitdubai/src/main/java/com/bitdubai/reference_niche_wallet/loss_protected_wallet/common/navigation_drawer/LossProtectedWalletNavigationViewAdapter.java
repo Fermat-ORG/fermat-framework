@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class LossProtectedWalletNavigationViewAdapter extends FermatAdapter<MenuItem, com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer.NavigationItemMenuViewHolder> {
 
-
+    private int MAX_DIVEDER_HEIGHT = 2;
     Typeface tf;
     protected LossProtectedWalletNavigationViewAdapter(Context context) {
         super(context);
@@ -68,7 +68,9 @@ public class LossProtectedWalletNavigationViewAdapter extends FermatAdapter<Menu
 
             //holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
             if(data.isSelected())
-                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+                //holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+                holder.getNavigation_row_divider().setBackgroundResource(R.color.diveder_navigation_color);
+                holder.getNavigation_row_divider().getLayoutParams().height = MAX_DIVEDER_HEIGHT;
 
             switch (position) {
                 case 0:
