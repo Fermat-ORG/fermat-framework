@@ -55,6 +55,7 @@ import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
@@ -273,7 +274,6 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     public void run() {
                         if(!isWaitingForResponse){
                             int resultKey = createNewIdentity();
-                            tokenlyRequestDialog.dismiss();
                             switch (resultKey) {
                                 case CREATE_IDENTITY_SUCCESS:
                                     break;
@@ -287,8 +287,10 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                                     Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
                                     break;
                             }
-                        }else
+                        }else{
+                            tokenlyRequestDialog.dismiss();
                             Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
                 tokenlyRequest.start();
@@ -525,18 +527,22 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
             if(!authenticationSuccessful){
                 //I'll launch a toast
+                tokenlyRequestDialog.dismiss();
                 Toast.makeText(
                         getActivity(),
                         "Authentication credentials are invalid.",
                         Toast.LENGTH_SHORT).show();
             }
             if(Validate.isObjectNull(fan)){
+                tokenlyRequestDialog.dismiss();
                 Toast.makeText(getActivity(), "The tokenly authentication failed.", Toast.LENGTH_SHORT).show();
             }else{
                 if(isUpdate){
+                    tokenlyRequestDialog.dismiss();
                     Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                 }else{
+                    tokenlyRequestDialog.dismiss();
                     Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                 }

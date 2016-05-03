@@ -250,7 +250,6 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                         try {
                             if(!isWaitingForResponse){
                                 int resultKey = createNewIdentity();
-                                tokenlyRequestDialog.dismiss();
                                 switch (resultKey) {
                                     case CREATE_IDENTITY_SUCCESS:
                                         break;
@@ -264,8 +263,10 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                                         Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
                                         break;
                                 }
-                            }else
+                            }else{
+                                tokenlyRequestDialog.dismiss();
                                 Toast.makeText(getActivity(), "Waiting for Tokenly API response, please wait.", Toast.LENGTH_SHORT).show();
+                            }
                         } catch (InvalidParameterException e) {
                             e.printStackTrace();
                         }
@@ -524,23 +525,26 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             isWaitingForResponse = false;
             if(!authenticationSuccessful){
                 //I'll launch a toast
+                tokenlyRequestDialog.dismiss();
                 Toast.makeText(
                         getActivity(),
                         "Authentication credentials are invalid.",
                         Toast.LENGTH_SHORT).show();
             }
             if(Validate.isObjectNull(artist)){
+                tokenlyRequestDialog.dismiss();
                 Toast.makeText(getActivity(), "The tokenly authentication failed.", Toast.LENGTH_SHORT).show();
             }else{
                 if(isUpdate){
+                    tokenlyRequestDialog.dismiss();
                     Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                 }else{
+                    tokenlyRequestDialog.dismiss();
                     Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                 }
             }
-
         }
 
         @Override
