@@ -211,6 +211,13 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
         text.setVisibility(View.GONE);
         mArtistExternalPlatform.setVisibility(View.GONE);
+
+        text2.setVisibility(View.GONE);
+        MexposureLevel.setVisibility(View.GONE);
+
+        text3.setVisibility(View.GONE);
+        MartistAcceptConnectionsType.setVisibility(View.GONE);
+
         List<String> arraySpinner = ExternalPlatform.getArrayItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mArtistExternalPlatform.setAdapter(adapter);
