@@ -10,6 +10,8 @@
         android:layout_height="match_parent"
         android:contentDescription="Fermat "
         android:id="@+id/imageView_fermat"
-        android:src="@drawable/splash" />
+        android:src="@drawable/fermat_logo" />
+
+
 
 </RelativeLayout>
