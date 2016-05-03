@@ -18,7 +18,7 @@ import java.util.List;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
- * Created by Matias Furszyfer on 2015.09.30..
+ * Created by Gian Barboza on 12/04/16.
  */
 public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalletTransaction, ChunckValuesHistoryItemViewHolder>  {
 
