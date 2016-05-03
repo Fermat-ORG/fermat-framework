@@ -40,6 +40,18 @@
             android:textSize="14sp"
             app:typeface="ROBOTO_REGULAR"
             tools:text="Nelson Alfonso Ramirez Noguera" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="2dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/plusicon_active"/>
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <View

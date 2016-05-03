@@ -21,4 +21,7 @@
 
     <color name="color_spent_progressBar">#1D85B8</color>
     <color name="color_noSpent_progressBar">#073487</color>
+
+    <color name="diveder_navigation_color">#073487</color>
+
 </resources>
