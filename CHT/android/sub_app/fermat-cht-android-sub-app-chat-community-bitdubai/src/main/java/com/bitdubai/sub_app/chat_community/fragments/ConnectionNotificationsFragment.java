@@ -176,7 +176,7 @@ public class ConnectionNotificationsFragment
 
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
+            showEmpty(true, emptyView);
             onRefresh();
 
         } catch (Exception ex) {
@@ -266,14 +266,14 @@ public class ConnectionNotificationsFragment
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
-            Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Connection Accepted", Toast.LENGTH_LONG).show();
             //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
         } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
             e.printStackTrace();
-            Toast.makeText(getActivity(), "TODO ACCEPT but.. ERROR! ->", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Connection Accepted but.. ERROR! ->", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -288,26 +288,30 @@ public class ConnectionNotificationsFragment
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-             emptyView.setAnimation(anim);
-             emptyView.setVisibility(View.VISIBLE);
-            emptyView.setBackgroundResource(R.drawable.fondo);
+        if (show/* &&
+                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)*/) {
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
+            emptyView.setBackgroundResource(R.drawable.fondo);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
+            rootView.setBackgroundResource(R.drawable.fondo);
             if (adapter != null)
                 adapter.changeDataSet(null);
-        } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
+        } else if (!show /*&& emptyView.getVisibility() == View.VISIBLE*/) {
             emptyView.setAnimation(anim);
-            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            emptyView.setBackground(bgcolor);
+            emptyView.setVisibility(View.GONE);
             noData.setAnimation(anim);
+            emptyView.setBackgroundResource(0);
             noDatalabel.setAnimation(anim);
-             emptyView.setVisibility(View.GONE);
             noData.setVisibility(View.GONE);
             noDatalabel.setVisibility(View.GONE);
+            rootView.setBackgroundResource(0);
+            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+            emptyView.setBackground(bgcolor);
+            rootView.setBackground(bgcolor);
         }
     }
 

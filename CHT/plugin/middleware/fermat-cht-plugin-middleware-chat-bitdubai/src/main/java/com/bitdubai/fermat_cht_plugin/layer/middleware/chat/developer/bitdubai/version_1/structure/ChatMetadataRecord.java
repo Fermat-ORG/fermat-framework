@@ -34,35 +34,6 @@ public class ChatMetadataRecord implements ChatMetadata {
     TypeChat typeChat;
     List<GroupMember> groupMembers;
 
-//    public ChatMetadataRecord(
-//            UUID chatId,
-//            UUID objectId,
-//            PlatformComponentType localActorType,
-//            String localActorPublicKey,
-//            PlatformComponentType remoteActorType,
-//            String remoteActorPublicKey,
-//            String chatName,
-//            ChatMessageStatus chatMessageStatus,
-//            MessageStatus messageStatus,
-//            Timestamp date,
-//            UUID messageId,
-//            String message,
-//            DistributionStatus distributionStatus) {
-//        this.chatId = chatId;
-//        this.objectId = objectId;
-//        this.localActorType = localActorType;
-//        this.localActorPublicKey = localActorPublicKey;
-//        this.remoteActorType = remoteActorType;
-//        this.remoteActorPublicKey = remoteActorPublicKey;
-//        this.chatName = chatName;
-//        this.chatMessageStatus = chatMessageStatus;
-//        this.messageStatus = messageStatus;
-//        this.date = date;
-//        this.messageId = messageId;
-//        this.message = message;
-//        this.distributionStatus = distributionStatus;
-//    }
-
     public ChatMetadataRecord(
             UUID chatId,
             UUID objectId,
