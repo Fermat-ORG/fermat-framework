@@ -147,7 +147,8 @@ public class ChatListFragment extends AbstractFermatFragment{
     private int offset = 0;
 
     public static ChatListFragment newInstance() {
-        return new ChatListFragment();}
+        return new ChatListFragment();
+    }
 
     public void chatlistview (){
         UUID chatidtemp;
@@ -166,9 +167,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
-                        if(chatManager.checkWritingStatus(chatidtemp)) {
-                            message.add("Writing..");
-                        }
+
                         Message mess = chatManager.getMessageByChatId(chatidtemp);
                         if (mess != null) {
                             noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
@@ -183,7 +182,11 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     String pk2 = chat.getRemoteActorPublicKey();
                                     if (pk2.equals(pk1)) {
                                         contactName.add(cont.getAlias());
-                                        message.add(mess.getMessage());
+                                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                                            message.add("Writing..");
+                                        }else{
+                                            message.add(mess.getMessage());
+                                        }
                                         status.add(mess.getStatus().toString());
                                         typeMessage.add(mess.getType().toString());
                                         long timemess = chat.getLastMessageDate().getTime();
@@ -430,15 +433,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(code.equals("13")){
             updatevalues();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-            for(int i = 0; i == chatId.size(); i++) {
-                try {
-                    if (chatManager.checkWritingStatus(chatId.get(i))) {
-                        message.add("Writing..");
-                    }
-                }catch (CantGetWritingStatus cantGetWritingStatus) {
-                    cantGetWritingStatus.printStackTrace();
-                }
-            }
         }
     }
 

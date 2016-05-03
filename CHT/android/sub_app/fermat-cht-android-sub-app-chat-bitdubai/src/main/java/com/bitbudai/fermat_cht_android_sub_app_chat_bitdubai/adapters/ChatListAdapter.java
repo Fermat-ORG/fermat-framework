@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,8 +87,12 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
             //contactname.setTypeface(tf, Typeface.NORMAL);
 
             TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
+            /*if(message.get(position).equals("Writing..")) {
+                lastmessage.setTextColor(Color.parseColor("#FF33A900"));
+            }else{*/
+             //   lastmessage.setTextColor(Color.parseColor("#757575"));
+            //}
             lastmessage.setText(message.get(position));
-
 
             TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
             dateofmessage.setText(dateMessage.get(position));
