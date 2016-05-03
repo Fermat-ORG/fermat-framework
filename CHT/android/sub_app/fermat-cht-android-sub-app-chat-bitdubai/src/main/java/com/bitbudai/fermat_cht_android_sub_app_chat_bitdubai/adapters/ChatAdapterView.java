@@ -39,9 +39,11 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -67,6 +69,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -102,6 +106,7 @@ public class ChatAdapterView extends LinearLayout {
     private boolean loadDummyData = false;
     private boolean chatWasCreate =false;
     private Calendar today;
+    UUID newChatId;
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
@@ -197,6 +202,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if(chatId !=null){
                 List<Message> messL=  chatManager.getMessagesByChatId(chatId);
+
                 MessageImpl messagei;
                 for(Message mess : messL){
                     msg = new ChatMessage();
@@ -330,35 +336,54 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+                                  @Override
+                                  public void run() {
+
+                                      try {
+                                          if(chatManager.checkWritingStatus(chatId)){
+                                                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
+                                                }else {
+                                              ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+                                          }
+                                      } catch (CantGetWritingStatus cantGetWritingStatus) {
+                                          cantGetWritingStatus.printStackTrace();
+                                      }
+                                  }
+                              },0,1000);
+
+
         messageET.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                    if (!isKeyboardShown(messageET.getRootView())) {
-                        onBackPressed();
-                    } else onAdjustKeyboard();
-                }
-            }
-        });
+                    @Override
+                    public void onGlobalLayout() {
+                        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                            if (!isKeyboardShown(messageET.getRootView())) {
+                                onBackPressed();
+                            } else onAdjustKeyboard();
+                        }
+                    }
+                });
 
         messageET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                //TODO: ESTO NO VA AQUÍ ES PARA PROBAR LOCALMENTE TU PROPIA ESCRITURA..
-                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
+
 
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                    try {
+                       chatManager.sendWritingStatus(chatId);
+                    } catch (CHTException e) {
+                        e.printStackTrace();
+                    }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                //TODO: ESTO NO VA AQUÍ ES PARA PROBAR LOCALMENTE TU PROPIA ESCRITURA..
-                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
 
             }
         });
@@ -439,7 +464,7 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setLastMessageDate(new Timestamp(dv));
                         remotePublicKey=chat.getRemoteActorPublicKey();
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
-                        UUID newChatId;
+
                         if(chatPrevious.getChatId() != chatId){
                             newChatId = chatPrevious.getChatId();
                         }else{
@@ -460,10 +485,11 @@ public class ChatAdapterView extends LinearLayout {
                     } else {
                         Contact newContact= chatSession.getSelectedContact();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
+
                         chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);//chat.setRemoteActorType(remoteActorType);
                         chat.setRemoteActorPublicKey(remotePublicKey);
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
-                        UUID newChatId;
+
                         if (chatPrevious != null) {
                             newChatId = chatPrevious.getChatId();
                         } else {
