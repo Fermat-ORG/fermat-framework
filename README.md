@@ -1,5 +1,5 @@
 <!-- all links tested by laderuner -->
-![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/00135845a9d1fbe3696c98454834efbd7b4329fb/MediaKit/Logotype/fermat_logo_3D/Fermat_logo_v2_readme_1024x466.png "Fermat Logo")
 
 # *Fermat*
 *A Decentralized, Collaborative, Blockchain-Enabled, Modular App Platform To Unleash the P2P “Internet of People” Economy*
