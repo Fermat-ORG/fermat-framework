@@ -38,6 +38,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -62,6 +63,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -165,11 +168,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
+                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                            message.add("Writing..");
+                        }
                         noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                         contactId.add(chat.getRemoteActorPublicKey());
-                        //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
-                        //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                        //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
+
+
                         if(chatIdentity!= null) {
                             for (ChatActorCommunityInformation cont : chatManager
                                     .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
@@ -215,7 +220,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 }
                             }
                         }else setUpHelpChat(false);
-
                     }
                 }
             }
@@ -373,18 +377,19 @@ public class ChatListFragment extends AbstractFermatFragment{
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
         registerForContextMenu(list);
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     appSession.setData("whocallme", "chatlist");
                     //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-                    int newPosition= Utils.safeLongToInt(adapter.getItemId(position));
+                    //int newPosition= Utils.safeLongToInt(adapter.getItem(position));
                     Contact contact=new ContactImpl();
-                    contact.setRemoteActorPublicKey(contactId.get(newPosition));
-                    contact.setAlias(contactName.get(newPosition));
+                    contact.setRemoteActorPublicKey(adapter.getContactIdItem(position));
+                    contact.setAlias(adapter.getItem(position));
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    imgId.get(newPosition).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    adapter.getImgIdItem(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
                     appSession.setData(ChatSession.CONTACT_DATA, contact);
@@ -431,6 +436,15 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+            for(int i = 0; i == chatId.size(); i++) {
+                try {
+                    if (chatManager.checkWritingStatus(chatId.get(i))) {
+                        message.add("Writing..");
+                    }
+                }catch (CantGetWritingStatus cantGetWritingStatus) {
+                    cantGetWritingStatus.printStackTrace();
+                }
+            }
         }
     }
 
@@ -529,7 +543,6 @@ public class ChatListFragment extends AbstractFermatFragment{
             if (Build.VERSION.SDK_INT < 23) {
                 MenuInflater inflater = new MenuInflater(getActivity());
                 inflater.inflate(R.menu.chat_list_context_menu, menu);
-
             }else{
                 MenuInflater inflater = new MenuInflater(getContext());
                 inflater.inflate(R.menu.chat_list_context_menu, menu);
