@@ -18,7 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 public class NetworkClientProfileRegisteredEvent<T extends Profile> extends AbstractEvent {
 
     /**
-     * Represent the profile registered.
+     * Represent the registered profile.
      */
     private T profile;
 

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection</code>
@@ -89,6 +90,14 @@ public interface NetworkClientConnection {
      * @throws CantRequestProfileListException if something goes wrong.
      */
     void actorTraceDiscoveryQuery(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
+
+    /**
+     * Through the method <code>getCommunicationChannelType</code> we can get the communication channel type
+     * of the network client connection object.
+     *
+     * @return a CommunicationChannels enum element.
+     */
+    CommunicationChannels getCommunicationChannelType();
 
     /**
      * Through the method <code>isConnected</code> we can verify if the connection object is

@@ -548,7 +548,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private FermatWebSocketClientNodeChannel getFermatWebSocketClientNodeChannelInstanceSeedNode(){
 
         //return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-        return new FermatWebSocketClientNodeChannel("localhost", 9090);
+        return new FermatWebSocketClientNodeChannel("localhost", 8080);
 
     }
 
