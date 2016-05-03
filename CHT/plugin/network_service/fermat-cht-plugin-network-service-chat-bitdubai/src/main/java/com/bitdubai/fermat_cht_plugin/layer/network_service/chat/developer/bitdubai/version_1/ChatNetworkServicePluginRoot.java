@@ -323,6 +323,15 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                     chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responsTo);
                     if(chatMetadataRecord!=null)
                     launcheIncomingWritingStatusNotification(chatMetadataRecord.getChatId());
+                    break;
+                case TRANSACTION_ONLINE_STATUS:
+                    chatMetadataRecord=null;
+                    responsTo = (messageData.has(ChatTransmissionJsonAttNames.RESPONSE_TO)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.RESPONSE_TO).getAsString(), UUID.class) : null;
+                    if(responsTo!=null)
+                        chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responsTo);
+                    if(chatMetadataRecord!=null)
+                        launcheIncomingOnlineStatusNotification(chatMetadataRecord.getChatId());
+                    break;
                 default:
                     break;
 
@@ -482,7 +491,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     }
 
     private void launcheIncomingOnlineStatusNotification(UUID chatId){
-        IncomingNewOnlineStatusUpdate event = (IncomingNewOnlineStatusUpdate) getEventManager().getNewEvent(EventType.INCOMING_WRITING_STATUS);
+        IncomingNewOnlineStatusUpdate event = (IncomingNewOnlineStatusUpdate) getEventManager().getNewEvent(EventType.INCOMING_ONLINE_STATUS);
         event.setChatId(chatId);
         event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
         getEventManager().raiseEvent(event);
@@ -897,6 +906,70 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     }
 
     @Override
+    public void sendOnlineStatus(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, final UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
+        try {
+
+            if (localActorPubKey == null || localActorPubKey.length() == 0) {
+                throw new IllegalArgumentException("Argument localActorPubKey can not be null");
+            }
+            if (senderType == null) {
+                throw new IllegalArgumentException("Argument senderType can not be null");
+            }
+            if (remoteActorPubKey == null || remoteActorPubKey.length() == 0) {
+                throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
+            }
+            if (receiverType == null) {
+                throw new IllegalArgumentException("Argument receiverType can not be null");
+            }
+
+            ChatMetadataRecord chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByChatAndMessageId(chatId, null);
+            final String msjContent = EncodeMsjContent.encodeMSjContentTransactionOnlineNotification(
+                    chatMetadataRecord.getResponseToNotification(),
+                    senderType,
+                    receiverType,
+                    chatId
+            );
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                    getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
+                                    msjContent
+                            );
+                        } catch (CantSendMessageException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+        } catch (Exception e) {
+
+            StringBuilder contextBuffer = new StringBuilder();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantSendChatMessageNewStatusNotificationException pluginStartException = new CantSendChatMessageNewStatusNotificationException(CantSendChatMessageNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
+
+            reportUnexpectedError(pluginStartException);
+
+            throw pluginStartException;
+        }
+    }
+
+    @Override
     public void sendWritingStatus(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, final UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
         try {
 
@@ -921,20 +994,20 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                     chatId
             );
 
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            sendNewMessage(
-                                    getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
-                                    getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
-                                    msjContent
-                            );
-                        } catch (CantSendMessageException e) {
-                            e.printStackTrace();
-                        }
+            executorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        sendNewMessage(
+                                getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
+                                msjContent
+                        );
+                    } catch (CantSendMessageException e) {
+                        e.printStackTrace();
                     }
-                });
+                }
+            });
 
         } catch (Exception e) {
 

@@ -35,6 +35,7 @@ public class ChatImpl implements Chat {
     private TypeChat                    typeChat;
     private boolean                     scheduledDelivery;
     private boolean                     isWriting;
+    private boolean                     isOnline;
 
     /**
      * Constructor without arguments
@@ -291,6 +292,16 @@ public class ChatImpl implements Chat {
 
     public void setIsWriting(boolean isWriting) {
         this.isWriting = isWriting;
+    }
+
+    @Override
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    @Override
+    public void setIsOnline(boolean isOnline) {
+        this.isOnline = isOnline;
     }
 
     @Override
