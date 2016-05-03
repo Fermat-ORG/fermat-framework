@@ -65,6 +65,7 @@ public class DeveloperDatabaseFactory {
         basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_NETWORK_TYPE);
         basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME);
+        basicWalletBitcoinWalletColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME);
 
         /**
          * basicWalletBitcoinWalletColumns table
