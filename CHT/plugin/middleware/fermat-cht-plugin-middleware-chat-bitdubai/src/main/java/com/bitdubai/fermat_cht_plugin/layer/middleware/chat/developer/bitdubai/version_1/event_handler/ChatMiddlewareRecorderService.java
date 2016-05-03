@@ -166,8 +166,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
 
     public void IncomingNewOnlineStatusUpdateEventHandler(IncomingNewOnlineStatusUpdate event) throws CantSaveEventException {
         try{
-            //TODO: Finish this.
-//            chatMiddlewareMonitorAgent.checkIncomingWritingStatus(event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingOnlineStatus(event.getChatId());
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,

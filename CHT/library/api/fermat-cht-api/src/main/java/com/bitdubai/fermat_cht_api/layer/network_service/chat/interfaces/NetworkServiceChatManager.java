@@ -39,6 +39,8 @@ public interface NetworkServiceChatManager extends FermatManager, TransactionPro
 
     void sendWritingStatus(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, UUID chatId) throws CantSendChatMessageNewStatusNotificationException;
 
+    void sendOnlineStatus(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, UUID chatId) throws CantSendChatMessageNewStatusNotificationException;
+
     /**
      *
      * @return
