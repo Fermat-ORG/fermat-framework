@@ -141,6 +141,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID);
+        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT);
         /**
          * Table Message addition.
          */
