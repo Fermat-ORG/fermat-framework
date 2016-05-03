@@ -7,6 +7,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
@@ -43,133 +47,131 @@ public enum P2pEventType implements FermatEventEnum {
      * Declaration of the Web Socket Communication Layer Events
      */
     COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION("CL_CRCN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new GenericEventListener<>(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
+        public CompleteComponentRegistrationNotificationEvent getNewEvent() {
             return new CompleteComponentRegistrationNotificationEvent(this);
         }
     },
 
     FAILURE_COMPONENT_REGISTRATION_REQUEST_NOTIFICATION("FCRRN"){
-        public FermatEvent getNewEvent() {
+        public FailureComponentRegistrationNotificationEvent getNewEvent() {
             return new FailureComponentRegistrationNotificationEvent(this);
         }
     },
 
     FAILURE_UPDATE_ACTOR_REQUEST_NOTIFICATION("FUPDACTRN"){
-        public FermatEvent getNewEvent() {
+        public FailureUpdateActorNotificationEvent getNewEvent() {
             return new FailureUpdateActorNotificationEvent(this);
         }
     },
 
     COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION("CL_CCRCN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new GenericEventListener<>(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
+        public CompleteClientComponentRegistrationNotificationEvent getNewEvent() {
             return new CompleteClientComponentRegistrationNotificationEvent(this);
         }
     },
 
     REGISTER_SERVER_REQUEST_NOTIFICATION("REG_SER_REN"){
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new GenericEventListener<>(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
+        public RegisterServerRequestNotificationEvent getNewEvent() {
             return new RegisterServerRequestNotificationEvent(this);
         }
     },
 
     COMPLETE_REQUEST_LIST_COMPONENT_REGISTERED_NOTIFICATION("CL_CRLCRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new GenericEventListener<>(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
+        public CompleteRequestListComponentRegisteredNotificationEvent getNewEvent() {
             return new CompleteRequestListComponentRegisteredNotificationEvent(this);
         }
     },
 
     FAILURE_REQUESTED_LIST_NOT_AVAILABLE_NOTIFICATION("FRLNAN"){
-        public FermatEvent getNewEvent() {
+        public FailureRequestedListNotAvailableNotificationEvent getNewEvent() {
             return new FailureRequestedListNotAvailableNotificationEvent(this);
         }
     },
 
     COMPLETE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("CL_CCCRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new GenericEventListener<>(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
+        public CompleteComponentConnectionRequestNotificationEvent getNewEvent() {
             return new CompleteComponentConnectionRequestNotificationEvent(this);
         }
     },
 
     COMPLETE_UPDATE_ACTOR_NOTIFICATION("CL_UPDACT") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new GenericEventListener<>(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
+        public CompleteUpdateActorNotificationEvent getNewEvent() {
             return new CompleteUpdateActorNotificationEvent(this);
         }
     },
 
     FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("F_CCCRN") {
-        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
-            return new GenericEventListener<>(this, eventMonitor);
-        }
-        public FermatEvent getNewEvent() {
+        public FailureComponentConnectionRequestNotificationEvent getNewEvent() {
             return new FailureComponentConnectionRequestNotificationEvent(this);
         }
     },
 
     NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
-        public FermatEvent getNewEvent() {
+        public NewNetworkServiceMessageReceivedNotificationEvent getNewEvent() {
             return new NewNetworkServiceMessageReceivedNotificationEvent(this);
         }
     },
 
     NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
-        public FermatEvent getNewEvent() {
+        public NewNetworkServiceMessageSentNotificationEvent getNewEvent() {
             return new NewNetworkServiceMessageSentNotificationEvent(this);
         }
     },
 
     CLIENT_CONNECTION_CLOSE("CCC"){
-        public FermatEvent getNewEvent() {
+        public ClientConnectionCloseNotificationEvent getNewEvent() {
             return new ClientConnectionCloseNotificationEvent(this);
         }
     },
 
     CLIENT_CONNECTION_LOOSE("CCL"){
-        public FermatEvent getNewEvent() {
+        public ClientConnectionLooseNotificationEvent getNewEvent() {
             return new ClientConnectionLooseNotificationEvent(this);
         }
     },
 
     CLIENT_SUCCESS_RECONNECT("CSC"){
-        public FermatEvent getNewEvent() {
+        public ClientSuccessReconnectNotificationEvent getNewEvent() {
             return new ClientSuccessReconnectNotificationEvent(this);
         }
     },
 
     VPN_CONNECTION_CLOSE("VCC"){
-        public FermatEvent getNewEvent() {
+        public VPNConnectionCloseNotificationEvent getNewEvent() {
             return new VPNConnectionCloseNotificationEvent(this);
         }
     },
 
     VPN_CONNECTION_LOOSE("VCL"){
-        public FermatEvent getNewEvent() {
+        public VPNConnectionLooseNotificationEvent getNewEvent() {
             return new VPNConnectionLooseNotificationEvent(this);
         }
     },
 
     VPN_SUCCESS_RECONNECT("VSR"){
-        public FermatEvent getNewEvent() {
+        public VpnSuccessReconnectNotificationEvent getNewEvent() {
             return new VpnSuccessReconnectNotificationEvent(this);
         }
-    }
+    },
+
+
+    /**
+     * INIT NETWORK NODE-CLIENT TEMPLATE EVENTS
+     */
+
+    NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED("NCAPR"){
+        public NetworkClientProfileRegisteredEvent<ActorProfile> getNewEvent() { return new NetworkClientProfileRegisteredEvent<>(this); }
+    },
+    NETWORK_CLIENT_CLIENT_PROFILE_REGISTERED("NCCPR"){
+        public NetworkClientProfileRegisteredEvent<ClientProfile> getNewEvent() { return new NetworkClientProfileRegisteredEvent<>(this); }
+    },
+    NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED("NCNSPR"){
+        public NetworkClientProfileRegisteredEvent<NetworkServiceProfile> getNewEvent() { return new NetworkClientProfileRegisteredEvent<>(this); }
+    },
+
+    /**
+     * END  NETWORK NODE-CLIENT TEMPLATE EVENTS
+     */
 
     ;
 
@@ -188,7 +190,7 @@ public enum P2pEventType implements FermatEventEnum {
     }
 
     public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
-        return new GenericEventListener(this, fermatEventMonitor);
+        return new GenericEventListener<>(this, fermatEventMonitor);
     }
 
     public abstract FermatEvent getNewEvent();
