@@ -1,68 +1,80 @@
 package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.world.exceptions.CantGetIndexException;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.interfaces.BankMoneyRestockManager;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_sale.interfaces.CustomerBrokerSale;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.MissingCustomerBrokerSaleDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.utils.CustomerBrokerSaleImpl;
-import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.util.logging.Logger;
+
 
 /**
  * The Class <code>UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent</code>
  * contains the logic for handling agent transactional
  * Created by franklin on 15.12.15
  */
-public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implements Agent {
+public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends FermatAgent {
     //TODO: Documentar y manejo de excepciones.
     private Thread agentThread;
     private final ErrorManager errorManager;
@@ -71,14 +83,17 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
     private final OpenContractManager openContractManager;
     private final CloseContractManager closeContractManager;
     private final CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
-    private final FiatIndexManager fiatIndexManager;
+    private final CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final BankMoneyRestockManager bankMoneyRestockManager;
     private final CashMoneyRestockManager cashMoneyRestockManager;
     private final CryptoMoneyRestockManager cryptoMoneyRestockManager;
-    private final NotificationManagerMiddleware notificationManagerMiddleware;
-    private CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread;
-    private CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting;
+    private Broadcaster broadcaster;
+
+    public final int SLEEP_TIME = 5000;
+    public final int DELAY_HOURS = 2;
+    public final int TIME_BETWEEN_NOTIFICATIONS = 600000; //10min
+    private long lastNotificationTime = 0;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
                                                                       CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
@@ -87,384 +102,742 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent implemen
                                                                       OpenContractManager openContractManager,
                                                                       CloseContractManager closeContractManager,
                                                                       CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-                                                                      FiatIndexManager fiatIndexManager,
+                                                                      CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter,
                                                                       CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                                       BankMoneyRestockManager bankMoneyRestockManager,
                                                                       CashMoneyRestockManager cashMoneyRestockManager,
                                                                       CryptoMoneyRestockManager cryptoMoneyRestockManager,
-                                                                      NotificationManagerMiddleware notificationManagerMiddleware) {
+                                                                      Broadcaster broadcaster) {
 
-        this.errorManager                                              = errorManager;
-        this.customerBrokerSaleNegotiationManager                      = customerBrokerSaleNegotiationManager;
-        this.openContractManager                                       = openContractManager;
-        this.closeContractManager                                      = closeContractManager;
-        this.customerBrokerContractSaleManager                         = customerBrokerContractSaleManager;
-        this.fiatIndexManager                                          = fiatIndexManager;
-        this.cryptoBrokerWalletManager                                 = cryptoBrokerWalletManager;
-        this.bankMoneyRestockManager                                   = bankMoneyRestockManager;
-        this.cashMoneyRestockManager                                   = cashMoneyRestockManager;
-        this.cryptoMoneyRestockManager                                 = cryptoMoneyRestockManager;
-        this.notificationManagerMiddleware                             = notificationManagerMiddleware;
-
+        this.errorManager = errorManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+        this.openContractManager = openContractManager;
+        this.closeContractManager = closeContractManager;
+        this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
+        this.currencyExchangeRateProviderFilter = currencyExchangeRateProviderFilter;
+        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
+        this.bankMoneyRestockManager = bankMoneyRestockManager;
+        this.cashMoneyRestockManager = cashMoneyRestockManager;
+        this.cryptoMoneyRestockManager = cryptoMoneyRestockManager;
+        this.broadcaster = broadcaster;
         this.userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao = new UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao(pluginDatabaseSystem, pluginId);
-        try {
-            //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
-            this.cryptoBrokerWalletSettingSpread     = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
-            if (!cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().isEmpty())
-            {
-                this.cryptoBrokerWalletAssociatedSetting = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0);
-            }
-        } catch (CantGetCryptoBrokerWalletSettingException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CryptoBrokerWalletNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
+
+        createAndStartThread();
     }
+
     @Override
     public void start() throws CantStartAgentException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("Customer Broker Sale monitor agent starting");
+        Logger LOG = Logger.getGlobal();
+        LOG.info("Customer Broker Sale monitor agent starting");
 
-        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-
-        this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
+        super.start();
     }
 
     @Override
-    public void stop() {
+    public void stop() throws CantStopAgentException {
         this.agentThread.interrupt();
+        super.stop();
+    }
+
+    private void createAndStartThread() {
+        final Runnable target = new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning()) {
+                    process();
+                }
+            }
+        };
+
+        this.agentThread = new Thread(target, this.getClass().getSimpleName());
+    }
+
+    private void process() {
+
+        while (isRunning()) {
+
+            try {
+                Thread.sleep(SLEEP_TIME);
+            } catch (InterruptedException interruptedException) {
+                cleanResources();
+                return;
+            }
+
+            doTheMainTask();
+
+            if (agentThread.isInterrupted()) {
+                cleanResources();
+                return;
+            }
+        }
+    }
+
+    private void doTheMainTask() {
+        try {
+            final String transactionStatusColumnName = UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                    CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME;
+
+            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+            final String brokerWalletPublicKey = "crypto_broker_wallet";
+
+            // NegotiationStatus.CLOSED -> TransactionStatus.IN_PROCESS
+            takeCloseNegotiationsAndCreateTransactionWithStatusInProgress();
+
+            // IN_PROCESS -> IN_OPEN_CONTRACT
+            changeTransactionStatusFromInProcessToInOpenContract(transactionStatusColumnName, brokerWalletPublicKey);
+
+            // IN_OPEN_CONTRACT -> IN_CONTRACT_SUBMIT
+            changeTransactionStatusFromInOpenContractToInContractSubmit(transactionStatusColumnName);
+
+            // IN_CONTRACT_SUBMIT -> Update Contract Expiration Time and notify
+            updateContractExpirationDateWhitStatusInContractSubmitAndNotify(transactionStatusColumnName, brokerWalletPublicKey);
+
+            // IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit
+            changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(transactionStatusColumnName, brokerWalletPublicKey);
+
+            // IN_CONTRACT_SUBMIT -> IN_PAYMENT_SUBMIT: apply the credit (restock) from the payment to the wallets
+            changeTransactionStatusFromInContractSubmitToInPaymentSubmitAndApplyCredit(transactionStatusColumnName, brokerWalletPublicKey);
+
+            // IN_PAYMENT_SUBMIT -> IN_PENDING_MERCHANDISE
+            changeTransactionStatusFromInPaymentSubmitToInPendingMerchandise(transactionStatusColumnName);
+
+            // IN_PENDING_MERCHANDISE -> Update Contract Expiration Time and notify
+            updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(transactionStatusColumnName, brokerWalletPublicKey);
+
+            // IN_PENDING_MERCHANDISE -> Update Contract Status to CANCELLED for expiration time in merchandise
+            changeTransactionStatusFromInPendingMerchandiseToCancelledIfExpirationTimeReached(transactionStatusColumnName, brokerWalletPublicKey);
+
+            // IN_PENDING_MERCHANDISE -> MERCHANDISE_SUBMIT
+            changeTransactionStatusInPendingMerchandiseFromToMerchandiseSubmit(transactionStatusColumnName);
+
+            // IN_MERCHANDISE_SUBMIT -> COMPLETED
+            changeTransactionStatusFromInMerchandiseSubmitToCompleted(transactionStatusColumnName, brokerWalletPublicKey);
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
     }
 
     /**
-     * Private class which implements runnable and is started by the Agent
-     * Based on MonitorAgent created by Rodrigo Acosta
+     * NegotiationStatus.CLOSED -> TransactionStatus.IN_PROCESS
+     *
+     * @throws CantGetListSaleNegotiationsException
+     * @throws DatabaseOperationException
+     * @throws InvalidParameterException
+     * @throws MissingCustomerBrokerSaleDataException
      */
-    private final class MonitorAgent implements Runnable {
+    private void takeCloseNegotiationsAndCreateTransactionWithStatusInProgress() throws FermatException {
+        final Collection<CustomerBrokerSaleNegotiation> negotiationsClosed = customerBrokerSaleNegotiationManager.
+                getNegotiationsByStatus(NegotiationStatus.CLOSED);
 
-        private final ErrorManager errorManager;
-        public final int SLEEP_TIME = 5000;
-        public final int DELAY_HOURS = 2;
-        int iterationNumber = 0;
-        boolean threadWorking;
-        private BigDecimal priceReference = null;
-        private BigDecimal amount         = null;
-        private String bankAccount        = null;
-        private FiatCurrency fiatCurrency = null;
-        CustomerBrokerSaleImpl customerBrokerSale = null;
-        //UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
+        final String customerBrokerSaleTransactionIdColumnName = UserLevelBusinessTransactionCustomerBrokerSaleConstants.
+                CUSTOMER_BROKER_SALE_TRANSACTION_ID_COLUMN_NAME;
 
-        public MonitorAgent(final ErrorManager errorManager) {
+        for (CustomerBrokerSaleNegotiation records : negotiationsClosed) {
+            String negotiationId = records.getNegotiationId().toString(); //Buscar que la transaccion no se encuentre ya registrada
 
-            this.errorManager = errorManager;
-        }
+            DatabaseTableFilter filterTable = getFilterTable(negotiationId, customerBrokerSaleTransactionIdColumnName);
 
-        @Override
-        public void run() {
-            threadWorking = true;
-            while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
-                try {
-                    Thread.sleep(SLEEP_TIME);
-                } catch (InterruptedException interruptedException) {
-                    return;
-                }
+            List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
 
-                /**
-                 * now I will check if there are pending transactions to raise the event
-                 */
-                try {
-                    doTheMainTask();
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-
+            if (customerBrokerSales.isEmpty()) {
+                CustomerBrokerSale customerBrokerSale = new CustomerBrokerSaleImpl(negotiationId, negotiationId, 0, null, null, TransactionStatus.IN_PROCESS, null, null, null);
+                userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
             }
         }
+    }
 
-        private void doTheMainTask(){
-            try {
-                CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
-                //TODO:Revisar este caso CryptoBrokerWalletAssociatedSetting va a devolver varios registros.
-                if (!cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().isEmpty()) {
-                    CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings().get(0);
+    /**
+     * IN_PROCESS -> IN_OPEN_CONTRACT:
+     * <p/>
+     * Registra el Open Contract siempre y cuando el Transaction Status de la CustomerBrokerSale este IN_PROCESS
+     * Se obtiene el customerCurrency de la negociacion para obtener el marketExchangeRate de ese currency vs. USD
+     * <p/>
+     * Se envia un Broadcast para actualizar la UI y enviar una notificacion
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
+     * @throws FermatException
+     */
+    private void changeTransactionStatusFromInProcessToInOpenContract(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException {
+        List<CustomerBrokerSale> customerBrokerSales;
+        DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_PROCESS.getCode(), transactionStatusColumnName);
+        customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+
+        //Registra el Open Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_PROCESS
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.
+                    getNegotiationsByNegotiationId(UUID.fromString(customerBrokerSale.getTransactionId()));
+
+            //Find the negotiation's customerCurrency, to find the marketExchangeRate of that currency vs. USD
+            String customerCurrency = "";
+            for (Clause clause : customerBrokerSaleNegotiation.getClauses())
+                if (clause.getType() == ClauseType.CUSTOMER_CURRENCY)
+                    customerCurrency = clause.getValue();
+
+            float marketExchangeRate = 1;
+            if (customerCurrency.isEmpty()) {
+                try {
+                    marketExchangeRate = getMarketExchangeRate(customerCurrency);
+                } catch (CantGetExchangeRateException e) {
+                    marketExchangeRate = 1;
                 }
-                //Se verifica el cierre de la negociacion
-                for (CustomerBrokerSaleNegotiation records : customerBrokerSaleNegotiationManager.getNegotiationsByStatus(NegotiationStatus.CLOSED))
-                {
-                    //Buscar que la transaccion no se encuentre ya registrada
-                    if(userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(records.getNegotiationId().toString(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_ID_COLUMN_NAME)).isEmpty()) {
-                        customerBrokerSale = new CustomerBrokerSaleImpl(records.getNegotiationId().toString(),
-                                records.getNegotiationId().toString(),
-                                0, null, null, TransactionStatus.IN_PROCESS, null, null, null);
+            }
+            openContractManager.openSaleContract(customerBrokerSaleNegotiation, marketExchangeRate);
 
+            //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
+            customerBrokerSale.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
+            userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+        }
+    }
+
+    /**
+     * IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit:
+     * <p/>
+     * If Expiration Time is done, Update the contract status to CANCELLED.
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
+     * @throws FermatException
+     */
+    private void changeTransactionStatusFromInContractSubmitToCancelledIfExpirationTimeReached(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException {
+        DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), transactionStatusColumnName);
+        List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        Collection<CustomerBrokerContractSale> contractSalesPendingPayment = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPendingPayment) {
+                String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+
+                if (customerBrokerSale.getTransactionId().equals(negotiationId)) {
+
+                    long timeToDelivery = 0;
+                    long timeStampToday = new Date().getTime();
+                    Negotiation negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                    Collection<Clause> negotiationClause = negotiation.getClauses();
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+
+                    if (clauseValue != null)
+                        timeToDelivery = Long.parseLong(clauseValue);
+
+                    /*System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
+                                    "\n - Contract: " + customerBrokerContractSale.getContractId() +
+                                    "\n - timeStampToday: " + timeStampToday +
+                                    "\n - dateTimeToDelivery: " + timeToDelivery
+                    );*/
+
+                    if (timeStampToday >= timeToDelivery) {
+
+                        //UPDATE CONTRACT STATUS
+                        customerBrokerContractSaleManager.cancelContract(customerBrokerContractSale.getContractId(),
+                                "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT PAYMENT.");
+
+                        //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
+                        customerBrokerSale.setTransactionStatus(TransactionStatus.CANCELLED);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
+                        //BROADCASTER
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+
                     }
                 }
-                //Se crea la business transaction
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PROCESS.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PROCESS
-                {
-                    CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerSale.getTransactionId()));
-                    //Registra el Open Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_PROCESS
-                    openContractManager.openSaleContract(customerBrokerSaleNegotiation, fiatIndexManager.getCurrentIndex(fiatIndexManager.getReferenceCurrency()));
-                    //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
-                    customerBrokerSale.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
+            }
+        }
+    }
+
+    /**
+     * IN_OPEN_CONTRACT -> IN_CONTRACT_SUBMIT:
+     * <p/>
+     * Se debe enviar un Broadcast para actualizar la UI
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     *
+     * @throws FermatException
+     */
+    private void changeTransactionStatusFromInOpenContractToInContractSubmit(String transactionStatusColumnName) throws FermatException {
+        DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_OPEN_CONTRACT.getCode(), transactionStatusColumnName);
+        List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        Collection<CustomerBrokerContractSale> contractSalesPendingPayment = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPendingPayment) {
+                if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                    customerBrokerSale.setTransactionStatus(TransactionStatus.IN_CONTRACT_SUBMIT);
                     userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                 }
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_OPEN_CONTRACT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_OPEN_CONTRACT
-                {
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT))
-                    {
-                        if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
-                        {
-                            customerBrokerSale.setTransactionStatus(TransactionStatus.IN_CONTRACT_SUBMIT);
-                            userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-                        }
-                    }
-                }
-                //Se verifica las condiciones del contrato y el status
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
-                {
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT))
-                    {
-                        if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
-                        {
-                            //Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
-                            Date date = null;
-                            long timeStampToday =  ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
-                            if (timeStampToday <= DELAY_HOURS)
-                            {
-                                customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
-                            }
-                        }
-                    }
-                }
-                //Se sigue verificando el estatus del contrato hasta que se consiga la realización de un pago
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
-                {
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PAYMENT_SUBMIT))
-                    {
-                        if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
-                        {
-                            //Si se detecta la realización de un pago se procede actulizar el estatus de la transacción y a monitorear la llegada de la mercadería.
-                            //Se verifica si el broker configuró procesar Restock de manera automática
-                            int sw = 0;
-                            if (cryptoBrokerWalletSettingSpread.getRestockAutomatic())
-                            {
-                                //Recorrer las clausulas del contrato
-                                CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
-                                for (ContractClause contractClause : customerBrokerContractSale.getContractClause())
-                                {
-                                    if (contractClause.getType().getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode())
-                                    {
-                                        sw = 1;
-                                    }
-                                    if (contractClause.getType().getCode() == ContractClauseType.BANK_TRANSFER.getCode())
-                                    {
-                                        sw = 2;
-                                    }
-                                    if (contractClause.getType().getCode() == ContractClauseType.CASH_DELIVERY  .getCode() && contractClause.getType().getCode() == ContractClauseType.CASH_ON_HAND.getCode())
-                                    {
-                                        sw = 3;
-                                    }
-                                }
-                                //TODO: Datos de amount, priceReference, CryptoCurrency, FiatCurrency, cbpWalletPublicKey, bnkWalletPublicKey, cshWalletPublicKey, cryWalletPublicKey de donde sale
-                                //
-                                for (Clause clause : customerBrokerSaleNegotiation.getClauses())
-                                {
-                                    if (clause.getType().getCode() == ClauseType.EXCHANGE_RATE.getCode())
-                                    {
-                                        priceReference = new BigDecimal(clause.getValue());
-                                    }
-                                    if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY_QUANTITY.getCode())
-                                    {
-                                        amount = new BigDecimal(clause.getValue());
-                                    }
-                                    if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY_QUANTITY.getCode())
-                                    {
-                                        amount = new BigDecimal(clause.getValue());
-                                    }
-                                    if (clause.getType().getCode() == ClauseType.BROKER_BANK_ACCOUNT.getCode())
-                                    {
-                                        bankAccount = clause.getValue();
-                                    }
-                                    if (clause.getType().getCode() == ClauseType.BROKER_CURRENCY.getCode())
-                                    {
-                                        fiatCurrency = FiatCurrency.valueOf(clause.getValue());
-                                    }
-                                }
-                                if (sw == 1) {
-                                    cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                            CryptoCurrency.BITCOIN,
-                                            "walletPublicKey",
-                                            "walletPublicKey",
-                                            amount,
-                                            "RESTOCK AUTOMATIC",
-                                            priceReference,
-                                            OriginTransaction.RESTOCK_AUTOMATIC);
-                                }
-                                //
-                                if (sw == 2) {
-                                    bankMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                            fiatCurrency,
-                                            "walletPublicKey",
-                                            "walletPublicKey",
-                                            bankAccount,
-                                            amount,
-                                            "RESTOCK AUTOMATIC",
-                                            priceReference,
-                                            OriginTransaction.RESTOCK_AUTOMATIC);
-                                }
-                                //
-                                if (sw == 3) {
-                                    cashMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                            fiatCurrency,
-                                            "walletPublicKey",
-                                            "walletPublicKey",
-                                            "cashReference",
-                                            amount,
-                                            "memo",
-                                            priceReference,
-                                            OriginTransaction.RESTOCK_AUTOMATIC);
-                                }
-                            }
-                            customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
-                            userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-                        }
-                    }
-                }
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PAYMENT_SUBMIT
-                {
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE))
-                    {
-                        if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
-                        {
-                            customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PENDING_MERCHANDISE);
-                            userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-                        }
-                    }
-                }
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PENDING_MERCHANDISE
-                {
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE))
-                    {
-                        if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
-                        {
-                            //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida, se eleva un evento de notificación
-                            Date date = null;
-                            long timeStampToday =  ((customerBrokerContractSale.getDateTime() - date.getTime()) / 60) / 60;
-                            if (timeStampToday <= DELAY_HOURS)
-                            {
-                                customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                                notificationManagerMiddleware.addPopUpNotification(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT, "Review Negotiation");
-                            }
-                        }
-                    }
-                }
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PENDING_MERCHANDISE
-                {
-
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.MERCHANDISE_SUBMIT))
-                    {
-                        if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
-                        {
-                            customerBrokerSale.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
-                            userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-                        }
-                    }
-                }
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_MERCHANDISE_SUBMIT
-                {
-                    //Comienzo a recorrer todas las transacciones que esten en Transaction_Status IN_MERCHANDISE_SUBMIT
-                    //Registra el Close Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_MERCHANDISE_SUBMIT
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.MERCHANDISE_SUBMIT))
-                    {
-                        if (customerBrokerSale.getTransactionId() == customerBrokerContractSale.getNegotiatiotId())
-                        {
-                            closeContractManager.closeSaleContract(customerBrokerContractSale.getContractId());
-                        }
-                    }
-                }
-                for(CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_MERCHANDISE_SUBMIT
-                {
-                    for(CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.COMPLETED))
-                    {
-                        customerBrokerSale.setTransactionStatus(TransactionStatus.COMPLETED);
-                        userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-                    }
-                }
-            } catch (CantGetListSaleNegotiationsException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (DatabaseOperationException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (MissingCustomerBrokerSaleDataException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantOpenContractException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (InvalidParameterException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantGetListCustomerBrokerContractSaleException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantCloseContractException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantGetIndexException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantGetCryptoBrokerWalletSettingException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CryptoBrokerWalletNotFoundException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantCreateCryptoMoneyRestockException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantCreateBankMoneyRestockException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantCreateCashMoneyRestockException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantGetListClauseException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            } catch (CantUpdateCustomerBrokerContractSaleException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);;
             }
         }
+    }
 
-        private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue)
-        {
-            // I define the filter to search for the public Key
-            DatabaseTableFilter filter = new DatabaseTableFilter() {
-                @Override
-                public void setColumn(String column) {
+    /**
+     * IN_CONTRACT_SUBMIT -> Update Contract Expiration Time and notify:
+     * <p/>
+     * Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento de notificacion
+     * siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
+     * @throws FermatException
+     */
+    private void updateContractExpirationDateWhitStatusInContractSubmitAndNotify(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException {
+        DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), transactionStatusColumnName);
+        List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        Collection<CustomerBrokerContractSale> contractSalesPendingPayment = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT);
 
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPendingPayment) {
+                if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                    // Si la fecha del contracto se acerca al dia y 2 horas antes de vencerse debo de elevar un evento
+                    // de notificacion siempre y cuando el ContractStatus sea igual a PENDING_PAYMENT
+
+                    long timeStampToday = ((customerBrokerContractSale.getDateTime() - new Date().getTime()) / 3600000);
+                    if (timeStampToday <= DELAY_HOURS) {
+                        customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
+
+                        if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                            lastNotificationTime = new Date().getTime();
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                        }
+                    }
                 }
-
-                @Override
-                public void setType(DatabaseFilterType type) {
-
-                }
-
-                @Override
-                public void setValue(String value) {
-
-                }
-
-                @Override
-                public String getColumn() {
-                    return columnValue;
-                }
-
-                @Override
-                public String getValue() {
-                    return valueFilter;
-                }
-
-                @Override
-                public DatabaseFilterType getType() {
-                    return DatabaseFilterType.EQUAL;
-                }
-            };
-            return filter;
+            }
         }
+    }
+
+    /**
+     * * IN_PENDING_MERCHANDISE -> Update Contract Expiration Time and notify:
+     * <p/>
+     * Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida,
+     * se eleva un evento de notificación
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
+     * @throws FermatException
+     */
+    private void updateContractExpirationDateWhitInPendingMerchandiseStatusAndNotify(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException {
+        DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), transactionStatusColumnName);
+        List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        Collection<CustomerBrokerContractSale> contractSalesPendingMerchandise = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPendingMerchandise) {
+                if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                    //Si se acerca la tiempo límite para recibir la mercadería y esta no ha sido registrada como recibida,
+                    // se eleva un evento de notificación
+                    long timeStampToday = ((customerBrokerContractSale.getDateTime() - new Date().getTime()) / 3600000);
+                    if (timeStampToday <= DELAY_HOURS) {
+                        customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
+
+                        if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
+                            lastNotificationTime = new Date().getTime();
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * IN_PENDING_MERCHANDISE -> MERCHANDISE_SUBMIT:
+     * <p/>
+     * Se debe enviar un Broadcast para actualizar la UI
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     *
+     * @throws FermatException
+     */
+    private void changeTransactionStatusInPendingMerchandiseFromToMerchandiseSubmit(String transactionStatusColumnName) throws FermatException {
+        DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), transactionStatusColumnName);
+        List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        Collection<CustomerBrokerContractSale> contractSalesMerchandiseSubmit = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.MERCHANDISE_SUBMIT);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesMerchandiseSubmit) {
+                if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                    customerBrokerSale.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
+                    userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                }
+            }
+        }
+    }
+
+    /**
+     * IN_PENDING_MERCHANDISE -> Update Contract Status to CANCELLED for expiration time in merchandise:
+     * <p/>
+     * If Expiration Time is done, Update the contract status to CANCELLED.
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
+     * @throws FermatException
+     */
+    private void changeTransactionStatusFromInPendingMerchandiseToCancelledIfExpirationTimeReached(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException {
+        DatabaseTableFilter filterTable;
+        List<CustomerBrokerSale> customerBrokerSales;
+        Collection<CustomerBrokerContractSale> contractSalesPendingMerchandise;
+        filterTable = getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), transactionStatusColumnName);
+        customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        contractSalesPendingMerchandise = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPendingMerchandise) {
+                String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+
+                if (customerBrokerSale.getTransactionId().equals(negotiationId)) {
+
+                    long timeToDelivery = 0;
+                    long timeStampToday = new Date().getTime();
+                    Negotiation negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                    Collection<Clause> negotiationClause = negotiation.getClauses();
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+
+                    if (clauseValue != null)
+                        timeToDelivery = Long.parseLong(clauseValue);
+
+                    // System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN MERCHANDISE ***\n" +
+                    // "\n - Contract: " + customerBrokerContractSale.getContractId() +
+                    // "\n - timeStampToday: " + timeStampToday +
+                    // "\n - dateTimeToDelivery: " + timeToDelivery);
+
+                    if (timeStampToday >= timeToDelivery) {
+
+                        //UPDATE CONTRACT STATUS
+                        customerBrokerContractSaleManager.cancelContract(customerBrokerContractSale.getContractId(),
+                                "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT MERCHANDISE.");
+
+                        //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
+                        customerBrokerSale.setTransactionStatus(TransactionStatus.CANCELLED);
+                        userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
+                        //BROADCASTER
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * IN_PAYMENT_SUBMIT -> IN_PENDING_MERCHANDISE:
+     * Se debe enviar un Broadcast para actualizar la UI
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     *
+     * @throws FermatException
+     */
+    private void changeTransactionStatusFromInPaymentSubmitToInPendingMerchandise(String transactionStatusColumnName) throws FermatException {
+        DatabaseTableFilter filterTable;
+        List<CustomerBrokerSale> customerBrokerSales;
+        filterTable = getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), transactionStatusColumnName);
+        customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        Collection<CustomerBrokerContractSale> contractSalesPendingMerchandise = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPendingMerchandise) {
+                if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                    customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PENDING_MERCHANDISE);
+                    userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                }
+            }
+        }
+    }
+
+    /**
+     * IN_MERCHANDISE_SUBMIT -> COMPLETED
+     * <p/>
+     * Se debe enviar un Broadcast para actualizar la UI
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
+     * @throws DatabaseOperationException
+     * @throws InvalidParameterException
+     * @throws CantGetListCustomerBrokerContractSaleException
+     * @throws CantCloseContractException
+     * @throws MissingCustomerBrokerSaleDataException
+     */
+    private void changeTransactionStatusFromInMerchandiseSubmitToCompleted(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException {
+        DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
+        List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        Collection<CustomerBrokerContractSale> contractSalesCompleted;
+        contractSalesCompleted = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.READY_TO_CLOSE);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesCompleted) {
+                if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+
+                    System.out.print("\nTEST CONTRACT - USER LEVEL SALE - AGENT - getCustomerBrokerSales()\n");
+                    closeContractManager.closeSaleContract(customerBrokerContractSale.getContractId());
+
+                    customerBrokerSale.setTransactionStatus(TransactionStatus.COMPLETED);
+                    userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION);
+                }
+            }
+        }
+    }
+
+    /**
+     * IN_CONTRACT_SUBMIT -> IN_PAYMENT_SUBMIT:
+     * <p/>
+     * Se sigue verificando el estatus del contrato hasta que se consiga la realización de un pago.
+     * Si se detecta la realización de un pago se procede actulizar el estatus de la transacción y a monitorear la llegada de la mercadería.
+     * Se verifica si el broker configuró procesar Restock de manera automática.
+     * <p/>
+     * Se debe enviar un Broadcast para actualizar la UI
+     *
+     * @param transactionStatusColumnName the Transaction Status column name
+     * @param brokerWalletPublicKey       the broker wallet public key
+     *
+     * @throws FermatException
+     * @throws ParseException
+     */
+    private void changeTransactionStatusFromInContractSubmitToInPaymentSubmitAndApplyCredit(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException, ParseException {
+        final DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), transactionStatusColumnName);
+        final List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
+        final Collection<CustomerBrokerContractSale> contractSalesPaymentSubmit = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PAYMENT_SUBMIT);
+
+        for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
+            for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPaymentSubmit) {
+                final String transactionId = customerBrokerSale.getTransactionId();
+                final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+
+                if (transactionId.equals(negotiationId)) {
+                    /* Si se detecta la realización de un pago se procede actulizar el estatus de la transacción y a monitorear
+                    la llegada de la mercadería. Se verifica si el broker configuró procesar Restock de manera automática. */
+
+                    applySalePaymentCredit(brokerWalletPublicKey, customerBrokerContractSale, negotiationId);
+
+                    customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
+                    userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.
+                            CBW_CONTRACT_CUSTOMER_SUBMITTED_PAYMENT_NOTIFICATION);
+                }
+            }
+        }
+    }
+
+    /**
+     * Apply a sale credit coming from a payment to the broker wallet and the crypto, bank o cash wallet
+     *
+     * @param brokerWalletPublicKey the broker wallet public key
+     * @param contractSale          the sale contract information
+     * @param negotiationId         the negotiation ID associated with the contract
+     *
+     * @throws FermatException
+     * @throws ParseException
+     */
+    private void applySalePaymentCredit(String brokerWalletPublicKey, CustomerBrokerContractSale contractSale, String negotiationId) throws FermatException, ParseException {
+
+        final NumberFormat numberFormat = NumberFormat.getInstance();
+        final CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
+                getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+        // Obtengo info de las clausulas de la negociacion
+        final Collection<Clause> saleNegotiationClauses = saleNegotiation.getClauses();
+
+        String clauseValue;
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.EXCHANGE_RATE);
+        final BigDecimal priceReference = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
+        final BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_BANK_ACCOUNT);
+        final String bankAccount = NegotiationClauseHelper.getAccountNumberFromString(clauseValue);
+
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+        final MoneyType paymentMethod = MoneyType.getByCode(clauseValue);
+
+        final String currencyCode = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY);
+
+        //Ejecuto el restock dependiendo del tipo de transferencia a realizar
+        switch (paymentMethod) {
+            case CRYPTO:
+                cryptoMoneyRestockManager.createTransactionRestock(
+                        contractSale.getPublicKeyBroker(),
+                        CryptoCurrency.getByCode(currencyCode),
+                        brokerWalletPublicKey,
+                        "reference_wallet", // TODO: obtenerlo de installed wallets
+                        amount,
+                        "Payment from a Customer",
+                        priceReference,
+                        OriginTransaction.SALE,
+                        contractSale.getContractId(),
+                        BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
+                break;
+            case BANK:
+                bankMoneyRestockManager.createTransactionRestock(
+                        contractSale.getPublicKeyBroker(),
+                        FiatCurrency.getByCode(currencyCode),
+                        brokerWalletPublicKey,
+                        "banking_wallet", // TODO: obtenerlo de installed wallets
+                        bankAccount,
+                        amount,
+                        "Payment from a Customer",
+                        priceReference,
+                        OriginTransaction.SALE,
+                        contractSale.getContractId());
+                break;
+            case CASH_ON_HAND:
+                cashMoneyRestockManager.createTransactionRestock(
+                        contractSale.getPublicKeyBroker(),
+                        FiatCurrency.getByCode(currencyCode),
+                        brokerWalletPublicKey,
+                        "cash_wallet",  // TODO: obtenerlo de installed wallets
+                        "cashReference",
+                        amount,
+                        "Cash on Hand Payment from a Customer",
+                        priceReference,
+                        OriginTransaction.SALE,
+                        contractSale.getContractId());
+                break;
+            case CASH_DELIVERY:
+                cashMoneyRestockManager.createTransactionRestock(
+                        contractSale.getPublicKeyBroker(),
+                        FiatCurrency.getByCode(currencyCode),
+                        brokerWalletPublicKey,
+                        "cash_wallet",  // TODO: obtenerlo de installed wallets
+                        "cashReference",
+                        amount,
+                        "Cash Delivery Payment from a Customer",
+                        priceReference,
+                        OriginTransaction.SALE,
+                        contractSale.getContractId());
+                break;
+        }
+    }
+
+    /**
+     * Create a table filter object
+     *
+     * @param valueFilter the value of the filter
+     * @param columnValue the column name which is going to be queried
+     *
+     * @return the filter object
+     */
+    private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
+        // I define the filter to search for the public Key
+        return new DatabaseTableFilter() {
+            @Override
+            public void setColumn(String column) {
+            }
+
+            @Override
+            public void setType(DatabaseFilterType type) {
+            }
+
+            @Override
+            public void setValue(String value) {
+            }
+
+            @Override
+            public String getColumn() {
+                return columnValue;
+            }
+
+            @Override
+            public String getValue() {
+                return valueFilter;
+            }
+
+            @Override
+            public DatabaseFilterType getType() {
+                return DatabaseFilterType.EQUAL;
+            }
+        };
+    }
+
+    /**
+     * Disconnect from database and explicitly set all references to null.
+     */
+    private void cleanResources() {
+
+    }
+
+    /**
+     * Return the market exchange rate for the currency to sell vs USD
+     *
+     * @param customerCurrency the code of the currency to sell
+     *
+     * @return the market exchange rate fot this currency vs USD
+     *
+     * @throws CantGetExchangeRateException
+     */
+    private float getMarketExchangeRate(String customerCurrency) throws CantGetExchangeRateException {
+        //Find out if customerCurrency parameter is a FiatCurrency or a CryptoCurrency
+        Currency currency = null;
+        try {
+            if (FiatCurrency.codeExists(customerCurrency))
+                currency = FiatCurrency.getByCode(customerCurrency);
+            else if (CryptoCurrency.codeExists(customerCurrency))
+                currency = CryptoCurrency.getByCode(customerCurrency);
+        } catch (Exception e) {
+            throw new CantGetExchangeRateException();
+        }
+
+        if (currency == null)
+            throw new CantGetExchangeRateException();
+
+
+        CurrencyPair currencyPair = new CurrencyPairImpl(currency, FiatCurrency.US_DOLLAR);
+
+
+        //Get saved CER providers in broker wallet
+        final String publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest"; //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
+
+        try {
+            final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall);
+            final CryptoBrokerWalletSetting cryptoWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+            final List<CryptoBrokerWalletProviderSetting> providerSettings = cryptoWalletSetting.getCryptoBrokerWalletProviderSettings();
+
+            for (CryptoBrokerWalletProviderSetting providerSetting : providerSettings) {
+
+                UUID providerId = providerSetting.getPlugin();
+                CurrencyExchangeRateProviderManager providerReference = currencyExchangeRateProviderFilter.getProviderReference(providerId);
+                if (providerReference.isCurrencyPairSupported(currencyPair)) {
+                    ExchangeRate currentExchangeRate = providerReference.getCurrentExchangeRate(currencyPair);
+                    return (float) currentExchangeRate.getPurchasePrice();
+                }
+            }
+        } catch (Exception e) { /*Continue*/ }
+
+        //Find any CER provider which can obtain the needed currencyPair, regardless of it not being set up in the broker wallet
+        try {
+            final Collection<CurrencyExchangeRateProviderManager> providers = currencyExchangeRateProviderFilter.
+                    getProviderReferencesFromCurrencyPair(currencyPair);
+
+            for (CurrencyExchangeRateProviderManager provider : providers) {
+                try {
+                    ExchangeRate currentExchangeRate = provider.getCurrentExchangeRate(currencyPair);
+                    return (float) currentExchangeRate.getPurchasePrice();
+
+                } catch (UnsupportedCurrencyPairException ignore) { /*Continue*/ }
+            }
+        } catch (CantGetProviderException ignore) { /*Continue*/ }
+
+        throw new CantGetExchangeRateException();
     }
 }

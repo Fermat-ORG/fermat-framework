@@ -21,6 +21,8 @@ public class IncomingExtraUserDataBaseConstants {
     public static final ColumnDefinition INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN = new ColumnDefinition("ProtocolStatus", DatabaseDataType.STRING, 10,false);
     public static final ColumnDefinition INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN = new ColumnDefinition("TransactionStatus", DatabaseDataType.STRING, 10,false);
     public static final ColumnDefinition INCOMING_EXTRA_USER_REGISTRY_TABLE_TIMESTAMP_COLUMN = new ColumnDefinition("Timestamp", DatabaseDataType.LONG_INTEGER, 100,false);
+    public static final ColumnDefinition INCOMING_EXTRA_USER_REGISTRY_TABLE_NETWORK_TYPE = new ColumnDefinition("BlockchainNetworkType", DatabaseDataType.STRING, 10,false);
+
 
     public static final String INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME = "IncomingExtraUserEventsRecorded";
     public static final ColumnDefinition INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN = new ColumnDefinition("Id", DatabaseDataType.STRING, 36,true);

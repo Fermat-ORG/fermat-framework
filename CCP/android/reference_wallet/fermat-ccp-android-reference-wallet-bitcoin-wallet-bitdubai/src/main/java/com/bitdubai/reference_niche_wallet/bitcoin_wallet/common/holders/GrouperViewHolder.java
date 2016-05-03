@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.holders;
 
 import android.annotation.SuppressLint;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -8,11 +9,12 @@ import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.content.res.Resources;
+
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
@@ -33,25 +35,16 @@ public class GrouperViewHolder extends ParentViewHolder {
     private static final float PIVOT_VALUE = 0.5f;
     private static final long DEFAULT_ROTATE_DURATION_MS = 200;
     private static final boolean HONEYCOMB_AND_ABOVE = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB;
-
-    private View itemView;
-
-
-    Resources res;
-
-
     public ColorDrawable background;
-
-
+    public ImageView mArrowExpandImageView;
+    Resources res;
+    private View itemView;
     private ImageView contactIcon;
     private TextView txt_contactName;
     private TextView txt_amount;
     private TextView txt_notes;
     private TextView txt_time;
-
-
     private TextView txt_total_number_transactions;
-    public ImageView mArrowExpandImageView;
     private TextView txt_total_balance;
 
     /**
@@ -90,7 +83,11 @@ public class GrouperViewHolder extends ParentViewHolder {
             {
                 photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
                 contactName = cryptoWalletTransaction.getInvolvedActor().getName();
+            }else{
+            if (cryptoWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
+                contactName = "Device User Transaction";
             }
+        }
 
         //TODO Ver porque se cae cuando el contacto tiene algunos bytes
         try {
@@ -110,7 +107,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
         txt_notes.setText(cryptoWalletTransaction.getMemo());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
         txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()) + " hs");
         txt_total_number_transactions.setText(String.valueOf(childCount)+ " records");
 

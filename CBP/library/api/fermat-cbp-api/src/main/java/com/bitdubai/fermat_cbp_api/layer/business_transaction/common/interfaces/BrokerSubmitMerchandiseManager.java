@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * BrokerSubmitOnlineMerchandise plugins.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/12/15.
  */
-public interface BrokerSubmitMerchandiseManager extends FermatManager {
+public interface BrokerSubmitMerchandiseManager extends BusinessTransactionManager {
 
 
     /**

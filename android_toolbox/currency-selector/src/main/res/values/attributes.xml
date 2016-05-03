@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Caviar Dreams Typeface -->
+    <attr name="typeface" format="enum">
+        <enum name="caviar_dreams" value="0" />
+        <enum name="caviar_dreams_bold" value="1" />
+        <enum name="caviar_dreams_italic" value="2" />
+        <enum name="caviar_dreams_bold_italic" value="3" />
+    </attr>
+
+    <declare-styleable name="CaviarTextView">
+        <attr name="typeface"/>
+    </declare-styleable>
+
+    <declare-styleable name="CaviarEditText">
+        <attr name="typeface"/>
+    </declare-styleable>
+
+    <declare-styleable name="custom.CaviarButton">
+        <attr name="typeface"/>
+    </declare-styleable>
+
+    <declare-styleable name="CaviarRadioButton">
+        <attr name="typeface" />
+    </declare-styleable>
+
+ </resources>

@@ -14,12 +14,9 @@ import java.util.Map;
 /**
  * Created by Matias Furszyfer on 2015.07.20..
  */
-public class CryptoBrokerIdentitySubAppSession
-        extends AbstractFermatSession<InstalledSubApp, CryptoBrokerIdentityModuleManager, SubAppResourcesProviderManager>
-        {
-
+public class CryptoBrokerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp, CryptoBrokerIdentityModuleManager, SubAppResourcesProviderManager> {
     public static final String IDENTITY_INFO = "CRYPTO_IDENTITY_INFO";
-
     public CryptoBrokerIdentitySubAppSession() {
+
     }
 }

@@ -115,16 +115,20 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
             try {
                 //image null
                 if (intraUserInformation != null && identity != null) {
-                    getSession().getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPhrase(),intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                    getSession().getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPhrase(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(), identity.getProfileImage(), identity.getPublicKey(), identity.getAlias());
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
                     Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
                 } else {
-                    super.toastDefaultError();
+                    Toast.makeText(getContext(), "Can't Send Request Connection - Manager not initialised ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantStartRequestException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "Can't Send Request Connection ", Toast.LENGTH_SHORT).show();
+
+            } catch (Exception e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }

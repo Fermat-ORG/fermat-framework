@@ -6,13 +6,11 @@
  */
 package com.bitdubai.linux.core.app;
 
-import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_linux_core.OSAPlatform;
@@ -22,7 +20,7 @@ import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContex
  * The Class <code>com.bitdubai.linux.core.app.FermatLinuxAppMain</code> initialize
  * all fermat system
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 30/11/15.
  *
  * @version 1.0
@@ -30,10 +28,6 @@ import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContex
  */
 public class FermatLinuxAppMain {
 
-    /**
-     *  Represent the fermatSystem instance
-     */
-    private static final FermatSystem fermatSystem = new FermatSystem();
 
     /**
      * Represent the fermatContext instance
@@ -41,11 +35,16 @@ public class FermatLinuxAppMain {
     private static final FermatLinuxContext fermatLinuxContext = FermatLinuxContext.getInstance();
 
     /**
+     * Represent the fermatSystem instance
+     */
+    private static final FermatSystem fermatSystem = FermatSystem.getInstance(fermatLinuxContext, new OSAPlatform());
+
+    /**
      * Main method
      *
      * @param args
      */
-    public static void main(String [ ] args){
+    public static void main(String[] args) {
 
         try {
 
@@ -60,10 +59,10 @@ public class FermatLinuxAppMain {
             /*
              * Start the system
              */
-            fermatSystem.start(fermatLinuxContext, new OSAPlatform());
-            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, Developers.BITDUBAI, new Version()) );
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE  , Developers.BITDUBAI, new Version()));
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
             System.out.println("***********************************************************************");
             System.out.println("*FERMAT - ERROR                                                       *");

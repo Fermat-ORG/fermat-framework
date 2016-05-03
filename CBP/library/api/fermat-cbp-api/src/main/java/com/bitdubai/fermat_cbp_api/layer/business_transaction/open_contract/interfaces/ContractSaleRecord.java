@@ -1,13 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.Contract;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 
 import java.util.Collection;
@@ -19,12 +17,12 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
 
     Collection<ContractClause> contractClauses;
     long dayTime;
-    CurrencyType merchandiseCurrency;
+    Currency merchandiseCurrency;
     float merchandiseAmount;
     long merchandiseDeliveryExpirationDate;
     String negotiationId;
     float paymentAmount;
-    CurrencyType paymentCurrency;
+    Currency paymentCurrency;
     long paymentExpirationDate;
     String publicKeyBroker;
     String publicKeyCustomer;
@@ -32,6 +30,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
     float referencePrice;
     ContractStatus status;
     String contractHash;Boolean nearExpirationDatetime;
+    String cancelReason;
 
     /**
      * Represents the contract id/hash
@@ -61,7 +60,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         return this.merchandiseAmount;
     }
 
-    public CurrencyType getMerchandiseCurrency() {
+    public Currency getMerchandiseCurrency() {
         return this.merchandiseCurrency;
     }
     
@@ -77,7 +76,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         return this.paymentAmount;
     }
     
-    public CurrencyType getPaymentCurrency() {
+    public Currency getPaymentCurrency() {
         return this.paymentCurrency;
     }
     
@@ -119,6 +118,9 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         return nearExpirationDatetime;
     }
 
+    @Override
+    public String getCancelReason() { return cancelReason; }
+
     public void setNearExpirationDatetime(Boolean nearExpirationDatetime) {this.nearExpirationDatetime = nearExpirationDatetime;
     }
 
@@ -133,7 +135,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         this.merchandiseAmount=merchandiseAmount;
     }
 
-    public void setMerchandiseCurrency(CurrencyType merchandiseCurrency) {
+    public void setMerchandiseCurrency(Currency merchandiseCurrency) {
         this.merchandiseCurrency=merchandiseCurrency;
     }
 
@@ -154,7 +156,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         this.paymentAmount=paymentAmount;
     }
 
-    public void setPaymentCurrency(CurrencyType paymentCurrency) {
+    public void setPaymentCurrency(Currency paymentCurrency) {
         this.paymentCurrency=paymentCurrency;
     }
 
@@ -182,6 +184,9 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         this.status=status;
     }
 
+    public void setCancelReason(String reason){
+        this.cancelReason = reason;
+    }
     /**
      * The string of the ContractSaleRecord will be used to generate a unique Hash.
      * This hash will be used as Id.
@@ -190,8 +195,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
      */
     @Override
     public String toString() {
-        return "ContractSaleRecord{" +
-                "contractClauses=" + contractClauses +
+        return "ContractRecord{" +
                 ", dayTime=" + dayTime +
                 ", merchandiseCurrency=" + merchandiseCurrency +
                 ", merchandiseAmount=" + merchandiseAmount +

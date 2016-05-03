@@ -84,8 +84,8 @@ public class StopTest {
                 customerBrokerPurchaseNegotiation,
                 customerBrokerSaleNegotiation,
                 customerBrokerPurchaseNegotiationManager,
-                customerBrokerSaleNegotiationManager
-        );
+                customerBrokerSaleNegotiationManager,
+                broadcaster);
 /*
         testObj1.start();
         Thread.sleep(100);

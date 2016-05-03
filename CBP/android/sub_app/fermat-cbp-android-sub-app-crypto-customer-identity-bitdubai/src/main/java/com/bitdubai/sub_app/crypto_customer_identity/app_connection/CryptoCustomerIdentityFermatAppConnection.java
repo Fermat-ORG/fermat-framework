@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.crypto_customer_identity.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -24,7 +23,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.session.CryptoCustomerIdent
  */
 public class CryptoCustomerIdentityFermatAppConnection extends AppConnections {
 
-    public CryptoCustomerIdentityFermatAppConnection(Activity activity) {
+    public CryptoCustomerIdentityFermatAppConnection(Context activity) {
         super(activity);
     }
 

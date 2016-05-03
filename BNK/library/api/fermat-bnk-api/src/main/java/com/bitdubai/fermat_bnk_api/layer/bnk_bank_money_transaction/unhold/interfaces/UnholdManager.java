@@ -19,4 +19,6 @@ public interface UnholdManager extends FermatManager {
     BankTransaction unHold(BankTransactionParameters parameters)throws CantMakeUnholdTransactionException;
 
     BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetUnholdTransactionException;
+
+    boolean isTransactionRegistered(UUID transactionId);
 }

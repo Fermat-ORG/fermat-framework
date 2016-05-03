@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.all_definition.money;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -38,5 +40,33 @@ public class CryptoAddress implements Serializable {
         return  this.cryptoCurrency;
 
     }
-    
+
+    @Override
+    public String toString() {
+        return cryptoCurrency.toString() + ":" + address;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CryptoAddress) || obj == null )
+            return false;
+
+        /**
+         * CryptoCurrency and Address must be equals to return true
+         */
+        if (((CryptoAddress) obj).getCryptoCurrency().equals(cryptoCurrency) && ((CryptoAddress) obj).getAddress().equals(address))
+            return true;
+        else
+            return false;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int hash = 1;
+        hash = prime * hash +  ((cryptoCurrency == null ? 0 : cryptoCurrency.hashCode()));
+        hash = prime * hash +  ((StringUtils.isBlank(address) ? 0 : address.hashCode()));
+
+        return hash;
+    }
 }

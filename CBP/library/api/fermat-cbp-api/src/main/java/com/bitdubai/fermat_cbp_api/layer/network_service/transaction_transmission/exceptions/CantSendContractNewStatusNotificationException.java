@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 20/11/15.
  */
-public class CantSendContractNewStatusNotificationException extends DAPException {
+public class CantSendContractNewStatusNotificationException extends CBPException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T SEND THE CONTRACT NEW STATUS NOTIFICATION";
 

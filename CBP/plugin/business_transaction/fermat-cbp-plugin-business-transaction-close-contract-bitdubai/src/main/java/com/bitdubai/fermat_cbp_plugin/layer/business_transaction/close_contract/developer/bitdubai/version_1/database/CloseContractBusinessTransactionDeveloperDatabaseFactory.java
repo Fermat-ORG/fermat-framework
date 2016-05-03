@@ -107,6 +107,7 @@ public class CloseContractBusinessTransactionDeveloperDatabaseFactory implements
         openContractColumns.add(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSMISSION_STATUS_COLUMN_NAME);
         openContractColumns.add(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_TYPE_COLUMN_NAME);
         openContractColumns.add(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_XML_COLUMN_NAME);
+        openContractColumns.add(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME);
 
         /**
          * Table Close Contract addition.

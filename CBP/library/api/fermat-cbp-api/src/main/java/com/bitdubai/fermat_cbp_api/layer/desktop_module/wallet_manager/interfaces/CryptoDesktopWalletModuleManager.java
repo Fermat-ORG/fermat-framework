@@ -28,7 +28,7 @@ public interface CryptoDesktopWalletModuleManager {
      * @return the list of crypto wallet installed
      * @throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantGetCryptoWalletListException
      */
-    public List<CryptoDesktopWalletInformation> getAllWalletInstalled(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantGetCryptoWalletListException;
+    List<CryptoDesktopWalletInformation> getAllWalletInstalled(int max, int offset) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantGetCryptoWalletListException;
 
 
     /**
@@ -36,7 +36,7 @@ public interface CryptoDesktopWalletModuleManager {
      *
      * @return A list with the installed wallets information
      */
-    public List<CryptoDesktopInstalledWallet> getInstalledWallets() throws CantListWalletsException;
+    List<CryptoDesktopInstalledWallet> getInstalledWallets() throws CantListWalletsException;
 
     /**
      * This method initialize the installation presses of the wallet by giving the control to the
@@ -49,11 +49,11 @@ public interface CryptoDesktopWalletModuleManager {
      * @param version the version of the wallet to install
      * @throws CantStartWalletInstallationException
      */
-    public void installWallet(WalletCategory walletCategory,
-                              UUID skinId,
-                              UUID languageId,
-                              UUID walletCatalogueId,
-                              Version version) throws CantStartWalletInstallationException;
+    void installWallet(WalletCategory walletCategory,
+                       UUID skinId,
+                       UUID languageId,
+                       UUID walletCatalogueId,
+                       Version version) throws CantStartWalletInstallationException;
 
 
 
@@ -65,7 +65,7 @@ public interface CryptoDesktopWalletModuleManager {
      * @param languageId the language identifier
      * @throws CantStartWalletLanguageInstallationException
      */
-    public void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartWalletLanguageInstallationException;
+    void installLanguage(UUID walletCatalogueId, UUID languageId) throws CantStartWalletLanguageInstallationException;
 
     /**
      * This method initialize the installation presses of a skin by giving the control to the
@@ -75,7 +75,7 @@ public interface CryptoDesktopWalletModuleManager {
      * @param skinId the skin identifier
      * @throws CantStartWalletSkinInstallationException
      */
-    public void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartWalletSkinInstallationException;
+    void installSkin(UUID walletCatalogueId, UUID skinId) throws CantStartWalletSkinInstallationException;
 
 
     /**
@@ -86,7 +86,7 @@ public interface CryptoDesktopWalletModuleManager {
      * @param languageId the language identifier
      * @throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantStartUninstallWalletLanguageException
      */
-    public void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantStartUninstallWalletLanguageException;
+    void uninstallLanguage(UUID walletCatalogueId, UUID languageId) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantStartUninstallWalletLanguageException;
 
     /**
      * This method initialize the uninstall presses of a skin by giving the control to the
@@ -96,7 +96,7 @@ public interface CryptoDesktopWalletModuleManager {
      * @param skinId the skin identifier
      * @throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantStartUninstallWalletSkinException
      */
-    public void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantStartUninstallWalletSkinException;
+    void uninstallSkin(UUID walletCatalogueId, UUID skinId) throws com.bitdubai.fermat_cbp_api.layer.desktop_module.wallet_manager.exception.CantStartUninstallWalletSkinException;
 
     /**
      * This method initialize the uninstall presses of the wallet by giving the control to the
@@ -105,5 +105,5 @@ public interface CryptoDesktopWalletModuleManager {
      * @param walletCatalogueId the wallet id in the catalogue
      * @throws CantStartUninstallWalletException
      */
-    public void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException;
+    void uninstallWallet(UUID walletCatalogueId) throws CantStartUninstallWalletException;
 }

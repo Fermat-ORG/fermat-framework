@@ -11,20 +11,12 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 public interface DatabaseRecord {
 
-    public String getName();
+    String getName();
 
-    public String getValue();
+    String getValue();
 
-    public boolean getChange();
+    boolean isChange();
 
-    public boolean getUseValueofVariable();
-
-    public void setName(String name);
-
-    public void setValue(String value);
-
-    public void setChange(boolean change);
-
-    public void setUseValueofVariable(boolean ifvariable);
+    boolean isUseOfVariable();
 
 }

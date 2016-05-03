@@ -12,13 +12,13 @@ import java.util.Map;
 public interface SubAppSessionManager {
 
 
-    public FermatSession<InstalledSubApp,?> openSubAppSession(InstalledSubApp subApp,ErrorManager errorManager,ModuleManager moduleManager,AppConnections appConnections);
+    FermatSession<InstalledSubApp,?> openSubAppSession(InstalledSubApp subApp, ErrorManager errorManager, ModuleManager moduleManager, AppConnections appConnections);
 
-    public boolean closeSubAppSession(String subAppPublicKey);
+    boolean closeSubAppSession(String subAppPublicKey);
     //subApp publicKey
-    public Map<String, FermatSession<InstalledSubApp,?>> listOpenSubApps();
+    Map<String, FermatSession<InstalledSubApp,?>> listOpenSubApps();
 
-    public boolean isSubAppOpen(String subAppPublicKey);
-    public FermatSession<InstalledSubApp,?> getSubAppsSession(String subAppPublicKey);
+    boolean isSubAppOpen(String subAppPublicKey);
+    FermatSession<InstalledSubApp,?> getSubAppsSession(String subAppPublicKey);
 
 }

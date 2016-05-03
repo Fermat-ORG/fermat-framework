@@ -16,14 +16,14 @@ public interface RequestCustomerBrokerSaleManager {
 
     List<RequestCustomerBrokerSale> getReceivedRequestSale(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.CantGetRequestListException;
 
-    public void sendRequestSale(String senderWalletPublicKey,
-                                    String requestSenderPublicKey,
-                                    String requestDestinationPublicKey,
-                                    String requestDescription,
-                                    CryptoAddress addressToSendThePayment,
-                                    long cryptoAmount) throws com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.RequestUnexpectedErrorException;
+    void sendRequestSale(String senderWalletPublicKey,
+                         String requestSenderPublicKey,
+                         String requestDestinationPublicKey,
+                         String requestDescription,
+                         CryptoAddress addressToSendThePayment,
+                         long cryptoAmount) throws com.bitdubai.fermat_cbp_api.layer.request.customer_broker_sale.exceptions.RequestUnexpectedErrorException;
 
-    public void rejectRequestSale(UUID requestId) throws FailedToRejectTheRequestSaleException;
+    void rejectRequestSale(UUID requestId) throws FailedToRejectTheRequestSaleException;
 
     RequestCustomerBrokerSale createRequestCustomerBrokerSale(String senderWalletPublicKey,
                                                                       String requestSenderPublicKey,

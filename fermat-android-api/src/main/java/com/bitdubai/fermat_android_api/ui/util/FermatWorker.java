@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_android_api.ui.util;
 
-import android.app.Activity;
+import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -20,8 +21,9 @@ public abstract class FermatWorker extends Thread {
     /**
      * References Fields
      */
-    private Activity context;
+    private Context context;
     private FermatWorkerCallBack callBack;
+    private Handler mHandler;
 
     /**
      * Simple constructor
@@ -35,8 +37,9 @@ public abstract class FermatWorker extends Thread {
      *
      * @param context Activity Context used for init the context field and be able to call delegates on the UI Thread.
      */
-    protected FermatWorker(Activity context) {
+    protected FermatWorker(Context context) {
         setContext(context);
+        mHandler = new Handler(context.getMainLooper());
     }
 
     /**
@@ -45,18 +48,20 @@ public abstract class FermatWorker extends Thread {
      * @param context  Activity Context used for init the context field and be able to call delegates on the UI Thread.
      * @param callBack Instance of FermatWorkerCallBack to call functions over UI Thread and handle the result
      */
-    public FermatWorker(Activity context, FermatWorkerCallBack callBack) {
+    public FermatWorker(Context context, FermatWorkerCallBack callBack) {
         setContext(context);
         setCallBack(callBack);
+        mHandler = new Handler(context.getMainLooper());
     }
 
     @Override
     public void run() {
         try {
+            if(mHandler==null)mHandler = new Handler(context.getMainLooper());
             //todo: check connection availability
             final Object result = doInBackground();
             if (context != null && callBack != null) {
-                context.runOnUiThread(new Runnable() {
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -69,7 +74,7 @@ public abstract class FermatWorker extends Thread {
             }
         } catch (final Exception ex) {
             if (callBack != null && context != null) {
-                context.runOnUiThread(new Runnable() {
+                mHandler.post(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -116,7 +121,7 @@ public abstract class FermatWorker extends Thread {
      *
      * @param context Activity Context used for init the context field and be able to call delegates on the UI Thread.
      */
-    public void setContext(Activity context) {
+    public void setContext(Context context) {
         this.context = context;
     }
 

@@ -1,5 +1,8 @@
 package com.bitdubai.sub_app.manager.fragment.provisory_classes;
 
+import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
@@ -25,6 +28,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     private Version version;
     private int iconResource;
     private int position;
+    //TODO: completar
+    private AppsStatus appStatus;
+    private int bannerRes;
+    Platforms platforms;
 
     public InstalledSubApp(SubApps subApps, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version) {
         this.subApps = subApps;
@@ -41,7 +48,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         this.iconResource = iconResource;
     }
 
-    /**
+    public void setAppStatus(AppsStatus appStatus) {
+        this.appStatus = appStatus;
+    }
+/**
      * InstalledWallet Interface implementation.
      */
 
@@ -142,6 +152,16 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public void setBanner(int res) {
+        this.bannerRes = res;
+    }
+
+    @Override
+    public int getBannerRes() {
+        return bannerRes;
+    }
+
+    @Override
     public String getAppName() {
         return subApps.getCode();
     }
@@ -149,6 +169,21 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return appStatus;
+    }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.SUB_APP;
+    }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
     }
 
     @Override
@@ -166,5 +201,13 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
     @Override
     public int getNotifications() {
         return 0;
+    }
+
+    public Platforms getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(Platforms platforms) {
+        this.platforms = platforms;
     }
 }

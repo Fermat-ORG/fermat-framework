@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class DolarTodaySubsystem extends AbstractPluginSubsystem {
 
     public DolarTodaySubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_DOLARTODAY));
+        super(new PluginReference(Plugins.DOLARTODAY));
     }
 
     @Override

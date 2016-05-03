@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionConnectionsDAO;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database.TransactionTransmissionContractHashDao;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.CommunicationNetworkServiceConnectionManager;
@@ -46,7 +46,7 @@ public class StartTest {
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     @Mock
-    private TransactionTransmissionPluginRoot transactionTransmissionPluginRoot;
+    private TransactionTransmissionNetworkServicePluginRoot transactionTransmissionNetworkServicePluginRoot;
 
     @Mock
     private TransactionTransmissionConnectionsDAO transactionTransmissionConnectionsDAO;
@@ -70,7 +70,7 @@ public class StartTest {
     public void Start_ParametersProperlySet_ThreadStarted() throws Exception{
 
         TransactionTransmissionAgent transactionTransmissionAgent = new TransactionTransmissionAgent(
-                transactionTransmissionPluginRoot,
+                transactionTransmissionNetworkServicePluginRoot,
                 transactionTransmissionConnectionsDAO,
                 transactionTransmissionContractHashDao,
                 communicationNetworkServiceConnectionManager,

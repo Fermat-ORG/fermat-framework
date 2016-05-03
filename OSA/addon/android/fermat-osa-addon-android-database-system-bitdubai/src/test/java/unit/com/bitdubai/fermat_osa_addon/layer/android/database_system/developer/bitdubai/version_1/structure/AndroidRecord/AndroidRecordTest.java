@@ -1,6 +1,5 @@
 package unit.com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidRecord;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidRecord;
 
 import org.junit.Before;
@@ -41,9 +40,9 @@ public class AndroidRecordTest {
             true
         );
 
-        assertThat(record1.getChange()).isEqualTo(record2.getChange());
+        assertThat(record1.isChange()).isEqualTo(record2.isChange());
         assertThat(record1.getValue()).isEqualTo(record2.getValue());
-        assertThat(record1.getUseValueofVariable()).isEqualTo(record2.getUseValueofVariable());
+        assertThat(record1.isUseOfVariable()).isEqualTo(record2.isUseOfVariable());
         assertThat(record1.getName()).isEqualTo(record2.getName());
 
         assertThat(record1.toString()).isEqualTo(record2.toString());
@@ -58,9 +57,9 @@ public class AndroidRecordTest {
                 false
         );
 
-        assertThat(record1.getChange()).isNotEqualTo(record2.getChange());
+        assertThat(record1.isChange()).isNotEqualTo(record2.isChange());
         assertThat(record1.getValue()).isNotEqualTo(record2.getValue());
-        assertThat(record1.getUseValueofVariable()).isNotEqualTo(record2.getUseValueofVariable());
+        assertThat(record1.isUseOfVariable()).isNotEqualTo(record2.isUseOfVariable());
         assertThat(record1.getName()).isNotEqualTo(record2.getName());
 
         assertThat(record1.toString()).isNotEqualTo(record2.toString());

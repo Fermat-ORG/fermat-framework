@@ -24,6 +24,6 @@ public interface Image {
      *
      * @return byte []
      */
-    public byte [] getData();
+    byte [] getData();
 
 }

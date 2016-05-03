@@ -74,7 +74,7 @@ public final class SelectableIdentity implements CryptoBrokerCommunitySelectable
                 "alias='" + alias + '\'' +
                 ", publicKey='" + publicKey + '\'' +
                 ", actorType=" + actorType +
-                ", profileImage=" + Arrays.toString(image) +
+                ", image=" + (image != null) +
                 '}';
     }
 

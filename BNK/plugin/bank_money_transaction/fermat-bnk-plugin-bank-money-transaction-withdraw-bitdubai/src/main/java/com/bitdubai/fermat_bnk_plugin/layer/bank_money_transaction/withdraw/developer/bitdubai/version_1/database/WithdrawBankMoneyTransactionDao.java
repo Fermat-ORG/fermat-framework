@@ -67,7 +67,7 @@ public class WithdrawBankMoneyTransactionDao {
         try {
             table.insertRecord(record);
         }catch (CantInsertRecordException e){
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 }

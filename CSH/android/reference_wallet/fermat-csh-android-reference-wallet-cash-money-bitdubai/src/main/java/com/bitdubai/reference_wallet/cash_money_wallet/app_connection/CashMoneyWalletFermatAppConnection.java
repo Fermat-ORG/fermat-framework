@@ -1,7 +1,6 @@
 package com.bitdubai.reference_wallet.cash_money_wallet.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -25,7 +24,7 @@ public class CashMoneyWalletFermatAppConnection extends AppConnections{
 
     IntraUserLoginIdentity intraUserLoginIdentity;
 
-    public CashMoneyWalletFermatAppConnection(Activity activity, IntraUserLoginIdentity intraUserLoginIdentity) {
+    public CashMoneyWalletFermatAppConnection(Context activity, IntraUserLoginIdentity intraUserLoginIdentity) {
         super(activity);
         this.intraUserLoginIdentity = intraUserLoginIdentity;
     }

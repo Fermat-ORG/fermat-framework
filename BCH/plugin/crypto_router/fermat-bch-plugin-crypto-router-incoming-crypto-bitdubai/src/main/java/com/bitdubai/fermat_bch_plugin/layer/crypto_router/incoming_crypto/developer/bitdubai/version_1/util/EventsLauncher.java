@@ -3,13 +3,15 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+
+
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CryptoStatusNotHandledException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 
 import java.util.Set;
@@ -159,6 +161,30 @@ public class EventsLauncher implements DealsWithEvents {
                         break;
                     case REVERSED_ON_BLOCKCHAIN:
                         raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEEM_POINT);
+                        break;
+                    case IRREVERSIBLE:
+                        //define what to do.
+                        break;
+                    default:
+                        String message = "I could not find the event for this crypto status";
+                        String context = "Specialist: " + specialist.name() + " with code: " + specialist.getCode() + FermatException.CONTEXT_CONTENT_SEPARATOR + "Crypto Status: " + cryptoStatus.name() + " with code: " + cryptoStatus.getCode();
+                        String possibleCause = "Crypto Status not considered in switch statement";
+                        throw new CryptoStatusNotHandledException(message, null, context, possibleCause);
+                }
+                break;
+            case ASSET_REDEMPTION_SPECIALIST:
+                switch (cryptoStatus) {
+                    case ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION);
+                        break;
+                    case ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION);
+                        break;
+                    case REVERSED_ON_CRYPTO_NETWORK:
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEMPTION);
+                        break;
+                    case REVERSED_ON_BLOCKCHAIN:
+                        raiseEvent(EventType.INCOMING_ASSET_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_REDEMPTION);
                         break;
                     case IRREVERSIBLE:
                         //define what to do.

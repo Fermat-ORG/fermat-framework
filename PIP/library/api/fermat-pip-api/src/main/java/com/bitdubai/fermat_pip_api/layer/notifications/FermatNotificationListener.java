@@ -7,6 +7,6 @@ import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.Notifica
  */
 public interface FermatNotificationListener {
 
-    public void notificate(NotificationEvent notificationEvent);
+    void notificate(NotificationEvent notificationEvent);
 
 }

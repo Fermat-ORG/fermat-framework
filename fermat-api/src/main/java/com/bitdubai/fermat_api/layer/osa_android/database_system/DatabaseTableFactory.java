@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -14,13 +15,18 @@ import java.util.ArrayList;
  * */
 public interface DatabaseTableFactory {
 
-    public void addIndex(String index);
+    void addIndex(String singleColumnIndex);
 
-    public String getIndex();
+    void addIndex(List<String> multipleColumnIndex);
 
-    public  String getTableName ();
+    List<List<String>> listIndexes();
 
-    public void addColumn (String columnName, DatabaseDataType dataType, int dataTypeSize, boolean primaryKey);
+    String getTableName();
 
-    public ArrayList<DatabaseTableColumn> getColumns ();
+    void addColumn(String           columnName  ,
+                   DatabaseDataType dataType    ,
+                   int              dataTypeSize,
+                   boolean          primaryKey  );
+
+    ArrayList<DatabaseTableColumn> getColumns();
 }

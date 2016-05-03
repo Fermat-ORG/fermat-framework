@@ -42,6 +42,9 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
         final String                            negotiationXML,
         final long                              timestamp
     ){
+
+        super(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION);
+
         this.transmissionId             = transmissionId;
         this.transactionId              = transactionId;
         this.negotiationId              = negotiationId;
@@ -60,37 +63,27 @@ public final class NegotiationMessage extends NegotiationTransmissionMessage {
     
     public final UUID getTransmissionId(){ return transmissionId; }
 
-    
     public final UUID getTransactionId(){ return transactionId; }
 
-    
     public final UUID getNegotiationId(){ return negotiationId; }
 
-    
     public final NegotiationTransactionType getNegotiationTransactionType(){ return negotiationTransactionType; }
 
-    
     public final String getPublicKeyActorSend(){ return publicKeyActorSend; }
 
-    
     public final PlatformComponentType getActorSendType(){ return actorSendType; }
 
-    
     public final String getPublicKeyActorReceive(){ return publicKeyActorReceive;}
 
-    
     public final PlatformComponentType getActorReceiveType(){ return actorReceiveType; }
 
-    
     public final NegotiationTransmissionType getTransmissionType(){ return transmissionType; }
-
 
     public final NegotiationTransmissionState getTransmissionState(){ return transmissionState; }
 
     public final NegotiationType getNegotiationType(){ return negotiationType; }
 
     public final String getNegotiationXML(){ return negotiationXML; }
-
 
     public final long getTimestamp(){ return timestamp; }
 

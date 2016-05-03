@@ -15,4 +15,4 @@ public class Constants {
     public static final String PRESENTATION_SCREEN_ENABLED = "presentation_screen_enabled";
     public static final String PRESENTATIO_DIALOG_CHECKED = "don't show dialog more";
 
-};
+}

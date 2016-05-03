@@ -22,10 +22,11 @@ public class CashMoneyWalletTransactionImpl implements CashMoneyWalletTransactio
     BigDecimal amount;
     String memo;
     long timestamp;
+    boolean isPending;
 
 
-    public CashMoneyWalletTransactionImpl(UUID transactionId, String publicKeyWallet, String publicKeyActor, String publicKeyPlugin,
-                                          TransactionType transactionType, BalanceType balanceType, BigDecimal amount, String memo, long timestamp) {
+    public CashMoneyWalletTransactionImpl(UUID transactionId, String publicKeyWallet, String publicKeyActor, String publicKeyPlugin, TransactionType transactionType,
+                                          BalanceType balanceType, BigDecimal amount, String memo, long timestamp, boolean isPending) {
         this.transactionId = transactionId;
         this.publicKeyWallet = publicKeyWallet;
         this.publicKeyActor = publicKeyActor;
@@ -35,6 +36,7 @@ public class CashMoneyWalletTransactionImpl implements CashMoneyWalletTransactio
         this.amount = amount;
         this.memo = memo;
         this.timestamp = timestamp;
+        this.isPending = isPending;
     }
 
 
@@ -84,5 +86,10 @@ public class CashMoneyWalletTransactionImpl implements CashMoneyWalletTransactio
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public boolean isPending() {
+        return isPending;
     }
 }

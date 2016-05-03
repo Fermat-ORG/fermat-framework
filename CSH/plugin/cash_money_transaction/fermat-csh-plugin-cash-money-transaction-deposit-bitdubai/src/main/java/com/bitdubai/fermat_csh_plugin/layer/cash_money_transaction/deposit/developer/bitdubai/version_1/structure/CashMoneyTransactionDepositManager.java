@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterCreditException;
@@ -57,7 +57,7 @@ public class CashMoneyTransactionDepositManager implements CashDepositTransactio
      */
 
     @Override
-    public CashDepositTransaction createCashDepositTransaction(CashDepositTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
+    public CashDepositTransaction createCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
         CashMoneyWallet wallet;
         try{
             wallet = cashMoneyWalletManager.loadCashMoneyWallet(depositParameters.getPublicKeyWallet());
@@ -68,8 +68,15 @@ public class CashMoneyTransactionDepositManager implements CashDepositTransactio
         }
 
         try{
-            wallet.getAvailableBalance().credit(depositParameters.getTransactionId(), depositParameters.getPublicKeyActor(), depositParameters.getPublicKeyPlugin(), depositParameters.getAmount(), depositParameters.getMemo());
-            wallet.getBookBalance().credit(depositParameters.getTransactionId(), depositParameters.getPublicKeyActor(), depositParameters.getPublicKeyPlugin(), depositParameters.getAmount(), depositParameters.getMemo());
+            // TODO - Revisar el parametro transactionId en este metodo:
+            // wallet.getAvailableBalance().credit(depositParameters.getTransactionId(), depositParameters.getPublicKeyActor(), depositParameters.getPublicKeyPlugin(), depositParameters.getAmount(), depositParameters.getMemo());
+            // TODO - Revisar el parametro transactionId en este metodo porque esta dado excepcion debido a que es el mismo que el de la instruccion de mas arriba:
+            // wallet.getBookBalance().credit(depositParameters.getTransactionId(), depositParameters.getPublicKeyActor(), depositParameters.getPublicKeyPlugin(), depositParameters.getAmount(), depositParameters.getMemo());
+
+            // TODO - Se le esta colocando un random ID pra que sea unico. Por favor revisar esto
+            wallet.getAvailableBalance().credit(UUID.randomUUID(), depositParameters.getPublicKeyActor(), depositParameters.getPublicKeyPlugin(), depositParameters.getAmount(), depositParameters.getMemo());
+            // TODO - Se le esta colocando un random ID pra que sea unico. Por favor revisar esto
+            wallet.getBookBalance().credit(UUID.randomUUID(), depositParameters.getPublicKeyActor(), depositParameters.getPublicKeyPlugin(), depositParameters.getAmount(), depositParameters.getMemo());
 
         } catch (CantGetCashMoneyWalletBalanceException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

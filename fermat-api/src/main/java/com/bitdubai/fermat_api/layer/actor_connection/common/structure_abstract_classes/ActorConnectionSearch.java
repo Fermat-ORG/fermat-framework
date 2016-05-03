@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.database_abstract_classes.ActorConnectionDao;
-import com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants;
+import static com.bitdubai.fermat_api.layer.actor_connection.common.database_common_classes.ActorConnectionDatabaseConstants.*;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -41,7 +41,7 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
     public final void resetFilters() {
 
         this.databaseTable = dao.getActorConnectionsTable();
-        databaseTable.addStringFilter(ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, actorIdentity.getPublicKey(), DatabaseFilterType.EQUAL);
     }
 
     /**
@@ -51,8 +51,11 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      */
     public final void addAlias(final String alias) {
 
-        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME;
-        databaseTable.addStringFilter(field, alias, DatabaseFilterType.LIKE);
+        databaseTable.addStringFilter(
+                ACTOR_CONNECTIONS_ALIAS_COLUMN_NAME,
+                alias,
+                DatabaseFilterType.LIKE
+        );
     }
 
     /**
@@ -62,8 +65,11 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      */
     public final void addActorType(final Actors actorType){
 
-        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME;
-        databaseTable.addFermatEnumFilter(field, actorType, DatabaseFilterType.EQUAL);
+        databaseTable.addFermatEnumFilter(
+                ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME,
+                actorType,
+                DatabaseFilterType.EQUAL
+        );
     }
 
     /**
@@ -73,8 +79,11 @@ public abstract class ActorConnectionSearch<Z extends LinkedActorIdentity, T ext
      */
     public final void addConnectionState(final ConnectionState connectionState) {
 
-        String field = ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME;
-        databaseTable.addFermatEnumFilter(field, connectionState, DatabaseFilterType.EQUAL);
+        databaseTable.addFermatEnumFilter(
+                ACTOR_CONNECTIONS_CONNECTION_STATE_COLUMN_NAME,
+                connectionState,
+                DatabaseFilterType.EQUAL
+        );
     }
 
     /**

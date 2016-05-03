@@ -4,15 +4,16 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfa
 
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * The interface <code>CryptoCustomerSearch</code>
+ * The interface <code>CryptoCustomerCommunitySearch</code>
  * provides the methods to search for a particular crypto customer
  */
-public interface CryptoCustomerSearch {
+public interface CryptoCustomerSearch extends Serializable {
 
-    public void setNameToSearch(String nameToSearch);
+    void setNameToSearch(String nameToSearch);
 
     List<CryptoCustomerInformation> getResult() throws CantGetCryptoCustomerSearchResult;
 }

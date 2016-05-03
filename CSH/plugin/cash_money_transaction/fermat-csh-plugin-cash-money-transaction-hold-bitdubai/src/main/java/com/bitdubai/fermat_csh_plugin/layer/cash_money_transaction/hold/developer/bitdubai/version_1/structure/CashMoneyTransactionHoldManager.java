@@ -84,4 +84,14 @@ public class CashMoneyTransactionHoldManager implements CashHoldTransactionManag
         return dao.getCashHoldTransaction(transactionId).getStatus();
     }
 
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        try{
+            CashHoldTransaction transaction = dao.getCashHoldTransaction(transactionId);
+            if(transaction.equals(transaction.getTransactionId()))
+                return true;
+        }catch (Exception e){}
+        return false;
+    }
+
 }

@@ -18,42 +18,42 @@ public interface CryptoDesktopSubAppInformation {
      *
      * @return the public key represented as a string
      */
-    public String getSubAppCatalogueId();
+    String getSubAppCatalogueId();
 
     /**
      * This method gives us the SubApp name
      *
      * @return the name of the wallet
      */
-    public String getSubAppName();
+    String getSubAppName();
 
     /**
      * This method gives us the version of the wallet
      *
      * @return the version of the wallet
      */
-    public Version getWalletVersion();
+    Version getWalletVersion();
 
     /**
      * This method gives us the list of all the languages installed for this SubApp
      *
      * @return the saud list of languages
      */
-    public List<CryptoSubAppInstalledLanguage> getLanguagesId();
+    List<CryptoSubAppInstalledLanguage> getLanguagesId();
 
     /**
      * This method gives us the list of all the skins installed for this wallet
      *
      * @return the saud list of skins
      */
-    public List<CryptoSubAppInstalledSkin> getSkinsId();
+    List<CryptoSubAppInstalledSkin> getSkinsId();
 
     /**
      * This method tell us the category of the wallet
      *
      * @return the category of the wallet
      */
-    public SubAppCategory getSubAppCategory();
+    SubAppCategory getSubAppCategory();
 
     /**
      * This method gives us a codification of the SubApp identifier (the identifier is an enum that
@@ -62,17 +62,17 @@ public interface CryptoDesktopSubAppInformation {
      * @return an string that is result of the method getCode of an enum that can be inferred by the
      * SubAppCategory of the wallet.
      */
-    public String getSubAppPlatformIdentifier();
+    String getSubAppPlatformIdentifier();
 
     /**
      * This method gives us the name of the wallet icon used to identify the image in the SubApp resources plug-in
      *
      * @return the name of the said icon
      */
-    public String getSubAppIcon();
+    String getSubAppIcon();
 
 
-    public SubAppType getSubAppType();
+    SubAppType getSubAppType();
 }
 
 

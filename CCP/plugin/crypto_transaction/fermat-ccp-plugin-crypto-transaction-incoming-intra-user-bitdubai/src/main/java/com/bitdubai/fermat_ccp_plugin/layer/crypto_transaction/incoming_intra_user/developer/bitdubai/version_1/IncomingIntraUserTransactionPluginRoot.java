@@ -23,8 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.incoming_intra_user.IncomingIntraUserManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.database.IncomingIntraUserTransactionDeveloperDatabaseFactory;
@@ -81,7 +83,11 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_TRANSMISSION)
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.LOSS_PROTECTED_WALLET)
+    private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
     /*
      * Incoming Intra User member variables
      */
@@ -170,7 +176,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         }
 
         try {
-            this.relayAgent = new IncomingIntraUserRelayAgent(this.errorManager, this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoTransmissionNetworkServiceManager);
+            this.relayAgent = new IncomingIntraUserRelayAgent(this.errorManager, this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoTransmissionNetworkServiceManager,broadcaster,lossProtectedWalletManager);
             this.relayAgent.start();
         } catch (CantStartIncomingIntraUserRelayAgentException e) {
             this.eventRecorderService.stop();
@@ -221,7 +227,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         FermatEventListener fermatEventListener;
         FermatEventHandler fermatEventHandler;
 
-        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
+        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA);
         fermatEventHandler = new IncomingCryptoMetadataEventHandler(eventRecorderService);
 
         fermatEventListener.setEventHandler(fermatEventHandler);

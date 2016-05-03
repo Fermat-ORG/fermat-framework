@@ -27,6 +27,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.DefaultWalletNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
+
+
 /**
  * The interface <code>com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.interfaces.CryptoAddressDealer</code>
  * represents all the components in the crypto address plugin that generate and register addresses.
@@ -52,11 +54,12 @@ public abstract class CryptoAddressDealer {
     }
 
     protected final CryptoAddress getAddress(final VaultType      vaultType     ,
-                                             final CryptoCurrency cryptoCurrency) throws CantGenerateCryptoAddressException, GetNewCryptoAddressException {
+                                             final CryptoCurrency cryptoCurrency,
+                                             final BlockchainNetworkType blockchainNetworkType) throws CantGenerateCryptoAddressException, GetNewCryptoAddressException {
 
         try {
 
-            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(BlockchainNetworkType.DEFAULT);
+            return cryptoVaultSelector.getVault(vaultType, cryptoCurrency).getCryptoAddress(blockchainNetworkType);
 
         } catch (CantIdentifyVaultException e) {
 
@@ -125,7 +128,7 @@ public abstract class CryptoAddressDealer {
 
     protected final CryptoAddress generateAndRegisterCryptoAddress(final Platforms            platform ,
                                                                    final VaultType            vaultType,
-                                                                   final CryptoAddressRequest request  ) throws CantGenerateAndRegisterCryptoAddressException,
+                                                                   final CryptoAddressRequest request) throws CantGenerateAndRegisterCryptoAddressException,
                                                                                                                 DefaultWalletNotFoundException               {
 
         try {
@@ -137,7 +140,7 @@ public abstract class CryptoAddressDealer {
                     platform
             );
 
-            final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency());
+            final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency(), request.getBlockchainNetworkType());
 
             this.registerCryptoAddress(
                     cryptoAddress,

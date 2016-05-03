@@ -5,6 +5,6 @@ package com.bitdubai.fermat_api.layer.osa_android.file_system;
  */
 public interface DealsWithPluginFileSystem {
 
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem);
+    void setPluginFileSystem(PluginFileSystem pluginFileSystem);
 
 }

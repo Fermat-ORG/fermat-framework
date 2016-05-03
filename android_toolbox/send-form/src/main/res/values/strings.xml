@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">SendForm</string>
+
+    <string name="name_label">Name</string>
+    <string name="name_hint">e.g. Sergey Brin</string>
+    <string name="bitcoin_wallet_address_label">Bitcoin Wallet Address</string>
+    <string name="bitcoin_wallet_address_hint">e.g. abc3def6ghi7jkl8mno2pq5rst7</string>
+    <string name="currency_label">Currency</string>
+    <string name="amount_label">Amount</string>
+    <string name="amount_hint">e.g. 27.3</string>
+    <string name="unit_label">Unit</string>
+    <string name="note_label">Note</string>
+    <string name="note_hint">Pending payment</string>
+    <string name="send_label">Send</string>
+    <string name="cancel_label">Cancel</string>
+
+    <string name="address_error_message_label">Length must be between 24 and 37 characters</string>
+    <string name="empty_message_label">Fields cannot be empty</string>
+    <string name="cancel_toast_label">Transaction have been canceled!</string>
+    <string name="send_toast_label">Funds have been sent!</string>
+
+    <string-array name="test_array">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Clelia López</item>
+        <item>Item with very extra super duper long name</item>
+    </string-array>
+
+    <string-array name="currency_array">
+        <item>Bitcoins (BTC)</item>
+        <item>American Dollar (USD)</item>
+        <item>Canadian Dollar (CAD)</item>
+        <item>Argentine Peso (ARG)</item>
+        <item>Venezuelan Bolivar (VEF)</item>
+    </string-array>
+
+    <string-array name="unit_array">
+        <item>mBTC</item>
+        <item>Bits</item>
+        <item>Satoshis</item>
+    </string-array>
+</resources>

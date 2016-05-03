@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FermatCustomViews</string>
+    <string name="american_dollar_label">Dólar Americano</string>
+    <string name="ars_label">ARS</string>
+    <string name="argentine_peso_label">Peso Argentino</string>
+    <string name="aud_label">AUD</string>
+    <string name="australian_dollar_label">Dólar Australiano</string>
+    <string name="cad_label">CAD</string>
+    <string name="canadian_dollar_label">Dólar Canadiense</string>
+    <string name="cop_label">COP</string>
+    <string name="colombian_peso_label">Peso Colombiano</string>
+    <string name="eur_label">EUR</string>
+    <string name="euro_label">Euro</string>
+    <string name="header_label">Selección de Divisa</string>
+    <string name="usd_label">USD</string>
+    <string name="vef_label">VEF</string>
+    <string name="venezuelan_bolivar_label">Boíivar Venezolano</string>
+    <string name="currency_amount_0_label">0</string>
+    <string name="currency_label">Divisa</string>
+    <string name="btc_label">BTC</string>
+    <string name="test_amount">Monto</string>
+    <string name="british_pound_label">Libra Esterlina</string>
+    <string name="gbp_label">GBP</string>
+    <string name="japanese_yen_label">Yen Japonés</string>
+    <string name="jpy_label">JPY</string>
+    <string name="test_default">Por Defecto</string>
+</resources>

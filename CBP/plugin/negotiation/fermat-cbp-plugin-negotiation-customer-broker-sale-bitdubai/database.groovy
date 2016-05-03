@@ -18,9 +18,10 @@ databaseTables << [
                 ["Start Date Time", "LONG_INTEGER", "100", "false"],
                 ["Expiration Date Time", "LONG_INTEGER", "100", "false"],
                 ["Status", "STRING", "20", "false"],
+                ["Near Expiration Date Time", "STRING", "1", "false"],
                 ["Memo", "STRING", "300", "false"],
                 ["Cancel Reason", "STRING", "300", "false"],
-                ["Near Expiration Date Time", "STRING", "1", "false"]
+                ["Last Negotiation Update Date", "LONG_INTEGER", "100", "false"]
 
         ],
         firstKey: "Negotiation Id"
@@ -29,6 +30,7 @@ databaseTables << [
         columns : [
                 ["Clause Id", "STRING", "36", "true"],
                 ["Negotiation Id", "STRING", "36", "false"],
+                ["Crypto Broker Public Key", "STRING", "64", "false"],
                 ["Type", "STRING", "20", "false"],
                 ["Value", "STRING", "20", "false"],
                 ["Status", "STRING", "20", "false"],

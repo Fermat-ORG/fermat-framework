@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
@@ -21,10 +22,11 @@ public class HoldCryptoMoneyTransactionImpl implements CryptoHoldTransaction {
     private float                   amount;
     private CryptoCurrency          currency;
     private String                  memo;
+    private BlockchainNetworkType   blockchainNetworkType;
 
     public HoldCryptoMoneyTransactionImpl(){
 
-    };
+    }
 
     @Override
     public CryptoTransactionStatus getStatus() {
@@ -124,5 +126,20 @@ public class HoldCryptoMoneyTransactionImpl implements CryptoHoldTransaction {
     @Override
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    /**
+     * Returns the blockchainNetworkType of the transaction
+     *
+     * @return BlockchainNetworkType of the transaction
+     */
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    @Override
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 }

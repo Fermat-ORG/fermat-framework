@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
@@ -35,38 +34,31 @@ import java.util.UUID;
 public class BusinessTransactionBankMoneyDestockDatabaseDao {
 
     Database database;
+
     UUID pluginId;
-    /**
-     * DealsWithPluginDatabaseSystem interface variable and implementation
-     */
+
+    /** DealsWithPluginDatabaseSystem interface variable and implementation */
     PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * DealsWithPluginFileSystem interface member variables
-     */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * Constructor
-     */
+    /** Constructor */
     public BusinessTransactionBankMoneyDestockDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
     }
 
     private DatabaseTable getDatabaseTable(String tableName) {
-
         return database.getTable(tableName);
     }
 
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
         try {
-            database = pluginDatabaseSystem.openDatabase(this.pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
-
+            database = pluginDatabaseSystem.openDatabase(this.pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.
+                    BANK_MONEY_DESTOCK_DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
-            BusinessTransactionBankMoneyDestockDatabaseFactory businessTransactionBankMoneyDestockDatabaseFactory = new BusinessTransactionBankMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
-            database = businessTransactionBankMoneyDestockDatabaseFactory.createDatabase(this.pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
+            BusinessTransactionBankMoneyDestockDatabaseFactory factory = new BusinessTransactionBankMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
+            database = factory.createDatabase(this.pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
         }
+
         return database;
     }
 
@@ -88,6 +80,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
         record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME, bankMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME, bankMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, bankMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, bankMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
@@ -95,10 +88,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     private List<DatabaseTableRecord> getBankMoneyRestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -129,6 +119,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
         bankMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         bankMoneyDestockTransaction.setPriceReference(new BigDecimal(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         bankMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
+        bankMoneyDestockTransaction.setOriginTransactionId(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
 
         return bankMoneyDestockTransaction;
     }
@@ -141,50 +132,42 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TABLE_NAME);
-            DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyDestockRecord(bankMoneyTransaction);
+            DatabaseTableRecord bankMoneyDestockRecord = getBankMoneyDestockRecord(bankMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(bankMoneyTransaction.getTransactionId().toString());
             filter.setColumn(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME);
 
             if (isNewRecord(table, filter))
-                transaction.addRecordToInsert(table, bankMoneyRestockRecord);
+                transaction.addRecordToInsert(table, bankMoneyDestockRecord);
             else {
                 table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                transaction.addRecordToUpdate(table, bankMoneyRestockRecord);
+                transaction.addRecordToUpdate(table, bankMoneyDestockRecord);
             }
 
-            //I execute the transaction and persist the database side of the asset.
             database.executeTransaction(transaction);
-            database.closeDatabase();
 
         }catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Bank Money Restock Transaction in the database.", null);
         }
     }
 
     public List<BankMoneyTransaction> getBankMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
     {
-        Database database = null;
         try {
             database = openDatabase();
-            List<BankMoneyTransaction> bankMoneyTransactions = new ArrayList<>();
-            // I will add the Asset Factory information from the database
-            for (DatabaseTableRecord bankMoneyRestockRecord : getBankMoneyRestockData(filter)) {
-                final BankMoneyTransaction bankMoneyTransaction = getBankMoneyDestockTransaction(bankMoneyRestockRecord);
 
+            final List<BankMoneyTransaction> bankMoneyTransactions = new ArrayList<>();
+            final List<DatabaseTableRecord> bankMoneyRestockData = getBankMoneyRestockData(filter);
+
+            for (DatabaseTableRecord bankMoneyRestockRecord : bankMoneyRestockData) {
+                final BankMoneyTransaction bankMoneyTransaction = getBankMoneyDestockTransaction(bankMoneyRestockRecord);
                 bankMoneyTransactions.add(bankMoneyTransaction);
             }
-
-            database.closeDatabase();
 
             return bankMoneyTransactions;
         }
         catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
         }
     }

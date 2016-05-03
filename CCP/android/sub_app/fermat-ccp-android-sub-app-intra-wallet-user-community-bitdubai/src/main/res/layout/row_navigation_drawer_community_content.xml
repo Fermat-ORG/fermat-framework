@@ -26,21 +26,21 @@
         android:id="@+id/textView_label"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:background="#0072bb"
         android:paddingBottom="14dp"
         android:paddingLeft="16dp"
         android:paddingTop="14dp"
         android:text="Home"
-        android:layout_weight="1"
         android:textColor="#ffffff"
         android:textSize="16sp"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
     <View
+        android:id="@+id/badge"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"
-        android:id="@+id/badge"
         />
 
 </LinearLayout>

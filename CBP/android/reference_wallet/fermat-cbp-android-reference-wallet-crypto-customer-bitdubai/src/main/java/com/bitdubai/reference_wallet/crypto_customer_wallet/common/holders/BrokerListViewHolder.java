@@ -1,8 +1,12 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.provider.MediaStore;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,15 +15,11 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerExchangeRatesAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.ByteArrayInputStream;
 
 /**
  * View Holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter}
@@ -30,8 +30,7 @@ import java.util.List;
  */
 public class BrokerListViewHolder extends FermatViewHolder {
     private Resources res;
-    private BrokerExchangeRatesAdapter adapter;
-    private CryptoCustomerWalletManager walletManager;
+    private BrokerExchangeRatesAdapter quotesAdapter;
 
     public ImageView brokerImage;
     public FermatTextView brokerName;
@@ -42,13 +41,11 @@ public class BrokerListViewHolder extends FermatViewHolder {
     /**
      * Create a view holder for the {@link com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter}
      *
-     * @param itemView      the item view
-     * @param walletManager the wallet manager to get the list of exchange rates for the broker merchandise
+     * @param itemView the item view
      */
-    public BrokerListViewHolder(View itemView, CryptoCustomerWalletManager walletManager) {
+    public BrokerListViewHolder(View itemView) {
         super(itemView);
         res = itemView.getResources();
-        this.walletManager = walletManager;
 
         brokerImage = (ImageView) itemView.findViewById(R.id.ccw_broker_image);
         brokerName = (FermatTextView) itemView.findViewById(R.id.ccw_broker_name);
@@ -56,33 +53,34 @@ public class BrokerListViewHolder extends FermatViewHolder {
         exchangeRates = (RecyclerView) itemView.findViewById(R.id.ccw_broker_exchange_rates);
 
         final Context context = itemView.getContext();
-        adapter = new BrokerExchangeRatesAdapter(context);
-        exchangeRates.setAdapter(adapter);
+        quotesAdapter = new BrokerExchangeRatesAdapter(context);
+        exchangeRates.setAdapter(quotesAdapter);
         exchangeRates.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
     }
 
     public void bind(BrokerIdentityBusinessInfo data) {
         brokerName.setText(data.getAlias());
 
-        String currency = data.getMerchandiseCurrency().getCode();
+        String currency = data.getMerchandise().getCode();
         String text = res.getString(R.string.ccw_selling_merchandise, currency);
         merchandiseToSell.setText(text);
 
         final byte[] profileImage = data.getProfileImage();
-        brokerImage.setImageDrawable(getImgDrawable(profileImage));
+
+        if( profileImage != null && profileImage.length > 0 ){
+            ByteArrayInputStream bytes = new ByteArrayInputStream(profileImage);
+            BitmapDrawable bmd = new BitmapDrawable(bytes);
+            brokerImage.setImageBitmap(bmd.getBitmap());
+        }else{
+            brokerImage.setImageResource(R.drawable.ic_profile_male);
+        }
 
         loadDataInAdapter(data);
     }
 
     private void loadDataInAdapter(BrokerIdentityBusinessInfo data) {
-        if (adapter.getItemCount() == 0) {
-            String publicKey = data.getPublicKey();
-            FermatEnum currency = data.getMerchandiseCurrency();
-
-            List<MerchandiseExchangeRate> list = new ArrayList<>();
-            list.addAll(walletManager.getListOfBrokerMerchandisesExchangeRate(publicKey, currency));
-
-            adapter.changeDataSet(list);
+        if (quotesAdapter.getItemCount() == 0) {
+            quotesAdapter.changeDataSet(data.getQuotes());
         }
     }
 
@@ -90,6 +88,6 @@ public class BrokerListViewHolder extends FermatViewHolder {
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.person);
+        return ImagesUtils.getRoundedBitmap(res, R.drawable.ic_profile_male);
     }
 }

@@ -111,6 +111,10 @@ public class CashMoneyTransactionHoldPluginRoot extends AbstractPlugin implement
         return holdTransactionManager.getCashHoldTransactionStatus(transactionId);
     }
 
+    @Override
+    public boolean isTransactionRegistered(UUID transactionId) {
+        return holdTransactionManager.isTransactionRegistered(transactionId);
+    }
 
 
     /*

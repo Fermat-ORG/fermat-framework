@@ -53,7 +53,7 @@ public class Skin implements Serializable {//implements FermatSkin {
         this.setLandscapeLayouts(landscapeLayouts);
     }
 
-    public Skin(){};
+    public Skin(){}
 
     public UUID getId() {
         return id;

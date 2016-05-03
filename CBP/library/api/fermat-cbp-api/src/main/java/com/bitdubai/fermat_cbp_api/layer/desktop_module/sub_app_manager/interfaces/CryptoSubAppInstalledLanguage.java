@@ -15,14 +15,14 @@ public interface CryptoSubAppInstalledLanguage {
      *
      * @return the identifier
      */
-    public UUID getId();
+    UUID getId();
 
     /**
      * This method gives us the language of the wallet
      *
      * @return the language
      */
-    public Languages getLanguage();
+    Languages getLanguage();
 
     /**
      * This method gives us the label of the language wallet. </p></>
@@ -30,14 +30,14 @@ public interface CryptoSubAppInstalledLanguage {
      *
      * @return the label of the language
      */
-    public String getLabel();
+    String getLabel();
 
     /**
      * This method gives us the version of the language wallet
      *
      * @return the version
      */
-    public Version getVersion();
+    Version getVersion();
 
 }
 

@@ -70,6 +70,11 @@ public class WalletPublisherModuleModulePluginRootPlugin extends AbstractPlugin 
     }
 
     @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
     public void setAppPublicKey(String publicKey) {
 
     }
@@ -184,7 +189,7 @@ public class WalletPublisherModuleModulePluginRootPlugin extends AbstractPlugin 
     @Override
     public List<WalletFactoryProject> getProjectsReadyToPublish() throws CantGetWalletFactoryProjectException {
 
-        return (List<WalletFactoryProject>) walletFactoryProjectManager.getWalletFactoryProjectByState(WalletFactoryProjectState.CLOSED);
+        return walletFactoryProjectManager.getWalletFactoryProjectByState(WalletFactoryProjectState.CLOSED);
 
     }
 

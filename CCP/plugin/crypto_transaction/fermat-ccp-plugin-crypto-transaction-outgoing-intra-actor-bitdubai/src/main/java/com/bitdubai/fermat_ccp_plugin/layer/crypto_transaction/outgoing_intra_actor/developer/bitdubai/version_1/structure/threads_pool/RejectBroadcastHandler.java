@@ -7,5 +7,5 @@ import java.util.concurrent.ThreadPoolExecutor;
  */
 public interface RejectBroadcastHandler {
 
-    public void rejectedBroadcastExecution(Runnable r, ThreadPoolExecutor executor);
+    void rejectedBroadcastExecution(Runnable r, ThreadPoolExecutor executor);
 }

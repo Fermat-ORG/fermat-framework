@@ -20,11 +20,14 @@ class BitcoinCryptoNetworkDatabaseConstants {
     static final String TRANSACTIONS_TRX_ID_COLUMN_NAME = "trx_id";
     static final String TRANSACTIONS_HASH_COLUMN_NAME = "hash";
     static final String TRANSACTIONS_BLOCK_HASH_COLUMN_NAME = "block_hash";
+    static final String TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE = "network_type";
     static final String TRANSACTIONS_CRYPTO_STATUS_COLUMN_NAME = "crypto_status";
     static final String TRANSACTIONS_BLOCK_DEPTH_COLUMN_NAME = "block_depth";
     static final String TRANSACTIONS_ADDRESS_TO_COLUMN_NAME = "address_to";
     static final String TRANSACTIONS_ADDRESS_FROM_COLUMN_NAME = "address_from";
-    static final String TRANSACTIONS_VALUE_COLUMN_NAME = "value";
+    static final String TRANSACTIONS_BTC_AMOUNT_COLUMN_NAME = "btc_amount";
+    static final String TRANSACTIONS_FEE_AMOUNT_COLUMN_NAME = "fee";
+    static final String TRANSACTIONS_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
     static final String TRANSACTIONS_OP_RETURN_COLUMN_NAME = "op_return";
     static final String TRANSACTIONS_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
     static final String TRANSACTIONS_LAST_UPDATE_COLUMN_NAME = "last_update";
@@ -85,5 +88,16 @@ class BitcoinCryptoNetworkDatabaseConstants {
     static final String BROADCAST_LAST_EXECUTION_DATE_COLUMN_NAME = "last_execution_date";
 
     static final String BRTOADCAST_FIRST_KEY_COLUMN = "hash";
+
+    /**
+     * ActiveNetworks database table definition.
+     */
+    static final String ACTIVENETWORKS_TABLE_NAME = "activeNetworkTypes";
+
+    static final String ACTIVENETWORKS_NETWORKTYPE= "networkType";
+    static final String ACTIVENETWORKS_KEYS = "keys";
+    static final String ACTIVENETWORKS_LAST_UPDATE = "last_update";
+
+    static final String ACTIVENETWORKS_FIRST_KEY_COLUMN = "networkType";
 
 }

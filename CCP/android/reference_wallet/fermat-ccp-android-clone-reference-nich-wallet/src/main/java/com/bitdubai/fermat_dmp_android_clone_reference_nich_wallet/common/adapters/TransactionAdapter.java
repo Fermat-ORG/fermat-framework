@@ -69,7 +69,7 @@ public class TransactionAdapter extends FermatAdapter<Item, TransactionAdapter.T
         }else{
             EntryItem entryItem = (EntryItem) data;
             holder.textView_contact_name.setText(entryItem.cryptoWalletTransaction.getInvolvedActor().getName());
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault());
             holder.txtView_time.setText(sdf.format(entryItem.cryptoWalletTransaction.getTimestamp()));
             holder.txtView_amount.setText(WalletUtils.formatBalanceString(entryItem.cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()));
 

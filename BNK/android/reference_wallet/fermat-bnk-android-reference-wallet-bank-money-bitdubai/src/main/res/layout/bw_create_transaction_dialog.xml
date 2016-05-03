@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:orientation="horizontal"
-        android:background="#12acff"
+        android:background="@color/dark_purple"
         >
 
         <!--<ImageView
@@ -188,34 +188,22 @@
 
     <LinearLayout
         android:id="@+id/linear_create_contact"
-        android:layout_width="380dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingBottom="3dip"
         android:layout_marginTop="20dp"
         android:background="#FFFFFF"
-        android:paddingRight="50dp"
+        android:paddingRight="0dp"
         >
-
-        <Button
-            android:id="@+id/bnk_ctd_cancel_transaction_btn"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="#efefef"
-            android:text="Cancel"
-            android:textColor="#666666"
-            android:textSize="14sp"
-            />
-
 
         <Button
             android:id="@+id/bnk_ctd_apply_transaction_btn"
             android:layout_width="match_parent"
             android:layout_weight="1"
             android:layout_height="40dp"
-            android:background="#1173aa"
-            android:text="OK"
+            android:background="@color/dark_purple"
+            android:text="Done"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             />

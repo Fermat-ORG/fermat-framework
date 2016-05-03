@@ -295,4 +295,37 @@ public class CryptoAddressBookCryptoModuleDao implements DealsWithPluginDatabase
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
+    /**
+     * gets from database the list of crypto addresses for a given actor type
+     * @param actorType
+     * @return
+     */
+    public List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantListCryptoAddressBookRecordsException{
+        if (actorType == null) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, null, "", "actorType, can not be null");
+        }
+
+        try {
+            DatabaseTable cryptoAddressBookTable = database.getTable(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+            cryptoAddressBookTable.addStringFilter(CryptoAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_DELIVERED_TO_ACTOR_TYPE_COLUMN_NAME, actorType.getCode(), DatabaseFilterType.EQUAL);
+            cryptoAddressBookTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoAddressBookTable.getRecords();
+
+            List<CryptoAddressBookRecord> cryptoAddressBookRecords = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoAddressBookRecords.add(buildCryptoAddressBookRecord(record));
+            }
+
+            return cryptoAddressBookRecords;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (InvalidParameterException exception) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "Check the cause.");
+        } catch (InvalidCryptoAddressBookRecordParametersException exception) {
+            throw new CantListCryptoAddressBookRecordsException(CantListCryptoAddressBookRecordsException.DEFAULT_MESSAGE, exception, "", "There's a problem with the data in database.");
+        }
+    }
 }

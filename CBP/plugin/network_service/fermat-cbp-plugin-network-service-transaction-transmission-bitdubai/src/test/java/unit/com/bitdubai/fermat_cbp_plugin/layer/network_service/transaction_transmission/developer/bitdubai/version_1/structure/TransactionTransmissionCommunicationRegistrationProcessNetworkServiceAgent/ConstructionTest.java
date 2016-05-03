@@ -4,10 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionPluginRoot;
+import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.TransactionTransmissionNetworkServicePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.structure.TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,12 +26,12 @@ public class ConstructionTest {
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
 
     @Mock
-    private TransactionTransmissionPluginRoot transactionTransmissionPluginRoot;
+    private TransactionTransmissionNetworkServicePluginRoot transactionTransmissionNetworkServicePluginRoot;
 
     @Test
     public void ConstructionTest(){
         TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent transactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent = new TransactionTransmissionCommunicationRegistrationProcessNetworkServiceAgent(
-                this.transactionTransmissionPluginRoot,
+                this.transactionTransmissionNetworkServicePluginRoot,
                 this.wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
         );
 

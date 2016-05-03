@@ -2,11 +2,13 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_u
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoMetadataEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEventHandler;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.IncomingIntraUserCantSaveEventException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
+
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -48,7 +50,7 @@ public class IncomingIntraUserEventRecorderService{
             registerEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER, new IncomingCryptoOnCryptoNetworkWaitingTransferenceIntraUserEventHandler(this));
             registerEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_INTRA_USER, new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEventHandler(this));
             registerEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_INTRA_USER, new IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEventHandler(this));
-            registerEvent(EventType.INCOMING_CRYPTO_METADATA,new IncomingCryptoMetadataEventHandler(this));
+            registerEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_CRYPTO_METADATA,new IncomingCryptoMetadataEventHandler(this));
 
             this.serviceStatus = ServiceStatus.STARTED;
         }catch (Exception e) {
@@ -57,6 +59,13 @@ public class IncomingIntraUserEventRecorderService{
     }
 
     private void registerEvent(EventType eventType, FermatEventHandler fermatEventHandler){
+        FermatEventListener fermatEventListener = this.eventManager.getNewListener(eventType);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        this.eventManager.addListener(fermatEventListener);
+        this.listenersRegistered.add(fermatEventListener);
+    }
+
+    private void registerEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType eventType, FermatEventHandler fermatEventHandler){
         FermatEventListener fermatEventListener = this.eventManager.getNewListener(eventType);
         fermatEventListener.setEventHandler(fermatEventHandler);
         this.eventManager.addListener(fermatEventListener);

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_pip_core.layer.sub_app_module.android_core.AndroidCorePluginSubsystem;
 import com.bitdubai.fermat_pip_core.layer.sub_app_module.developer.DeveloperPluginSubsystem;
 import com.bitdubai.fermat_pip_core.layer.sub_app_module.notification.NotificationPluginSubsystem;
 
@@ -25,6 +26,7 @@ public class SubAppModuleLayer extends AbstractLayer {
 
             registerPlugin(new DeveloperPluginSubsystem());
             registerPlugin(new NotificationPluginSubsystem());
+            registerPlugin(new AndroidCorePluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

@@ -3,10 +3,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
+import java.io.Serializable;
+
 /**
  * Created by natalia on 03/09/15.
  */
-public class IntraUserNetworkService  implements IntraUserInformation {
+public class IntraUserNetworkService  implements IntraUserInformation,Serializable {
 
 
     private String publicKey;
@@ -29,7 +31,7 @@ public class IntraUserNetworkService  implements IntraUserInformation {
 
     @Override
     public byte[] getProfileImage() {
-        return (profileImage!=null) ? (byte[] )this.profileImage.clone() : null;
+        return (profileImage!=null) ? this.profileImage.clone() : null;
     }
 
     @Override
@@ -44,6 +46,11 @@ public class IntraUserNetworkService  implements IntraUserInformation {
 
     @Override
     public ConnectionState getConnectionState() {
+        return null;
+    }
+
+    @Override
+    public String getState() {
         return null;
     }
 }

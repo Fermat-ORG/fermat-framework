@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionManager;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.interfaces.CryptoBrokerActorConnectionSearch;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
@@ -72,11 +73,21 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
 
         try {
 
+            /**
+             * If the actor type of the receiving actor is different of CBP_CRYPTO_BROKER i can't send the request.
+             */
+            if (actorReceiving.getActorType() != Actors.CBP_CRYPTO_BROKER)
+                throw new UnsupportedActorTypeException("actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Unsupported actor type exception.");
+
+            /**
+             * Here I generate the needed information to register the new actor connection record.
+             */
             final UUID newConnectionId = UUID.randomUUID();
             final CryptoBrokerLinkedActorIdentity linkedIdentity = new CryptoBrokerLinkedActorIdentity(
                     actorSending.getPublicKey(),
                     actorSending.getActorType()
             );
+
             final ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
             final long currentTime = System.currentTimeMillis();
 
@@ -91,25 +102,25 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
                     currentTime
             );
 
-            switch(actorReceiving.getActorType()) {
-                case CBP_CRYPTO_BROKER:
+            /**
+             * I register the actor connection.
+             */
+            dao.registerActorConnection(actorConnection);
 
-                    dao.registerActorConnection(actorConnection);
+            final CryptoBrokerConnectionInformation connectionInformation = new CryptoBrokerConnectionInformation(
+                    newConnectionId              ,
+                    actorSending.getPublicKey()  ,
+                    actorSending.getActorType()  ,
+                    actorSending.getAlias()      ,
+                    actorSending.getImage()      ,
+                    actorReceiving.getPublicKey(),
+                    currentTime
+            );
 
-                    final CryptoBrokerConnectionInformation connectionInformation = new CryptoBrokerConnectionInformation(
-                            actorSending.getPublicKey()  ,
-                            actorSending.getActorType()  ,
-                            actorSending.getAlias()      ,
-                            actorSending.getImage()      ,
-                            actorReceiving.getPublicKey(),
-                            currentTime
-                    );
-
-                    cryptoBrokerNetworkService.requestConnection(connectionInformation);
-                    break;
-                default:
-                    throw new UnsupportedActorTypeException("actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Unsupported actor type exception.");
-            }
+            /**
+             * i send the request through the network service.
+             */
+            cryptoBrokerNetworkService.requestConnection(connectionInformation);
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
 
@@ -125,6 +136,8 @@ public class ActorConnectionManager implements CryptoBrokerActorConnectionManage
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorConnectionException);
             throw new CantRequestActorConnectionException(cantRegisterActorConnectionException, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Problem registering the actor connection in DAO.");
         } catch (final CantRequestConnectionException cantRequestConnectionException) {
+
+            // TODO if there is an error in the actor network service we should delete the generated actor connection record.+++
 
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRequestConnectionException);
             throw new CantRequestActorConnectionException(cantRequestConnectionException, "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Error trying to request the connection through the network service.");

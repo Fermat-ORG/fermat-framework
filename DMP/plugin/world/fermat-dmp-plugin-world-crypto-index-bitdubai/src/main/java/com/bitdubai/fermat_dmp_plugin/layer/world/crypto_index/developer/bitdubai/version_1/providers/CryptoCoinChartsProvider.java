@@ -11,6 +11,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.interfaces.InterfaceUrlAPI;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.structure.HTTPJson;
 
+import org.json.JSONException;
+
 /**
  * Created by francisco on 13/08/15.
  */
@@ -24,7 +26,12 @@ public class CryptoCoinChartsProvider implements CryptoIndexProvider {
         HTTPJson jsonService = new HTTPJson();
         String pair = cryptoCurrency.getCode().toLowerCase() + "_" + fiatCurrency.getCode().toLowerCase();
         String urlApi = getUrlAPI(pair);
-        String stringMarketPrice = jsonService.getJSONFromUrl(urlApi).get("price").toString();
+        String stringMarketPrice = null;
+        try {
+            stringMarketPrice = jsonService.getJSONFromUrl(urlApi).get("price").toString();
+        } catch (JSONException ex) {
+            throw new CantGetMarketPriceException("Cant get the Market Price for this CryptoCoinCharts Provider", ex, ex.getMessage(), "Maybe the JSON response is null or part of this JSON is missing");
+        }
         return Double.valueOf(stringMarketPrice);
     }
 

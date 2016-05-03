@@ -8,5 +8,5 @@ import java.util.List;
  */
 public interface FermatComboBox  extends Serializable {
 
-    public List<String> getValues();
+    List<String> getValues();
 }

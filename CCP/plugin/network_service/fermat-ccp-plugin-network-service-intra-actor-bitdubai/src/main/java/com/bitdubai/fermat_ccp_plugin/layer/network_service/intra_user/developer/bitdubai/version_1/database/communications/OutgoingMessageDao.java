@@ -41,6 +41,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@Deprecated
 public class OutgoingMessageDao {
 
     /**
@@ -131,8 +132,6 @@ public class OutgoingMessageDao {
         return outgoingTemplateNetworkServiceMessage;
     }
 
-    ;
-
     /**
      * Method that list the all entities on the data base.
      *
@@ -196,8 +195,6 @@ public class OutgoingMessageDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -275,8 +272,6 @@ public class OutgoingMessageDao {
         return list;
     }
 
-    ;
-
 
     /**
      * Method that list the all entities on the data base. The valid value of
@@ -319,7 +314,7 @@ public class OutgoingMessageDao {
             /*
              * 2 - load the data base to memory with filters
              */
-            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
             templateTable.loadToMemory();
 
             /*
@@ -352,6 +347,8 @@ public class OutgoingMessageDao {
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
+            cantLoadTableToMemory.printStackTrace();
+
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
@@ -367,8 +364,6 @@ public class OutgoingMessageDao {
         return list;
     }
 
-    ;
-
     /**
      * Method that create a new entity in the data base.
      *
@@ -383,17 +378,21 @@ public class OutgoingMessageDao {
 
         try {
 
-            /*
+            if(findById(String.valueOf(entity.getId()))== null)
+            {
+                   /*
              * 1- Create the record to the entity
              */
-            DatabaseTableRecord entityRecord = constructFrom(entity);
+                DatabaseTableRecord entityRecord = constructFrom(entity);
 
             /*
              * 2.- Create a new transaction and execute
              */
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+                DatabaseTransaction transaction = getDataBase().newTransaction();
+                transaction.addRecordToInsert(getDatabaseTable(), entityRecord);
+                getDataBase().executeTransaction(transaction);
+            }
+
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
@@ -406,6 +405,8 @@ public class OutgoingMessageDao {
             CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
 
+        } catch (CantReadRecordDataBaseException e) {
+            e.printStackTrace();
         }
 
     }
@@ -432,8 +433,13 @@ public class OutgoingMessageDao {
             /*
              * 2.- Create a new transaction and execute
              */
+            DatabaseTable outgoinMessageTable =  getDatabaseTable();
             DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+
+            //set filter
+            outgoinMessageTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME, entity.getId(), DatabaseFilterType.EQUAL);
+
+            transaction.addRecordToUpdate(outgoinMessageTable, entityRecord);
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {

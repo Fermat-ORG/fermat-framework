@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">fermat-dap-android-sub-app-asset-user-community-bitdubai</string>
+    <string name="connect">Connect</string>
+
+    <string name="help">Help</string>
+
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="status_connecting">Connecting</string>
+    <string name="status_denied">Connection Denied</string>
+    <string name="status_canceled">Connection Canceled</string>
+    <string name="group_members">Number of Members: </string>
+    <string name="group_edit">Edit Name</string>
+    <string name="group_delete">Delete</string>
+    <string name="group_users_add">Add</string>
+    <string name="group_users_delete">Delete</string>
+    <string name="group_detail">Group Detail</string>
+    <string name="add_users">Add</string>
+    <string name="connection_request_send">Connection request sent</string>
+    <string name="before_action_user">Asset Issuer or Asset User Identities must be created before action.</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_community_welcome_subTitle">Welcome to the Asset User Community.</string>
+    <string name="dap_user_community_welcome_body">This application will help you discover and connect to Asset Users registered in our network.!\n\nIf you are identified as an Asset Issuer, you will need to connect to Assets Users in order to be able to deliver them your assets.\n\nSelect any available Asset User and click connect to start the process. If your network speed is low, you may have to retry several times.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_community_group_subTitle">Welcome to the Asset User Community Groups..</string>
+    <string name="dap_user_community_group_body">From here you can administrate and organize your users groups</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_community_group_users_subTitle">Welcome to the Group members screen.</string>
+    <string name="dap_user_community_group_users_body">From here you can add users to the selected Group</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Settings Notifications Help - Init-->
+    <string name="dap_user_community_settings_notification_subTitle">Welcome to the settings notification screen.</string>
+    <string name="dap_user_community_settings_notification_body">Here you can edit your notification settings configurations.</string>
+    <!--Dialog Settings Notifications Help - End-->
+
+    <string name="dap_user_community_opps_system_error">Oooops! recovering from system error</string>
+    <string name="dap_user_community_system_error">User Community system error</string>
+</resources>

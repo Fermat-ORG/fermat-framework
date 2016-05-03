@@ -1,0 +1,38 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/padding"
+    android:paddingLeft="@dimen/padding"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_activity">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/contact_detail_header"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:textColor="@color/black"
+        android:layout_gravity="center"
+        android:gravity="center_vertical"
+        style="@style/addressHeader"/>
+
+    <LinearLayout android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:showDividers="middle"
+        android:dividerPadding="12dp"
+        android:minHeight="48dp"
+        android:divider="?android:attr/listDivider"
+        android:layout_gravity="center">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/alias"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:paddingRight="@dimen/padding"
+            android:layout_gravity="center"
+            android:gravity="center_vertical"
+            android:textColor="@color/black"
+            style="@style/addressDetail"/>
+    </LinearLayout>
+
+</LinearLayout>

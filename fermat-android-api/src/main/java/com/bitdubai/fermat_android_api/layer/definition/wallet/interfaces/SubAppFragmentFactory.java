@@ -23,6 +23,6 @@ public interface SubAppFragmentFactory<S extends FermatSession>{
      * @return the fragment referenced
      */
 
-    public android.app.Fragment getFragment(String code, S subAppsSession,SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException;
+    android.app.Fragment getFragment(String code, S subAppsSession, SubAppResourcesProviderManager subAppResourcesProviderManager) throws FragmentNotFoundException;
 
 }

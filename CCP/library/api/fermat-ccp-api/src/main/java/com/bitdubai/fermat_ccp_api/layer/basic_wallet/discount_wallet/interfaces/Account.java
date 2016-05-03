@@ -8,25 +8,25 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
  */
 public interface Account {
 
-    public long getBalance() ;
+    long getBalance() ;
 
-    public double getAvailableBalance ();
+    double getAvailableBalance();
 
-    public FiatCurrency getFiatCurrency() ;
+    FiatCurrency getFiatCurrency() ;
 
-    public String getLabel() ;
+    String getLabel() ;
 
-    public String getName() ;
+    String getName() ;
 
-    public void setLabel(String label) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
+    void setLabel(String label) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
 
-    public void setName(String name) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
+    void setName(String name) throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
 
-    public AccountStatus getStatus();
+    AccountStatus getStatus();
 
-    public void openAccount() throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
+    void openAccount() throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
     
-    public void closeAccount() throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
+    void closeAccount() throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
     
-    public void deleteAccount() throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
+    void deleteAccount() throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.discount_wallet.exceptions.OperationFailed;
 }

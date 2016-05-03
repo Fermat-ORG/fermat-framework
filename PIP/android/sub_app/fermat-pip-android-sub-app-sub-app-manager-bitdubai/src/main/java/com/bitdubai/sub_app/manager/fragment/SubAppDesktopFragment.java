@@ -2,7 +2,6 @@ package com.bitdubai.sub_app.manager.fragment;
 
 import android.app.Service;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,28 +10,25 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.sub_app.manager.R;
 import com.bitdubai.sub_app.manager.fragment.provisory_classes.InstalledSubApp;
 
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import android.app.Fragment;
 /**
  * Created by Natalia on 12/01/2015.
  */
-public class SubAppDesktopFragment extends Fragment {
+public class SubAppDesktopFragment extends AbstractDesktopFragment {
 
     private static final String ARG_POSITION = "position";
     private static final String CWP_SUB_APP_ALL_DEVELOPER = Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode();
@@ -93,8 +89,10 @@ public class SubAppDesktopFragment extends Fragment {
 //
 //
         InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_FACTORY,null,null,"wallet_factory","Wallet Factory","public_key_factory","wallet_factory",new Version(1,0,0));
+        installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER,null,null,"wallet_publisher","Wallet Publisher","public_key_publisher","wallet_publisher",new Version(1,0,0));
+        installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
         mlist.add(installedSubApp);
         installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", "public_key_dap_factory", "sub-app-asset-factory", new Version(1, 0, 0));
         mlist.add(installedSubApp);
@@ -195,7 +193,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
 
                         }
                     });
@@ -208,7 +206,7 @@ public class SubAppDesktopFragment extends Fragment {
                         @Override
                         public void onClick(View view) {
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
                         }
                     });
                     break;
@@ -222,7 +220,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
                         }
                     });
                     break;
@@ -236,7 +234,7 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
           //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                           try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
                         }
                     });
                     break;
@@ -249,7 +247,11 @@ public class SubAppDesktopFragment extends Fragment {
                         public void onClick(View view) {
 
                             //set the next fragment and params
-                            ((FermatScreenSwapper) getActivity()).selectSubApp(installedSubApp);
+                            try {
+                               try {                                 selectSubApp(installedSubApp);                             } catch (Exception e) {                                 e.printStackTrace();                             }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                     break;

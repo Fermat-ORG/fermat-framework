@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 # Fermat Developer Installer
 #The MIT License (MIT)
 #
@@ -24,7 +24,7 @@ installationFolder=$HOME #you can modify the installation folder, as default I a
 #Please, select one platform accoding your Operative System
 platform="-linux-x64.tar.gz"
 #platform="-linux-i586.tar.gz"
-gradleVersion=2.10
+gradleVersion=2.12
 #If you want to install Genymotion, please, uncomment any line with the version that sets with your OS
 #Genymotion 32Bits
 #genymotion="genymotion-2.5.2_x86.bin"
@@ -200,8 +200,9 @@ function installIDE(){
     sudo mv android-studio /opt/android-studio
     
 }
+
 function installGenymotion(){
-    if[ ! ${genymotion} ]; then
+    if[ ${genymotion} ]; then
         timestamp
         genymotionURL="http://files2.genymotion.com/genymotion/genymotion-2.5.2/"
         echo "Downloading Genymotion"
@@ -221,6 +222,7 @@ function installGenymotion(){
         echo "Executing genymotion"
         echo "./genymotion"
         ./genymotion
+     fi
 }
 #Main script
 clear

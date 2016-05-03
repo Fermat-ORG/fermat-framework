@@ -32,7 +32,7 @@ public class AppFriendsListAdapter extends FermatAdapter<CryptoBrokerCommunityIn
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_connection_list;
+        return R.layout.cbc_row_connection_list;
     }
 
     @Override

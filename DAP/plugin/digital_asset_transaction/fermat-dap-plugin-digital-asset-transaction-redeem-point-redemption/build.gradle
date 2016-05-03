@@ -1,0 +1,10 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+dependencies {
+    compile project(':fermat-pip-api')
+    compile project(':fermat-dap-api')
+
+}

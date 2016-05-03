@@ -7,16 +7,16 @@ import java.util.UUID;
  */
 public interface Translator {
 
-    public UUID getId();
+    UUID getId();
 
-    public String getName();
+    String getName();
 
-    public String getPublicKey();
+    String getPublicKey();
 
-    public void setId(UUID id);
+    void setId(UUID id);
 
-    public void setName(String name);
+    void setName(String name);
 
-    public void setPublicKey(String publicKey);
+    void setPublicKey(String publicKey);
 
 }

@@ -16,6 +16,8 @@ public enum Layers implements FermatEnum {
     ACTOR                          ("ACT"),
     ACTOR_CONNECTION               ("ACC"),
     ACTOR_NETWORK_SERVICE          ("ANS"),
+    AGENT                          ("AGN"),
+    API                            ("API"),
     BANK_MONEY_TRANSACTION         ("BMT"),
     BASIC_WALLET                   ("BSW"),
     BUSINESS_TRANSACTION           ("BTX"),
@@ -29,7 +31,9 @@ public enum Layers implements FermatEnum {
     DEFINITION                     ("DEF"),
     DESKTOP_MODULE                 ("DKM"),
     DIGITAL_ASSET_TRANSACTION      ("DAT"),
+    EXTERNAL_API                   ("EAP"),
     ENGINE                         ("ENG"),
+    FUNDS_TRANSACTION              ("FTX"),
     HARDWARE                       ("HAR"),
     IDENTITY                       ("IDT"),
     MIDDLEWARE                     ("MID"),
@@ -42,6 +46,7 @@ public enum Layers implements FermatEnum {
     STOCK_TRANSACTIONS             ("STR"),
     SUB_APP_MODULE                 ("SAM"),
     SEARCH                         ("SCH"),
+    SONG_WALLET                    ("SWL"),
     SYSTEM                         ("SYS"),
     TRANSACTION                    ("TRA"),
     USER                           ("USR"),
@@ -58,53 +63,17 @@ public enum Layers implements FermatEnum {
         this.code = code;
     }
 
-    public static Layers getByCode(String code) throws InvalidParameterException {
+    public static Layers getByCode(final String code) throws InvalidParameterException {
 
-        switch (code) {
-
-            case "ACT":  return ACTOR;
-            case "ACC":  return ACTOR_CONNECTION;
-            case "ANS":  return ACTOR_NETWORK_SERVICE;
-            case "BMT":  return BANK_MONEY_TRANSACTION;
-            case "BSW":  return BASIC_WALLET;
-            case "BTX":  return BUSINESS_TRANSACTION;
-            case "CMT":  return CASH_MONEY_TRANSACTION;
-            case "COM":  return COMMUNICATION;
-            case "CRM":  return CRYPTO_MODULE;
-            case "CON":  return CONTRACT;
-            case "CRN":  return CRYPTO_NETWORK;
-            case "CRR":  return CRYPTO_ROUTER;
-            case "CRV":  return CRYPTO_VAULT;
-            case "DAT":  return DIGITAL_ASSET_TRANSACTION;
-            case "DEF":  return DEFINITION;
-            case "DKM":  return DESKTOP_MODULE;
-            case "ENG":  return ENGINE;
-            case "HAR":  return HARDWARE;
-            case "IDT":  return IDENTITY;
-            case "MID":  return MIDDLEWARE;
-            case "NEG":  return NEGOTIATION;
-            case "NTS":  return NETWORK_SERVICE;
-            case "PMS":  return PLATFORM_SERVICE;
-            case "PRO":  return PROVIDER;
-            case "REQ":  return REQUEST;
-            case "SAM":  return SUB_APP_MODULE;
-            case "SCH":  return SEARCH;
-            case "SYS":  return SYSTEM;
-            case "TRA":  return TRANSACTION;
-            case "NTR":  return NEGOTIATION_TRANSACTION;
-            case "STR":  return STOCK_TRANSACTIONS;
-            case "USR":  return USER;
-            case "WAL":  return WALLET;
-            case "WAM":  return WALLET_MODULE;
-            case "WRL":  return WORLD;
-            case "ULB":  return USER_LEVEL_BUSINESS_TRANSACTION;
-
-            default:
-                throw new InvalidParameterException(
-                        "Code Received: " + code,
-                        "The received code is not valid for the Layers enum"
-                );
+        for (Layers layer : Layers.values()) {
+            if(layer.getCode().equals(code))
+                return layer;
         }
+
+        throw new InvalidParameterException(
+                "Code Received: " + code,
+                "The received code is not valid for the Layers enum"
+        );
     }
 
     @Override

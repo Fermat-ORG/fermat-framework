@@ -168,17 +168,16 @@ public  class SendFragment extends AbstractFermatFragment {
 
          linear_layout_send_form = (LinearLayout)rootView.findViewById(R.id.send_form);
 
-                ((Button) rootView.findViewById(R.id.btn_expand_send_form)).setOnClickListener(new View.OnClickListener() {
+                rootView.findViewById(R.id.btn_expand_send_form).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        boolean isShow =linear_layout_send_form.isShown();
+                        boolean isShow = linear_layout_send_form.isShown();
                         //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
-                        if(isShow){
+                        if (isShow) {
                             Fx.slide_up(getActivity(), linear_layout_send_form);
                             linear_layout_send_form.setVisibility(View.GONE);
                             showDialog();
-                        }
-                        else{
+                        } else {
                             linear_layout_send_form.setVisibility(View.VISIBLE);
                             Fx.slide_down(getActivity(), linear_layout_send_form);
                         }
@@ -285,8 +284,7 @@ public  class SendFragment extends AbstractFermatFragment {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
-                if (groupPosition == 0) {
-//                    Platform platform = ApplicationSession.getFermatPlatform();
+                //                    Platform platform = ApplicationSession.getFermatPlatform();
 //                    CorePlatformContext platformContext = platform.getCorePlatformContext();
 //
 //                    AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
@@ -295,15 +293,9 @@ public  class SendFragment extends AbstractFermatFragment {
 //                    appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_NEW_SEND);
 //                    intent = new Intent(getActivity(), com.bitdubai.android_core.app.FragmentActivity.class);
 //                    startActivity(intent);
-
-                   // intent = new Intent(getActivity(), SendToNewContactActivity.class);
-                  //  startActivity(intent);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+// intent = new Intent(getActivity(), SendToNewContactActivity.class);
+//  startActivity(intent);
+                return groupPosition == 0;
             }
         });
 

@@ -5,11 +5,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.crypto_customer_community.fragments.MainFragment;
-import com.bitdubai.sub_app.crypto_customer_community.preference_settings.CryptoCustomerCommunityPreferenceSettings;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionNotificationsFragment;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionOtherProfileFragment;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsListFragment;
+import com.bitdubai.sub_app.crypto_customer_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 
-import static com.bitdubai.sub_app.crypto_customer_community.fragmentFactory.CryptoCustomerCommunityFragmentsEnumType.MAIN_FRAGMET;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..
@@ -19,11 +20,37 @@ public class CryptoCustomerCommunityFragmentFactory extends FermatFragmentFactor
 
     @Override
     public AbstractFermatFragment getFermatFragment(CryptoCustomerCommunityFragmentsEnumType fragments) throws FragmentNotFoundException {
-        if (fragments == MAIN_FRAGMET) {
-            return MainFragment.newInstance();
-        }
+        AbstractFermatFragment currentFragment = null;
 
-        throw createFragmentNotFoundException(fragments);
+        switch (fragments) {
+            case CWP_WALLET_STORE_ALL_FRAGMENT:
+                //currentFragment = ConnectionsWorldFragment.newInstance();
+                break;
+            case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTIONS:
+                //currentFragment = ConnectionsFragment.newInstance();
+                break;
+            case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_DETAIL:
+                currentFragment = null;
+                break;
+            case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS:
+                currentFragment = ConnectionNotificationsFragment.newInstance();
+                break;
+            case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE:
+                currentFragment = ConnectionOtherProfileFragment.newInstance();
+                break;
+            case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD:
+                currentFragment = ConnectionsWorldFragment.newInstance();
+                break;
+            case CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_FRIEND_LIST:
+                currentFragment = ConnectionsListFragment.newInstance();
+                break;
+            default:
+                throw new FragmentNotFoundException(
+                        fragments.toString(),
+                        "Switch failed"
+                );
+        }
+        return currentFragment;
     }
 
     @Override

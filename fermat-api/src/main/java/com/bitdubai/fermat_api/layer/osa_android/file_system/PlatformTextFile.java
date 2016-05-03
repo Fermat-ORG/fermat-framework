@@ -17,12 +17,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 
  public interface PlatformTextFile {
 
-    public String getContent ();
+    String getContent();
 
-    public void setContent (String content);
+    void setContent(String content);
 
-    public void persistToMedia() throws CantPersistFileException;
+    void persistToMedia() throws CantPersistFileException;
 
-    public void loadFromMedia() throws CantLoadFileException;
+    void loadFromMedia() throws CantLoadFileException;
     
 }

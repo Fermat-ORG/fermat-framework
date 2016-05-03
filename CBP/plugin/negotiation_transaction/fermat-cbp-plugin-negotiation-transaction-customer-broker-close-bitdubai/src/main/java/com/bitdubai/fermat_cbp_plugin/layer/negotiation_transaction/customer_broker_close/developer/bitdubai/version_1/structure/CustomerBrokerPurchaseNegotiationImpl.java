@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -13,44 +14,53 @@ import java.util.UUID;
 public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurchaseNegotiation{
 
     private final   UUID                negotiationId;
-    private final   String              publicKeyCustomer;
-    private final   String              publicKeyBroker;
-    private final   long                startDataTime;
+    private final   String              customerPublicKey;
+    private final   String              brokerPublicKey;
+    private final   long                startDate;
     private final   long                negotiationExpirationDate;
-    private         NegotiationStatus   statusNegotiation;
+    private final   NegotiationStatus   status;
+    private final   boolean             nearExpirationDatetime;
     private final   Collection          <Clause> clauses;
-
     private         long                lastNegotiationUpdateDate;
     private         String              cancelReason;
     private         String              memo;
+    private         boolean             dataHasChanged;
 
     public CustomerBrokerPurchaseNegotiationImpl(
         UUID                negotiationId,
-        String              publicKeyCustomer,
-        String              publicKeyBroker,
-        long                startDataTime,
+        String              customerPublicKey,
+        String              brokerPublicKey,
+        long                startDate,
         long                negotiationExpirationDate,
-        NegotiationStatus   statusNegotiation,
-        Collection          <Clause> clauses
+        NegotiationStatus   status,
+        boolean             nearExpirationDatetime,
+        Collection          <Clause> clauses,
+        long                lastNegotiationUpdateDate,
+        String              cancelReason,
+        String              memo
     ){
 
         this.negotiationId              = negotiationId;
-        this.publicKeyCustomer          = publicKeyCustomer;
-        this.publicKeyBroker            = publicKeyBroker;
-        this.startDataTime              = startDataTime;
+        this.customerPublicKey          = customerPublicKey;
+        this.brokerPublicKey            = brokerPublicKey;
+        this.startDate                  = startDate;
         this.negotiationExpirationDate  = negotiationExpirationDate;
-        this.statusNegotiation          = statusNegotiation;
+        this.status                     = status;
+        this.nearExpirationDatetime     = nearExpirationDatetime;
         this.clauses                    = clauses;
+        this.lastNegotiationUpdateDate  = lastNegotiationUpdateDate;
+        this.cancelReason               = cancelReason;
+        this.memo                       = memo;
     }
 
     @Override
     public String getCustomerPublicKey() {
-        return this.publicKeyCustomer;
+        return this.customerPublicKey;
     }
 
     @Override
     public String getBrokerPublicKey() {
-        return this.publicKeyBroker;
+        return this.brokerPublicKey;
     }
 
     @Override
@@ -60,7 +70,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
     @Override
     public Long getStartDate() {
-        return this.startDataTime;
+        return this.startDate;
     }
 
     @Override
@@ -78,13 +88,11 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
     @Override
     public NegotiationStatus getStatus() {
-        return this.statusNegotiation;
+        return this.status;
     }
 
     @Override
-    public Boolean getNearExpirationDatetime() {
-        return null;
-    }
+    public Boolean getNearExpirationDatetime() { return null; }
 
     @Override
     public Collection<Clause> getClauses() {
@@ -110,4 +118,12 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     public String getMemo() {
         return this.memo;
     }
+
+    public boolean dataHasChanged() {
+        return dataHasChanged;
+    }
+
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo, NegotiationStatus status){}
+
+    public String toString(){ return "";}
 }

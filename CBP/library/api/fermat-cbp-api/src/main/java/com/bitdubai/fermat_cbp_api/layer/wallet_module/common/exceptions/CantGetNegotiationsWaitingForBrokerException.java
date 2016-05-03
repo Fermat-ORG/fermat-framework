@@ -27,7 +27,7 @@ public class CantGetNegotiationsWaitingForBrokerException extends FermatExceptio
      * @param cause   the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
      */
     public CantGetNegotiationsWaitingForBrokerException(String message, Exception cause) {
-        super(message, cause, "", "");
+        super(message, cause, "N/A", "");
     }
 
     /**
@@ -36,6 +36,10 @@ public class CantGetNegotiationsWaitingForBrokerException extends FermatExceptio
      * @param cause the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
      */
     public CantGetNegotiationsWaitingForBrokerException(Exception cause) {
-        super(DEFAULT_MESSAGE, cause, "", "");
+        super(DEFAULT_MESSAGE, cause, "N/A", "");
+    }
+
+    public CantGetNegotiationsWaitingForBrokerException(String message) {
+        super(message, null, "N/A", "");
     }
 }

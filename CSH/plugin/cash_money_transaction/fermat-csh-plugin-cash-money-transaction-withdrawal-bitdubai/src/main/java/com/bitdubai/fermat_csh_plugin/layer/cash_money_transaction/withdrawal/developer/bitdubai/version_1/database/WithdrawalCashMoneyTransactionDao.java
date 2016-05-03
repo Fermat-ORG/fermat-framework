@@ -15,9 +15,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransaction;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.interfaces.CashWithdrawalTransactionParameters;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.withdrawal.developer.bitdubai.version_1.exceptions.CantGetWithdrawalTransactionException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.withdrawal.developer.bitdubai.version_1.exceptions.CantInitializeWithdrawalCashMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.withdrawal.developer.bitdubai.version_1.exceptions.WithdrawalCashMoneyTransactionInconsistentTableStateException;
@@ -71,7 +71,7 @@ public class WithdrawalCashMoneyTransactionDao {
 
 
 
-    public CashWithdrawalTransaction createCashWithdrawalTransaction(CashWithdrawalTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException {
+    public CashWithdrawalTransaction createCashWithdrawalTransaction(CashTransactionParameters withdrawalParameters) throws CantCreateWithdrawalTransactionException {
 
         DatabaseTable transactionTable = this.database.getTable(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_TABLE_NAME);
         DatabaseTableRecord newRecord = transactionTable.getEmptyRecord();
@@ -155,7 +155,7 @@ public class WithdrawalCashMoneyTransactionDao {
     }
 
 
-    private void newWithdrawalTransactionRecord(DatabaseTableRecord newRecord, CashWithdrawalTransactionParameters withdrawalParameters) {
+    private void newWithdrawalTransactionRecord(DatabaseTableRecord newRecord, CashTransactionParameters withdrawalParameters) {
 
         newRecord.setUUIDValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_TRANSACTION_ID_COLUMN_NAME, withdrawalParameters.getTransactionId());
         newRecord.setStringValue(WithdrawalCashMoneyTransactionDatabaseConstants.WITHDRAWAL_WALLET_PUBLIC_KEY_COLUMN_NAME, withdrawalParameters.getPublicKeyWallet());

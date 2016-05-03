@@ -18,7 +18,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantCancelTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
+import com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.events.OutgoingIntraActorTransactionSentEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 /**
@@ -109,7 +109,8 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
                 dao.cancelTransaction(transaction);
                 return;
             case ON_BLOCKCHAIN:
-                bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
+                //debit available balance only in this case
+               // bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
                 dao.setToCryptoStatus(transaction, CryptoStatus.ON_BLOCKCHAIN);
                 return;
             case REVERSED_ON_BLOCKCHAIN:
@@ -156,7 +157,7 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
     }
 
     private void raiseNotificationEvent(OutgoingIntraActorTransactionWrapper transaction) {
-        FermatEvent eventToLaunch = this.eventManager.getNewEvent(EventType.OUTGOING_INTRA_ACTOR_TRANSACTION_SENT);
+        FermatEvent eventToLaunch = this.eventManager.getNewEvent(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_ACTOR_TRANSACTION_SENT);
         ((OutgoingIntraActorTransactionSentEvent) eventToLaunch).setTransactionHash(transaction.getTransactionHash());
         this.eventManager.raiseEvent(eventToLaunch);
     }

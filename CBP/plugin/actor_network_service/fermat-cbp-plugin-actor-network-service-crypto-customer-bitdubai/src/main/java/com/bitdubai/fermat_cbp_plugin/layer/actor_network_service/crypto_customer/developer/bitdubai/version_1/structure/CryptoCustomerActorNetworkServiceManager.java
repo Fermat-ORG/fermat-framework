@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerExposingData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
@@ -13,8 +14,8 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.i
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.utils.CryptoCustomerExposingData;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,11 +61,11 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         cryptoCustomer.getPublicKey(),
-                        (cryptoCustomer.getAlias().toLowerCase()),
+                        (cryptoCustomer.getAlias()),
                         (cryptoCustomer.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                        null// imageString
+                        imageString
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
@@ -85,6 +86,42 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
         }
     }
 
+    @Override
+    public void updateIdentity(CryptoCustomerExposingData actor) throws CantExposeIdentityException {
+        try {
+            if (isRegistered()) {
+
+                final String imageString = Base64.encodeToString(actor.getImage(), Base64.DEFAULT);
+
+
+                final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
+                        actor.getPublicKey(),
+                        (actor.getAlias()),
+                        (actor.getAlias().toLowerCase() + "_" + this.platformComponentProfile.getName().replace(" ", "_")),
+                        NetworkServiceType.UNDEFINED,
+                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                        imageString);
+
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            communicationsClientConnection.updateRegisterActorProfile(platformComponentProfile.getNetworkServiceType(), platformComponentProfile);
+                        } catch (CantRegisterComponentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                thread.start();
+            }
+        }catch (Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
+        }
+    }
+
     private void addCryptoCustomerToExpose(final CryptoCustomerExposingData cryptoCustomerExposingData) {
 
         if (cryptoCustomersToExpose == null)
@@ -97,6 +134,8 @@ public final class CryptoCustomerActorNetworkServiceManager implements CryptoCus
     public final void exposeIdentities(final Collection<CryptoCustomerExposingData> cryptoCustomerExposingDataList) throws CantExposeIdentitiesException {
 
         try {
+
+            System.out.println("************** im in the network service exposing the identities: quantitty:"+cryptoCustomerExposingDataList.size());
 
             for (final CryptoCustomerExposingData cryptoCustomer : cryptoCustomerExposingDataList)
                 this.exposeIdentity(cryptoCustomer);

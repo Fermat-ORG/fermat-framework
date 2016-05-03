@@ -18,4 +18,6 @@
     <color name="create_button_text">#ffffff</color>
     <color name="spanned_text">#ff2f14</color>
 
+    <color name="background_toolbar">#9A12B09F</color>
+
 </resources>

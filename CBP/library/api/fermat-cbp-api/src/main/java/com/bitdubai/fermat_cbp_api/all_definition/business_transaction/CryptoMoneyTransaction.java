@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.all_definition.business_transaction;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
@@ -47,7 +48,7 @@ public interface CryptoMoneyTransaction {
     void setCbpWalletPublicKey(String cbpWalletPublicKey);
 
     /**
-     * The property <code>getCryWalletPublicKey</code>  represented the public key Bitcoin Wallet
+     * The property <code>getCryptoWalletPublicKey</code>  represented the public key Bitcoin Wallet
      *
      * @return the Sting
      */
@@ -109,5 +110,20 @@ public interface CryptoMoneyTransaction {
      */
     OriginTransaction getOriginTransaction();
     void setOriginTransaction(OriginTransaction originTransaction);
+
+    /**
+     * The property <code>OriginTransactionId</code>  represented the Origin Transaction
+     *
+     * @return the String
+     */
+    String getOriginTransactionId();
+    void setOriginTransactionId(String originTransactionId);
+
+    /**
+     * Returns the blockchainNetworkType of the transaction
+     * @return      BlockchainNetworkType of the transaction
+     */
+    BlockchainNetworkType getBlockchainNetworkType();
+    void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType);
 
 }

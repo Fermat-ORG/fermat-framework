@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by Angel on 2015.09.16..
+ * Updated by Manuel Perez on 24/01/2016.
  */
 public class CantGetListCustomerBrokerContractPurchaseException extends FermatException {
 
@@ -19,5 +20,22 @@ public class CantGetListCustomerBrokerContractPurchaseException extends FermatEx
      */
     public CantGetListCustomerBrokerContractPurchaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    /**
+     * Constructor with parameters
+     * @param message
+     * @param cause
+     */
+    public CantGetListCustomerBrokerContractPurchaseException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    /**
+     * Constructor with parameters
+     * @param message
+     */
+    public CantGetListCustomerBrokerContractPurchaseException(final String message) {
+        this(message, null);
     }
 }

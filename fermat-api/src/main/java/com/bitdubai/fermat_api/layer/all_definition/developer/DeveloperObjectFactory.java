@@ -7,10 +7,10 @@ import java.util.List;
  */
 public interface DeveloperObjectFactory {
 
-    public DeveloperDatabase getNewDeveloperDatabase (String name, String Id);
+    DeveloperDatabase getNewDeveloperDatabase(String name, String Id);
 
-    public DeveloperDatabaseTable getNewDeveloperDatabaseTable (String name, List<String> columnNames);
+    DeveloperDatabaseTable getNewDeveloperDatabaseTable(String name, List<String> columnNames);
 
-    public DeveloperDatabaseTableRecord getNewDeveloperDatabaseTableRecord (List<String> values);
+    DeveloperDatabaseTableRecord getNewDeveloperDatabaseTableRecord(List<String> values);
 
 }

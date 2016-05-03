@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.exceptions.CantHashFileNameException;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.UUID;
@@ -27,7 +28,7 @@ import java.util.UUID;
  *
  */
 
-public class AndroidPluginFileSystem implements PluginFileSystem {
+public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
 
     private static final String CHARSET_NAME = "UTF-8";
     private static final String DIGEST_ALGORITHM = "SHA-256";
@@ -95,6 +96,39 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
 
             throw new CantCreateFileException(e,"", "Unhandled error.");
         }
+    }
+
+    @Override
+    public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan)  throws Exception{
+
+        String content = null;
+
+        try {
+            AndroidPluginTextFile androidPluginTextFile = new AndroidPluginTextFile(
+                    ownerId                        ,
+                    context.getFilesDir().getPath(),
+                    directoryName                  ,
+                    hashFileName(fileName)         ,
+                    privacyLevel                   ,
+                    lifeSpan
+            );
+
+            androidPluginTextFile.loadFromMedia();
+
+            content = androidPluginTextFile.getContent();
+
+        } catch (CantHashFileNameException | CantLoadFileException e) {
+            return false;
+        }
+
+
+        if (content!=null){
+            if(!content.equals("")){
+                return true;
+            }
+        }
+        return false;
+
     }
 
     @Override
@@ -223,5 +257,10 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
 
             throw new CantHashFileNameException(e, "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }
+    }
+
+    @Override
+    public String getAppPath() {
+        return context.getFilesDir().getPath();
     }
 }

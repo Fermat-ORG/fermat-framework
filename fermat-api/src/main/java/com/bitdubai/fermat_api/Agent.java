@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.CantStartAgentException;
  */
 public interface Agent {
     
-    public void start() throws CantStartAgentException;
+    void start() throws CantStartAgentException;
     
-    public void stop ();
+    void stop();
 
 }

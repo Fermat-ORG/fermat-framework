@@ -9,6 +9,8 @@
     <string name="action_disable">Disable / Enable</string>
     <string name="action_edit">Edit</string>
     <string name="action_wallet_store">Wallet Store</string>
+    <string name="action_developer_search_title">Search</string>
+    <string name="developer_search_hint">Plugin name</string>
     <string name="title_section1">Luis Fernando Molina</string>
     <string name="title_section2">Contacts</string>
     <string name="title_section3">Accounts</string>

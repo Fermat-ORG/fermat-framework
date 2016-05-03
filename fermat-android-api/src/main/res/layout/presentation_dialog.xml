@@ -8,6 +8,7 @@
     android:background="@drawable/rounded_corners">
 
     <View
+        android:id="@+id/view_color"
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
         android:background="@drawable/round_corner_line_dialog"
@@ -59,6 +60,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
+                    android:id="@+id/img_icon"
                     android:paddingBottom="2dp"/>
 
             </LinearLayout>
@@ -75,10 +77,12 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="85dp">
+                android:layout_height="110dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:id="@+id/image_banner"
                     android:scaleType="fitXY"
                     />
@@ -99,6 +103,7 @@
                 android:textColor="#1d1d26"
                 android:paddingRight="30dp"
                 />
+
 
             <View
                 android:layout_width="match_parent"
@@ -188,6 +193,7 @@
                     <!--android:buttonTint="@color/black_overlay"-->
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/checkbox_not_show_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="Don´t show this again"
@@ -229,6 +235,7 @@
                         android:id="@+id/image_view_left"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
+                        android:src="@drawable/ic_profile_male"
                         />
                     <ImageView
                         android:layout_width="match_parent"
@@ -266,6 +273,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
                         android:id="@+id/image_view_right"
+                        android:src="@drawable/img_profile_female"
                         android:padding="6dp"
                         />
                     <ImageView

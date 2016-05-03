@@ -1,4 +1,13 @@
-# CSH Modules
+# Cash Platform (CSH)
+
+This platform let you manage the FIAT money (Dollar, Euro, Yuan, etc) you have in cash, 
+and let a Crypto Broker to sell merchandise receiving cash as payment
+
+## GUI Components
+
+### Reference Wallet
+* [Cash Money Reference Wallet](android/reference_wallet/fermat-csh-android-reference-wallet-cash-money-bitdubai/)
+
 
 ## Plugins
 

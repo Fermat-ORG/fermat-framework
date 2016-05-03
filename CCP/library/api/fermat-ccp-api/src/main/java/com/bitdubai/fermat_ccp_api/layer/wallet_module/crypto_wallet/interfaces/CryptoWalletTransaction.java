@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 
 import java.io.Serializable;
@@ -44,6 +45,8 @@ public interface CryptoWalletTransaction extends Serializable {
     BalanceType getBalanceType();
 
     TransactionType getTransactionType();
+
+    TransactionState getTransactionState();
 
     long getTimestamp();
 

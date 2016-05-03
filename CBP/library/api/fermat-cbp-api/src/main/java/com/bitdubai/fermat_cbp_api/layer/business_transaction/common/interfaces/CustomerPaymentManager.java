@@ -11,14 +11,15 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
  * CustomerSubmitOfflinePayment plugins.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
  */
-public interface CustomerPaymentManager extends FermatManager {
+public interface CustomerPaymentManager extends BusinessTransactionManager {
 
     /**
      * This method returns the ContractTransactionStatus by contractHash
      * @param contractHash
      * @return
      */
-    ContractTransactionStatus getContractTransactionStatus(String contractHash) throws UnexpectedResultReturnedFromDatabaseException;
+    ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
+            UnexpectedResultReturnedFromDatabaseException;
 
     /**
      * This method return the ContractStatus by contractHash

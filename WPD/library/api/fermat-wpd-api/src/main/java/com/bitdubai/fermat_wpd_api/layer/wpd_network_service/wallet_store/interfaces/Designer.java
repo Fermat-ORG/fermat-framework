@@ -6,15 +6,15 @@ import java.util.UUID;
  * Created by rodrigo on 7/23/15.
  */
 public interface Designer {
-    public UUID getId();
+    UUID getId();
 
-    public String getName();
+    String getName();
 
-    public String getPublicKey();
+    String getPublicKey();
 
-    public void setiD(UUID id);
+    void setiD(UUID id);
 
-    public void setName(String name);
+    void setName(String name);
 
-    public void setPublicKey(String publicKey);
+    void setPublicKey(String publicKey);
 }

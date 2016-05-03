@@ -1,17 +1,16 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantDeleteIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantListIntraUsersIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
 
-
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The interface <code>IntraUserIdentityModuleManager</code>
@@ -20,7 +19,7 @@ import java.util.List;
 /**
  * Created by natalia on 05/01/16.
  */
-public interface IntraUserIdentityModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface IntraUserIdentityModuleManager extends ModuleManager<IntraUserIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<IntraUserIdentitySettings>{
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -29,7 +28,7 @@ public interface IntraUserIdentityModuleManager extends ModuleManager<FermatSett
      *
      * @throws CantListIntraUsersIdentityException if something goes wrong.
      */
-    List<IntraUserModuleIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraUsersIdentityException;
+    ArrayList<IntraUserModuleIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraUsersIdentityException;
 
     /**
      * The method <code>createNewIntraWalletUser</code> creates a new intra wallet user Identity for the logged in Device User and returns the

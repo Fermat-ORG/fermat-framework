@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.util;
 
-import java.io.UnsupportedEncodingException;
-
 import net.jpountz.lz4.LZ4Compressor;
 import net.jpountz.lz4.LZ4Factory;
 import net.jpountz.lz4.LZ4SafeDecompressor;
+
+import java.io.UnsupportedEncodingException;
 
 public class DataCompressor {
 	

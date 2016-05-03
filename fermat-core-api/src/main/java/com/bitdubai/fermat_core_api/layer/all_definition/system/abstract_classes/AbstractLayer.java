@@ -2,19 +2,20 @@ package com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classe
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.AddonNotFoundException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterAddonException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.AddonNotFoundException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterAddonException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,6 +38,10 @@ public abstract class AbstractLayer {
 
         this.addons  = new ConcurrentHashMap<>();
         this.plugins = new ConcurrentHashMap<>();
+    }
+
+    public Collection<AbstractPluginSubsystem> getPlugins() {
+        return plugins.values();
     }
 
     public abstract void start() throws CantStartLayerException;

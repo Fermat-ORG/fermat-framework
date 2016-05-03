@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
+import android.util.Base64;
+
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
@@ -63,8 +65,18 @@ public final class CryptoBrokerActorNetworkServiceSearch extends CryptoBrokerSea
 
             for (final PlatformComponentProfile platformComponentProfile : list) {
 
-                //byte[] imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), null/*imageByte*/));
+                System.out.println("************** I'm a crypto broker searched: "+platformComponentProfile);
+                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
+
+                byte[] imageByte;
+
+                if (platformComponentProfile.getExtraData() != null)
+                    imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                else
+                    imageByte = null;
+
+
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
             }
 
             return cryptoBrokerExposingDataList;

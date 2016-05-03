@@ -19,7 +19,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -31,12 +33,14 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.i
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.interfaces.CashMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndexManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDeveloperFactory;
+import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerSaleDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerSaleManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -85,8 +89,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_SALE)
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WORLD, plugin = Plugins.FIAT_INDEX)
-    FiatIndexManager fiatIndexManager;
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
+    private CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
@@ -103,14 +107,19 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
     @NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
     NotificationManagerMiddleware notificationManagerMiddleware;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    Broadcaster broadcaster;
+
     UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    public static EventSource EVENT_SOURCE = EventSource.USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER;
+
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.UserLevelBusinessTransactionCustomerBrokerSalePluginRoot");
         return returnedClasses;
     }
 
@@ -142,8 +151,9 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
             startMonitorAgent();
             this.serviceStatus = ServiceStatus.STARTED;
             System.out.print("***** Init User Level Bussines Customer Broker Sale *****");
-        } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantStartAgentException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -202,33 +212,40 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
         try {
             userLevelBusinessTransactionCustomerBrokerUserDeveloperFactory.initializeDatabase();
             developerDatabaseTableRecordList = userLevelBusinessTransactionCustomerBrokerUserDeveloperFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Bank Money Restock ******");
+        } catch (CantInitializeCustomerBrokerSaleDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
     }
 
-    UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent;
+    UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent agent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the Customer Broker Sale plugin
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if(userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent == null) {
-            userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(errorManager,
+        if(agent == null) {
+            agent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(
+                    errorManager,
                     customerBrokerSaleNegotiationManager,
                     pluginDatabaseSystem,
                     pluginId,
                     openContractManager,
                     closeContractManager,
                     customerBrokerContractSaleManager,
-                    fiatIndexManager,
+                    currencyExchangeRateProviderFilter,
                     cryptoBrokerWalletManager,
                     bankMoneyRestockManager,
                     cashMoneyRestockManager,
                     cryptoMoneyRestockManager,
-                    notificationManagerMiddleware);
-            userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
-        }else userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
+                    broadcaster);
+
+            agent.start();
+
+        }else agent.start();
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
     }
 }

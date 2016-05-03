@@ -29,7 +29,8 @@
 #	12) Adjust the agent list: you can add any element according the plug-in structure.
 #	13) Adjust the nsMessage list: you can add any element according the plug-in structure.
 #	14) Adjust the nsMessage list: you can add any element according the plug-in structure.
-#	15) Set the isNetworkService var: if this plug-in is anetwork service you need to set this var in True
+#	15) Set the isNetworkService var: if this plug-in is a network service you need to set this var in True
+#	16) Set the isModule var: if this plug-in is a module you need to set this var in True
 #
 #This script was created by Manuel Perez (darkpriestrelative@gmail.com) on 10/11/2015
 ######
@@ -45,6 +46,7 @@
 #   		- Add the variable networkService.
 #   1.2.4:	- Fix a bug in Agent and events issues generation.
 #   1.2.8:      - Fix a bug described in https://github.com/bitDubai/fermat/issues/4285
+#   1.2.16	- Included the variable isModule to avoid generate database issues
  
 from pygithub3 import Github
 
@@ -57,7 +59,7 @@ githubPassword='pass'
 repository='fermat'
 teamLeaderGithubUser="teamLeader"
 isNetworkService=False
-
+isModule=False
 
 #Please, not modify this line.
 pluginClassName=pluginName.replace(' ','')
@@ -92,7 +94,13 @@ else:
 	teamLeaderMessage=''
 repositoryUser='bitDubai'
 
-rootIssues=[" - Plug-In__sep__This is the root of your issue structure and must be labeled as SUPER ISSUE. It is closed only when all its children and grand children are closed.",
+if IsModule: 
+	rootIssues=[" - Plug-In__sep__This is the root of your issue structure and must be labeled as SUPER ISSUE. It is closed only when all its children and grand children are closed.",
+" - Analisys__sep__This is the Analisys root. It is closed whenever all analisys is done. This issue must be linked to the root of the issue structure.",
+" - Implementation__sep__This is the Implementation root. It is closed whenever all implementation is done. This issue must be linked to the root of the issue structure. - Implementation - Developer Class__sep__This issue is closed when this class if fully implemented.",
+" - Implementation - Plug-in Root__sep__This issue is closed when this class if fully implemented."]
+else:
+	rootIssues=[" - Plug-In__sep__This is the root of your issue structure and must be labeled as SUPER ISSUE. It is closed only when all its children and grand children are closed.",
 " - Analisys__sep__This is the Analisys root. It is closed whenever all analisys is done. This issue must be linked to the root of the issue structure.",
 " - Implementation__sep__This is the Implementation root. It is closed whenever all implementation is done. This issue must be linked to the root of the issue structure. - Implementation - Developer Class__sep__This issue is closed when this class if fully implemented.",
 " - Implementation - Plug-in Root__sep__This issue is closed when this class if fully implemented.",

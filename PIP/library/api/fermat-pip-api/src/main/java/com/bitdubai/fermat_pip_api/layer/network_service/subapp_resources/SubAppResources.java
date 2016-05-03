@@ -18,7 +18,7 @@ public interface SubAppResources extends ResourceProviderManager {
      *
      * @return the Id of resources being represented
      */
-    public UUID getResourcesId();
+    UUID getResourcesId();
 
     /**
      * This method gives us the manifest file of the resources
@@ -26,7 +26,7 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return string that contains the resources manifest (a file describing the resources)
      * @throws com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetManifestException
      */
-    public String getManifest() throws com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetManifestException;
+    String getManifest() throws com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetManifestException;
 
     /**
      * This method let us get an skin file referenced by its name
@@ -35,7 +35,7 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return The content of the file
      * @throws com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetSkinFileException
      */
-    public String getSkinFile(String fileName) throws com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetSkinFileException;
+    String getSkinFile(String fileName) throws com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.exceptions.CantGetSkinFileException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -44,7 +44,7 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return The content of the file
      * @throws CantGetLanguageFileException
      */
-    public String getLanguageFile(String fileName) throws CantGetLanguageFileException;
+    String getLanguageFile(String fileName) throws CantGetLanguageFileException;
 
 
     /**
@@ -54,7 +54,7 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName) throws CantGetResourcesException;
+    byte[] getImageResource(String imageName) throws CantGetResourcesException;
 
     /**
      * This method let us get a video referenced by a name
@@ -63,7 +63,7 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return the video represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getVideoResource(String videoName) throws CantGetResourcesException;
+    byte[] getVideoResource(String videoName) throws CantGetResourcesException;
 
     /**
      * This method let us get a sound referenced by a name
@@ -72,7 +72,7 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return the sound represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getSoundResource(String soundName) throws CantGetResourcesException;
+    byte[] getSoundResource(String soundName) throws CantGetResourcesException;
 
     /**
      * This method let us get a font style referenced by a name
@@ -81,7 +81,7 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return the font style represented as the content of a ttf file
      * @throws CantGetResourcesException
      */
-    public String getFontStyle(String styleName);
+    String getFontStyle(String styleName);
 
     /**
      * This method let us get a layout referenced by a name
@@ -90,5 +90,5 @@ public interface SubAppResources extends ResourceProviderManager {
      * @return the layiut represented as String
      * @throws CantGetResourcesException
      */
-    public String getLayoutResource(String layoutName) throws CantGetResourcesException;
+    String getLayoutResource(String layoutName) throws CantGetResourcesException;
 }

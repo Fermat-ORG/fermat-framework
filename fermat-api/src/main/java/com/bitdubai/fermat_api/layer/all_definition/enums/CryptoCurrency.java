@@ -12,13 +12,13 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
  * Modified by Manuel Perez on 03/08/2015
  * Modified by pmgesualdi - (pmgesualdi@hotmail.com) on 30/11/2015.
  */
-public enum CryptoCurrency implements FermatEnum, Currency {
+public enum CryptoCurrency implements Currency {
 
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BITCOIN     ("BTC", "Bitcoin"),
-    CHAVEZCOIN  ("CHC", "Chavezcoin"),
+    ETHEREUM    ("ETH", "Ethereum"),
     LITECOIN    ("LTC", "Litecoin")
 
     ;
@@ -39,7 +39,7 @@ public enum CryptoCurrency implements FermatEnum, Currency {
 
         switch (code) {
             case "BTC": return CryptoCurrency.BITCOIN;
-            case "CHC": return CryptoCurrency.CHAVEZCOIN;
+            case "ETH": return CryptoCurrency.ETHEREUM;
             case "LTC": return CryptoCurrency.LITECOIN;
             default:
                 throw new InvalidParameterException(
@@ -61,5 +61,10 @@ public enum CryptoCurrency implements FermatEnum, Currency {
     @Override
     public String getCode() {
         return this.code;
+    }
+
+    @Override
+    public CurrencyTypes getType() {
+        return CurrencyTypes.CRYPTO;
     }
 }

@@ -19,38 +19,38 @@ public interface Skin {
     /**
      * Skin identified information
      */
-    public UUID getSkinId();
-    public String getSkinName();
-    public UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
+    UUID getSkinId();
+    String getSkinName();
+    UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
 
-    public ScreenSize getScreenSize();
+    ScreenSize getScreenSize();
 
     /**
      * Version information, current, Inicial and Final versions accepted.
      */
-    public Version getVersion();
-    public Version getInitialWalletVersion();
-    public Version getFinalWalletVersion();
+    Version getVersion();
+    Version getInitialWalletVersion();
+    Version getFinalWalletVersion();
 
     /**
      * Skin presentation information
      */
-    public byte[] getPresentationImage() throws CantGetWalletIconException;
-    public List<byte[]> getPreviewImageList() throws CantGetWalletIconException;
-    public boolean hasVideoPreview();
-    public List<URL> getVideoPreviews() throws CantGetSkinVideoPreviewException;
+    byte[] getPresentationImage() throws CantGetWalletIconException;
+    List<byte[]> getPreviewImageList() throws CantGetWalletIconException;
+    boolean hasVideoPreview();
+    List<URL> getVideoPreviews() throws CantGetSkinVideoPreviewException;
 
     /**
      * Skin resource information
      */
 
-    public long getSkinSizeInBytes();
+    long getSkinSizeInBytes();
 
     /**
      * Skin designer information
      */
-    public DesignerIdentity getDesigner();
+    DesignerIdentity getDesigner();
 
-    public boolean isDefault();
+    boolean isDefault();
 
 }

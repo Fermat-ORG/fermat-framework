@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_pip_api.layer.module.developer.exception.CantGetDataBaseToolException;
 import com.bitdubai.fermat_pip_api.layer.module.developer.interfaces.DatabaseTool;
@@ -187,9 +188,10 @@ public class DatabaseToolsDatabaseTableListFragment extends AbstractFermatFragme
 
                         developerSubAppSession.setData("resource",databases);
                         developerSubAppSession.setData("developerDataBase",developerDatabase);
-                        developerSubAppSession.setData("databaseTable",developerDatabaseTableList.get(position));
+                        developerSubAppSession.setData("databaseTable", developerDatabaseTableList.get(position));
 
-                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
+//                        ((FermatScreenSwapper)getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey(),R.id.startContainer,null);
+                        changeActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST, appSession.getAppPublicKey());
                     }
                 });
 

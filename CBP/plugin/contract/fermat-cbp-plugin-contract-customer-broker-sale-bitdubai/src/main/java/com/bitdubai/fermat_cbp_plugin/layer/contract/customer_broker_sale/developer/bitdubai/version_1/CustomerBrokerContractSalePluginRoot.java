@@ -71,7 +71,11 @@ public class CustomerBrokerContractSalePluginRoot extends AbstractPlugin impleme
 
         @Override
         public FermatManager getManager() {
-            return new CustomerBrokerSaleManager(this.CustomerBrokerContractSaleDao);
+            return new CustomerBrokerSaleManager(
+                    this.CustomerBrokerContractSaleDao,
+                    this.errorManager,
+                    this.getPluginVersionReference()
+            );
         }
 
     /*

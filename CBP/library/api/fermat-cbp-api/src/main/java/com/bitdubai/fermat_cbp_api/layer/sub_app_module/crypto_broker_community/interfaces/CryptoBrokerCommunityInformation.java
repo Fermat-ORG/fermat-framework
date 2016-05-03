@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+
+import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerIdentityInformation</code>
@@ -9,7 +13,7 @@ import java.util.List;
  * Created by natalia on 16/09/15.
  */
 
-public interface CryptoBrokerCommunityInformation {
+public interface CryptoBrokerCommunityInformation extends Serializable {
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented crypto broker
@@ -36,6 +40,18 @@ public interface CryptoBrokerCommunityInformation {
      * @return
      */
     List listCryptoBrokerWallets();
+
+    /**
+     * The method <code>getConnectionState</code> returns the Connection State Status
+     * @return ConnectionState object
+     */
+    ConnectionState getConnectionState();
+
+    /**
+     * The method <code>getConnectionId</code> returns the Connection UUID this actor has with the selected actor
+     * @return UUID object
+     */
+    UUID getConnectionId();
 
 }
 

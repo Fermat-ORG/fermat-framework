@@ -19,7 +19,7 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the production environment
      */
-    public static final String SERVER_IP_PRODUCCTION = "52.35.64.221";
+    public static final String SERVER_IP_PRODUCTION = "52.35.64.221";
 
     /**
      * Represent the SERVER_IP in the developer environment
@@ -29,7 +29,7 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the local environment
      */
-    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.0.103";
+    public static final String SERVER_IP_DEVELOPER_LOCAL = "192.168.1.3";
 
     /**
      * Represents the value of DISABLE_CLIENT
@@ -47,11 +47,15 @@ public class ServerConf {
     public static final String WS_PROTOCOL = "ws://";
 
     /**
+     * Represent the WEB_SOCKET_CONTEXT_PATH
+     */
+    public static final String WEB_SOCKET_CONTEXT_PATH = "/fermat/ws/";
+
+    /**
      * Represent the HTTP_PROTOCOL
      */
     public static final String HTTP_PROTOCOL = "http://";
-
-
+    
     /**
      * Represent the DEFAULT_PORT
      */

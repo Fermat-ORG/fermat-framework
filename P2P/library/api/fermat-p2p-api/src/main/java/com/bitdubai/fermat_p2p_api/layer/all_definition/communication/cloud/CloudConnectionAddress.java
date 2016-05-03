@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
-import java.net.InetSocketAddress;
-
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
+
+import java.net.InetSocketAddress;
 
 /**
  * Created by jorgeejgonzalez

@@ -41,7 +41,7 @@ public abstract class HeaderFactory <OCL extends View.OnClickListener>{
 
     private void setUp(){
         LayoutInflater layoutInflater = getLayoutInflater();
-        mHeader = mRootView.inflate(mRootView.getContext(),setLayoutId(),mRootView);
+        mHeader = View.inflate(mRootView.getContext(), setLayoutId(), mRootView);
         constructHeader(layoutInflater,(ViewGroup)mHeader);
     }
 

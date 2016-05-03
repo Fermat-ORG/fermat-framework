@@ -13,6 +13,7 @@ import java.util.List;
 /**
  * @author Jose Manuel De Sousa
  */
+@SuppressWarnings("unused")
 public class AppListIdentityAdapter extends FermatAdapter<MenuItem, AppListItentitiesDrawerHolder> {
 
     protected AppListIdentityAdapter(Context context, List<MenuItem> dataSet) {

@@ -23,10 +23,6 @@ dependencies {
     compile project(':fermat-bch-plugin-crypto-vault-bitcoin-currency-bitdubai')
     compile project(':fermat-bch-plugin-crypto-vault-bitcoin-watch-only-bitdubai')
 
-    // TODO MOVE THE PROJECTS TO THEIR PLACE
-    compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-
-
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 

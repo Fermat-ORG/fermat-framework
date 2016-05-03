@@ -1,20 +1,21 @@
 package com.bitdubai.fermat_cer_api.layer.provider.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_cer_api.all_definition.enums.TimeUnit;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 
+import java.io.Serializable;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/7/2015.
  */
-public interface CurrencyExchangeRateProviderManager extends FermatManager {
+public interface CurrencyExchangeRateProviderManager extends FermatManager, Serializable {
 
     /**
      * Returns the name of the provider
@@ -52,18 +53,18 @@ public interface CurrencyExchangeRateProviderManager extends FermatManager {
     ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
-     * Returns an exchange rate of a given date, for a specific currencyPair
+     * Returns an exchange rate of a given Calendar, for a specific currencyPair
      *
      * @return an exchangeRate object
      */
-    ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, Calendar calendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
-     * Given a TimeUnit (Days,weeks,months) and a currencyPair, returns a list of max ExchangeRates, starting from the given offset
+     * Given a start and end Calendar and a currencyPair, returns a list of DAILY ExchangeRates
      *
      * @return a list of exchangeRate objects
      */
-    Collection<ExchangeRate> getExchangeRatesFromPeriod(CurrencyPair currencyPair, TimeUnit timeUnit, int max, int offset) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
+    Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, Calendar startCalendar, Calendar endCalendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException;
 
     /**
      * Returns a list of queried exchange rates, for a specific currencyPair

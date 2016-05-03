@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -20,7 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CreateNewLocationFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     // Data
     private Country[] countries;
@@ -32,6 +41,9 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     private FermatEditText zipCodeEditText;
     private FermatEditText addressLineOneEditText;
     private FermatEditText addressLineTwoEditText;
+
+    private CryptoBrokerWalletModuleManager walletManager;
+    private ErrorManager errorManager;
 
 
     public static CreateNewLocationFragment newInstance() {
@@ -62,7 +74,29 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         layout.findViewById(R.id.cbw_create_new_location_button).setOnClickListener(this);
 
+
+        try {
+            walletManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        }
+
+        configureToolbar();
+
         return layout;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.cbw_action_bar_gradient_colors));
+
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -74,6 +108,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     public void onNothingSelected(AdapterView<?> adapterView) {
 
     }
+
 
     @Override
     public void onClick(View view) {
@@ -97,12 +132,29 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
         if (addressLineTwoEditText.getText().toString().length() > 0)
             location.append(addressLineTwoEditText.getText().toString()).append(", ");
 
+
         if (location.length() > 0) {
-            List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
-            locations.add(location.toString());
-
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
-
+            try {
+                walletManager.createNewLocation(location.toString(), "");
+                changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+            } catch (CantCreateLocationSaleException e) {
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+            }
+            /*
+                List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
+                int pos = locations.size()-1;
+                if(locations.get(pos).equals("settings")){
+                    locations.remove(pos);
+                    locations.add(location.toString());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
+                }
+                if(locations.get(pos).equals("wizard")){
+                    locations.remove(pos);
+                    locations.add(location.toString());
+                    changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
+                }
+            */
         } else {
             Toast.makeText(getActivity(), "Need to set the fields", Toast.LENGTH_LONG).show();
         }
@@ -116,4 +168,15 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         return data;
     }
+
+    /*@Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        List<String> locations = (List<String>) appSession.getData(CryptoBrokerWalletSession.LOCATION_LIST);
+        int pos = locations.size()-1;
+        if(locations.get(pos).equals("settings") || locations.get(pos).equals("wizard")){
+            locations.remove(pos);
+        }
+    }*/
+
 }

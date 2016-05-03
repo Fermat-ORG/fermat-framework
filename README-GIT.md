@@ -137,7 +137,7 @@ git pull https://github.com/$nombreDeveloper/fermat.git develop
 ```
 
 #### Compiling and Running the project on the IDE
-It’s actually necessary and recommended to perform a test on the Pull Request content, testing the new functionalities or changes that it says to now have.
+It’s actually necessary and recommended to perform a test on the Pull Request content, testing the new functionalities or changes that it says to have now.
 
 #### Approving the Merge
 Once decided on the Pull Request approval, you need to follow the next steps:

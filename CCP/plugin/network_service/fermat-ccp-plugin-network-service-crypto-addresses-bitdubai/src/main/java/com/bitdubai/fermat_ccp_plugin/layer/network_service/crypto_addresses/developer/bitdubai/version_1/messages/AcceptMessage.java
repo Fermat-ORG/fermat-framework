@@ -13,20 +13,16 @@ import java.util.UUID;
  */
 public class AcceptMessage extends NetworkServiceMessage {
 
-    private final UUID          requestId    ;
     private final CryptoAddress cryptoAddress;
 
     public AcceptMessage(final UUID          requestId    ,
-                         final CryptoAddress cryptoAddress) {
+                         final CryptoAddress cryptoAddress,
+                         String identitySender,
+                         String actorDestination) {
 
-        super(MessageTypes.ACCEPT);
+        super(requestId,MessageTypes.ACCEPT,identitySender,actorDestination);
 
-        this.requestId = requestId;
         this.cryptoAddress = cryptoAddress;
-    }
-
-    public UUID getRequestId() {
-        return requestId;
     }
 
     public CryptoAddress getCryptoAddress() {
@@ -36,7 +32,7 @@ public class AcceptMessage extends NetworkServiceMessage {
     @Override
     public String toString() {
         return "AcceptMessage{" +
-                "requestId=" + requestId +
+                "requestId=" + getRequestId() +
                 ", cryptoAddress=" + cryptoAddress +
                 '}';
     }

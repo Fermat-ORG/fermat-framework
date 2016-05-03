@@ -26,6 +26,17 @@ public class DesktopRecord  implements DatabaseRecord {
     private String recordValue;
     private boolean recordChange;
 
+    public DesktopRecord() {
+    }
+
+    public DesktopRecord(final String  recordName  ,
+                         final String  recordValue ,
+                         final boolean recordChange) {
+
+        this.recordName   = recordName  ;
+        this.recordValue  = recordValue ;
+        this.recordChange = recordChange;
+    }
 
     /**
      * DatabaseRecord interface implementation.
@@ -51,18 +62,13 @@ public class DesktopRecord  implements DatabaseRecord {
         return this.recordValue;
     }
 
-    /**
-     * Returns true if the record record was changed
-     *
-     * @return boolean if change
-     */
     @Override
-    public boolean getChange(){
-        return this.recordChange;
+    public boolean isChange() {
+        return false;
     }
 
     @Override
-    public boolean getUseValueofVariable() {
+    public boolean isUseOfVariable() {
         return false;
     }
 
@@ -70,7 +76,6 @@ public class DesktopRecord  implements DatabaseRecord {
      * Set the field record name
      * @param name field name
      */
-    @Override
     public void setName (String name){
         this.recordName = name;
     }
@@ -79,7 +84,6 @@ public class DesktopRecord  implements DatabaseRecord {
      * Set the field record value
      * @param value field value
      */
-    @Override
     public void setValue (String value){
         this.recordValue = value;
     }
@@ -89,14 +93,16 @@ public class DesktopRecord  implements DatabaseRecord {
      * Set if the record was changed
      * @param change boolean if change
      */
-    @Override
     public void setChange (boolean change){
         this.recordChange = change;
     }
 
-    @Override
     public void setUseValueofVariable(boolean ifvariable) {
 
     }
 
+    @Override
+    public String toString() {
+        return recordName+"="+recordValue;
+    }
 }

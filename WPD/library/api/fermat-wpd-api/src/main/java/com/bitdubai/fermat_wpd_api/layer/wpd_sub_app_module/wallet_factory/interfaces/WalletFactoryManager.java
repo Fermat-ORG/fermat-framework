@@ -31,20 +31,20 @@ public interface WalletFactoryManager extends ModuleManager {
 
     List<WalletFactoryProject> getAvailableProjects() throws CantGetAvailableProjectsException;
 
-    public WalletFactoryProject createEmptyProject()throws CantCreateWalletDescriptorFactoryProjectException;
+    WalletFactoryProject createEmptyProject()throws CantCreateWalletDescriptorFactoryProjectException;
 
-    public void saveProject(WalletFactoryProject walletFactoryProject)throws CantSaveWalletFactoryProyect;
+    void saveProject(WalletFactoryProject walletFactoryProject)throws CantSaveWalletFactoryProyect;
 
-    public void removeProject(WalletFactoryProject walletFactoryProject) throws CantRemoveWalletFactoryProject;
+    void removeProject(WalletFactoryProject walletFactoryProject) throws CantRemoveWalletFactoryProject;
 
-    public WalletFactoryProject getProject(String publicKey)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
+    WalletFactoryProject getProject(String publicKey)throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
-    public List<WalletFactoryProject> getClosedProjects() throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
+    List<WalletFactoryProject> getClosedProjects() throws CantGetWalletFactoryProjectException, ProjectNotFoundException;
 
-    public void closeProject(WalletFactoryProject walletFactoryProject)throws CantGetWalletFactoryProjectException;
+    void closeProject(WalletFactoryProject walletFactoryProject)throws CantGetWalletFactoryProjectException;
 
-    public List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException;
+    List<InstalledWallet> getInstalledWallets() throws CantGetInstalledWalletsException;
 
-    public void cloneInstalledWallets (InstalledWallet walletToClone, String newName) throws CantCloneInstalledWalletException;
+    void cloneInstalledWallets(InstalledWallet walletToClone, String newName) throws CantCloneInstalledWalletException;
 
 }

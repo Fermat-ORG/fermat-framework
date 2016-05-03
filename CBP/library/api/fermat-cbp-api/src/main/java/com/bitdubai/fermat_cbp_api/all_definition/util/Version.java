@@ -108,13 +108,9 @@ public class Version implements Serializable {
             return false;
 
         Version version = (Version) obj;
-        if (this.major.equals(version.getMajor()) &&
+        return this.major.equals(version.getMajor()) &&
                 this.minor.equals(version.getMinor()) &&
-                this.patch.equals(version.getPatch())
-                )
-            return true;
-        else
-            return false;
+                this.patch.equals(version.getPatch());
     }
 
     @Override
@@ -131,10 +127,7 @@ public class Version implements Serializable {
      * @return true if the version is between version1 and version2.
      */
     public boolean isBetween(Version version1, Version version2){
-        if (this.isAbove(version1) && !this.isAbove(version2)  || this.equals(version1) && this.equals(version2))
-            return true;
-        else
-            return false;
+        return this.isAbove(version1) && !this.isAbove(version2) || this.equals(version1) && this.equals(version2);
     }
 
     /**
@@ -153,10 +146,7 @@ public class Version implements Serializable {
             if (this.minor > version.getMinor())
                 return true;
             if (this.minor == version.getMinor()){
-                if (this.patch > version.getPatch())
-                    return true;
-                else
-                    return false;
+                return this.patch > version.getPatch();
             } else
                 return false;
         } else

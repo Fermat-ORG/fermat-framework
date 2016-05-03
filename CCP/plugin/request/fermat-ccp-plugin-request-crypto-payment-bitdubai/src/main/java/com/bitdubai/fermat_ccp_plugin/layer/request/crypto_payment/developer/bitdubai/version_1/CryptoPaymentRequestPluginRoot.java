@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.interfaces.CryptoPaymentRequestManager;
@@ -75,7 +76,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE     , plugin = Plugins.WALLET_MANAGER        )
     private WalletManagerManager walletManagerManager;
 
-
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     private final List<FermatEventListener> listenersAdded;
 
@@ -115,7 +117,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     errorManager,
                     outgoingIntraActorManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             cryptoPaymentRegistry.initialize();
@@ -143,7 +146,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     pluginDatabaseSystem,
                     pluginId,
                     walletManagerManager,
-                    eventManager
+                    eventManager,
+                    broadcaster
             );
 
             eventActions.initialize();
@@ -159,7 +163,7 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
 
             FermatEventHandler fermatEventHandler;
 
-            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_INTRA_USER_DEBIT_TRANSACTION);
+            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.INCOMING_INTRA_USER_DEBIT_TRANSACTION);
             fermatEventHandler = new IncomingIntraUserTransactionDebitEventHandler(this);
 
             fermatEventListener.setEventHandler(fermatEventHandler);
@@ -170,7 +174,7 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
             /**
              * Listener Outgoing Intra User Rollback transaction notifications event
              */
-            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
+            fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_ccp_api.layer.platform_service.event_manager.enums.EventType.OUTGOING_INTRA_USER_ROLLBACK_TRANSACTION);
             fermatEventHandler = new OutgoingIntraUserRollbackTransactionEventHandler(this);
 
             fermatEventListener.setEventHandler(fermatEventHandler);
@@ -197,7 +201,8 @@ public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
                     errorManager,
                     outgoingIntraActorManager,
                     pluginDatabaseSystem,
-                    pluginId
+                    pluginId,
+                    broadcaster
             );
 
             cryptoPaymentRegistry.initialize();

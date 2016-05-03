@@ -84,7 +84,7 @@ public class SideMenu implements FermatSideMenu {
 
     public void setNotifications(int[] notifications) {
         try {
-            if (notifications != null)
+            if (notifications != null && notifications.length != 0)
                 for (int i = 0; i < menuItems.size(); i++) {
                     menuItems.get(i).setNotifications(notifications[i]);
                 }

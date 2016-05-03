@@ -2,11 +2,12 @@ package unit.com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker_wa
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
 
@@ -15,14 +16,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * Created by nelson on 21/12/15.
  */
+@RunWith(MockitoJUnitRunner.class)
 public class GetContractsHistoryTest {
 
-    CryptoBrokerWalletManager walletManager;
-
-    @Before
-    public void setUp() throws Exception {
-        walletManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager();
-    }
+    @Mock
+    CryptoBrokerWalletModuleManager walletManager;
 
     @Test
     public void passNullAsParameterShouldReturnAllItems() throws Exception {

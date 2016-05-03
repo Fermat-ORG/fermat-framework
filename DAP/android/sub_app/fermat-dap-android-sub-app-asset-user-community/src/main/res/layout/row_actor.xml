@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="1dp"
+    android:background="#d9d6d6"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="120dp"
+        android:layout_height="120dp">
+
+        <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
+            android:id="@+id/profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/asset_user_comunity" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/community_name"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_alignParentBottom="true"
+            android:background="#B3000000"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:paddingBottom="2dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:singleLine="false"
+            android:text="Anna"
+            android:textColor="#FFFFFFFF"
+            android:textSize="16sp"
+            app:typeface="ROBOTO_REGULAR"
+            tools:ignore="HardcodedText" />
+
+        <CheckBox
+            android:id="@+id/connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:clickable="false"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true" />
+
+        <ImageView
+            android:id="@+id/connection_state_connected"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/user_community_ic_home_friend"
+            android:visibility="gone"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+        <ImageView
+            android:id="@+id/connection_state_waiting"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/user_community_icon_contact_standby"
+            android:visibility="gone"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+
+        <ImageView
+            android:id="@+id/connection_state_denied"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/user_community_icon_contact_no_conect"
+            android:visibility="gone"
+            tools:ignore="ContentDescription,RtlHardcoded" />
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:background="#0072bb"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:text="Online"
+        android:textColor="#ffffff"
+        android:textSize="10sp"
+        tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/crypto"
+        android:layout_width="match_parent"
+        android:layout_height="18dp"
+        android:background="#ffffff"
+        android:gravity="center_vertical"
+        android:paddingLeft="8dp"
+        android:paddingStart="8dp"
+        android:text="CryptoAddress: "
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:visibility="gone"
+        tools:ignore="HardcodedText,RtlSymmetry,SmallSp" />
+
+</LinearLayout>

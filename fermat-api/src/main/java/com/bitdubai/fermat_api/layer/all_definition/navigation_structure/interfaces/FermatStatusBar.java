@@ -6,11 +6,11 @@ import java.io.Serializable;
  * Created by rodrigo on 2015.07.20..
  */
 public interface FermatStatusBar extends Serializable {
-    public String getColor();
+    String getColor();
 
-    public boolean isVisible() ;
+    boolean isVisible() ;
 
-    public void setColor(String color);
+    void setColor(String color);
 
-    public void setVisible(boolean visible);
+    void setVisible(boolean visible);
 }

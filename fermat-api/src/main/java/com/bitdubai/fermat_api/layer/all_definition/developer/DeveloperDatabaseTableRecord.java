@@ -7,5 +7,5 @@ import java.util.List;
  */
 public interface DeveloperDatabaseTableRecord {
 
-    public List<String> getValues(); //TODO: Este quizas no sea el mejor modo de devolver los valores
+    List<String> getValues(); //TODO: Este quizas no sea el mejor modo de devolver los valores
 }

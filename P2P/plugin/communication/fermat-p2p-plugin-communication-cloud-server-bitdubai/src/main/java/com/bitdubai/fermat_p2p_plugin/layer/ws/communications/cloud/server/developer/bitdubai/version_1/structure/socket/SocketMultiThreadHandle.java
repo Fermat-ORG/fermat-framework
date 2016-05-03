@@ -6,6 +6,20 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.socket;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,20 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.DiscoveryQueryParametersCommunication;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.components.PlatformComponentProfileCommunication;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.WsCommunicationCloudServer;
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.reflect.TypeToken;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.socket.SocketMultiThreadHandle</code>
@@ -44,16 +44,9 @@ public class SocketMultiThreadHandle extends Thread{
 
     private Socket socket;
 
-    /**
-     * Represent the wsCommunicationCloudServer
-     */
-    private WsCommunicationCloudServer wsCommunicationCloudServer;
-
-    public SocketMultiThreadHandle(Socket clientSocket, WsCommunicationCloudServer wsCommunicationCloudServer) {
+    public SocketMultiThreadHandle(Socket clientSocket) {
         this.socket = clientSocket;
-        this.wsCommunicationCloudServer = wsCommunicationCloudServer;
     }
-
 
     public void run() {
         InputStream inp = null;
@@ -89,7 +82,7 @@ public class SocketMultiThreadHandle extends Thread{
 
                         String clientIdentityPublicKey = jsonObject.get(JsonAttNamesConstants.NAME_IDENTITY).getAsString();
 
-                        if(wsCommunicationCloudServer.getRegisteredClientConnectionsCache().containsKey(clientIdentityPublicKey)) {
+                        if(MemoryCache.getInstance().getRegisteredClientConnectionsCache().containsKey(clientIdentityPublicKey)) {
 
                             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParametersCommunication().
                                     fromJson(jsonObject.get(JsonAttNamesConstants.DISCOVERY_PARAM).getAsString());
@@ -184,28 +177,23 @@ public class SocketMultiThreadHandle extends Thread{
          */
         switch (platformComponentType){
 
-            case COMMUNICATION_CLOUD_SERVER :
-                if (!wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().isEmpty()){
-                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values()).clone();
-                }
-                break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                if (!wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().isEmpty()){
-                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values()).clone();
+                if (!MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().isEmpty()){
+                    list = (List<PlatformComponentProfile>) new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values()).clone();
                 }
                 break;
 
             case NETWORK_SERVICE :
-                if (wsCommunicationCloudServer.getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
-                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
+                if (MemoryCache.getInstance().getRegisteredNetworkServicesCache().containsKey(networkServiceType) && !MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType).isEmpty()){
+                    list = (List<PlatformComponentProfile>) new ArrayList<>(MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType)).clone();
                 }
                 break;
 
             //Others
             default :
-                if (wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
-                    list = (List<PlatformComponentProfile>) new ArrayList<>(wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
+                if (MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().containsKey(platformComponentType) && !MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType).isEmpty()) {
+                    list = (List<PlatformComponentProfile>) new ArrayList<>(MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType)).clone();
                 }
                 break;
         }
@@ -444,21 +432,18 @@ public class SocketMultiThreadHandle extends Thread{
          */
         switch (platformComponentType){
 
-            case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values());
-                break;
 
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values());
+                temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values());
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType));
+                temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType));
                 break;
 
             //Others
             default :
-                temporalList = wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }
@@ -501,21 +486,17 @@ public class SocketMultiThreadHandle extends Thread{
          */
         switch (platformComponentType){
 
-            case COMMUNICATION_CLOUD_SERVER :
-                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudServerCache().values());
-                break;
-
             case COMMUNICATION_CLOUD_CLIENT :
-                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredCommunicationsCloudClientCache().values());
+                temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredCommunicationsCloudClientCache().values());
                 break;
 
             case NETWORK_SERVICE :
-                temporalList = new ArrayList<>(wsCommunicationCloudServer.getRegisteredNetworkServicesCache().get(networkServiceType));
+                temporalList = new ArrayList<>(MemoryCache.getInstance().getRegisteredNetworkServicesCache().get(networkServiceType));
                 break;
 
             //Others
             default :
-                temporalList = wsCommunicationCloudServer.getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
+                temporalList = MemoryCache.getInstance().getRegisteredOtherPlatformComponentProfileCache().get(platformComponentType);
                 break;
 
         }

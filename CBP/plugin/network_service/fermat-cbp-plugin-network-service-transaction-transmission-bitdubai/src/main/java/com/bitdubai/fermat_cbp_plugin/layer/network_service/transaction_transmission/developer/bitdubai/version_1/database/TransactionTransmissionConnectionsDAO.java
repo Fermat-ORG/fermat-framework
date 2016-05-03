@@ -50,7 +50,7 @@ public class TransactionTransmissionConnectionsDAO {
 
             try {
 
-                CommunicationNetworkServiceDatabaseFactory databaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+                TransactionTransmissionDatabaseFactory databaseFactory = new TransactionTransmissionDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(
                         pluginId,
                         pluginId.toString()
@@ -78,7 +78,7 @@ public class TransactionTransmissionConnectionsDAO {
 
         try {
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
+            DatabaseTable addressExchangeRequestTable = database.getTable(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
 
             entityRecord = buildDatabaseRecord(entityRecord, transactionTransmissionConnectionRecord);
@@ -103,9 +103,9 @@ public class TransactionTransmissionConnectionsDAO {
 
         try {
 
-            DatabaseTable metadataTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
+            DatabaseTable metadataTable = database.getTable(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
 
-            metadataTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            metadataTable.addUUIDFilter(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
 
             metadataTable.loadToMemory();
 
@@ -135,10 +135,10 @@ public class TransactionTransmissionConnectionsDAO {
 
     private TransactionTransmissionConnectionRecord buildTransactionTransmissionRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID id = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME);
-        String actorPublicKey = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
-        String ipkNetworkService = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME);
-        String lastConnection = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME);
+        UUID id = record.getUUIDValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME);
+        String actorPublicKey = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME);
+        String ipkNetworkService = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME);
+        String lastConnection = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME);
 
         return new TransactionTransmissionConnectionRecord(
                 id,
@@ -152,10 +152,10 @@ public class TransactionTransmissionConnectionsDAO {
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record,
                                                     TransactionTransmissionConnectionRecord transactionTransmissionConnectionRecord) {
 
-        record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transactionTransmissionConnectionRecord.getId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME, transactionTransmissionConnectionRecord.getActorPublicKey());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME, transactionTransmissionConnectionRecord.getIpkNetworkService());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME, transactionTransmissionConnectionRecord.getLastConnection());
+        record.setUUIDValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME, transactionTransmissionConnectionRecord.getId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME, transactionTransmissionConnectionRecord.getActorPublicKey());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME, transactionTransmissionConnectionRecord.getIpkNetworkService());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME, transactionTransmissionConnectionRecord.getLastConnection());
         return record;
     }
 

@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -25,6 +27,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,14 +42,16 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-
+    private ErrorManager errorManager;
     private Database database;
 
     public BrokerSubmitOnlineMerchandiseBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
-            final Database database) {
+            final Database database,
+            final ErrorManager errorManager) {
 
+        this.errorManager         = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.database             = database            ;
@@ -71,14 +77,18 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 );
 
             } catch (CantCreateDatabaseException f) {
-
+                errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        f);
                 throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
                         CantCreateDatabaseException.DEFAULT_MESSAGE,
                         f,
                         "",
                         "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-
+                errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        z);
                 throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
                         CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
                         z,
@@ -87,14 +97,18 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             }
 
         } catch (CantOpenDatabaseException e) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
                     CantOpenDatabaseException.DEFAULT_MESSAGE,
                     e,
                     "",
                     "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
                     CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
                     e,
@@ -144,6 +158,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             saveNewEvent(eventType, eventSource, eventRecordID.toString());
 
         } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantSaveEventException(
                     FermatException.wrapException(exception),
                     "Saving new event.",
@@ -171,11 +188,17 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             databaseTable.insertRecord(eventRecord);
 
         } catch (CantInsertRecordException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantSaveEventException(
                     exception,
                     "Saving new event.",
                     "Cannot insert a record in Submit Online Merchandise database");
         } catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantSaveEventException(
                     FermatException.wrapException(exception),
                     "Saving new event.",
@@ -192,17 +215,26 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
         try{
-
             String stringContractTransactionStatus=getValue(
                     contractHash,
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException( exception,
+                    "Getting the contract transaction status",
+                    "Unexpected error" );
         }
     }
 
@@ -227,12 +259,18 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return null;
+            }
             checkDatabaseRecords(records);
             String value=records
                     .get(0)
                     .getStringValue(valueColumn);
             return value;
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
@@ -271,14 +309,28 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
-
-        DatabaseTable databaseTable=getDatabaseSubmitTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractSale
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractSale
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(CantInsertRecordException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
+                    exception,"Error in persistContractInDatabase","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -289,14 +341,28 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
-
-        DatabaseTable databaseTable=getDatabaseSubmitTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractPurchase
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractPurchase
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(CantInsertRecordException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
+                    exception,"Error in persistContractInDatabase","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -310,21 +376,36 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             String cryptoWalletPublicKey,
             long cryptoAmount,
             String cbpWalletPublicKey,
-            BigDecimal referencePrice)
+            BigDecimal referencePrice,
+            BlockchainNetworkType blockchainNetworkType,String intraActorPK)
             throws CantInsertRecordException {
-
-        DatabaseTable databaseTable=getDatabaseSubmitTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractSale,
-                brokerCryptoAddress,
-                cryptoWalletPublicKey,
-                cryptoAmount,
-                cbpWalletPublicKey,
-                referencePrice
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractSale,
+                    brokerCryptoAddress,
+                    cryptoWalletPublicKey,
+                    cryptoAmount,
+                    cbpWalletPublicKey,
+                    referencePrice,
+                    blockchainNetworkType,intraActorPK
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(CantInsertRecordException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,"Error in persistContractInDatabase","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -340,19 +421,33 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             String cbpWalletPublicKey,
             BigDecimal referencePrice)
             throws CantInsertRecordException {
-
-        DatabaseTable databaseTable=getDatabaseSubmitTable();
-        DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-        databaseTableRecord= buildDatabaseTableRecord(
-                databaseTableRecord,
-                customerBrokerContractPurchase,
-                brokerCryptoAddress,
-                cryptoWalletPublicKey,
-                cryptoAmount,
-                cbpWalletPublicKey,
-                referencePrice
-        );
-        databaseTable.insertRecord(databaseTableRecord);
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
+            databaseTableRecord= buildDatabaseTableRecord(
+                    databaseTableRecord,
+                    customerBrokerContractPurchase,
+                    brokerCryptoAddress,
+                    cryptoWalletPublicKey,
+                    cryptoAmount,
+                    cbpWalletPublicKey,
+                    referencePrice
+            );
+            databaseTable.insertRecord(databaseTableRecord);
+        }catch(CantInsertRecordException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
+                    exception,"Error in persistContractInDatabase","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -370,7 +465,8 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             String walletPublicKey,
             long cryptoAmount,
             String cbpWalletPublicKey,
-            BigDecimal referencePrice) {
+            BigDecimal referencePrice,
+            BlockchainNetworkType blockchainNetworkType,String intraActorPk) {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
@@ -393,6 +489,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME,
                 brokerCryptoAddress);
         record.setStringValue(
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME,
+                intraActorPk);
+        record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 walletPublicKey);
         record.setLongValue(
@@ -405,6 +504,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setDoubleValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
                 referencePrice.doubleValue()
+        );
+        if(blockchainNetworkType==null){
+            blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        }
+        record.setStringValue(
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME,
+                blockchainNetworkType.getCode()
         );
         return record;
     }
@@ -518,7 +624,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 customerBrokerContractPurchase.getPublicKeyBroker());
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_ONLINE_DE_STOCK.getCode());
+                ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE_CONFIRMATION.getCode());
 
         return record;
     }
@@ -532,11 +638,26 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingDeStockTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                ContractTransactionStatus.PENDING_ONLINE_DE_STOCK.getCode(),
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
-        );
+        try{
+            return getBrokerOnlinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_ONLINE_DE_STOCK.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+            );
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantGetContractListException.DEFAULT_MESSAGE,
+                    exception,"Error in persistContractInDatabase","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -548,11 +669,54 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                ContractTransactionStatus.CRYPTO_MERCHANDISE_SUBMITTED.getCode(),
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
-        );
+        try{
+            return getBrokerOnlinePaymentRecordList(
+                    ContractTransactionStatus.CRYPTO_MERCHANDISE_SUBMITTED.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+            );
+        }catch (CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,"Getting value from getPendingCryptoTransactionList","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
+    }
+
+    /**
+     * This method returns a BusinessTransactionRecord List according the arguments.
+     * @param key String with the search key.
+     * @param keyColumn String with the key column name.
+     * @param valueColumn String with the value searched column name.
+     * @return List<BusinessTransactionRecord>
+     * @throws CantGetContractListException
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    private List<BusinessTransactionRecord> getBrokerOnlinePaymentRecordList(
+            String key,
+            String keyColumn,
+            String valueColumn) throws
+            CantGetContractListException,
+            UnexpectedResultReturnedFromDatabaseException {
+        List<String> pendingContractHash= getStringList(
+                key,
+                keyColumn,
+                valueColumn);
+        List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
+        BusinessTransactionRecord businessTransactionRecord;
+        for(String contractHash : pendingContractHash){
+            businessTransactionRecord = getBrokerBusinessTransactionRecord(contractHash);
+            businessTransactionRecordList.add(businessTransactionRecord);
+        }
+        return businessTransactionRecordList;
     }
 
     /**
@@ -577,10 +741,69 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getBusinessTransactionRecord(contractHash);
+            businessTransactionRecord = getBrokerBusinessTransactionRecord(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
+    }
+
+    private BusinessTransactionRecord getCustomerBusinessTransactionRecord(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            ContractTransactionStatus contractTransactionStatus;
+            BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
+
+            databaseTable.addStringFilter(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record = records.get(0);
+
+            businessTransactionRecord.setTransactionId(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
+
+            businessTransactionRecord.setContractHash(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setCustomerPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setBrokerPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
+
+            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+            businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
+
+            return businessTransactionRecord;
+
+        } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Invalid parameter in ContractTransactionStatus");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Unexpected Result");
+        }
     }
 
     /**
@@ -627,7 +850,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    public BusinessTransactionRecord getBusinessTransactionRecord(String contractHash)
+    public BusinessTransactionRecord getBrokerBusinessTransactionRecord(String contractHash)
             throws
             UnexpectedResultReturnedFromDatabaseException {
 
@@ -663,7 +886,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                                     SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setTransactionHash(contractHash);
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME));
             businessTransactionRecord.setTransactionId(
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
@@ -674,6 +897,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+
+            businessTransactionRecord.setActorPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME));
+
             businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
@@ -696,15 +922,40 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setPriceReference(
                     referencePrice
             );
+            //Setting the blockchain network type.
+            BlockchainNetworkType blockchainNetworkType;
+            String blockchainNetworkTypeString = record.getStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME
+            );
+            if(blockchainNetworkTypeString==null||blockchainNetworkTypeString.isEmpty()){
+                blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            } else {
+                blockchainNetworkType=BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
+            }
+            businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Unexpected Result");
         }
 
     }
@@ -756,10 +1007,20 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             record=buildDatabaseTableRecord(record, businessTransactionRecord);
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Updating databaseTableRecord from a BusinessTransactionRecord",
+                    "Unexpected error");
         }
     }
 
@@ -788,9 +1049,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setLongValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME,
                 businessTransactionRecord.getCryptoAmount());
-        record.setStringValue(
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
-                businessTransactionRecord.getCryptoStatus().getCode());
+        //I need to check if crypto status is null
+        CryptoStatus cryptoStatus=businessTransactionRecord.getCryptoStatus();
+        if(cryptoStatus!=null){
+            record.setStringValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
+                    cryptoStatus.getCode());
+        }
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getCustomerPublicKey());
@@ -808,7 +1073,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 businessTransactionRecord.getExternalWalletPublicKey());
         record.setDoubleValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
-                businessTransactionRecord.getCryptoAmount()
+                businessTransactionRecord.getPriceReference().doubleValue()
         );
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
@@ -827,12 +1092,27 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public List<String> getPendingToSubmitCryptoList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getStringList(
-                ContractTransactionStatus.PENDING_PAYMENT.getCode(),
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getStringList(
+                    ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,"Getting value from PendingToSubmitCryptoList","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -844,12 +1124,55 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION.getCode(),
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getBrokerOnlinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE_NOTIFICATION.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,
+                    "Getting value from PendingTosSubmitNotificationList","");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
+    }
+
+    public List<BusinessTransactionRecord> getPendingToSubmitConfirmationList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        try{
+            return getCustomerOnlinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_SUBMIT_ONLINE_MERCHANDISE_CONFIRMATION.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,
+                    "Getting value from PendingTosSubmitNotificationList","");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -861,12 +1184,27 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                CryptoStatus.PENDING_SUBMIT.getCode(),
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getBrokerOnlinePaymentRecordList(
+                    CryptoStatus.PENDING_SUBMIT.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,"Getting value from getPendingToSubmitCryptoStatusList","");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -878,12 +1216,26 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getOnCryptoNetworkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getBrokerOnlinePaymentRecordList(
+                    CryptoStatus.ON_CRYPTO_NETWORK.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException("Error",exception,"Getting value from getOnCryptoNetworkCryptoStatusList","");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -895,12 +1247,26 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     public List<BusinessTransactionRecord> getOnBlockchainkCryptoStatusList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        return getCustomerOnlinePaymentRecordList(
-                CryptoStatus.ON_BLOCKCHAIN.getCode(),
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        try{
+            return getBrokerOnlinePaymentRecordList(
+                    CryptoStatus.ON_BLOCKCHAIN.getCode(),
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CRYPTO_STATUS_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException("Error",exception,"Getting value from getOnBlockchainkCryptoStatusList","");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -929,9 +1295,19 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                     SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Getting value from database",
+                    "Unexpected error");
         }
 
     }
@@ -968,9 +1344,19 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             }
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Getting events in EventStatus.PENDING\"",
+                    "Unexpected error");
         }
     }
 
@@ -982,13 +1368,22 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
      */
     public boolean isContractHashInDatabase(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        String contractHashFromDatabase=getValue(
-                contractHash,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
-                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                        SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
-        return contractHashFromDatabase!=null;
+        try{
+            String contractHashFromDatabase=getValue(
+                    contractHash,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+            return contractHashFromDatabase!=null;
+        }catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
     }
 
     /**
@@ -1020,10 +1415,90 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
+        }
+    }
+
+    /**
+     * This method returns the completion date from database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public long getCompletionDateByContractHash(
+            String contractHash)
+            throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            databaseTable.addStringFilter(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return 0;
+            }
+            checkDatabaseRecords(records);
+            long completionDate=records
+                    .get(0)
+                    .getLongValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME);
+            return completionDate;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting completion date from database",
+                    "Cannot load the database table");
+        }
+    }
+
+    /**
+     * This method sets the completion date in the database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public void setCompletionDateByContractHash(
+            String contractHash,
+            long completionDate)
+            throws UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            databaseTable.addStringFilter(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return ;
+            }
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setLongValue(
+                    BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME,
+                    completionDate);
+            databaseTable.updateRecord(record);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Setting completion date from database",
+                    "Cannot load the database table");
         }
     }
 

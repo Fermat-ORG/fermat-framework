@@ -50,4 +50,8 @@ public class BasicSubAppSettings implements SubAppSettings {
         return null;
     }
 
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
+
+    }
 }

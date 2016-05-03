@@ -1,9 +1,12 @@
 package com.bitdubai.sub_app.crypto_customer_identity.common.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.text.SpannableString;
 import android.view.View;
-import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.TextUtils;
@@ -13,7 +16,7 @@ import com.bitdubai.sub_app.crypto_customer_identity.R;
 import com.bitdubai.sub_app.crypto_customer_identity.common.holders.CryptoCustomerIdentityInfoViewHolder;
 import com.bitdubai.sub_app.crypto_customer_identity.util.CryptoCustomerIdentityListFilter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Adapter para el RecyclerView del CryptoBrokerIdentityListFragment que muestra la lista de identidades de un customer
@@ -26,13 +29,16 @@ public class CryptoCustomerIdentityInfoAdapter
 
     CryptoCustomerIdentityListFilter filter;
 
-    public CryptoCustomerIdentityInfoAdapter(Context context, ArrayList<CryptoCustomerIdentityInformation> dataSet) {
+    public CryptoCustomerIdentityInfoAdapter(Context context, List<CryptoCustomerIdentityInformation> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder, final CryptoCustomerIdentityInformation data, final int position) {
-        filter = (CryptoCustomerIdentityListFilter) getFilter();
+    protected void bindHolder(final CryptoCustomerIdentityInfoViewHolder holder  ,
+                              final CryptoCustomerIdentityInformation    data    ,
+                              final int                                  position) {
+
+        filter = getFilter();
 
         SpannableString spannedText = TextUtils.getSpannedText(
                 context.getResources(),
@@ -41,7 +47,15 @@ public class CryptoCustomerIdentityInfoAdapter
                 filter.getConstraint());
 
         holder.setText(spannedText);
-        holder.setImage(data.getProfileImage());
+
+        byte[] profileImage = data.getProfileImage();
+        Bitmap imageBitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+
+        RoundedBitmapDrawable roundedDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), imageBitmap);
+        roundedDrawable.setCornerRadius(95);
+        holder.getImage().setImageDrawable(roundedDrawable);
+
+
     }
 
     @Override
@@ -55,7 +69,7 @@ public class CryptoCustomerIdentityInfoAdapter
     }
 
     @Override
-    public Filter getFilter() {
+    public CryptoCustomerIdentityListFilter getFilter() {
         if (filter == null)
             filter = new CryptoCustomerIdentityListFilter(dataSet, this);
 

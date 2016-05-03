@@ -38,7 +38,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      *
      * @return List<DescriptorFactoryProject>
      */
-    public List<WalletFactoryProject> getProjectsReadyToPublish() throws CantGetWalletFactoryProjectException;
+    List<WalletFactoryProject> getProjectsReadyToPublish() throws CantGetWalletFactoryProjectException;
 
     /**
      * This method returns the information stored about the all published component
@@ -47,7 +47,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedComponents(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedComponents(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published wallets
@@ -56,7 +56,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedWallets(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedWallets(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the all published skins
@@ -65,7 +65,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent> getPublishedSkins(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent> getPublishedSkins(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published language
@@ -74,7 +74,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @return List<InformationPublishedComponentMiddleware>
      * @throws CantGetPublishedComponentInformationException
      */
-    public List<InformationPublishedComponent>  getPublishedLanguages(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
+    List<InformationPublishedComponent>  getPublishedLanguages(PublisherIdentity publisherIdentity) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method returns the information stored about the published component with his details
@@ -84,7 +84,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @return InformationPublishedComponentMiddleware whit details
      * @throws CantGetPublishedComponentInformationException
      */
-    public InformationPublishedComponent getInformationPublishedComponentWithDetails(UUID idInformationPublishedComponent) throws CantGetPublishedComponentInformationException;
+    InformationPublishedComponent getInformationPublishedComponentWithDetails(UUID idInformationPublishedComponent) throws CantGetPublishedComponentInformationException;
 
     /**
      * This method publishes the skin factory project <code>SkinDescriptorFactoryProject</code> with the skin information in
@@ -101,7 +101,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @param publisherIdentity
      * @throws CantPublishComponentException
      */
-    public void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
+    void publishSkin(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
 
     /**
      * This method publishes the language factory project <code>LanguageDescriptorFactoryProject</code> with the language information in
@@ -118,7 +118,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @param publisherIdentity
      * @throws CantPublishComponentException
      */
-    public void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
+    void publishLanguage(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialWalletVersion, Version finalWalletVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
 
     /**
      * This method publishes the wallet factory project <code>WalletFactoryProject</code> with the wallet information in
@@ -135,7 +135,7 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @param publisherIdentity
      * @throws CantPublishComponentException
      */
-    public void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
+    void publishWallet(WalletFactoryProject walletFactoryProject, byte[] icon, byte[] mainScreenShot, List<byte[]> screenShotDetails, URL videoUrl, String observations, Version initialPlatformVersion, Version finalPlatformVersion, PublisherIdentity publisherIdentity) throws CantPublishComponentException;
 
     /**
      * Method that return the list of versions of the platform
@@ -143,6 +143,6 @@ public interface WalletPublisherModuleManager extends ModuleManager {
      * @return List<Version>
      * @throws CantLoadPlatformInformationException
      */
-    public List<Version> getPlatformVersions() throws CantLoadPlatformInformationException;
+    List<Version> getPlatformVersions() throws CantLoadPlatformInformationException;
 
 }

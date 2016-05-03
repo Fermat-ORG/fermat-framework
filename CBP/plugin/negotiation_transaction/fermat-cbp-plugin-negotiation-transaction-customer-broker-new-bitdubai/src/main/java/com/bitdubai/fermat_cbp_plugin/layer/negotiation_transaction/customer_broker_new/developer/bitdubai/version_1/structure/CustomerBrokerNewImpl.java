@@ -9,7 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import java.util.UUID;
 
 /**
- * Created by yordin on 23/11/15.
+ * Created by Yordin Alayn on 23.11.15.
  */
 public class CustomerBrokerNewImpl implements CustomerBrokerNew {
 

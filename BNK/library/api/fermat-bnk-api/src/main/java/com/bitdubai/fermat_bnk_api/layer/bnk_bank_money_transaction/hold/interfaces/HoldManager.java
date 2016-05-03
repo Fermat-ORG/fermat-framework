@@ -20,4 +20,6 @@ public interface HoldManager extends FermatManager {
 
     BankTransactionStatus getHoldTransactionsStatus(UUID transactionId) throws CantGetHoldTransactionException;
 
+    boolean isTransactionRegistered(UUID transactionId);
+
 }

@@ -16,6 +16,7 @@ import java.util.List;
  * Created by Matias Furszyfer on 2015.09.30..
  * Modified by Jose Manuel De Sousa
  */
+@SuppressWarnings("unused")
 public class AppNavigationAdapter extends FermatAdapter<MenuItem, AppNavigationHolder> {
 
 
@@ -29,15 +30,6 @@ public class AppNavigationAdapter extends FermatAdapter<MenuItem, AppNavigationH
         super(context, dataSet);
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
-
-    public void setOnClickListerAcceptButton(View.OnClickListener onClickListener){
-
-    }
-
-    public void setOnClickListerRefuseButton(View.OnClickListener onClickListener){
-
-    }
-
     /**
      * Create a new holder instance
      *
