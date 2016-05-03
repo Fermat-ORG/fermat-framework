@@ -289,7 +289,7 @@ public class ChatMiddlewareMonitorAgent implements
 
                 if (discoverIteration == 0) {
                     sendChatBroadcasting();
-                    resetWritingStatus();
+//                    resetWritingStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -506,7 +506,7 @@ public class ChatMiddlewareMonitorAgent implements
                 chat.setIsWriting(false);
                 chatMiddlewareDatabaseDao.saveChat(chat);
             }
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
         }catch(DatabaseOperationException e){
             e.printStackTrace();
         } catch (CantGetChatException e) {
@@ -531,7 +531,7 @@ public class ChatMiddlewareMonitorAgent implements
             chat.setIsWriting(true);
             chatMiddlewareDatabaseDao.saveChat(chat);
 
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (CantSaveChatException e) {
             throw new CantGetPendingTransactionException(
