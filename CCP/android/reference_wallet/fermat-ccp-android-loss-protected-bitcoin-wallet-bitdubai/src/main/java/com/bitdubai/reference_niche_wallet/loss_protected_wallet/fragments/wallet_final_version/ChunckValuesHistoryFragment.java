@@ -96,7 +96,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
      * Executor Service
      */
     private ExecutorService executor;
-    private int MAX_TRANSACTIONS = 20;
+    private int MAX_TRANSACTIONS = 10;
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
@@ -362,11 +362,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             lstTransaction = cryptoWallet.listLastActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
-                    TransactionType.DEBIT,
+                    TransactionType.CREDIT,
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk,
                     blockchainNetworkType,
-                    20, offset);
+                    MAX_TRANSACTIONS, offset);
 
         } catch (Exception e) {
             lossProtectedWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
