@@ -4,7 +4,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -89,5 +88,15 @@ public class MessageMock implements Message {
     @Override
     public void setContactId(UUID contactId) {
         //Not implemented in this mock.
+    }
+
+    @Override
+    public long getCount() {
+        return 0;
+    }
+
+    @Override
+    public void setCount(long count) {
+
     }
 }

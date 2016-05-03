@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -31,6 +32,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import java.util.List;
 
 /**
  * Chat Fragment
@@ -89,14 +92,17 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
             try {
                 chatIdentity = chatSettings.getIdentitySelected();
-                if(chatIdentity==null)
-                {
-                    chatIdentity = chatManager
-                            .newInstanceChatActorCommunitySelectableIdentity(chatManager
-                                    .getIdentityChatUsersFromCurrentDeviceUser().get(0));
-                    chatSettings.setIdentitySelected(chatIdentity);
-                    chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
-                            PlatformComponentType.ACTOR_CHAT);
+                if (chatIdentity == null) {
+                    List<ChatIdentity> chatIdentityList=chatManager
+                            .getIdentityChatUsersFromCurrentDeviceUser();
+                    if(chatIdentityList != null && chatIdentityList.size()>0) {
+                        chatIdentity = chatManager
+                                .newInstanceChatActorCommunitySelectableIdentity(
+                                        chatIdentityList.get(0));
+                        chatSettings.setIdentitySelected(chatIdentity);
+                        chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
+                                PlatformComponentType.ACTOR_CHAT);
+                    }
                 }
             } catch (Exception e) {
                 if (errorManager != null)
