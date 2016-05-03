@@ -11,10 +11,10 @@ This guide covers *everything* you need to know to set up the development enviro
 ## System Requirements
 The advisable requirements to ensure enough CPU power to run the project are:
 * Min specs: <br>
-  Intel Core i3-2350M  // AMD Althon 64 X2 3800+ <br>
+  Intel Core i3-2350M  // AMD Athlon 64 X2 3800+ <br>
   8Gb RAM (to run smoothly with other programs you should need 12Gb at least)
 
-* Recomended specs:<br>
+* Recommended specs:<br>
   Intel Core i5-4440 //  AMD FX 4100<br>
   16Gb RAM
 <br>
@@ -23,7 +23,7 @@ The advisable requirements to ensure enough CPU power to run the project are:
 <br>
 ### 1.- Working on Linux - PLEASE READ THIS FIRST- 
 
-It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began  setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution).<br> 
+It is highly recommended that you use Linux instead of Windows, since compilation time significantly reduces. Developers that began setting up a Windows environment finally gave up and moved to Ubuntu (Linux most popular distribution).<br>
 To use Ubuntu, you will need:
 * a) 30 Gb Free space in you hard disk, to allocate a new *partition* to install Ubuntu (this will NOT affect your Windows partition)
 * b) A valid UBUNTU disc image ( you can download v.14.04.3  here:  [Ubuntu 64-bit] (http://releases.ubuntu.com/14.04.3/ubuntu-14.04.3-desktop-amd64.iso?_ga=1.159021118.501985227.1450309029) ) (please check if there is an updated one )
@@ -58,7 +58,7 @@ You can try first the Automatic installation, but if you prefer to do it manuall
 
 ```shell
 platform="-linux-x64.tar.gz" #To use this platform, please, not modify this line.
-#platfform="-linux-i586.tar.gz" #To use this platorm, comment the previous line and uncomment this.
+#platfform="-linux-i586.tar.gz" #To use this platform, comment the previous line and uncomment this.
 ```
 
 * Then, to execute the script, go to your  _$HOME_ folder in your shell console and execute it, as it is shown in the following example:
@@ -76,7 +76,7 @@ When the scripts finishes, then follow with <<Cloning Repository>>
 <a name="Manual"></a>
 #### B.- Manual installation (if automatic installation did no work properly)
 
-In case the script goes wrong or does not fullfill its intended job, you can follow next steps to manually set up of the environment.
+In case the script goes wrong or does not fulfill its intended job, you can follow next steps to manually set up of the environment.
 
 ##### Installing Git
 
@@ -112,7 +112,7 @@ sudo mv jdk* /opt/java
 
 We can also install Gradle using the `apt` service, although the version might be out of date, we recommend that you download the one available in [gradle.org](http://gradle.org/)
 
-This is a *zip* file that you must extract using the `unzip` commmand, then we move it to the **/opt** folder
+This is a *zip* file that you must extract using the `unzip` command, then we move it to the **/opt** folder
 
 ```bash
 unzip -e gradle-2.10-all.zip
@@ -173,7 +173,7 @@ You can use either [IntelliJ IDEA](https://www.jetbrains.com/idea/) or [Android 
 
 In either case you must import the project as a Gradle Project and select the settings.gradle file inside your local fermat repository as the source of your project.
 
-This will import all the subprojects and configure the IDE to start developing in Fermat.
+This will import all the sub-projects and configure the IDE to start developing in Fermat.
 
 If this is your first execution of the IDE, it might ask you to point to where Java and Gradle are configured, as part of the initial settings they need to assemble the *.idea* folder; you must point them to the */opt/java* and */opt/gradle* folder respectively.
 
@@ -260,7 +260,7 @@ git checkout master
 git merge newbranch/master
 ```
 
-All changes will be updated in your oudated local repository with the last release.
+All changes will be updated in your outdated local repository with the last release.
 
 * Now push the changes to update your fork!
 ```shell
@@ -314,7 +314,7 @@ Then overwrite the source code with your changes.
 
 * Commit the changes.
 
-Go to github and create a Pull Request:
+Go to Github and create a Pull Request:
 You have to go to your fork and then with the commits do the pull request.
 
 #### Pull your changes to the main fork (if you have a fork created and a branch pointing to main fork).
@@ -343,7 +343,7 @@ You have to go to your fork and then with the commits do the pull request.
 ### Compiling
 To open the project we must start the IDE in this case it can be android studio or IntelliJ IDEA (whichever you have chosen to work with).
 <br>
-When you start the IDE a welcome form will show up and different options willl be listed including "Open an existing Android Studio Project" or simply "Open" depending on the IDE you have selected to work with.
+When you start the IDE a welcome form will show up and different options will be listed including "Open an existing Android Studio Project" or simply "Open" depending on the IDE you have selected to work with.
 <br>
 We chose the latter named option to open the project and head to the directory where it was cloned.
 <br>
@@ -417,7 +417,7 @@ This component is dedicated to developers and it basically holds two main functi
 
 * **Log Tools:** Changes the level of application execution to a log level for Plug-ins. This way the developer can put the application in debug mode or any other type of Log to check the behavior of classes, methods, and variables used by the app.  
 <br>
-The objective of this SubApp is to facilitatethe work of developers allowing them to access the database, Plug-in charts that are being developed as well as verifying the behavior of the Log Tools from the mobile device.
+The objective of this SubApp is to facilitate the work of developers allowing them to access the database, Plug-in charts that are being developed as well as verifying the behavior of the Log Tools from the mobile device.
 <br>
 The main advantage the SubApp Developer gives is to allow debugging without the device having to be connected to Android Studio or an other IDE and capture possible errors.
 <br>
