@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
@@ -9,7 +10,9 @@ import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -23,8 +26,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.support.v7.widget.Toolbar;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ConstantSubtitle;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -34,9 +39,11 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
@@ -62,6 +69,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -97,6 +106,7 @@ public class ChatAdapterView extends LinearLayout {
     private boolean loadDummyData = false;
     private boolean chatWasCreate =false;
     private Calendar today;
+    UUID newChatId;
 
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
@@ -114,6 +124,7 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSettings=chatSettings;
         //this.background=background;
         initControls();
+        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
     }
 
     public ChatAdapterView(Context context, AttributeSet attrs) {
@@ -191,6 +202,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if(chatId !=null){
                 List<Message> messL=  chatManager.getMessagesByChatId(chatId);
+
                 MessageImpl messagei;
                 for(Message mess : messL){
                     msg = new ChatMessage();
@@ -304,23 +316,78 @@ public class ChatAdapterView extends LinearLayout {
         boolean isKeyboardShown = heightDiff > SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD * dm.density;
         return isKeyboardShown;
     }
+    public void ChangeStatusOnTheSubtitleBar(int state){
+        switch (state){
+            case ConstantSubtitle.IS_OFFLINE:
+                toolbar.setSubtitle("Last time today at 12:00pm");
+                break;
+            case ConstantSubtitle.IS_ONLINE:
+                toolbar.setSubtitle("Online");
+                break;
 
+            case ConstantSubtitle.IS_WRITING:
+               // toolbar.setSubtitleTextColor(Color.parseColor("#fff"));
+                toolbar.setSubtitle("Writing..");
+                break;
+        }
+    }
     public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
+        Timer t = new Timer();
+        t.scheduleAtFixedRate(new TimerTask() {
+                                  @Override
+                                  public void run() {
+
+                                      try {
+                                          if(chatManager.checkWritingStatus(chatId)){
+                                                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
+                                                }else {
+                                              ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+                                          }
+                                      } catch (CantGetWritingStatus cantGetWritingStatus) {
+                                          cantGetWritingStatus.printStackTrace();
+                                      }
+                                  }
+                              },0,1000);
+
+
         messageET.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                            if (!isKeyboardShown(messageET.getRootView())) {
+                                onBackPressed();
+                            } else onAdjustKeyboard();
+                        }
+                    }
+                });
+
+        messageET.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onGlobalLayout() {
-                if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
-                    if (!isKeyboardShown(messageET.getRootView())) {
-                        onBackPressed();
-                    } else onAdjustKeyboard();
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    try {
+                       chatManager.sendWritingStatus(chatId);
+                    } catch (CHTException e) {
+                        e.printStackTrace();
+                    }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
+
         //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
         //messagesContainer.setAdapter(adapter);
@@ -397,7 +464,7 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setLastMessageDate(new Timestamp(dv));
                         remotePublicKey=chat.getRemoteActorPublicKey();
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
-                        UUID newChatId;
+
                         if(chatPrevious.getChatId() != chatId){
                             newChatId = chatPrevious.getChatId();
                         }else{
@@ -418,10 +485,11 @@ public class ChatAdapterView extends LinearLayout {
                     } else {
                         Contact newContact= chatSession.getSelectedContact();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
+
                         chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);//chat.setRemoteActorType(remoteActorType);
                         chat.setRemoteActorPublicKey(remotePublicKey);
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
-                        UUID newChatId;
+
                         if (chatPrevious != null) {
                             newChatId = chatPrevious.getChatId();
                         } else {

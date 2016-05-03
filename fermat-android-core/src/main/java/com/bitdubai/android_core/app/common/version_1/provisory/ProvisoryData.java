@@ -186,10 +186,10 @@ public class ProvisoryData {
                 SubApps.CHT_CHAT_IDENTITY,
                 null,
                 null,
-                "sub_app_chat_identity",
+                "public_key_cht_identity_chat",
                 "Chat",
                 SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),
-                "sub_app_chat_identity",
+                "public_key_cht_identity_chat",
                 new Version(1, 0, 0),
                 Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
         item2 = new Item(installedSubApp);
