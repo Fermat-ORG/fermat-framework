@@ -28,8 +28,7 @@ public class GsonProvider {
     private GsonProvider(){
 
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Timestamp.class, new JsonDateSerializer());
-        builder.registerTypeAdapter(Timestamp.class, new JsonDateDeserializer()).create();
+        builder.registerTypeAdapter(Timestamp.class, new JsonDateAdapter());
         builder.registerTypeAdapter(Profile.class, new InterfaceAdapter<Profile>());
         builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
         gson = builder.create();
