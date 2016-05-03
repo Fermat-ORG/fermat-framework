@@ -26,7 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 /**
  * Created by Joaquin Carrasuquero on 11/04/16.
  */
-public class confirm_dialog extends Dialog implements
+public class Confirm_dialog extends Dialog implements
         View.OnClickListener {
 
 
@@ -81,7 +81,7 @@ public class confirm_dialog extends Dialog implements
      */
 
 
-    public confirm_dialog(Activity a,
+    public Confirm_dialog(Activity a,
                           LossProtectedWallet  cryptoWallet,
                           long cryptoAmount,
                           CryptoAddress destinationAddress,
