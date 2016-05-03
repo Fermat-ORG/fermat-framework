@@ -54,7 +54,7 @@
             android:maxLines="1"
             android:singleLine="true"
             android:text="wants to connect with you"
-            android:textColor="#ffffff"
+            android:textColor="#3d3d3d"
             android:textSize="16sp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 

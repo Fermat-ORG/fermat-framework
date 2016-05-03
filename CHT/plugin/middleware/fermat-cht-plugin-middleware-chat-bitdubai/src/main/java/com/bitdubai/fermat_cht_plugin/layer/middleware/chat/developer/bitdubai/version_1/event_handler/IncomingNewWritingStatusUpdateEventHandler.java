@@ -11,10 +11,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
- * Created by José Vilchez on 09/03/16.
- * Edited by Miguel Rincon on 19/04/2016
+ * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 28/04/16.
  */
-public class IncomingNewChatStatusUpdateEventHandler extends AbstractChatMiddlewareEventHandler {
+public class IncomingNewWritingStatusUpdateEventHandler extends AbstractChatMiddlewareEventHandler {
 
     private ErrorManager errorManager;
 
@@ -23,7 +22,7 @@ public class IncomingNewChatStatusUpdateEventHandler extends AbstractChatMiddlew
         if(this.chatMiddlewareRecorderService.getStatus()== ServiceStatus.STARTED) {
 
             try {
-                this.chatMiddlewareRecorderService.IncomingNewChatStatusUpdateEventHandler((IncomingNewChatStatusUpdate) fermatEvent);
+                this.chatMiddlewareRecorderService.IncomingNewWritingStatusUpdateEventHandler((IncomingNewChatStatusUpdate) fermatEvent);
             } catch(CantSaveEventException exception){
                 errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantSaveEventException(exception,"Handling the IncomingNewChatStatusUpdate", "Check the cause");

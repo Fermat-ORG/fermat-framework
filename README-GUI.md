@@ -26,7 +26,7 @@ A SubApp is a GUI Component that allows a user to carry out non-financial operat
  
 A GUI component in Fermat is divided into 2 Plug-ins, the graphic interfaces and the module of such interface. This last one has the following functionalities:
 
-- Works as a connection between the Plug-ins of the platform, cosuming the services that they provide.
+- Works as a connection between the Plug-ins of the platform, consuming the services that they provide.
 - It covers the logic of the presentation, gathering, organizing and grouping Plug-in data.
 
 For more information about how to create a Module refer to [this documentation](https://github.com/bitDubai/fermat/blob/master/README-PLUG-INS.md)
@@ -134,9 +134,9 @@ public class IntraUserIdentityFragmentFactory extends FermatSubAppFragmentFactor
 
 ### App Connections Class
 
-The `AppConections` abstract class lets you include instances of the things that your Wallet or Sub-App needs to run; these things are: the *Module*, the *Session* and the *Fragment Factory*. You can also include other instances such as: a *Navigation View Painter* (in case you'd like to include a custom a side menu), a *Footer Painter* (in case you'd want to include a footer) and a *Header Painter* (the same, only a header). These three elements can be defined in the *Navigation Structure* of your Wallet or Sub-App.
+The `AppConnections` abstract class lets you include instances of the things that your Wallet or Sub-App needs to run; these things are: the *Module*, the *Session* and the *Fragment Factory*. You can also include other instances such as: a *Navigation View Painter* (in case you'd like to include a custom a side menu), a *Footer Painter* (in case you'd want to include a footer) and a *Header Painter* (the same, only a header). These three elements can be defined in the *Navigation Structure* of your Wallet or Sub-App.
 
-To include an AppConections class inside your project, you first need to extend it and modify it, adding the instances of your project's classes. Then, you need to add an instance of your new `AppConnections` class in the `FermatAppConnectionManager`, which manages all the the different `AppConections` classes inside Fermat.
+To include an AppConnections class inside your project, you first need to extend it and modify it, adding the instances of your project's classes. Then, you need to add an instance of your new `AppConnections` class in the `FermatAppConnectionManager`, which manages all the the different `AppConnections` classes inside Fermat.
 
 This is a example of an `AppConnections` class:
 
@@ -201,7 +201,7 @@ public class FermatAppConnectionManager {
             case "public_key_ccp_intra_user_identity":
                 fermatAppConnection = new CryptoWalletUserFermatAppConnection(activity);
                 break;
-            case "public_key_intra_user_commmunity":
+            case "public_key_intra_user_community":
                 fermatAppConnection = new CryptoWalletUserCommunityFermatAppConnection(activity);
                 break;
 
@@ -234,7 +234,7 @@ public class FermatAppConnectionManager {
             case "public_key_dap_user_community":
                 fermatAppConnection = new CommunityAssetUserFermatAppConnection(activity);
                 break;
-            case "public_key_dap_reedem_point_community":
+            case "public_key_dap_redeem_point_community":
                 fermatAppConnection = new CommunityRedeemPointFermatAppConnection(activity);
                 break;
 
@@ -298,7 +298,7 @@ Fermat is an application different from other Android applications; it has its o
 
 It allows to set the flow of interaction between the different application screens just as certain visual aspects of these screens like backgrounds, colors , and sizes.
 
-It also allows to set for screens the existente of Headers, Footers, Navigation Drawers, Tabs and TabStrips, Menus, among other elements following a similar style to *WordPress*.
+It also allows to set for screens the existence of Headers, Footers, Navigation Drawers, Tabs and TabStrips, Menus, among other elements following a similar style to *WordPress*.
 
 Depending on whether you want to create a SubApp or Wallet, you have to add your navigation structure in the `void factoryReset()` method to any of these two classes:
 
@@ -354,7 +354,7 @@ private void factoryReset(){
     runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
     runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
     
-    // Adding the Navigation Structure in the plataform
+    // Adding the Navigation Structure in the platform
     listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     
     ...
@@ -430,7 +430,7 @@ runtimeFragment = new Fragment();
 runtimeFragment.setType(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
 // Adding the Fragment in the Activity 
-// and seting it has a Start Fragment (is going to show first for this activiy)
+// and setting it has a Start Fragment (is going to show first for this activity)
 runtimeActivity.addFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
 runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
 
@@ -470,7 +470,7 @@ public enum Fragments implements FermatFragments {
 
 ```java
 ...
-// Createting a Header
+// Creating a Header
 runtimeHeader = new Header();
 runtimeHeader.setLabel("Market rate");
 
@@ -483,9 +483,9 @@ It’s possible to add an expandable and collapsible header in an activity of yo
 
 - Set in the navigation structure that the activity has a header:
  
-- Create a class `<nombreScreen>HeaderViewPainter` that implements `HeaderViewPainter` in the `commons/headers/` folder of your GUI Project. For example, in the bitcoin wallet it would be `commons/headers/HomeHeaderViewPainter.java`. This class contains the view wanted to be shown as a header.
+- Create a class `<ScreenName>HeaderViewPainter` that implements `HeaderViewPainter` in the `commons/headers/` folder of your GUI Project. For example, in the bitcoin wallet it would be `commons/headers/HomeHeaderViewPainter.java`. This class contains the view wanted to be shown as a header.
 
-- Inside the `onActivityCreated` method of the fragment that the header will contain, `getPaintActivtyFeactures().addHeaderView()` must be passed as a standard, a form of `<nombreScreen>HeaderViewPainter`
+- Inside the `onActivityCreated` method of the fragment that the header will contain, `getPaintActivityFeatures().addHeaderView()` must be passed as a standard, a form of `<ScreenName>HeaderViewPainter`
 
 ##### Footer
 
@@ -514,7 +514,7 @@ It’s  possible to add a sliding *Footer* in an activity of your app. This is d
 
 - Set in the navigation structure for the activity to have a *Footer* and assign a fragment to it
  
-- Create a `<nombreScreen>FooterViewPainter` class that implements `FooterViewPainter` in the `commons/footers/` folder of your GUI project; for example in the Crypto Broker wallet it would be `commons/footers/HomeFooterViewPainter.java`. This class contains the views that make up the *Footer*:
+- Create a `<ScreenName>FooterViewPainter` class that implements `FooterViewPainter` in the `commons/footers/` folder of your GUI project; for example in the Crypto Broker wallet it would be `commons/footers/HomeFooterViewPainter.java`. This class contains the views that make up the *Footer*:
   - `slide_container` is the *Footer* view that is always visible to be able to display the content.
   - `footer_container` is the *Footer* view that represents its content, and it shows up when the *Footer* is displayed.
 
@@ -559,21 +559,21 @@ It’s possible to add a *Navigation Drawer* (or Side Menu) that allows you to g
 
 - Set in the navigation structure that the activity has a *Side Menu* and that the latter has a number of *Menu Items*
 
-- Create a `<nombreApp>NavigationViewAdapater` class (with its View Holder) that implements `FermatAdapter` in the `commons/navigationView/` folder. For example in the bitcoin wallet it would be `commons/navigationDrawer/BitcoinWalletNavigationViewAdapter.java`. This adapter represents the items that are to be displayed in the navigation drawer and are related to those already set in the navigation structure
+- Create a `<AppName>NavigationViewAdapter` class (with its View Holder) that implements `FermatAdapter` in the `commons/navigationView/` folder. For example in the bitcoin wallet it would be `commons/navigationDrawer/BitcoinWalletNavigationViewAdapter.java`. This adapter represents the items that are to be displayed in the navigation drawer and are related to those already set in the navigation structure
 
-- Create a `<nombreApp>NavigationViewPainter` class that implements `NavigationViewPainter` in the `commons/navigationView/` folder. For example in the bitcoin wallet it would be `commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java`. This class contains the elements that make up the *Navigation Drawer*:
+- Create a `<AppName>NavigationViewPainter` class that implements `NavigationViewPainter` in the `commons/navigationView/` folder. For example in the bitcoin wallet it would be `commons/navigationDrawer/BitcoinWalletNavigationViewPainter.java`. This class contains the elements that make up the *Navigation Drawer*:
   - *Header*: A View that represents the header of the Navigation Drawer. Usually the photo of the person logged in is placed here.
-  - *Adapter*: a form `<nombreApp>NavigationViewAdapater` that represents the menu items
+  - *Adapter*: a form `<AppName>NavigationViewAdapter` that represents the menu items
   - *Content*: A View that is drawn after the menu items, anything can be placed here, for example a footer to show more information 
   
-- Within the `onActivityCreated` method of the fragment that will contain the *Navigation Drawer*, as a standard we must pass  `getPaintActivtyFeactures().addNavigationView()` a form of `<nombreApp>NavigationViewPainter`
+- Within the `onActivityCreated` method of the fragment that will contain the *Navigation Drawer*, as a standard we must pass  `getPaintActivityFeactures().addNavigationView()` a form of `<AppName>NavigationViewPainter`
 
 ##### Tabs and TabStrip
 ##### TitleBar and StatusBar
 ##### Wizard and WizardPage
 
 ### Android api
-#### API Organitation
+#### API Organization
 #### AbstractFermatFragment Class
 
 In your GUI project, you must create the fragments that you set in the navigation structure, creating classes that inherit from `AbstractFermatFragment` and placing them within the `fragments` folder of your project. `AbstractFermatFragment` has a reference to your Wallet or SubApp `Session`, as well as, to `Settings` and `ProviderManager`. There are several subclasses in `fermat-api` that extend `AbstractFermatFragment` and facilitate certain jobs, such as handling lists and some more specialized things like drop-down lists, wirzards, etc:
@@ -630,7 +630,7 @@ public class SettingsActivityFragment extends AbstractFermatFragment {
 
         try {
             BrokerNavigationViewPainter navigationViewPainter = new BrokerNavigationViewPainter(getActivity(), null);
-            getPaintActivtyFeactures().addNavigationView(navigationViewPainter);
+            getPaintActivityFeatures().addNavigationView(navigationViewPainter);
         } catch (Exception e) {
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
             errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -746,7 +746,7 @@ The GUI components are grouped in projects that could represent a Wallet, SubApp
 Whenever you wish you create a new Wallet, SubApp or Desktop, you must create the project that will hold the GUI components in any of the three directories that are shown below following this structure: 
     
     + Platform_Name
-      + Client_Type (actualmente android)
+      + Client_Type (Android, nowadays)
         + desktop
           - desktop_project_name_1
           - desktop_project_name_2
@@ -836,9 +836,9 @@ A GUI component project for Android in Fermat has the following basic structure 
 Where:
 
 - Everything that goes in the `src` folder are files and resources you will need to develop your Wallet/SubApp/Desktop in Android.
-- Inside `src/main/java` you will find the package where you will place java files (classes, intefaces, enums..) with your Android code. It has the following basic packages: **fragmentFactory**, **fragments**, **preference_settings** and **session**. Each one of them explained in detail later on in this README.
+- Inside `src/main/java` you will find the package where you will place java files (classes, interfaces, enums..) with your Android code. It has the following basic packages: **fragmentFactory**, **fragments**, **preference_settings** and **session**. Each one of them explained in detail later on in this README.
 - Inside `src/main/res` there are `xml` files found that represent *layouts, menus, colors, strings and sizes* as well as image files and others that represent visual resources with which you’re going to interact the java classes that have an Android logic.
-- Everything that goes in the `test` folder is code that is used to make Unit Testing on the funtionalities you’re developing in `src`.
+- Everything that goes in the `test` folder is code that is used to make Unit Testing on the functionalities you’re developing in `src`.
 - The Unit Test are created inside the package `unit.com.bitdubai.[project_type].[name_of_the_project]` in `test/java`
 - The file `build.gradle` is where you define the dependencies of the project with others of the platforms or with third party libraries and those that Android offers but not as default (the Support Libraries for example). Also the minimal version of the OS is defined where the app is going to run like the SDK Android version that is going to be used among other things (for more information see [this link](http://developer.android.com/tools/building/configuring-gradle.html))
 - The file `proguard-rules.pro` configures the Proguard tool. (for more information see  [this link](http://developer.android.com/guide/developing/tools/proguard.html)). **NOTE:** *we do not configure this file at the moment, therefore it is empty*
@@ -890,7 +890,7 @@ project(':fermat-cbp-android-sub-app-customers-bitdubai').projectDir = new File(
 ### Create a Navigation Structure for your app 
 ### Android Core Connection
 #### Connect a Fragment Factory
- When connecting the coresponding FragmentFactory to the developed Plug-in we must add to the android core so it can have reference to itself, we must follow these steps:
+ When connecting the corresponding FragmentFactory to the developed Plug-in we must add to the android core so it can have reference to itself, we must follow these steps:
 
 Include dependency to the build.gradle module
 Find in the folder the /android-core/common/version_1/fragment_factory/ route Here you will find the SubAppFragmentFactory and WalletFragmentFactory classes, that are in charge of creating the fragmentFactory form of the previously created module and so just as in the adroid core be able to do a petition.
@@ -921,9 +921,9 @@ it is temporarily located in the /android-core/common/version_1/ProvisoryData cl
     - at least one `layout.xml`
     - `colors.xml`, `dimension.xml` and `strings.xml`
 	
-2. Create the `AppConections` class and add it in the `FermatAppConectionsManager`
+2. Create the `AppConnections` class and add it in the `FermatAppConnectionsManager`
 
-- In `src/main/java/app_conection` create a class that extend from `AppConnections` and fill the requiered methods, as described in the **App Connections Class** section of this document
+- In `src/main/java/app_connection` create a class that extend from `AppConnections` and fill the required methods, as described in the **App Connections Class** section of this document
 
 3. Register the Activities and Fragments in the fermat-api project:
 
