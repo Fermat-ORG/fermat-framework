@@ -27,6 +27,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.ut
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.FanActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
@@ -513,6 +514,14 @@ public final class FanActorNetworkServiceManager implements FanManager {
                 ConnectionRequestAction.REQUEST,
                 aer.getSendingTime()
         ).toJson();
+    }
+
+    public FanConnectionRequest getConnectionRequest(UUID requestId) throws ConnectionRequestNotFoundException {
+        try {
+            return fanActorNetworkServiceDao.getConnectionRequest(requestId);
+        } catch (CantFindRequestException e) {
+            throw new ConnectionRequestNotFoundException(e, "Getting connection request", "Cannot fina the request "+requestId);
+        }
     }
 
 }

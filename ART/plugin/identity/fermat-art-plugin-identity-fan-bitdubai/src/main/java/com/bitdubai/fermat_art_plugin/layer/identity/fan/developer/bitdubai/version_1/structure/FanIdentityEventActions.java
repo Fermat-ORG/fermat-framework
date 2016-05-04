@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleConnectionRequestAcceptedException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
@@ -13,6 +14,9 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExternalPlatformInformation;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
@@ -39,6 +43,11 @@ public class FanIdentityEventActions {
     private ArtistManager artistNetworkService;
 
     /**
+     * Represents the Artist Actor Network Service manager.
+     */
+    private FanManager fanNetworkService;
+
+    /**
      * Represents the Fanatic Identity Manager.
      */
     private FanaticIdentityManager fanaticIdentityManager;
@@ -57,10 +66,12 @@ public class FanIdentityEventActions {
     public FanIdentityEventActions(
             ArtistManager artistNetworkService,
             FanaticIdentityManager fanaticIdentityManager,
-            TokenlyFanIdentityManager tokenlyFanIdentityManager) {
+            TokenlyFanIdentityManager tokenlyFanIdentityManager,
+            FanManager fanManager) {
         this.artistNetworkService = artistNetworkService;
         this.fanaticIdentityManager = fanaticIdentityManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
+        this.fanNetworkService = fanManager;
     }
 
     /**
@@ -76,7 +87,9 @@ public class FanIdentityEventActions {
                         request.getSenderActorType() == PlatformComponentType.ART_FAN) {
                     switch (request.getRequestAction()) {
                         case NONE:
-                            this.handleConnection(request.getSenderPublicKey());
+                            this.handleConnection(
+                                    request.getDestinationPublicKey(),
+                                    EventSource.ACTOR_NETWORK_SERVICE_ARTIST);
                             break;
                         //Other cases do nothing
                     }
@@ -112,29 +125,53 @@ public class FanIdentityEventActions {
      * @throws CantListArtistsException
      * @throws CantAddNewArtistConnectedException
      */
-    private void handleConnection(String senderPublicKey) throws
+    private void handleConnection(String senderPublicKey, EventSource eventSource) throws
             CantListFanIdentitiesException,
             CantListArtistsException,
             CantAddNewArtistConnectedException {
         //First, we get the Identities from this device
         List<Fanatic> fanaticList = fanaticIdentityManager.listIdentitiesFromCurrentDeviceUser();
         ArtExternalPlatform externalPlatform;
-        ActorSearch<ArtistExposingData> actorSearch;
-        List<ArtistExposingData> artistExposingDataList;
-        for(Fanatic fanatic : fanaticList){
-            //We get the fanatic external platform
-            externalPlatform = fanatic.getExternalPlatform();
-            actorSearch = artistNetworkService.getSearch();
-            artistExposingDataList = actorSearch.getResult(PlatformComponentType.ART_ARTIST);
-            switch (externalPlatform){
-                case TOKENLY:
-                    updateTKYIdentity(senderPublicKey,fanatic, artistExposingDataList);
-                    break;
-                case UNDEFINED:
-                    //TODO: throw an exception
-            }
+        switch (eventSource){
+            case ACTOR_NETWORK_SERVICE_ARTIST:
+                ActorSearch<ArtistExposingData> actorSearch;
+                List<ArtistExposingData> artistExposingDataList;
+                for(Fanatic fanatic : fanaticList){
+                    //We get the fanatic external platform
+                    externalPlatform = fanatic.getExternalPlatform();
+                    actorSearch = artistNetworkService.getSearch();
+                    artistExposingDataList = actorSearch.getResult(PlatformComponentType.ART_ARTIST);
+                    switch (externalPlatform){
+                        case TOKENLY:
+                            updateTKYIdentity(senderPublicKey,fanatic, artistExposingDataList);
+                            break;
+                        case UNDEFINED:
+                            //TODO: throw an exception
+                    }
+
+                }
+                break;
+            case ACTOR_NETWORK_SERVICE_FAN:
+                ActorSearch<ArtistExposingData> fanSearch;
+                //List<FanExposingData> fanExposingDataList;
+                List<ArtistExposingData> fanExposingDataList;
+                for(Fanatic fanatic : fanaticList){
+                    //We get the fanatic external platform
+                    externalPlatform = fanatic.getExternalPlatform();
+                    fanSearch = artistNetworkService.getSearch();
+                    fanExposingDataList = fanSearch.getResult(PlatformComponentType.ART_ARTIST);
+                    switch (externalPlatform){
+                        case TOKENLY:
+                            updateFanTKYIdentity(senderPublicKey, fanatic, fanExposingDataList);
+                            break;
+                        case UNDEFINED:
+                            //TODO: throw an exception
+                    }
+
+                }
 
         }
+
     }
 
     /**
@@ -221,6 +258,67 @@ public class FanIdentityEventActions {
     }
 
     /**
+     * This method updates the TKY identity with the remote artist information.
+     * We get this information through the Artist Actor Network Service.
+     * @param fanatic
+     * @param artistExposingDataList
+     * @throws CantAddNewArtistConnectedException
+     */
+    private void updateFanTKYIdentity(
+            String senderPublicKey,
+            Fanatic fanatic,
+            List<ArtistExposingData> artistExposingDataList) throws
+            CantAddNewArtistConnectedException {
+        try{
+            UUID tkyId = fanatic.getExternalIdentityID();
+            Fan tkyFan = this.tokenlyFanIdentityManager.getFanIdentity(tkyId);
+
+            String artistUsername;
+            String remoteArtistPublicKey;
+            for(ArtistExposingData artistExposingData : artistExposingDataList){
+                remoteArtistPublicKey = artistExposingData.getPublicKey();
+                //If the public key from the search is equals to the actor requester, we going to proceed
+                if(!senderPublicKey.equals(remoteArtistPublicKey)){
+                    continue;
+                }
+                //verify if we got Tokenly information
+                ArtistExternalPlatformInformation artistExternalPlatformInformation =
+                        artistExposingData.getArtistExternalPlatformInformation();
+                HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap =
+                        artistExternalPlatformInformation.getExternalPlatformInformationMap();
+                if(artExternalPlatformStringHashMap.containsKey(ArtExternalPlatform.TOKENLY)){
+                    artistUsername = artExternalPlatformStringHashMap.get(
+                            ArtExternalPlatform.TOKENLY);
+                    //Finally, we can update the TKY identity with the artist username
+                    tkyFan.addNewArtistConnected(artistUsername);
+                    tokenlyFanIdentityManager.updateFanIdentity(tkyFan);
+
+                }
+            }
+        } catch (ObjectNotSetException e) {
+            throw new CantAddNewArtistConnectedException(
+                    e,
+                    "Updating TKY identity",
+                    "A method argument is null" );
+        } catch (IdentityNotFoundException e) {
+            throw new CantAddNewArtistConnectedException(
+                    e,
+                    "Updating TKY identity",
+                    "Identity cannot be found" );
+        } catch (CantGetFanIdentityException e) {
+            throw new CantAddNewArtistConnectedException(
+                    e,
+                    "Updating TKY identity",
+                    "Cannot get a Fan identity" );
+        } catch (CantUpdateFanIdentityException e) {
+            throw new CantAddNewArtistConnectedException(
+                    e,
+                    "Updating TKY identity",
+                    "Cannot update a Fan identity" );
+        }
+    }
+
+    /**
      * This method handles the Connection Request Accepted event
      * @param artistAcceptedPublicKey
      * @throws CantHandleConnectionRequestAcceptedException
@@ -228,7 +326,7 @@ public class FanIdentityEventActions {
     public void handleArtistRequestConnectionAccepted(String artistAcceptedPublicKey) throws
             CantHandleConnectionRequestAcceptedException {
         try {
-            this.handleConnection(artistAcceptedPublicKey);
+            this.handleConnection(artistAcceptedPublicKey, EventSource.ACTOR_NETWORK_SERVICE_FAN);
         } catch (CantListFanIdentitiesException e) {
             throw new CantHandleConnectionRequestAcceptedException(
                     e,

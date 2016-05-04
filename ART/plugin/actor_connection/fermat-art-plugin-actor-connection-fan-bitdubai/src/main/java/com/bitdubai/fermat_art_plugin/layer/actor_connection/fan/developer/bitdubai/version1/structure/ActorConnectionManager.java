@@ -43,6 +43,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -510,8 +511,17 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                                     connectionId,
                                     ConnectionState.CONNECTED
                             );
+                            String artistAcceptedPublicKeyD="";
+                            List<FanActorConnection> fanActorConnectionList =
+                                    dao.listActorConnections(dao.getActorConnectionsTable());
+                            for(FanActorConnection fanActorConnection : fanActorConnectionList){
+                                if(fanActorConnection.getConnectionId().equals(connectionId)){
+                                    artistAcceptedPublicKeyD = fanActorConnection.getPublicKey();
+                                    break;
+                                }
+                            }
                             //We gonna raise a event indicating the request accepting.
-                            raiseConnectionRequestEvent(artistAcceptedPublicKey);
+                            raiseConnectionRequestEvent(artistAcceptedPublicKeyD);
                     }
                     break;
                 default:
