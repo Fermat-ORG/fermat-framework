@@ -137,6 +137,10 @@ public class ActorConnectionEventsActions {
                         if (request.getRequestType() == RequestType.SENT)
                             this.handleDisconnect(request.getRequestId());
                         break;
+                    case CANCEL:
+                        if(request.getRequestType() == RequestType.RECEIVED)
+                            this.handleCancelConnection(request.getRequestId());
+                        break;
                 }
             }
         } catch(CantListPendingConnectionRequestsException |
@@ -144,7 +148,8 @@ public class ActorConnectionEventsActions {
                 UnexpectedConnectionStateException |
                 CantAcceptActorConnectionRequestException |
                 CantDenyActorConnectionRequestException |
-                CantDisconnectFromActorException e) {
+                CantDisconnectFromActorException |
+                CantCancelActorConnectionRequestException e) {
 
             throw new CantHandleNewsEventException(
                     e,
@@ -187,7 +192,7 @@ public class ActorConnectionEventsActions {
 
             switch(request.getSenderActorType()) {
                 case ART_ARTIST:
-                    dao.registerActorConnection(actorConnection);
+                    dao.registerConnection(actorConnection);
                     actorArtistNetworkServiceManager.confirm(request.getRequestId());
                     break;
                 case ART_FAN:

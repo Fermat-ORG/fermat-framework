@@ -6,15 +6,16 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.events.ArtistConnectionRequestAcceptedEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.events.ArtistConnectionRequestUpdatesEvent;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.FanaticPluginRoot;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.FanIdentityNotStartedException;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanIdentityEventActions;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/04/16.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/05/16.
  */
-public class ArtistConnectionRequestUpdatesEventHandler implements FermatEventHandler {
+public class FanaticConnectionRequestAcceptedEventHandler implements FermatEventHandler {
 
     private final FanIdentityEventActions fanIdentityEventActions;
     private final FanaticPluginRoot fanaticPluginRoot;
@@ -24,7 +25,7 @@ public class ArtistConnectionRequestUpdatesEventHandler implements FermatEventHa
      * @param fanIdentityEventActions
      * @param fanaticPluginRoot
      */
-    public ArtistConnectionRequestUpdatesEventHandler(
+    public FanaticConnectionRequestAcceptedEventHandler(
             final FanIdentityEventActions fanIdentityEventActions,
             final FanaticPluginRoot fanaticPluginRoot) {
         this.fanIdentityEventActions = fanIdentityEventActions;
@@ -40,10 +41,15 @@ public class ArtistConnectionRequestUpdatesEventHandler implements FermatEventHa
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (this.fanaticPluginRoot.getStatus() == ServiceStatus.STARTED) {
-            if (fermatEvent instanceof ArtistConnectionRequestUpdatesEvent) {
-                fanIdentityEventActions.handleArtistUpdateEvent();
-            } else {
-                EventType eventExpected = EventType.ARTIST_CONNECTION_REQUEST_UPDATES;
+            if (fermatEvent instanceof ArtistConnectionRequestAcceptedEvent) {
+                ArtistConnectionRequestAcceptedEvent event =
+                        (ArtistConnectionRequestAcceptedEvent) fermatEvent;
+                fanIdentityEventActions.handleArtistRequestConnectionAccepted(
+                        event.getArtistAcceptedPublicKey());
+            } else if(fermatEvent instanceof ArtistConnectionRequestUpdatesEvent) {
+                //Nothing to do here
+            }else{
+                EventType eventExpected = EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                         "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdu
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/04/16.
  */
-public class ArtistConnectionRequestNewsEventHandler implements FermatEventHandler {
+public class FanaticConnectionRequestNewsEventHandler implements FermatEventHandler {
 
     private final ActorConnectionEventActions actorConnectionEventActions          ;
     private final FanActorConnectionPluginRoot fanActorConnectionPluginRoot;
@@ -24,7 +24,7 @@ public class ArtistConnectionRequestNewsEventHandler implements FermatEventHandl
      * @param actorConnectionEventActions
      * @param fanActorConnectionPluginRoot
      */
-    public ArtistConnectionRequestNewsEventHandler(
+    public FanaticConnectionRequestNewsEventHandler(
             final ActorConnectionEventActions actorConnectionEventActions,
             final FanActorConnectionPluginRoot fanActorConnectionPluginRoot) {
         this.actorConnectionEventActions = actorConnectionEventActions            ;
@@ -40,14 +40,23 @@ public class ArtistConnectionRequestNewsEventHandler implements FermatEventHandl
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (this.fanActorConnectionPluginRoot.getStatus() == ServiceStatus.STARTED) {
-            if (fermatEvent instanceof ArtistConnectionRequestNewsEvent) {
-                actorConnectionEventActions.handleArtistNewsEvent(fermatEvent.getSource());
-            } else {
-                EventType eventExpected = EventType.ARTIST_CONNECTION_REQUEST_NEWS;
-                String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
-                        "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
-                throw new UnexpectedEventException(context);
+            //To void useless exception
+            switch(fermatEvent.getSource()){
+                case ACTOR_NETWORK_SERVICE_FAN:
+                    if (fermatEvent instanceof ArtistConnectionRequestNewsEvent) {
+                        actorConnectionEventActions.handleArtistNewsEvent(fermatEvent.getSource());
+                    } else {
+                        EventType eventExpected = EventType.ARTIST_CONNECTION_REQUEST_NEWS;
+                        String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
+                                "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();
+                        throw new UnexpectedEventException(context);
+                    }
+                    break;
+                case ACTOR_NETWORK_SERVICE_ARTIST:
+                    break;
+                default:
             }
+
         } else {
             throw new FanActorConnectionNotStartedException("Plugin is not started.");
         }
