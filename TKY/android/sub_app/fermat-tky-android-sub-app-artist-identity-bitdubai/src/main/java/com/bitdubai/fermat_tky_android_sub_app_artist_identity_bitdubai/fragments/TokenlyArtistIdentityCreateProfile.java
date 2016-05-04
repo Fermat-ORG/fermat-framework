@@ -244,7 +244,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 tokenlyRequestDialog.setMessage("Please Wait");
                 tokenlyRequestDialog.setTitle("Connecting to Tokenly");
                 tokenlyRequestDialog.show();
-                Thread tokenlyRequest = new Thread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -272,7 +272,6 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                         }
                     }
                 });
-                tokenlyRequest.start();
             }
         });
     }
@@ -470,6 +469,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             }
             return CREATE_IDENTITY_FAIL_MODULE_IS_NULL;
         }
+        tokenlyRequestDialog.dismiss();
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
     }

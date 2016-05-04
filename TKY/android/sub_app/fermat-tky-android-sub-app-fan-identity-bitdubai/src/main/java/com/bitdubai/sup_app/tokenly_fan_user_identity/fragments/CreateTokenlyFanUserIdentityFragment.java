@@ -261,6 +261,8 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             }
         });
 
+
+
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -269,10 +271,10 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 tokenlyRequestDialog.setMessage("Please Wait");
                 tokenlyRequestDialog.setTitle("Connecting to Tokenly");
                 tokenlyRequestDialog.show();
-                Thread tokenlyRequest = new Thread(new Runnable() {
+                getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if(!isWaitingForResponse){
+                        if (!isWaitingForResponse) {
                             int resultKey = createNewIdentity();
                             switch (resultKey) {
                                 case CREATE_IDENTITY_SUCCESS:
@@ -287,13 +289,12 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                                     Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
                                     break;
                             }
-                        }else{
+                        } else {
                             tokenlyRequestDialog.dismiss();
                             Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-                tokenlyRequest.start();
             }
         });
     }
@@ -345,6 +346,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             }
             return CREATE_IDENTITY_FAIL_MODULE_IS_NULL;
         }
+        tokenlyRequestDialog.dismiss();
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
     }
