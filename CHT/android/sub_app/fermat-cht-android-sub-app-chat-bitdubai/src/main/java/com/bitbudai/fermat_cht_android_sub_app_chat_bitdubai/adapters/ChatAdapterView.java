@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
@@ -149,6 +150,7 @@ public class ChatAdapterView extends LinearLayout {
                 contactIcon = bmd.getBitmap();
                 leftName = contact.getAlias();
                 Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
+
                 if (cht != null)
                     chatId = cht.getChatId();
                 else chatId = null;
@@ -240,6 +242,7 @@ public class ChatAdapterView extends LinearLayout {
                 checkStatusWriting();
 
 
+
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -272,6 +275,7 @@ public class ChatAdapterView extends LinearLayout {
             return null;
         }
     }
+
 
     public class BackgroundAsyncTask extends
             AsyncTask<Message, Integer, Message> {
@@ -354,7 +358,7 @@ public class ChatAdapterView extends LinearLayout {
 
             case ConstantSubtitle.IS_WRITING:
                 // toolbar.setSubtitleTextColor(Color.parseColor("#fff"));
-                toolbar.setSubtitle("Writing..");
+                toolbar.setSubtitle("Typing..");
                 break;
         }
     }
@@ -364,9 +368,6 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
-
-
-
         messageET.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -624,11 +625,15 @@ public class ChatAdapterView extends LinearLayout {
         try {
             if (chatManager.checkWritingStatus(chatId)) {
                 ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
-            }else {
+            }else if(chatManager.checkOnlineStatus(remotePk)){
                 ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+            }else{
+                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
             }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();
+        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+            cantGetOnlineStatus.printStackTrace();
         }
 
     }
