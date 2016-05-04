@@ -15,6 +15,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
@@ -245,8 +246,8 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     }
 
     @Override
-    public void sendOnlineStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException {
-
+    public boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
+        return middlewareChatManager.checkOnlineStatus(contactPublicKey);
     }
 
     @Override
