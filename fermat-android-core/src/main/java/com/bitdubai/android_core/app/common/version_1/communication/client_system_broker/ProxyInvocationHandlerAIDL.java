@@ -34,6 +34,14 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
         Log.i(TAG,"method: "+ method.getName());
         Log.i(TAG, "args: " + args);
 
+//        return clientSystemBrokerService.getRequestManager().addRequestAndWaitForResponse(
+//                pluginVersionReference,
+//                responseStr,
+//                proxy,
+//                method,
+//                args
+//        );
+
         return clientSystemBrokerService.sendMessage(
                 pluginVersionReference,
                 responseStr,

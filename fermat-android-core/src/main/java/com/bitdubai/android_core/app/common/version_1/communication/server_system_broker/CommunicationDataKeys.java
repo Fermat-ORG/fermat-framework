@@ -15,4 +15,5 @@ public class CommunicationDataKeys {
 
     public static final String DATA_CHUNKED_DATA = "chuckedData";
     public static final String DATA_IS_CHUNKED_DATA_FINISH = "chuckFinish";
+    public static final String DATA_SOCKET_STARTED = "socketRunning";
 }

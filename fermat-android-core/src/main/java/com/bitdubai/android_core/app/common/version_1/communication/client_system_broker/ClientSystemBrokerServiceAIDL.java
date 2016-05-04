@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.net.LocalSocket;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,13 +13,15 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
+import android.os.TransactionTooLargeException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.IServerBrokerService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
@@ -45,6 +48,12 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private ExecutorService poolExecutor;
     private ProxyFactory proxyFactory;
     private BufferChannelAIDL bufferChannelAIDL;
+
+    /**
+     * Socket Implementation to receive messages from server
+     */
+    private LocalClientSocketSession mReceiverSocketSession;
+
 
     public ClientSystemBrokerServiceAIDL() {
         this.proxyFactory = new ProxyFactory();
@@ -87,6 +96,23 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                      pluginVersionReference.getVersion().toString(),
                      method.getName(),
                      parameters);
+        } catch (TransactionTooLargeException t){
+            try {
+                objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                        KEY,
+                        dataId,
+                        pluginVersionReference.getPlatform().getCode(),
+                        pluginVersionReference.getLayers().getCode(),
+                        pluginVersionReference.getPlugins().getCode(),
+                        pluginVersionReference.getDeveloper().getCode(),
+                        pluginVersionReference.getVersion().toString(),
+                        method.getName(),
+                        parameters);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (Exception e){
+                e.printStackTrace();
+            }
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (Exception e){
@@ -94,7 +120,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         }
 
         if(objectArrived!=null){
-            isDataChuncked = objectArrived.isChunckedData();
+            isDataChuncked = objectArrived.isLargeData();
         }else{
             Log.e(TAG,"Object arrived null, please check this");
         }
@@ -104,7 +130,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
 
         if(isDataChuncked){
-            if(Looper.myLooper() == Looper.getMainLooper()) throw new WorkOnMainThreadException(proxy,method);
+            if(Looper.myLooper() == Looper.getMainLooper()) throw new LargeWorkOnMainThreadException(proxy,method);
             o = bufferChannelAIDL.getBufferObject(dataId);
             Log.i(TAG, o != null ? o.toString() : "");
             return (o instanceof EmptyObject)?null:o;
@@ -288,7 +314,11 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     //String keyResponse = msg.getData().getString(DATA_KEY_TO_RESPONSE);
                     //TODO: el DATA_KEY_TO_RESPONSE quizás deberia ser el id
 //                    onMessageRecieve(UUID.fromString(id),msg.getData().getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
-                    onFullDateRecieve(id,bundle.getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
+
+                    //todo: con esto solo estaba el metodo viejo:
+//                    onFullDateRecieve(id,bundle.getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
+
+                    mReceiverSocketSession.addWaitingMessage();
                     break;
                 case CommunicationMessages.MSG_SEND_CHUNKED_DATA:
                     bundle = msg.getData();
@@ -341,11 +371,22 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             // We want to monitor the service for as long as we are
             // connected to it.
             try {
+
+                //testear esto
+                //si el cliente está registrado:
+                mReceiverSocketSession = new LocalClientSocketSession(KEY,new LocalSocket(),bufferChannelAIDL);
+                mReceiverSocketSession.connect();
+                mReceiverSocketSession.start();
+                //
+
+
+
                 Message msg = Message.obtain(null,
                         CommunicationMessages.MSG_REGISTER_CLIENT);
                 msg.replyTo = mMessenger;
                 Bundle bundle = new Bundle();
                 bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
+                bundle.putBoolean(CommunicationDataKeys.DATA_SOCKET_STARTED,true);
                 msg.setData(bundle);
 
                 Log.i(TAG, "service connected: " + mMessengerIsBound);
@@ -419,6 +460,5 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,"key",pluginVersionReference);
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
     }
-
 
 }

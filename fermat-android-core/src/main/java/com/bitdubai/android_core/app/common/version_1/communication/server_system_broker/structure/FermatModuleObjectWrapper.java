@@ -6,16 +6,18 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 /**
- * Created by mati on 2016.04.18..
+ * Created by Matias Furszyfer on 2016.04.18..
  */
 public class FermatModuleObjectWrapper implements Parcelable {
 
+    private String objectRequestId;
     private Serializable object;
-    private boolean isChunckedData = false;
+    private boolean isLargeData = false;
 
-    public FermatModuleObjectWrapper(Serializable object,boolean isChunckedData) {
+    public FermatModuleObjectWrapper(Serializable object,boolean isLargeData,String objectRequestId) {
         this.object = object;
-        this.isChunckedData = isChunckedData;
+        this.isLargeData = isLargeData;
+        this.objectRequestId = objectRequestId;
     }
 
     public FermatModuleObjectWrapper(Serializable object) {
@@ -40,12 +42,16 @@ public class FermatModuleObjectWrapper implements Parcelable {
         }
     };
 
-    public boolean isChunckedData() {
-        return isChunckedData;
+    public boolean isLargeData() {
+        return isLargeData;
     }
 
     public Object getObject() {
         return object;
+    }
+
+    public String getObjectRequestId() {
+        return objectRequestId;
     }
 
     @Override
