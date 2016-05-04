@@ -28,7 +28,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPaymentRequest, PaymentHistoryItemViewHolder>  {
 
     private onRefreshList onRefreshList;
-    // private View.OnClickListener mOnClickListener;
+
     LossProtectedWallet cryptoWallet;
     LossProtectedWalletSession referenceWalletSession;
     Typeface tf;
@@ -40,7 +40,6 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
         this.referenceWalletSession =referenceWalletSession;
-        //this.mOnClickListener = onClickListener;
         this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
@@ -74,6 +73,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
     @Override
     protected int getCardViewResource() {
         return R.layout.loss_history_request_row;
+    }
     /**
      * Bind ViewHolder
      *
