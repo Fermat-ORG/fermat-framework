@@ -150,14 +150,14 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
             //Another listener
-            eventManager.getNewListener(
+            FermatEventListener acceptListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT);
-            updatesListener.setEventHandler(
+            acceptListener.setEventHandler(
                     new ArtistConnectionRequestAcceptedEventHandler(
                             this.fanIdentityEventActions,
                             this));
-            eventManager.addListener(updatesListener);
-            listenersAdded.add(updatesListener);
+            eventManager.addListener(acceptListener);
+            listenersAdded.add(acceptListener);
 
             exposeIdentities();
             System.out.println("############\n ART IDENTITY Fanatic STARTED\n");
@@ -176,7 +176,8 @@ public class FanaticPluginRoot extends AbstractPlugin implements
         this.fanIdentityEventActions = new FanIdentityEventActions(
                 artistActorNetWorkServiceManager,
                 identityFanaticManager,
-                tokenlyFanIdentityManager);
+                tokenlyFanIdentityManager,
+                fanManager);
     }
 
     private void exposeIdentities(){

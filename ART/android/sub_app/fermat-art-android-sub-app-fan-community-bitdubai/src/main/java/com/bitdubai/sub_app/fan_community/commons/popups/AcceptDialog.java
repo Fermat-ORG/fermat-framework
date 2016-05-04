@@ -86,8 +86,7 @@ public class AcceptDialog extends
                 if (fanCommunityInformation != null && identity != null) {
                     System.out.println("************* I'm going to accept: "+fanCommunityInformation.getConnectionId());
                     getSession().getModuleManager().acceptFan(
-                            fanCommunityInformation.getConnectionId(),
-                            fanCommunityInformation.getPublicKey());
+                            fanCommunityInformation.getConnectionId());
                     Toast.makeText(getContext(),
                             " Accepted connection request from " + fanCommunityInformation.getAlias(),
                             Toast.LENGTH_SHORT).show();
