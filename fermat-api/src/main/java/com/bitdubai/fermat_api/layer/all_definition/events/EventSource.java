@@ -79,7 +79,13 @@ public enum EventSource implements FermatEnum {
     USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER ("ULCBPM"),
     USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER ("ULCBSM"),
     TIMEOUT_NOTIFIER("TON"),
-    CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT");
+    CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+
+    NETWORK_CLIENT    ("NETWORK_CLIENT"),
+
+
+    ;
+
 
     private final String code;
 
@@ -154,6 +160,8 @@ public enum EventSource implements FermatEnum {
             case "ULCBSM" : return USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER;
             case "TON"  :   return TIMEOUT_NOTIFIER;
             case "CCPODT": return CCP_OUTGOING_DRAFT_TRANSACTION;
+
+            case "NETWORK_CLIENT": return NETWORK_CLIENT;
 
             default: throw new InvalidParameterException(
                     "Code Received: " + code,

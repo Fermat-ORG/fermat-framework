@@ -3,8 +3,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import javax.websocket.Session;
 
@@ -30,15 +32,8 @@ public abstract class PackageProcessor {
      */
     private PackageType packageType;
 
-    /**
-     * Represent the gson instance
-     */
-    private Gson gson;
-
-    /**
-     * Represent the jsonParser instance
-     */
-    private JsonParser jsonParser;
+    private ErrorManager errorManager;
+    private EventManager eventManager;
 
     /**
      * Constructor with parameter
@@ -46,11 +41,11 @@ public abstract class PackageProcessor {
      * @param channel
      * @param packageType
      */
-    public PackageProcessor(CommunicationsNetworkClientChannel channel, PackageType packageType) {
+    public PackageProcessor(final CommunicationsNetworkClientChannel channel    ,
+                            final PackageType                        packageType) {
+
         this.channel     = channel;
         this.packageType = packageType;
-        this.gson        = new Gson();
-        this.jsonParser  = new JsonParser();
     }
 
     /**
@@ -71,22 +66,20 @@ public abstract class PackageProcessor {
         return packageType;
     }
 
-    /**
-     * Gets the value of gson and returns
-     *
-     * @return gson
-     */
-    public Gson getGson() {
-        return gson;
+    public ErrorManager getErrorManager() {
+
+        if (errorManager == null)
+            errorManager = (ErrorManager) ClientContext.get(ClientContextItem.ERROR_MANAGER);
+
+        return errorManager;
     }
 
-    /**
-     * Gets the value of jsonParser and returns
-     *
-     * @return jsonParser
-     */
-    public JsonParser getJsonParser() {
-        return jsonParser;
+    public EventManager getEventManager() {
+
+        if (eventManager == null)
+            eventManager = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER);
+
+        return eventManager;
     }
 
     /**

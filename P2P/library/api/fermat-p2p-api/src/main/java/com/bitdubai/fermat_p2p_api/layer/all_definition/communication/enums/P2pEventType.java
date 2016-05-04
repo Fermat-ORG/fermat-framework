@@ -3,14 +3,11 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventListener;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
@@ -160,13 +157,13 @@ public enum P2pEventType implements FermatEventEnum {
      */
 
     NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED("NCAPR"){
-        public NetworkClientProfileRegisteredEvent<ActorProfile> getNewEvent() { return new NetworkClientProfileRegisteredEvent<>(this); }
-    },
-    NETWORK_CLIENT_CLIENT_PROFILE_REGISTERED("NCCPR"){
-        public NetworkClientProfileRegisteredEvent<ClientProfile> getNewEvent() { return new NetworkClientProfileRegisteredEvent<>(this); }
+        public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }
     },
     NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED("NCNSPR"){
-        public NetworkClientProfileRegisteredEvent<NetworkServiceProfile> getNewEvent() { return new NetworkClientProfileRegisteredEvent<>(this); }
+        public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }
+    },
+    NETWORK_CLIENT_REGISTERED("NCR"){
+        public NetworkClientRegisteredEvent getNewEvent() { return new NetworkClientRegisteredEvent(this); }
     },
 
     /**
@@ -192,8 +189,6 @@ public enum P2pEventType implements FermatEventEnum {
     public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
         return new GenericEventListener<>(this, fermatEventMonitor);
     }
-
-    public abstract FermatEvent getNewEvent();
 
     /**
      * Return the enum by the code

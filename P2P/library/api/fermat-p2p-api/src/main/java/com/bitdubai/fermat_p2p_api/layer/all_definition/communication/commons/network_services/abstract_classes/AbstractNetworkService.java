@@ -1,16 +1,19 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededLayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -18,11 +21,22 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNetworkServiceRegisteredEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.interfaces.CommunicationLayerManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -48,27 +62,42 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     protected EventManager eventManager;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.DEVICE_LOCATION)
+    protected LocationManager locationManager;
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     protected PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM          , addon = Addons.LOG_MANAGER)
-    protected LogManager logManager;
-
-    @NeededLayerReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION)
-    protected CommunicationLayerManager communicationLayerManager;
+    @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_CLIENT)
+    protected NetworkClientManager networkClientManager;
 
     /**
-     * Represent the EVENT_SOURCE
+     * Represents the EVENT_SOURCE
      */
     public EventSource eventSource;
 
     /**
-     * Represent the identity
+     * Represents the identity
      */
     private ECCKeyPair identity;
+
+    /**
+     * Represents the network Service Type
+     */
+    private NetworkServiceType networkServiceType;
+
+    /**
+     * Represents the network service profile.
+     */
+    private NetworkServiceProfile profile;
+
+    /**
+     * Represents the registered
+     */
+    private boolean registered;
 
     /**
      * Hold the listeners references
@@ -76,17 +105,30 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     private List<FermatEventListener> listenersAdded;
 
     /**
+     * AGENTS DEFINITION ----->
+     */
+    /**
+     * Represent the networkServiceRegistrationProcessAgent
+     */
+    private NetworkServiceRegistrationProcessAgent networkServiceRegistrationProcessAgent;
+
+    /**
      * Constructor with parameters
      *
      * @param pluginVersionReference
      * @param eventSource
+     * @param networkServiceType
      */
     public AbstractNetworkService(final PluginVersionReference pluginVersionReference,
-                                  final EventSource            eventSource           ) {
+                                  final EventSource            eventSource           ,
+                                  final NetworkServiceType     networkServiceType    ) {
 
         super(pluginVersionReference);
 
         this.eventSource           = eventSource;
+        this.networkServiceType    = networkServiceType;
+
+        this.registered            = Boolean.FALSE;
         this.listenersAdded        = new CopyOnWriteArrayList<>();
     }
 
@@ -108,6 +150,22 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              * Initialize the identity
              */
             initializeIdentity();
+
+            /*
+             * Initialize the profile
+             */
+            initializeProfile();
+
+            /*
+             * Initialize listeners
+             */
+            initializeListeners();
+
+            /*
+             * Initialize the agents and start
+             */
+            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
+            this.networkServiceRegistrationProcessAgent.start();
 
         } catch (Exception exception) {
 
@@ -136,17 +194,20 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
          /*
          * Ask if the resources are injected.
          */
-        if (communicationLayerManager == null ||
+        if (networkClientManager == null ||
                 pluginDatabaseSystem == null ||
+                locationManager == null ||
                 errorManager == null ||
                 eventManager == null) {
 
             String context =
                     "Plugin ID: " + pluginId
                     + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
-                    + "communicationLayerManager: " + communicationLayerManager
+                    + "networkClientManager: " + networkClientManager
                     + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
                     + "pluginDatabaseSystem: " + pluginDatabaseSystem
+                    + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
+                    + "locationManager: " + locationManager
                     + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
                     + "errorManager: " + errorManager
                     + CantStartPluginException.CONTEXT_CONTENT_SEPARATOR
@@ -222,4 +283,88 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     }
 
+    /**
+     * Initializes the profile of this network service
+     *
+     * @throws CantInitializeNetworkServiceProfileException if something goes wrong.
+     */
+    private void initializeProfile() throws CantInitializeNetworkServiceProfileException {
+
+        Location location;
+
+        try {
+
+            location = locationManager.getLocation();
+
+        } catch (CantGetDeviceLocationException exception) {
+
+            location = null;
+            // TODO MANAGE IN OTHER WAY...
+            errorManager.reportUnexpectedPluginException(
+                    this.getPluginVersionReference(),
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception
+            );
+        }
+        this.profile = new NetworkServiceProfile();
+
+        this.profile.setIdentityPublicKey(this.identity.getPublicKey());
+        this.profile.setNetworkServiceType(this.networkServiceType);
+        this.profile.setLocation(location);
+
+    }
+
+    /**
+     * Initializes all event listener and configure
+     */
+    private void initializeListeners() {
+
+        /*
+         * 1. Listen and handle Network Client Registered Event
+         */
+        FermatEventListener networkClientRegistered = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_REGISTERED);
+        networkClientRegistered.setEventHandler(new NetworkClientRegisteredEventHandler(this));
+        eventManager.addListener(networkClientRegistered);
+        listenersAdded.add(networkClientRegistered);
+
+        /*
+         * 2. Listen and handle Network Client Network Service Registered Event
+         */
+        FermatEventListener networkServiceProfileRegisteredListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED);
+        networkServiceProfileRegisteredListener.setEventHandler(new NetworkClientNetworkServiceRegisteredEventHandler(this));
+        eventManager.addListener(networkServiceProfileRegisteredListener);
+        listenersAdded.add(networkServiceProfileRegisteredListener);
+
+    }
+
+
+
+    public void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
+
+        if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()){
+            networkServiceRegistrationProcessAgent.stop();
+            networkServiceRegistrationProcessAgent = null;
+        }
+        this.getConnection().registerProfile(this.getProfile());
+
+    }
+
+    /**
+     * Get registered value
+     *
+     * @return boolean
+     */
+    public final boolean isRegistered() {
+        return registered;
+    }
+
+    public final NetworkServiceProfile getProfile() {
+
+        return profile;
+    }
+
+    public final NetworkClientConnection getConnection() {
+
+        return networkClientManager.getConnection();
+    }
 }

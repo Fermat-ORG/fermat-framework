@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
@@ -58,7 +60,7 @@ import java.util.concurrent.Executors;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
+public class NetworkClientCommunicationPluginRoot extends AbstractPlugin implements NetworkClientManager {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -147,7 +149,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
-            ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
+            ClientContext.add(ClientContextItem.EVENT_MANAGER  , eventManager);
 
             //nodesProfileList = getNodesProfileList();
 
@@ -168,7 +170,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
             }else {
 
-                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 9090 + "/fermat/ws/client-channel");
+                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 8080 + "/fermat/ws/client-channel");
 
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                         uri,
@@ -440,9 +442,15 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
     }
 
+    @Override
+    public NetworkClientConnection getConnection() {
+
+        return networkClientCommunicationConnection;
+    }
+
     /*
-     * get the NodesProfile List in the webService of the NetworkNode Harcoded
-     */
+         * get the NodesProfile List in the webService of the NetworkNode Harcoded
+         */
     private List<NodeProfile> getNodesProfileList(){
 
         HttpURLConnection conn = null;

@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 
 /**
@@ -15,12 +14,12 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkClientProfileRegisteredEvent<T extends Profile> extends AbstractEvent {
+public class NetworkClientProfileRegisteredEvent extends AbstractEvent {
 
     /**
      * Represent the registered profile.
      */
-    private T profile;
+    private String publicKey;
 
     /**
      * Constructor with parameters
@@ -31,18 +30,18 @@ public class NetworkClientProfileRegisteredEvent<T extends Profile> extends Abst
         super(p2pEventType);
     }
 
-    public T getProfile() {
-        return profile;
+    public String getPublicKey() {
+        return publicKey;
     }
 
-    public void setProfile(T profile) {
-        this.profile = profile;
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     @Override
     public String toString() {
         return "NetworkClientProfileRegisteredEvent{" +
-                "profile=" + profile +
+                "publicKey='" + publicKey + '\'' +
                 '}';
     }
 }
