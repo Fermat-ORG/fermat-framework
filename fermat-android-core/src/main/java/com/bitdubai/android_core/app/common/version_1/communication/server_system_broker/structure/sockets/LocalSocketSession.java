@@ -29,19 +29,32 @@ public abstract class LocalSocketSession {
     private AtomicInteger messageSize;
 
     // object to lock the thread until a message is received
-    private Lock waitMessageLocker;
+    private final Lock waitMessageLocker;
 
 
     public LocalSocketSession(String pkIdentity,LocalSocket localSocket) {
         this.localSocket = localSocket;
         this.pkIdentity = pkIdentity;
+        waitMessageLocker = new Lock();
     }
 
     public void start(){
-        waitMessageLocker = new Lock();
         messageSize = new AtomicInteger(0);
         runner = new Thread(new SessionRunner());
         runner.start();
+    }
+
+    public void stop(){
+        if(!runner.isInterrupted()) runner.interrupt();
+    }
+
+    public void destroy() throws IOException {
+        clear();
+    }
+
+    public void clear() throws IOException {
+        messageSize = null;
+        localSocket.close();
     }
 
 
@@ -57,6 +70,12 @@ public abstract class LocalSocketSession {
                 out.writeObject(fermatModuleObjectWrapper);
             } catch (IOException e) {
                 e.printStackTrace();
+            } finally {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -64,6 +83,10 @@ public abstract class LocalSocketSession {
 
     public void addWaitingMessage(){
         messageSize.incrementAndGet();
+        waitMessageLocker.unblock();
+        synchronized (waitMessageLocker){
+            waitMessageLocker.notify();
+        }
     }
 
     public void connect() {
@@ -72,7 +95,7 @@ public abstract class LocalSocketSession {
             try {
                 localSocket.connect(new LocalSocketAddress(CommunicationServerService.SERVER_NAME));
                 localSocket.setReceiveBufferSize(500000);
-                localSocket.setSoTimeout(3000);
+                localSocket.setSoTimeout(6000);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -86,11 +109,13 @@ public abstract class LocalSocketSession {
             try {
                 if(localSocket!=null) {
                     InputStream inputStream = localSocket.getInputStream();
+
                     while (true) {
+                        ObjectInputStream objectInputStream = null;
                         while(messageSize.get()!=0){
+                            if(objectInputStream==null) objectInputStream = new ObjectInputStream(inputStream);
                             Log.i(TAG,"Cantidad de mensajes a recibir: "+messageSize.get());
                             //byte[] readed = new byte[LocalSocketConfiguration.MESSAGE_SIZE];
-                            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
                             FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();
                             //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
                             if(object!=null) {
@@ -101,8 +126,21 @@ public abstract class LocalSocketSession {
                             }
                         }
                         if(messageSize.get()==0){
-                            while(waitMessageLocker.getIsBlock()) {
+                            Log.i(TAG, "Cleaning Socket");
+                            if(objectInputStream!=null) {
+                                objectInputStream.reset();
+                                objectInputStream.close();
+                                objectInputStream = null;
+                            }
+                            boolean flag = false;
+                            while(!flag) {
                                 waitMessageLocker.block();
+                                synchronized (waitMessageLocker){
+                                    waitMessageLocker.wait();
+                                }
+                                if(!waitMessageLocker.getIsBlock()){
+                                    flag = true;
+                                }
                             }
                         }
                     }

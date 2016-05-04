@@ -51,6 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.NotSerializableException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -66,7 +67,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Created by mati on 2016.04.18..
+ * Created by MAtias Furszyfer on 2016.04.18..
  */
 public class CommunicationServerService extends Service implements FermatWorkerCallBack, BroadcastInterface {
 
@@ -204,10 +205,12 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         return false;
     }
 
-    private void sendFullData(String dataId, String clientKey, Serializable data){
+    private void sendFullData(String dataId, String clientKey, Serializable data) throws NotSerializableException {
 
+
+        if(!(data instanceof Serializable)) throw new NotSerializableException("Object: "+data.getClass().getName()+" is not serializable");
         //test
-        sendLargeData(dataId,clientKey,data);
+        sendLargeData(dataId, clientKey, data);
 
 
 
@@ -266,10 +269,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
              * Acá se va a hacer el chunk y el envio al cliente
              */
             //chunkAndSendData(dataId,clientKey,aidlObject);
-
             if (isDataForChunk(aidlObject)) {
-                sendFullData(dataId,clientKey,aidlObject);
-                return new FermatModuleObjectWrapper(aidlObject,true,dataId);
+                try {
+                    sendFullData(dataId, clientKey, aidlObject);
+                    return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+                } catch (NotSerializableException e) {
+                    return new FermatModuleObjectWrapper(dataId,aidlObject,true,e);
+                }
             }else {
                 return new FermatModuleObjectWrapper(aidlObject,false,dataId);
             }
@@ -419,6 +425,18 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         executorService.shutdownNow();
+        try {
+            localServerSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        for (LocalServerSocketSession localServerSocketSession : socketsClients.values()) {
+            try {
+                localServerSocketSession.destroy();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

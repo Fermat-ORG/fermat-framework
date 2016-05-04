@@ -59,7 +59,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         this.proxyFactory = new ProxyFactory();
     }
 
-    public Object sendMessage(PluginVersionReference pluginVersionReference,String responseStr, Object proxy, Method method, Object[] args) {
+    public Object sendMessage(PluginVersionReference pluginVersionReference,String responseStr, Object proxy, Method method, Object[] args) throws Exception {
         FermatModuleObjectWrapper[] parameters = null;
         if(args!=null) {
             parameters = new FermatModuleObjectWrapper[args.length];
@@ -69,8 +69,8 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) args[i]);
                     parameters[i] = fermatModuleObjectWrapper;
                 } catch (ClassCastException e) {
-                    e.printStackTrace();
-                    Log.e(TAG, "Objeto no implementa el FermatModuleObject");
+                    //e.printStackTrace();
+                    Log.e(TAG, "ERROR: Objeto "+args[i].getClass().getName()+" no implementa interface Serializable");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -110,6 +110,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         parameters);
             } catch (RemoteException e) {
                 e.printStackTrace();
+            }catch (RuntimeException e){
+                Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface "+proxy.getClass().getInterfaces()[0]+" in method:"+ method.getName());
+                e.printStackTrace();
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -119,16 +122,16 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             e.printStackTrace();
         }
 
+
         if(objectArrived!=null){
+            if(objectArrived.getE()!=null) throw objectArrived.getE();
+
             isDataChuncked = objectArrived.isLargeData();
         }else{
-            Log.e(TAG,"Object arrived null, please check this");
+            Log.e(TAG,"Object arrived null, please check your module");
+            return null;
         }
-
-
         Object o = null;
-
-
         if(isDataChuncked){
             if(Looper.myLooper() == Looper.getMainLooper()) throw new LargeWorkOnMainThreadException(proxy,method);
             o = bufferChannelAIDL.getBufferObject(dataId);
@@ -139,11 +142,6 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             Log.i(TAG, o1 != null ? o1.toString() : "");
             return o1;
         }
-
-
-
-
-
 //        try {
 //            FermatModuleObjectWrapper fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
 //                    pluginVersionReference.getPlatform().getCode(),
