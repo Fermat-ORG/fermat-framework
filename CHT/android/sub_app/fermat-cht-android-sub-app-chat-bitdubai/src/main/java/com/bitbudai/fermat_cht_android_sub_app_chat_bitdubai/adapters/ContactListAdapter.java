@@ -58,11 +58,9 @@ import java.util.UUID;
 
 public class ContactListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
-
-    List<ContactList> contactsList = new ArrayList<>();
-    ArrayList<String> contactinfo=new ArrayList<>();
-    ArrayList<Bitmap> contacticon=new ArrayList<>();
-    ArrayList<String> contactid=new ArrayList<>();
+    ArrayList<String> contactInfo=new ArrayList<>();
+    ArrayList<Bitmap> contactIcon=new ArrayList<>();
+    ArrayList<String> contactId=new ArrayList<>();
     private ChatManager chatManager;
     private FermatSession appSession;
     private ErrorManager errorManager;
@@ -72,20 +70,19 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
     private Context context;
     private Context mContext;
     ImageView imagen;
-    TextView contactname;
+    TextView contactName;
     private AdapterCallback mAdapterCallback;
 
     ArrayList<String> filteredData;
-    ArrayList<String> originalData;
     private String filterString;
 
-    public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid,
+    public ContactListAdapter(Context context, ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId,
                               ChatManager chatManager, ChatModuleManager moduleManager,
                               ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
-        super(context, R.layout.contact_list_item, contactinfo);
-        this.contactinfo = contactinfo;
-        this.contacticon = contacticon;
-        this.contactid = contactid;
+        super(context, R.layout.contact_list_item, contactInfo);
+        this.contactInfo = contactInfo;
+        this.contactIcon = contactIcon;
+        this.contactId = contactId;
         this.chatManager=chatManager;
         this.moduleManager=moduleManager;
         this.errorManager=errorManager;
@@ -105,10 +102,10 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
         try {
             imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
-            imagen.setImageBitmap(Utils.getRoundedShape(contacticon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+            imagen.setImageBitmap(Utils.getRoundedShape(contactIcon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
-            contactname = (TextView) item.findViewById(R.id.text1);
-            contactname.setText(contactinfo.get(position));
+            contactName = (TextView) item.findViewById(R.id.text1);
+            contactName.setText(contactInfo.get(position));
             //contactname.setTypeface(tf, Typeface.NORMAL);
 
             final int pos=position;
@@ -118,10 +115,10 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
                 public void onClick(View v) {
                     try {
                         Contact contact=new ContactImpl();
-                        contact.setRemoteActorPublicKey(contactid.get(pos));
-                        contact.setAlias(contactinfo.get(pos));
+                        contact.setRemoteActorPublicKey(contactId.get(pos));
+                        contact.setAlias(contactInfo.get(pos));
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        contacticon.get(pos).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        contactIcon.get(pos).compress(Bitmap.CompressFormat.PNG, 100, stream);
                         byte[] byteArray = stream.toByteArray();
                         contact.setProfileImage(byteArray);
                         appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
@@ -147,24 +144,24 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
         void onMethodCallback();
     }
 
-    public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
-        this.contactinfo=contactinfo;
-        this.contacticon=contacticon;
-        this.contactid=contactid;
+    public void refreshEvents(ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId) {
+        this.contactInfo=contactInfo;
+        this.contactIcon=contactIcon;
+        this.contactId=contactId;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        if (contactinfo != null) {
+        if (contactInfo != null) {
             if (filteredData != null) {
-                if (filteredData.size() < contactinfo.size()) {
+                if (filteredData.size() < contactInfo.size()) {
                     return filteredData.size();
                 } else {
-                    return contactinfo.size();
+                    return contactInfo.size();
                 }
             }else{
-                return contactinfo.size();
+                return contactInfo.size();
             }
         } else {
             return 0;
@@ -173,7 +170,15 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 
     @Override
     public String getItem(int position) {
-        return filteredData.get(position);
+        return contactInfo.get(position);
+    }
+
+    public Bitmap getContactIcon(int position) {
+        return contactIcon.get(position);
+    }
+
+    public String getContactId(int position) {
+        return contactId.get(position);
     }
 
     @Override
@@ -181,12 +186,15 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
         return position;
     }
 
-    public void setData(ArrayList<String> data) {
-        this.filteredData = data;
+    public void setData(ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId) {
+        this.contactInfo=contactInfo;
+        this.contactIcon=contactIcon;
+        this.contactId=contactId;
+        this.filteredData = contactInfo;
     }
 
     public Filter getFilter() {
-        return new ContactListFilter(contactinfo, this);
+        return new ContactListFilter(contactInfo, contactIcon, contactId, this);
     }
 
     public void setFilterString(String filterString) {

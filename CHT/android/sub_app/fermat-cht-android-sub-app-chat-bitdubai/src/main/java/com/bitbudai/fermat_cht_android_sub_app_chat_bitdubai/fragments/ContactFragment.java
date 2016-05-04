@@ -118,9 +118,7 @@ public class ContactFragment extends AbstractFermatFragment {
 
         try {
             Contact con= chatSession.getSelectedContact();
-
             contactname.add(con.getAlias());
-
             contactid.add(con.getRemoteActorPublicKey());
             contactalias.add(con.getAlias());
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
@@ -164,15 +162,15 @@ public class ContactFragment extends AbstractFermatFragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         // Inflate the menu items
-        inflater.inflate(R.menu.contact_detail_menu, menu);
+//        inflater.inflate(R.menu.contact_detail_menu, menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_block_contact) {
-            //Contact con = chatSession.getSelectedContact();
-            return true;
-        }
+//        if (item.getItemId() == R.id.menu_block_contact) {
+//            //Contact con = chatSession.getSelectedContact();
+//            return true;
+//        }
 //        if (item.getItemId() == R.id.menu_edit_contact) {
 //            try {
 //               // Contact con = chatSession.getSelectedContact();
