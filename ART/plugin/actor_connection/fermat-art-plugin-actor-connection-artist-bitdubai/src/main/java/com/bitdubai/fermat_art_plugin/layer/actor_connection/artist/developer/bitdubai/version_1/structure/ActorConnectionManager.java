@@ -130,7 +130,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
             /**
              * I register the actor connection.
              */
-            artistActorConnectionDao.registerActorConnection(actorConnection);
+            artistActorConnectionDao.registerConnection(actorConnection);
             PlatformComponentType platformComponentType = PlatformComponentType.ART_ARTIST;
             switch (actorSending.getActorType()){
                 case ART_ARTIST:

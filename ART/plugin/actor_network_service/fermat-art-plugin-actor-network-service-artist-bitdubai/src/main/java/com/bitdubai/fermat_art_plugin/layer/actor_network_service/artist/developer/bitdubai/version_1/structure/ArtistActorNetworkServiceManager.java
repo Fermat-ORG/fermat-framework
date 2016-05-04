@@ -350,7 +350,34 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
             ConnectionRequestNotFoundException  {
+        try {
 
+            final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+
+            artistActorNetworkServiceDao.cancelConnection(
+                    requestId,
+                    protocolState
+            );
+
+            ArtistConnectionRequest connectionRequest = artistActorNetworkServiceDao.getConnectionRequest(requestId);
+
+            sendMessage(
+                    buildJsonInformationMessage(connectionRequest),
+                    connectionRequest.getSenderPublicKey(),
+                    connectionRequest.getSenderActorType(),
+                    connectionRequest.getDestinationPublicKey(),
+                    connectionRequest.getDestinationActorType()
+            );
+
+        } catch (final CantCancelConnectionRequestException | ConnectionRequestNotFoundException e){
+            // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCancelConnectionRequestException(e, null, "Unhandled Exception.");
+        }
     }
 
     /**

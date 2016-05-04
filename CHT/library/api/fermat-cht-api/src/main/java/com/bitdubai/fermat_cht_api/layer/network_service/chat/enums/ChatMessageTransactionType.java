@@ -23,7 +23,8 @@ public enum ChatMessageTransactionType {
      */
     CHAT_METADATA_TRASMIT("CMDT"),
     MESSAGE_METADATA_TRANSMIT("MMDT"),
-    TRANSACTION_STATUS_UPDATE ("TSU");
+    TRANSACTION_STATUS_UPDATE ("TSU"),
+    TRANSACTION_WRITING_STATUS ("TWS");
 
     /**
      * Represent the code of the message status

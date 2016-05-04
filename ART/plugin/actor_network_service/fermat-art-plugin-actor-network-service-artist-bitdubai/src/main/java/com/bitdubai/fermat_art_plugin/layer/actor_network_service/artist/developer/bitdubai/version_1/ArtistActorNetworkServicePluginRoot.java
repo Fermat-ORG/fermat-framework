@@ -342,7 +342,10 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                             state
                     );
                     break;
-
+                case CANCEL:
+                    artistActorNetworkServiceDao.cancelConnection(informationMessage.getRequestId(),
+                            state);
+                    break;
                 default:
                     throw new CantHandleNewMessagesException(
                             "action not supported: " +informationMessage.getAction(),
