@@ -124,6 +124,26 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
                 errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            /**
+             * Create actions table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.ACTIONS_TABLE_NAME);
+
+            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ID_CHAT_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_WRITING_STATE, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, DatabaseDataType.STRING, 10, Boolean.FALSE);
+
+            table.addIndex(ChatMiddlewareDatabaseConstants.ACTIONS_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                errorManager.reportUnexpectedPluginException(Plugins.CHAT_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateTableException));
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
             /**
              * Create Contacts table.
              */
