@@ -70,6 +70,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.Receiv
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.BlockchainDownloadInfoDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -260,8 +261,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             //paint toolbar on red
                 final Toolbar toolBar = getToolbar();
                 toolBar.setBackgroundColor(Color.RED);
-
-                setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
+                if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                  setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
             }
 
         } catch (Exception ex) {
@@ -315,6 +316,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         getActivity(),
                         referenceWalletSession,
                         null,
+                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
 
 

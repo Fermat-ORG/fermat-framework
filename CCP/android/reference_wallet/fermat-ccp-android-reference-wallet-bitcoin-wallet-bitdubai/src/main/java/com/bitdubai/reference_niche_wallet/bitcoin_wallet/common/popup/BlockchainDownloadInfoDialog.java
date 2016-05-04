@@ -37,9 +37,8 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
     private static final String TAG = "BlockchainDownload";
 
     private final Activity activity;
-    private final int type;
     private final boolean checkButton;
-
+    private final int type;
     /**
      * Members
      */
@@ -53,18 +52,8 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
     /**
      * UI
      */
-    private FrameLayout container_john_doe;
-    private FrameLayout container_jane_doe;
-    private FermatTextView txt_title;
-    private ImageView image_banner;
-    private FermatTextView txt_sub_title;
-    private FermatTextView txt_body;
-    private FermatTextView footer_title;
+
     private CheckBox checkbox_not_show;
-    private ImageView image_view_left;
-    private ImageView image_view_right;
-    private Button btn_left;
-    private Button btn_right;
     private FermatButton btn_dismiss;
 
     /**
@@ -74,11 +63,11 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources     parent class of WalletResources and SubAppResources
      */
-    public BlockchainDownloadInfoDialog(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,boolean checkButton) {
+    public BlockchainDownloadInfoDialog(Activity activity, ReferenceWalletSession fermatSession, SubAppResourcesProviderManager resources,int type,boolean checkButton) {
         super(activity, fermatSession, resources);
         this.activity = activity;
-
         this.checkButton = checkButton;
+        this.type = type;
     }
 
     @Override
@@ -88,9 +77,8 @@ public class BlockchainDownloadInfoDialog extends FermatDialog<ReferenceWalletSe
         checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
         checkbox_not_show.setChecked(!checkButton);
 
-                btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
-                btn_dismiss.setOnClickListener(this);
-
+        btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
+        btn_dismiss.setOnClickListener(this);
 
     }
 

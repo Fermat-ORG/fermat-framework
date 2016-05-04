@@ -41,7 +41,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/txt_title"
-                    android:text="Warning!"
+                    android:text="Advertisement!"
                     android:paddingLeft="5dp"
                     android:layout_weight="1"
                     android:textSize="20sp"
