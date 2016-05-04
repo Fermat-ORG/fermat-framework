@@ -18,7 +18,7 @@ import java.util.List;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
- * Created by Gian Barboza on 12/04/16.
+ * Created by Matias Furszyfer on 2015.09.30..
  */
 public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalletTransaction, ChunckValuesHistoryItemViewHolder>  {
 
@@ -78,10 +78,13 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()));
         holder.getTxt_amount().setTypeface(tf) ;
 
+        //final double exchange_Rate = data.getExchangeRate();
+        //final double actualExchangeRate = lossProtectedWalletSession.getActualExchangeRate();
+
         if (lossProtectedWalletSession.getActualExchangeRate() > data.getExchangeRate()){
-            holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
-        }else {
             holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
+        }else {
+            holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
         }
 
 

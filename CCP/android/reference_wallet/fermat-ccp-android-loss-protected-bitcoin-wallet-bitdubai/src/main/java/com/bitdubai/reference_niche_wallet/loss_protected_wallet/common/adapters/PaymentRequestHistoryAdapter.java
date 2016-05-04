@@ -106,7 +106,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
         holder.getTxt_notes().setTypeface(tf);
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
-        holder.getTxt_time().setText(sdf.format(data.getDate()) + " hs");
+        holder.getTxt_time().setText(data.getDate() + " hs");
         holder.getTxt_time().setTypeface(tf);
 
         String state = "";

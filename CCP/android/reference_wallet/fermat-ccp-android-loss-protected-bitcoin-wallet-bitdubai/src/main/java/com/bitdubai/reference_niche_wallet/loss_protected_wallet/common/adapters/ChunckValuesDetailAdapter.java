@@ -24,7 +24,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMoneyType;
 
 /**
- * Created by Gian Barboza on 12/04/16.
+ * Created by root on 12/04/16.
  */
 public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtectedWalletSpend,ChunckValuesDetailItemViewHolder> {
     private onRefreshList onRefresh;

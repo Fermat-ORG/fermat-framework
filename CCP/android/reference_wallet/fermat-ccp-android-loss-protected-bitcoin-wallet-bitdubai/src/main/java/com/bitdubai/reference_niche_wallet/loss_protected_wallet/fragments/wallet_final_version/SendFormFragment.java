@@ -499,7 +499,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                 appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                 blockchainNetworkType
                         );
                     } else {
@@ -517,7 +517,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                         VaultType.CRYPTO_CURRENCY_VAULT,
                                         CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                         appSession.getAppPublicKey(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                        ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                         blockchainNetworkType
                                 );
                             } else {
@@ -656,7 +656,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     Actors.INTRA_USER,
                                                     cryptoWalletWalletContact.getActorPublicKey(),
                                                     cryptoWalletWalletContact.getActorType(),
-                                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                                     blockchainNetworkType,
                                                     appSession.getActualExchangeRate());
                                             confirm_dialog.show();
@@ -679,7 +679,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     Actors.INTRA_USER,
                                                     cryptoWalletWalletContact.getActorPublicKey(),
                                                     cryptoWalletWalletContact.getActorType(),
-                                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                                     blockchainNetworkType,
                                                     appSession.getActualExchangeRate()
                                             );

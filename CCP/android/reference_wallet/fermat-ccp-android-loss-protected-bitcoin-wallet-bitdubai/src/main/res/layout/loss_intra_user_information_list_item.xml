@@ -43,7 +43,7 @@
         android:paddingRight="8dp"
         android:paddingStart="8dp"
         android:singleLine="true"
-        android:textColor="#000000"
+        android:textColor="#333333"
         tools:text="@string/matias_furszyfer_text" />
 
         <CheckBox

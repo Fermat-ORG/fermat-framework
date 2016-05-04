@@ -42,7 +42,7 @@ public class AddConnectionsAdapter extends FermatAdapter<LossProtectedWalletIntr
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.intra_user_information_list_item;
+        return R.layout.loss_intra_user_information_list_item;
     }
 
     @Override
