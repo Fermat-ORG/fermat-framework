@@ -39,7 +39,7 @@ public class AsymmetricCryptography_NEW {
     /**
      * Represent the instance
      */
-    final static private AsymmetricCryptography_NEW instance = new AsymmetricCryptography_NEW();
+    final static private AsymmetricCryptography instance = new AsymmetricCryptography();
 
     /**
      * Constructor
@@ -69,7 +69,7 @@ public class AsymmetricCryptography_NEW {
      * @return FermatCipher
      */
     public static FermatCipher getFermatCipher(){
-        return instance.fermatCipher;
+        return null; //instance.fermatCipher;
     }
 
     /**

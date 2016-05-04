@@ -88,7 +88,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
              * Get the packet content from the message content and decrypt
              */
             packetContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), clientConnection.getServerIdentity().getPrivateKey());
-           // LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
+            LOG.info("packetContentJsonStringRepresentation = " + packetContentJsonStringRepresentation);
 
             /*
              * Construct the json object

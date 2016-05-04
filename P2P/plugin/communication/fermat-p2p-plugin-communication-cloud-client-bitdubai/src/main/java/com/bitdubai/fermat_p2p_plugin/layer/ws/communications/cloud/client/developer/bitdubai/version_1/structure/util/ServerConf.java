@@ -19,12 +19,12 @@ public class ServerConf {
     /**
      * Represent the SERVER_IP in the production environment
      */
-    public static final String SERVER_IP_PRODUCTION = "192.168.8.101";
+    public static final String SERVER_IP_PRODUCTION = "52.35.64.221"; // "192.168.1.6"; //
 
     /**
      * Represent the SERVER_IP in the developer environment
      */
-    public static final String SERVER_IP_DEVELOPER_AWS = "52.11.156.16";
+    public static final String SERVER_IP_DEVELOPER_AWS = "192.168.1.6";
 
     /**
      * Represent the SERVER_IP in the local environment
