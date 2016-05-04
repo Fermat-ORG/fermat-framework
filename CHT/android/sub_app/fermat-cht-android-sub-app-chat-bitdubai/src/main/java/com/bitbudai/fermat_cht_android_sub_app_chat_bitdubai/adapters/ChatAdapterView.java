@@ -645,16 +645,25 @@ public class ChatAdapterView extends LinearLayout {
 
     public void checkStatus(){
         try {
-            if (chatManager.checkWritingStatus(chatId)) {
-                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
-            }else {
-                workerOnline.execute();
-                if(isOnline){
-                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
-                }else{
-                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
-                }
-            }
+           if(chatWasCreate) {
+               if (chatManager.checkWritingStatus(chatId)) {
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
+               } else {
+                   workerOnline.execute();
+                   if (isOnline) {
+                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+                   } else {
+                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
+                   }
+               }
+           }else{
+               workerOnline.execute();
+               if (isOnline) {
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+               } else {
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
+               }
+           }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();
         }
