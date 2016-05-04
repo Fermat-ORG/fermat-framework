@@ -64,6 +64,8 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.IntraActorCryptoTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -98,6 +100,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
     IntraActorCryptoTransactionManager intraActorCryptoTransactionManager;
     OutgoingIntraActorManager outgoingIntraActorManager;
+    IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     public CustomerOnlinePaymentMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
@@ -108,7 +111,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
             TransactionTransmissionManager transactionTransmissionManager,
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
-            OutgoingIntraActorManager outgoingIntraActorManager) throws CantSetObjectException {
+            OutgoingIntraActorManager outgoingIntraActorManager,IntraWalletUserIdentityManager intraWalletUserIdentityManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -118,6 +121,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
         this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
         this.outgoingIntraActorManager=outgoingIntraActorManager;
         this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
         setIntraActorCryptoTransactionManager(outgoingIntraActorManager);
     }
 
@@ -322,7 +326,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             businessTransactionRecord.getCryptoAddress(),
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
-                            businessTransactionRecord.getCustomerPublicKey(),
+                            intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0).getPublicKey(),
                             businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_CUSTOMER,
                             Actors.INTRA_USER,
@@ -449,6 +453,11 @@ public class CustomerOnlinePaymentMonitorAgent implements
                 }
 
 
+            } catch (CantListIntraWalletUsersException e) {
+                throw new CannotSendContractHashException(
+                        e,
+                        "Sending contract hash",
+                        "Cannot get list of intra users");
             } catch (CantGetContractListException e) {
                 throw new CannotSendContractHashException(
                         e,
