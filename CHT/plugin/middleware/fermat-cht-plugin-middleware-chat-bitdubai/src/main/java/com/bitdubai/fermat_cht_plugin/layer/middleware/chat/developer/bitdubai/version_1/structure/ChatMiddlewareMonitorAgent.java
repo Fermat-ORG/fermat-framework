@@ -7,10 +7,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -18,61 +14,47 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
-import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -82,10 +64,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -204,7 +184,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 10000; //2000;
+        public final int SLEEP_TIME = 5000; //2000;
         public final int DISCOVER_ITERATION_LIMIT = 1;
         int discoverIteration = 0;
         int iterationNumber = 0;
@@ -309,6 +289,7 @@ public class ChatMiddlewareMonitorAgent implements
 
                 if (discoverIteration == 0) {
                     sendChatBroadcasting();
+                    resetWritingStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -420,8 +401,7 @@ public class ChatMiddlewareMonitorAgent implements
                     saveMessage(chatMetadata);
 
                     //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
-                    //broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, BROADCAST_CODE);
-                    //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, BROADCAST_CODE);
+                   
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {
@@ -511,6 +491,69 @@ public class ChatMiddlewareMonitorAgent implements
         }
     }
 
+    public void resetWritingStatus(){
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    errorManager,
+                    pluginFileSystem);
+
+            List<Chat> chats = chatMiddlewareDatabaseDao.getChatList();
+
+            for(Chat chat : chats){
+                chat.setIsWriting(false);
+                chatMiddlewareDatabaseDao.saveChat(chat);
+            }
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+        }catch(DatabaseOperationException e){
+            e.printStackTrace();
+        } catch (CantGetChatException e) {
+            e.printStackTrace();
+        } catch (CantSaveChatException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void checkIncomingWritingStatus(UUID chatId) throws
+            CantGetPendingTransactionException,
+            UnexpectedResultReturnedFromDatabaseException {
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    errorManager,
+                    pluginFileSystem);
+
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            chat.setIsWriting(true);
+            chatMiddlewareDatabaseDao.saveChat(chat);
+
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+        } catch (CantSaveChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (DatabaseOperationException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantGetChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        }
+    }
+
     /**
      * This method returns true if the chat and the message exists in database.
      * This throws an exception instead return false if any element does not exists in database
@@ -559,8 +602,9 @@ public class ChatMiddlewareMonitorAgent implements
             CantGetMessageException, SendStatusUpdateMessageNotificationException {
         UUID messageId = chatMetadata.getMessageId();
         System.out.println("12345 SAVING MESSAGE");
-        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
-        if (messageRecorded == null) {
+//        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+                Message messageRecorded = null;
+//        if (messageRecorded == null) {
             /**
              * In this case, the message is not created in database, so, is an incoming message,
              * I need to create a new message
@@ -568,7 +612,7 @@ public class ChatMiddlewareMonitorAgent implements
             messageRecorded = getMessageFromChatMetadata(
                     chatMetadata);
             if (messageRecorded == null) return;
-        }
+//        }
 
         messageRecorded.setStatus(MessageStatus.RECEIVE);
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
