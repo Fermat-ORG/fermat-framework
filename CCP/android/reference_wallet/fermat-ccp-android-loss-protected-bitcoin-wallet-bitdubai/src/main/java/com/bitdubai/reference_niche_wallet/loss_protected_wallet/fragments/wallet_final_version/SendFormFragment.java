@@ -67,9 +67,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.confirm_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -648,7 +648,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                     if(amountDecimal.compareTo(new BigDecimal(availableBalance)) != 1)
                                     {
                                         if (!lossProtectedEnabled) {
-                                            confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),lossProtectedWallet,amountDecimal.longValueExact(),
+                                            Confirm_dialog confirm_dialog = new Confirm_dialog(getActivity(),lossProtectedWallet,amountDecimal.longValueExact(),
                                                     validAddress,
                                                     notes,
                                                     appSession.getAppPublicKey(),
@@ -663,7 +663,30 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                         }
                                         else
                                         {
-                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
+                                            try {
+
+                                                lossProtectedWallet.send(
+                                                        amountDecimal.longValueExact(),
+                                                        validAddress,
+                                                        notes,
+                                                        appSession.getAppPublicKey(),
+                                                        lossProtectedWallet.getActiveIdentities().get(0).getPublicKey(),
+                                                        Actors.INTRA_USER,
+                                                        cryptoWalletWalletContact.getActorPublicKey(),
+                                                        cryptoWalletWalletContact.getActorType(),
+                                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                                        blockchainNetworkType,
+                                                        appSession.getActualExchangeRate()
+                                                );
+                                                Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                                onBack(null);
+
+                                            } catch (LossProtectedInsufficientFundsException e) {
+                                                e.printStackTrace();
+                                                Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
+                                            }
+
+                                           // Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
 
                                         }
                                     }
@@ -691,6 +714,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                             Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
                                         }
                                     }
+
                                 } else {
                                     Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
                                 }
