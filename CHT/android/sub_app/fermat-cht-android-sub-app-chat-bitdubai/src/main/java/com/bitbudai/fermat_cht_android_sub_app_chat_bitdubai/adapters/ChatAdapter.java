@@ -43,6 +43,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
+        this.chatMessages = chatMessages;
     }
 
     @Override
@@ -98,7 +99,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
         holder.tickstatusimage.setImageResource(0);
-        holder.txtMessage.setText(data.getMessage());
+        holder.txtMessage.setText(data.getMessage().toString());
         holder.txtInfo.setText(data.getDate());
         if (isMe) {
             holder.contentWithBG.setBackgroundResource(R.drawable.burble_green_shadow);
@@ -188,10 +189,10 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 //    }
 
     public void changeDataSet(ArrayList<ChatMessage> data) {
-        if(filterString.equals(""))
+        //if(filterString.equals(""))
             this.chatMessages = data;
-        else
-            this.filteredData = data;
+//        else
+//            this.filteredData = data;
     }
 
     public Filter getFilter() {

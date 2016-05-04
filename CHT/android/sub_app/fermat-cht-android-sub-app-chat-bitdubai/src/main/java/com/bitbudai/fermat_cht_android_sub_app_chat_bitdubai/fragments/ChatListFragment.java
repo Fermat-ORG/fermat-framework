@@ -126,7 +126,12 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 String pk2 = chat.getRemoteActorPublicKey();
                                 if (pk2.equals(pk1)) {
                                     contactName.add(cont.getAlias());
-                                    Message mess = chatManager.getMessageByChatId(chatidtemp);
+                                    Message mess=null;
+                                    try {
+                                        mess = chatManager.getMessageByChatId(chatidtemp);
+                                    }catch (Exception e){
+                                        mess=null;
+                                    }
                                     if (mess != null) {
                                         if(chatManager.checkWritingStatus(chatidtemp)) {
                                             message.add("Writing..");
