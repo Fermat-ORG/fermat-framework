@@ -44,6 +44,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServi
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -103,7 +104,8 @@ public class ChatAdapterView extends LinearLayout {
     private boolean chatWasCreate = false;
     private Calendar today;
     UUID newChatId;
-
+    Boolean textNeverChange = false;
+    static final int TIME_TO_REFRESH_TOOLBAR = 6000;
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
                            ChatManager chatManager, ChatModuleManager moduleManager,
                            ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, int background, Toolbar toolbar, ChatPreferenceSettings chatSettings) {
@@ -235,11 +237,39 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
+                checkStatusWriting();
+
+
             }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
+    public class BackgroundAsyncTaskWriting extends
+            AsyncTask<Void, Integer, Void> {
+
+        int myProgress;
+
+        @Override
+        protected void onPostExecute(Void result) {
+            //this.cancel(true);
+            return;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                    try {
+                            chatManager.sendWritingStatus(chatId);
+                    } catch (CHTException e) {
+                        e.printStackTrace();
+                    }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
         }
     }
 
@@ -334,22 +364,7 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
-//        Timer t = new Timer();
-//        t.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//
-//                try {
-//                    if (chatManager.checkWritingStatus(chatId)) {
-//                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
-//                    } else {
-//                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
-//                    }
-//                } catch (CantGetWritingStatus cantGetWritingStatus) {
-//                    cantGetWritingStatus.printStackTrace();
-//                }
-//            }
-//        }, 0, 1000);
+
 
 
         messageET.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -371,10 +386,14 @@ public class ChatAdapterView extends LinearLayout {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    chatManager.sendWritingStatus(chatId);
-                } catch (CHTException e) {
-                    e.printStackTrace();
+                if (chatWasCreate) {
+                    if (messageET.length() > 0 && textNeverChange == false) {
+                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
+                        batw.execute();
+                        textNeverChange = true;
+                    }else if(messageET.length() == 0 && textNeverChange == true){
+                        textNeverChange = false;
+                    }
                 }
             }
 
@@ -382,6 +401,7 @@ public class ChatAdapterView extends LinearLayout {
             public void afterTextChanged(Editable s) {
             }
         });
+
 
         //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
@@ -482,11 +502,12 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);//chat.setRemoteActorType(remoteActorType);
                         chat.setRemoteActorPublicKey(remotePublicKey);
                         Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
-
-                        if (chatPrevious != null) {
-                            newChatId = chatPrevious.getChatId();
-                        } else {
-                            newChatId = UUID.randomUUID();
+                        if(newChatId == null) {
+                            if (chatPrevious != null) {
+                                newChatId = chatPrevious.getChatId();
+                            } else {
+                                newChatId = UUID.randomUUID();
+                            }
                         }
                         chat.setChatId(newChatId);
                         chat.setObjectId(UUID.randomUUID());
@@ -597,6 +618,19 @@ public class ChatAdapterView extends LinearLayout {
         //whatToDo();
         findMessage();
         scroll();
+    }
+
+    public void checkStatusWriting(){
+        try {
+            if (chatManager.checkWritingStatus(chatId)) {
+                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
+            }else {
+                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+            }
+        } catch (CantGetWritingStatus cantGetWritingStatus) {
+            cantGetWritingStatus.printStackTrace();
+        }
+
     }
 
     private void scroll() {

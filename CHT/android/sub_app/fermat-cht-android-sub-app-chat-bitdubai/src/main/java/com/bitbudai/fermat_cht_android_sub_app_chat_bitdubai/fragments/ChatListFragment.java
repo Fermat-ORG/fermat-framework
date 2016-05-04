@@ -97,7 +97,8 @@ public class ChatListFragment extends AbstractFermatFragment{
     private int offset = 0;
 
     public static ChatListFragment newInstance() {
-        return new ChatListFragment();}
+        return new ChatListFragment();
+    }
 
     public void chatlistview (){
         UUID chatidtemp;
@@ -116,7 +117,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
-
                         noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                         contactId.add(chat.getRemoteActorPublicKey());
                         if(chatIdentity!= null) {
@@ -130,7 +130,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     if (mess != null) {
                                         if(chatManager.checkWritingStatus(chatidtemp)) {
                                             message.add("Writing..");
-                                        }else {
+                                        }else{
                                             message.add(mess.getMessage());
                                         }
                                         status.add(mess.getStatus().toString());
@@ -388,15 +388,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-//            for(int i = 0; i == chatId.size(); i++) {
-//                try {
-//                    if (chatManager.checkWritingStatus(chatId.get(i))) {
-//                        message.add("Writing..");
-//                    }
-//                }catch (CantGetWritingStatus cantGetWritingStatus) {
-//                    cantGetWritingStatus.printStackTrace();
-//                }
-//            }
         }
     }
 
