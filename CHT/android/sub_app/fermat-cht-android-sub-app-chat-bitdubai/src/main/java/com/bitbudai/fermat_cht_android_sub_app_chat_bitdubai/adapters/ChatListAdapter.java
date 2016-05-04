@@ -23,7 +23,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -34,7 +33,7 @@ import java.util.UUID;
  *
  */
 
-public class ChatListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class ChatListAdapter extends ArrayAdapter{//implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
     ArrayList<String> contactName=new ArrayList<>();
     ArrayList<String> message=new ArrayList<>();
@@ -142,41 +141,41 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         notifyDataSetChanged();
     }
 
-    @Override
-    public int getCount() {
-        if (contactName != null) {
-            if(filteredData.size()<contactName.size()) {
-                return filteredData.size();
-            }else{
-                return contactName.size();}
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public String getItem(int position) {
-        return filteredData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void setData(ArrayList<String> data) {
-        this.filteredData = data;
-    }
-
-    public Filter getFilter() {
-        return new ChatListFilter(contactName, this);
-    }
-
-    public void setFilterString(String filterString) {
-        this.filterString = filterString;
-    }
-
-    public String getFilterString() {
-        return filterString;
-    }
+//    @Override
+//    public int getCount() {
+//        if (contactName != null) {
+//            if(filteredData.size()<contactName.size()) {
+//                return filteredData.size();
+//            }else{
+//                return contactName.size();}
+//        } else {
+//            return 0;
+//        }
+//    }
+//
+//    @Override
+//    public String getItem(int position) {
+//        return filteredData.get(position);
+//    }
+//
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    public void setData(ArrayList<String> data) {
+//        this.filteredData = data;
+//    }
+//
+//    public Filter getFilter() {
+//        return new ChatListFilter(contactName, this);
+//    }
+//
+//    public void setFilterString(String filterString) {
+//        this.filterString = filterString;
+//    }
+//
+//    public String getFilterString() {
+//        return filterString;
+//    }
 }
