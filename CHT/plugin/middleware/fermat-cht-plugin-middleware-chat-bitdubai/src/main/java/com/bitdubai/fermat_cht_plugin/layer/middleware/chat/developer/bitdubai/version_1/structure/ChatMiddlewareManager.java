@@ -35,6 +35,11 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
+import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
@@ -96,6 +101,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     ChatActorConnectionManager chatActorConnectionManager;
 
+    ChatManager chatActorNetworkServiceManager;
+
     private final Broadcaster broadcaster;
     public final String BROADCAST_CODE="13";
 
@@ -108,7 +115,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             DeviceUserManager deviceUserManager,
             NetworkServiceChatManager chatNetworkServiceManager,
             Broadcaster broadcaster,
-            ChatActorConnectionManager chatActorConnectionManager
+            ChatActorConnectionManager chatActorConnectionManager,
+            ChatManager chatActorNetworkServiceManager
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
@@ -119,6 +127,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         this.chatNetworkServiceManager = chatNetworkServiceManager;
         this.broadcaster = broadcaster;
         this.chatActorConnectionManager = chatActorConnectionManager;
+        this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
     /**
@@ -751,6 +760,12 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException {
         try {
+            ActionState writingState = chatMiddlewareDatabaseDao.getActionById(chatId);
+            System.out.println("12345 writingState " + writingState);
+            if(writingState != null && writingState == ActionState.WRITING) return;
+
+            chatMiddlewareDatabaseDao.saveAction(chatId,ActionState.WRITING);
+
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             if (chat == null) {
                 throw new SendWritingStatusMessageNotificationException("Chat not found");
@@ -764,6 +779,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     chat.getRemoteActorType(),
                     chat.getChatId()
             );
+//            chatMiddlewareDatabaseDao.saveAction(chatId, ActionState.PENDING);
+
         }catch(Exception e){
             throw new SendWritingStatusMessageNotificationException(
                     e,
@@ -787,39 +804,39 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "");
         }
     }
+//
+//    public void sendOnlineStatus(UUID chatId) throws SendOnlineStatusMessageNotificationException {
+//        try {
+//            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+//            if (chat == null) {
+//                throw new SendWritingStatusMessageNotificationException("Chat not found");
+//            }
+//            String localActorPublicKey = chat.getLocalActorPublicKey();
+//            String remoteActorPublicKey = chat.getRemoteActorPublicKey();
+//            networkServiceChatManager.sendOnlineStatus(
+//                    localActorPublicKey,
+//                    chat.getLocalActorType(),
+//                    remoteActorPublicKey,
+//                    chat.getRemoteActorType(),
+//                    chat.getChatId()
+//            );
+//        }catch(Exception e){
+//            throw new SendOnlineStatusMessageNotificationException(
+//                    e,
+//                    "Something went wrong",
+//                    "");
+//        }
+//    }
 
-    public void sendOnlineStatus(UUID chatId) throws SendOnlineStatusMessageNotificationException {
+    public boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus {
         try {
-            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            if (chat == null) {
-                throw new SendWritingStatusMessageNotificationException("Chat not found");
-            }
-            String localActorPublicKey = chat.getLocalActorPublicKey();
-            String remoteActorPublicKey = chat.getRemoteActorPublicKey();
-            networkServiceChatManager.sendOnlineStatus(
-                    localActorPublicKey,
-                    chat.getLocalActorType(),
-                    remoteActorPublicKey,
-                    chat.getRemoteActorType(),
-                    chat.getChatId()
-            );
-        }catch(Exception e){
-            throw new SendOnlineStatusMessageNotificationException(
-                    e,
-                    "Something went wrong",
-                    "");
-        }
-    }
+//            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
 
-    public boolean checkOnlineStatus(UUID chatId) throws CantGetOnlineStatus {
-        try {
-            return chatMiddlewareDatabaseDao.getChatByChatId(chatId).isOnline();
-        }catch(CantGetChatException e){
-            throw new CantGetOnlineStatus(
-                    e,
-                    "Something went wrong",
-                    "");
-        } catch (DatabaseOperationException e) {
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            return chatActorSearch.getResult(remotePublicKey) != null;
+
+        } catch (CantListChatException e) {
             throw new CantGetOnlineStatus(
                     e,
                     "Something went wrong",

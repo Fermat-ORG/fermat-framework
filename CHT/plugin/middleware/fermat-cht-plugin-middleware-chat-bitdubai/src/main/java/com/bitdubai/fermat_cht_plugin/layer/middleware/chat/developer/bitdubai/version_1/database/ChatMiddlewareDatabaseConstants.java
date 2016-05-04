@@ -53,6 +53,19 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String MESSAGE_FIRST_KEY_COLUMN = "id_message";
 
     /**
+     * actions database table definition.
+     */
+    public static final String ACTIONS_TABLE_NAME = "actions";
+
+    public static final String ACTIONS_ID_CHAT_COLUMN_NAME = "id_chat";
+    public static final String ACTIONS_WRITING_STATE = "writing_state";
+    public static final String ACTIONS_ONLINE_STATE = "online_state";
+
+    public static final String ACTIONS_FIRST_KEY_COLUMN = "id_chat";
+
+//    De acá a abajo tengo que revisar
+
+    /**
      * Contacts database table definition.
      */
     public static final String CONTACTS_TABLE_NAME = "contacts";

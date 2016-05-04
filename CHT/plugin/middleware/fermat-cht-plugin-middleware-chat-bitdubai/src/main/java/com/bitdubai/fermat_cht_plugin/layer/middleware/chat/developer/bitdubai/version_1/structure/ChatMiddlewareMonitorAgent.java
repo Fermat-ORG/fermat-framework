@@ -23,12 +23,10 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveActionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
@@ -39,8 +37,8 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
@@ -55,6 +53,7 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
@@ -289,7 +288,7 @@ public class ChatMiddlewareMonitorAgent implements
 
                 if (discoverIteration == 0) {
                     sendChatBroadcasting();
-//                    resetWritingStatus();
+                    resetWritingStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -500,21 +499,79 @@ public class ChatMiddlewareMonitorAgent implements
                     errorManager,
                     pluginFileSystem);
 
-            List<Chat> chats = chatMiddlewareDatabaseDao.getChatList();
+            boolean changes=false;
+
+            //Resetear los writing state enviados
+            List<UUID> chatsId = chatMiddlewareDatabaseDao.getWritingActions();
+            System.out.println("12345 Chats to reset enviados "+ chatsId.size());
+
+            if(chatsId != null && !chatsId.isEmpty()) {
+                for (UUID chatId : chatsId) {
+                    chatMiddlewareDatabaseDao.saveAction(chatId, ActionState.NONE);
+                    System.out.println("12345 Action writing Updated " + chatId);
+                    changes = true;
+                }
+            }
+
+            //Resetear los writing state recibidos
+            List<Chat> chats = chatMiddlewareDatabaseDao.getChatListByWriting();
+            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
+
+            if(chats == null && chats.isEmpty()) return;
 
             for(Chat chat : chats){
                 chat.setIsWriting(false);
                 chatMiddlewareDatabaseDao.saveChat(chat);
+                System.out.println("12345 Chat writing Updated "+chat.getChatId());
+                changes = true;
             }
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+            if(changes)
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
         }catch(DatabaseOperationException e){
             e.printStackTrace();
         } catch (CantGetChatException e) {
             e.printStackTrace();
         } catch (CantSaveChatException e) {
             e.printStackTrace();
+        } catch (CantGetPendingActionListException e) {
+            e.printStackTrace();
+        } catch (CantSaveActionException e) {
+            e.printStackTrace();
         }
     }
+
+//    public void checkOutgoingWritingStatus(){
+//        try {
+//            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+//                    pluginDatabaseSystem,
+//                    pluginId,
+//                    database,
+//                    errorManager,
+//                    pluginFileSystem);
+//
+//            List<UUID> chatIds = chatMiddlewareDatabaseDao.getWritingActions();
+//
+//            if(chatIds == null || chatIds.isEmpty()) return;
+//
+//            for(UUID chatId : chatIds){
+//                Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+//                chat.setIsWriting(false);
+//                chatMiddlewareDatabaseDao.saveChat(chat);
+//            }
+//
+////            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+//        }catch(DatabaseOperationException e){
+//            e.printStackTrace();
+//        } catch (CantGetChatException e) {
+//            e.printStackTrace();
+//        } catch (CantSaveChatException e) {
+//            e.printStackTrace();
+//        } catch (CantGetPendingActionListException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void checkIncomingWritingStatus(UUID chatId) throws
             CantGetPendingTransactionException,
@@ -528,46 +585,12 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginFileSystem);
 
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            chat.setIsWriting(true);
-            chatMiddlewareDatabaseDao.saveChat(chat);
-
-//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-
-        } catch (CantSaveChatException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
-        } catch (DatabaseOperationException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
-        } catch (CantGetChatException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
-        }
-    }
-
-    public void checkIncomingOnlineStatus(UUID chatId) throws
-            CantGetPendingTransactionException,
-            UnexpectedResultReturnedFromDatabaseException {
-        try {
-            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
-                    pluginDatabaseSystem,
-                    pluginId,
-                    database,
-                    errorManager,
-                    pluginFileSystem);
-
-            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            chat.setIsOnline(true);
-            chatMiddlewareDatabaseDao.saveChat(chat);
+            if(chat != null) {
+                System.out.println("12345 Saving is writing chat "+chat.getChatId());
+                chat.setIsWriting(true);
+                chatMiddlewareDatabaseDao.saveChat(chat);
+                System.out.println("12345 chat saved");
+            }
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
@@ -591,6 +614,44 @@ public class ChatMiddlewareMonitorAgent implements
             );
         }
     }
+
+//    public void checkIncomingOnlineStatus(UUID chatId) throws
+//            CantGetPendingTransactionException,
+//            UnexpectedResultReturnedFromDatabaseException {
+//        try {
+//            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+//                    pluginDatabaseSystem,
+//                    pluginId,
+//                    database,
+//                    errorManager,
+//                    pluginFileSystem);
+//
+//            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+//            chat.setIsOnline(true);
+//            chatMiddlewareDatabaseDao.saveChat(chat);
+//
+//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+//
+//        } catch (CantSaveChatException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot update message from database"
+//            );
+//        } catch (DatabaseOperationException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot update message from database"
+//            );
+//        } catch (CantGetChatException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot update message from database"
+//            );
+//        }
+//    }
 
     /**
      * This method returns true if the chat and the message exists in database.
