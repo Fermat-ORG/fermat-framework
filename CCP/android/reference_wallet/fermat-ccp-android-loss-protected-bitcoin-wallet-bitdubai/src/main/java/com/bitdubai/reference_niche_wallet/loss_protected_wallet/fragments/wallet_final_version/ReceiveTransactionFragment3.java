@@ -94,6 +94,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
 
         lst = new ArrayList<LossProtectedWalletTransaction>();
 
+            lst = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
             lossProtectedWallet = lossWalletSession.getModuleManager().getCryptoWallet();
             settingsManager = lossWalletSession.getModuleManager().getSettingsManager();

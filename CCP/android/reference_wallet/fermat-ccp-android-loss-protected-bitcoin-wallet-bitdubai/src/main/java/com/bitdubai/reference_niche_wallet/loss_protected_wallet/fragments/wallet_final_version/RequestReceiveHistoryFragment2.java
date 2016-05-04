@@ -1,6 +1,7 @@
 
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -93,23 +94,23 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-            //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
 //            getExecutor().execute(new Runnable() {
 //                @Override
 //                public void run() {
 //                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
 //                        final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
-//                        getActivity().runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                try {
+//                       getActivity().runOnUiThread(new Runnable() {
+//                           @Override
+//                          public void run() {
+//                              try {
 //                                    getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
 //                                }catch (OutOfMemoryError o){
-//                                    o.printStackTrace();
-//                                }
+//                                 o.printStackTrace();
+//                               }
 //                            }
-//                        });
+//                       });
 //                    }
 //                }
 //            });

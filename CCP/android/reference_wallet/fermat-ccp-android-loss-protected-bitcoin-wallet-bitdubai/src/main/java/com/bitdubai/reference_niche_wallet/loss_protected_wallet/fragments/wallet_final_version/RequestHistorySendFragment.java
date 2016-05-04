@@ -88,6 +88,8 @@ public class RequestHistorySendFragment extends FermatWalletListFragment<LossPro
 
         lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
+        lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
