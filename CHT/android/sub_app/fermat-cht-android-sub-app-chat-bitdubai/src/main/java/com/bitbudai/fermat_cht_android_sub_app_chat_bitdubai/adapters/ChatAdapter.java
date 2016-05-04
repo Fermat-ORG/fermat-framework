@@ -186,20 +186,20 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 //    public long getItemId(int position) {
 //        return position;
 //    }
-//
-//    public void setData(ArrayList<ChatMessage> data) {
-//        if(filterString.equals(""))
-//            this.chatMessages = data;
-//        else
-//            this.filteredData = data;
-//    }
+
+    public void changeDataSet(ArrayList<ChatMessage> data) {
+        if(filterString.equals(""))
+            this.chatMessages = data;
+        else
+            this.filteredData = data;
+    }
 
     public Filter getFilter() {
-        messagesData=null;
-        for(ChatMessage data:chatMessages){
-            messagesData.add(data);
-        }
-        return new ChatFilter(messagesData, this);
+//        messagesData=null;
+//        for(ChatMessage data:chatMessages){
+//            messagesData.add(data);
+//        }
+        return new ChatFilter(chatMessages, this);
     }
 
     public void setFilterString(String filterString) {

@@ -43,7 +43,7 @@
                 android:id="@+id/nodata"
                 android:layout_width="180dp"
                 android:layout_height="180dp"
-                android:src="@drawable/icon_no_contacts"
+                android:src="@drawable/cht_icon_no_contacts"
                 android:gravity="center"
                 android:layout_gravity="center"
                 android:layout_centerVertical="true"

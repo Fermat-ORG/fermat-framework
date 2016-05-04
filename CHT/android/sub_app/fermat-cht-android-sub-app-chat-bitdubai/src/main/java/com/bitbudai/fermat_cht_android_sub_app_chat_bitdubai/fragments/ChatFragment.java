@@ -165,7 +165,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         // Locate the search item
         MenuItem searchItem = menu.findItem(R.id.menu_search);
         searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+        searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -176,7 +176,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
                     adapterView.refreshEvents();
-                    adapter.getFilter().filter(s);
+                    adapterView.getFilter(s);
                 }
                 return false;
             }

@@ -583,6 +583,10 @@ public class ChatAdapterView extends LinearLayout {
         });*/
     }
 
+    public void getFilter(String s) {
+        adapter.getFilter().filter(s);
+    }
+
     public void displayMessage(ChatMessage message) {
         adapter.addItem(message);
         adapter.notifyDataSetChanged();

@@ -59,6 +59,7 @@ public class ChatFilter extends
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
 //        adapter.changeDataSet((List<DigitalAsset>) filterResults.values);
         //adapter.setData((ArrayList<ChatMessage>) filterResults.values);
+        adapter.changeDataSet((ArrayList<ChatMessage>) filterResults.values);
         adapter.notifyDataSetChanged();
     }
 }
