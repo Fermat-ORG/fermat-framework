@@ -430,9 +430,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 
     public void appSessionSetDataContact (int position){
         //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-        //int newPosition= Utils.safeLongToInt(adapter.getItemId(position));
         Contact contact=new ContactImpl();
-        contact.setRemoteActorPublicKey(adapter.getContactId(position));
         contact.setRemoteActorPublicKey(adapter.getContactId(position));
         contact.setAlias(adapter.getItem(position));
         ByteArrayOutputStream stream = new ByteArrayOutputStream();

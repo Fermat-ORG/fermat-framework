@@ -3,9 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -27,7 +25,6 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAd
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -35,10 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -63,8 +56,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -77,47 +68,7 @@ import java.util.UUID;
  */
 
 public class ChatListFragment extends AbstractFermatFragment{
-
-    // Bundle key for saving previously selected search result item
-    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =    "SELECTED_ITEM";
-//    private ChatListAdapter adapter; // The main query adapter
-//    private ImageLoader mImageLoader; // Handles loading the chat image in a background thread
-//    private String mSearchTerm; // Stores the current search query term
-//
-//    private OnChatInteractionListener mOnChatSelectedListener;
-//
-//    // Stores the previously selected search item so that on a configuration change the same item
-//    // can be reselected again
-//    private int mPreviouslySelectedSearchItem = 0;
-//    //public ArrayList<ContactList> contactList;
-//   // private ListView contactsContainer;
-//    //private ContactsAdapter adapter;
-//
-//    // Whether or not the search query has changed since the last time the loader was refreshed
-//    private boolean mSearchQueryChanged;
-//
-//    // Whether or not this fragment is showing in a two-pane layout
-      private boolean mIsTwoPaneLayout;
-//
-//    // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
-//    // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
-//    private boolean mIsSearchResultView = false;
-
-    /*boolean dualPane;
-    private static int currentCheckPosition = 0;
-    private ProgressBar progressBar;
-    private static ChatsList chats;
-    private LinearLayout layout;
-    private ProgressDialog mProgressDialog;
-    private boolean fragmentStopped = false;
-
-    private FermatTextView noChatsMessage;
-
-    private long clickedId;*/
-
-
     private ChatManager chatManager;
-    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
@@ -140,9 +91,6 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList<Bitmap> imgId=new ArrayList<>();
     View layout;
     PresentationDialog presentationDialog;
-    private Toolbar toolbar;
-    private Bitmap contactIcon;
-    private BitmapDrawable contactIconCircular;
     ImageView noData;
     TextView noDatalabel;
     private static final int MAX = 20;
@@ -168,13 +116,9 @@ public class ChatListFragment extends AbstractFermatFragment{
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
-                        if(chatManager.checkWritingStatus(chatidtemp)) {
-                            message.add("Writing..");
-                        }
+
                         noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                         contactId.add(chat.getRemoteActorPublicKey());
-
-
                         if(chatIdentity!= null) {
                             for (ChatActorCommunityInformation cont : chatManager
                                     .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
@@ -184,11 +128,19 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     contactName.add(cont.getAlias());
                                     Message mess = chatManager.getMessageByChatId(chatidtemp);
                                     if (mess != null) {
-                                        message.add(mess.getMessage());
+                                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                                            message.add("Writing..");
+                                        }else {
+                                            message.add(mess.getMessage());
+                                        }
                                         status.add(mess.getStatus().toString());
                                         typeMessage.add(mess.getType().toString());
                                     }else{
-                                        message.add("");
+                                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                                            message.add("Writing..");
+                                        }else {
+                                            message.add("");
+                                        }
                                         status.add("");
                                         typeMessage.add("");
                                     }
@@ -436,15 +388,15 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-            for(int i = 0; i == chatId.size(); i++) {
-                try {
-                    if (chatManager.checkWritingStatus(chatId.get(i))) {
-                        message.add("Writing..");
-                    }
-                }catch (CantGetWritingStatus cantGetWritingStatus) {
-                    cantGetWritingStatus.printStackTrace();
-                }
-            }
+//            for(int i = 0; i == chatId.size(); i++) {
+//                try {
+//                    if (chatManager.checkWritingStatus(chatId.get(i))) {
+//                        message.add("Writing..");
+//                    }
+//                }catch (CantGetWritingStatus cantGetWritingStatus) {
+//                    cantGetWritingStatus.printStackTrace();
+//                }
+//            }
         }
     }
 

@@ -102,8 +102,8 @@ public class ChatListFilter extends Filter {
 
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-        adapter.setData((ArrayList<String>) filterResults.values, message, dateMessage, chatId, contactId,
-                status, typeMessage, noReadMsgs, imgId);
+        adapter.setData((ArrayList<String>) filterResults.values, messageDatan, dateMessageDatan, chatIdDatan, contactIdDatan,
+                statusDatan, typeMessageDatan, noReadMsgsDatan, imgIdDatan);
         adapter.notifyDataSetChanged();
     }
 }

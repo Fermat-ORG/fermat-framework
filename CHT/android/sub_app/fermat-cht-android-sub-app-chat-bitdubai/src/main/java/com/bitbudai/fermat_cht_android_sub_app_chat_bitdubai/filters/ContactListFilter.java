@@ -64,6 +64,6 @@ public class ContactListFilter extends Filter {
     @Override
     protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
         adapter.setData((ArrayList<String>) filterResults.values, contactIconDatan, contactIdDatan);
-        adapter.notifyDataSetChanged();//jose 04A11DBA1A3234349F01C6A79A3E82FB5AC767A365A6FF0BB77D42110D12CB23FCFD332D73BE466EE0437F11AF5F701829262814CA64BFEA84CC8A440B2844C97C
+        adapter.notifyDataSetChanged();
     }
 }

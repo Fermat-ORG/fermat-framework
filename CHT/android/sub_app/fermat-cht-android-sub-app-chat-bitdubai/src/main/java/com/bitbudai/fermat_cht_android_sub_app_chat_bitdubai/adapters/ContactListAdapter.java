@@ -74,7 +74,6 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
     private AdapterCallback mAdapterCallback;
 
     ArrayList<String> filteredData;
-    ArrayList<String> originalData;
     private String filterString;
 
     public ContactListAdapter(Context context, ArrayList contactInfo, ArrayList contactIcon, ArrayList contactId,

@@ -47,7 +47,6 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     private ErrorManager errorManager;
 
     ArrayList<String> filteredData;
-    ArrayList<String> originalData;
     private String filterString;
 
     public ChatListAdapter(Context context, ArrayList<String> contactName,
@@ -70,7 +69,6 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.noReadMsgs = noReadMsgs;
         this.imgId=imgId;
         this.filteredData = contactName;
-        this.originalData = contactName;
         this.errorManager=errorManager;
     }
 
