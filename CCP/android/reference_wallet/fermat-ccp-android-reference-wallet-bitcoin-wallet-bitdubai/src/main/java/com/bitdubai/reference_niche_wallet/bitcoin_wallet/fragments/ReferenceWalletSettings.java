@@ -100,6 +100,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
             list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
+            list.add(new PreferenceSettingsLinkText(11, "Send Bitcoins To Loss Protected Wallet", "",15,Color.GRAY));
+
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -144,8 +146,14 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
                     changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, referenceWalletSession.getAppPublicKey());
 
                 }
-            }
+                else
+                {
+                    if (preferenceSettingsItem.getId() == 11) {
+                      //send btc to loss protected
+                    }
+                }
 
+            }
 
             try {
                 referenceWalletSession.getModuleManager().persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);

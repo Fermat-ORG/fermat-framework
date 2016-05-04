@@ -899,7 +899,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
 
-            if (bitcoinLossProtectedWalletSpendList.size() == 0) {
+          /*  if (bitcoinLossProtectedWalletSpendList.size() == 0) {
 
                BitcoinLossProtectedWalletSpend lst1 = new BitcoinLossProtectedWalletSpend() {
                     @Override
@@ -957,7 +957,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
                 bitcoinLossProtectedWalletSpendList.add(lst1);
                 bitcoinLossProtectedWalletSpendList.add(lst2);
-            }
+            }*/
 
                 return bitcoinLossProtectedWalletSpendList;
 
@@ -995,6 +995,45 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         } catch(Exception e){
             throw new CantGetActorLossProtectedTransactionHistoryException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+    }
+
+
+    @Override
+    public List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
+                                                                                           final TransactionType transactionType,
+                                                                                           String walletPublicKey,
+                                                                                           String intraUserLoggedInPublicKey,
+                                                                                           BlockchainNetworkType blockchainNetworkType,
+                                                                                           int max,
+                                                                                           int offset) throws CantListLossProtectedTransactionsException {
+
+
+        List<LossProtectedWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+        try {
+            if(intraUserLoggedInPublicKey!=null){
+                BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
+                        balanceType,
+                        transactionType,
+                        max,
+                        offset
+                );
+
+                List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+
+        //get actor to data
+                for (BitcoinLossProtectedWalletTransaction bwt : bitcoinWalletTransactionList) {
+                    cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
+                }
+
+
+            }
+
+            return cryptoWalletTransactionList;
+        } catch(Exception e){
+            throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+
     }
 
 
@@ -1300,7 +1339,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             if(bwt != null)
              cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
-            else{
+            /*else{
                 BitcoinLossProtectedWalletTransaction transaction = new BitcoinLossProtectedWalletTransaction() {
                     @Override
                     public UUID getTransactionId() {return UUID.randomUUID();}
@@ -1391,7 +1430,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     }
                 };
                 cryptoWalletTransaction = enrichTransaction(transaction, walletPublicKey, intraUserLoggedInPublicKey);
-            }
+            }*/
 
             return  cryptoWalletTransaction;
 
@@ -1431,18 +1470,17 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType,double purchasePrice) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType,purchasePrice);
-
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType);
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,purchasePrice);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType);
 
                     break;
             }

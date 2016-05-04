@@ -327,13 +327,29 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             getAndShowMarketExchangeRateData(rootView);
 
 
-            txt_type_balance.setOnTouchListener(new View.OnTouchListener() {
+            txt_type_balance.setOnLongClickListener(new View.OnLongClickListener() {
+                public boolean onLongClick(View arg0) {
+                    Runnable _longPressed = new Runnable() {
+                        public void run() {
+                            Log.i("info", "LongPress");
+                            Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
+                            GET("", getActivity());
+                        }
+                    };
+                    return true;    // <- set to true
+                }
+
+            });
+
+
+
+       /*     txt_type_balance.setOnTouchListener(new View.OnTouchListener() {
                 long TIME_HOLD_TO_PRESS = 2000;
 
                 final Handler _handler = new Handler();
                 Runnable _longPressed = new Runnable() {
                     public void run() {
-                        Log.i("info","LongPress");
+                        Log.i("info", "LongPress");
                         GET("", getActivity());
                     }
                 };
@@ -341,22 +357,22 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
 
-                   if (event.getAction() == MotionEvent.ACTION_DOWN){
-                       before = System.currentTimeMillis();
-                       return true;
-                   }else if (event.getAction() == MotionEvent.ACTION_UP){
-                       after = System.currentTimeMillis();
-                       if (after - before <= TIME_HOLD_TO_PRESS){
-                           changeBalanceType(txt_type_balance, txt_balance_amount);
-                           return true;
-                       }else{
-                           GET("", getActivity());
-                           return true;
-                       }
-                   }
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        before = System.currentTimeMillis();
+                        return true;
+                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                        after = System.currentTimeMillis();
+                        if (after - before <= TIME_HOLD_TO_PRESS) {
+                            changeBalanceType(txt_type_balance, txt_balance_amount);
+                            return true;
+                        } else {
+                            GET("", getActivity());
+                            return true;
+                        }
+                    }
                     return false;
                 }
-            });
+            });*/
 
          
 
