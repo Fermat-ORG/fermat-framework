@@ -1713,7 +1713,7 @@ public class ChatMiddlewareDatabaseDao {
     public ActionState getActionById(UUID chatId) throws CantSaveActionException {
 
         try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
+            DatabaseTable databaseTable = getDatabaseActionsTable();
             List<EventRecord> eventRecords = new ArrayList<>();
             EventRecord eventRecord;
             databaseTable.addStringFilter(
