@@ -242,13 +242,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
         @Override
         public FermatModuleObjectWrapper invoqueModuleMethod(String clientKey,String dataId,String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
-            Log.i(TAG,"invoqueModuleMethod");
-            Log.i(TAG,platformCode);
-            Log.i(TAG,layerCode);
-            Log.i(TAG,pluginsCode);
-            Log.i(TAG,version);
-            Log.i(TAG,method);
-            Log.i(TAG,"Parameters");
+//            Log.i(TAG,"invoqueModuleMethod");
+//            Log.i(TAG,platformCode);
+//            Log.i(TAG,layerCode);
+//            Log.i(TAG,pluginsCode);
+//            Log.i(TAG,version);
+//            Log.i(TAG,method);
+//            Log.i(TAG,"Parameters");
             for (FermatModuleObjectWrapper parameter : parameters) {
                 Log.i(TAG, parameter.toString());
             }
@@ -284,13 +284,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
         @Override
         public FermatModuleObjectWrapper invoqueModuleLargeDataMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
-            Log.i(TAG,"invoqueModuleMethod");
-            Log.i(TAG,platformCode);
-            Log.i(TAG,layerCode);
-            Log.i(TAG,pluginsCode);
-            Log.i(TAG,version);
-            Log.i(TAG,method);
-            Log.i(TAG,"Parameters");
+//            Log.i(TAG,"invoqueModuleMethod");
+//            Log.i(TAG,platformCode);
+//            Log.i(TAG,layerCode);
+//            Log.i(TAG,pluginsCode);
+//            Log.i(TAG,version);
+//            Log.i(TAG,method);
+//            Log.i(TAG,"Parameters");
             for (FermatModuleObjectWrapper parameter : parameters) {
                 Log.i(TAG, parameter.toString());
             }
@@ -451,13 +451,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
 
     private Serializable moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final FermatModuleObjectWrapper[]  parameters){
-        Log.i(TAG, "Invoque method called");
+//        Log.i(TAG, "Invoque method called");
         Callable<Object> callable = new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-                Log.i(TAG,"Method to execute: "+ method);
-                Log.i(TAG,"PluginVersionReference: "+ pluginVersionReference.toString());
-                Log.i(TAG,"Parameters: "+parameters);
+//                Log.i(TAG,"Method to execute: "+ method);
+//                Log.i(TAG,"PluginVersionReference: "+ pluginVersionReference.toString());
+//                Log.i(TAG,"Parameters: "+parameters);
                 FermatManager fermatManager = fermatSystem.startAndGetPluginVersion(pluginVersionReference);
                 ModuleManager moduleManager = null;
                 Class clazz = null;
@@ -481,31 +481,31 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     classes = new Class[params.length];
                     for (int pos = 0; pos < params.length; pos++) {
                         classes[pos] = params[pos].getClass();
-                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
+//                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
                     }
                 }
                 //TODO: ver porque puse el moduleManager en el invoque, si daberia id ahí o d
                 try {
                     if(classes==null){
                         m = clazz.getDeclaredMethod(method, null);
-                        Log.i(TAG,"Method: "+ m.getName());
-                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
-                        Log.i(TAG,"Method return type: "+ m.getReturnType());
+//                        Log.i(TAG,"Method: "+ m.getName());
+//                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
+//                        Log.i(TAG,"Method return type: "+ m.getReturnType());
                         s =  m.invoke(moduleManager, null);
                     } else{
                         try{
-                            for(Class c : classes){
-                                Log.i(TAG,"Class to use for parameter: "+ c.getName());
-                            }
+//                            for(Class c : classes){
+//                                Log.i(TAG,"Class to use for parameter: "+ c.getName());
+//                            }
                             m = clazz.getDeclaredMethod(method, classes);
                         }catch (NoSuchMethodException e){
-                            Log.e(TAG,"Metodo buscando: "+method);
+                            //Log.e(TAG,"Metodo buscando: "+method);
                             int pos = 0;
                             for (Method method1 : clazz.getMethods()) {
                                 //Log.e(TAG,pos+": Metodo: "+method1.getName( ));
                                 if(method1.getName().equals(method)){
                                     for (Class<?> aClass : method1.getParameterTypes()) {
-                                        Log.e(TAG,pos+": Metodo parameters class type: "+aClass.getName());
+                                        //Log.e(TAG,pos+": Metodo parameters class type: "+aClass.getName());
                                     }
                                 }
                             }
@@ -516,16 +516,16 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
                             }
                         }
-                        Log.i(TAG,"Method: "+ m.getName());
-                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
-                        Log.i(TAG,"Method return type: "+ m.getReturnType());
+//                        Log.i(TAG,"Method: "+ m.getName());
+//                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
+//                        Log.i(TAG,"Method return type: "+ m.getReturnType());
                         s =  m.invoke(moduleManager,params);
                     }
-                    if(s!=null){
-                        Log.i(TAG,"Method return: "+ s.toString());
-                    }else{
-                        Log.i(TAG,"Method return: null, check this");
-                    }
+//                    if(s!=null){
+//                        Log.i(TAG,"Method return: "+ s.toString());
+//                    }else{
+//                        Log.i(TAG,"Method return: null, check this");
+//                    }
 
                 } catch (NoSuchMethodException e) {
                     Log.e(TAG,"NoSuchMethodException:"+method+" on class"+clazz.getName());
@@ -546,7 +546,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         Object s = null;
         try {
             s = future.get();
-            Log.i(TAG,"Invoque method return: "+ s);
+//            Log.i(TAG,"Invoque method return: "+ s);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -555,17 +555,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             e.printStackTrace();
         }
 
-        if(s!=null) {
-            Log.i(TAG, "Data to send: "+ s.toString());
-        }else{
-            Log.i(TAG, "Data to send: null, check this");
-        }
+//        if(s!=null) {
+//            Log.i(TAG, "Data to send: "+ s.toString());
+//        }else{
+//            Log.i(TAG, "Data to send: null, check this");
+//        }
         final Serializable finalS = (Serializable) s;
-        if(s!=null){
-            Log.i(TAG,"Method return: "+ s.toString());
-        }else{
-            Log.i(TAG,"Method return: null, check this");
-        }
+
         return finalS;
     }
 
