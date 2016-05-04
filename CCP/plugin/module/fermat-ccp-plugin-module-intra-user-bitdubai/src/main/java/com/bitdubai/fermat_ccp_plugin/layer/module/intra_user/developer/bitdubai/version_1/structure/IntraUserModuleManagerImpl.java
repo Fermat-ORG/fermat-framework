@@ -267,6 +267,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
                 //return intra user information - if not connected - status return null
                 IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Offline");
+
+                //testing reason
+                intraUserInformation.setProfileImageNull();
+
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
