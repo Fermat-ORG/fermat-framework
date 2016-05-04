@@ -125,7 +125,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 // context.registerForContextMenu(lblMensaje);
 
                 final FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
-                final CustomDialogFragment dialog = CustomDialogFragment.newInstance(context, preferenceSettingsOpenDialogText.getDialogData());
+                final CustomDialogFragment dialog = CustomDialogFragment.newInstance(context, preferenceSettingsOpenDialogText.getDialogData(), null);
                 CustomDialogFragment.CustomDialogListener listener = new CustomDialogFragment.CustomDialogListener();
                 listener.setListener(new CustomDialogFragment.DialogListener() {
                     @Override
@@ -137,7 +137,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
                     @Override
                     public void onDialogNegativeClick(DialogFragment dialog) {
-                        System.out.println(getClass().getSimpleName() + "------------------------------ CANCEL button pressed");
+                        // no-op
                     }
                 });
 
