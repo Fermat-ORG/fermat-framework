@@ -258,10 +258,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             if(pendingBlocks > 0){
             //paint toolbar on red
-                final RelativeLayout container_header_balance = getToolbarHeader();
-                container_header_balance.setBackgroundColor(Color.RED);
+                final Toolbar toolBar = getToolbar();
+                toolBar.setBackgroundColor(Color.RED);
 
-                makeText(getActivity(), "Blockchain Update in progress.", Toast.LENGTH_SHORT).show();
+                setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
             }
 
         } catch (Exception ex) {
@@ -310,41 +310,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     }
 
     private void setUpBlockchainProgress(boolean checkButton) {
-        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
-                new PresentationBitcoinWalletDialog(
+        BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
+                new BlockchainDownloadInfoDialog(
                         getActivity(),
                         referenceWalletSession,
                         null,
-                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
 
 
-        presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                if(o!=null){
-                    if((Boolean)(o)){
-                        //invalidate();
-                        referenceWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                    }
-                }
-                try {
-                    ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
-                    if(cryptoWalletIntraUserIdentity==null){
-                        getActivity().onBackPressed();
-                    }else{
-                        invalidate();
-                    }
-                } catch (CantListCryptoWalletIntraUserIdentityException e) {
-                    e.printStackTrace();
-                } catch (CantGetCryptoWalletException e) {
-                    e.printStackTrace();
-                }
-
             }
         });
-        presentationBitcoinWalletDialog.show();
+        blockchainDownloadInfoDialog.show();
     }
 
     @Override
@@ -1122,7 +1101,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             {
                 //update toolbar color
                 final Toolbar toolBar = getToolbar();
-                toolBar.setBackgroundColor(Color.GREEN);
+                toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+
+                        makeText(getActivity(), "Blockchain Download Complete",
+                                Toast.LENGTH_SHORT).show();
             }
             else
             {
