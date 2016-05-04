@@ -105,6 +105,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     ErrorManager errorManager;
     Broadcaster broadcaster;
 
+
     /**
      * Constructor
      * @param eventManager
@@ -239,7 +240,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao);;
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao, eventManager);;
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -249,7 +250,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao, eventManager);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");

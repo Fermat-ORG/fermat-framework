@@ -27,6 +27,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.ut
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.FanActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -90,7 +92,7 @@ public final class FanActorNetworkServiceManager implements FanManager {
 
             } else {
 
-                final String imageString = Base64.encodeToString(fan.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(fan.getExtraData().getBytes(), Base64.DEFAULT);
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         fan.getPublicKey(),
@@ -124,7 +126,7 @@ public final class FanActorNetworkServiceManager implements FanManager {
         try {
             if (isRegistered()) {
 
-                final String imageString = Base64.encodeToString(actor.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(actor.getExtraData().getBytes(), Base64.DEFAULT);
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(

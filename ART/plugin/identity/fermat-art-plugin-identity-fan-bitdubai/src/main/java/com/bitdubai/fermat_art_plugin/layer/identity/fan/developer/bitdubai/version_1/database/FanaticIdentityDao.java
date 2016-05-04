@@ -292,7 +292,6 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 record.setStringValue(
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
                         externalUsername);
-                table.insertRecord(record);
 
                 table.updateRecord(record);
             }

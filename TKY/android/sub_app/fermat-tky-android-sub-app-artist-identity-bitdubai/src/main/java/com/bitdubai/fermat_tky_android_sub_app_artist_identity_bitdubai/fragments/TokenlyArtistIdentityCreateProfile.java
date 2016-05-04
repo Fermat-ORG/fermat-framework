@@ -65,7 +65,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by Gabriel Araujo.
+ * Created by juan Sulbaran
  */
 public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
@@ -246,6 +246,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                         resultKey = createNewIdentity();
                         switch (resultKey) {
                             case CREATE_IDENTITY_SUCCESS:
+
                                 break;
                             case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                                 Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();

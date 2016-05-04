@@ -26,8 +26,8 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.database.FanActorConnectionDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.database.FanActorConnectionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.event_handler.ArtistConnectionRequestNewsEventHandler;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.event_handler.ArtistConnectionRequestUpdatesEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.event_handler.FanaticConnectionRequestNewsEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.event_handler.FanaticConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.structure.ActorConnectionEventActions;
 import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.structure.ActorConnectionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -103,7 +103,7 @@ public class FanActorConnectionPluginRoot extends AbstractPlugin implements Data
             FermatEventListener updatesListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
             updatesListener.setEventHandler(
-                    new ArtistConnectionRequestUpdatesEventHandler(
+                    new FanaticConnectionRequestUpdatesEventHandler(
                             eventActions,
                             this));
             eventManager.addListener(updatesListener);
@@ -112,7 +112,7 @@ public class FanActorConnectionPluginRoot extends AbstractPlugin implements Data
             FermatEventListener newListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_NEWS);
             newListener.setEventHandler(
-                    new ArtistConnectionRequestNewsEventHandler(
+                    new FanaticConnectionRequestNewsEventHandler(
                     eventActions,
                     this));
             eventManager.addListener(newListener);
@@ -123,7 +123,8 @@ public class FanActorConnectionPluginRoot extends AbstractPlugin implements Data
                     dao,
                     errorManager,
                     this.getPluginVersionReference(),
-                    fanActorNetworkServiceManager
+                    fanActorNetworkServiceManager,
+                    eventManager
             );
             super.start();
         } catch (final CantInitializeActorConnectionDatabaseException

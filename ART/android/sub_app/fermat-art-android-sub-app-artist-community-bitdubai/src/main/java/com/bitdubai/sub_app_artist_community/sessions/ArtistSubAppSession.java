@@ -8,7 +8,10 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 07/04/16.
  */
-public class ArtistSubAppSession extends AbstractFermatSession<InstalledSubApp,ArtistCommunitySubAppModuleManager, SubAppResourcesProviderManager> {
+public class ArtistSubAppSession extends AbstractFermatSession<
+        InstalledSubApp,
+        ArtistCommunitySubAppModuleManager,
+        SubAppResourcesProviderManager> {
 
     public ArtistSubAppSession() {
     }

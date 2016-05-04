@@ -95,11 +95,11 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
     @Override
     public List<FanCommunityInformation> listWorldFan(FanCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListFansException {
-        List<FanCommunityInformation> worldfanaticList;
+        List<FanCommunityInformation> worldFanaticList;
         List<FanActorConnection> actorConnections;
 
         try{
-            worldfanaticList = getFanaticSearch().getResult();
+            worldFanaticList = getFanaticSearch().getResult();
         } catch (CantGetFanSearchResult e) {
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListFansException(e, "", "Error in listWorldFan trying to list world Fanatics");
@@ -121,17 +121,17 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
 
         FanCommunityInformation worldFanatic;
-        for(int i = 0; i < worldfanaticList.size(); i++)
+        for(int i = 0; i < worldFanaticList.size(); i++)
         {
-            worldFanatic = worldfanaticList.get(i);
+            worldFanatic = worldFanaticList.get(i);
             for(FanActorConnection connectedFan : actorConnections)
             {
                 if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldfanaticList.set(i, new FanCommunityInformationImpl(worldFanatic.getPublicKey(), worldFanatic.getAlias(), worldFanatic.getImage(), connectedFan.getConnectionState(), connectedFan.getConnectionId()));
+                    worldFanaticList.set(i, new FanCommunityInformationImpl(worldFanatic.getPublicKey(), worldFanatic.getAlias(), worldFanatic.getImage(), connectedFan.getConnectionState(), connectedFan.getConnectionId()));
             }
         }
 
-        return worldfanaticList;    }
+        return worldFanaticList;    }
 
     @Override
     public List<FanCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException {

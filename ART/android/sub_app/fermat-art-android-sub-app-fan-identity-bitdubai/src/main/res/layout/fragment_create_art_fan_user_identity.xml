@@ -105,7 +105,8 @@
                     android:layout_below="@+id/afi_external_platform_label"
                     android:layout_alignParentLeft="true"
                     android:textColor="#919090"
-                    />
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"                    />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
@@ -126,7 +127,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/afi_external_identity"
                     android:layout_alignParentLeft="true"
-                    android:textColor="#919090" />
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"                    />
             </RelativeLayout>
         </RelativeLayout>
 

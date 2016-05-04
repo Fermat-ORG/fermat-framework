@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
@@ -23,6 +22,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListE
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetWalletSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeWithExternalAPIException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
@@ -31,7 +31,6 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetLastUpdateDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongNameException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
-import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSongException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSynchronizeDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
@@ -265,10 +264,13 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     songId = UUID.randomUUID();
                     fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(),song);
                     fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
-                    broadcaster.publish(
-                            BroadcasterType.UPDATE_VIEW,
-                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                            fermatBundle);
+                    fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
+                            BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
+                    try {
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    }catch (Exception ex){
+                        System.out.println("TKY_BROADCAST_SONG:"+ex);
+                    }
                     //Download the song.
                     downloadSong(song, user.getUsername(), songId);
                     /**
@@ -288,10 +290,9 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     //Inform to UI this download exception.
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_EXCEPTION.getCode(),song);
-                    broadcaster.publish(
-                            BroadcasterType.UPDATE_VIEW,
-                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                            fermatBundle);
+                    fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
+                            BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
             /**
@@ -305,7 +306,6 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     toDownloadSongList.size());
         } catch (CantGetAlbumException e) {
             broadcaster.publish(BroadcasterType.UPDATE_VIEW,
-                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                     "Connection Error");
             throw new CantSynchronizeWithExternalAPIException(
                     e,

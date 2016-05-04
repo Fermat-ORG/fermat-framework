@@ -28,7 +28,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
@@ -69,7 +68,7 @@ public class ConnectionsWorldFragment extends
     private FanCommunitySettings appSettings;
     private int offset = 0;
     private int mNotificationsCount = 0;
-    private ArrayList<FanCommunityInformation> cryptoCustomerCommunityInformationList;
+    private ArrayList<FanCommunityInformation> fanCommunityInformationArrayList;
 
     //Flags
     private boolean isRefreshing = false;
@@ -155,7 +154,7 @@ public class ConnectionsWorldFragment extends
 
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
-            adapter = new AppListAdapter(getActivity(), cryptoCustomerCommunityInformationList);
+            adapter = new AppListAdapter(getActivity(), fanCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_gridView);
             recyclerView.setHasFixedSize(true);
@@ -244,9 +243,9 @@ public class ConnectionsWorldFragment extends
                             result.length > 0) {
                         progressDialog.dismiss();
                         if (getActivity() != null && adapter != null) {
-                            cryptoCustomerCommunityInformationList = (ArrayList<FanCommunityInformation>) result[0];
-                            adapter.changeDataSet(cryptoCustomerCommunityInformationList);
-                            if (cryptoCustomerCommunityInformationList.isEmpty()) {
+                            fanCommunityInformationArrayList = (ArrayList<FanCommunityInformation>) result[0];
+                            adapter.changeDataSet(fanCommunityInformationArrayList);
+                            if (fanCommunityInformationArrayList.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
