@@ -56,7 +56,7 @@ import java.util.UUID;
  *
  */
 
-public class ContactListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class ContactListAdapter extends ArrayAdapter {//implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
 
     List<ContactList> contactsList = new ArrayList<>();
@@ -153,48 +153,48 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
         this.contactid=contactid;
         notifyDataSetChanged();
     }
-
-    @Override
-    public int getCount() {
-        if (contactinfo != null) {
-            if (filteredData != null) {
-                if (filteredData.size() < contactinfo.size()) {
-                    return filteredData.size();
-                } else {
-                    return contactinfo.size();
-                }
-            }else{
-                return contactinfo.size();
-            }
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public String getItem(int position) {
-        return filteredData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void setData(ArrayList<String> data) {
-        this.filteredData = data;
-    }
-
-    public Filter getFilter() {
-        return new ContactListFilter(contactinfo, this);
-    }
-
-    public void setFilterString(String filterString) {
-        this.filterString = filterString;
-    }
-
-    public String getFilterString() {
-        return filterString;
-    }
+//
+//    @Override
+//    public int getCount() {
+//        if (contactinfo != null) {
+//            if (filteredData != null) {
+//                if (filteredData.size() < contactinfo.size()) {
+//                    return filteredData.size();
+//                } else {
+//                    return contactinfo.size();
+//                }
+//            }else{
+//                return contactinfo.size();
+//            }
+//        } else {
+//            return 0;
+//        }
+//    }
+//
+//    @Override
+//    public String getItem(int position) {
+//        return filteredData.get(position);
+//    }
+//
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    public void setData(ArrayList<String> data) {
+//        this.filteredData = data;
+//    }
+//
+//    public Filter getFilter() {
+//        return new ContactListFilter(contactinfo, this);
+//    }
+//
+//    public void setFilterString(String filterString) {
+//        this.filterString = filterString;
+//    }
+//
+//    public String getFilterString() {
+//        return filterString;
+//    }
 
 }

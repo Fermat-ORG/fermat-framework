@@ -26,21 +26,18 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.database.FanaticIdentityDeveloperDatabaseFactory;
-import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestAcceptedEventHandler;
-import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestUpdatesEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.FanaticConnectionRequestAcceptedEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.FanaticConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanIdentityEventActions;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.IdentityFanaticManagerImpl;
@@ -144,7 +141,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             FermatEventListener updatesListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
             updatesListener.setEventHandler(
-                    new ArtistConnectionRequestUpdatesEventHandler(
+                    new FanaticConnectionRequestUpdatesEventHandler(
                             this.fanIdentityEventActions,
                             this));
             eventManager.addListener(updatesListener);
@@ -152,8 +149,9 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             //Another listener
             FermatEventListener acceptListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT);
-            acceptListener.setEventHandler(
-                    new ArtistConnectionRequestAcceptedEventHandler(
+
+            updatesListener.setEventHandler(
+                    new FanaticConnectionRequestAcceptedEventHandler(
                             this.fanIdentityEventActions,
                             this));
             eventManager.addListener(acceptListener);
