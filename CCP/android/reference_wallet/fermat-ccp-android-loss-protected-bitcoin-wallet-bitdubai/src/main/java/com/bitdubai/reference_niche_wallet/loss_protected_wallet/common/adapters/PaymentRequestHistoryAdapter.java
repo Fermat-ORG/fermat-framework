@@ -73,9 +73,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.history_request_row;
-    }
-
+        return R.layout.loss_history_request_row;
     /**
      * Bind ViewHolder
      *

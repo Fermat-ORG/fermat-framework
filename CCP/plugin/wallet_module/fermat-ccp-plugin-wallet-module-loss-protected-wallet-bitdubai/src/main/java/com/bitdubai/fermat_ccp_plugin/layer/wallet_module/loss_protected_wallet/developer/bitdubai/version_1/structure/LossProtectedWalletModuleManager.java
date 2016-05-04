@@ -1044,7 +1044,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
 
 
-                if(cryptoWalletTransactionList.size() == 0)
+             /*   if(cryptoWalletTransactionList.size() == 0)
                 {
                     Actor actor = new Actor() {
                         @Override
@@ -1274,7 +1274,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction, null, actor));
                     cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction1, null, actor1));
 
-                }
+                }*/
 
 
 

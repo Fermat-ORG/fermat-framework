@@ -362,7 +362,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             lstTransaction = cryptoWallet.listLastActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
-                    TransactionType.DEBIT,
+                    TransactionType.CREDIT,
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk,
                     blockchainNetworkType,
