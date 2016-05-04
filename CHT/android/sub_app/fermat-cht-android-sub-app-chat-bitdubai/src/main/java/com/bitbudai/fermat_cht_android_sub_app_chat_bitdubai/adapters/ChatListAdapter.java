@@ -40,7 +40,7 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     ArrayList<String> message=new ArrayList<>();
     ArrayList<String> dateMessage=new ArrayList<>();
     ArrayList<UUID> chatId=new ArrayList<>();
-    ArrayList<UUID> contactId=new ArrayList<>();
+    ArrayList<String> contactId=new ArrayList<>();
     ArrayList<String> status=new ArrayList<>();
     ArrayList<String> typeMessage=new ArrayList<>();
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
@@ -48,7 +48,6 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     private ErrorManager errorManager;
 
     ArrayList<String> filteredData;
-    ArrayList<String> originalData;
     private String filterString;
 
     public ChatListAdapter(Context context, ArrayList<String> contactName,
@@ -71,7 +70,6 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.noReadMsgs = noReadMsgs;
         this.imgId=imgId;
         this.filteredData = contactName;
-        this.originalData = contactName;
         this.errorManager=errorManager;
     }
 
@@ -149,10 +147,15 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     @Override
     public int getCount() {
         if (contactName != null) {
-            if(filteredData.size()<contactName.size()) {
-                return filteredData.size();
+            if (filteredData != null) {
+                if(filteredData.size()<contactName.size()) {
+                    return filteredData.size();
+                }else{
+                    return contactName.size();
+                }
             }else{
-                return contactName.size();}
+                return contactName.size();
+            }
         } else {
             return 0;
         }
@@ -160,7 +163,38 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
 
     @Override
     public String getItem(int position) {
-        return filteredData.get(position);
+        return contactName.get(position);
+    }
+
+    public String getMessageItem(int position) {
+        return message.get(position);
+    }
+
+    public String getDateMessageItem(int position) {
+        return dateMessage.get(position);
+    }
+
+    public UUID getChatIdItem(int position) {
+        return chatId.get(position);
+    }
+
+    public String getContactIdItem(int position) {
+        return contactId.get(position);
+    }
+
+    public String getStatusItem(int position) {
+        return status.get(position);
+    }
+    public String getTypeMessageItem(int position) {
+        return typeMessage.get(position);
+    }
+
+    public int getNoReadMsgsItem(int position) {
+        return noReadMsgs.get(position);
+    }
+
+    public Bitmap getImgIdItem(int position) {
+        return imgId.get(position);
     }
 
     @Override
@@ -168,12 +202,29 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         return position;
     }
 
-    public void setData(ArrayList<String> data) {
-        this.filteredData = data;
+    public void setData(ArrayList contactName,
+                        ArrayList message,
+                        ArrayList dateMessage,
+                        ArrayList chatId,
+                        ArrayList contactId,
+                        ArrayList status,
+                        ArrayList typeMessage,
+                        ArrayList noReadMsgs,
+                        ArrayList imgId) {
+        this.filteredData = contactName;
+        this.contactName = contactName;
+        this.message = message;
+        this.dateMessage = dateMessage;
+        this.chatId = chatId;
+        this.contactId = contactId;
+        this.status = status;
+        this.typeMessage = typeMessage;
+        this.noReadMsgs = noReadMsgs;
+        this.imgId=imgId;
     }
 
     public Filter getFilter() {
-        return new ChatListFilter(contactName, this);
+        return new ChatListFilter(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId, this);
     }
 
     public void setFilterString(String filterString) {
