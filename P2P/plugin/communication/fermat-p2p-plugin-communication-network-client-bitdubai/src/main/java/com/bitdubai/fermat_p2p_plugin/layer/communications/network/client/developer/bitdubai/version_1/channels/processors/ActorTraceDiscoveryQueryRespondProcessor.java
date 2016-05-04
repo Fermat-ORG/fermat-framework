@@ -6,6 +6,15 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 
 import javax.websocket.Session;
 
@@ -48,15 +57,64 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
         if(actorsProfileListMsgRespond.getStatus() == ActorsProfileListMsgRespond.STATUS.SUCCESS){
             //raise event
 
-            if(actorsProfileListMsgRespond.getProfileList() != null) {
-
-                for(ResultDiscoveryTraceActor result : actorsProfileListMsgRespond.getProfileList() )
-                    System.out.println(new Gson().toJson(result));
-
-            }
+            if(actorsProfileListMsgRespond.getProfileList() != null && actorsProfileListMsgRespond.getProfileList().size() > 0)
+                  goThroughResultDiscoveryTraceActorList(actorsProfileListMsgRespond.getProfileList());
 
         }else{
             //there is some wrong
+        }
+
+    }
+
+    /*
+     * we go through ResultDiscoveryTraceActor list when get the Actor
+     * then raise event notification
+     */
+    private synchronized void goThroughResultDiscoveryTraceActorList(List<ResultDiscoveryTraceActor> resultList){
+
+        Boolean isOnline = Boolean.FALSE;
+
+        for(ResultDiscoveryTraceActor result : resultList){
+
+            try {
+
+                URL url = new URL("http://" + result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort() +
+                        "/fermat/rest/api/v1/online/component/actor/" + result.getActorProfile().getIdentityPublicKey());
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("Accept", "application/json");
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String respond = reader.readLine();
+
+                if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+                    /*
+                    * Decode into a json Object
+                    */
+                    JsonParser parser = new JsonParser();
+                    JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                    isOnline = respondJsonObject.get("isOnline").getAsBoolean();
+
+                    if(isOnline){
+                        System.out.print("Actor Found in the NODE: " + result.getNodeProfile().toJson());
+                        //raise event success found actor
+
+                        break;
+                    }
+
+                }
+
+            } catch (Exception e) {
+               // e.printStackTrace();
+            }
+
+        }
+
+        if(!isOnline) {
+            System.out.print("Actor NOT Found in the list of NODES");
+            //raise event not success found actor
         }
 
     }

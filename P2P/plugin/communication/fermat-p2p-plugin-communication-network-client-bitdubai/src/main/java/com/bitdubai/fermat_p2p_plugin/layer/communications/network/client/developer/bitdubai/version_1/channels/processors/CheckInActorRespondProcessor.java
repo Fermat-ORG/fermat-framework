@@ -88,7 +88,7 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
 
             /* test CheckInProfileDiscoveryQueryRequestProcessor and the ActorTraceDiscoveryQueryRequestProcessor */
 
-//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(null,"alias",0.0,null,"2016",null,0,null,null,0);
+//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters("intrauser",null,0.0,null,null,null,0,null,null,0);
 //            try {
 //                getChannel().getNetworkClientCommunicationConnection().registeredProfileDiscoveryQuery(discoveryQueryParameters);
 //            } catch (Exception e) {
