@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -73,7 +72,7 @@ public final class NetworkServiceRegistrationProcessAgent {
             try{
 
                 System.out.println(networkServiceRoot.getProfile().getNetworkServiceType() + " networkServiceRoot.isRegistered() " + networkServiceRoot.isRegistered()
-                             + " networkServiceRoot.getCommunicationsClientConnection().isRegistered() " + networkServiceRoot.getConnection().isRegistered());
+                             + " networkServiceRoot.getConnection().isRegistered() " + networkServiceRoot.getConnection().isRegistered());
 
                 if (networkServiceRoot.getConnection().isRegistered() && !networkServiceRoot.isRegistered()){
 

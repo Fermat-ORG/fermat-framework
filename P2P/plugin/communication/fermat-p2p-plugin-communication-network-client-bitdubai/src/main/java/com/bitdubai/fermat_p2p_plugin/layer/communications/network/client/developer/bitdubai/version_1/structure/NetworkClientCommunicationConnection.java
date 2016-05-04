@@ -320,9 +320,10 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
             packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
         else if (profile instanceof ClientProfile)
             packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
-        else if (profile instanceof NetworkServiceProfile)
+        else if (profile instanceof NetworkServiceProfile) {
             packageType = PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST;
-        else {
+            ((NetworkServiceProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+        } else {
             CantRegisterProfileException fermatException = new CantRegisterProfileException(
                     "profile:" + profile,
                     "Unsupported profile type."
