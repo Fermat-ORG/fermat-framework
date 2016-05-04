@@ -137,5 +137,4 @@ public interface FanManager extends FermatManager{
     
     void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
 
-    FanConnectionRequest getConnectionRequest(UUID requestId) throws ConnectionRequestNotFoundException;
 }

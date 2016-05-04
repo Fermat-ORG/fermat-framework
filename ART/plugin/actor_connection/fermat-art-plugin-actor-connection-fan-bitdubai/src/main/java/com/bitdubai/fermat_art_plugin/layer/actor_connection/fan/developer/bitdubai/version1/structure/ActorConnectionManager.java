@@ -19,10 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
-import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.events.ArtistConnectionRequestAcceptedEvent;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
@@ -35,7 +32,6 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
 import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.database.FanActorConnectionDao;
@@ -460,15 +456,6 @@ public class ActorConnectionManager implements FanActorConnectionManager {
         }
     }
 
-    @Override
-    public void acceptConnection(UUID connectionId) throws
-            CantAcceptActorConnectionRequestException,
-            ActorConnectionNotFoundException,
-            UnexpectedConnectionStateException {
-        /**
-         * Implemented only for compilation, do nothing for now
-         */
-    }
 
     /**
      * This method accepts a connection.
@@ -480,8 +467,7 @@ public class ActorConnectionManager implements FanActorConnectionManager {
      */
     @Override
     public void acceptConnection(
-            final UUID connectionId,
-            final String artistAcceptedPublicKey) throws
+            final UUID connectionId) throws
             CantAcceptActorConnectionRequestException,
             ActorConnectionNotFoundException,
             UnexpectedConnectionStateException{
@@ -511,17 +497,17 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                                     connectionId,
                                     ConnectionState.CONNECTED
                             );
-                            String artistAcceptedPublicKeyD="";
+                            String artistAcceptedPublicKey="";
                             List<FanActorConnection> fanActorConnectionList =
                                     dao.listActorConnections(dao.getActorConnectionsTable());
                             for(FanActorConnection fanActorConnection : fanActorConnectionList){
                                 if(fanActorConnection.getConnectionId().equals(connectionId)){
-                                    artistAcceptedPublicKeyD = fanActorConnection.getPublicKey();
+                                    artistAcceptedPublicKey = fanActorConnection.getPublicKey();
                                     break;
                                 }
                             }
                             //We gonna raise a event indicating the request accepting.
-                            raiseConnectionRequestEvent(artistAcceptedPublicKeyD);
+                            raiseConnectionRequestEvent(artistAcceptedPublicKey);
                     }
                     break;
                 default:
