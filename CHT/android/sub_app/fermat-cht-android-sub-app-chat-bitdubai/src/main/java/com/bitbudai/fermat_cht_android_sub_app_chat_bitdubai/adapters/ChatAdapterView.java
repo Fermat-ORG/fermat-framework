@@ -125,7 +125,7 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSettings = chatSettings;
         //this.background=background;
         initControls();
-        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+
     }
 
     public ChatAdapterView(Context context, AttributeSet attrs) {
@@ -276,6 +276,34 @@ public class ChatAdapterView extends LinearLayout {
             return null;
         }
     }
+    public class BackgroundAsyncTaskOnline extends
+            AsyncTask<Void, Integer, Boolean> {
+
+        int myProgress;
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                try {
+                    return chatManager.checkOnlineStatus(remotePk);
+                } catch (CHTException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(Boolean x) {
+            if (x != null) {
+               isOnline = x;
+            }
+        }
+    }
+
 
 
     public class BackgroundAsyncTask extends
@@ -631,25 +659,14 @@ public class ChatAdapterView extends LinearLayout {
         scroll();
     }
 
-    FermatWorker workerOnline = new FermatWorker() {
-        @Override
-        protected Object doInBackground() throws Exception {
-            try {
-                isOnline = chatManager.checkOnlineStatus(remotePk);
-            }catch(CantGetOnlineStatus cantGetOnlineStatus){
-                cantGetOnlineStatus.printStackTrace();
-            }
-            return isOnline;
-        }
-    };
-
     public void checkStatus(){
         try {
            if(chatWasCreate) {
                if (chatManager.checkWritingStatus(chatId)) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
                } else {
-                   workerOnline.execute();
+                   BackgroundAsyncTaskOnline backAto = new BackgroundAsyncTaskOnline();
+                   backAto.execute();
                    if (isOnline) {
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
                    } else {
@@ -657,10 +674,11 @@ public class ChatAdapterView extends LinearLayout {
                    }
                }
            }else{
-               workerOnline.execute();
+               BackgroundAsyncTaskOnline backAto = new BackgroundAsyncTaskOnline();
+               backAto.execute();
                if (isOnline) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
-               } else {
+               }else {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
                }
            }
