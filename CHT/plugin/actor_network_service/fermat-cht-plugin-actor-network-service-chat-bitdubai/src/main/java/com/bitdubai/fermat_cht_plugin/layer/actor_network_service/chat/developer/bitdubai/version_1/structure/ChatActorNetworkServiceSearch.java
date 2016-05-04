@@ -169,8 +169,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
 
         } catch (final CantRequestListException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantListChatException(e, "", "Problem trying to request list of registered components in communication layer.");
+            return null;
 
         } catch (final Exception e) {
 
