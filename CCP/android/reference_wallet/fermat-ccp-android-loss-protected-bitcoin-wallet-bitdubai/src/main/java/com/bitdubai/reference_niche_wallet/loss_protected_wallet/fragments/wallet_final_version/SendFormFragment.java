@@ -231,8 +231,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                // changeActivity(Activities.CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY, appSession.getAppPublicKey());
-            }
+             }
         });
         errorConnectingFermatNetworkDialog.show();
     }
