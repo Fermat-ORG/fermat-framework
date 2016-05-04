@@ -552,7 +552,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
-            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_LOSS_PROTECTED_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
             Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
     }
