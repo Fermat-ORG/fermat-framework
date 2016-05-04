@@ -2,6 +2,8 @@ package com.bitdubai.android_core.app.common.version_1.communication.server_syst
 
 import android.app.Service;
 import android.content.Intent;
+import android.net.LocalServerSocket;
+import android.net.LocalSocket;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -13,6 +15,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.classes.BroadcastInterface;
+import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
@@ -37,6 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.Sc
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.module_object_creator.FermatModuleObjectInterface;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
@@ -63,16 +68,29 @@ import java.util.concurrent.Future;
 /**
  * Created by mati on 2016.04.18..
  */
-public class CommunicationServerService extends Service implements FermatWorkerCallBack {
+public class CommunicationServerService extends Service implements FermatWorkerCallBack, BroadcastInterface {
+
+    public static final String SERVER_NAME = "server_fermat";
+
 
     private static String TAG = "CommunicationServerService";
-    private static int BLOCK_SYZE = 1024*1000;
+    private static int BLOCK_SYZE = 1024*250;
 
     public int processingQueue = 0;
     /**
      * Clients connected
      */
     private Map<String, Messenger> clients;
+
+    /**
+     * Server socket
+     */
+    private LocalServerSocket localServerSocket;
+    private Thread serverThread;
+    /**
+     * Clients connected
+     */
+    private Map<String,LocalServerSocketSession> socketsClients;
 
     private boolean isFermatSystemRunning = false;
 
@@ -94,6 +112,12 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     final Messenger mMessenger = new Messenger(new IncomingHandler());
 
 
+    /**
+     * Manager
+     */
+    private BroadcastManager broadcastManager;
+
+
 
     private void chunkAndSendData(String dataId,String clientKey,Serializable data){
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -106,9 +130,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
 
             int i = 0;
-            int blockSize = BLOCK_SYZE;
+            int blockSize = 512;
             while (i < yourBytes.length){
-                if (i + BLOCK_SYZE > yourBytes.length) {
+                if (i + 512 > yourBytes.length) {
                     blockSize = yourBytes.length - i;
                 }
 
@@ -181,6 +205,12 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     }
 
     private void sendFullData(String dataId, String clientKey, Serializable data){
+
+        //test
+        sendLargeData(dataId,clientKey,data);
+
+
+
         Messenger messenger = clients.get(clientKey);
         Message msg = Message.obtain(null, CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
         msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, data);
@@ -192,6 +222,16 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void sendLargeData(String dataId,String clientKey, Serializable data){
+        try {
+            LocalServerSocketSession localServerSocketSession = socketsClients.get(clientKey);
+            localServerSocketSession.sendMessage(dataId, data);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private final IServerBrokerService.Stub mBinder = new IServerBrokerService.Stub() {
@@ -229,11 +269,43 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
             if (isDataForChunk(aidlObject)) {
                 sendFullData(dataId,clientKey,aidlObject);
-                return new FermatModuleObjectWrapper(aidlObject,true);
+                return new FermatModuleObjectWrapper(aidlObject,true,dataId);
             }else {
-                return new FermatModuleObjectWrapper(aidlObject,false);
+                return new FermatModuleObjectWrapper(aidlObject,false,dataId);
             }
 
+        }
+
+        @Override
+        public FermatModuleObjectWrapper invoqueModuleLargeDataMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
+            Log.i(TAG,"invoqueModuleMethod");
+            Log.i(TAG,platformCode);
+            Log.i(TAG,layerCode);
+            Log.i(TAG,pluginsCode);
+            Log.i(TAG,version);
+            Log.i(TAG,method);
+            Log.i(TAG,"Parameters");
+            for (FermatModuleObjectWrapper parameter : parameters) {
+                Log.i(TAG, parameter.toString());
+            }
+            Serializable aidlObject = null;
+            try {
+                PluginVersionReference pluginVersionReference = new PluginVersionReference(
+                        Platforms.getByCode(platformCode),
+                        Layers.getByCode(layerCode),
+                        Plugins.getByCode(pluginsCode),
+                        Developers.BITDUBAI,
+                        new Version());
+                aidlObject = moduleDataRequest(pluginVersionReference,method,parameters);
+            } catch (InvalidParameterException e) {
+                e.printStackTrace();
+            }
+
+            /**
+             * Acá se va a hacer el chunk y el envio al cliente
+             */
+            chunkAndSendData(dataId,clientKey,aidlObject);
+            return new FermatModuleObjectWrapper(aidlObject,true,dataId);
         }
 
         @Override
@@ -322,7 +394,25 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
         executorService = Executors.newFixedThreadPool(10);
         clients = new HashMap<>();
+        socketsClients = new HashMap<>();
+
+
+        try {
+            localServerSocket = new LocalServerSocket(SERVER_NAME);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        broadcastManager = new BroadcastManager(this);
+        AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+        if(!AndroidCoreUtils.getInstance().isStarted())
+            AndroidCoreUtils.getInstance().setStarted(true);
+
+
     }
+
+
 
     @Override
     public void onDestroy() {
@@ -517,7 +607,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
     }
 
-
     /**
      * Messenger
      */
@@ -533,7 +622,25 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             try {
                 switch (msg.what) {
                     case CommunicationMessages.MSG_REGISTER_CLIENT:
-                        registerClient(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY), msg.replyTo);
+                        final String clientKey = msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY);
+                        registerClient(clientKey, msg.replyTo);
+                        if(msg.getData().containsKey(CommunicationDataKeys.DATA_SOCKET_STARTED)){
+                            serverThread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        LocalSocket localSocket = localServerSocket.accept();
+                                        localSocket.setSendBufferSize(500000);
+                                        LocalServerSocketSession localServerSocketSession = new LocalServerSocketSession(clientKey,localSocket);
+                                        socketsClients.put(clientKey, localServerSocketSession);
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                }
+                            });
+                            serverThread.start();
+                        }
                         break;
                     case CommunicationMessages.MSG_UNREGISTER_CLIENT:
                         unRegisterClient(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY));
@@ -560,4 +667,25 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     private void unRegisterClient(String key){
         clients.remove(key);
     }
+
+
+    /**
+     * Methods to delete
+     */
+
+    @Override
+    public void notificateBroadcast(String appCode, String code) {
+
+    }
+
+    @Override
+    public void notificateBroadcast(String appCode, FermatBundle bundle) {
+
+    }
+
+    @Override
+    public int notificateProgressBroadcast(FermatBundle bundle) {
+        return 0;
+    }
+
 }
