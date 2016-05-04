@@ -198,6 +198,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
                 bitcoinWalletSettings.setNotificationEnabled(true);
+                bitcoinWalletSettings.setIsBlockchainDownloadEnabled(true);
 
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);

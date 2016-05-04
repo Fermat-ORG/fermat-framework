@@ -316,7 +316,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     protocolState,
                     requestMessage.getNetworkType(),
                     requestMessage.getReferenceWallet(),
-                    0, PaymentConstants.OUTGOING_MESSAGE
+                    0, PaymentConstants.OUTGOING_MESSAGE,
+                    requestMessage.getWalletPublicKey()
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {
@@ -584,7 +585,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
      * - Type          : SENT.
      */
     @Override
-    public void sendCryptoPaymentRequest(UUID requestId, String identityPublicKey, Actors identityType, String actorPublicKey, Actors actorType, CryptoAddress cryptoAddress, String description, long amount, long startTimeStamp, BlockchainNetworkType networkType, ReferenceWallet referenceWallet) throws CantSendRequestException {
+    public void sendCryptoPaymentRequest(UUID requestId, String identityPublicKey, Actors identityType, String actorPublicKey, Actors actorType, CryptoAddress cryptoAddress, String description, long amount, long startTimeStamp, BlockchainNetworkType networkType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantSendRequestException {
 
         System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT.");
 
@@ -609,7 +610,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     protocolState,
                     networkType,
                     referenceWallet,
-                    0, PaymentConstants.OUTGOING_MESSAGE
+                    0, PaymentConstants.OUTGOING_MESSAGE,
+                    walletPublicKey
             );
 
 
@@ -1053,7 +1055,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                 cpr.getNetworkType(),
                 cpr.getReferenceWallet(),
                 cpr.getIdentityPublicKey(),
-                cpr.getActorPublicKey()
+                cpr.getActorPublicKey(),
+                cpr.getWalletPublicKey()
 
         ).toJson();
     }

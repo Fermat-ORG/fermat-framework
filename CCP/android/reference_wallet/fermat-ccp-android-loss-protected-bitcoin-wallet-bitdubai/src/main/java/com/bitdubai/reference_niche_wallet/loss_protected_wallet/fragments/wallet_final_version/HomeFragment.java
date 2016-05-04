@@ -115,12 +115,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      * */
     private List<BitcoinLossProtectedWalletSpend> allWalletSpendingList;
     private BitcoinLossProtectedWalletSpend bitcoinLossProtectedWalletSpend;
-    String walletPublicKey = "loss_protected_wallet";
-    long before = 0;
-    long after = 0;
-    boolean pressed = false;
-    CircularProgressBar circularProgressBar;
-    Thread background;
+
 
     // Fermat Managers
 

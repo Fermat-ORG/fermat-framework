@@ -69,7 +69,7 @@ public class IncomingIntraUserTransactionHandler {
 
     private void launchIncomingMoneyNotificationEvent(CryptoAddressBookRecord cryptoAddressBookRecord,Transaction<CryptoTransaction> transaction) {
 
-        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,cryptoAddressBookRecord.getWalletPublicKey(),"TRANSACTIONARRIVE_" + transaction.getTransactionID().toString());
+        //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,cryptoAddressBookRecord.getWalletPublicKey(),"TRANSACTIONARRIVE_" + transaction.getTransactionID().toString());
 
 
     }
