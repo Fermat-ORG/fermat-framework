@@ -140,6 +140,9 @@ public class FanIdentityEventActions {
                     //We get the fanatic external platform
                     externalPlatform = fanatic.getExternalPlatform();
                     actorSearch = artistNetworkService.getSearch();
+                    if(actorSearch==null){
+                        //TODO: throw an exception
+                    }
                     artistExposingDataList = actorSearch.getResult(PlatformComponentType.ART_ARTIST);
                     switch (externalPlatform){
                         case TOKENLY:
@@ -159,6 +162,9 @@ public class FanIdentityEventActions {
                     //We get the fanatic external platform
                     externalPlatform = fanatic.getExternalPlatform();
                     fanSearch = artistNetworkService.getSearch();
+                    if(fanSearch==null){
+                        //TODO: throw an exception
+                    }
                     fanExposingDataList = fanSearch.getResult(PlatformComponentType.ART_ARTIST);
                     switch (externalPlatform){
                         case TOKENLY:
@@ -192,29 +198,12 @@ public class FanIdentityEventActions {
 
             String artistUsername;
             String remoteArtistPublicKey;
-            ArtArtistExtraData<ArtistExternalPlatformInformation> artistExternalData;
             for(ArtistExposingData artistExposingData : artistExposingDataList){
                 remoteArtistPublicKey = artistExposingData.getPublicKey();
                 //If the public key from the search is equals to the actor requester, we going to proceed
                 if(!senderPublicKey.equals(remoteArtistPublicKey)){
                     continue;
                 }
-                //Get the remote artist public key
-                /*remoteArtistPublicKey = artistExposingData.getPublicKey();
-                //Request the remote artist information
-                artistExternalData=artistNetworkService.requestExternalPlatformInformation(
-                        requestId,
-                        fanatic.getPublicKey(),
-                        PlatformComponentType.ART_FAN,
-                        remoteArtistPublicKey
-                );
-                //Process the information obtained
-                List<ArtistExternalPlatformInformation> listInformation=
-                        artistExternalData.listInformation();
-                for(ArtistExternalPlatformInformation artistExternalPlatformInformation :
-                        listInformation){
-                    HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap=
-                            artistExternalPlatformInformation.getExternalPlatformInformationMap();*/
                     //verify if we got Tokenly information
                 ArtistExternalPlatformInformation artistExternalPlatformInformation =
                         artistExposingData.getArtistExternalPlatformInformation();
@@ -239,12 +228,7 @@ public class FanIdentityEventActions {
                     e,
                     "Updating TKY identity",
                     "Identity cannot be found" );
-        } /*catch (CantRequestExternalPlatformInformationException e) {
-            throw new CantAddNewArtistConnectedException(
-                    e,
-                    "Updating TKY identity",
-                    "Cannot request information to a remote device" );
-        }*/ catch (CantGetFanIdentityException e) {
+        } catch (CantGetFanIdentityException e) {
             throw new CantAddNewArtistConnectedException(
                     e,
                     "Updating TKY identity",

@@ -516,12 +516,4 @@ public final class FanActorNetworkServiceManager implements FanManager {
         ).toJson();
     }
 
-    public FanConnectionRequest getConnectionRequest(UUID requestId) throws ConnectionRequestNotFoundException {
-        try {
-            return fanActorNetworkServiceDao.getConnectionRequest(requestId);
-        } catch (CantFindRequestException e) {
-            throw new ConnectionRequestNotFoundException(e, "Getting connection request", "Cannot fina the request "+requestId);
-        }
-    }
-
 }

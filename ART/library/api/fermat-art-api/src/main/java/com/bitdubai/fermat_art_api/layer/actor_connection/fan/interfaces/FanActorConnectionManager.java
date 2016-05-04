@@ -17,11 +17,8 @@ public interface FanActorConnectionManager extends
                 FanLinkedActorIdentity,
                 FanActorConnection,
                 FanActorConnectionSearch> {
-
-        void acceptConnection(final UUID connectionId,
-                              final String artistAcceptedPublicKey) throws
-                CantAcceptActorConnectionRequestException,
-                ActorConnectionNotFoundException,
-                UnexpectedConnectionStateException;
+        /**
+        * This interface is empty in this version
+        */
 
 }
