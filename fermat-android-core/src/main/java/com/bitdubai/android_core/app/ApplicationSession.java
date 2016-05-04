@@ -137,6 +137,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
                 handleUncaughtException(thread, e);
 //                ACRA.getErrorReporter().handleSilentException(e);
                 ACRA.getErrorReporter().handleException(e);
+                ACRA.getErrorReporter().uncaughtException(thread,e);
             }
         });
 
@@ -152,6 +153,8 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
                 }
             }).start();
+        }else{
+
         }
 
 //        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);

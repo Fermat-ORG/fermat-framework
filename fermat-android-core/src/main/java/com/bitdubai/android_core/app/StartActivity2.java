@@ -16,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
-import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
 import com.bitdubai.fermat.R;
 
 
@@ -30,7 +29,7 @@ import com.bitdubai.fermat.R;
  * -- Luis.
  */
 
-public class StartActivity2 extends AppCompatActivity implements  ServiceCallback {
+public class StartActivity2 extends AppCompatActivity  {
 
 
 
@@ -239,17 +238,5 @@ public class StartActivity2 extends AppCompatActivity implements  ServiceCallbac
         }
     };
 
-    private ServiceCallback registerCallback(){
-        return this;
-    }
 
-
-    @Override
-    public void callback(int option) {
-        if (option==1){
-            fermatInit();
-        }else if(option==2){
-            Toast.makeText(this,"Ooooops, an error occur, please re open the app",Toast.LENGTH_SHORT).show();
-        }
-    }
 }
