@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
@@ -337,15 +339,24 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     }
 
-
-
-    public void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
+    public final void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
 
         if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()){
             networkServiceRegistrationProcessAgent.stop();
             networkServiceRegistrationProcessAgent = null;
         }
         this.getConnection().registerProfile(this.getProfile());
+
+    }
+
+    public final void handleNetworkServiceRegisteredEvent() {
+
+        System.out.println("********** THIS NETWORK SERVICE HAS BEEN REGISTERED: " + this.getProfile());
+        this.registered = Boolean.TRUE;
+        onNetworkServiceRegistered();
+    }
+
+    public void onNetworkServiceRegistered() {
 
     }
 

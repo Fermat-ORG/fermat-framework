@@ -49,7 +49,7 @@ public class NetworkClientNetworkServiceRegisteredEventHandler implements Fermat
 
         if (this.networkService.isStarted())
             if (this.networkService.getProfile().getIdentityPublicKey().equals(fermatEvent.getPublicKey()))
-                System.out.println("********** THIS NETWORK SERVICE HAD BEEN REGISTERED: "+this.networkService.getProfile());
+                this.networkService.handleNetworkServiceRegisteredEvent();
 
     }
 }
