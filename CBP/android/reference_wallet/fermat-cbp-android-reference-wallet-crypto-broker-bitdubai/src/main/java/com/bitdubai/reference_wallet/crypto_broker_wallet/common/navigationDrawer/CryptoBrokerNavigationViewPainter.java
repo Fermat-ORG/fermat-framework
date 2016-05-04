@@ -176,17 +176,24 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         try {
             final List<EarningsPair> earningsPairs = moduleManager.getEarningsPairs(session.getAppPublicKey());
             for (EarningsPair earningsPair : earningsPairs) {
-                final String linkedCurrency = earningsPair.getLinkedCurrency().getCode();
-                final String earningCurrency = earningsPair.getEarningCurrency().getCode();
+                final Currency linkedCurrency = earningsPair.getLinkedCurrency();
+                final String linkedCurrencyCode = linkedCurrency.getCode();
 
-                String currencies = linkedCurrency + " / " + earningCurrency;
+                final Currency earningCurrency = earningsPair.getEarningCurrency();
+                final String earningCurrencyCode = earningCurrency.getCode();
+
+                String currencies = linkedCurrencyCode + " / " + earningCurrencyCode;
                 String value = "0.0";
 
                 final EarningsSearch search = earningsPair.getSearch();
 
                 final List<EarningsDetailData> earningsDetails = EarningsDetailData.generateEarningsDetailData(search.listResults(), TimeFrequency.DAILY);
                 if (!earningsDetails.isEmpty()) {
-                    final double amount = earningsDetails.get(0).getAmount();
+                    double amount = earningsDetails.get(0).getAmount();
+
+                    if(earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
+                        amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
+
                     value = numberFormat.format(amount);
                 }
 
