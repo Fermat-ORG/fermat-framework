@@ -312,7 +312,7 @@ public class ActorConnectionEventActions {
                         request.getSenderActorType() == PlatformComponentType.ART_FAN*/) {
                     switch (request.getRequestAction()) {
                         case ACCEPT:
-                            this.handleAcceptConnection(request.getRequestId());
+                            this.handleAcceptConnection(request.getRequestId(),EventSource.ACTOR_NETWORK_SERVICE_ARTIST);
                             break;
                         case DISCONNECT:
                             this.handleDisconnect(request.getRequestId());
@@ -354,7 +354,7 @@ public class ActorConnectionEventActions {
                         request.getSenderActorType() == PlatformComponentType.ART_FAN*/) {
                     switch (request.getRequestAction()) {
                         case ACCEPT:
-                            this.handleAcceptConnection(request.getRequestId());
+                            this.handleAcceptConnection(request.getRequestId(),EventSource.ACTOR_NETWORK_SERVICE_FAN);
                             break;
                         case DISCONNECT:
                             this.handleDisconnect(request.getRequestId());
@@ -610,7 +610,7 @@ public class ActorConnectionEventActions {
      * @throws ActorConnectionNotFoundException
      * @throws UnexpectedConnectionStateException
      */
-    public void handleAcceptConnection(final UUID connectionId) throws
+    public void handleAcceptConnection(final UUID connectionId, final EventSource eventSource) throws
             CantAcceptActorConnectionRequestException,
             ActorConnectionNotFoundException,
             UnexpectedConnectionStateException{
@@ -625,7 +625,10 @@ public class ActorConnectionEventActions {
                             connectionId,
                             ConnectionState.CONNECTED
                     );
-                    artistNetworkService.confirm(connectionId);
+                    if (eventSource == EventSource.ACTOR_NETWORK_SERVICE_ARTIST)
+                        artistNetworkService.confirm(connectionId);
+                    else
+                        fanNetworkService.confirm(connectionId);
                     break;
                 default:
                     throw new UnexpectedConnectionStateException(
