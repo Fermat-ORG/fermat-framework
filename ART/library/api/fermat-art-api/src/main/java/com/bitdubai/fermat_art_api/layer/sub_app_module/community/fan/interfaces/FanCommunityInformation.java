@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExternalPlatformInformation;
 
 import java.util.UUID;
 
@@ -37,4 +38,9 @@ public interface FanCommunityInformation {
      * @return UUID object
      */
     UUID getConnectionId();
+    /**
+     * The method <code>getArtistExternalPlatformInformation</code> returns the ArtistExternalPlatformInformation this actor has with the selected actor
+     * @return ArtistExternalPlatformInformation object
+     */
+    FanExternalPlatformInformation getFanExternalPlatformInformation();
 }

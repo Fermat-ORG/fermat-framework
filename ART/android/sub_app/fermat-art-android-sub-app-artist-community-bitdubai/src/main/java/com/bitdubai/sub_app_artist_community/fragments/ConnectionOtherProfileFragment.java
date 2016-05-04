@@ -143,11 +143,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
 
     private ArtExternalPlatform getSelectedIdentityExternalPlatform(){
         HashMap<ArtExternalPlatform, String> selectedIdentityExternalPlatformMap = artistCommunityInformation.getArtistExternalPlatformInformation().getExternalPlatformInformationMap();
-        ArtExternalPlatform selectedIdentityExternalPlatfor;
+        ArtExternalPlatform selectedIdentityExternalPlatform;
         Iterator<Map.Entry<ArtExternalPlatform, String>> entries = selectedIdentityExternalPlatformMap.entrySet().iterator();
         Map.Entry<ArtExternalPlatform, String> entry = entries.next();
-        selectedIdentityExternalPlatfor = entry.getKey();
-        return selectedIdentityExternalPlatfor;
+        selectedIdentityExternalPlatform = entry.getKey();
+        return selectedIdentityExternalPlatform;
     }
 
     @Override
