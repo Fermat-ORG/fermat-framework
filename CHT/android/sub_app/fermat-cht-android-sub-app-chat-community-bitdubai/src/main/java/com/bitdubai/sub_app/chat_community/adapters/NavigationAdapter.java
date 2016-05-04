@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.chat_community.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
