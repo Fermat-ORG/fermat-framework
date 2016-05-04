@@ -11,7 +11,6 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.sub_app.chat_community.R;
-import com.bitdubai.sub_app.chat_community.common.views.Utils;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 
 import java.util.List;
@@ -98,14 +97,14 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 //                        holder.connectionState.setVisibility(View.GONE);
 //                    break;
 //            }
-            holder.row_connection_state.setText(connectionState.toString());//data.getState()
-            if(data.getConnectionState().toString().equals("Offline"))
-                holder.row_connection_state.setTextColor(Color.RED);
-            else
-                holder.row_connection_state.setTextColor(Color.WHITE);
+            //holder.row_connection_state.setText(connectionState.toString());//data.getState()
+//            if(data.getConnectionState().toString().equals("Offline"))
+//                holder.row_connection_state.setTextColor(Color.RED);
+//            else
+//                holder.row_connection_state.setTextColor(Color.WHITE);
         } else {
-            holder.row_connection_state.setText("Offline");
-            holder.row_connection_state.setTextColor(Color.RED);
+//            holder.row_connection_state.setText("Offline");
+//            holder.row_connection_state.setTextColor(Color.RED);
            // holder.connectionState.setVisibility(View.GONE);
         }
 
