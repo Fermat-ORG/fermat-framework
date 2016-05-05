@@ -166,11 +166,13 @@ public class BroadcastManager implements BroadcasterInterface {
     }
 
     private void updateView(String code){
-        TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
-        if(adapter!=null) {
-            for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
-                fragment.onUpdateView(code);
-                fragment.onUpdateViewUIThred(code);
+        if (fermatActivity != null) {
+            TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+            if (adapter != null) {
+                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+                    fragment.onUpdateView(code);
+                    fragment.onUpdateViewUIThred(code);
+                }
             }
         }
     }
