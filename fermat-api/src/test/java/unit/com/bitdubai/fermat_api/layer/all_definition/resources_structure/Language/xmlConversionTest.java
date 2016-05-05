@@ -5,8 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 
-import junit.framework.TestCase;
-
 import org.junit.Assert;
 import org.junit.Test;
 

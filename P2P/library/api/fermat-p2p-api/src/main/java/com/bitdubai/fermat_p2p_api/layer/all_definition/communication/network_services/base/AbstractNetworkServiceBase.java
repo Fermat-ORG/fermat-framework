@@ -789,6 +789,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
         try {
 
+            System.out.println("Executing handleFailureComponentConnectionRequest ");
+            communicationNetworkServiceConnectionManager.removeRequestedConnection(event.getRemoteParticipant().getIdentityPublicKey());
             communicationSupervisorPendingMessagesAgent.removeConnectionWaitingForResponse(event.getRemoteParticipant().getIdentityPublicKey());
             checkFailedSendMessage(event.getRemoteParticipant().getIdentityPublicKey());
             onFailureComponentConnectionRequest(event.getRemoteParticipant());

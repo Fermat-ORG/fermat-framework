@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.util;
 
-import java.math.BigInteger;
-
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.EllipticCurvePoint;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Curve;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Point;
+
+import java.math.BigInteger;
 
 public class ECMath {
 
