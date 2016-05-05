@@ -113,6 +113,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
      */
     private List<NodeProfile> nodesProfileList;
 
+    /*
+     * Represent the clientsConnectionsManager
+     */
+    private ClientsConnectionsManager clientsConnectionsManager;
+
 
     @Override
     public FermatManager getManager() {
@@ -138,6 +143,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
         try{
 
+            clientsConnectionsManager = new ClientsConnectionsManager();
+
             /*
              * Initialize the identity of the node
              */
@@ -155,7 +162,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
-            ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, new ClientsConnectionsManager());
+            ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, clientsConnectionsManager);
 
             //nodesProfileList = getNodesProfileList();
 
