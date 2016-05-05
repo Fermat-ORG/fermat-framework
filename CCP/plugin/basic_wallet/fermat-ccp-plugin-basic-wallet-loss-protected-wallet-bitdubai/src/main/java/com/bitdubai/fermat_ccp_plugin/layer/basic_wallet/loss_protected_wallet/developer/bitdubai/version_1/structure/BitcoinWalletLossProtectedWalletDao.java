@@ -900,12 +900,41 @@ public class BitcoinWalletLossProtectedWalletDao {
     }
 
 
+
+    private  List<DatabaseTableRecord> getRecordsGreaterThanRate(BlockchainNetworkType blockchainNetworkType,String exchangeRate) throws CantGetTransactionsRecordException
+    {
+        try {
+            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
+
+            //I look for records income greater than or equal to the current share price
+
+            bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
+            bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TYPE_COLUMN_NAME, TransactionType.CREDIT.getCode(), DatabaseFilterType.EQUAL);
+            bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, String.valueOf(exchangeRate), DatabaseFilterType.GREATER_OR_EQUAL_THAN);
+            bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+
+            bitcoinWalletTable.addFilterOrder(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            bitcoinWalletTable.loadToMemory();
+
+            return bitcoinWalletTable.getRecords();
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetTransactionsRecordException("Get Records Less ThanRate",e,"CantLoadTableToMemoryException" , "");
+
+        } catch (Exception e) {
+            throw new CantGetTransactionsRecordException("Get Records Less ThanRate",FermatException.wrapException(e),"unknown Error", "");
+
+        }
+    }
+
+
     private  List<DatabaseTableRecord> getRecordsLessThanRate(BlockchainNetworkType blockchainNetworkType,String exchangeRate) throws CantGetTransactionsRecordException
     {
         try {
         DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-        //busco los registros de ingreso menores a la cotizacion actual
+        //I look for lower income records to the current share price
 
         bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
         bitcoinWalletTable.addStringFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TYPE_COLUMN_NAME, TransactionType.CREDIT.getCode(), DatabaseFilterType.EQUAL);
@@ -981,6 +1010,12 @@ public class BitcoinWalletLossProtectedWalletDao {
                         }
 
                 }
+
+            }
+            else
+            {
+                //No tengo bloques que pueda gastar sin perder dinero, inserto un registro de gasto con perdida
+                List<DatabaseTableRecord> transactionsRecords = getRecordsGreaterThanRate(transactionRecord.getBlockchainNetworkType(),exchangeRate);
 
             }
 
