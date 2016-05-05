@@ -625,6 +625,7 @@ public class ChatMiddlewareMonitorAgent implements
 
         boolean changes=false;
 
+
         List<Chat> chats = null;
             chats = chatMiddlewareDatabaseDao.getChatListByOnline();
 

@@ -787,7 +787,10 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus {
         try {
-            return chatMiddlewareDatabaseDao.getChatByChatId(chatId).isWriting();
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            if (chat!=null)
+                return chat.isWriting();
+            else return false;
         }catch(CantGetChatException e){
             throw new CantGetWritingStatus(
                     e,
@@ -830,7 +833,10 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     public boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus {
             try {
-                return chatMiddlewareDatabaseDao.getChatByRemotePublicKey(remotePublicKey).isOnline();
+                Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(remotePublicKey);
+                if (chat!=null)
+                    return chat.isOnline();
+                else return false;
             } catch (CantGetChatException e) {
                 throw new CantGetOnlineStatus(
                         e,
