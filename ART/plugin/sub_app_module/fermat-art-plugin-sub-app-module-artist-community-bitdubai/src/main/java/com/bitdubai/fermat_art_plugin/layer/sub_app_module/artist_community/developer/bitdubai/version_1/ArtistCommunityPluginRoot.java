@@ -29,16 +29,16 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  */
 public class ArtistCommunityPluginRoot extends AbstractModule<ArtistCommunitySettings, ArtistCommunitySelectableIdentity> {
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,           layer = Layers.IDENTITY,                plugin = Plugins.ARTIST_IDENTITY     )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.IDENTITY,                plugin = Plugins.ARTIST_IDENTITY     )
     private ArtistIdentityManager artistIdentityManager;
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,           layer = Layers.ACTOR_CONNECTION,        plugin = Plugins.ARTIST_ACTOR_CONNECTION)
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.ACTOR_CONNECTION,        plugin = Plugins.ARTIST_ACTOR_CONNECTION)
     private ArtistActorConnectionManager artistActorConnectionManager;
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,           layer = Layers.ACTOR_NETWORK_SERVICE,   plugin = Plugins.ARTIST   )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.ACTOR_NETWORK_SERVICE,   plugin = Plugins.ARTIST   )
     private ArtistManager artistNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,           layer = Layers.IDENTITY,                plugin = Plugins.FANATIC_IDENTITY   )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.IDENTITY,                plugin = Plugins.FANATIC_IDENTITY   )
     private FanaticIdentityManager fanaticIdentityManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,       layer = Layers.PLATFORM_SERVICE,        addon = Addons.ERROR_MANAGER)

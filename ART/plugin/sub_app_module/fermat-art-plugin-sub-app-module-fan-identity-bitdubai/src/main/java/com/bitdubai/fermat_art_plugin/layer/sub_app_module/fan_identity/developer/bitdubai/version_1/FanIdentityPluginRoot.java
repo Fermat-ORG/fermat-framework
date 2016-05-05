@@ -28,7 +28,7 @@ public class FanIdentityPluginRoot extends AbstractModule<FanIdentitySettings, A
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART, layer = Layers.IDENTITY,plugin = Plugins.FANATIC_IDENTITY)
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.IDENTITY,plugin = Plugins.FANATIC_IDENTITY)
     private FanaticIdentityManager fanaticIdentityManager;
 
     private ModuleFanIdentityManager moduleFanIdentityManager;

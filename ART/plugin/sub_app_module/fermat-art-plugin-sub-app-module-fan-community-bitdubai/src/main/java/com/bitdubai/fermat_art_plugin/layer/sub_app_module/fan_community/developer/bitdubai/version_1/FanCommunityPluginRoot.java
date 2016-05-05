@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
@@ -30,17 +29,17 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  */
 public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, FanCommunitySelectableIdentity> {
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
     private ArtistIdentityManager artistIdentityManager;
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
     private FanActorConnectionManager fanActorConnectionManager;
 
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN   )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN   )
     private FanManager fanNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,         layer = Layers.IDENTITY,              plugin = Plugins.FANATIC_IDENTITY   )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.FANATIC_IDENTITY   )
     private FanaticIdentityManager fanaticIdentityManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,     layer = Layers.PLATFORM_SERVICE,      addon  = Addons.ERROR_MANAGER)

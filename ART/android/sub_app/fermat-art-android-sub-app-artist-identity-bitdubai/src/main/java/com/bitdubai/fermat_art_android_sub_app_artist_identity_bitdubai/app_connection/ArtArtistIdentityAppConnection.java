@@ -53,7 +53,7 @@ public class ArtArtistIdentityAppConnection extends AppConnections {
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.PLATFORM_ART,
+                Platforms.ART_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.ART_ARTIST_SUB_APP_MODULE,
                 Developers.BITDUBAI,
