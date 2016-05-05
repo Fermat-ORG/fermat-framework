@@ -36,7 +36,10 @@ import java.util.concurrent.ExecutionException;
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
  * Edited by Miguel Payarez on 30/03/16.
  */
-public interface FanWalletModule extends ModuleManager<FanWalletPreferenceSettings, ActiveActorIdentityInformation> {
+public interface FanWalletModule extends
+        ModuleManager<
+                FanWalletPreferenceSettings,
+                ActiveActorIdentityInformation> {
 
     //Song Wallet
     /**
@@ -202,7 +205,8 @@ public interface FanWalletModule extends ModuleManager<FanWalletPreferenceSettin
      * @return
      * @throws CantGetSongException
      */
-    Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId) throws CantGetSongException;
+    Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId)
+            throws CantGetSongException;
 
     /**
      * This method checks if the Tokenly Music API is available.
