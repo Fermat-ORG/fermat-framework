@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
@@ -23,7 +24,8 @@ import java.util.UUID;
 public interface TokenlyFanIdentityManagerModule extends
         ModuleManager<
                 TokenlyFanPreferenceSettings,
-                ActiveActorIdentityInformation> {
+                ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<TokenlyFanPreferenceSettings> {
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the fan
      * identities linked to the current logged device user.

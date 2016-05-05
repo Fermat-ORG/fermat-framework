@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_identity.developer.bitdubai.version_1.structure.ModuleFanIdentityManager;
@@ -31,6 +32,9 @@ public class FanIdentityPluginRoot extends AbstractModule<FanIdentitySettings, A
     @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.IDENTITY,plugin = Plugins.FANATIC_IDENTITY)
     private FanaticIdentityManager fanaticIdentityManager;
 
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon  = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
     private ModuleFanIdentityManager moduleFanIdentityManager;
     /**
      * Default constructor
@@ -40,6 +44,8 @@ public class FanIdentityPluginRoot extends AbstractModule<FanIdentitySettings, A
     }
     private void initPluginManager(){
         this.moduleFanIdentityManager = new ModuleFanIdentityManager(
+                pluginFileSystem,
+                pluginId,
                 errorManager,
                 fanaticIdentityManager);
     }

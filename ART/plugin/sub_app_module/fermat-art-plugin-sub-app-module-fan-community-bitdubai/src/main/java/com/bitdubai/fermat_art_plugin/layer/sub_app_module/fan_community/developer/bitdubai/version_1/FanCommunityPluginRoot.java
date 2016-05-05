@@ -35,7 +35,6 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
     private FanActorConnectionManager fanActorConnectionManager;
 
-
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN   )
     private FanManager fanNetworkServiceManager;
 

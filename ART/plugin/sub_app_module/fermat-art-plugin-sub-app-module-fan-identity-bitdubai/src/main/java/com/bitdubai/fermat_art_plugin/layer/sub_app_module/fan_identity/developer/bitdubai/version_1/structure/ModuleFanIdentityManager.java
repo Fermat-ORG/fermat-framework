@@ -1,9 +1,10 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
@@ -27,11 +28,18 @@ import java.util.UUID;
 /**
  * Created by alexander on 3/15/16.
  */
-public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serializable {
+public class ModuleFanIdentityManager
+        extends ModuleManagerImpl<FanIdentitySettings>
+        implements FanIdentityManagerModule,Serializable {
     private final ErrorManager errorManager;
     private final FanaticIdentityManager fanaticIdentityManager;
 
-    public ModuleFanIdentityManager(ErrorManager errorManager, FanaticIdentityManager fanaticIdentityManager) {
+    public ModuleFanIdentityManager(
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            ErrorManager errorManager,
+            FanaticIdentityManager fanaticIdentityManager) {
+        super(pluginFileSystem, pluginId);
         this.errorManager = errorManager;
         this.fanaticIdentityManager = fanaticIdentityManager;
     }
@@ -94,10 +102,10 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serial
         fanaticIdentityManager.publishIdentity(publicKey);
     }
 
-    @Override
+    /*@Override
     public SettingsManager<FanIdentitySettings> getSettingsManager() {
         return null;
-    }
+    }*/
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

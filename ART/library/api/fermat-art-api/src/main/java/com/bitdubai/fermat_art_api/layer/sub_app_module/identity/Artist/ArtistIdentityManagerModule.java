@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
@@ -23,7 +24,9 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
  */
-public interface ArtistIdentityManagerModule extends ModuleManager<ArtistIdentitySettings,ActiveActorIdentityInformation> {
+public interface ArtistIdentityManagerModule
+        extends ModuleManager<ArtistIdentitySettings,ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<ArtistIdentitySettings> {
 
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist

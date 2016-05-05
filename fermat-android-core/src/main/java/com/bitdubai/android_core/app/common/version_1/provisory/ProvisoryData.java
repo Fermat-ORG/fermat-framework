@@ -176,7 +176,7 @@ public class ProvisoryData {
                 "sub_app_art_artist_identity",
                 new Version(1, 0, 0),
                 Platforms.ART_PLATFORM,
-                AppsStatus.ALPHA);
+                AppsStatus.DEV);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.icon_bitcoin_network_active);
@@ -193,7 +193,7 @@ public class ProvisoryData {
                 "sub_app_art_fan_identity",
                 new Version(1,0,0),
                 Platforms.ART_PLATFORM,
-                AppsStatus.ALPHA);
+                AppsStatus.DEV);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.subapp_art_fan_icon);
         item2.setPosition(8);
@@ -210,7 +210,7 @@ public class ProvisoryData {
                 "sub_app_tky_artist_identity",
                 new Version(1, 0, 0),
                 Platforms.TOKENLY,
-                AppsStatus.ALPHA);
+                AppsStatus.DEV);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.subapp_tky_artist_icon);
@@ -229,7 +229,7 @@ public class ProvisoryData {
                 "tky_fan_sub_app",
                 new Version(1,0,0),
                 Platforms.TOKENLY,
-                AppsStatus.ALPHA);
+                AppsStatus.DEV);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.subapp_tky_fan_icon);
         item2.setPosition(10);

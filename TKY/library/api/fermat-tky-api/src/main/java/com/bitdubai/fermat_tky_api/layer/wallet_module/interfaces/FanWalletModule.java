@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
@@ -39,7 +40,8 @@ import java.util.concurrent.ExecutionException;
 public interface FanWalletModule extends
         ModuleManager<
                 FanWalletPreferenceSettings,
-                ActiveActorIdentityInformation> {
+                ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<FanWalletPreferenceSettings> {
 
     //Song Wallet
     /**

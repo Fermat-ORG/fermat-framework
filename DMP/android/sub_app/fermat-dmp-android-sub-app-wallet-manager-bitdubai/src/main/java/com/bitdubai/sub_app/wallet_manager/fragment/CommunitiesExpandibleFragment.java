@@ -336,7 +336,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 "sub_app_artist_community",
                 new Version(1, 0, 0),
                 Platforms.ART_PLATFORM,
-                AppsStatus.ALPHA);
+                AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.artist_banner);
         installedSubApp.setBanner(R.drawable.artist_banner);
@@ -352,7 +352,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 "sub_app_art_fan_community",
                 new Version(1, 0, 0),
                 Platforms.ART_PLATFORM,
-                AppsStatus.ALPHA);
+                AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.communities_icon);
         installedSubApp.setBanner(R.drawable.communities_bar);

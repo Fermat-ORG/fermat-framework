@@ -15,10 +15,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
@@ -58,14 +58,14 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
  */
-public class FanCommunityManager implements FanCommunityModuleManager,Serializable {
+public class FanCommunityManager
+        extends ModuleManagerImpl<FanCommunitySettings>
+        implements FanCommunityModuleManager,Serializable {
     private final ArtistIdentityManager                artistIdentityManager                    ;
     private final FanActorConnectionManager            fanActorConnectionManager                ;
     private final FanManager                           fanActorNetworkServiceManager            ;
     private final FanaticIdentityManager               fanaticIdentityManager                   ;
     private final ErrorManager                         errorManager                             ;
-    private final PluginFileSystem                     pluginFileSystem                         ;
-    private final UUID                                 pluginId                                 ;
     private final PluginVersionReference               pluginVersionReference                   ;
 
     private SettingsManager<FanCommunitySettings> settingsManager;
@@ -82,14 +82,12 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
                                           final PluginFileSystem pluginFileSystem,
                                           final UUID pluginId,
                                           final PluginVersionReference pluginVersionReference) {
-
+        super(pluginFileSystem, pluginId);
         this.artistIdentityManager                    = artistIdentityManager                    ;
         this.fanActorConnectionManager                = fanActorConnectionManager                ;
         this.fanActorNetworkServiceManager            = fanActorNetworkServiceManager            ;
         this.fanaticIdentityManager                   = fanaticIdentityManager                   ;
         this.errorManager                             = errorManager                             ;
-        this.pluginFileSystem                         = pluginFileSystem                         ;
-        this.pluginId                                 = pluginId                                 ;
         this.pluginVersionReference                   = pluginVersionReference                   ;
     }
 
@@ -395,7 +393,7 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
     }
 
-    @Override
+    /*@Override
     public SettingsManager<FanCommunitySettings> getSettingsManager() {
 
         if (this.settingsManager != null)
@@ -406,7 +404,7 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
                 pluginId
         );
 
-        return this.settingsManager;    }
+        return this.settingsManager;    }*/
 
     @Override
     public FanCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

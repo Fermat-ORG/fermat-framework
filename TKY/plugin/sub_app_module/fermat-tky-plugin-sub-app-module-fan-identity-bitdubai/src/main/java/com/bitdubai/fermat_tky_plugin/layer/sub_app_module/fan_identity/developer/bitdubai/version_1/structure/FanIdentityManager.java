@@ -1,9 +1,10 @@
 package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.fan_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
@@ -28,7 +29,9 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/15/16.
  */
-public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Serializable {
+public class FanIdentityManager
+        extends ModuleManagerImpl<TokenlyFanPreferenceSettings>
+        implements TokenlyFanIdentityManagerModule,Serializable {
     private final ErrorManager errorManager;
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
@@ -42,7 +45,10 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     public FanIdentityManager(
             ErrorManager errorManager,
             TokenlyFanIdentityManager tokenlyFanIdentityManager,
-            TokenlyApiManager tokenlyApiManager) {
+            TokenlyApiManager tokenlyApiManager,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId) {
+        super(pluginFileSystem, pluginId);
         this.errorManager = errorManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
         this.tokenlyApiManager = tokenlyApiManager;
@@ -54,7 +60,14 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     }
 
     @Override
-    public Fan createFanIdentity(String userName, byte[] profileImage, String userPassword,  ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
+    public Fan createFanIdentity(
+            String userName,
+            byte[] profileImage,
+            String userPassword,
+            ExternalPlatform externalPlatform) throws
+            CantCreateFanIdentityException,
+            FanIdentityAlreadyExistsException,
+            WrongTokenlyUserCredentialsException {
         return tokenlyFanIdentityManager.createFanIdentity(
                 userName,
                 profileImage,
@@ -63,7 +76,15 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     }
 
     @Override
-    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException {
+    public Fan updateFanIdentity(
+            String userName,
+            String password,
+            UUID id,
+            String publicKey,
+            byte[] profileImage,
+            ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException,
+            WrongTokenlyUserCredentialsException {
         return tokenlyFanIdentityManager.updateFanIdentity(
                 userName,
                 password,
@@ -88,13 +109,15 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
         return tokenlyApiManager.getMusicAPIStatus();
     }
 
-    @Override
+    /*@Override
     public SettingsManager<TokenlyFanPreferenceSettings> getSettingsManager() {
         return null;
-    }
+    }*/
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws
+            CantGetSelectedActorIdentityException,
+            ActorIdentityNotSelectedException {
         return null;
     }
 

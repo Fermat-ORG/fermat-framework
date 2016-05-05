@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -43,13 +44,13 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/16/16.
  */
-public class FanWalletModuleManagerImpl implements FanWalletModule {
+public class FanWalletModuleManagerImpl
+        extends ModuleManagerImpl<FanWalletPreferenceSettings>
+        implements FanWalletModule {
     private final ErrorManager errorManager;
     private final SongWalletTokenlyManager songWalletTokenlyManager;
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
 
     private SettingsManager<FanWalletPreferenceSettings> settingsManager;
 
@@ -60,12 +61,11 @@ public class FanWalletModuleManagerImpl implements FanWalletModule {
                                       TokenlyApiManager tokenlyApiManager,
                                       PluginFileSystem pluginFileSystem,
                                       UUID pluginId) {
+        super(pluginFileSystem, pluginId);
         this.errorManager = errorManager;
         this.songWalletTokenlyManager = songWalletTokenlyManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
         this.tokenlyApiManager = tokenlyApiManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
     }
 
 
@@ -194,7 +194,7 @@ public class FanWalletModuleManagerImpl implements FanWalletModule {
         return tokenlyApiManager.getSwapBotAPIStatus();
     }
 
-    @Override
+    /*@Override
     public SettingsManager<FanWalletPreferenceSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
@@ -205,7 +205,7 @@ public class FanWalletModuleManagerImpl implements FanWalletModule {
         );
 
         return this.settingsManager;
-    }
+    }*/
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

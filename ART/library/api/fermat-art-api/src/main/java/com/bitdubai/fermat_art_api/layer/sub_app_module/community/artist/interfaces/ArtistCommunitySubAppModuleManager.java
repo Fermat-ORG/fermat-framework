@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ArtistCancellingFailedException;
@@ -25,7 +25,7 @@ import java.util.UUID;
 public interface ArtistCommunitySubAppModuleManager extends
         ModuleManager<
                 ArtistCommunitySettings,
-                ArtistCommunitySelectableIdentity> {
+                ArtistCommunitySelectableIdentity>,ModuleSettingsImpl<ArtistCommunitySettings> {
 
     /**
      * The method <code>listWorldArtists</code> returns the list of all Artist in the world,
