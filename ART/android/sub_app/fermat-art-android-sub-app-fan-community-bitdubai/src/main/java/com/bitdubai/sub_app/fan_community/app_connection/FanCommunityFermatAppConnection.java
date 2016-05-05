@@ -36,7 +36,7 @@ public class FanCommunityFermatAppConnection extends AppConnections<FanCommunity
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.PLATFORM_ART,
+                Platforms.ART_PLATFORM,
                 Layers.SUB_APP_MODULE,
                 Plugins.FAN_COMMUNITY_SUB_APP_MODULE,
                 Developers.BITDUBAI,

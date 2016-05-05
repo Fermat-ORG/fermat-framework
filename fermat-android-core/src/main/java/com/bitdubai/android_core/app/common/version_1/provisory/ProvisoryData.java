@@ -175,7 +175,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
                 "sub_app_art_artist_identity",
                 new Version(1, 0, 0),
-                Platforms.PLATFORM_ART,
+                Platforms.ART_PLATFORM,
                 AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
@@ -192,7 +192,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_IDENTITY.getCode(),
                 "sub_app_art_fan_identity",
                 new Version(1,0,0),
-                Platforms.PLATFORM_ART,
+                Platforms.ART_PLATFORM,
                 AppsStatus.ALPHA);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.subapp_art_fan_icon);
@@ -359,7 +359,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                 "sub_app_art_fan_community",
                 new Version(1, 0, 0),
-                Platforms.PLATFORM_ART,
+                Platforms.ART_PLATFORM,
                 AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
@@ -376,7 +376,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                 "sub_app_art_artist_community",
                 new Version(1, 0, 0),
-                Platforms.PLATFORM_ART,
+                Platforms.ART_PLATFORM,
                 AppsStatus.ALPHA);
 
         item1 = new Item(installedSubApp);

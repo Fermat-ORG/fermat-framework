@@ -22,7 +22,10 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/6/16.
  */
-public interface ArtistCommunitySubAppModuleManager extends ModuleManager<ArtistCommunitySettings, ArtistCommunitySelectableIdentity> {
+public interface ArtistCommunitySubAppModuleManager extends
+        ModuleManager<
+                ArtistCommunitySettings,
+                ArtistCommunitySelectableIdentity> {
 
     /**
      * The method <code>listWorldArtists</code> returns the list of all Artist in the world,
@@ -33,7 +36,10 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      *
      * @throws CantListArtistsException if something goes wrong.
      */
-    List<ArtistCommunityInformation> listWorldArtists(ArtistCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListArtistsException;
+    List<ArtistCommunityInformation> listWorldArtists(
+            ArtistCommunitySelectableIdentity selectedIdentity,
+            final int max,
+            final int offset) throws CantListArtistsException;
 
 
     /**
@@ -44,7 +50,8 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      *
      * @throws CantListIdentitiesToSelectException if something goes wrong.
      */
-    List<ArtistCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
+    List<ArtistCommunitySelectableIdentity> listSelectableIdentities() throws
+            CantListIdentitiesToSelectException;
 
 
     /**
@@ -80,8 +87,10 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
      * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void requestConnectionToArtist(ArtistCommunitySelectableIdentity selectedIdentity     ,
-                                   ArtistCommunityInformation        artistToContact) throws CantRequestConnectionException,
+    void requestConnectionToArtist(
+            ArtistCommunitySelectableIdentity selectedIdentity,
+            ArtistCommunityInformation artistToContact) throws
+            CantRequestConnectionException,
             ActorConnectionAlreadyRequestedException,
             ActorTypeNotSupportedException;
 
@@ -94,7 +103,9 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      * @throws CantAcceptRequestException           if something goes wrong.
      * @throws ConnectionRequestNotFoundException   if we cant find the connection request..
      */
-    void acceptArtist(UUID requestId) throws CantAcceptRequestException, ConnectionRequestNotFoundException;
+    void acceptArtist(UUID requestId) throws
+            CantAcceptRequestException,
+            ConnectionRequestNotFoundException;
 
 
     /**
@@ -105,7 +116,9 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      * @throws ArtistConnectionDenialFailedException if something goes wrong.
      * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
-    void denyConnection(UUID requestId) throws ArtistConnectionDenialFailedException, ConnectionRequestNotFoundException;
+    void denyConnection(UUID requestId) throws
+            ArtistConnectionDenialFailedException,
+            ConnectionRequestNotFoundException;
 
     /**
      * The method <code>disconnectArtist</code> disconnect an Artist from the list managed by this
@@ -116,7 +129,9 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      * @throws ArtistDisconnectingFailedException if something goes wrong.
      * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
-    void disconnectArtist(UUID requestId) throws ArtistDisconnectingFailedException, ConnectionRequestNotFoundException;
+    void disconnectArtist(UUID requestId) throws
+            ArtistDisconnectingFailedException,
+            ConnectionRequestNotFoundException;
 
     /**
      * The method <code>cancelArtist</code> cancels an Artist from the list managed by this
@@ -126,7 +141,9 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      * @throws ArtistCancellingFailedException if something goes wrong.
      * @throws ConnectionRequestNotFoundException   if we cant find the connection request.
      */
-    void cancelArtist(UUID requestId) throws ArtistCancellingFailedException, ConnectionRequestNotFoundException;
+    void cancelArtist(UUID requestId) throws
+            ArtistCancellingFailedException,
+            ConnectionRequestNotFoundException;
 
     /**
      * The method <code>listAllConnectedArtists</code> returns the list of all artist registered by the
@@ -136,9 +153,10 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      *
      * @throws CantListArtistsException if something goes wrong.
      */
-    List<ArtistCommunityInformation> listAllConnectedArtists(final ArtistCommunitySelectableIdentity selectedIdentity,
-                                                                         final int                                     max             ,
-                                                                         final int                                     offset          ) throws CantListArtistsException;
+    List<ArtistCommunityInformation> listAllConnectedArtists(
+            final ArtistCommunitySelectableIdentity selectedIdentity,
+            final int max,
+            final int offset) throws CantListArtistsException;
 
     /**
      * The method <code>listArtistsPendingLocalAction</code> returns the list of artist waiting to be accepted
@@ -148,9 +166,10 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      *
      * @throws CantListArtistsException if something goes wrong.
      */
-    List<ArtistCommunityInformation> listArtistsPendingLocalAction(final ArtistCommunitySelectableIdentity selectedIdentity,
-                                                                               final int max,
-                                                                               final int offset) throws CantListArtistsException;
+    List<ArtistCommunityInformation> listArtistsPendingLocalAction(
+            final ArtistCommunitySelectableIdentity selectedIdentity,
+            final int max,
+            final int offset) throws CantListArtistsException;
 
     /**
      * The method <code>listArtistsPendingRemoteAction</code> list the artist that haven't
@@ -161,9 +180,10 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      *
      * @throws CantListArtistsException if something goes wrong.
      */
-    List<ArtistCommunityInformation> listArtistsPendingRemoteAction(final ArtistCommunitySelectableIdentity selectedIdentity,
-                                                                                final int max,
-                                                                                final int offset) throws CantListArtistsException;
+    List<ArtistCommunityInformation> listArtistsPendingRemoteAction(
+            final ArtistCommunitySelectableIdentity selectedIdentity,
+            final int max,
+            final int offset) throws CantListArtistsException;
 
     /**
      * Count Artist waiting
@@ -180,7 +200,8 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      *
      * @throws CantValidateConnectionStateException if something goes wrong.
      */
-    ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;
+    ConnectionState getActorConnectionState(String publicKey) throws
+            CantValidateConnectionStateException;
 
 
 }
