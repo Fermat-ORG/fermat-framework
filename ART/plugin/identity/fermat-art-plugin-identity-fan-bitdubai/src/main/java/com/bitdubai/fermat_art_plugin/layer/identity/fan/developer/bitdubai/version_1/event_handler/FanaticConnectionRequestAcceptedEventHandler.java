@@ -46,9 +46,7 @@ public class FanaticConnectionRequestAcceptedEventHandler implements FermatEvent
                         (ArtistConnectionRequestAcceptedEvent) fermatEvent;
                 fanIdentityEventActions.handleArtistRequestConnectionAccepted(
                         event.getArtistAcceptedPublicKey());
-            } else if(fermatEvent instanceof ArtistConnectionRequestUpdatesEvent) {
-                //Nothing to do here
-            }else{
+            } else{
                 EventType eventExpected = EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+
                         "Event expected: " + eventExpected.toString()              + " - " + eventExpected.getCode();

@@ -239,7 +239,7 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                 case CONNECTED:
                     // disconnect from an actor through network service and after that mark as DISCONNECTED LOCALLY
                     // TODO HAVE IN COUNT THAT YOU HAVE TO DISCONNECT FROM AN SPECIFIC TYPE OF ACTOR,.
-                    artistNetworkService.disconnect(connectionId);
+                    fanNetworkService.disconnect(connectionId);
                     dao.changeConnectionState(
                             connectionId,
                             ConnectionState.DISCONNECTED_LOCALLY
