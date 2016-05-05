@@ -4,7 +4,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -28,6 +31,11 @@ import javax.websocket.Session;
  */
 public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
 
+    /*
+     * Represent the clientsConnectionsManager
+     */
+    private ClientsConnectionsManager clientsConnectionsManager;
+
     /**
      * Constructor whit parameter
      *
@@ -38,6 +46,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                 communicationsNetworkClientChannel,
                 PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND
         );
+        this.clientsConnectionsManager =  (ClientsConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }
 
     /**
@@ -105,15 +114,14 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                          * if exist conenction to node use the actual NetworkClientCommunicationConnection
                          * else then request a new NetworkClientCommunicationConnection to that Node
                          */
-                        if(getChannel().getNetworkClientCommunicationConnection().getNetworkClientCommunicationPluginRoot().
-                                getListConnectionActiveToNode().containsKey(uriToNode)){
+                        if(clientsConnectionsManager.getListConnectionActiveToNode().containsKey(uriToNode)){
 
                             /*
                              * set the ListActorConnectIntoNode with IdentityPublicKey of Actor and
                              * the uriToNode to can find the NetworkClientCommunicationConnection in the
                              * ListConnectionActiveToNode
                              */
-                            getChannel().getNetworkClientCommunicationConnection().getNetworkClientCommunicationPluginRoot().getListActorConnectIntoNode().put(
+                            clientsConnectionsManager.getListActorConnectIntoNode().put(
                                     result.getActorProfile().getIdentityPublicKey(),
                                     uriToNode
                             );
@@ -122,14 +130,17 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                              * set the ListConnectionActiveToNode with uriToNode and the
                              * NetworkClientCommunicationConnection respective
                              */
-                            getChannel().getNetworkClientCommunicationConnection().getNetworkClientCommunicationPluginRoot().getListConnectionActiveToNode().put(
+                            clientsConnectionsManager.getListConnectionActiveToNode().put(
                                     uriToNode,
-                                    getChannel().getNetworkClientCommunicationConnection().getNetworkClientCommunicationPluginRoot().getListConnectionActiveToNode().get(uriToNode)
+                                    clientsConnectionsManager.getListConnectionActiveToNode().get(uriToNode)
                             );
 
                         }else{
 
-                            // request connection to the Node extern in the NetworkClientCommunicationPluginRoot
+                            // request connection to the Node extern in the clientsConnectionsManager
+                            clientsConnectionsManager.requestConnectionToNodeExtern(
+                                    result.getActorProfile().getIdentityPublicKey(),
+                                    uriToNode);
 
                         }
 

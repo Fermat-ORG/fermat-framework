@@ -627,7 +627,4 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         return uri;
     }
 
-    public NetworkClientCommunicationPluginRoot getNetworkClientCommunicationPluginRoot() {
-        return networkClientCommunicationPluginRoot;
-    }
 }

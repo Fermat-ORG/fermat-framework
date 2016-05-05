@@ -23,13 +23,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -103,16 +104,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
     private NetworkClientCommunicationConnection networkClientCommunicationConnection;
 
     /*
-     * Represent the listActorConnectIntoNode
-     */
-    private Map<String, String> listActorConnectIntoNode;
-
-    /*
-     * Represent the listConnectionActiveToNode
-     */
-    private Map<String, NetworkClientCommunicationConnection> listConnectionActiveToNode;
-
-    /*
      * Represent The executorService
      */
     private ExecutorService executorService;
@@ -133,8 +124,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
      */
     public NetworkClientCommunicationPluginRoot() {
         super(new PluginVersionReference(new Version()));
-        this.listActorConnectIntoNode = new HashMap<>();
-        this.listConnectionActiveToNode = new HashMap<>();
     }
 
     @Override
@@ -165,6 +154,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
+            ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, new ClientsConnectionsManager());
 
             //nodesProfileList = getNodesProfileList();
 
@@ -502,14 +492,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
                 conn.disconnect();
         }
 
-    }
-
-    public Map<String, String> getListActorConnectIntoNode() {
-        return listActorConnectIntoNode;
-    }
-
-    public Map<String, NetworkClientCommunicationConnection> getListConnectionActiveToNode() {
-        return listConnectionActiveToNode;
     }
 
 }
