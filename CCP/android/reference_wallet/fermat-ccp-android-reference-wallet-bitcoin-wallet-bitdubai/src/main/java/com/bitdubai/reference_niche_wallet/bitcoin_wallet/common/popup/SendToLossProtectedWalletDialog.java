@@ -140,7 +140,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
         list.add("BTC");
         list.add("Bits");
         list.add("Satoshis");
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(activity,
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(activity,
                 R.layout.send_to_loss_protected_list_item_spinner, list);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(dataAdapter);
@@ -257,14 +257,9 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
     private void sendCrypto() {
 
-        Toast.makeText(activity, "sending btc to loss protected Wallet", Toast.LENGTH_SHORT).show();
+      //  Toast.makeText(activity, "Sending btc to Loss Protected Wallet", Toast.LENGTH_SHORT).show();
 
-        /**
-         * TODO: Esta todo el metodo listo para enviar los btc a la Loss Protected Wallet.
-         * TODO: Solo falta agregar a la interfaces de la references los metodos getInstalledWallets() y sendToWallet().
-         * TODO: Para asi porder hacer pruebas y mejorarlo.
-         */
-        /*try {
+        try {
 
             EditText txtAmount = editTextAmount;
             String amount = txtAmount.getText().toString();
@@ -303,12 +298,12 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                     List<InstalledWallet> list= cryptoWallet.getInstalledWallets();
                     InstalledWallet wallet = null;
                     for (int i = 0; i < list.size() ; i++) {
-                        if (walletName.equals(list.get(i).getWalletName())){
+                        if (list.get(i).getWalletName().equals("Loss Protected Wallet")){
                             wallet = list.get(i);
                         }
                     }
                     if (wallet != null){
-                        System.out.println("public key"+wallet.getWalletPublicKey());
+
                         if (operator.compareTo(minSatoshis) == 1) {
                             cryptoWallet.sendToWallet(
                                     operator.longValueExact(),
@@ -319,10 +314,8 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                     blockchainNetworkType
-
-                                    // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                             );
-                            Toast.makeText(activity, "Sending...", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(activity, "Sending btc to Loss Protected Wallet...", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(activity, "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
                         }
@@ -349,7 +342,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
         } catch (Exception e) {
             Toast.makeText(activity, "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-        }*/
+        }
 
     }
 }

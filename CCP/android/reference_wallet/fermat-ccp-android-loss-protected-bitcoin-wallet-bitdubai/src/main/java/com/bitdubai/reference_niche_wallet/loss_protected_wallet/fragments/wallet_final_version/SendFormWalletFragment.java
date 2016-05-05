@@ -398,11 +398,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
-                    //Long amount = Long.parseLong(editTextAmount.getText().toString());
-                    //if (amount > 0) {
-                    //long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                    //editTextAmount.setHint("Available amount: " + actualBalance + " bits");
-                    //}
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -543,7 +539,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                 }
                             }
                             if (wallet != null){
-                                System.out.println("public key"+wallet.getWalletPublicKey());
+
                                 if (operator.compareTo(minSatoshis) == 1) {
                                     cryptoWallet.sendToWallet(
                                             operator.longValueExact(),
@@ -555,8 +551,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                             blockchainNetworkType
 
-                                            // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
-                                    );
+                                           );
                                     Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                     onBack(null);
                                 } else {
