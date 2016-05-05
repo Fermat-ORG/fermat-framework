@@ -23,11 +23,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseFactory;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantInitializeNetworkClientP2PDatabaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -38,15 +38,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import org.springframework.web.client.RestTemplate;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -56,7 +56,7 @@ import java.util.concurrent.Executors;
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 12/11/15.
  * Updated by Leon Acosta - (laion.cj91@gmail.com) on 07/04/2016.
  *
- * @author xxxxxxxxxx
+ * @author Hendry Rodriguez
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -103,6 +103,16 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
     private NetworkClientCommunicationConnection networkClientCommunicationConnection;
 
     /*
+     * Represent the listActorConnectIntoNode
+     */
+    private Map<String, String> listActorConnectIntoNode;
+
+    /*
+     * Represent the listConnectionActiveToNode
+     */
+    private Map<String, NetworkClientCommunicationConnection> listConnectionActiveToNode;
+
+    /*
      * Represent The executorService
      */
     private ExecutorService executorService;
@@ -118,8 +128,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
         return null;
     }
 
+    /**
+     * Constructor
+     */
     public NetworkClientCommunicationPluginRoot() {
         super(new PluginVersionReference(new Version()));
+        this.listActorConnectIntoNode = new HashMap<>();
+        this.listConnectionActiveToNode = new HashMap<>();
     }
 
     @Override
@@ -487,6 +502,14 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
                 conn.disconnect();
         }
 
+    }
+
+    public Map<String, String> getListActorConnectIntoNode() {
+        return listActorConnectIntoNode;
+    }
+
+    public Map<String, NetworkClientCommunicationConnection> getListConnectionActiveToNode() {
+        return listConnectionActiveToNode;
     }
 
 }
