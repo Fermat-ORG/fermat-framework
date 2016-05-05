@@ -32,6 +32,9 @@ interface IServerBrokerService {
           in FermatModuleObjectWrapper[] parameters
           );
 
+    String register();
+
+
     FermatModuleObjectWrapper invoqueModuleMethod2(
                 in String platformCode,
                 in String layerCode,

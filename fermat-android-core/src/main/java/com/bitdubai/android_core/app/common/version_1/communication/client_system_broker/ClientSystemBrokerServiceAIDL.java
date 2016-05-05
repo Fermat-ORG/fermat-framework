@@ -39,8 +39,8 @@ import java.util.concurrent.Executors;
  */
 public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrokerService {
 
-    private static final String TAG = "ClientBrokerService";
-    private static final String KEY = "s";
+    private static final String TAG = "ClientBrokerServiceAIDL";
+//    private static final String KEY = "s";
     private static final int THREADS_NUM = 3;
 
     private final IBinder localBinder = new LocalBinder();
@@ -48,6 +48,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private ExecutorService poolExecutor;
     private ProxyFactory proxyFactory;
     private BufferChannelAIDL bufferChannelAIDL;
+
+
+    private String serverIdentificationKey;
 
     /**
      * Socket Implementation to receive messages from server
@@ -60,6 +63,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     public Object sendMessage(PluginVersionReference pluginVersionReference,String responseStr, Object proxy, Method method, Object[] args) throws Exception {
+        Log.i(TAG,"SendMessage start");
         FermatModuleObjectWrapper[] parameters = null;
         if(args!=null) {
             parameters = new FermatModuleObjectWrapper[args.length];
@@ -87,7 +91,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
         try {
             objectArrived = iServerBrokerService.invoqueModuleMethod(
-                     KEY,
+                    serverIdentificationKey,
                      dataId,
                      pluginVersionReference.getPlatform().getCode(),
                      pluginVersionReference.getLayers().getCode(),
@@ -99,7 +103,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         } catch (TransactionTooLargeException t){
             try {
                 objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
-                        KEY,
+                        serverIdentificationKey,
                         dataId,
                         pluginVersionReference.getPlatform().getCode(),
                         pluginVersionReference.getLayers().getCode(),
@@ -132,14 +136,15 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             return null;
         }
         Object o = null;
+        Log.i(TAG,"SendMessage almost end");
         if(isDataChuncked){
             if(Looper.myLooper() == Looper.getMainLooper()) throw new LargeWorkOnMainThreadException(proxy,method);
             o = bufferChannelAIDL.getBufferObject(dataId);
-            Log.i(TAG, o != null ? o.toString() : "");
+            //Log.i(TAG, o != null ? o.toString() : "");
             return (o instanceof EmptyObject)?null:o;
         }else{
             Object o1 = objectArrived.getObject();;
-            Log.i(TAG, o1 != null ? o1.toString() : "");
+            //Log.i(TAG, o1 != null ? o1.toString() : "");
             return o1;
         }
 //        try {
@@ -202,9 +207,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
         doBindService(serviceIntent);
 
-        Intent serviceIntent2 = new Intent(this, CommunicationServerService.class);
-        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);
-        doBindMessengerService(serviceIntent2);
+//        Intent serviceIntent2 = new Intent(this, CommunicationServerService.class);
+//        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);
+//        doBindMessengerService(serviceIntent2);
     }
 
 
@@ -221,9 +226,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             doUnbindService();
         }
 
-        if(mMessengerIsBound){
-            doUnbindMessengerService();
-        }
+//        if(mMessengerIsBound){
+//            doUnbindMessengerService();
+//        }
         super.onDestroy();
     }
 
@@ -240,6 +245,33 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             iServerBrokerService = IServerBrokerService.Stub.asInterface(service);
             Log.d(TAG, "Attached.");
             mIsBound = true;
+
+            Log.i(TAG,"Registering client");
+            try {
+                serverIdentificationKey = iServerBrokerService.register();
+
+
+                //running socket receiver
+                Log.i(TAG,"Starting socket receiver");
+                mReceiverSocketSession = new LocalClientSocketSession(serverIdentificationKey,new LocalSocket(),bufferChannelAIDL);
+                mReceiverSocketSession.connect();
+                mReceiverSocketSession.start();
+
+            } catch (RemoteException e) {
+                e.printStackTrace();
+                Log.e(TAG,"Cant run socket, register to server fail");
+            }
+
+
+
+
+//            Message msg = Message.obtain(null,
+//                    CommunicationMessages.MSG_REGISTER_CLIENT);
+//            msg.replyTo = mMessenger;
+//            Bundle bundle = new Bundle();
+//            bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
+//            bundle.putBoolean(CommunicationDataKeys.DATA_SOCKET_STARTED, true);
+//            msg.setData(bundle);
         }
 
 
@@ -256,8 +288,8 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     void doBindService(Intent intent) {
         try {
-            Log.d(TAG, "Before init intent.componentName");
-            Log.d(TAG, "Before bindService");
+            //Log.d(TAG, "Before init intent.componentName");
+            //Log.d(TAG, "Before bindService");
             if (bindService(intent, mConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE returned true");
             } else {
@@ -372,37 +404,30 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
                 //testear esto
                 //si el cliente está registrado:
-                mReceiverSocketSession = new LocalClientSocketSession(KEY,new LocalSocket(),bufferChannelAIDL);
-                mReceiverSocketSession.connect();
-                mReceiverSocketSession.start();
+//                mReceiverSocketSession = new LocalClientSocketSession(KEY,new LocalSocket(),bufferChannelAIDL);
+//                mReceiverSocketSession.connect();
+//                mReceiverSocketSession.start();
                 //
 
 
 
-                Message msg = Message.obtain(null,
-                        CommunicationMessages.MSG_REGISTER_CLIENT);
-                msg.replyTo = mMessenger;
-                Bundle bundle = new Bundle();
-                bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
-                bundle.putBoolean(CommunicationDataKeys.DATA_SOCKET_STARTED,true);
-                msg.setData(bundle);
+//                Message msg = Message.obtain(null,
+//                        CommunicationMessages.MSG_REGISTER_CLIENT);
+//                msg.replyTo = mMessenger;
+//                Bundle bundle = new Bundle();
+//                bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
+//                bundle.putBoolean(CommunicationDataKeys.DATA_SOCKET_STARTED,true);
+//                msg.setData(bundle);
+//
+//                Log.i(TAG, "service connected: " + mMessengerIsBound);
+//                Log.i(TAG, "service is not null: " + mServiceMcu);
+//                mServiceMcu.send(msg);
+//
+//                synchronized (this){
+//                    notifyAll();
+//                }
 
-                Log.i(TAG, "service connected: " + mMessengerIsBound);
-                Log.i(TAG, "service is not null: " + mServiceMcu);
-                mServiceMcu.send(msg);
 
-                synchronized (this){
-                    notifyAll();
-                }
-
-
-            } catch (RemoteException e) {
-                // In this case the service has crashed before we could even
-                // do anything with it; we can count on soon being
-                // disconnected (and then reconnected if it can be restarted)
-                // so there is no need to do anything here.
-                Log.e(TAG, "CommService is not running");
-                e.printStackTrace();
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -421,8 +446,8 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     void doBindMessengerService(Intent intent) {
         try {
-            Log.d(TAG, "Before init intent.componentName");
-            Log.d(TAG, "Before bindService");
+           // Log.d(TAG, "Before init intent.componentName");
+            //Log.d(TAG, "Before bindService");
             if (bindService(intent, mMessengerConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to ISERVERBROKERSERVICE MESSENGER returned true");
             } else {
@@ -454,7 +479,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
      */
 
     public ModuleManager getModuleManager(PluginVersionReference pluginVersionReference) throws CantCreateProxyException {
-        Log.i(TAG,"creating proxy");
+        //Log.i(TAG,"creating proxy");
         ProxyInvocationHandlerAIDL mInvocationHandler = new ProxyInvocationHandlerAIDL(this,"key",pluginVersionReference);
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
     }

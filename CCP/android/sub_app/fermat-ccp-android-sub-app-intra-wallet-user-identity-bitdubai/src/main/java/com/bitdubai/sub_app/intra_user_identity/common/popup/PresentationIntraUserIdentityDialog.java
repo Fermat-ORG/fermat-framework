@@ -95,12 +95,12 @@ public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserI
 
                     }else{
                         //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                        IntraUserIdentitySettings intraUserIdentitySettings = getSession().getModuleManager().loadAndGetSettings("123456789");
+                        IntraUserIdentitySettings intraUserIdentitySettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                         intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         if (getSession().getAppPublicKey()!=null){
                             getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
                         }else{
-                            getSession().getModuleManager().persistSettings("123456789", intraUserIdentitySettings);
+                            getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
                         }
 
                     }

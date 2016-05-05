@@ -60,6 +60,7 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -240,6 +241,10 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     private final IServerBrokerService.Stub mBinder = new IServerBrokerService.Stub() {
 
 
+        public String register(){
+            return UUID.randomUUID().toString();
+        }
+
         @Override
         public FermatModuleObjectWrapper invoqueModuleMethod(String clientKey,String dataId,String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
 //            Log.i(TAG,"invoqueModuleMethod");
@@ -316,16 +321,16 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
         @Override
         public FermatModuleObjectWrapper invoqueModuleMethod2(String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
-            Log.i(TAG,"invoqueModuleMethod");
-            Log.i(TAG,platformCode);
-            Log.i(TAG,layerCode);
-            Log.i(TAG,pluginsCode);
-            Log.i(TAG,version);
-            Log.i(TAG,method);
-            Log.i(TAG,"Parameters");
-            for (FermatModuleObjectWrapper parameter : parameters) {
-                Log.i(TAG, parameter.toString());
-            }
+//            Log.i(TAG,"invoqueModuleMethod");
+//            Log.i(TAG,platformCode);
+//            Log.i(TAG,layerCode);
+//            Log.i(TAG,pluginsCode);
+//            Log.i(TAG,version);
+//            Log.i(TAG,method);
+//            Log.i(TAG,"Parameters");
+//            for (FermatModuleObjectWrapper parameter : parameters) {
+//                Log.i(TAG, parameter.toString());
+//            }
             FermatModuleObjectWrapper wrapper = null;
 //            try {
 //                PluginVersionReference pluginVersionReference = new PluginVersionReference(
@@ -356,7 +361,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i(TAG,"onBind:"+intent.getAction());
+        Log.i(TAG, "onBind:" + intent.getAction());
         IBinder iBinder = null;
         try {
             switch (intent.getAction()) {
@@ -519,7 +524,15 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //                        Log.i(TAG,"Method: "+ m.getName());
 //                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
 //                        Log.i(TAG,"Method return type: "+ m.getReturnType());
-                        s =  m.invoke(moduleManager,params);
+                        if(moduleManager!=null) {
+                            if (m != null) {
+                                s = m.invoke(moduleManager, params);
+                            } else {
+                                Log.e(TAG, "Method: " + method + " is not found in interface: " + moduleManager.getClass().getName());
+                            }
+                        }else {
+                            Log.e(TAG, "NOT FOUND ModuleManger for this pluginVersionRefence:"+pluginVersionReference.toString());
+                        }
                     }
 //                    if(s!=null){
 //                        Log.i(TAG,"Method return: "+ s.toString());
