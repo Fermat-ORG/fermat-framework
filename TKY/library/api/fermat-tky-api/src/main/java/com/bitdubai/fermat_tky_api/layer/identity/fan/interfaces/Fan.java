@@ -10,7 +10,7 @@ import java.util.List;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
 
-public interface Fan extends Identity, Serializable {
+public interface Fan extends Identity {
 
     /**
      * This interface, in this version only extends the default methods in ArtIdentity interface.
