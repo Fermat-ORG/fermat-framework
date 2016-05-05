@@ -134,7 +134,7 @@ public class ActorConnectionEventsActions {
                         this.handleDenyConnection(request.getRequestId());
                         break;
                     case DISCONNECT:
-                        if (request.getRequestType() == RequestType.SENT)
+                        //if (request.getRequestType() == RequestType.SENT)
                             this.handleDisconnect(request.getRequestId());
                         break;
                     case CANCEL:
