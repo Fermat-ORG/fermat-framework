@@ -135,35 +135,26 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
      * Process the transaction
      * @param actorsCatalogTransaction
      */
-    private int processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException, InvalidParameterException {
+    private void processTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException, InvalidParameterException {
 
         LOG.info("Executing method processTransaction");
 
-        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())){
-            return 1;
-        }else {
+        switch (actorsCatalogTransaction.getTransactionType()){
 
-            switch (actorsCatalogTransaction.getTransactionType()){
+            case ActorsCatalogTransaction.ADD_TRANSACTION_TYPE :
+                insertActorsCatalog(actorsCatalogTransaction);
+                break;
 
-                case ActorsCatalogTransaction.ADD_TRANSACTION_TYPE :
-                    insertActorsCatalog(actorsCatalogTransaction);
-                    break;
+            case ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE :
+                updateActorsCatalog(actorsCatalogTransaction);
+                break;
 
-                case ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE :
-                    updateActorsCatalog(actorsCatalogTransaction);
-                    break;
-
-                case ActorsCatalogTransaction.DELETE_TRANSACTION_TYPE :
-                    deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
-                    break;
-            }
-
-            insertActorsCatalogTransaction(actorsCatalogTransaction);
-            insertActorsCatalogTransaction(actorsCatalogTransaction);
-
+            case ActorsCatalogTransaction.DELETE_TRANSACTION_TYPE :
+                deleteActorsCatalog(actorsCatalogTransaction.getIdentityPublicKey());
+                break;
         }
 
-        return 0;
+        insertActorsCatalogTransaction(actorsCatalogTransaction);
     }
 
     /**
