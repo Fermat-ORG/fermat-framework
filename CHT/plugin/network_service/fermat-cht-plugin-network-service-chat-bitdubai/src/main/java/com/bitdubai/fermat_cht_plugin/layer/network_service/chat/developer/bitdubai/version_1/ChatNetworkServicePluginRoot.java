@@ -208,13 +208,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             ChatMetadataRecord chatMetadataRecord;
             switch (chatMessageTransactionType) {
                 case CHAT_METADATA_TRASMIT:
-                    String chatMetadataXml = messageData.get(ChatTransmissionJsonAttNames.CHAT_METADATA).getAsString();
-                    System.out.println("chatMetadataXml = " + chatMetadataXml);
+                    String chatMetadataJson = messageData.get(ChatTransmissionJsonAttNames.CHAT_METADATA).getAsString();
+                    System.out.println("chatMetadataJson = " + chatMetadataJson);
                     /*
                      * Convert the xml to object
                      */
 
-                    chatMetadataRecord = (ChatMetadataRecord) XMLParser.parseXML(chatMetadataXml, new ChatMetadataRecord());
+                    chatMetadataRecord = ChatMetadataRecord.fromJson(chatMetadataJson);
 //                    messageData = EncodeMsjContent.decodeMsjContent(chatMetadataXml);
 //                    chatMetadataRecord = new ChatMetadataRecord(messageData);
                     System.out.println("----------------------------\n" +
