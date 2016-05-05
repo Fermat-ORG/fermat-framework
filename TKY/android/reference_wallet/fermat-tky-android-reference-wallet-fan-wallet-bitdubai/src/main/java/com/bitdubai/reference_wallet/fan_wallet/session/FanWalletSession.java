@@ -9,7 +9,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
+import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.SongFragment;
+
+import java.util.List;
 
 /**
  * Created by Miguel Payarez on 14/03/16.
@@ -23,6 +26,7 @@ public class FanWalletSession extends AbstractFermatSession<InstalledWallet,FanW
     SongAdapter songAdapter=null;
     RecyclerView recyclerView=null;
     Boolean downloading=null;
+    List<SongItems> items=null;
 
     public void setDownloadThreadClass(SongFragment.DownloadThreadClass downloadThreadClass){this.downloadThreadClass=downloadThreadClass;}
     public SongFragment.DownloadThreadClass getDownloadThreadClass(){return downloadThreadClass;}
@@ -45,5 +49,7 @@ public class FanWalletSession extends AbstractFermatSession<InstalledWallet,FanW
     public void setDownloading(Boolean downloading){this.downloading=downloading;}
     public Boolean getDownloading(){return downloading;}
 
+    public void setItems( List<SongItems> items){this.items=items;}
+    public  List<SongItems> getItems(){return items;}
 
 }

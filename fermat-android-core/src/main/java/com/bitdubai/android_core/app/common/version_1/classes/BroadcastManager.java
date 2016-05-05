@@ -157,15 +157,19 @@ public class BroadcastManager implements BroadcasterInterface {
 
     private void updateView(FermatBundle bundle) {
         try {
-            TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
-            if (adapter != null) {
-                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
-                    fragment.onUpdateView(bundle);
-                    fragment.onUpdateViewUIThred(bundle);
+            if(fermatActivity!=null) {
+                if(fermatActivity.get()!=null) {
+                    TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+                    if (adapter != null) {
+                        for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+                            fragment.onUpdateView(bundle);
+                            fragment.onUpdateViewUIThred(bundle);
+                        }
+                    }
                 }
             }
         }catch(NullPointerException e){
-            Log.e(TAG,"Cant fermatActivity Null excepcion");
+            Log.e(TAG,"Cant fermatActivity excepcion");
             e.printStackTrace();
         }
     }
@@ -173,14 +177,25 @@ public class BroadcastManager implements BroadcasterInterface {
 
 
     private void updateView(String code){
-        TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
-        if(adapter!=null) {
-            for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
-                fragment.onUpdateView(code);
-                fragment.onUpdateViewUIThred(code);
+        try {
+            if(fermatActivity!=null) {
+                if(fermatActivity.get()!=null) {
+                    TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+                    if (adapter != null) {
+                        for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
+                        fragment.onUpdateView(code);
+                       fragment.onUpdateViewUIThred(code);
+                        }
+                    }
+                }
             }
+
+        }catch(NullPointerException e){
+        Log.e(TAG,"Cant fermatActivity excepcion");
+        e.printStackTrace();
         }
-    }
+
+        }
 
     //TODO: esto va a ser del codigo de la app, el paquete del intent
     private void updateView(String appCode,String code){
