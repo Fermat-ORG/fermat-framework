@@ -279,6 +279,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
 //        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Sending ping to the node...");
 
+
         String pingString = "PING";
         ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
         pingData.put(pingString.getBytes()).flip();

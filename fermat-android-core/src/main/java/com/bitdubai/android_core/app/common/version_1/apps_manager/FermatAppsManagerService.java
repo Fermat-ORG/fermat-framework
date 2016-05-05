@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
@@ -81,9 +82,9 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     public void init(){
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
         appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
-        if(appsInstalledInDevice.isEmpty()){
+        //if(appsInstalledInDevice.isEmpty()){
             appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
-        }
+        //}
     }
 
     public FermatStructure lastAppStructure() {
@@ -220,7 +221,13 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     @Override
     public FermatStructure getAppStructure(String appPublicKey) {
-        return selectRuntimeManager(appsInstalledInDevice.get(appPublicKey)).getAppByPublicKey(appPublicKey);
+        FermatAppType fermatAppType =appsInstalledInDevice.get(appPublicKey);
+        if(fermatAppType!=null) {
+            return selectRuntimeManager(fermatAppType).getAppByPublicKey(appPublicKey);
+        }else{
+            Log.e(TAG,"App instaled in device null: "+appPublicKey);
+            return null;
+        }
     }
 
     @Override

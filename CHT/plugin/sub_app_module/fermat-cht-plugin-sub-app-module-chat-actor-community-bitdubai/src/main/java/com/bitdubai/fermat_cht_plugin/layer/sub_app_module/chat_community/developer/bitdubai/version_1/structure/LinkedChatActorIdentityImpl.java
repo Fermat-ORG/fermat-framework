@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.LinkedChatActorIdentity;
 
 import java.util.UUID;
 

@@ -54,7 +54,7 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
 
                 if (session != null) {
 
-                    System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = " + session.isOpen());
+                   // System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = " + session.isOpen());
 
                     try {
 

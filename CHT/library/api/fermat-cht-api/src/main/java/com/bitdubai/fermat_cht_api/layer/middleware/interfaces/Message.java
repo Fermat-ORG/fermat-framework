@@ -24,4 +24,6 @@ public interface Message {
     void setMessageDate(Timestamp messageDate);
     UUID getContactId();
     void setContactId(UUID contactId);
+    long getCount();
+    void setCount(long count);
 }
