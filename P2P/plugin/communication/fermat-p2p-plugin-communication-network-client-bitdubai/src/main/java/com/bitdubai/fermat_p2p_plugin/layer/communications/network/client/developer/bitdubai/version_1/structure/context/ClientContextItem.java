@@ -21,6 +21,7 @@ public enum ClientContextItem {
     ERROR_MANAGER              ,
     EVENT_MANAGER              ,
     LOCATION_SERVICE           ,
+    LOCATION_MANAGER          ,
     CLIENTS_CONNECTIONS_MANAGER,
 
     ;

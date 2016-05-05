@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.util.HardcodeConstants;
@@ -49,12 +50,15 @@ public class ClientsConnectionsManager {
 
     private EventManager eventManager;
 
+    private LocationManager locationManager;
+
     public ClientsConnectionsManager(){
         this.listActorConnectIntoNode = new HashMap<>();
         this.listConnectionActiveToNode = new HashMap<>();
         this.identity = (ECCKeyPair) ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
         this.errorManager = (ErrorManager) ClientContext.get(ClientContextItem.ERROR_MANAGER);
         this.eventManager = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER);
+        this.locationManager = (LocationManager) ClientContext.get(ClientContextItem.LOCATION_MANAGER);
     }
 
     public Map<String, String> getListActorConnectIntoNode() {
@@ -83,7 +87,7 @@ public class ClientsConnectionsManager {
                     uri,
                     errorManager,
                     eventManager,
-                    null,
+                    locationManager,
                     identity,
                     new PluginVersionReference(new Version()),
                     null,

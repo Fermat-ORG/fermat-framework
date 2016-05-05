@@ -154,6 +154,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
+            ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
             ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, new ClientsConnectionsManager());
 
             //nodesProfileList = getNodesProfileList();
