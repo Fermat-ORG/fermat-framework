@@ -1011,16 +1011,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
                 makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
             } else {
-                //update balance amount
-                final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(
-                        moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),
-                        blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
+                if(code.equals("Btc_arrive"))
+                {
+                    //update balance amount
+                    final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(
+                            moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),
+                                    blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
-                changeBalanceType(txt_type_balance, txt_balance_amount);
-                //System.out.println(System.currentTimeMillis());
+                    changeBalanceType(txt_type_balance, txt_balance_amount);
+                    //System.out.println(System.currentTimeMillis());
 
-                circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-                circularProgressBar.setProgressValue2(getBalanceAverage());
+                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                    circularProgressBar.setProgressValue2(getBalanceAverage());
+                }
+
             }
         }
         catch (Exception e) {

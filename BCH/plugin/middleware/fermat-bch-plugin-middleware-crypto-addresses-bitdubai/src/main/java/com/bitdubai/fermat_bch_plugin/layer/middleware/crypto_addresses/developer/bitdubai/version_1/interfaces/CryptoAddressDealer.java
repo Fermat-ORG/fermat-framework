@@ -104,7 +104,7 @@ public abstract class CryptoAddressDealer {
 
             for (InstalledWallet installedWallet : walletManagerSelector.getWalletManager(platform).getInstalledWallets())
             {
-                if(wallet.getWalletPublicKey().equals(walletPublicKey))
+                if(installedWallet.getWalletPublicKey().equals(walletPublicKey))
                     wallet = installedWallet;
             }
 
