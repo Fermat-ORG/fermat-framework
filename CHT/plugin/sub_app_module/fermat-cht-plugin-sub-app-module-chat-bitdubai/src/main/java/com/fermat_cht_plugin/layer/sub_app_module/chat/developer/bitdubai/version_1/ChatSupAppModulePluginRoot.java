@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -27,6 +28,7 @@ import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versio
  * Created by franklin on 06/01/16.
  * Edited by Jose Cardozo josejcb (josejcb89@gmail.com) on 29/02/16.
  */
+@PluginInfo(platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_SUP_APP_MODULE)
 public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSettings, ActiveActorIdentityInformation> {
 
     private ChatManager chatManager;
