@@ -148,14 +148,22 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext());
+                    servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext(),false);
                     servicesHelpers.bindServices();
 
 
                 }
             }).start();
         }else{
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext(),true);
+                    servicesHelpers.bindBackgroundServices();
 
+
+                }
+            }).start();
         }
 
 //        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
@@ -184,6 +192,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     }
 
     public NotificationService getNotificationService(){
+        if(servicesHelpers==null){
+
+        }
         return getServicesHelpers().getNotificationService();
     }
 

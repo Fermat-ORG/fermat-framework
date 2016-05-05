@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -479,7 +480,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
-        getActivity().invalidateOptionsMenu();
+        if(getActivity()!=null) {
+            getActivity().invalidateOptionsMenu();
+        }else{
+            Log.e(TAG,"updateNotificationsBadge activity null, please check this, class"+getClass().getName()+" line: "+new Throwable().getStackTrace()[0].getLineNumber());
+        }
     }
 
 

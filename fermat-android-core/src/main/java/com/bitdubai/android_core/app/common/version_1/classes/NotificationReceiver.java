@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
@@ -26,7 +27,12 @@ public class NotificationReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
+//        Log.i(INTENT_NAME,"Notification received!");
+        String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
+        String code = intent.getStringExtra(ApplicationConstants.INTENT_EXTRA_DATA);
+//        Log.i(INTENT_NAME,"AppPublicKey: "+appPublicKey);
+//        Log.i(INTENT_NAME,"Code received:"+code);
+        updateView(appPublicKey,code);
 
     }
 

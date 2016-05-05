@@ -408,12 +408,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         fermatSystem = FermatSystem.getInstance();
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
-//            AndroidCoreUtils.getInstance().setContextAndResume(this);
+            broadcastManager = new BroadcastManager();
+            AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+            if(!AndroidCoreUtils.getInstance().isStarted())
+                AndroidCoreUtils.getInstance().setStarted(true);
             fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
         } catch (FermatException e) {
-
             System.err.println(e.toString());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -434,10 +435,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             e.printStackTrace();
         }
 
-        broadcastManager = new BroadcastManager(this);
-        AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
-        if(!AndroidCoreUtils.getInstance().isStarted())
-            AndroidCoreUtils.getInstance().setStarted(true);
 
 
     }
