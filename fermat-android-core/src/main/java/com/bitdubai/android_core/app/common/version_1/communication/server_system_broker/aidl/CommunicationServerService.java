@@ -209,7 +209,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     private void sendFullData(String dataId, String clientKey, Serializable data) throws NotSerializableException {
 
 
-        if(!(data instanceof Serializable)) throw new NotSerializableException("Object: "+data.getClass().getName()+" is not serializable");
         //test
         sendLargeData(dataId, clientKey, data);
 
@@ -242,7 +241,26 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
 
         public String register(){
-            return UUID.randomUUID().toString();
+            final String clientKey = UUID.randomUUID().toString();
+            if(serverThread==null) {
+                serverThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            LocalSocket localSocket = localServerSocket.accept();
+                            localSocket.setSendBufferSize(500000);
+                            LocalServerSocketSession localServerSocketSession = new LocalServerSocketSession(clientKey, localSocket);
+                            socketsClients.put(clientKey, localServerSocketSession);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+            }
+            serverThread.start();
+
+            return clientKey;
         }
 
         @Override
@@ -276,6 +294,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             //chunkAndSendData(dataId,clientKey,aidlObject);
             if (isDataForChunk(aidlObject)) {
                 try {
+                    if(!(aidlObject instanceof Serializable)) throw new NotSerializableException("Object: "+aidlObject.getClass().getName()+" is not serializable");
                     sendFullData(dataId, clientKey, aidlObject);
                     return new FermatModuleObjectWrapper(aidlObject, true, dataId);
                 } catch (NotSerializableException e) {
