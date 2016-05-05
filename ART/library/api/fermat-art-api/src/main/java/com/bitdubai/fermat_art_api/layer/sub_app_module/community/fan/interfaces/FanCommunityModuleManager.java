@@ -136,8 +136,12 @@ public interface FanCommunityModuleManager extends
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
      * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void requestConnectionToFan(FanCommunitySelectableIdentity selectedIdentity,
-                                FanCommunityInformation artistToContact) throws CantRequestConnectionException,ActorConnectionAlreadyRequestedException,ActorTypeNotSupportedException;
+    void requestConnectionToFan(
+            FanCommunitySelectableIdentity selectedIdentity,
+            FanCommunityInformation artistToContact) throws
+            CantRequestConnectionException,
+            ActorConnectionAlreadyRequestedException,
+            ActorTypeNotSupportedException;
 
     /**
      * The method <code>disconnectFan</code> disconnect a fan from the list managed by this
