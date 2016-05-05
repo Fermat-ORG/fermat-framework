@@ -656,7 +656,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                         else
                                         {
                                             //setting protected eneabled can't send
-                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. ", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                    else{

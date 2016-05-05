@@ -436,13 +436,18 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //set Earning or Losts Values
             double total = 0;
-            total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
-            if (total>=0){
-                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" earned");
-                earnOrLostImage.setBackgroundResource(earning_icon);
-            }else {
-                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" losted");
-                earnOrLostImage.setImageResource(R.drawable.lost_icon);
+            //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
+            if (total > 0){
+                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(total)+" earned");
+                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+            }
+            if (total==0){
+                txt_earnOrLost.setText("USD 0.00");
+                earnOrLostImage.setVisibility(View.INVISIBLE);
+            }
+            if (total< 0){
+                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(total)+" earned");
+                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
             }
 
             //set Actual Date

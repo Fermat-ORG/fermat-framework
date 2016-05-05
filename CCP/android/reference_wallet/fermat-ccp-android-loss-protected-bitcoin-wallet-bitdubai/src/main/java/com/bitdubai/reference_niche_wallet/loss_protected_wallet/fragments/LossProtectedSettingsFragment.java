@@ -202,7 +202,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             } catch (SettingsNotFoundException e) {
                 e.printStackTrace();
             }
-            if(preferenceSettingsItem.getId() == 3){
+            if(preferenceSettingsItem.getId() == 10){
                 //Get providers list
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWallet.getExchangeRateProviderManagers());
 
@@ -234,7 +234,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             }
 
-            if (preferenceSettingsItem.getId() == 4){
+            if (preferenceSettingsItem.getId() == 11){
                 //receive Regtest test bitcoins
                 Runnable _longPressed = new Runnable() {
                     public void run() {
