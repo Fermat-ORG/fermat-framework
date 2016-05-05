@@ -151,7 +151,6 @@ import java.util.UUID;
  * Created by nelson on 11/11/15.
  * Modified by Franklin Marcano 30/12/15
  */
-@PluginInfo(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_CUSTOMER, createdBy = "nelsonalfo")
 public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         extends ModuleManagerImpl<CryptoCustomerWalletPreferenceSettings> implements CryptoCustomerWalletModuleManager, Serializable {
 
