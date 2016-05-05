@@ -3,13 +3,14 @@ package com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.Identity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
 
-public interface Fan extends Identity {
+public interface Fan extends Identity, Serializable {
 
     /**
      * This interface, in this version only extends the default methods in ArtIdentity interface.
