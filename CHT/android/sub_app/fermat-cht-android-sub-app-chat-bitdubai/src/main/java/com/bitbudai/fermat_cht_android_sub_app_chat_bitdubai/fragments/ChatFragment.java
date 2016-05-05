@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
@@ -156,6 +157,15 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 .addToolbar(toolbar)
                 .build();
         return adapterView;
+    }
+
+    public void onStop () {
+        try {
+            chatManager.activeOnlineStatus(null);
+        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+            cantGetOnlineStatus.printStackTrace();
+        }
+        super.onStop();
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

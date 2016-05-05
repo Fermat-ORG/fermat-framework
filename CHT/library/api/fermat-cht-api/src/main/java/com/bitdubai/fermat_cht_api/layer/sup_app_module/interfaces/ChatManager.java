@@ -107,6 +107,8 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
      */
     boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
 
+    void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
+
     void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
 
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;

@@ -106,6 +106,7 @@ public class ChatAdapterView extends LinearLayout {
     private boolean chatWasCreate = false;
     private Calendar today;
     UUID newChatId;
+    int CounterText;
     Boolean isOnline = false;
     Boolean textNeverChange = false;
     static final int TIME_TO_REFRESH_TOOLBAR = 6000;
@@ -152,6 +153,11 @@ public class ChatAdapterView extends LinearLayout {
                 contactIcon = bmd.getBitmap();
                 leftName = contact.getAlias();
                 Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
+                try {
+                    chatManager.activeOnlineStatus(remotePk);
+                } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+                    cantGetOnlineStatus.printStackTrace();
+                }
 
                 if (cht != null)
                     chatId = cht.getChatId();
@@ -168,14 +174,17 @@ public class ChatAdapterView extends LinearLayout {
         try {
             //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             findValues(chatSession.getSelectedContact());
+
             if (chatSession.getData("whocallme").equals("chatlist")) {
                 //if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
+
             } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 //if I choose a contact, this will search the chat previously created with this contact
                 //Here it is define if we need to create a new chat or just add the message to chat created previously
                 chatWasCreate = chatId != null;
             }
+
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -276,33 +285,7 @@ public class ChatAdapterView extends LinearLayout {
             return null;
         }
     }
-    public class BackgroundAsyncTaskOnline extends
-            AsyncTask<Void, Integer, Boolean> {
 
-        int myProgress;
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            try {
-                try {
-                    return chatManager.checkOnlineStatus(remotePk);
-                } catch (CHTException e) {
-                    e.printStackTrace();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(Boolean x) {
-            if (x != null) {
-               isOnline = x;
-            }
-        }
-    }
 
 
 
@@ -407,7 +390,9 @@ public class ChatAdapterView extends LinearLayout {
                         }
                     }
                 });
-            checkStatus();
+
+
+       final int i = 0;
         messageET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -415,23 +400,22 @@ public class ChatAdapterView extends LinearLayout {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                int i = 0;
                 if (chatWasCreate) {
-                    i++;
-                    if(i == 5){
+                    CounterText++;
+                    if(CounterText == 5){
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
-                        i = 0;
+                        CounterText = 0;
                     }
                     if (messageET.length() > 0 && textNeverChange == false) {
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
                         textNeverChange = true;
-                    }else if(messageET.length() == 0 && textNeverChange == true){
+                    } else if (messageET.length() == 0 && textNeverChange == true) {
                         textNeverChange = false;
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
-                        i = 0;
+
                     }
                 }
             }
@@ -440,6 +424,7 @@ public class ChatAdapterView extends LinearLayout {
             public void afterTextChanged(Editable s) {
             }
         });
+
 
 
         //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
@@ -454,7 +439,7 @@ public class ChatAdapterView extends LinearLayout {
             whatToDo();
             findMessage();
             scroll();
-
+            checkStatus();
 //        if (rightName != null) {
 //            meLabel.setText(rightName);
 //        } else {
@@ -656,34 +641,31 @@ public class ChatAdapterView extends LinearLayout {
     public void refreshEvents() {
         //whatToDo();
         findMessage();
+        checkStatus();
         scroll();
     }
 
     public void checkStatus(){
         try {
-           if(chatWasCreate) {
+           if(chatSession.getData("whocallme").equals("chatlist")) {
                if (chatManager.checkWritingStatus(chatId)) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
-               } else {
-                   BackgroundAsyncTaskOnline backAto = new BackgroundAsyncTaskOnline();
-                   backAto.execute();
-                   if (isOnline) {
-                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
-                   } else {
-                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
-                   }
-               }
-           }else{
-               BackgroundAsyncTaskOnline backAto = new BackgroundAsyncTaskOnline();
-               backAto.execute();
-               if (isOnline) {
+               } else if(chatManager.checkOnlineStatus(remotePk)){
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
-               }else {
+               }else{
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
+               }
+           }else {
+               if(chatManager.checkOnlineStatus(remotePk)){
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
+               }else{
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE);
                }
            }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();
+        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+            cantGetOnlineStatus.printStackTrace();
         }
     }
 

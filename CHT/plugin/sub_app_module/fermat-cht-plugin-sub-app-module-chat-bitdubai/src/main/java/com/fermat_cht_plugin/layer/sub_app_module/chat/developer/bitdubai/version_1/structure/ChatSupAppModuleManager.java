@@ -249,6 +249,10 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     public boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
         return middlewareChatManager.checkOnlineStatus(contactPublicKey);
     }
+    @Override
+    public void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
+         middlewareChatManager.activeOnlineStatus(contactPublicKey);
+    }
 
     @Override
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
