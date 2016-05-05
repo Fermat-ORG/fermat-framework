@@ -107,14 +107,13 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      * Manager
      * */
     private LossProtectedWallet lossProtectedWallet;
-    private LossProtectedWallet moduleManager;
+
     private ErrorManager errorManager;
 
     /**
      * DATA
      * */
     private List<BitcoinLossProtectedWalletSpend> allWalletSpendingList;
-    private BitcoinLossProtectedWalletSpend bitcoinLossProtectedWalletSpend;
 
 
     // Fermat Managers
@@ -322,7 +321,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             getAndShowMarketExchangeRateData(rootView);
 
 
-            txt_type_balance.setOnLongClickListener(new View.OnLongClickListener() {
+           /* txt_type_balance.setOnLongClickListener(new View.OnLongClickListener() {
                 public boolean onLongClick(View arg0) {
                     Runnable _longPressed = new Runnable() {
                         public void run() {
@@ -334,7 +333,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     return true;    // <- set to true
                 }
 
-            });
+            });*/
 
 
 
@@ -435,16 +434,16 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             noDataInChart           = (TextView) rootView.findViewById(R.id.noDataInChart);
 
 
-            /*//set Earning or Losts Values
+            //set Earning or Losts Values
             double total = 0;
-            //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
+            total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
             if (total>=0){
                 txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" earned");
                 earnOrLostImage.setBackgroundResource(earning_icon);
             }else {
                 txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" losted");
                 earnOrLostImage.setImageResource(R.drawable.lost_icon);
-            }*/
+            }
 
             //set Actual Date
 
@@ -519,7 +518,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = moduleManager.requestAddressToKnownUser(
+            CryptoAddress cryptoAddress = lossProtectedWallet.requestAddressToKnownUser(
                     lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey(),
                     Actors.INTRA_USER,
                     actorPublicKey,
@@ -548,7 +547,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     public void GET(String url, final Context context){
         final Handler mHandler = new Handler();
         try {
-            if(moduleManager.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType)<500000000L) {
+            if(lossProtectedWallet.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType)<500000000L) {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -581,7 +580,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                             CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
                             LossProtectedWalletContact cryptoWalletWalletContact = null;
                             try {
-                                cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
+                                cryptoWalletWalletContact = lossProtectedWallet.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
 
                             } catch (Exception e) {
 

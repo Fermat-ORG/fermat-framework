@@ -263,7 +263,7 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
                     data.add(grouperItem);
                 }
 
-                if(!data.isEmpty()){
+                if(data.isEmpty()){
                     FermatAnimationsUtils.showEmpty(getActivity(),true,emptyListViewsContainer);
                 }
 

@@ -8,13 +8,18 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -29,17 +34,23 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
 
     private onRefreshList onRefreshList;
 
-    LossProtectedWallet cryptoWallet;
-    LossProtectedWalletSession referenceWalletSession;
+    LossProtectedWallet lossProtectedWallet;
+    LossProtectedWalletSession appSession;
     Typeface tf;
+
+    boolean lossProtectedEnabled;
+    BlockchainNetworkType blockchainNetworkType;
+    SettingsManager<LossProtectedWalletSettings> settingsManager;
+
+
     protected PaymentRequestHistoryAdapter(Context context) {
         super(context);
     }
 
     public PaymentRequestHistoryAdapter(Context context, List<LossProtectedPaymentRequest> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession referenceWalletSession,onRefreshList onRefresh) {
         super(context, dataSet);
-        this.cryptoWallet = cryptoWallet;
-        this.referenceWalletSession =referenceWalletSession;
+        this.lossProtectedWallet = cryptoWallet;
+        this.appSession =referenceWalletSession;
         this.onRefreshList = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
@@ -90,7 +101,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
         }
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), appSession.getTypeAmount()));
         holder.getTxt_amount().setTypeface(tf) ;
 
         if(data.getContact() != null)
@@ -178,13 +189,45 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                 @Override
                 public void onClick(View view) {
                     try {
-                        cryptoWallet.approveRequest(data.getRequestId()
-                                , referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                        Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
-                        notifyDataSetChanged();
-//                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-//                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
-                        onRefreshList.onRefresh();
+
+                        //verify loss protected settings
+                        //TODO:  esta verificacion de proteccion solo se valida si sabes que va a perder dinero
+                        settingsManager = appSession.getModuleManager().getSettingsManager();
+                        LossProtectedWalletSettings bitcoinWalletSettings = null;
+                        bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+
+                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
+                        lossProtectedWallet = appSession.getModuleManager().getCryptoWallet();
+
+                        lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
+
+                        long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
+
+
+                        if( data.getAmount() > availableBalance) //Balance value is greater than send amount
+                        {
+
+                            if (!lossProtectedEnabled) {
+                                //show dialog confirm
+                                Toast.makeText(context, "Action not allowed, you will lose money. Restricted by LossProtected Configuration.", Toast.LENGTH_LONG).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(context, "Action not allowed, you will lose money. Restricted by LossProtected Configuration.", Toast.LENGTH_LONG).show();
+                            }
+
+                        }
+                        else
+                        {
+                            lossProtectedWallet.approveRequest(data.getRequestId()
+                                    , appSession.getIntraUserModuleManager().getPublicKey());
+                            Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                            notifyDataSetChanged();
+                            onRefreshList.onRefresh();
+                        }
+
+
                     } catch (Exception e) {
                         showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
                     }
@@ -196,11 +239,9 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
             @Override
             public void onClick(View view) {
                 try {
-                    cryptoWallet.refuseRequest(data.getRequestId());
+                    lossProtectedWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
-//                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-//                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                     onRefreshList.onRefresh();
                 } catch (Exception e) {
                     showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());

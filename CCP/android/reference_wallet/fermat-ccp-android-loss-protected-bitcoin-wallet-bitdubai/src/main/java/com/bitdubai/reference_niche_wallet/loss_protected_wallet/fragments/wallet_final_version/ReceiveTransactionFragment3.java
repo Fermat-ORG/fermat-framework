@@ -119,7 +119,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletExpandableListFragm
 
             }
 
-            onRefresh();
+            openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             ex.printStackTrace();
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -184,7 +184,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletExpandableListFragm
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            lst = new ArrayList<LossProtectedWalletTransaction>();
+            lst = new ArrayList<>();
             animationManager = new AnimationManager(rootView,emptyListViewsContainer);
             getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         } catch (Exception e){

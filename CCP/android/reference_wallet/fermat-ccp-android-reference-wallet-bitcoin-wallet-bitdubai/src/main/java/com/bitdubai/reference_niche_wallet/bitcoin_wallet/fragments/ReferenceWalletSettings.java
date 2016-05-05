@@ -249,9 +249,6 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
     @Override
     public void dialogOptionSelected(String item, int position) {
-       // CustomDialogFragment customDialogFragment = (CustomDialogFragment) dialog;
-       // previousSelectedItem = customDialogFragment.getPreviousSelectedItem();
-       // Toast.makeText(this, "OK button pressed", Toast.LENGTH_SHORT).show();
 
         BlockchainNetworkType blockchainNetworkType;
 
