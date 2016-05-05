@@ -1015,7 +1015,7 @@ public class BitcoinWalletLossProtectedWalletDao {
             else
             {
                 //No tengo bloques que pueda gastar sin perder dinero, inserto un registro de gasto con perdida
-                List<DatabaseTableRecord> transactionsRecords = getRecordsGreaterThanRate(transactionRecord.getBlockchainNetworkType(),exchangeRate);
+               // List<DatabaseTableRecord> transactionsRecords = getRecordsGreaterThanRate(transactionRecord.getBlockchainNetworkType(),exchangeRate);
 
             }
 
