@@ -149,8 +149,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             //Another listener
             FermatEventListener acceptListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT);
-
-            updatesListener.setEventHandler(
+            acceptListener.setEventHandler(
                     new FanaticConnectionRequestAcceptedEventHandler(
                             this.fanIdentityEventActions,
                             this));

@@ -63,7 +63,7 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
 
         mDescription = (FermatTextView) findViewById(R.id.aac_description);
         mUsername = (FermatTextView) findViewById(R.id.aac_user_name);
-        mTitle = (FermatTextView)findViewById(R.id.title);
+        mTitle = (FermatTextView)findViewById(R.id.aac_title);
         positiveBtn = (FermatButton) findViewById(R.id.aac_positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.aac_negative_button);
 
