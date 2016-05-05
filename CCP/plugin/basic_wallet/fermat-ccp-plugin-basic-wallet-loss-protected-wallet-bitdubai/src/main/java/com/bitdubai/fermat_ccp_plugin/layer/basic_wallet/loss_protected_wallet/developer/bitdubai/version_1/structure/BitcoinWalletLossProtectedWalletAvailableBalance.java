@@ -154,7 +154,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             //calculate value blocks to spend and inserted into the table
 
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "Btc_arrive");
 
             //get exchange rate on background
             setActualExchangeRate(cryptoTransaction.getTransactionId());
