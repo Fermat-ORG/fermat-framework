@@ -23,14 +23,14 @@
         android:name="com.bitdubai.android_core.app.ApplicationSession"
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         >
 
 
         <activity
             android:name="com.bitdubai.android_core.app.StartActivity"
 
-            android:icon="@drawable/ic_launcher"
+            android:icon="@mipmap/ic_launcher"
             android:theme="@style/AppTheme.NoActionBarStart"
             android:configChanges="orientation"
             android:screenOrientation="portrait">

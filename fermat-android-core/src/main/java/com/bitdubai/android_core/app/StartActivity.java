@@ -260,6 +260,16 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(myReceiverIsRegistered) {
+            unregisterReceiver(startReceiver);
+            myReceiverIsRegistered = false;
+        }
+
+    }
+
+    @Override
     public void onPostExecute(Object... result) {
         try {
 
