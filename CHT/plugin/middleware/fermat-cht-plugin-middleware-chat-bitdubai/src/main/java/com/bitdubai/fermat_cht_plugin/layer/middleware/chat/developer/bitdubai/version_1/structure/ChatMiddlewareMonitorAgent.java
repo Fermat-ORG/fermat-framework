@@ -521,6 +521,7 @@ public class ChatMiddlewareMonitorAgent implements
 
             for(String publicKey : publicKeys){
                 Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(publicKey);
+                if(chat==null) continue;
                 boolean isOnline = chatActorSearch.getResult(publicKey) != null;
                 System.out.println("12345 is online "+isOnline);
                 chat.setIsOnline(isOnline);
