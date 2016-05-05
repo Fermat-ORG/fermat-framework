@@ -365,8 +365,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     this.deviceUserManager,
                     this.networkServiceChatManager,
                     this.broadcaster,
-                    chatActorConnectionManager,
-                    chatActorNetworkService
+                    chatActorConnectionManager
             );
 
             /**
@@ -382,7 +381,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     chatMiddlewareManager,
                     broadcaster,
                     pluginFileSystem,
-                    chatActorConnectionManager);
+                    chatActorConnectionManager,
+                    chatActorNetworkService);
             openContractMonitorAgent.start();
 
             /**

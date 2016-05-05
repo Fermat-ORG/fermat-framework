@@ -133,12 +133,12 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
             final List<PlatformComponentProfile> list = communicationsClientConnection.requestListComponentRegistered(discoveryQueryParameters);
 
             PlatformComponentProfile platformComponentProfile;
-
+            System.out.println("12345 CHECKING ONLINE STATUS SO FAR SO GOOD");
             if(list !=null && !list.isEmpty()) {
                 platformComponentProfile = list.get(0);
             }
             else return null;
-
+            System.out.println("12345 CHECKING ONLINE STATUS SO FAR SO GOOD IS OK");
                 System.out.println("************** I'm a chat searched: "+platformComponentProfile);
 //                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
 

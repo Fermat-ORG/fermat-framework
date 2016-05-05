@@ -10,7 +10,7 @@ public enum ActionState {
      * Definition types
      */
 //    PENDING         ("PEND"),
-    WRITING         ("WRIT"),
+    ACTIVE          ("ACTV"),
     NONE            ("NONE");
 //    DONE            ("DONE");
 
@@ -45,8 +45,8 @@ public enum ActionState {
     public static ActionState getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "WRIT":
-                return ActionState.WRITING;
+            case "ACTV":
+                return ActionState.ACTIVE;
             case "NONE":
                 return ActionState.NONE;
         }
