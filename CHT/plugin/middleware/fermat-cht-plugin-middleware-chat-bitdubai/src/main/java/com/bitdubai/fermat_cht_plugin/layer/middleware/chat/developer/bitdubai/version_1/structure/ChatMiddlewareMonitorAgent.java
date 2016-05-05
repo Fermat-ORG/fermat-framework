@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -298,7 +299,7 @@ public class ChatMiddlewareMonitorAgent implements
                     checkOnlineStatus();
                 }
                 if(discoverIteration == 2){
-                    resetOnineStatus();
+                    resetOnlineStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -511,43 +512,21 @@ public class ChatMiddlewareMonitorAgent implements
                     errorManager,
                     pluginFileSystem);
 
-            List<String> publicKeys = chatMiddlewareDatabaseDao.getOnlineActions();
+            List<ActionOnline> onlineActions = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
 
-            if(publicKeys==null || publicKeys.isEmpty()) return;
+            if(onlineActions==null || onlineActions.isEmpty()) return;
 
             System.out.println("12345 CHECKING ONLINE STATUS");
 
             ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
-            for(String publicKey : publicKeys){
-                Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(publicKey);
-                if(chat==null) continue;
-                boolean isOnline = chatActorSearch.getResult(publicKey) != null;
+            for(ActionOnline actionOnline : onlineActions){
+                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 System.out.println("12345 is online "+isOnline);
-                chat.setIsOnline(isOnline);
-                chatMiddlewareDatabaseDao.saveChat(chat);
+                chatMiddlewareDatabaseDao.saveOnlineActionValue(actionOnline.getPublicKey(), isOnline);
             }
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-
-        } catch (CantSaveChatException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
-        } catch (DatabaseOperationException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
-        } catch (CantGetChatException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot update message from database"
-            );
         } catch (CantGetPendingActionListException e) {
             throw new CantGetPendingTransactionException(
                     e,
@@ -555,6 +534,12 @@ public class ChatMiddlewareMonitorAgent implements
                     "Cannot update message from database"
             );
         } catch (CantListChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantSaveActionException e) {
             throw new CantGetPendingTransactionException(
                     e,
                     "Checking the incoming status pending transactions",
@@ -615,7 +600,7 @@ public class ChatMiddlewareMonitorAgent implements
         }
     }
 
-    public void resetOnineStatus(){
+    public void resetOnlineStatus(){
         try {
         chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
                 pluginDatabaseSystem,
@@ -627,25 +612,22 @@ public class ChatMiddlewareMonitorAgent implements
         boolean changes=false;
 
 
-        List<Chat> chats = null;
-            chats = chatMiddlewareDatabaseDao.getChatListByOnline();
+        List<ActionOnline> actionOnlines = null;
+            actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
 
-        if(chats == null || chats.isEmpty()) return;
+        if(actionOnlines == null || actionOnlines.isEmpty()) return;
 
-        for(Chat chat : chats){
-            chat.setIsOnline(false);
-            chatMiddlewareDatabaseDao.saveChat(chat);
+        for(ActionOnline actionOnline : actionOnlines){
+            chatMiddlewareDatabaseDao.saveOnlineActionValue(actionOnline.getPublicKey(), false);
             changes = true;
         }
 
         if(changes)
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
-        } catch (DatabaseOperationException e) {
+        } catch (CantGetPendingActionListException e) {
             e.printStackTrace();
-        } catch (CantGetChatException e) {
-            e.printStackTrace();
-        } catch (CantSaveChatException e) {
+        } catch (CantSaveActionException e) {
             e.printStackTrace();
         }
     }

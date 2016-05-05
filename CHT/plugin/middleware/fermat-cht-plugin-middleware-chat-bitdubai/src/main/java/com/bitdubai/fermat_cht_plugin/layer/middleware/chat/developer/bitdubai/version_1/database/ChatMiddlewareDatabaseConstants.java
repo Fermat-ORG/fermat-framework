@@ -59,6 +59,7 @@ public class ChatMiddlewareDatabaseConstants {
 
     public static final String ACTIONS_WRITING_ID_CHAT_COLUMN_NAME = "id_chat";
     public static final String ACTIONS_WRITING_STATE = "writing_state";
+    public static final String ACTIONS_WRITING_VALUE = "writing_state";
 
     public static final String ACTIONS_WRITING_FIRST_KEY_COLUMN = "id_chat";
 
@@ -70,6 +71,7 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String ACTIONS_ONLINE_ID_COLUMN_NAME = "id_action";
     public static final String ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME = "publik_key";
     public static final String ACTIONS_ONLINE_STATE = "online_state";
+    public static final String ACTIONS_ONLINE_VALUE = "online_value";
 
     public static final String ACTIONS_ONLINE_FIRST_KEY_COLUMN = "id_action";
 

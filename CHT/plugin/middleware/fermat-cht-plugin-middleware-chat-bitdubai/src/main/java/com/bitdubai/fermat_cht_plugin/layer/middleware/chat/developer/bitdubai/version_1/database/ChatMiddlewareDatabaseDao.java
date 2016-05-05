@@ -54,12 +54,14 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMember
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ActionOnlineImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatUserIdentityImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactConnectionImpl;
@@ -1424,7 +1426,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState writingState) throws DatabaseOperationException{
+    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState writingState, Boolean value) throws DatabaseOperationException{
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1589,6 +1591,18 @@ public class ChatMiddlewareDatabaseDao {
 
 
         return message;
+    }
+
+    private ActionOnline getActionOnlineTransaction(final DatabaseTableRecord actionOnlineTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
+        ActionOnlineImpl actionOnline = new ActionOnlineImpl();
+
+        actionOnline.setId(actionOnlineTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME));
+        actionOnline.setPublicKey(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME));
+        actionOnline.setActionState(ActionState.getByCode(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE)));
+        actionOnline.setValue(Boolean.valueOf(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE)));
+
+
+        return actionOnline;
     }
 
     private ChatUserIdentity getChatUserIdentityTransaction(final DatabaseTableRecord chatUserIdentityTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
@@ -1793,24 +1807,72 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public List<String> getOnlineActions() throws CantGetPendingActionListException{
+    public List<ActionOnline> getOnlineActionsByActiveState() throws CantGetPendingActionListException{
         try {
             DatabaseTable databaseTable = getDatabaseOnlineActionsTable();
-            List<EventRecord> eventRecords = new ArrayList<>();
-            EventRecord eventRecord;
             databaseTable.addStringFilter(
                     ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE,
                     ActionState.ACTIVE.getCode(),
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            List<String> publicKeys= new ArrayList<>();
+            List<ActionOnline> actionOnlines= new ArrayList<>();
             for(DatabaseTableRecord record : records){
-                publicKeys.add(record.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME));
+
+                actionOnlines.add(getActionOnlineTransaction(record));
             }
-            return publicKeys;
+            return actionOnlines;
 
         }catch(CantLoadTableToMemoryException e){
+            throw new CantGetPendingActionListException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to load table to memory.",
+                    null);
+        } catch (DatabaseOperationException e) {
+            throw new CantGetPendingActionListException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to load table to memory.",
+                    null);
+        } catch (InvalidParameterException e) {
+            throw new CantGetPendingActionListException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to load table to memory.",
+                    null);
+        }
+    }
+
+    public List<ActionOnline> getOnlineActionsByOnline() throws CantGetPendingActionListException{
+        try {
+            DatabaseTable databaseTable = getDatabaseOnlineActionsTable();
+            databaseTable.addStringFilter(
+                    ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE,
+                    Boolean.toString(true),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            List<ActionOnline> actionOnlines= new ArrayList<>();
+            for(DatabaseTableRecord record : records){
+
+                actionOnlines.add(getActionOnlineTransaction(record));
+            }
+            return actionOnlines;
+
+        }catch(CantLoadTableToMemoryException e){
+            throw new CantGetPendingActionListException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to load table to memory.",
+                    null);
+        } catch (DatabaseOperationException e) {
+            throw new CantGetPendingActionListException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to load table to memory.",
+                    null);
+        } catch (InvalidParameterException e) {
             throw new CantGetPendingActionListException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
@@ -1820,20 +1882,27 @@ public class ChatMiddlewareDatabaseDao {
     }
 
 
-    public void saveOnlineAction(String publicKey, ActionState writingState) throws CantSaveActionException {
+    public void saveOnlineActionState(String publicKey, ActionState actionState) throws CantSaveActionException {
 
         try
         {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
-            UUID actionId = getOnlineActionByPk(publicKey);
-            if(actionId==null){
+            ActionOnline actionOnline = getOnlineActionByPk(publicKey);
+            UUID actionId;
+            boolean value;
+            if(actionOnline==null){
                 actionId=UUID.randomUUID();
+                value = false;
+            }
+            else {
+                actionId=actionOnline.getId();
+                value = actionOnline.getValue();
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, writingState);
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
@@ -1865,7 +1934,59 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
-    public UUID getOnlineActionByPk(String publicKey) throws CantSaveActionException {
+    public void saveOnlineActionValue(String publicKey, boolean value) throws CantSaveActionException {
+
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            ActionOnline actionOnline = getOnlineActionByPk(publicKey);
+            UUID actionId;
+            ActionState actionState;
+            if(actionOnline==null){
+                actionId=UUID.randomUUID();
+                actionState = ActionState.NONE;
+            }
+            else {
+                actionId=actionOnline.getId();
+                actionState = actionOnline.getActionState();
+            }
+
+            DatabaseTable table = getDatabaseOnlineActionsTable();
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(actionId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, record);
+            else {
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, record);
+            }
+
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantSaveActionException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to save the Chat Transaction in the database.",
+                    null);
+        }
+    }
+
+    public ActionOnline getOnlineActionByPk(String publicKey) throws CantSaveActionException {
 
         try {
             DatabaseTable databaseTable = getDatabaseOnlineActionsTable();
@@ -1876,11 +1997,24 @@ public class ChatMiddlewareDatabaseDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             if(records!=null && !records.isEmpty()){
-                return UUID.fromString(records.get(0).getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME));
+                ActionOnline actionOnline = getActionOnlineTransaction(records.get(0));
+                return actionOnline;
             }
             else return null;
 
         }catch(CantLoadTableToMemoryException e){
+            throw new CantSaveActionException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to load table to memory.",
+                    null);
+        } catch (DatabaseOperationException e) {
+            throw new CantSaveActionException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to load table to memory.",
+                    null);
+        } catch (InvalidParameterException e) {
             throw new CantSaveActionException(
                     DatabaseOperationException.DEFAULT_MESSAGE,
                     FermatException.wrapException(e),
