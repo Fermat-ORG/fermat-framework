@@ -185,7 +185,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    adapterView.refreshEvents();
                     adapterView.getFilter(s);
                 }
                 return false;

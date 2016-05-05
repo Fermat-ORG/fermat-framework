@@ -162,6 +162,7 @@ public class ChatAdapterView extends LinearLayout {
                 if (cht != null)
                     chatId = cht.getChatId();
                 else chatId = null;
+                appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId));
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -391,8 +392,7 @@ public class ChatAdapterView extends LinearLayout {
                     }
                 });
 
-
-       final int i = 0;
+        
         messageET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -629,6 +629,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void getFilter(String s) {
+        findMessage();
+        refreshEvents();
         adapter.getFilter().filter(s);
     }
 
