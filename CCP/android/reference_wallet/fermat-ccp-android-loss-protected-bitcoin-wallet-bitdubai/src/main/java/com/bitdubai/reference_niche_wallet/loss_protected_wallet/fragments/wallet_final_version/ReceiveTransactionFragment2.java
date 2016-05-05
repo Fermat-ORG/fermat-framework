@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -70,7 +71,7 @@ import static android.widget.Toast.makeText;
  * @since 7/10/2015
  */
 public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSession,ResourceProviderManager>
-        implements FermatListItemListeners<LossProtectedWalletTransaction>,ElementsWithAnimation {
+        implements FermatListItemListeners<LossProtectedWalletTransaction>, ElementsWithAnimation {
 
     private int MAX_TRANSACTIONS = 20;
 
@@ -413,6 +414,16 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public void startExpandAnimation(int verticalOffSet) {
         moveViewToOriginalPosition(emptyListViewsContainer);
+    }
+
+    @Override
+    public void startCollapseAnimation(Context context, int verticalOffset) {
+        // no-op
+    }
+
+    @Override
+    public void startExpandAnimation(Context context, int verticalOffset) {
+        // no-op
     }
 
     private void moveViewToOriginalPosition(View view) {
