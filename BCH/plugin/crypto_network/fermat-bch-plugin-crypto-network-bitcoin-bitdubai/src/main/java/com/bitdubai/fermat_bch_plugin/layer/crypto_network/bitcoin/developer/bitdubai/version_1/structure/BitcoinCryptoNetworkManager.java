@@ -103,7 +103,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
-    Broadcaster broadcaster;
+
 
 
     /**
@@ -112,21 +112,18 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param pluginFileSystem
      * @param pluginId
      * @param errorManager
-     * @param broadcaster
      * @param bitcoinCryptoNetworkDatabaseDao
      */
     public BitcoinCryptoNetworkManager(EventManager eventManager,
                                        PluginFileSystem pluginFileSystem,
                                        UUID pluginId,
                                        ErrorManager errorManager,
-                                       Broadcaster broadcaster,
                                        BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
         this.eventManager = eventManager;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
         this.WALLET_PATH = pluginFileSystem.getAppPath();
-        this.broadcaster = broadcaster;
         this.dao = bitcoinCryptoNetworkDatabaseDao;
 
         runningAgents = new HashMap<>();
