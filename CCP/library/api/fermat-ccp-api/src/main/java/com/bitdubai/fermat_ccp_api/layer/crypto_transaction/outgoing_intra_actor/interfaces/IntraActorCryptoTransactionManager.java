@@ -70,8 +70,7 @@ public interface IntraActorCryptoTransactionManager extends FermatManager {
                     Actors senderActorType,
                     Actors receptorActorType,
                     ReferenceWallet referenceWallet,
-                    BlockchainNetworkType blockchainNetworkType,
-                    double purchasePrice) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
+                    BlockchainNetworkType blockchainNetworkType) throws com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions,
             com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 
     /**

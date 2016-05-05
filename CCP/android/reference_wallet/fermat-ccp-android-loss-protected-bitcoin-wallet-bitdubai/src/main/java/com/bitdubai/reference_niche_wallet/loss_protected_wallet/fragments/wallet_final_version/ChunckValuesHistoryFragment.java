@@ -360,7 +360,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
 
-            lstTransaction = cryptoWallet.listLastActorTransactionsByTransactionType(
+            lstTransaction = cryptoWallet.listAllActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
                     TransactionType.CREDIT,
                     lossProtectedWalletSession.getAppPublicKey(),

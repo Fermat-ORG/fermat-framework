@@ -26,7 +26,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/available_balance_text"
+                android:text="@string/real_balance_text"
                 android:textSize="16sp"
                 android:id="@+id/txt_type_balance"
                 android:textColor="#FFF"/>

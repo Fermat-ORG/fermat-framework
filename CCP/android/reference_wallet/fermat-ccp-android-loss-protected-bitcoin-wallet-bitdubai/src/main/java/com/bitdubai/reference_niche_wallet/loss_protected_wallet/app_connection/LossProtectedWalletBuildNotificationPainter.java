@@ -34,10 +34,10 @@ public class LossProtectedWalletBuildNotificationPainter {
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
 
-                            notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,resultCode);
+                            notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC. Confirmation pendient.","","",true,resultCode);
 
                         }else{
-                            notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived","","",true,resultCode);
+                            notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived. Confirmation pendient","","",true,resultCode);
                         }
                         break;
                     case "TRANSACTIONREVERSE":

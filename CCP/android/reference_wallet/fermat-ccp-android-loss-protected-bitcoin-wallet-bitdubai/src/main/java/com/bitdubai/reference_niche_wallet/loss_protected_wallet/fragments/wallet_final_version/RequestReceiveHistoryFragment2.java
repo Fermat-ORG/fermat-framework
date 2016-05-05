@@ -96,24 +96,6 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
 
             lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
-//            getExecutor().execute(new Runnable() {
-//                @Override
-//                public void run() {
-//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-//                        final Drawable drawable = getResources().getDrawable(R.drawable.background_gradient, null);
-//                       getActivity().runOnUiThread(new Runnable() {
-//                           @Override
-//                          public void run() {
-//                              try {
-//                                    getPaintActivtyFeactures().setActivityBackgroundColor(drawable);
-//                                }catch (OutOfMemoryError o){
-//                                 o.printStackTrace();
-//                               }
-//                            }
-//                       });
-//                    }
-//                }
-//            });
 
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 
@@ -158,9 +140,6 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
 
         frameLayout.setLayoutParams(lbs);
 
-        //ImageView icon = new ImageView(getActivity());  Create an icon
-        //icon.setImageResource(R.drawable.btn_request_selector);
-        //icon.setImageResource(R.drawable.ic_contact_newcontact);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
             @Override
@@ -175,7 +154,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
         final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_request_selector)
+                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.floatbutton_sendbitcoin)
                 .build();
 
         FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())

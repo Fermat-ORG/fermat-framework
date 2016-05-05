@@ -96,7 +96,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                              String                description      ,
                                              long                  amount           ,
                                              BlockchainNetworkType networkType      ,
-                                             ReferenceWallet       referenceWallet) throws CantGenerateCryptoPaymentRequestException {
+                                             ReferenceWallet       referenceWallet
+                                             ) throws CantGenerateCryptoPaymentRequestException {
 
 
         System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET.");
@@ -151,7 +152,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     amount,
                     startTimeStamp,
                     networkType,
-                    referenceWallet
+                    referenceWallet,
+                    walletPublicKey
             );
 
             System.out.println("********** Crypto Payment Request -> generating request. SENT - WAITING RECEPTION CONFIRMATION -> OK.");
@@ -185,7 +187,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                                               long                  amount           ,
                                                               long                  startTimeStamp   ,
                                                               BlockchainNetworkType networkType,
-                                                              ReferenceWallet       referenceWallet) throws CantSendRequestException                     ,
+                                                              ReferenceWallet       referenceWallet,
+                                                              String walletPublicKey) throws CantSendRequestException                     ,
                                                                                                               CantChangeCryptoPaymentRequestStateException ,
                                                                                                               CryptoPaymentRequestNotFoundException        {
 
@@ -202,7 +205,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                 amount,
                 startTimeStamp,
                 networkType,
-                referenceWallet
+                referenceWallet,
+                walletPublicKey
         );
 
         // change the state to waiting reception confirmation
@@ -583,7 +587,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                     cryptoPayment.getAmount(),
                                     cryptoPayment.getStartTimeStamp(),
                                     cryptoPayment.getNetworkType(),
-                                    cryptoPayment.getReferenceWallet()
+                                    cryptoPayment.getReferenceWallet(),
+                                    cryptoPayment.getWalletPublicKey()
                             );
 
                         } catch(CantSendRequestException                     |

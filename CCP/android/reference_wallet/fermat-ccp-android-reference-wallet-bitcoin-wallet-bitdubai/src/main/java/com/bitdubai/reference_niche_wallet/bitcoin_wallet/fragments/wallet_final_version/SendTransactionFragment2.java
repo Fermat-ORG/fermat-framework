@@ -124,8 +124,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private int progress1=1;
     private Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
-
-    private String runningBalance;
+    
     private BitcoinWalletSettings bitcoinWalletSettings = null;
 
     private ExecutorService _executor;
@@ -179,6 +178,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
                 bitcoinWalletSettings.setNotificationEnabled(true);
+                bitcoinWalletSettings.setIsBlockchainDownloadEnabled(true);
+
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
                 if(moduleManager!=null)
@@ -344,8 +345,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private void setUpScreen(){
         int[] emptyOriginalPos = new int[2];
         if(emptyListViewsContainer!=null)
-            emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
-    }
+            emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);    }
+    String runningBalance;
 
     private void setUpDonut(LayoutInflater inflater)  {
         try {

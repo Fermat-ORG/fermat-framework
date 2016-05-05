@@ -108,7 +108,6 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
-            //CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -152,7 +151,7 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.transaction_history_main;
+        return R.layout.loss_transaction_history_main;
     }
 
     @Override
@@ -175,7 +174,6 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
     @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
             adapter = new TransactionsHistoryAdapter(getActivity(), lst,cryptoWallet,lossWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
@@ -202,7 +200,7 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
             LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossWalletSession.getIntraUserModuleManager();
             if(intraUserLoginIdentity!=null) {
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
-                lst = cryptoWallet.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                lst = cryptoWallet.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
                 offset+=MAX_TRANSACTIONS;
             }
 
@@ -220,7 +218,6 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
     @Override
     public void onItemClickListener(LossProtectedWalletTransaction item, int position) {
         selectedItem = item;
-        //showDetailsActivityFragment(selectedItem);
     }
 
     /**
@@ -255,7 +252,6 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
 

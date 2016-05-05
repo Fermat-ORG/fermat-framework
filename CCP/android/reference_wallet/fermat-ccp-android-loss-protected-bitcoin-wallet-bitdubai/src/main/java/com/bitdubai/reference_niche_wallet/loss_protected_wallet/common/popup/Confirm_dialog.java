@@ -151,8 +151,7 @@ public class Confirm_dialog extends Dialog implements
                         this.deliveredToActorPublicKey,
                         this.deliveredToActorType,
                         this.referenceWallet,
-                        blockchainNetworkType,
-                        exchangeRate
+                        blockchainNetworkType
 
                 );
             } catch (CantSendLossProtectedCryptoException e) {
