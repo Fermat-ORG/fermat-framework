@@ -5,15 +5,24 @@ import android.os.Bundle;
 import android.view.WindowManager;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.contacts_list_adapter.WalletContact;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.SendToLossProtectedWalletDialog;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
@@ -29,11 +38,15 @@ import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Wa
 /**
  * Created by mati on 2016.02.09..
  */
-public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceWalletSession,WalletResourcesProviderManager> {
+public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceWalletSession,WalletResourcesProviderManager> implements FermatSettings {
 
     private ReferenceWalletSession referenceWalletSession;
     private BitcoinWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
+
+    private CryptoWalletWalletContact cryptoWalletWalletContact;
+    private BlockchainNetworkType blockchainNetworkType;
+    private CryptoWallet cryptoWallet;
 
     public static ReferenceWalletSettings newInstance() {
         return new ReferenceWalletSettings();
@@ -65,6 +78,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         //noinspection TryWithIdenticalCatches
         try {
             bitcoinWalletSettings = referenceWalletSession.getModuleManager().loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            cryptoWallet = referenceWalletSession.getModuleManager();
 
             list.add(new PreferenceSettingsSwithItem(1, "Enabled Notifications", bitcoinWalletSettings.getNotificationEnabled()));
 
@@ -100,6 +114,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
             list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
+            list.add(new PreferenceSettingsLinkText(11, "Send To Loss Protected Wallet", "",15,Color.GRAY));
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -137,14 +152,22 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
                 changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY, referenceWalletSession.getAppPublicKey());
 
-            } else {
-                if (preferenceSettingsItem.getId() == 9) {
-                    //export key show fragment
+            } else if (preferenceSettingsItem.getId() == 9) {
+                //export key show fragment
 
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, referenceWalletSession.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, referenceWalletSession.getAppPublicKey());
 
-                }
+            }else if (preferenceSettingsItem.getId() == 11){
+                SendToLossProtectedWalletDialog sendToLossProtectedWalletDialog = new SendToLossProtectedWalletDialog(
+                        getActivity(),
+                        cryptoWallet,
+                        referenceWalletSession,
+                        blockchainNetworkType);
+                sendToLossProtectedWalletDialog.show();
+
             }
+
+
 
 
             try {
@@ -155,6 +178,19 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         } catch (Exception e) {
         }
 
+    }
+
+    private void sendCrypto() {
+        try {
+            if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
+                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(),cryptoWallet);
+                if (validAddress != null) {
+
+                }
+            }
+        }catch (Exception e){
+
+        }
     }
 
     @Override
@@ -259,5 +295,8 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
     }
 
 
+    @Override
+    public void setIsPresentationHelpEnabled(boolean b) {
 
+    }
 }
