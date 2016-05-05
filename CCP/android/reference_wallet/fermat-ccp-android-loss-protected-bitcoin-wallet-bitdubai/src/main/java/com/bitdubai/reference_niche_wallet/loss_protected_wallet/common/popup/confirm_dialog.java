@@ -46,6 +46,7 @@ public class confirm_dialog extends Dialog implements
     private String deliveredToActorPublicKey;
     private Actors deliveredToActorType;
     private ReferenceWallet referenceWallet;
+    private double exchangeRate;
 
     /**
      *  Deals with crypto wallet interface
@@ -90,7 +91,8 @@ public class confirm_dialog extends Dialog implements
                           String deliveredToActorPublicKey,
                           Actors deliveredToActorType,
                           ReferenceWallet referenceWallet,
-                          BlockchainNetworkType blockchainNetworkType) {
+                          BlockchainNetworkType blockchainNetworkType,
+                          double exchangeRate) {
         super(a);
         this.activity = a;
         this.cryptoWallet=cryptoWallet;
@@ -104,6 +106,7 @@ public class confirm_dialog extends Dialog implements
         this.deliveredToActorType = deliveredToActorType;
         this.referenceWallet = referenceWallet;
         this.blockchainNetworkType = blockchainNetworkType;
+        this.exchangeRate = exchangeRate;
     }
 
 
@@ -148,7 +151,9 @@ public class confirm_dialog extends Dialog implements
                         this.deliveredToActorPublicKey,
                         this.deliveredToActorType,
                         this.referenceWallet,
-                        blockchainNetworkType
+                        blockchainNetworkType,
+                        exchangeRate
+
                 );
             } catch (CantSendLossProtectedCryptoException e) {
                 e.printStackTrace();

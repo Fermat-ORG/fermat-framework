@@ -15,8 +15,9 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment3;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestFormFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestReceiveHistoryFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestReceiveHistoryFragment2;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestHistorySendFragment;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestSendHistoryFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment2;
@@ -72,7 +73,7 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED:
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED:
-                    currentFragment = RequestSendHistoryFragment.newInstance();
+                    currentFragment = RequestHistorySendFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
                     currentFragment = ReceiveTransactionFragment3.newInstance();
@@ -81,10 +82,10 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                     currentFragment = SendTransactionFragment3.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY:
-                    currentFragment = RequestReceiveHistoryFragment.newInstance();
+                    currentFragment = RequestReceiveHistoryFragment2.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_SENT_HISTORY:
-                    currentFragment = RequestSendHistoryFragment.newInstance();
+                    currentFragment = RequestSendHistoryFragment2.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_FRAGMENT:
                     currentFragment = SendFormFragment.newInstance();

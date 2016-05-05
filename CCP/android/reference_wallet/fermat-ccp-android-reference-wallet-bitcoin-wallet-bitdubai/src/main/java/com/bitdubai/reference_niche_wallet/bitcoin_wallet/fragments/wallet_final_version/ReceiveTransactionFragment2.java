@@ -51,6 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -69,7 +70,7 @@ import static android.widget.Toast.makeText;
  * @since 7/10/2015
  */
 public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceWalletSession,ResourceProviderManager>
-        implements FermatListItemListeners<CryptoWalletTransaction>,ElementsWithAnimation {
+        implements FermatListItemListeners<CryptoWalletTransaction> {
 
     private int MAX_TRANSACTIONS = 20;
 
@@ -95,6 +96,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     //SettingsManager<BitcoinWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
+
+    private AnimationManager animationManager;
 
     public static ReceiveTransactionFragment2 newInstance() {
         return new ReceiveTransactionFragment2();
@@ -218,13 +221,14 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     public void onResume() {
-        getPaintActivtyFeactures().addCollapseAnimation(this);
+        animationManager = new AnimationManager(rootView, emptyListViewsContainer);
+        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         super.onResume();
     }
 
     @Override
     public void onStop() {
-        getPaintActivtyFeactures().removeCollapseAnimation(this);
+        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
         super.onStop();
     }
 
@@ -402,49 +406,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
-        }
-    }
-
-
-
-
-
-
-    @Override
-    public void startCollapseAnimation(int verticalOffset) {
-        moveViewToScreenCenter(emptyListViewsContainer);
-    }
-
-    @Override
-    public void startExpandAnimation(int verticalOffSet) {
-        moveViewToOriginalPosition(emptyListViewsContainer);
-    }
-
-    private void moveViewToOriginalPosition(View view) {
-        if(Build.VERSION.SDK_INT>17) {
-            if(view!=null) {
-                int position[] = new int[2];
-                view.getLocationOnScreen(position);
-                float centreY = rootView.getY() + rootView.getHeight() / 2;
-                TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0, centreY - 250, 0);
-                anim.setDuration(1000);
-                anim.setFillAfter(true);
-                view.startAnimation(anim);
-            }
-        }
-    }
-
-    private void moveViewToScreenCenter( View view ) {
-        if (Build.VERSION.SDK_INT > 17) {
-            if(view!=null) {
-                DisplayMetrics dm = new DisplayMetrics();
-                rootView.getDisplay().getMetrics(dm);
-                float centreY = rootView.getY() + rootView.getHeight() / 2;
-                TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
-                anim.setDuration(1000);
-                anim.setFillAfter(true);
-                view.startAnimation(anim);
-            }
         }
     }
 

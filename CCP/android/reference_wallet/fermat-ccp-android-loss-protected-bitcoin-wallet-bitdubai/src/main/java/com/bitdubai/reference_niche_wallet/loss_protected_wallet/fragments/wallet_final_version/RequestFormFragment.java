@@ -163,7 +163,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.request_form_base, container, false);
+            rootView = inflater.inflate(R.layout.loss_request_form_base, container, false);
             NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {
@@ -237,8 +237,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("Bits");
         list.add("BTC");
+        list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -254,20 +254,10 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                     if (amount.equals("")){
                         amount = "0";
                     }
-                    switch (position) {
-                        case 0:
-                            text = "[bits]";
-                            if (txtType.equals("[btc]")) {
-                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = bitcoinConverter.getBits(amount);
-                            } else {
-                                newAmount = amount;
-                            }
-
-                            break;
-                        case 1:
-                            text = "[btc]";
+                switch (position) {
+                    case 0:
+                        text = "[btc]";
+                        if (!amount.equals("") && amount != null){
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
                             } else if (txtType.equals("[satoshis]")) {
@@ -275,9 +265,30 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                             } else {
                                 newAmount = amount;
                             }
-                            break;
-                        case 2:
-                            text = "[satoshis]";
+                        }else{
+                            newAmount = amount;
+                        }
+
+
+                        break;
+                    case 1:
+                        text = "[bits]";
+                        if (!amount.equals("") && amount != null) {
+                            if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBits(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
+                            newAmount = amount;
+                        }
+
+                        break;
+                    case 2:
+                        text = "[satoshis]";
+                        if (!amount.equals("") && amount != null) {
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                             } else if (txtType.equals("[btc]")) {
@@ -285,8 +296,11 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                             } else {
                                 newAmount = amount;
                             }
-                            break;
-                    }
+                        }else{
+                            newAmount = amount;
+                        }
+                        break;
+                }
 
 
                 AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);

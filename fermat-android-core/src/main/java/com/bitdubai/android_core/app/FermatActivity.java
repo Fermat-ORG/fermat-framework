@@ -721,28 +721,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             if (appBarLayout != null)
                 appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
-                    boolean isShow = false;
                     int scrollRange = -1;
+                    boolean alreadyPerform = false;
 
                     @Override
                     public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                         if (scrollRange == -1) {
                             scrollRange = appBarLayout.getTotalScrollRange();
                         }
-                        if (scrollRange + verticalOffset == 0) {
-                            collapsingToolbarLayout.setTitle("");
-                            if(!isShow)
-                                for(ElementsWithAnimation element : elementsWithAnimation){
-                                    element.startCollapseAnimation(scrollRange);
-                                }
-
-                            isShow = true;
-                        } else if (isShow) {
-                            collapsingToolbarLayout.setTitle("");
-                            for(ElementsWithAnimation element : elementsWithAnimation){
-                                element.startExpandAnimation(scrollRange);
-                            }
-                            isShow = false;
+                        if(verticalOffset == 0) {
+                            alreadyPerform = false;
+                            for(ElementsWithAnimation element : elementsWithAnimation)
+                                element.startCollapseAnimation(getApplicationContext(), verticalOffset);
+                        } else if (verticalOffset < 0 && !alreadyPerform) {
+                            alreadyPerform = true;
+                            for(ElementsWithAnimation element : elementsWithAnimation)
+                                element.startExpandAnimation(getApplicationContext(), verticalOffset);
                         }
                     }
                 });
@@ -1735,7 +1729,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     public void sendMailExternal(String mailUserTo, String bodyText) throws Exception {
         YourOwnSender yourOwnSender = new YourOwnSender(this);
-        yourOwnSender.send(mailUserTo, bodyText);
+        yourOwnSender.sendPrivateKey(mailUserTo, bodyText);
     }
 
     @Override

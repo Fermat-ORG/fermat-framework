@@ -17,10 +17,12 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
@@ -36,6 +38,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWall
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -65,6 +68,9 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM        , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
     private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+    private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.EXTRA_WALLET_USER)
     private ExtraUserManager extraUserManager;
@@ -101,6 +107,12 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
 
     private String appPublicKey;
 
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS         , layer = Layers.CRYPTO_NETWORK  , plugin = Plugins.BITCOIN_NETWORK       )
+    private BitcoinNetworkManager bitcoinNetworkManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
+
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -108,39 +120,6 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
         super(new PluginVersionReference(new Version()));
 
     }
-
-//    @Override
-//    public CryptoWallet getCryptoWallet() throws CantGetCryptoWalletException {
-//
-//        try {
-//
-//            logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
-//
-//            CryptoWalletWalletModuleManager walletModuleCryptoWallet = new CryptoWalletWalletModuleManager(
-//                    bitcoinWalletManager          ,
-//                    cryptoAddressBookManager      ,
-//                    cryptoAddressesNSManager      ,
-//                    cryptoPaymentManager          ,
-//                    cryptoVaultManager            ,
-//                    errorManager                  ,
-//                    extraUserManager              ,
-//                    intraWalletUserActorManager   ,
-//                    intraWalletUserIdentityManager,
-//                    outgoingExtraUserManager      ,
-//                    outgoingIntraActorManager     ,
-//                    walletContactsManager,
-//                    pluginId, pluginFileSystem);
-//
-//            walletModuleCryptoWallet.initialize();
-//
-//            logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
-//
-//            return walletModuleCryptoWallet;
-//        } catch (final Exception e) {
-//
-//            throw new CantGetCryptoWalletException(CantGetCryptoWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e));
-//        }
-//    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -194,62 +173,9 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
         }
     }
 
-//    public CryptoWalletWalletModuleSettingsManager<CryptoWalletWalletModuleSettings> getSettingsManager() {
-//        return new CryptoWalletWalletModuleSettingsManager(pluginFileSystem,pluginId);
-//    }
+
 
     private SettingsManager<BitcoinWalletSettings> settingsManager;
-
-//    @Override
-//    public SettingsManager<BitcoinWalletSettings> getSettingsManager() {
-//        if (this.settingsManager != null)
-//            return this.settingsManager;
-//
-//        this.settingsManager = new SettingsManager<>(
-//                pluginFileSystem,
-//                pluginId
-//        );
-//
-//        return this.settingsManager;
-//    }
-
-//    @Override
-//    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-//        try {
-//            List<IntraWalletUserIdentity> lst = getCryptoWallet().getActiveIdentities();
-//            if(lst.isEmpty()){
-//                return null;
-//            }else{
-//                return lst.get(0);
-//            }
-//        } catch (CantGetCryptoWalletException e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
-//    @Override
-//    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-//        getCryptoWallet().createIntraUser(name, phrase, profile_img);
-//    }
-//
-//    @Override
-//    public void setAppPublicKey(String publicKey) {
-//        this.appPublicKey = publicKey;
-//    }
-//
-//    @Override
-//    public int[] getMenuNotifications() {
-//        int[] notifications = new int[5];
-//        try {
-//            notifications[2] = cryptoPaymentManager.getCryptoPaymentRegistry().listCryptoPaymentRequestsByTypeAndState(appPublicKey, CryptoPaymentState.PENDING_RESPONSE, CryptoPaymentType.RECEIVED,99,0).size();
-//        } catch (CantListCryptoPaymentRequestsException e) {
-//            e.printStackTrace();
-//        } catch (CantGetCryptoPaymentRegistryException e) {
-//            e.printStackTrace();
-//        }
-//        return notifications;
-//    }
 
     //TODO: ordenar esto please
     CryptoWalletWalletModuleManager walletModuleCryptoWallet = null;
@@ -276,8 +202,9 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
                         outgoingIntraActorManager,
                         walletContactsManager,
                         pluginId,
-                        pluginFileSystem
-                );
+                        pluginFileSystem,
+                        eventManager,
+                        bitcoinNetworkManager, broadcaster);
 
                 walletModuleCryptoWallet.initialize();
             }

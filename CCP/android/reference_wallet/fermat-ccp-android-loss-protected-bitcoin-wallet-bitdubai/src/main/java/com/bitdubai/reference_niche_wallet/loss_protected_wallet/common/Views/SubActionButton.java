@@ -43,7 +43,7 @@ public class SubActionButton extends LinearLayout {
         textView = new TextView(context);
         textView.setText(text);
         textView.setGravity(Gravity.CENTER_VERTICAL);
-        textView.setTextColor(Color.WHITE);
+        textView.setTextColor(Color.DKGRAY);
         LinearLayout.LayoutParams lps_text = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lps_text.topMargin = 22;
         textView.setLayoutParams(lps_text);
