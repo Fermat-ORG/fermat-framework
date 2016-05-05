@@ -37,7 +37,11 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -94,6 +98,7 @@ public class ChatMiddlewareMonitorAgent implements
     ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     public final String BROADCAST_CODE = "13";
     ChatActorConnectionManager chatActorConnectionManager;
+    ChatManager chatActorNetworkServiceManager;
 
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
@@ -104,7 +109,8 @@ public class ChatMiddlewareMonitorAgent implements
                                       NetworkServiceChatManager chatNetworkServiceManager,
                                       MiddlewareChatManager chatMiddlewareManager,
                                       Broadcaster broadcaster, PluginFileSystem pluginFileSystem,
-                                      ChatActorConnectionManager chatActorConnectionManager) throws CantSetObjectException {
+                                      ChatActorConnectionManager chatActorConnectionManager,
+                                      ChatManager chatActorNetworkServiceManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -115,6 +121,7 @@ public class ChatMiddlewareMonitorAgent implements
         this.broadcaster = broadcaster;
         this.pluginFileSystem = pluginFileSystem;
         this.chatActorConnectionManager = chatActorConnectionManager;
+        this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
     @Override
@@ -184,7 +191,7 @@ public class ChatMiddlewareMonitorAgent implements
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000; //2000;
-        public final int DISCOVER_ITERATION_LIMIT = 1;
+        public final int DISCOVER_ITERATION_LIMIT = 2;
         int discoverIteration = 0;
         int iterationNumber = 0;
         boolean threadWorking;
@@ -289,6 +296,10 @@ public class ChatMiddlewareMonitorAgent implements
                 if (discoverIteration == 0) {
                     sendChatBroadcasting();
                     resetWritingStatus();
+                    checkOnlineStatus();
+                }
+                if(discoverIteration == 2){
+                    resetOnlineStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -490,6 +501,53 @@ public class ChatMiddlewareMonitorAgent implements
         }
     }
 
+    public void checkOnlineStatus() throws
+            CantGetPendingTransactionException,
+            UnexpectedResultReturnedFromDatabaseException {
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    errorManager,
+                    pluginFileSystem);
+
+            List<ActionOnline> onlineActions = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
+
+            if(onlineActions==null || onlineActions.isEmpty()) return;
+
+            System.out.println("12345 CHECKING ONLINE STATUS");
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            for(ActionOnline actionOnline : onlineActions){
+                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
+                System.out.println("12345 is online "+isOnline);
+                chatMiddlewareDatabaseDao.saveOnlineActionValue(actionOnline.getPublicKey(), isOnline);
+            }
+
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+        } catch (CantGetPendingActionListException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantListChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantSaveActionException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        }
+    }
+
     public void resetWritingStatus(){
         try {
             chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
@@ -503,26 +561,26 @@ public class ChatMiddlewareMonitorAgent implements
 
             //Resetear los writing state enviados
             List<UUID> chatsId = chatMiddlewareDatabaseDao.getWritingActions();
-            System.out.println("12345 Chats to reset enviados "+ chatsId.size());
+//            System.out.println("12345 Chats to reset enviados "+ chatsId.size());
 
             if(chatsId != null && !chatsId.isEmpty()) {
                 for (UUID chatId : chatsId) {
-                    chatMiddlewareDatabaseDao.saveAction(chatId, ActionState.NONE);
-                    System.out.println("12345 Action writing Updated " + chatId);
+                    chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.NONE);
+//                    System.out.println("12345 Action writing Updated " + chatId);
                     changes = true;
                 }
             }
 
             //Resetear los writing state recibidos
             List<Chat> chats = chatMiddlewareDatabaseDao.getChatListByWriting();
-            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
+//            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
 
             if(chats == null && chats.isEmpty()) return;
 
             for(Chat chat : chats){
                 chat.setIsWriting(false);
                 chatMiddlewareDatabaseDao.saveChat(chat);
-                System.out.println("12345 Chat writing Updated "+chat.getChatId());
+//                System.out.println("12345 Chat writing Updated "+chat.getChatId());
                 changes = true;
             }
 
@@ -535,6 +593,38 @@ public class ChatMiddlewareMonitorAgent implements
             e.printStackTrace();
         } catch (CantSaveChatException e) {
             e.printStackTrace();
+        } catch (CantGetPendingActionListException e) {
+            e.printStackTrace();
+        } catch (CantSaveActionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetOnlineStatus(){
+        try {
+        chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                pluginDatabaseSystem,
+                pluginId,
+                database,
+                errorManager,
+                pluginFileSystem);
+
+        boolean changes=false;
+
+
+        List<ActionOnline> actionOnlines = null;
+            actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
+
+        if(actionOnlines == null || actionOnlines.isEmpty()) return;
+
+        for(ActionOnline actionOnline : actionOnlines){
+            chatMiddlewareDatabaseDao.saveOnlineActionValue(actionOnline.getPublicKey(), false);
+            changes = true;
+        }
+
+        if(changes)
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
         } catch (CantGetPendingActionListException e) {
             e.printStackTrace();
         } catch (CantSaveActionException e) {

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
@@ -92,7 +93,6 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
 
     /**
      * This method sends the message through the Chat Network Service for view writingStatus
-     * @param contactPublicKey,
      * @param chatId
      * @throws CantSendChatMessageException
      */
@@ -101,12 +101,13 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
     boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
 
     /**
-     * This method sends the message through the Chat Network Service for view onlineStatus
+     * This method check through the Chat Network Service for view onlineStatus
      * @param contactPublicKey,
-     * @param chatId
      * @throws CantSendChatMessageException
      */
-    void sendOnlineStatus (String contactPublicKey, UUID chatId) throws CantSendChatMessageException;
+    boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
+
+    void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus;
 
     void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
 
