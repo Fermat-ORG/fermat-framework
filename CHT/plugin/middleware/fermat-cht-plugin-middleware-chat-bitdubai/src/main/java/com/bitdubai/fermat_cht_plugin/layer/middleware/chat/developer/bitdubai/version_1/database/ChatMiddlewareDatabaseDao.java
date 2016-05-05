@@ -1433,6 +1433,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setUUIDValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME, uuid);
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME, publicKey);
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, writingState.getCode());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
 
         return record;
     }
@@ -1954,7 +1955,7 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value);
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
