@@ -15,17 +15,20 @@
             android:layout_width="match_parent"
             android:layout_height="46dp"
             android:gravity="center"
-            android:textSize="12sp"
+            android:textSize="14sp"
             android:text="@string/confirm_text"
-            android:textColor="#000000"
+            android:textColor="#1d1d26"
             android:layout_alignBottom="@+id/back_btn"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            android:layout_marginLeft="100dp"
+            android:layout_marginTop="100dp" />
 
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginLeft="100dp">
 
 
 
@@ -33,7 +36,7 @@
                 android:id="@+id/cancel_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#F44336"
+                android:background="#DC5A0F"
                 android:text="@string/cancel_btn"
                 android:textColor="#FFFFFF"
                 android:layout_weight="1" />
@@ -41,7 +44,7 @@
                 android:id="@+id/accept_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#01579B"
+                android:background="#073487"
                 android:text="@string/accept_btn"
                 android:textColor="#FFFFFF"
                 android:layout_weight="1" />
