@@ -3,13 +3,14 @@ package com.bitdubai.fermat_art_api.all_definition.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
  */
-public enum ArtExternalPlatform implements FermatEnum {
+public enum ArtExternalPlatform implements FermatEnum, Serializable {
 
     TOKENLY("TKY","Tokenly"),
     UNDEFINED("UNDEF","Undefined"),

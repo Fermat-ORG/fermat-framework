@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
@@ -45,8 +47,6 @@ import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.v
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 
 import java.util.ArrayList;
@@ -284,7 +284,9 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     public Artist createArtistIdentity( final String alias,
                                         final byte[] imageBytes,
                                         final String externalUsername,
-                                        ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, final UUID externalIdentityID,
+                                        ExposureLevel exposureLevel,
+                                        ArtistAcceptConnectionsType acceptConnectionsType,
+                                        final UUID externalIdentityID,
                                         final ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
 
         return identityArtistManager.createNewIdentityArtist(
