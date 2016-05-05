@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -180,14 +181,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
-            //errorManager = appSession.getErrorManager();
-
-//            if(lst==null){
-//                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
-//            }
 
             //get wallet settings
-
 
             try {
                 bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
@@ -225,8 +220,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
 
-
-            System.out.println("Network Type" + blockchainNetworkType);
             final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
             _executor.submit(new Runnable() {
@@ -257,11 +250,21 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
+            //get Blockchain Download Progress status
+           int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
+            int progress= moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getProgress();
+
+            if(pendingBlocks > 0){
+
+            //paint toolbar on red
+                final Toolbar toolBar = getToolbar();
+                toolBar.setBackgroundColor(Color.RED);
+
+                makeText(getActivity(), "Blockchain Update in progress.", Toast.LENGTH_SHORT).show();
+            }
+
 
         } catch (Exception ex) {
-//            if (errorManager != null)
-//                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-//                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
             ex.printStackTrace();
         }
 
@@ -328,6 +331,19 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        animationManager = new AnimationManager(rootView, emptyListViewsContainer);
+        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+        super.onStop();
+    }
+
     private void setUp(LayoutInflater inflater){
         try {
             //setUpHeader(inflater);
@@ -344,10 +360,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         int[] emptyOriginalPos = new int[2];
         if(emptyListViewsContainer!=null) {
             emptyListViewsContainer.getLocationOnScreen(emptyOriginalPos);
-            if (animationManager != null)
-                animationManager.setEmptyOriginalPos(emptyOriginalPos);
         }
-
     }
     String runningBalance;
 
@@ -427,9 +440,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
-        //txt_type_balance.setTypeface(tf);
-
-        //((TextView) balance_header.findViewById(R.id.txt_touch_to_change)).setTypeface(tf);
         // handler for the background updating
         final Handler progressHandler = new Handler() {
             public void handleMessage(Message msg) {
@@ -569,7 +579,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private String getWalletAddress(String actorPublicKey) {
         String walletAddres="";
         try {
-            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
+
             CryptoAddress cryptoAddress = moduleManager.requestAddressToKnownUser(
                     referenceWalletSession.getIntraUserModuleManager().getPublicKey(),
                     Actors.INTRA_USER,
@@ -906,7 +916,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         long balance = 0;
         try {
             balance = referenceWalletSession.getModuleManager().getBalance(balanceType, referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
-            System.out.println("THE BALANCE IS " + balance);
+
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -1090,16 +1100,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public void onUpdateViewOnUIThread(String code){
         try {
+            if(code.equals("BlockchainDownloadComplete"))
+            {
+                //update toolbar color
+                final Toolbar toolBar = getToolbar();
+                toolBar.setBackgroundColor(Color.GREEN);
+            }
+            else
+            {
+                //update balance amount
+                final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
-            //update balance amount
+                changeBalanceType(txt_type_balance, txt_balance_amount);
+                //System.out.println(System.currentTimeMillis());
 
-            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
-
-             changeBalanceType(txt_type_balance, txt_balance_amount);
-            //System.out.println(System.currentTimeMillis());
-
-            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-            circularProgressBar.setProgressValue2(getBalanceAverage());
+                circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                circularProgressBar.setProgressValue2(getBalanceAverage());
+            }
         }
         catch (Exception e) {
             e.printStackTrace();

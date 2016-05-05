@@ -9,6 +9,8 @@ interface IServerBrokerService {
 
 
     FermatModuleObjectWrapper invoqueModuleMethod(
+            in String clientKey,
+            in String dataId,
             in String platformCode,
             in String layerCode,
             in String pluginsCode,
@@ -17,6 +19,20 @@ interface IServerBrokerService {
             in String method,
             in FermatModuleObjectWrapper[] parameters
             );
+
+    FermatModuleObjectWrapper invoqueModuleLargeDataMethod(
+          in String clientKey,
+          in String dataId,
+          in String platformCode,
+          in String layerCode,
+          in String pluginsCode,
+          in String developerCode,
+          in String version,
+          in String method,
+          in FermatModuleObjectWrapper[] parameters
+          );
+
+    String register();
 
 
     FermatModuleObjectWrapper invoqueModuleMethod2(

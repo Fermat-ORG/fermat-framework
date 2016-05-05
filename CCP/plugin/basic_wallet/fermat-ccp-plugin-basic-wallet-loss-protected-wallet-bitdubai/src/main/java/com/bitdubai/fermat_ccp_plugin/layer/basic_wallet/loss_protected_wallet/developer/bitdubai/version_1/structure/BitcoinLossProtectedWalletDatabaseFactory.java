@@ -41,9 +41,9 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         Database database = null;
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
-            createLossProtetedWalletTable(ownerId, database.getDatabaseFactory());
+            createLossProtectedWalletTable(ownerId, database.getDatabaseFactory());
             createLossProtectedWalletBalancesTable(ownerId, database.getDatabaseFactory());
-            createLossProtectedWalletSpentTableFactory(ownerId, database.getDatabaseFactory());
+            createLossProtectedSpendWalletTable(ownerId, database.getDatabaseFactory());
             insertInitialBalancesRecord(database);
             database.closeDatabase();
             return database;
@@ -60,9 +60,18 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         }
     }
 
-    private void createLossProtetedWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+    private void createLossProtectedWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
         try{
             DatabaseTableFactory tableFactory = createLossProtectedWalletTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
+    private void createLossProtectedSpendWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+        try{
+            DatabaseTableFactory tableFactory = createLossProtectedWalletSpentTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
         } catch(InvalidOwnerIdException exception){
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");

@@ -23,4 +23,5 @@ public class ApplicationConstants {
     public static final String INTENT_APP_TYPE = "appType";
     public static final String RECENT_APPS = "recentApps";
     public static final String WELCOME_SCREEN = "welcomeScreen";
+    public static final String INTENT_EXTRA_DATA = "extraData";
 }

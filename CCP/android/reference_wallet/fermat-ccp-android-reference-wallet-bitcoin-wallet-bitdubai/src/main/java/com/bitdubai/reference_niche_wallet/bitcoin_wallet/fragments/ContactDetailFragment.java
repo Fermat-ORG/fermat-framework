@@ -399,20 +399,24 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
     public void onUpdateViewOnUIThread(String code){
       try
         {
-            //update contact address
-            cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-
-
-            if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+            if(!code.equals("BlockchainDownloadComplete"))
             {
-                text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
-                img_update.setVisibility(View.GONE);
-                receive_button.setVisibility(View.VISIBLE);
-                send_button.setVisibility(View.VISIBLE);
+                //update contact address
+                cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+
+
+                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                {
+                    text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                    img_update.setVisibility(View.GONE);
+                    receive_button.setVisibility(View.VISIBLE);
+                    send_button.setVisibility(View.VISIBLE);
+
+                }
+
+                referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
 
             }
-
-            referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
 
         }
         catch(Exception e)

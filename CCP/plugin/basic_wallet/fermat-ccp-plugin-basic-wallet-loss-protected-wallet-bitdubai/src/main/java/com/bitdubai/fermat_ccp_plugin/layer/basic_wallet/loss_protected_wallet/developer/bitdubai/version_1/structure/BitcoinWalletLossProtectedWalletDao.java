@@ -116,9 +116,8 @@ public class BitcoinWalletLossProtectedWalletDao {
         try {
 
             long availableBalance = 0;
-            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            //busco los registros de ingreso menores a la cotizacion actual, me ijo cuanto gasto de cada bloque y saco el salod
+            //busco los registros de ingreso menores a la cotizacion actual, me ijo cuanto gasto de cada bloque y saco el saldo
 
 
             for(DatabaseTableRecord record :  getRecordsLessThanRate(blockchainNetworkType,exchangeRate))
@@ -225,6 +224,39 @@ public class BitcoinWalletLossProtectedWalletDao {
             return spendings;
 
        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantListTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        } catch (Exception exception){
+            throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
+    }
+
+    public List<BitcoinLossProtectedWalletSpend> listAllWalletSpending() throws CantListTransactionsException {
+        try {
+
+            DatabaseTable bitcoinSpentTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_NAME);
+
+            bitcoinSpentTable.addFilterOrder(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+
+            bitcoinSpentTable.loadToMemory();
+
+            List<BitcoinLossProtectedWalletSpend> spendings = new ArrayList<>();
+
+            for(DatabaseTableRecord record : bitcoinSpentTable.getRecords())
+            {
+
+                UUID spendId               = record.getUUIDValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME);
+                UUID transactionId         = record.getUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME);
+                long amount                = record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME);
+                long timeStamp             = record.getLongValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME);
+                double exchangeRate        = record.getDoubleValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME);
+
+                spendings.add(new BitcoinWalletLossProtectedWalletSpend(spendId,transactionId,amount,timeStamp,exchangeRate));
+
+            }
+
+            return spendings;
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantListTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
         } catch (Exception exception){
             throw new CantListTransactionsException(CantListTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");

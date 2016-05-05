@@ -20,11 +20,13 @@ public class ServicesHelpers {
     private ClientSideBrokerServiceHelperAidle clientSystemBrokerServiceAIDL;
 
 
-    public ServicesHelpers(Context contextWeakReference){
-        appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
+    public ServicesHelpers(Context contextWeakReference,boolean isInBackground){
+        if(!isInBackground) {
+            appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
+            clientSideBrokerServiceHelper = new ClientSideBrokerServiceHelper(contextWeakReference);
+            clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
+        }
         notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
-        clientSideBrokerServiceHelper = new ClientSideBrokerServiceHelper(contextWeakReference);
-        //clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
     }
 
     public void bindServices(){
@@ -32,7 +34,7 @@ public class ServicesHelpers {
         appManagerServiceHelper.bindAppManagerService();
         notificationServiceHelper.bindNotificationService();
         clientSideBrokerServiceHelper.clientSideBrokerBoundService();
-        //clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
+        clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
     }
 
     public void unbindServices(){
@@ -40,7 +42,7 @@ public class ServicesHelpers {
         appManagerServiceHelper.unbindAppManagerService();
         notificationServiceHelper.unbindNotificationService();
         clientSideBrokerServiceHelper.unbindClientSideBrokerService();
-        //clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
+        clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
     }
 
     public FermatAppsManagerService getAppManager(){
@@ -48,6 +50,7 @@ public class ServicesHelpers {
     }
 
     public NotificationService getNotificationService() {
+        Log.i(TAG,"getNotificationService, service state: "+notificationServiceHelper.getNotificationService());
         return notificationServiceHelper.getNotificationService();
     }
 
@@ -65,5 +68,9 @@ public class ServicesHelpers {
 
     public ClientBrokerService getClientSideBrokerServiceAIDL() {
         return clientSystemBrokerServiceAIDL.getClientSystemBrokerService();
+    }
+
+    public void bindBackgroundServices() {
+
     }
 }

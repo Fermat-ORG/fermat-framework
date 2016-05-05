@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -49,6 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -67,7 +70,7 @@ import static android.widget.Toast.makeText;
  * @since 7/10/2015
  */
 public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragment<GrouperItem,ReferenceWalletSession,ResourceProviderManager>
-        implements FermatListItemListeners<CryptoWalletTransaction>,ElementsWithAnimation {
+        implements FermatListItemListeners<CryptoWalletTransaction> {
 
     private int MAX_TRANSACTIONS = 20;
 
@@ -94,6 +97,8 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     //SettingsManager<BitcoinWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
+    private AnimationManager animationManager;
+
     public static ReceiveTransactionFragment2 newInstance() {
         return new ReceiveTransactionFragment2();
     }
@@ -108,49 +113,80 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
 
         mHandler = new Handler();
-        BitcoinWalletSettings bitcoinWalletSettings = null;
+
+
         try {
             referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             if((moduleManager!=null)) {
-                bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
-                if (bitcoinWalletSettings != null) {
+                getExecutor().submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        BitcoinWalletSettings bitcoinWalletSettings = null;
+                        try {
 
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                        bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                        } catch (CantGetSettingsException e) {
+                            e.printStackTrace();
+                        } catch (SettingsNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (bitcoinWalletSettings != null) {
+
+                            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            }
+                            try {
+                                moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                            } catch (CantPersistSettingsException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+
+                        if (bitcoinWalletSettings != null) {
+                            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            }
+                        }
+                        try {
+                            moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                        } catch (CantPersistSettingsException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        try {
+                            blockchainNetworkType = (moduleManager != null) ? moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType() : BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        } catch (CantGetSettingsException e) {
+                            e.printStackTrace();
+                        } catch (SettingsNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        Log.i(TAG, "Network Type" + blockchainNetworkType);
+
+                        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                     }
-                    moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
-
-                }
+                });
 
 
-                if (bitcoinWalletSettings != null) {
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                        bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                    }
-                }
-                moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+
             }
 
-            } catch (Exception ex) {
+        } catch (Exception ex) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
 
-        try {
-            blockchainNetworkType = (moduleManager!=null)?moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType():BlockchainNetworkType.getDefaultBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
-        System.out.println("Network Type" + blockchainNetworkType);
 
-        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
     }
 
     @Nullable
@@ -180,9 +216,21 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getPaintActivtyFeactures().addCollapseAnimation(this);
+
     }
 
+    @Override
+    public void onResume() {
+        animationManager = new AnimationManager(rootView, emptyListViewsContainer);
+        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+        super.onStop();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -242,6 +290,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
+            if(openNegotiationList==null)openNegotiationList = new ArrayList<>();
             adapter = new ReceivetransactionsExpandableAdapter(getActivity(), openNegotiationList,getResources());
             adapter.setChildItemFermatEventListeners(this);
         }
@@ -357,49 +406,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
-        }
-    }
-
-
-
-
-
-
-    @Override
-    public void startCollapseAnimation(int verticalOffset) {
-        moveViewToScreenCenter(emptyListViewsContainer);
-    }
-
-    @Override
-    public void startExpandAnimation(int verticalOffSet) {
-        moveViewToOriginalPosition(emptyListViewsContainer);
-    }
-
-    private void moveViewToOriginalPosition(View view) {
-        if(Build.VERSION.SDK_INT>17) {
-            if(view!=null) {
-                int position[] = new int[2];
-                view.getLocationOnScreen(position);
-                float centreY = rootView.getY() + rootView.getHeight() / 2;
-                TranslateAnimation anim = new TranslateAnimation(emptyOriginalPos[0], 0, centreY - 250, 0);
-                anim.setDuration(1000);
-                anim.setFillAfter(true);
-                view.startAnimation(anim);
-            }
-        }
-    }
-
-    private void moveViewToScreenCenter( View view ) {
-        if (Build.VERSION.SDK_INT > 17) {
-            if(view!=null) {
-                DisplayMetrics dm = new DisplayMetrics();
-                rootView.getDisplay().getMetrics(dm);
-                float centreY = rootView.getY() + rootView.getHeight() / 2;
-                TranslateAnimation anim = new TranslateAnimation(0, emptyOriginalPos[0], 0, centreY - 250);
-                anim.setDuration(1000);
-                anim.setFillAfter(true);
-                view.startAnimation(anim);
-            }
         }
     }
 

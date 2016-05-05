@@ -9,7 +9,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
-import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
 import com.bitdubai.android_core.app.common.version_1.util.task.GetTask;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
@@ -42,12 +41,7 @@ public class BoundService extends Service implements FermatWorkerCallBack {
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
     private final IBinder mBinder = new LocalBinder();
-    private ServiceCallback callback;
 
-    public void registerCallback(ServiceCallback serviceCallback) {
-        Log.i("APP","service callback registered");
-        this.callback = serviceCallback;
-    }
 
 
     public class LocalBinder extends Binder {
@@ -105,9 +99,7 @@ public class BoundService extends Service implements FermatWorkerCallBack {
 
     private boolean fermatInit() {
         //TODO: aca mando el broadcast
-        if(callback!=null){
-            callback.callback(1);
-        }
+
         return true;
     }
 
@@ -154,7 +146,7 @@ public class BoundService extends Service implements FermatWorkerCallBack {
     public void onErrorOccurred(Exception ex) {
         //mDialog.dismiss();
         ex.printStackTrace();
-        callback.callback(2);
+
         Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
                 Toast.LENGTH_LONG).show();
     }
