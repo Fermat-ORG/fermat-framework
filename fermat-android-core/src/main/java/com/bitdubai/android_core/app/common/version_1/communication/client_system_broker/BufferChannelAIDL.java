@@ -117,6 +117,7 @@ public class BufferChannelAIDL {
         if(buffer.containsKey(id)){
             return buffer.get(id);
         }else {
+            Log.i(TAG,"GetObject salió por el otro lado..");
             ByteArrayOutputStream byteArrayOutputStream = objects.get(id);
             ByteArrayInputStream bis = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
             ObjectInput in = null;

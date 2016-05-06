@@ -82,6 +82,7 @@ public abstract class LocalSocketSession {
     }
 
     public void addWaitingMessage(){
+        Log.i(TAG,"Message arrive, unlocking wait..");
         messageSize.incrementAndGet();
         waitMessageLocker.unblock();
         synchronized (waitMessageLocker){
@@ -136,6 +137,7 @@ public abstract class LocalSocketSession {
                             while(!flag) {
                                 waitMessageLocker.block();
                                 synchronized (waitMessageLocker){
+                                    Log.i(TAG, "Waiting for message..");
                                     waitMessageLocker.wait();
                                 }
                                 if(!waitMessageLocker.getIsBlock()){
