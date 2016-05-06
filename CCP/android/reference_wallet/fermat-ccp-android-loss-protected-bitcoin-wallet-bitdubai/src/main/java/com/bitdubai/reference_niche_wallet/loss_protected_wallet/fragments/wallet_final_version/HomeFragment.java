@@ -103,6 +103,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     LossProtectedWalletSession lossProtectedWalletSession;
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
+
+
     /**
      * Manager
      * */
@@ -115,9 +117,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      * */
     private List<BitcoinLossProtectedWalletSpend> allWalletSpendingList;
 
+    private float totalEarnedAndLostForToday = 0;
 
     // Fermat Managers
-
     private TextView txt_type_balance;
     private TextView txt_touch_to_change;
     private TextView txt_balance_amount;
@@ -464,6 +466,22 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             LineData data = getData(allWalletSpendingList);
             //LineData data = new LineData(labels, dataset);
 
+            //Set Earned and Lost For To day en UI
+            if (totalEarnedAndLostForToday!=0){
+
+                if (totalEarnedAndLostForToday > 0){
+                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
+                    earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+                }else if (totalEarnedAndLostForToday==0){
+                    txt_earnOrLost.setText("USD 0.00");
+                    earnOrLostImage.setVisibility(View.INVISIBLE);
+                }else if (totalEarnedAndLostForToday< 0){
+                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
+                    earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+                }
+
+            }
+
             data.setValueTextSize(12f);
             data.setValueTextColor(Color.WHITE);
 
@@ -634,6 +652,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         ArrayList<Entry> entryList = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
+        //Date format for earned and lost for today
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
+        Date actualDate = new Date();
+
         //look for the size number of the spendings list
         int size = ListSpendigs.size();
 
@@ -644,6 +666,14 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 BitcoinLossProtectedWalletSpend listSpendig = ListSpendigs.get(i);
 
+                //get the total earned and lost
+                if(sdf.format(actualDate)==sdf.format(listSpendig.getTimestamp())){
+
+                totalEarnedAndLostForToday =+ getEarnOrLostOfSpending(
+                        listSpendig.getAmount(),
+                        listSpendig.getExchangeRate(),
+                        listSpendig.getTransactionId());
+                }
                 //get the entry value for chart with getEarnOrLostOfSpending method
                 final float valueEntry = getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
@@ -888,10 +918,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
                 if (e.getVal()>=0){
 
-                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(e.getVal())+" earned");
+                    txt_earnOrLost.setText("USD "+e.getVal()+" earned");
                     earnOrLostImage.setImageResource(R.drawable.earning_icon);
                 }else {
-                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(e.getVal())+" losted");
+                    txt_earnOrLost.setText("USD "+e.getVal()+" lost");
                     earnOrLostImage.setImageResource(R.drawable.lost_icon);
                 }
                 chart.invalidate(); // refresh
