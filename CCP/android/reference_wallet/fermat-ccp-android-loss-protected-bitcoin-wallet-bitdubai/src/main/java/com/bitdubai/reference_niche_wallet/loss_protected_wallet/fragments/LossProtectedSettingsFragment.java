@@ -32,6 +32,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -281,7 +282,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
         BlockchainNetworkType blockchainNetworkType;
-
+        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         switch (item) {
 
             case "MainNet":
@@ -298,12 +299,32 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 break;
 
             default:
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                //provider exchange
+                // Exchange Rate Provider
+                try {
+                    UUID exchangeProviderId = null;
+                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWallet.getExchangeRateProviderManagers());
+
+                    for (int i=0; i<providers.size(); i++) {
+                        CurrencyExchangeRateProviderManager provider = providers.get(i);
+
+                        if(provider.getProviderId().equals(item))
+
+                                exchangeProviderId = provider.getProviderId();
+
+                    }
+
+                    lossProtectedWallet.setExchangeProvider(exchangeProviderId);
+                } catch (CantGetProviderInfoException e) {
+                    e.printStackTrace();
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
 
         }
 
-        System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
 
         if (blockchainNetworkType == null) {
             if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {

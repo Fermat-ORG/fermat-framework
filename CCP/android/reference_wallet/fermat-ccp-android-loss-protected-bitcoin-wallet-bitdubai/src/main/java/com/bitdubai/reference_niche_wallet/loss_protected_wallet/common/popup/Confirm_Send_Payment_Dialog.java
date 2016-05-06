@@ -20,13 +20,13 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantApproveLossProtectedRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
+
+import android.content.Context;
 
 import java.util.UUID;
 
@@ -43,14 +43,8 @@ public Dialog d;
 
 private BlockchainNetworkType blockchainNetworkType;
 private long cryptoAmount;
-private CryptoAddress destinationAddress;
+
 private UUID requestId;
-private String walletPublicKey;
-private String deliveredByActorPublicKey;
-private Actors deliveredByActorType;
-private String deliveredToActorPublicKey;
-private Actors deliveredToActorType;
-private ReferenceWallet referenceWallet;
 
 /**
  *  Deals with crypto wallet interface
@@ -66,10 +60,15 @@ private LossProtectedWalletSession appSession;
         Button accept_btn;
 
 
-public Confirm_Send_Payment_Dialog(Activity a,UUID  requestId,LossProtectedWalletSession appSession){
+public Confirm_Send_Payment_Dialog(Context a,long cryptoAmount, UUID  requestId,
+                                   LossProtectedWalletSession appSession, BlockchainNetworkType blockchainNetworkType){
     super(a);
+
     this.requestId = requestId;
     this.appSession = appSession;
+    this.cryptoAmount = cryptoAmount;
+    this.blockchainNetworkType = blockchainNetworkType;
+    this.lossProtectedWallet = appSession.getModuleManager();
  }
 
 
