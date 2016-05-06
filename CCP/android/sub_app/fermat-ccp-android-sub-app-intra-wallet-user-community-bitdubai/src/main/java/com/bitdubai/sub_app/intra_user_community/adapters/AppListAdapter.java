@@ -17,12 +17,15 @@ import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.holders.AppWorldHolder;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorldHolder> {
 
+
+    List<ProgressTask> taskList = new ArrayList<>();
 
     public AppListAdapter(Context context) {
         super(context);
@@ -111,7 +114,9 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
             holder.thumbnail.setImageBitmap(bitmap);
         }else{
             holder.thumbnail.setVisibility(View.GONE);
-            new ProgressTask(holder.progressBar,holder.thumbnail).execute();
+            ProgressTask progressTask = new ProgressTask(holder.progressBar,holder.thumbnail);
+            progressTask.execute();
+            taskList.add(progressTask);
         }
 
     }
@@ -136,7 +141,7 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
             try {
                 TimeUnit.SECONDS.sleep(7);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+
             }
             return null;
         }
@@ -158,4 +163,15 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
             return dataSet.size();
         return 0;
     }
+
+    protected void onChangeDataSet(){
+        for (ProgressTask progressTask : taskList) {
+            try {
+                progressTask.cancel(true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
