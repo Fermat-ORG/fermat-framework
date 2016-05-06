@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -354,6 +355,8 @@ public class ChatAdapterView extends LinearLayout {
             case ConstantSubtitle.IS_OFFLINE:
                 if(date != null && date != "no record") {
                     toolbar.setSubtitle("Last time "+date);
+                }else{
+                    Log.i("159753 ** LastTimeConnection", "No show");
                 }
                 break;
             case ConstantSubtitle.IS_ONLINE:
