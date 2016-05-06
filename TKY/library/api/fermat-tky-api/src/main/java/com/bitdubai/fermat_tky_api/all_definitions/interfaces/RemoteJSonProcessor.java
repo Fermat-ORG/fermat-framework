@@ -2,6 +2,7 @@ package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.google.gson.JsonArray;
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -36,7 +38,8 @@ public abstract class RemoteJSonProcessor {
      */
     public static JsonElement getJSonElement(
             String requestURL)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         try{
             String jSonString=getJSonString(requestURL);
             JsonParser jsonParser=new JsonParser();
@@ -58,14 +61,23 @@ public abstract class RemoteJSonProcessor {
      */
     public static String getJSonString(
             String requestURL)
-            throws IOException {
-        URL url=new URL(requestURL);
-        Scanner scanner = new Scanner(url.openStream());
-        String jSonString = new String();
-        while (scanner.hasNext())
-            jSonString += scanner.nextLine();
-        scanner.close();
-        return jSonString;
+            throws IOException,
+            CantConnectWithTokenlyException {
+        try{
+            URL url=new URL(requestURL);
+            Scanner scanner = new Scanner(url.openStream());
+            String jSonString = new String();
+            while (scanner.hasNext())
+                jSonString += scanner.nextLine();
+            scanner.close();
+            return jSonString;
+        } catch (UnknownHostException e){
+            throw new CantConnectWithTokenlyException(
+                    e,
+                    "Getting a json string from remote URL",
+                    "Cannot find "+requestURL);
+        }
+
     }
 
     /**
@@ -76,7 +88,8 @@ public abstract class RemoteJSonProcessor {
      */
     public static JsonObject getJSonObject(
             String requestURL)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         return getJSonElement(requestURL).getAsJsonObject();
     }
 
@@ -88,7 +101,8 @@ public abstract class RemoteJSonProcessor {
      */
     public static JsonArray getJSonArray(
             String requestURL)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         return getJSonElement(requestURL).getAsJsonArray();
     }
 

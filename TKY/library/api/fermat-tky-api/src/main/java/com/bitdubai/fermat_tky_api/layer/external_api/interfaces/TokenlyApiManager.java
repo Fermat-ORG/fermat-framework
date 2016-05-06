@@ -2,6 +2,7 @@ package com.bitdubai.fermat_tky_api.layer.external_api.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
@@ -42,14 +43,14 @@ public interface TokenlyApiManager extends FermatManager {
      * @return
      * @throws CantGetAlbumException
      */
-    Album[] getAlbums() throws CantGetAlbumException;
+    Album[] getAlbums() throws CantGetAlbumException, CantConnectWithTokenlyException;
 
     /**
      * This method returns a download song by song Id.
      * @param id
      * @return
      */
-    DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException;
+    DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException, CantConnectWithTokenlyException;
 
     /**
      * This method returns a User object by a username and key pair

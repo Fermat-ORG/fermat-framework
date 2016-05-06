@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
@@ -60,13 +61,15 @@ public class TokenlyManager implements TokenlyApiManager {
      * @throws CantGetAlbumException
      */
     @Override
-    public Album[] getAlbums() throws CantGetAlbumException {
+    public Album[] getAlbums() throws CantGetAlbumException, CantConnectWithTokenlyException {
         Album[] albums = TokenlyAlbumProcessor.getAlbums();
         return albums;
     }
 
     @Override
-    public DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException {
+    public DownloadSong getDownloadSongBySongId(String id) throws
+            CantGetSongException,
+            CantConnectWithTokenlyException {
         DownloadSong downloadSong = TokenlyDownloadSongProcessor.getDownloadSongById(id);
         return downloadSong;
     }
