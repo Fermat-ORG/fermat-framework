@@ -847,7 +847,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         try {
             ActionOnline onlineAction = chatMiddlewareDatabaseDao.getOnlineActionByPk(remotePublicKey);
             if (onlineAction!=null && onlineAction.getLastConnection()!=null)
-                return onlineAction.getLastConnection().toString();
+                return onlineAction.getLastConnection();
             else return "no record";
         } catch (CantSaveActionException e) {
             throw new CantGetOnlineStatus(
