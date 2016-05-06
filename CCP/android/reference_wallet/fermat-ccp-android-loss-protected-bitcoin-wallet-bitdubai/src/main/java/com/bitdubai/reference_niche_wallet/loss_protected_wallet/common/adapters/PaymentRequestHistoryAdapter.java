@@ -215,7 +215,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                                 //show dialog confirm
                                 Confirm_Send_Payment_Dialog confirm_send_dialog = new Confirm_Send_Payment_Dialog(context,
                                         data.getAmount(),
-                                        data.getRequestId(), appSession,blockchainNetworkType);
+                                        data.getRequestId(), appSession,blockchainNetworkType,lossProtectedWallet);
                                 confirm_send_dialog.show();
                             }
                             else

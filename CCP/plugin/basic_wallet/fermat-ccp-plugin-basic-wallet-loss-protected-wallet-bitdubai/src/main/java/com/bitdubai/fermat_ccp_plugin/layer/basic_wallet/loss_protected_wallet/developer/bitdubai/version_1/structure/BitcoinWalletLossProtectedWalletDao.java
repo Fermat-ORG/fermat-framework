@@ -459,7 +459,7 @@ public class BitcoinWalletLossProtectedWalletDao {
             if (!isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.DEBIT, balanceType))
                 executeTransaction(transactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance,exchangeRate);
 
-            //calculate chunck values spent - not for intra wallet transfers
+            //calculate chunck values spent
             if(balanceType.equals(BalanceType.AVAILABLE))
                insertSpending(transactionRecord, exchangeRate);
 
@@ -979,7 +979,7 @@ public class BitcoinWalletLossProtectedWalletDao {
 
             long timestamp = System.currentTimeMillis();
 
-            List<DatabaseTableRecord> transactionsRecords = getTransactionsRecords(transactionRecord.getBlockchainNetworkType());
+            List<DatabaseTableRecord> transactionsRecords = getCreditTransactionsRecords(transactionRecord.getBlockchainNetworkType());
 
             //gasto primero de las transacciones con mayor valor de rate primero
             //tengo que traer lo que llevo gastado de cada transaccion para saber si uso eso o paso a otra
@@ -1046,7 +1046,7 @@ public class BitcoinWalletLossProtectedWalletDao {
 
 
 
-    private  List<DatabaseTableRecord> getTransactionsRecords(BlockchainNetworkType blockchainNetworkType) throws CantGetTransactionsRecordException
+    private  List<DatabaseTableRecord> getCreditTransactionsRecords(BlockchainNetworkType blockchainNetworkType) throws CantGetTransactionsRecordException
     {
         try {
             DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();

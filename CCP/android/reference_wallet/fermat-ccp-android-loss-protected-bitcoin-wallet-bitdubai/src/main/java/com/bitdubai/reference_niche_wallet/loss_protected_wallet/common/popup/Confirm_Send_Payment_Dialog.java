@@ -61,14 +61,14 @@ private LossProtectedWalletSession appSession;
 
 
 public Confirm_Send_Payment_Dialog(Context a,long cryptoAmount, UUID  requestId,
-                                   LossProtectedWalletSession appSession, BlockchainNetworkType blockchainNetworkType){
+                                   LossProtectedWalletSession appSession, BlockchainNetworkType blockchainNetworkType,LossProtectedWallet lossProtectedWallet){
     super(a);
 
     this.requestId = requestId;
     this.appSession = appSession;
     this.cryptoAmount = cryptoAmount;
     this.blockchainNetworkType = blockchainNetworkType;
-    this.lossProtectedWallet = appSession.getModuleManager();
+    this.lossProtectedWallet = lossProtectedWallet;
  }
 
 
