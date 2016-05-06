@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -50,6 +51,7 @@ import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,6 +74,7 @@ public class SongFragment extends AbstractFermatFragment {
     DownloadThreadClass downloadThread;
     SyncThreadClass syncThread;
     final Handler myHandler = new Handler();
+    final Handler myHandlerbitmap = new Handler();
     final Handler myCancelHandler = new Handler();
    // MonitorThreadClass monitorThreadClass;
     private SongAdapter adapter;
@@ -96,7 +99,6 @@ public class SongFragment extends AbstractFermatFragment {
     public SongFragment(){
 
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -235,6 +237,7 @@ public class SongFragment extends AbstractFermatFragment {
                 compareViewAndDatabase();
 
                 if( syncThread!=null) {
+                    System.out.println("AUTO SYNC STATUS RETURN:"+syncThread.getStatus());
                     if (syncThread.getStatus() != AsyncTask.Status.RUNNING
                             && syncThread.getStatus() != AsyncTask.Status.FINISHED) {
                         initValues();
@@ -322,8 +325,10 @@ public class SongFragment extends AbstractFermatFragment {
             }
 
         }else{
-
+            System.out.println("TKY_MANUAL SYNC1");
             if( syncThread!=null) {
+                System.out.println("TKY_MANUAL SYNC !=NULL");
+                System.out.println("TKY_MANUAL SYNC STATUS:"+syncThread.getStatus());
                 if (syncThread.getStatus() != AsyncTask.Status.RUNNING
                         && syncThread.getStatus() != AsyncTask.Status.FINISHED) {
 
@@ -341,11 +346,7 @@ public class SongFragment extends AbstractFermatFragment {
                 swipeContainer.setRefreshing(false);
             }
 
-
-
         }
-
-
 
     }
 
@@ -359,9 +360,10 @@ public class SongFragment extends AbstractFermatFragment {
         return 0;
     }
 
-    void searchInViewPosition(Song songOfBroadcast,UUID song_Id){
+    void searchInViewPosition(final Song songOfBroadcast,final UUID song_Id){
        int position;
        String songInfo;
+
        List<String> listComposerAndSongNameOnView=new ArrayList<>();
         for(SongItems songitems : items){
                if(!listComposerAndSongNameOnView.contains(songitems.getArtist_name()+"@#@#"+songitems.getSong_name())){
@@ -371,15 +373,23 @@ public class SongFragment extends AbstractFermatFragment {
         }
         songInfo=songOfBroadcast.getComposers()+"@#@#"+songOfBroadcast.getName();
         if(!listComposerAndSongNameOnView.contains(songInfo)){
-            items.add(new SongItems(R.drawable.tky_tokenly_album, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(),song_Id, 0, false));
-            adapter.setFilter(new SongItems(R.drawable.tky_tokenly_album,
-                    songOfBroadcast.getName(),
-                    songOfBroadcast.getComposers(),
-                    SongStatus.DOWNLOADING.getFriendlyName(),
-                    song_Id,
-                    0,
-                    false)
-                    ,false,items.size()-1);
+
+            myHandlerbitmap.post(new Runnable() {
+
+                public void run() {
+                    Bitmap albumArt=downloadBitmapAlbumArt(songOfBroadcast.getDownloadUrl());
+                    items.add(new SongItems(albumArt, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(),song_Id, 0, false));
+                    adapter.setFilter(new SongItems(albumArt,
+                            songOfBroadcast.getName(),
+                            songOfBroadcast.getComposers(),
+                            SongStatus.DOWNLOADING.getFriendlyName(),
+                            song_Id,
+                            0,
+                            false)
+                            ,false,items.size()-1);
+
+                }
+            });
 
         }
 
@@ -403,20 +413,28 @@ public class SongFragment extends AbstractFermatFragment {
             }
         }
 
-            for (WalletSong walletitems :songsInDatabase){
+            for (final WalletSong  walletitems :songsInDatabase){
                 databaseInfo=walletitems.getComposers()+"@#@#"+walletitems.getName();
               //  System.out.println("TKY_WALLET songs"+walletitems.getComposers()+"@#@#"+walletitems.getName());
                 if(!listComposerAndSongNameOnView.contains(databaseInfo)){
                     listComposerAndSongNameOnView.add("TKY_WALLET songs" + walletitems.getComposers() + "@#@#" + walletitems.getName());
                     //System.out.println("TKY_NOT in view" + walletitems.getComposers() + "@#@#" + walletitems.getName());
-                    items.add(new SongItems(R.drawable.tky_tokenly_album, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false));
-                    adapter.setFilter(new SongItems(R.drawable.tky_tokenly_album,
+
+                    myHandlerbitmap.post(new Runnable() {
+                    public void run() {
+                    Bitmap albumArt=downloadBitmapAlbumArt(walletitems.getDownloadUrl());
+                    items.add(new SongItems(albumArt, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false));
+                    adapter.setFilter(new SongItems(albumArt,
                             walletitems.getName(),
                             walletitems.getComposers(),
                             walletitems.getSongStatus().getFriendlyName(),
                             walletitems.getSongId(),
                             0,
                             false), false,  items.size()-1);
+                        }
+                    });
+
+
                 }else{
                     int position=searchInViewBySongId(walletitems.getSongId());
                     items.get(position).setProgressbarvissible(false);
@@ -426,6 +444,34 @@ public class SongFragment extends AbstractFermatFragment {
             }
 
 
+    }
+
+    Bitmap downloadBitmapAlbumArt(String url){
+
+        final MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+
+        try {
+        metaRetriever.setDataSource(url, new HashMap<String, String>());
+
+
+        //    final AssetFileDescriptor afd=getResources().openRawResourceFd(R.raw.calido_y_frio);
+        //    metaRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+
+        //Other Scenarios
+        //    final String uriPath="android.resource://"+getPackageName()+"/raw/t";
+        //   final Uri uri=Uri.parse(uriPath);
+        //   mediaMetadataRetriever.setDataSource(getApplication(),uri);
+
+        //   final AssetFileDescriptor afd=getAssets().openFd("t.mp4");
+        //   mediaMetadataRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+
+            System.out.println("TKY_URL_SONG:"+url);
+            final byte[] art = metaRetriever.getEmbeddedPicture();
+            return BitmapFactory.decodeByteArray(art, 0, art.length);
+        } catch (Exception e) {
+            System.out.println( "Couldn't create album art: " + e.getMessage());
+            return BitmapFactory.decodeResource(getResources(), R.drawable.no_found_art);
+        }
     }
 
     void swipeEffect(){
@@ -592,8 +638,6 @@ public class SongFragment extends AbstractFermatFragment {
                 myCancelHandler.post(myRunnableCancel);
             }
 
-
-
         } catch (Exception e) {
             Log.v(TAG, "EXCEPTION" + e);
         }
@@ -606,6 +650,7 @@ public class SongFragment extends AbstractFermatFragment {
             fanwalletSession.getModuleManager().cancelDownload();
         }
     };
+
 
     public void updateViewForBroadcaster(FermatBundle bundle) {
 
@@ -649,7 +694,6 @@ public class SongFragment extends AbstractFermatFragment {
                 e.printStackTrace();
             }
         }
-
 
 
     void updateProgress(int position, String progress){
