@@ -622,11 +622,12 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            DatabaseTableFilter filter = null;
             List<DatabaseTableRecord> records=getChatData(filter);
             if(records!=null && !records.isEmpty()){
                 for (DatabaseTableRecord record : records) {
                     table.deleteRecord(record);
+                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
                 }
             }
             //I execute the transaction and persist the database side of the chat.
@@ -828,6 +829,10 @@ public class ChatMiddlewareDatabaseDao {
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
 
             // I will add the message information from the database
+<<<<<<< HEAD
+=======
+
+>>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
                 final Message message = getMessageTransaction(getMessageDataDesceding(filter).get(0));
 
             database.closeDatabase();
@@ -836,9 +841,12 @@ public class ChatMiddlewareDatabaseDao {
                 return null;
             }
 
+<<<<<<< HEAD
             System.out.println("12345 MESSAGE = "+message.getCount());
             System.out.println("12345 COUNT = " + message.getMessage());
 
+=======
+>>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
             return message;
         }
         catch (Exception e) {
@@ -1049,7 +1057,7 @@ public class ChatMiddlewareDatabaseDao {
             database = openDatabase();
             List<ChatUserIdentity> chatUserIdentities = new ArrayList<>();
             // I will add the message information from the database
-            List<DatabaseTableRecord> records=getChatUserIdentityData(filter);
+            List<DatabaseTableRecord> records = getChatUserIdentityData(filter);
             if(records==null|| records.isEmpty()){
                 return chatUserIdentities;
             }
@@ -1379,6 +1387,8 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST, chat.getContactListString());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, chat.getTypeChat().getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, String.valueOf(chat.getScheduledDelivery()));
+        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING, String.valueOf(chat.isWriting()));
+        record.setStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE, String.valueOf(chat.isOnline()));
 
         return record;
     }
@@ -1434,11 +1444,17 @@ public class ChatMiddlewareDatabaseDao {
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
+<<<<<<< HEAD
 //        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
         table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.ASCENDING);
 
         table.loadToMemory();
 
+=======
+        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.ASCENDING);
+
+        table.loadToMemory();
+>>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
         return table.getRecords();
     }
 
@@ -1510,6 +1526,8 @@ public class ChatMiddlewareDatabaseDao {
         chat.setStatus(ChatStatus.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_STATUS_COLUMN_NAME)));
         chat.setTypeChat(TypeChat.getByCode(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT)));
         chat.setScheduledDelivery(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY)));
+        chat.setIsWriting(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING)));
+        chat.setIsOnline(Boolean.valueOf(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE)));
 
         try{
             chat.setContactAssociated(chatTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST));
@@ -1522,8 +1540,7 @@ public class ChatMiddlewareDatabaseDao {
         return chat;
     }
 
-    private Message getMessageTransaction(final DatabaseTableRecord messageTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException
-    {
+    private Message getMessageTransaction(final DatabaseTableRecord messageTransactionRecord) throws CantLoadTableToMemoryException, DatabaseOperationException, InvalidParameterException {
         MessageImpl message = new MessageImpl();
 
         message.setChatId(messageTransactionRecord.getUUIDValue(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME));
@@ -1686,7 +1703,7 @@ public class ChatMiddlewareDatabaseDao {
             UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getDatabaseEventsTable();
-            List<EventRecord> eventRecords=new ArrayList<>();
+            List<EventRecord> eventRecords = new ArrayList<>();
             EventRecord eventRecord;
             databaseTable.addStringFilter(
                     ChatMiddlewareDatabaseConstants.EVENTS_RECORDED_STATUS_COLUMN_NAME,
@@ -1935,9 +1952,9 @@ public class ChatMiddlewareDatabaseDao {
      * @return
      * @throws CantGetChatException
      */
-    public boolean messageIdExists(UUID messageId) throws CantGetChatException{
-        try{
-            DatabaseTable databaseTable=getDatabaseMessageTable();
+    public boolean messageIdExists(UUID messageId) throws CantGetChatException {
+        try {
+            DatabaseTable databaseTable = getDatabaseMessageTable();
             return checkIdMessageExists(
                     messageId,
                     ChatMiddlewareDatabaseConstants.MESSAGE_ID_MESSAGE_COLUMN_NAME,
@@ -1972,7 +1989,7 @@ public class ChatMiddlewareDatabaseDao {
             databaseTableFilter.setType(DatabaseFilterType.EQUAL);
             databaseTableFilter.setValue(id.toString());
             databaseTableFilter.setColumn(databaseColumn);
-            List<DatabaseTableRecord> records=getChatData(databaseTableFilter);
+            List<DatabaseTableRecord> records = getChatData(databaseTableFilter);
             return !(records == null || records.isEmpty());
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetChatException(
@@ -1992,7 +2009,7 @@ public class ChatMiddlewareDatabaseDao {
             databaseTableFilter.setType(DatabaseFilterType.EQUAL);
             databaseTableFilter.setValue(id.toString());
             databaseTableFilter.setColumn(databaseColumn);
-            List<DatabaseTableRecord> records=getMessageData(databaseTableFilter);
+            List<DatabaseTableRecord> records = getMessageData(databaseTableFilter);
             return !(records == null || records.isEmpty());
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetChatException(
@@ -2022,11 +2039,17 @@ public class ChatMiddlewareDatabaseDao {
             database.closeDatabase();
 
             if(messages.isEmpty()){
+<<<<<<< HEAD
                 System.out.println("**12345 LAST MESSAGE = NO MESSAGE");
                 return 0;
             }
 
             System.out.println("**12345 LAST MESSAGE = " + messages.get(0).getCount());
+=======
+                return 0;
+            }
+
+>>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
             return messages.get(0).getCount();
         }
         catch (Exception e) {

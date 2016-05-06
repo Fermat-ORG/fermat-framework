@@ -88,7 +88,13 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50 , Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST, DatabaseDataType.STRING, 256 , Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, DatabaseDataType.STRING, 10 , Boolean.FALSE);
+<<<<<<< HEAD
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, DatabaseDataType.STRING, 10, Boolean.FALSE);
+=======
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, DatabaseDataType.STRING, 10 , Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING, DatabaseDataType.STRING, 10 , Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE, DatabaseDataType.STRING, 10 , Boolean.FALSE);
+>>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
 
             table.addIndex(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
 

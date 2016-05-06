@@ -259,7 +259,11 @@ public class ConnectionNotificationsFragment
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
+<<<<<<< HEAD
             Toast.makeText(getActivity(), "Connection Accepted ->", Toast.LENGTH_LONG).show();
+=======
+            Toast.makeText(getActivity(), "Connection Accepted", Toast.LENGTH_LONG).show();
+>>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
             //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
             AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);
@@ -281,7 +285,7 @@ public class ConnectionNotificationsFragment
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show /*&&
+        if (show/* &&
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
