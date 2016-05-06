@@ -39,11 +39,11 @@ public class WebSocketConfigurator extends ServerEndpointConfig.Configurator{
     @Override
     public void modifyHandshake(ServerEndpointConfig serverEndpointConfig, HandshakeRequest handshakeRequest, HandshakeResponse handshakeResponse) {
 
-        LOG.info("Headers Attributes:");
+      /*  LOG.info("Headers Attributes:");
 
         for (String key : handshakeRequest.getHeaders().keySet()) {
             LOG.info(key + " : "+handshakeRequest.getHeaders().get(key));
-        }
+        } */
 
         if (handshakeRequest.getHeaders().containsKey(JsonAttNamesConstants.HEADER_ATT_NAME_TI)){
 
