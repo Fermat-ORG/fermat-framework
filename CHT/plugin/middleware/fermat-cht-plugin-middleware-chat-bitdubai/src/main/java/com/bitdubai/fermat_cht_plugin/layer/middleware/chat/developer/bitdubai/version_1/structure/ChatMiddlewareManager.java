@@ -843,6 +843,20 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             }
     }
 
+    public String checkLastConnection(String remotePublicKey) throws CantGetOnlineStatus {
+        try {
+            ActionOnline onlineAction = chatMiddlewareDatabaseDao.getOnlineActionByPk(remotePublicKey);
+            if (onlineAction!=null && onlineAction.getLastConnection()!=null)
+                return onlineAction.getLastConnection().toString();
+            else return "no record";
+        } catch (CantSaveActionException e) {
+            throw new CantGetOnlineStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
 
     /**
      * This method will notify PIP to launch a new notification to user

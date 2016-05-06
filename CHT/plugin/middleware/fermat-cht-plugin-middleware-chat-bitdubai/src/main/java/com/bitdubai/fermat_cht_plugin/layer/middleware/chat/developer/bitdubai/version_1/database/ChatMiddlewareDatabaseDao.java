@@ -1426,7 +1426,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState writingState, Boolean value) throws DatabaseOperationException{
+    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState writingState, Boolean value, Timestamp lastConnection) throws DatabaseOperationException{
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1434,6 +1434,8 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME, publicKey);
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, writingState.getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
+        if(lastConnection!=null)
+        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection.toString());
 
         return record;
     }
@@ -1601,7 +1603,8 @@ public class ChatMiddlewareDatabaseDao {
         actionOnline.setPublicKey(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME));
         actionOnline.setActionState(ActionState.getByCode(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE)));
         actionOnline.setValue(Boolean.valueOf(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE)));
-
+        String lastConnection = actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION);
+        if(lastConnection!=null) actionOnline.setLastConnection(Timestamp.valueOf(lastConnection));
 
         return actionOnline;
     }
@@ -1882,6 +1885,42 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    public void saveOnlineAction(ActionOnline actionOnline) throws CantSaveActionException {
+
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            DatabaseTable table = getDatabaseOnlineActionsTable();
+            DatabaseTableRecord record = getOnlineActionRecord(actionOnline.getId(), actionOnline.getPublicKey(), actionOnline.getActionState(),actionOnline.getValue(),actionOnline.getLastConnection());
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(actionOnline.getId().toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME);
+
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, record);
+
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantSaveActionException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to save the Chat Transaction in the database.",
+                    null);
+        }
+    }
+
 
     public void saveOnlineActionState(String publicKey, ActionState actionState) throws CantSaveActionException {
 
@@ -1892,18 +1931,21 @@ public class ChatMiddlewareDatabaseDao {
 
             ActionOnline actionOnline = getOnlineActionByPk(publicKey);
             UUID actionId;
+            Timestamp lastConnection;
             boolean value;
             if(actionOnline==null){
                 actionId=UUID.randomUUID();
                 value = false;
+                lastConnection = null;
             }
             else {
                 actionId=actionOnline.getId();
                 value = actionOnline.getValue();
+                lastConnection = actionOnline.getLastConnection();
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value);
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value,lastConnection);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
@@ -1955,7 +1997,7 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value);
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value,actionOnline.getLastConnection());
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
