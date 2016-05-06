@@ -20,6 +20,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
