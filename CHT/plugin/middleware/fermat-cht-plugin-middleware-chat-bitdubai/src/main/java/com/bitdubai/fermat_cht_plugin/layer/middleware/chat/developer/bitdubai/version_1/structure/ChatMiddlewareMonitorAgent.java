@@ -523,8 +523,10 @@ public class ChatMiddlewareMonitorAgent implements
 
             for(ActionOnline actionOnline : onlineActions){
                 boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
-                System.out.println("12345 is online "+isOnline);
-                chatMiddlewareDatabaseDao.saveOnlineActionValue(actionOnline.getPublicKey(), isOnline);
+                actionOnline.setValue(isOnline);
+                System.out.println("12345 is online " + isOnline);
+                if(!isOnline) actionOnline.setLastConnection(new Timestamp(new Date().getDate()));
+                chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
             }
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
@@ -619,7 +621,9 @@ public class ChatMiddlewareMonitorAgent implements
         if(actionOnlines == null || actionOnlines.isEmpty()) return;
 
         for(ActionOnline actionOnline : actionOnlines){
-            chatMiddlewareDatabaseDao.saveOnlineActionValue(actionOnline.getPublicKey(), false);
+            actionOnline.setValue(false);
+            actionOnline.setLastConnection(new Timestamp(new Date().getDate()));
+            chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
             changes = true;
         }
 
