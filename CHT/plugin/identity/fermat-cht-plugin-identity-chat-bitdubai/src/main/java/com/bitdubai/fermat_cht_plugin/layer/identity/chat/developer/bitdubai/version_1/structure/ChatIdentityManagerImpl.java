@@ -196,16 +196,12 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
                 }.start();
             }
             else{
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            chatManager.updateIdentity(chatExposingData);
-                        } catch (CantExposeIdentityException e) {
-                            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
-                        }
-                    }
-                }.start();
+                //TODO:Al actualizar la identidad falla la comunidad revisar
+                try {
+                    chatManager.updateIdentity(chatExposingData);
+                } catch (CantExposeIdentityException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+                }
             }
 
         } catch (CantGetChatUserIdentityException e) {
