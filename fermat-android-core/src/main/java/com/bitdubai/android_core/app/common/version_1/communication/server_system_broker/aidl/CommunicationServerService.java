@@ -210,6 +210,8 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
 
         //test
+        Log.i(TAG,"DATA CLass name: "+data.getClass().getName());
+        Log.i(TAG,"DATA: "+data);
         sendLargeData(dataId, clientKey, data);
 
 
@@ -545,6 +547,19 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                                 s = m.invoke(moduleManager, params);
                             } else {
                                 Log.e(TAG, "Method: " + method + " is not found in interface: " + moduleManager.getClass().getName());
+                                Log.e(TAG, "Superclass name: " + moduleManager.getClass().getSuperclass().getName());
+                                for (Method method1 : moduleManager.getClass().getSuperclass().getDeclaredMethods()) {
+                                    Log.e(TAG, "Method : " + method1.getName());
+                                }
+                                try {
+                                    m = moduleManager.getClass().getSuperclass().getDeclaredMethod(method, classes);
+                                    if (m != null) {
+                                        Log.e(TAG, "Method found: " + m.getName());
+                                    }
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
                             }
                         }else {
                             Log.e(TAG, "NOT FOUND ModuleManger for this pluginVersionRefence:"+pluginVersionReference.toString());
