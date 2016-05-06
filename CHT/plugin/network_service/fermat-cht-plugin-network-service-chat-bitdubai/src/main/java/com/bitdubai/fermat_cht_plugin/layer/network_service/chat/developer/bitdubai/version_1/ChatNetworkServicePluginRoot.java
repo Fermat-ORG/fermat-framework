@@ -311,9 +311,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                 launcheIncomingChatStatusNotification(chatMetadataRecord);
 
                             }
-
-                           // getCommunicationNetworkServiceConnectionManager().closeConnection(chatMetadataRecord.getRemoteActorPublicKey());
-                            //chatExecutorAgent.connectionFailure(chatMetadataRecord.getRemoteActorPublicKey());
                         }
                     }
                     break;
@@ -353,24 +350,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             UUID chatId = gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.ID_CHAT), UUID.class);
             ChatMessageTransactionType chatMessageTransactionType = gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE), ChatMessageTransactionType.class);
             if (chatMessageTransactionType==ChatMessageTransactionType.CHAT_METADATA_TRASMIT) {
-                // close connection, sender is the destination
                 launchOutgoingChatNotification(chatId);
-                System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
-                //getCommunicationNetworkServiceConnectionManager().closeConnection(chatMetadataRecord.getRemoteActorPublicKey());
-                //actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                System.out.println("ChatNetworkServicePluginRoot - SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
             }
-
-            //done message type receive
-//            if(actorNetworkServiceRecord.getNotificationDescriptor() == NotificationDescriptor.RECEIVED) {
-//                actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
-//                chatMetadataRecordDAO.update(actorNetworkServiceRecord);
-//                //actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
-//            }
-
 
         } catch (Exception e) {
             //quiere decir que no estoy reciviendo metadata si no una respuesta
-            System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT");
+            System.out.println("ChatNetworkServicePluginRoot - EXCEPCION DENTRO DEL PROCCESS EVENT");
             reportUnexpectedError(e);
         }
     }
@@ -458,7 +444,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
         {
             reportUnexpectedError(e);
         } catch (Exception e) {
-            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("ChatNetworkServicePluginRoot EXCEPCION REPROCESANDO MESSAGEs");
             reportUnexpectedError(e);
         }
     }
@@ -977,7 +963,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             if (remoteActorPubKey == null || remoteActorPubKey.length() == 0 || remoteActorPubKey.equals("null")) {
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
             }
-            System.out.println("ChatPLuginRoot - Starting method sendChatMetadata");
+            System.out.println("ChatNetworkServicePluginRoot - Starting method sendChatMetadata");
 
 
             long currentTime = System.currentTimeMillis();

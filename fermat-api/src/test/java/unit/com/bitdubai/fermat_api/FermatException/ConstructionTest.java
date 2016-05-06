@@ -1,13 +1,11 @@
 package unit.com.bitdubai.fermat_api.FermatException;
 
-import static org.fest.assertions.api.Assertions.*;
-
 import com.bitdubai.fermat_api.FermatException;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by jorgegonzalez on 2015.06.24..
