@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
  * Edited by Miguel Rincon on 18/04/2016
  */
 
-@PluginInfo(platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_IDENTITY_SUP_APP_MODULE)
+@PluginInfo(createdBy = "Franklin Marcano", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_IDENTITY_SUP_APP_MODULE)
 public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> {
 
     private ChatIdentityModuleManager chatIdentityModuleManager;

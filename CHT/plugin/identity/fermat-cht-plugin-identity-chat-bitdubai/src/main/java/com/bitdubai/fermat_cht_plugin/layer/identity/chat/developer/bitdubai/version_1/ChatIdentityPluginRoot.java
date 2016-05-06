@@ -47,7 +47,7 @@ import java.util.List;
 /**
  * Created by franklin on 30/03/16.
  */
-@PluginInfo(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
+@PluginInfo(createdBy = "Franklin Marcano", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
 public class ChatIdentityPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers {
     public ChatIdentityPluginRoot() {

@@ -83,7 +83,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Gabriel Araujo 15/02/16.
  */
-@PluginInfo(platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
+@PluginInfo(createdBy = "Gabirel Araujo", maintainerMail = "franklinmarcano1970@gmail.com",platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
 public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase implements NetworkServiceChatManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {

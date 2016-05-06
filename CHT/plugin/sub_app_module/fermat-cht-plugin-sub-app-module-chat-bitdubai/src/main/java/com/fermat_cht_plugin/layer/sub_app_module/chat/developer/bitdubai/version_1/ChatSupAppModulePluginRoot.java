@@ -28,7 +28,7 @@ import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versio
  * Created by franklin on 06/01/16.
  * Edited by Jose Cardozo josejcb (josejcb89@gmail.com) on 29/02/16.
  */
-@PluginInfo(platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_SUP_APP_MODULE)
+@PluginInfo(createdBy = "Franklin Marcano", maintainerMail = "franklinmarcano1970@gmail.com", platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_SUP_APP_MODULE)
 public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSettings, ActiveActorIdentityInformation> {
 
     private ChatManager chatManager;
