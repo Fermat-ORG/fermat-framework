@@ -209,40 +209,41 @@ public class ChatAdapterView extends LinearLayout {
 
             if (chatId != null) {
                 List<Message> messL = chatManager.getMessagesByChatId(chatId);
-
-                MessageImpl messagei;
-                for (Message mess : messL) {
-                    msg = new ChatMessage();
-                    message = mess.getMessage();
-                    inorout = mess.getType().toString();
-                    estatus = mess.getStatus().toString();
-                    msg.setId(mess.getMessageId());
-                    if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
-                    else {
-                        msg.setMe(false);
-                        if (estatus != MessageStatus.READ.toString()) {
-                            messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
-                            msg.setStatus(MessageStatus.READ.toString());
-                            messagei.setStatus(MessageStatus.READ);
-                            chatManager.saveMessage(messagei);
-                            chatManager.sendReadMessageNotification(messagei);
+                if(messL==null) {
+                    MessageImpl messagei;
+                    for (Message mess : messL) {
+                        msg = new ChatMessage();
+                        message = mess.getMessage();
+                        inorout = mess.getType().toString();
+                        estatus = mess.getStatus().toString();
+                        msg.setId(mess.getMessageId());
+                        if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
+                        else {
+                            msg.setMe(false);
+                            if (estatus != MessageStatus.READ.toString()) {
+                                messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
+                                msg.setStatus(MessageStatus.READ.toString());
+                                messagei.setStatus(MessageStatus.READ);
+                                chatManager.saveMessage(messagei);
+                                chatManager.sendReadMessageNotification(messagei);
+                            }
                         }
+                        msg.setStatus(mess.getStatus().toString());
+                        long timemess = mess.getMessageDate().getTime();
+                        long nanos = (mess.getMessageDate().getNanos() / 1000000);
+                        long milliseconds = timemess + nanos;
+                        Date dated = new java.util.Date(milliseconds);
+                        DateFormat formatter = DateFormat.getDateTimeInstance();
+                        if (Validate.isDateToday(dated)) {
+                            formatter = new SimpleDateFormat("HH:mm");
+                        }
+                        formatter.setTimeZone(TimeZone.getDefault());
+                        msg.setDate(formatter.format(new java.util.Date(milliseconds)));
+                        msg.setUserId(mess.getContactId());
+                        msg.setMessage(message);
+                        msg.setType(mess.getType().toString());
+                        chatHistory.add(msg);
                     }
-                    msg.setStatus(mess.getStatus().toString());
-                    long timemess = mess.getMessageDate().getTime();
-                    long nanos = (mess.getMessageDate().getNanos() / 1000000);
-                    long milliseconds = timemess + nanos;
-                    Date dated = new java.util.Date(milliseconds);
-                    DateFormat formatter = DateFormat.getDateTimeInstance();
-                    if (Validate.isDateToday(dated)) {
-                        formatter = new SimpleDateFormat("HH:mm");
-                    }
-                    formatter.setTimeZone(TimeZone.getDefault());
-                    msg.setDate(formatter.format(new java.util.Date(milliseconds)));
-                    msg.setUserId(mess.getContactId());
-                    msg.setMessage(message);
-                    msg.setType(mess.getType().toString());
-                    chatHistory.add(msg);
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
