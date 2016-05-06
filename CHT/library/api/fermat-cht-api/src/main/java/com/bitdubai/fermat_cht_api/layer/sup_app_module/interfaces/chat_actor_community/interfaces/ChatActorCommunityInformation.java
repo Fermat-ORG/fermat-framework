@@ -8,19 +8,19 @@ import java.util.UUID;
 /**
 * Created by Eleazar Oroño (eorono@protonmail.com) on 31/03/16.
  */
-public interface ChatActorCommunityInformation {
+public interface ChatActorCommunityInformation  {
 
-    String getActorPublickey();
+    String getPublicKey();
 
-    String getActorAlias();
+    String getAlias();
 
-    byte[] getActorImage();
+    byte[] getImage();
 
-    List listActorAlias();
+    List listAlias();
 
-    ConnectionState getActorConnectionState();
+    ConnectionState getConnectionState();
 
-    UUID getActorConnectionId();
+    UUID getConnectionId();
 
 
 

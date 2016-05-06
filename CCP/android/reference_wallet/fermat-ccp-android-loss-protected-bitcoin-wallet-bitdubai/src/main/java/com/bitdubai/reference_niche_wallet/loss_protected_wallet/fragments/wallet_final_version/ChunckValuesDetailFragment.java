@@ -61,7 +61,7 @@ import static android.widget.Toast.makeText;
 
 
 /**
- * Created by root on 12/04/16.
+ * Created by Gian Barboza on 12/04/16.
  */
 public class ChunckValuesDetailFragment extends FermatWalletListFragment<BitcoinLossProtectedWalletSpend>
         implements FermatListItemListeners<BitcoinLossProtectedWalletSpend>, onRefreshList {
@@ -166,7 +166,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+
         try {
             rootView =  super.onCreateView(inflater, container, savedInstanceState);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);

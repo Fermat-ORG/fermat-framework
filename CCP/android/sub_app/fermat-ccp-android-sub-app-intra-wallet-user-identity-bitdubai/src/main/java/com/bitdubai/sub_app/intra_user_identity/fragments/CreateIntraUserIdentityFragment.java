@@ -31,13 +31,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -58,7 +57,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
+public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<IntraUserIdentitySubAppSession,ResourceProviderManager> {
 
 
     private static final String TAG = "CreateIdentity";
@@ -73,9 +72,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    IntraUserIdentitySubAppSession intraUserIdentitySubAppSession;
     private byte[] brokerImageByteArray;
-    private IntraUserIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
     private Button createButton;
     private EditText mBrokerName;
@@ -85,7 +82,6 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private IntraUserModuleIdentity identitySelected;
     private boolean isUpdate = false;
     private EditText mBrokerPhrase;
-    SettingsManager<IntraUserIdentitySettings> settingsManager;
     IntraUserIdentitySettings intraUserIdentitySettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
@@ -102,21 +98,19 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
         executorService = Executors.newFixedThreadPool(3);
         try {
-            intraUserIdentitySubAppSession = (IntraUserIdentitySubAppSession) appSession;
-            moduleManager = intraUserIdentitySubAppSession.getModuleManager();
+
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    settingsManager = intraUserIdentitySubAppSession.getModuleManager().getSettingsManager();
 
                     try {
-                        if (intraUserIdentitySubAppSession.getAppPublicKey()!= null){
-                            intraUserIdentitySettings = settingsManager.loadAndGetSettings(intraUserIdentitySubAppSession.getAppPublicKey());
+                        if (appSession.getAppPublicKey()!= null){
+                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
                         }else{
                             //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                            intraUserIdentitySettings = settingsManager.loadAndGetSettings("123456789");
+                            intraUserIdentitySettings = appSession.getModuleManager().loadAndGetSettings("123456789");
                         }
 
                     } catch (Exception e) {
@@ -127,10 +121,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                         if (intraUserIdentitySettings == null) {
                             intraUserIdentitySettings = new IntraUserIdentitySettings();
                             intraUserIdentitySettings.setIsPresentationHelpEnabled(true);
-                            if (intraUserIdentitySubAppSession.getAppPublicKey() != null) {
-                                settingsManager.persistSettings(intraUserIdentitySubAppSession.getAppPublicKey(), intraUserIdentitySettings);
+                            if (appSession.getAppPublicKey() != null) {
+                                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), intraUserIdentitySettings);
                             } else {
-                                settingsManager.persistSettings("123456789", intraUserIdentitySettings);
+                                appSession.getModuleManager().persistSettings("123456789", intraUserIdentitySettings);
                             }
 
                         }
@@ -169,8 +163,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
             public void run() {
                 if (intraUserIdentitySettings != null) {
                     if (intraUserIdentitySettings.isPresentationHelpEnabled()) {
-                        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), intraUserIdentitySubAppSession, null, moduleManager);
-                        presentationIntraUserCommunityDialog.show();
+                        if(getActivity()!=null) {
+                            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), appSession, null, appSession.getModuleManager());
+                            presentationIntraUserCommunityDialog.show();
+                        }
                     }
                 }
             }
@@ -258,7 +254,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
     private void setUpIdentity() {
         try {
 
-            identitySelected = (IntraUserModuleIdentity) intraUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (IntraUserModuleIdentity) appSession.getData(SessionConstants.IDENTITY_SELECTED);
 
 
             if (identitySelected != null) {
@@ -269,7 +265,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                     public void run() {
                         ActiveActorIdentityInformation activeActorIdentityInformation = null;
                         try {
-                            activeActorIdentityInformation = moduleManager.getSelectedActorIdentity();
+                            activeActorIdentityInformation = appSession.getModuleManager().getSelectedActorIdentity();
                         } catch (CantGetSelectedActorIdentityException e) {
                             e.printStackTrace();
                         } catch (ActorIdentityNotSelectedException e) {
@@ -414,7 +410,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerPhraseText, brokerImageByteArray);
 
         if (dataIsValid) {
-            if (moduleManager != null) {
+            if (appSession.getModuleManager() != null) {
                 try {
                     if (!isUpdate) {
                         final String finalBrokerPhraseText = brokerPhraseText;
@@ -422,7 +418,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                                    appSession.getModuleManager().createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
                                     e.printStackTrace();
@@ -437,9 +433,9 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray);
+                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray);
                                     else
-                                        moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage());
+                                        appSession.getModuleManager().updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage());
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
@@ -511,8 +507,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
 
 
     public void showDialog(){
-        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(),intraUserIdentitySubAppSession, null,moduleManager);
-        presentationIntraUserCommunityDialog.show();
+        if(getActivity()!=null) {
+            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), appSession, null, appSession.getModuleManager());
+            presentationIntraUserCommunityDialog.show();
+        }
     }
 
     @Override

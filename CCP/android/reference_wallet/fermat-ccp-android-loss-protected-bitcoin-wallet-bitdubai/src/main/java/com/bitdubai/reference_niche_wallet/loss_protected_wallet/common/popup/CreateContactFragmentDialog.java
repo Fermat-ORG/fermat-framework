@@ -234,8 +234,8 @@ public class CreateContactFragmentDialog extends Dialog implements
 
             if (validAddress != null && !name.equals("")) {
 
-                // first i add the contact
-                //check photo is not null
+                // first I add the contact
+                //check if the photo is not null
 
                 if(contactImageBitmap!=null){
 

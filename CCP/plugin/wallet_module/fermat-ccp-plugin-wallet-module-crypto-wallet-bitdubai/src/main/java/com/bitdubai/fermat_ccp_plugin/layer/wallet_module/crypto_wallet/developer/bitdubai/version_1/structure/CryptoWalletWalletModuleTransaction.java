@@ -10,6 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionTy
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -19,7 +20,7 @@ import java.util.UUID;
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 11/07/15.
  * @version 1.0
  */
-public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransaction {
+public class CryptoWalletWalletModuleTransaction implements CryptoWalletTransaction,Serializable {
 
     private final UUID                     contactId;
     private final Actor                    involvedActor;

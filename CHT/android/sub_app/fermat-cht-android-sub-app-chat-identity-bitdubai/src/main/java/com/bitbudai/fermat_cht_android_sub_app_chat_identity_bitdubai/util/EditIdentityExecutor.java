@@ -10,7 +10,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.Chat
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
- * Created by angel on 20/1/16.
+ * Created by franklin 23/04/2016.
  */
 
 public class EditIdentityExecutor {
@@ -27,14 +27,16 @@ public class EditIdentityExecutor {
     private ErrorManager errorManager;
     private ChatIdentity identity;
     private String Publickey;
-    public EditIdentityExecutor(byte[] imageInBytes,String Publickey , String identityName) {
+    private String identityConnectionState;
+    public EditIdentityExecutor(byte[] imageInBytes,String Publickey , String identityName, String identityConnectionState) {
         this.imageInBytes = imageInBytes;
         this.Publickey = Publickey;
         this.identityName = identityName;
+        this.identityConnectionState = identityConnectionState;
     }
 
-    public EditIdentityExecutor(FermatSession session,String Publickey , String identityName, byte[] imageInBytes) {
-        this(imageInBytes, Publickey ,identityName);
+    public EditIdentityExecutor(FermatSession session,String Publickey , String identityName, byte[] imageInBytes, String identityConnectionState) {
+        this(imageInBytes, Publickey ,identityName, identityConnectionState);
         identity = null;
         if (session != null) {
             ChatIdentitySession subAppSession = (ChatIdentitySession) session;
@@ -55,7 +57,8 @@ public class EditIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes);
+            //TODO: Buscar la manera de que esta informacion venga desde android puede ser por la geolocalizacion
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", identityConnectionState);
 
         } catch (CantUpdateChatIdentityException e) {
             e.printStackTrace();

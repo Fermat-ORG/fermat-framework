@@ -27,6 +27,7 @@ import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyW
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.fan_wallet.app_connection.FanWalletFermatAppConnection;
+import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_broker_community.app_connection.CryptoBrokerCommunityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_broker_identity.app_connection.CryptoBrokerIdentityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_customer_community.app_connection.CryptoCustomerCommunityFermatAppConnection;
@@ -155,7 +156,9 @@ public class FermatAppConnectionManager {
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
-
+            case "public_key_cht_community":
+                fermatAppConnection = new ChatCommunityFermatAppConnection(activity);
+                break;
             case "public_key_cht_identity_chat":
                 fermatAppConnection = new ChatIdentityFermatAppConnection(activity);
                 break;

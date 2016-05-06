@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:background="@drawable/cbw_action_bar_gradient_colors"
-              android:paddingTop="16dp">
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@drawable/cbw_action_bar_gradient_colors"
+             android:paddingTop="16dp">
 
     <LinearLayout
         android:id="@+id/cbw_no_earnings_container"
@@ -18,17 +18,17 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/sad_face"
             android:layout_gravity="center"
+            android:src="@drawable/sad_face"
             tools:ignore="contentDescription"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:textSize="20sp"
             android:layout_gravity="center"
-            android:text="@string/cbw_no_earnings"/>
+            android:text="@string/cbw_no_earnings"
+            android:textColor="@color/black"
+            android:textSize="20sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -61,4 +61,14 @@
             app:strokeWidth="4dp"
             app:unselectedColor="#052331"/>
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/cbw_extract_earnings_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:layout_margin="16dp"
+        android:src="@drawable/ic_home_tab_arrow_down"
+        app:elevation="5dp"
+        app:fabSize="normal"/>
 </FrameLayout>

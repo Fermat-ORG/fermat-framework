@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -42,6 +44,8 @@ import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
 import org.fermat.fermat_dap_core.DAPPlatform;
 
+import java.lang.reflect.Method;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -286,8 +290,9 @@ public final class FermatSystem {
 
             if (moduleManager instanceof AbstractModule)
                 return ((AbstractModule) moduleManager).getModuleManager();
-            else
+            else {
                 throw new CantGetModuleManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements module manager interface.");
+            }
 
         } catch(final VersionNotFoundException e) {
 
@@ -301,6 +306,42 @@ public final class FermatSystem {
         }
     }
 
+    public final Class<ModuleManager> getModuleManager3(final PluginVersionReference pluginVersionReference) throws CantGetModuleManagerException  ,
+            ModuleManagerNotFoundException {
+        FermatManager moduleManager = null;
+        try {
+
+            moduleManager = fermatPluginManager.getPlugin(pluginVersionReference);
+
+            if (moduleManager instanceof AbstractModule)
+                return (Class<ModuleManager>) ((AbstractModule) moduleManager).getModuleManager().getClass();
+            else {
+                Method method = moduleManager.getClass().getMethod("getModuleManager");
+                if(method!=null){
+                    return method.getAnnotation(moduleManagerInterfacea.class).moduleManager();
+                }
+                throw new CantGetModuleManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements module manager interface.");
+            }
+
+        } catch(final VersionNotFoundException e) {
+
+            throw new ModuleManagerNotFoundException(e, pluginVersionReference.toString3(), "The module manager cannot be found.");
+        } catch(final CantGetModuleManagerException e) {
+            try {
+                Method method = moduleManager.getClass().getMethod("getModuleManager");
+                if (method != null) {
+                    return method.getAnnotation(moduleManagerInterfacea.class).moduleManager();
+                }
+            }catch (Exception e1){
+                throw e;
+            }
+
+        } catch (final Exception e) {
+
+            throw new CantGetModuleManagerException(e, pluginVersionReference.toString3(), "Unhandled error.");
+        }
+        return null;
+    }
 
 
     /**
@@ -447,6 +488,21 @@ public final class FermatSystem {
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
+        }
+
+        try {
+
+            List<AbstractPlugin> list = fermatSystemContext.getPlatform(new PlatformReference(Platforms.COMMUNICATION_PLATFORM)).getPlugins();
+            for (AbstractPlugin abstractPlugin : list) {
+                fermatPluginManager.startPluginAndReferences(abstractPlugin);
+                System.out.println("---------------------------------------------\n");
+                System.out.println("Cloud client starting");
+                System.out.println("---------------------------------------------\n");
+            }
+        } catch (PlatformNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantStartPluginException e) {
+            e.printStackTrace();
         }
         for(ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
             try {

@@ -25,7 +25,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -45,7 +44,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
 
     // Fermat Managers
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
+    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
@@ -65,8 +64,8 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         try {
             chatSession = ((ChatSession) appSession);
-            moduleManager = chatSession.getModuleManager();
-            chatManager = moduleManager.getChatManager();
+            chatManager = chatSession.getModuleManager();
+            //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));

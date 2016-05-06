@@ -15,7 +15,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockFactory;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.utils.CashTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
 import com.bitdubai.fermat_csh_api.all_definition.enums.CashTransactionStatus;
@@ -39,24 +38,19 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
     private Thread agentThread;
 
     private final ErrorManager errorManager;
-    private final StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CashUnholdTransactionManager cashUnholdTransactionManager;
     private final StockTransactionCashMoneyDestockFactory stockTransactionCashMoneyDestockFactory;
     private UUID pluginId;
     public final int SLEEP_TIME = 5000;
-    int iterationNumber = 0;
-    boolean threadWorking;
 
     public StockTransactionsCashMoneyDestockMonitorAgent(ErrorManager errorManager,
-                                                         StockTransactionCashMoneyDestockManager stockTransactionCashMoneyDestockManager,
                                                          CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                          CashUnholdTransactionManager cashUnholdTransactionManager,
                                                          PluginDatabaseSystem pluginDatabaseSystem,
                                                          UUID pluginId) {
 
         this.errorManager = errorManager;
-        this.stockTransactionCashMoneyDestockManager = stockTransactionCashMoneyDestockManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cashUnholdTransactionManager = cashUnholdTransactionManager;
         stockTransactionCashMoneyDestockFactory = new StockTransactionCashMoneyDestockFactory(pluginDatabaseSystem, pluginId);
@@ -76,9 +70,6 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
         Logger LOG = Logger.getGlobal();
         LOG.info("Cash Money Destock Transaction monitor agent starting");
 
-        //final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-
-        //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
         this.status = AgentStatus.STARTED;
     }
@@ -110,47 +101,6 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
         }
     }
 
-    /**
-     * Private class which implements runnable and is started by the Agent
-     * Based on MonitorAgent created by Rodrigo Acosta
-     */
-//    private final class MonitorAgent implements Runnable {
-//
-//        private final ErrorManager errorManager;
-//        public final int SLEEP_TIME = 5000;
-//        int iterationNumber = 0;
-//        boolean threadWorking;
-//
-//        public MonitorAgent(final ErrorManager errorManager) {
-//
-//            this.errorManager = errorManager;
-//        }
-//
-//        @Override
-//        public void run() {
-//            threadWorking = true;
-//            while (threadWorking) {
-//                /**
-//                 * Increase the iteration counter
-//                 */
-//                iterationNumber++;
-//                try {
-//                    Thread.sleep(SLEEP_TIME);
-//
-//                    /**
-//                     * now I will check if there are pending transactions to raise the event
-//                     */
-//
-//                    doTheMainTask();
-//                } catch (InterruptedException e) {
-//                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//                } catch (Exception e) {
-//                    errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-//                }
-//
-//            }
-//        }
-//    }
     private void doTheMainTask() {
         try {
             // I define the filter to null for all

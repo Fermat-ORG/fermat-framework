@@ -29,7 +29,9 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotific
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
@@ -164,7 +166,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
 
         }catch (Exception e){
-            reportUnexpectedError(e);
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
 
@@ -311,6 +313,14 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                         }
                     }
                     break;
+
+                case TRANSACTION_WRITING_STATUS:
+                    chatMetadataRecord=null;
+                    UUID responsTo = (messageData.has(ChatTransmissionJsonAttNames.RESPONSE_TO)) ? gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.RESPONSE_TO).getAsString(), UUID.class) : null;
+                    if(responsTo!=null)
+                    chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByResponseTo(responsTo);
+                    if(chatMetadataRecord!=null)
+                    launcheIncomingWritingStatusNotification(chatMetadataRecord.getChatId());
                 default:
                     break;
 
@@ -358,7 +368,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             //quiere decir que no estoy reciviendo metadata si no una respuesta
             System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT");
             reportUnexpectedError(e);
-
         }
     }
 
@@ -466,6 +475,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
     private void launcheIncomingChatStatusNotification(ChatMetadata chatMetadata){
         IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getEventManager().getNewEvent(EventType.INCOMING_STATUS);
         event.setChatMetadata(chatMetadata);
+        event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
+        getEventManager().raiseEvent(event);
+    }
+
+    private void launcheIncomingWritingStatusNotification(UUID chatId){
+        IncomingNewChatStatusUpdate event = (IncomingNewChatStatusUpdate) getEventManager().getNewEvent(EventType.INCOMING_WRITING_STATUS);
+        event.setChatId(chatId);
         event.setSource(ChatNetworkServicePluginRoot.EVENT_SOURCE);
         getEventManager().raiseEvent(event);
     }
@@ -831,7 +847,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                         @Override
                         public void run() {
                             try {
-
                                 sendNewMessage(
                                         getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
                                         getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
@@ -847,6 +862,70 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
 
 
+
+        } catch (Exception e) {
+
+            StringBuilder contextBuffer = new StringBuilder();
+            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("errorManager: " + errorManager);
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("eventManager: " + eventManager);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Plugin was not registered";
+
+            CantSendChatMessageNewStatusNotificationException pluginStartException = new CantSendChatMessageNewStatusNotificationException(CantSendChatMessageNewStatusNotificationException.DEFAULT_MESSAGE, e, context, possibleCause);
+
+            reportUnexpectedError(pluginStartException);
+
+            throw pluginStartException;
+        }
+    }
+
+    @Override
+    public void sendWritingStatus(final String localActorPubKey, final PlatformComponentType senderType, final String remoteActorPubKey, final PlatformComponentType receiverType, final UUID chatId) throws CantSendChatMessageNewStatusNotificationException {
+        try {
+
+            if (localActorPubKey == null || localActorPubKey.length() == 0) {
+                throw new IllegalArgumentException("Argument localActorPubKey can not be null");
+            }
+            if (senderType == null) {
+                throw new IllegalArgumentException("Argument senderType can not be null");
+            }
+            if (remoteActorPubKey == null || remoteActorPubKey.length() == 0) {
+                throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
+            }
+            if (receiverType == null) {
+                throw new IllegalArgumentException("Argument receiverType can not be null");
+            }
+
+            ChatMetadataRecord chatMetadataRecord = getChatMetadataRecordDAO().getNotificationByChatAndMessageId(chatId, null);
+            final String msjContent = EncodeMsjContent.encodeMSjContentTransactionWritingNotification(
+                    chatMetadataRecord.getResponseToNotification(),
+                    senderType,
+                    receiverType,
+                    chatId
+            );
+
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                    getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, receiverType),
+                                    msjContent
+                            );
+                        } catch (CantSendMessageException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
         } catch (Exception e) {
 
@@ -917,6 +996,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
             chatMetadataRecord.setSentDate(new Timestamp(currentTime));
             chatMetadataRecord.changeState(protocolState);
+            chatMetadataRecord.setTypeChat(chatMetadata.getTypeChat());
+            chatMetadataRecord.setGroupMembers(chatMetadata.getGroupMembers());
             final String EncodedMsg = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataRecord, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
 
 
@@ -936,21 +1017,41 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
             System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
+            if(chatMetadata.getTypeChat().equals(TypeChat.INDIVIDUAL)) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
-                                getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, remoteType),
-                                EncodedMsg
-                        );
-                    } catch (CantSendMessageException e) {
-                        e.printStackTrace();
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                    getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, remoteType),
+                                    EncodedMsg
+                            );
+                        } catch (CantSendMessageException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            });
+                });
+            }else if(chatMetadata.getTypeChat().equals(TypeChat.GROUP)){
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        for(GroupMember groupMember : chatMetadata.getGroupMembers()) {
+                            try {
+                                sendNewMessage(
+                                        getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                        getProfileDestinationToRequestConnection(groupMember.getActorPublicKey(), NetworkServiceType.UNDEFINED, remoteType),
+                                        EncodedMsg
+                                );
+                            } catch (CantSendMessageException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
 
         }catch(CantSendChatMessageMetadataException e){
             StringBuilder contextBuffer = new StringBuilder();
@@ -1047,6 +1148,17 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             throw pluginStartException;
         }
     }
+
+//    /**
+//     * @param chatMetadata
+//     * @throws CantSendChatMessageNewStatusNotificationException
+//     */
+//    @Override
+//    public void sendMessageChatBroadcast(ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException {
+//        //TODO: Este metodo es el va hacer llamado desde el middleware para que se arme la data necesaria para proceder a enviar el mensaje desde el metodo que usamos actualmente para el envio
+//
+//
+//    }
 
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {

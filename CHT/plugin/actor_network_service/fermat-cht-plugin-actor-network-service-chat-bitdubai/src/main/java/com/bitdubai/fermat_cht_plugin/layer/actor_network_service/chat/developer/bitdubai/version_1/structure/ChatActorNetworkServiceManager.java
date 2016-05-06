@@ -35,6 +35,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.Collection;
 import java.util.List;
@@ -52,6 +54,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     private final CommunicationsClientConnection communicationsClientConnection;
     private final ChatActorNetworkServiceDao chatActorNetworkServiceDao;
     private final ChatActorNetworkServicePluginRoot pluginRoot;
+
     private final ErrorManager errorManager;
     private final PluginVersionReference pluginVersionReference;
 
@@ -65,12 +68,14 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     public ChatActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
                                           final ChatActorNetworkServiceDao chatActorNetworkServiceDao,
                                           final ChatActorNetworkServicePluginRoot pluginRoot,
+
                                           final ErrorManager errorManager,
                                           final PluginVersionReference pluginVersionReference) {
 
         this.communicationsClientConnection = communicationsClientConnection;
         this.chatActorNetworkServiceDao = chatActorNetworkServiceDao;
         this.pluginRoot = pluginRoot;
+
         this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
         this.executorService = Executors.newFixedThreadPool(3);
@@ -89,15 +94,13 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
             } else {
 
-                final String imageString = Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT);
-
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         chatExposingData.getPublicKey(),
                         (chatExposingData.getAlias()),
                         (chatExposingData.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
-                        NetworkServiceType.UNDEFINED,
+                        NetworkServiceType.ACTOR_CHAT,
                         PlatformComponentType.ACTOR_CHAT,
-                        imageString
+                        extraDataToJson(chatExposingData)
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
@@ -177,6 +180,9 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     public ChatSearch getSearch() {
         return new ChatActorNetworkServiceSearch(communicationsClientConnection, errorManager, pluginVersionReference);
     }
+
+
+
 
     @Override
     public void requestConnection(ChatConnectionInformation chatConnectionInformation) throws CantRequestConnectionException {
@@ -383,6 +389,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         }
     }
 
+
+
+
+
+
     private void sendMessage(final String jsonMessage      ,
                              final String identityPublicKey,
                              final Actors identityType     ,
@@ -476,5 +487,16 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                 ConnectionRequestAction.REQUEST,
                 aer.getSendingTime()
         ).toJson();
+    }
+
+    private String extraDataToJson(ChatExposingData chatExposingData){
+        Gson gson = new Gson();
+        JsonObject jsonObjectContent = new JsonObject();
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.IMG, Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT));
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.COUNTRY, chatExposingData.getCountry());
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.STATE, chatExposingData.getState());
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.CITY, chatExposingData.getCity());
+
+        return gson.toJson(jsonObjectContent);
     }
 }

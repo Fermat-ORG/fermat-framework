@@ -9,6 +9,10 @@
 
     <!--Home Transactions -->
     <color name="csh_transaction_item_background">#00f5f5f5</color>
+    <color name="csh_transaction_hold_color">#f58a42</color>
+    <color name="csh_transaction_hold_color_progress_bar">#e08c26</color>
+    <color name="csh_transaction_unhold_color">#42f57e</color>
+    <color name="csh_transaction_unhold_color_progress_bar">#26e04b</color>
     <color name="csh_transaction_deposit_color">#42a5f5</color>
     <color name="csh_transaction_deposit_color_progress_bar">#26A9E0</color>
     <color name="csh_transaction_withdrawal_color">#ef5350</color>

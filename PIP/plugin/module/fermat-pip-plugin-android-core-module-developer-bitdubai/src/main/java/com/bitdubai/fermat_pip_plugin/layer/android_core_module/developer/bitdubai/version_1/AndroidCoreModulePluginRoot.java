@@ -1,27 +1,36 @@
 package com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdubai.version_1;
 
 
-import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreModule;
+import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettingsManager;
-import com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdubai.version_1.structure.AndroidCoreModuleManager;
 
 
 /**
@@ -35,7 +44,7 @@ import com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdub
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AndroidCoreModulePluginRoot extends AbstractPlugin implements AndroidCoreModule {
+public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSettings,ActiveActorIdentityInformation> implements AndroidCoreModule {
 
     @NeededPluginReference(platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.WS_CLOUD_CLIENT)
     private WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager;
@@ -62,9 +71,38 @@ public class AndroidCoreModulePluginRoot extends AbstractPlugin implements Andro
      *
      */
 
+
     @Override
-    public AndroidCoreManager getAndroidCoreManager() {
-        return new AndroidCoreModuleManager(wsCommunicationsCloudClientManager,bitcoinNetworkManager);
+    public NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException {
+        try {
+            if( this.wsCommunicationsCloudClientManager.isConnected())
+                return NetworkStatus.CONNECTED;
+            else
+                return NetworkStatus.DISCONNECTED;
+        } catch (Exception e) {
+            throw new CantGetCommunicationNetworkStatusException(CantGetCommunicationNetworkStatusException.DEFAULT_MESSAGE,e,"","Cant Get Cloud Cient Network Connection Status");
+        }
+    }
+
+    @Override
+    public NetworkStatus getBitcoinNetworkStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBitcoinNetworkStatusException {
+        try {
+            if(bitcoinNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType).isConnected())
+                return NetworkStatus.CONNECTED;
+            else
+                return NetworkStatus.DISCONNECTED;
+        } catch (CantGetBlockchainConnectionStatusException e) {
+            throw new CantGetBitcoinNetworkStatusException(CantGetBitcoinNetworkStatusException.DEFAULT_MESSAGE,e,"","Cant Get Bitcoin Network Connection Status");
+        }
+    }
+
+    @Override
+    public NetworkStatus getPrivateNetworkStatus() {
+        return NetworkStatus.CONNECTED;
+    }
+
+    public void setWsCommunicationsCloudClientManager(WsCommunicationsCloudClientManager wsCommunicationsCloudClientManager) {
+        this.wsCommunicationsCloudClientManager = wsCommunicationsCloudClientManager;
     }
 
     @Override
@@ -93,6 +131,18 @@ public class AndroidCoreModulePluginRoot extends AbstractPlugin implements Andro
     }
 
 
+    @Override
+    public ModuleManager<AndroidCoreSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+        return this;
+    }
 
+    @Override
+    public void persistSettings(String publicKey, AndroidCoreSettings settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey,settings);
+    }
 
+    @Override
+    public AndroidCoreSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+        return (AndroidCoreSettings) getSettingsManager().loadAndGetSettings(publicKey);
+    }
 }

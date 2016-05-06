@@ -13,6 +13,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,17 +65,30 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
             for (final PlatformComponentProfile platformComponentProfile : list) {
 
                 System.out.println("************** I'm a chat searched: "+platformComponentProfile);
-                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
+//                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
 
                 byte[] imageByte;
 
-                if (platformComponentProfile.getExtraData() != null)
-                    imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
+                JsonParser parser = new JsonParser();
+
+                Gson gson = new Gson();
+
+                JsonObject extraData = parser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+
+                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+
+                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
+
+                String imageString = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.IMG), String.class);
+
+                if(imageString != null && !imageString.equals(""))
+                    imageByte = Base64.decode(imageString, Base64.DEFAULT);
                 else
                     imageByte = null;
 
-
-                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city));
             }
 
             return chatExposingDataArrayList;

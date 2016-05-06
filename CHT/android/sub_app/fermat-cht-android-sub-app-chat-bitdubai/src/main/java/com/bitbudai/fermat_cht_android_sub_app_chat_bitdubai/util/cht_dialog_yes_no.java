@@ -10,20 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -31,9 +23,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -79,7 +69,6 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     }
 
     @Override
-
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
             txt_title = (TextView) this.findViewById(R.id.cht_alert_txt_title);
@@ -88,17 +77,15 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
             btn_no = (Button) this.findViewById(R.id.cht_alert_btn_no);
             try {
                 chatSession = ((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) getSession());
-                moduleManager = chatSession.getModuleManager();
-                chatManager = moduleManager.getChatManager();
+                chatManager = chatSession.getModuleManager();
+                //chatManager = moduleManager.getChatManager();
                 errorManager = getSession().getErrorManager();
-
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
             txt_title.setText(title);
             txt_body.setText(body);
-
         setUpListeners();
     }
 
@@ -177,29 +164,29 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 }
                 //changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                 }else if(AlertType == 2){
-                try {
-                    Contact con = chatSession.getSelectedContact();
-                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                    //chatManager.deleteContact(con);
-                    List<Contact> cont=  null;//chatManager.getContacts();
-                    if (cont.size() > 0) {
-                        for (int i=0;i<cont.size();i++){
-                            contactname.add(cont.get(i).getAlias());
-                            contactid.add(cont.get(i).getContactId());
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.get(i).getProfileImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            contacticon.add(bmd.getBitmap());
-                        }
-                        final ContactListAdapter adaptador =
-                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
-                                        moduleManager, errorManager, chatSession, getSession(), null);
-                        adaptador.refreshEvents(contactname, contacticon, contactid);
-                    }
-                //}catch(CantGetContactException e) {
-                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch (Exception e){
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
+//                try {
+//                    Contact con = chatSession.getSelectedContact();
+//                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                    //chatManager.deleteContact(con);
+//                    List<Contact> cont=  null;//chatManager.getContacts();
+//                    if (cont.size() > 0) {
+//                        for (int i=0;i<cont.size();i++){
+//                            contactname.add(cont.get(i).getAlias());
+//                            contactid.add(cont.get(i).getContactId());
+//                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.get(i).getProfileImage());
+//                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+//                            contacticon.add(bmd.getBitmap());
+//                        }
+//                        final ContactListAdapter adaptador =
+//                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
+//                                        moduleManager, errorManager, chatSession, getSession(), null);
+//                        adaptador.refreshEvents(contactname, contacticon, contactid);
+//                    }
+//                //}catch(CantGetContactException e) {
+//                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                }catch (Exception e){
+//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                }
                 delete_contact = true;
             }else if(AlertType == 3){
                 try {

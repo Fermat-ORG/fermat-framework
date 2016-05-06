@@ -224,132 +224,9 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * Desktop CCP
              */
 
-            String publicKey = "main_desktop";
-
-            runtimeDesktopObject = new RuntimeDesktopObject();
-            runtimeDesktopObject.setAppPublicKey(publicKey);
-            runtimeDesktopObject.setType("DCCP");
-            lastDesktopObject = publicKey;
-
-            runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
-
-            Activity activity = new Activity();
-            activity.setActivityType(Activities.CCP_DESKTOP.getCode());
-            activity.setType(Activities.CCP_DESKTOP);
-            activity.setFullScreen(true);
-            activity.setBottomNavigationMenu(new BottomNavigation());
-
-//            Wizard wizard = new Wizard();
-//            WizardPage wizardPage = new WizardPage();
-//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
-//            wizard.addPage(wizardPage);
-//
-//            wizardPage = new WizardPage();
-//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_SECOND_SCREEN_FRAGMENT.getKey());
-//            wizard.addPage(wizardPage);
-//
-//            wizardPage = new WizardPage();
-//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_THIRD_SCREEN_FRAGMENT.getKey());
-//            wizard.addPage(wizardPage);
-//
-//            wizardPage = new WizardPage();
-//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FOURTH_SCREEN_FRAGMENT.getKey());
-//            wizard.addPage(wizardPage);
-//
-//            activity.addWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey(),wizard);
-
-
-            /**
-             * set type home
-             */
-            //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
-            //activity.setType(Activities.dmp_DESKTOP_HOME);
-            activity.setActivityType("CCPDHA");
-            Fragment fragment = new Fragment();
-            fragment.setType(Fragments.DESKTOP_APPS_MAIN.getKey());
-            activity.addFragment(Fragments.DESKTOP_APPS_MAIN.getKey(), fragment);
-            activity.setStartFragment(Fragments.DESKTOP_APPS_MAIN.getKey());
-            runtimeDesktopObject.addActivity(activity);
-            activity.setColor("#fff");
-
-
-            // activity
-            fragment = new Fragment();
-            fragment.setType(Fragments.DESKTOP_P2P_MAIN.getKey());
-            activity.addFragment(Fragments.DESKTOP_P2P_MAIN.getKey(), fragment);
-
-            fragment = new Fragment();
-            fragment.setType(Fragments.DESKTOP_SOCIAL_MAIN.getKey());
-            activity.addFragment(Fragments.DESKTOP_SOCIAL_MAIN.getKey(), fragment);
-
-
-            //
-
-            /**
-             * Wizard
-             */
-            activity = new Activity();
-            activity.setActivityType(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
-            activity.setType(Activities.DESKTOP_WIZZARD_WELCOME);
-            activity.setFullScreen(true);
-            activity.setBackgroundColor("#ffffff");
-            activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
-            runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
-
-            fragment = new Fragment();
-            fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
-            activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(),fragment);
-            runtimeDesktopObject.addActivity(activity);
-
-
-
-
-            activity = new Activity();
-            activity.setBackgroundColor("#000000");
-            activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
-            activity.setType(Activities.DESKTOP_SETTING_FERMAT_NETWORK);
-            activity.setStartFragment(Fragments.DESKTOP_SETTINGS.getKey());
-            activity.setBackActivity(Activities.CCP_DESKTOP);
-            activity.setBackPublicKey(publicKey);
-
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setColor("#000000");
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeTitleBar.setLabel("Network Settings");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setTitleColor("#ffffff");
-            activity.setTitleBar(runtimeTitleBar);
-
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.DESKTOP_SETTINGS.getKey());
-            runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
-            activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
-            runtimeDesktopObject.addActivity(activity);
-
-
-            // community
-            activity = new Activity();
-            activity.setActivityType(Activities.DESKTOP_COMMUNITY_ACTIVITY.getCode());
-            activity.setType(Activities.DESKTOP_COMMUNITY_ACTIVITY);
-            activity.setStartFragment(Fragments.COMMUNITIES_FRAGMENT.getKey());
-            activity.setBackActivity(Activities.CCP_DESKTOP);
-            activity.setBackPublicKey(publicKey);
-            activity.setFullScreen(true);
-            activity.setBackgroundColor("#ffffff");
-            activity.setColor("#ffffff");
-
-
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.COMMUNITIES_FRAGMENT.getKey());
-            runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
-            activity.addFragment(Fragments.COMMUNITIES_FRAGMENT.getKey(), runtimeFragment);
-            runtimeDesktopObject.addActivity(activity);
-
-
-
-
-            lstDesktops.put(publicKey,runtimeDesktopObject);
+            createDesktop();
+            Activity activity;
+            Fragment fragment;
 
 
 
@@ -484,6 +361,134 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
     }
 
+    private void createDesktop() {
+        RuntimeDesktopObject runtimeDesktopObject;
+        TitleBar runtimeTitleBar;
+        Fragment runtimeFragment;
+        String publicKey = "main_desktop";
+
+        runtimeDesktopObject = new RuntimeDesktopObject();
+        runtimeDesktopObject.setAppPublicKey(publicKey);
+        runtimeDesktopObject.setType("DCCP");
+        lastDesktopObject = publicKey;
+
+        runtimeDesktopObject.setStartActivity(Activities.CCP_DESKTOP);
+
+        Activity activity = new Activity();
+        activity.setActivityType(Activities.CCP_DESKTOP.getCode());
+        activity.setType(Activities.CCP_DESKTOP);
+        activity.setFullScreen(true);
+        activity.setBottomNavigationMenu(new BottomNavigation());
+
+//            Wizard wizard = new Wizard();
+//            WizardPage wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_SECOND_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_THIRD_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FOURTH_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            activity.addWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey(),wizard);
+
+
+        /**
+         * set type home
+         */
+        //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
+        //activity.setType(Activities.dmp_DESKTOP_HOME);
+        activity.setActivityType("CCPDHA");
+        Fragment fragment = new Fragment();
+        fragment.setType(Fragments.DESKTOP_APPS_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_APPS_MAIN.getKey(), fragment);
+        activity.setStartFragment(Fragments.DESKTOP_APPS_MAIN.getKey());
+        runtimeDesktopObject.addActivity(activity);
+        activity.setColor("#fff");
+
+
+        // activity
+        fragment = new Fragment();
+        fragment.setType(Fragments.DESKTOP_P2P_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_P2P_MAIN.getKey(), fragment);
+
+        fragment = new Fragment();
+        fragment.setType(Fragments.DESKTOP_SOCIAL_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_SOCIAL_MAIN.getKey(), fragment);
+
+
+        //
+
+        /**
+         * Wizard
+         */
+        activity = new Activity();
+        activity.setActivityType(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
+        activity.setType(Activities.DESKTOP_WIZZARD_WELCOME);
+        activity.setFullScreen(true);
+        activity.setBackgroundColor("#ffffff");
+        activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+        runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
+
+        fragment = new Fragment();
+        fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+        activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(),fragment);
+        runtimeDesktopObject.addActivity(activity);
+
+
+        activity = new Activity();
+        activity.setBackgroundColor("#000000");
+        activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
+        activity.setType(Activities.DESKTOP_SETTING_FERMAT_NETWORK);
+        activity.setStartFragment(Fragments.DESKTOP_SETTINGS.getKey());
+        activity.setBackActivity(Activities.CCP_DESKTOP);
+        activity.setBackPublicKey(publicKey);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setColor("#000000");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setLabel("Network Settings");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        activity.setTitleBar(runtimeTitleBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DESKTOP_SETTINGS.getKey());
+        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
+        runtimeDesktopObject.addActivity(activity);
+
+
+        // community
+        activity = new Activity();
+        activity.setActivityType(Activities.DESKTOP_COMMUNITY_ACTIVITY.getCode());
+        activity.setType(Activities.DESKTOP_COMMUNITY_ACTIVITY);
+        activity.setStartFragment(Fragments.COMMUNITIES_FRAGMENT.getKey());
+        activity.setBackActivity(Activities.CCP_DESKTOP);
+        activity.setBackPublicKey(publicKey);
+        activity.setFullScreen(true);
+        activity.setBackgroundColor("#ffffff");
+        activity.setColor("#ffffff");
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.COMMUNITIES_FRAGMENT.getKey());
+        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        activity.addFragment(Fragments.COMMUNITIES_FRAGMENT.getKey(), runtimeFragment);
+        runtimeDesktopObject.addActivity(activity);
+
+
+        lstDesktops.put(publicKey,runtimeDesktopObject);
+    }
+
     private void createToolsDesktop() {
         RuntimeDesktopObject runtimeDesktopObject;
         Activity activity;
@@ -549,17 +554,24 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     @Override
     public FermatStructure getLastApp() {
         FermatStructure fermatStructure = null;
-        if(!lstDesktops.isEmpty()) {
-            if (lastDesktopObject != null)
-                fermatStructure = lstDesktops.get(lastDesktopObject);
-            else {
-                fermatStructure = lstDesktops.get("main_desktop");
+        try {
+            if (!lstDesktops.isEmpty()) {
+                if (lastDesktopObject != null)
+                    fermatStructure = lstDesktops.get(lastDesktopObject);
+                else {
+                    fermatStructure = lstDesktops.get("main_desktop");
+                }
+            } else {
+                fermatStructure = getAppByPublicKey("main_desktop");
+                if (fermatStructure != null) {
+                    if(!lstDesktops.containsKey("main_desktop")) {
+                        lstDesktops.put("main_desktop", (DesktopObject) fermatStructure);
+                    }
+                }
             }
-        }else {
-            fermatStructure = getAppByPublicKey("main_desktop");
-            if(fermatStructure!=null){
-                lstDesktops.put("main_desktop", (DesktopObject) fermatStructure);
-            }
+        }catch (Exception e){
+            createDesktop();
+            fermatStructure = lstDesktops.get("main_desktop");
         }
         return fermatStructure;
     }
@@ -587,7 +599,8 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
                         e1.printStackTrace();
                     }
 
-
+                    createDesktop();
+                    return lstDesktops.get(appPublicKey);
                 } catch (CantCreateFileException e) {
                     e.printStackTrace();
                 } catch (CantLoadFileException e) {

@@ -201,7 +201,7 @@
                         android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
                         android:padding="6dp"
-                        android:src="@drawable/ic_profile_male" />
+                        android:src="@drawable/profile_image_male_lossp" />
 
                     <ImageView
                         android:layout_width="match_parent"

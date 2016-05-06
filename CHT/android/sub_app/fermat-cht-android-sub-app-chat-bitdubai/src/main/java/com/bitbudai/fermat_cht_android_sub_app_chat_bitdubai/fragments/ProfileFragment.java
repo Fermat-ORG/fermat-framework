@@ -24,9 +24,6 @@ import android.widget.AlphabetIndexer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ProfileAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -112,8 +109,8 @@ public class ProfileFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         try {
             chatSession=((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) appSession);
-            moduleManager= chatSession.getModuleManager();
-            chatManager=moduleManager.getChatManager();
+            chatManager= chatSession.getModuleManager();
+            //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));

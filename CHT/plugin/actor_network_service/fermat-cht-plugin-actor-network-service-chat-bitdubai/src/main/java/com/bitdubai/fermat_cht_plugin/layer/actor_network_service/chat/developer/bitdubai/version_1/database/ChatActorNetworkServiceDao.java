@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -42,15 +45,21 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnect
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantFindRequestException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
+ * Edited by Miguel Rincon on 19/04/2016
  */
 public class ChatActorNetworkServiceDao {
+
+    private ErrorManager errorManager;
 
     private static final String PROFILE_IMAGE_DIRECTORY_NAME   = DeviceDirectory.LOCAL_USERS.getName() + "/CBP/cryptoBrokerActorNS";
     private static final String PROFILE_IMAGE_FILE_NAME_PREFIX = "profileImage";
@@ -90,17 +99,21 @@ public class ChatActorNetworkServiceDao {
                 );
 
             } catch (final CantCreateDatabaseException f) {
+                errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, f);
 
                 throw new CantInitializeDatabaseException(f, "", "There was a problem and we cannot create the database.");
             } catch (final Exception z) {
+                errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, z);
 
                 throw new CantInitializeDatabaseException(z, "", "Unhandled Exception.");
             }
 
         } catch (final CantOpenDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantInitializeDatabaseException(e, "", "Exception not handled by the plugin, there was a problem and we cannot open the database.");
         } catch (final Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantInitializeDatabaseException(e, "", "Unhandled Exception.");
         }
@@ -127,6 +140,7 @@ public class ChatActorNetworkServiceDao {
 
             actions.add(ConnectionRequestAction.ACCEPT);
             actions.add(ConnectionRequestAction.DENY);
+            actions.add(ConnectionRequestAction.DISCONNECT);
 
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
@@ -149,24 +163,20 @@ public class ChatActorNetworkServiceDao {
             return cryptoAddressRequests;
 
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
         }
     }
 
 
-    /**
-     * Return all the pending requests depending on the action informed through parameters.
-     *
-     * @param actions  the list of actions that we need to bring.
-     *
-     * @return a list of ChatConnectionRequest instances.
-     *
-     * @throws CantListPendingConnectionRequestsException  if something goes wrong.
-     */
+
+
+
     public final List<ChatConnectionRequest> listAllPendingRequestsByActorType(final Actors actorType, final List<ConnectionRequestAction> actions) throws CantListPendingConnectionRequestsException {
 
         try {
@@ -199,16 +209,18 @@ public class ChatActorNetworkServiceDao {
             return cryptoAddressRequests;
 
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
         }
     }
 
-
-    public final List<ChatConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
+  
+        public final List<ChatConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
 
@@ -237,9 +249,11 @@ public class ChatActorNetworkServiceDao {
             return cryptoAddressRequests;
 
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
         }
@@ -275,9 +289,11 @@ public class ChatActorNetworkServiceDao {
             return cryptoAddressRequests;
 
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
         }
@@ -320,16 +336,18 @@ public class ChatActorNetworkServiceDao {
             return cryptoAddressRequests;
 
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
         }
     }
 
 
-    public final void createConnectionRequest(final ChatConnectionInformation brokerInformation,
+    public final void createConnectionRequest(final ChatConnectionInformation chatActor,
                                               final ProtocolState                     state            ,
                                               final RequestType                       type             ,
                                               final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
@@ -337,16 +355,16 @@ public class ChatActorNetworkServiceDao {
         try {
 
             final ChatConnectionRequest connectionNew = new ChatConnectionRequest(
-                    brokerInformation.getConnectionId()        ,
-                    brokerInformation.getSenderPublicKey()     ,
-                    brokerInformation.getSenderActorType()     ,
-                    brokerInformation.getSenderAlias()         ,
-                    brokerInformation.getSenderImage()         ,
-                    brokerInformation.getDestinationPublicKey(),
+                    chatActor.getConnectionId()        ,
+                    chatActor.getSenderPublicKey()     ,
+                    chatActor.getSenderActorType()     ,
+                    chatActor.getSenderAlias()         ,
+                    chatActor.getSenderImage()         ,
+                    chatActor.getDestinationPublicKey(),
                     type                                       ,
                     state                                      ,
                     action                                     ,
-                    brokerInformation.getSendingTime()
+                    chatActor.getSendingTime()
             );
 
             final DatabaseTable addressExchangeRequestTable = database.getTable(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
@@ -358,6 +376,7 @@ public class ChatActorNetworkServiceDao {
             addressExchangeRequestTable.insertRecord(entityRecord);
 
         } catch (final CantInsertRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantRequestConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
         }
@@ -410,9 +429,11 @@ public class ChatActorNetworkServiceDao {
                 throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantDenyConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantDenyConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
@@ -465,9 +486,11 @@ public class ChatActorNetworkServiceDao {
                 throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantDisconnectException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantDisconnectException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
@@ -495,9 +518,11 @@ public class ChatActorNetworkServiceDao {
                 throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
 
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantFindRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantFindRequestException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
         }
@@ -544,9 +569,11 @@ public class ChatActorNetworkServiceDao {
                 throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantChangeProtocolStateException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
@@ -596,9 +623,11 @@ public class ChatActorNetworkServiceDao {
                 throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an address exchange request with that requestId.");
 
         } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantConfirmConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantConfirmConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
 
@@ -663,9 +692,11 @@ public class ChatActorNetworkServiceDao {
                 throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
 
         } catch (final CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantAcceptConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantAcceptConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
@@ -700,6 +731,7 @@ public class ChatActorNetworkServiceDao {
                 );
 
         } catch (final CantLoadTableToMemoryException cantLoadTableToMemoryException) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemoryException);
 
             throw new CantListPendingConnectionRequestsException(
                     cantLoadTableToMemoryException,
@@ -726,6 +758,7 @@ public class ChatActorNetworkServiceDao {
             return !records.isEmpty();
 
         } catch (final CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantFindRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
@@ -754,6 +787,7 @@ public class ChatActorNetworkServiceDao {
         } catch (final Exception e) {
 
             // TODO add better error management, "throws CantBuildDatabaseRecordException".
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             System.err.println("error trying to persist image:"+e.getMessage());
             return record;
@@ -800,6 +834,7 @@ public class ChatActorNetworkServiceDao {
             );
 
         } catch (final CantGetProfileImageException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new InvalidParameterException(
                     e,
@@ -825,6 +860,7 @@ public class ChatActorNetworkServiceDao {
             file.persistToMedia();
 
         } catch (final CantPersistFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantPersistProfileImageException(
                     "Error persist file.",
@@ -834,6 +870,7 @@ public class ChatActorNetworkServiceDao {
             );
 
         } catch (final CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantPersistProfileImageException(
                     "Error creating file.",
@@ -842,6 +879,7 @@ public class ChatActorNetworkServiceDao {
                     ""
             );
         } catch (final Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantPersistProfileImageException(
                     "",
@@ -869,6 +907,7 @@ public class ChatActorNetworkServiceDao {
             return file.getContent();
 
         } catch (final CantLoadFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantGetProfileImageException(
                     "Error loaded file.",
@@ -878,9 +917,11 @@ public class ChatActorNetworkServiceDao {
             );
 
         } catch (final FileNotFoundException | CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new FileNotFoundException(e, "", null);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
             throw new CantGetProfileImageException(
                     "",

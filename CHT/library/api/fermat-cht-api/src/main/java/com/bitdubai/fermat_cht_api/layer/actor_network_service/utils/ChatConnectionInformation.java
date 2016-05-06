@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.actor_network_service.utils;
 
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import java.util.Arrays;
@@ -10,13 +11,13 @@ import java.util.UUID;
  */
 public class ChatConnectionInformation {
 
-    private final UUID connectionId;
-    private final String senderPublicKey;
-    private final Actors senderActorType;
-    private final String senderAlias;
-    private final byte[] senderImage;
-    private final String destinationPublicKey;
-    private final long sendingTime;
+    private UUID connectionId;
+    private String senderPublicKey;
+    private Actors senderActorType;
+    private String senderAlias;
+    private byte[] senderImage;
+    private String destinationPublicKey;
+    private long sendingTime;
 
     public ChatConnectionInformation(final UUID connectionId,
                                      final String senderPublicKey,
@@ -34,6 +35,22 @@ public class ChatConnectionInformation {
         this.destinationPublicKey = destinationPublicKey;
         this.sendingTime = sendingTime;
     }
+
+    public ChatConnectionInformation(String stringValue, String stringValue1, byte[] image, long longValue, ConnectionState byCode) {
+
+    }
+
+    public ChatConnectionInformation(String A, String stringValue, byte[] image, long longValue, ConnectionState byCode, String stringValue1) {
+
+
+
+
+
+
+
+
+    }
+
 
     /**
      * @return a string representing the public key.

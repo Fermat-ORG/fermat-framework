@@ -31,8 +31,8 @@ android {
         applicationId "org.fermat"
         minSdkVersion 20
         targetSdkVersion 23
-        versionCode 31
-        versionName "0.65"
+        versionCode 37
+        versionName "0.70"
         multiDexEnabled true
     }
 
@@ -128,6 +128,8 @@ dependencies {
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
     //CHT
     compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
+    compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
     //TKY
     compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
     compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
@@ -162,14 +164,12 @@ dependencies {
     //    compile files('src/main/libs/additionnal.jar')
 
     //    compile files('src/main/libs/mail.jar')
-    compile 'com.sun.mail:android-mail:1.5.5'
-    compile 'com.sun.mail:android-activation:1.5.5'
+   // compile 'com.sun.mail:android-mail:1.5.5'
+    //compile 'com.sun.mail:android-activation:1.5.5'
     compile project(':horizontalscrollview')
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
-    //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
     compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
