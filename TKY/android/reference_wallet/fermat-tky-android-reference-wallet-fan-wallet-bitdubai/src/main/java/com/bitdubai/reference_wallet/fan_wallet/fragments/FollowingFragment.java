@@ -359,7 +359,6 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         protected Boolean doInBackground(Void... notUsingObject) {
             try {
                 try {
-
                     fanList= fanWalletModuleManager.listIdentitiesFromCurrentDeviceUser();
                     if(fanList.size()==0){
                         noFollowing =true;
