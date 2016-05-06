@@ -100,50 +100,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
     private ChatManager chatActorNetworkService;
 
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
-    //AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
-    //AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
-    //AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_BROKER_COMMUNITY)
-    //CryptoBrokerCommunitySubAppModuleManager cryptoBrokerCommunitySubAppModuleManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_CUSTOMER_COMMUNITY)
-    //CryptoCustomerCommunitySubAppModuleManager cryptoCustomerCommunitySubAppModuleManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
-    //ActorAssetUserManager actorAssetUserManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
-    //ActorAssetIssuerManager actorAssetIssuerManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
-    //ActorAssetRedeemPointManager actorAssetRedeemPointManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
-    //CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_CUSTOMER)
-    //CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.INTRA_WALLET_USER)
-    //private IntraUserModuleManager intraUserModuleManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     Broadcaster broadcaster;
 
