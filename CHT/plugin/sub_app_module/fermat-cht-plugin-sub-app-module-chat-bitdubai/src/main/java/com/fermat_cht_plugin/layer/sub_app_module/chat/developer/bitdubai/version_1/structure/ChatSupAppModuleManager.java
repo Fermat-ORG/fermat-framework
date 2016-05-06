@@ -249,6 +249,12 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     public boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
         return middlewareChatManager.checkOnlineStatus(contactPublicKey);
     }
+
+    @Override
+    public String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus {
+       return middlewareChatManager.checkLastConnection(contactPublicKey);
+    }
+
     @Override
     public void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
          middlewareChatManager.activeOnlineStatus(contactPublicKey);
