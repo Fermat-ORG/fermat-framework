@@ -125,7 +125,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 // context.registerForContextMenu(lblMensaje);
 
                 final FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
-                final CustomDialogFragment dialog = CustomDialogFragment.newInstance(context, preferenceSettingsOpenDialogText.getDialogData(), null);
+                final CustomDialogFragment dialog = CustomDialogFragment.newInstance(context, preferenceSettingsOpenDialogText.getDialogData());
                 CustomDialogFragment.CustomDialogListener listener = new CustomDialogFragment.CustomDialogListener();
                 listener.setListener(new CustomDialogFragment.DialogListener() {
                     @Override
