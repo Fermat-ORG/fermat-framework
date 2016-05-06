@@ -209,7 +209,7 @@ public class ChatAdapterView extends LinearLayout {
 
             if (chatId != null) {
                 List<Message> messL = chatManager.getMessagesByChatId(chatId);
-                if(messL==null) {
+                if(messL!=null) {
                     MessageImpl messagei;
                     for (Message mess : messL) {
                         msg = new ChatMessage();
