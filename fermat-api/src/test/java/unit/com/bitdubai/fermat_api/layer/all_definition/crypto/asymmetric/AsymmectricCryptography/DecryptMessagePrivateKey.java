@@ -1,10 +1,10 @@
 package unit.com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 
-import static org.fest.assertions.api.Assertions.*;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
+import static org.fest.assertions.api.Assertions.assertThat;
 
 public class DecryptMessagePrivateKey extends AsymmetricCryptographyUnitTest {
 
