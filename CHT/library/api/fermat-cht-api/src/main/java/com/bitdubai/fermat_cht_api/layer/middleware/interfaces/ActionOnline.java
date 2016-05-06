@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
 import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 
 /**
@@ -19,4 +20,7 @@ public interface ActionOnline {
 
     boolean getValue();
     void setValue(boolean value);
+
+    Timestamp getLastConnection();
+    void setLastConnection(Timestamp lastConnection);
 }

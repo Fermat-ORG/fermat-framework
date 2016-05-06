@@ -124,7 +124,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
-        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_ONLINE);
         /**
          * Table Chats addition.
          */
