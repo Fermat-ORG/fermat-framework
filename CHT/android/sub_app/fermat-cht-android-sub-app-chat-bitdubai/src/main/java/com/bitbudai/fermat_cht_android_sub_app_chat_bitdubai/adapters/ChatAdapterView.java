@@ -356,7 +356,7 @@ public class ChatAdapterView extends LinearLayout {
                 if(date != null && date != "no record") {
                     toolbar.setSubtitle("Last time "+date);
                 }else{
-                    Log.i("159753 ** LastTimeConnection", "No show");
+                    Log.i("159753**LastTimeOnChat", "No show");
                 }
                 break;
             case ConstantSubtitle.IS_ONLINE:
