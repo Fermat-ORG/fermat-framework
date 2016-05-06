@@ -604,8 +604,8 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void getFilter(String s) {
-        findMessage();
-        refreshEvents();
+//        findMessage();
+//        refreshEvents();
         adapter.getFilter().filter(s);
     }
 
