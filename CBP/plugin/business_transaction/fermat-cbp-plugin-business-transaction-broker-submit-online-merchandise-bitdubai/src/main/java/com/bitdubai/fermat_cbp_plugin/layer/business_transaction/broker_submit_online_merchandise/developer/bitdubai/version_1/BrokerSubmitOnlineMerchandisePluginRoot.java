@@ -51,6 +51,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -103,6 +104,9 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     /**
      * Represents the plugin manager.
@@ -277,7 +281,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     outgoingIntraActorManager,
-                    cryptoMoneyDeStockManager);
+                    cryptoMoneyDeStockManager,intraWalletUserIdentityManager);
             brokerSubmitOnlineMerchandiseMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
