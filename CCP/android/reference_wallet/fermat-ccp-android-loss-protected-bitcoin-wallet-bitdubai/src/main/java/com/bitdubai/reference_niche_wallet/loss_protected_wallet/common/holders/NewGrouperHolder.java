@@ -19,10 +19,13 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 
 
 /**
@@ -83,14 +86,12 @@ public class NewGrouperHolder extends ParentViewHolder {
             contactName = lossProtectedWalletTransaction.getInvolvedActor().getName();
         }else{
             if (lossProtectedWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
-                contactName = "Device User Transaction";
+                contactName = "Intra Wallet Transaction";
             }
         }
 
-
-
         txt_contactName.setText(contactName);
-        txt_amount.setText(lossProtectedWalletTransaction.getAmount() + " btc");
+        txt_amount.setText(formatBalanceString(lossProtectedWalletTransaction.getAmount() , ShowMoneyType.BITCOIN.getCode())+ " btc");
 
         txt_notes.setText(lossProtectedWalletTransaction.getMemo());
 

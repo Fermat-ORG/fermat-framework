@@ -125,7 +125,7 @@ public class BitcoinWalletLossProtectedWalletDao {
                 try {
 
                        long spending = getTotalTransactionsSpending(record.getUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME));
-                        availableBalance += (record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME) - spending);
+                        availableBalance += (record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_AMOUNT_COLUMN_NAME) - spending);
 
                 }catch (NullPointerException e){
                     System.out.println("THERE IS A NULL POINTER HERE !! TESTING ! ");

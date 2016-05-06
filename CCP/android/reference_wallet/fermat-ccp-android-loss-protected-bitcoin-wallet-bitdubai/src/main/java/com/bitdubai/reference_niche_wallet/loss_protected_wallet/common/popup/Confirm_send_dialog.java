@@ -31,7 +31,7 @@ import java.math.BigDecimal;
 /**
  * Created by Joaquin Carrasuquero on 11/04/16.
  */
-public class Confirm_dialog extends Dialog implements
+public class Confirm_send_dialog extends Dialog implements
         View.OnClickListener {
 
 
@@ -67,18 +67,18 @@ public class Confirm_dialog extends Dialog implements
     Button accept_btn;
 
 
-    public Confirm_dialog(Activity a,
-                          LossProtectedWallet  lossProtectedWallet,
-                          long cryptoAmount,
-                          CryptoAddress destinationAddress,
-                          String notes, String walletPublicKey,
-                          String deliveredByActorPublicKey,
-                          Actors deliveredByActorType,
-                          String deliveredToActorPublicKey,
-                          Actors deliveredToActorType,
-                          ReferenceWallet referenceWallet,
-                          BlockchainNetworkType blockchainNetworkType,
-                          LossProtectedWalletSession appSession) {
+    public Confirm_send_dialog(Activity a,
+                               LossProtectedWallet lossProtectedWallet,
+                               long cryptoAmount,
+                               CryptoAddress destinationAddress,
+                               String notes, String walletPublicKey,
+                               String deliveredByActorPublicKey,
+                               Actors deliveredByActorType,
+                               String deliveredToActorPublicKey,
+                               Actors deliveredToActorType,
+                               ReferenceWallet referenceWallet,
+                               BlockchainNetworkType blockchainNetworkType,
+                               LossProtectedWalletSession appSession) {
         super(a);
         this.activity = a;
         this.lossProtectedWallet=lossProtectedWallet;

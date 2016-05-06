@@ -10,9 +10,12 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by Joaquin Carrasquero on 04/05/16.
@@ -48,7 +51,8 @@ public class transactionHolder extends ChildViewHolder {
     public void bind(LossProtectedWalletTransaction lossProtectedWalletTransaction) {
 
         if (lossProtectedWalletTransaction.getActorFromPublicKey() != null){
-            txt_amount.setText(lossProtectedWalletTransaction.getAmount()+ " BTC");
+            txt_amount.setText(formatBalanceString(lossProtectedWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
+
             if(lossProtectedWalletTransaction.getTransactionState().equals(TransactionState.REVERSED))
                 txt_notes.setText((lossProtectedWalletTransaction.getMemo()==null) ? "No information" : lossProtectedWalletTransaction.getMemo() + "(Reversed)");
             else

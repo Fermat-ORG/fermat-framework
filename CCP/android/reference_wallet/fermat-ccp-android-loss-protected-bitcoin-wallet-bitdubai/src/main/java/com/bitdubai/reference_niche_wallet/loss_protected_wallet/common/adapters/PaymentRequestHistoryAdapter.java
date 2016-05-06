@@ -8,7 +8,9 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
@@ -16,10 +18,11 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.PaymentHistoryItemViewHolder;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_Send_Payment_Dialog;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_send_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -205,28 +208,29 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                         long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
 
 
-                        if( data.getAmount() > availableBalance) //Balance value is greater than send amount
+                        if( data.getAmount() > availableBalance) //the amount is greater than the available
                         {
-
-                            Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                            //check loss protected settings
+                            if (!lossProtectedEnabled) {
+                                //show dialog confirm
+                                Confirm_Send_Payment_Dialog confirm_send_dialog = new Confirm_Send_Payment_Dialog(super.getActivity(),
+                                        appSession,
+                                        data.getRequestId());
+                                confirm_send_dialog.show();
+                            }
+                            else
+                            {
+                                Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                            }
                         }
                         else
                         {
-
-                            if (!lossProtectedEnabled) {
-                                //show dialog confirm
+                            //aprove payment request
                                 lossProtectedWallet.approveRequest(data.getRequestId()
                                         , appSession.getIntraUserModuleManager().getPublicKey());
                                 Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 onRefreshList.onRefresh();
-                            }
-                            else
-                            {
-                                Toast.makeText(context, "Action not allowed, you will lose money. Restricted by LossProtected Configuration.", Toast.LENGTH_LONG).show();
-                            }
-
-
                         }
 
 

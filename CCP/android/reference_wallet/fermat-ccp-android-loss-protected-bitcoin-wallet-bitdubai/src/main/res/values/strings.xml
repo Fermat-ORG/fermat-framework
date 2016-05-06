@@ -242,7 +242,7 @@
     <string name="clear_text_button">Clear</string>
     <string name="accept_btn">Accept</string>
     <string name="cancel_btn">Cancel</string>
-    <string name="confirm_text">Do you really want to continue?</string>
+    <string name="confirm_text">Action not allowed, you will lose money.\n Do you really want to continue?</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="see_your_loss_balance_text">* Checking your availabe balance based on the actual exchange rate.\n* See the quote dollar today.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>
