@@ -481,11 +481,17 @@ Developers of dev.fermat.org on the client-side. We are responsible to show to t
     Skype:   miguel-209
     Github:  https://github.com/miguelcldn
 
-* **Isaías Taborda [Navi Developer]**<br/>
+* **Isaías Taborda [Navi Veteran Developer]**<br/>
 ---
     Email:   isaiasve30@hotmail.com
     Skype:   
     Github:  https://github.com/IsaTab
+
+* **Simón Oroño [Navi Veteran Developer]**<br/>
+---
+    Email:   simonorono@protonmail.com
+    Skype:   
+    Github:  https://github.com/simonorono
     
     
 * **Ricardo Delgado [Navi New Team Leader]**<br/>
@@ -549,12 +555,6 @@ In the Navi Sierra Team we look for the excellence in coding, following the best
     Email:   campusprize@gmail.com
     Skype:   campol
     Github:  https://github.com/campol
-
-* **Erick Narvaez [Navi Developer]**<br/>
----
-    Email:   ericknarvaez@hotmail.com 
-    Skype:   live:ericknarvaez
-    Github:  https://github.com/korik1
 
 <br/>
 
