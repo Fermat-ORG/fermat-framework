@@ -118,7 +118,7 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
 
             }
 
-            onRefresh();
+            openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             ex.printStackTrace();
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
@@ -243,32 +243,37 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
         ArrayList<GrouperItem> data = new ArrayList<>();
 
         try {
-            //when refresh offset set 0
-            if(refreshType.equals(FermatRefreshTypes.NEW))
-                offset = 0;
 
-            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossWalletSession.getIntraUserModuleManager();
-            if(intraUserLoginIdentity!=null) {
-                String intraUserPk = intraUserLoginIdentity.getPublicKey();
-                lst = cryptoWallet.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
-                offset+=MAX_TRANSACTIONS;
+            if(blockchainNetworkType != null)
+            {
+                //when refresh offset set 0
+                if(refreshType.equals(FermatRefreshTypes.NEW))
+                    offset = 0;
 
-                list = lst;
+                LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossWalletSession.getIntraUserModuleManager();
+                if(intraUserLoginIdentity!=null) {
+                    String intraUserPk = intraUserLoginIdentity.getPublicKey();
+                    lst = cryptoWallet.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                    offset+=MAX_TRANSACTIONS;
+
+                    list = lst;
 
 
-                for (LossProtectedWalletTransaction cryptoWalletTransaction : list) {
-                    List<LossProtectedWalletTransaction> lst = cryptoWallet.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                    for (LossProtectedWalletTransaction cryptoWalletTransaction : list) {
+                        List<LossProtectedWalletTransaction> lst = cryptoWallet.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
-                    GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
-                    data.add(grouperItem);
+                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
+                        data.add(grouperItem);
+                    }
+
+                    if(!data.isEmpty()){
+                        FermatAnimationsUtils.showEmpty(getActivity(),true,emptyListViewsContainer);
+                    }
+
+
                 }
-
-                if(!data.isEmpty()){
-                    FermatAnimationsUtils.showEmpty(getActivity(),true,emptyListViewsContainer);
-                }
-
-
             }
+
 
 
         } catch (Exception e) {

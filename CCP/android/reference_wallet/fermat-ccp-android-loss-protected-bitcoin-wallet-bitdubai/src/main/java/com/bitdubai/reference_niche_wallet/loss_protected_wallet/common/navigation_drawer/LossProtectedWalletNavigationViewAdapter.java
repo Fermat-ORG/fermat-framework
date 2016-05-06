@@ -77,23 +77,23 @@ public class LossProtectedWalletNavigationViewAdapter extends FermatAdapter<Menu
                 case 1:
                     Picasso.with(context).load((data.isSelected()) ? R.drawable.profile_icon : R.drawable.profile_icon).into(holder.getIcon());
                     break;
-                case 2:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.sendtowallet_icon : R.drawable.sendtowallet_icon).into(holder.getIcon());
+                //case 2:
+                //    Picasso.with(context).load((data.isSelected()) ? R.drawable.sendtowallet_icon : R.drawable.sendtowallet_icon).into(holder.getIcon());
 
-                    break;
-                case 3:
+                  //  break;
+                case 2:
                     Picasso.with(context).load((data.isSelected()) ? R.drawable.paymentrequest_icon : R.drawable.paymentrequest_icon).into(holder.getIcon());
                     if(data.getNotifications()!=0){
                         holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
                     }
                     break;
-                case 4:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.wallet_icon : R.drawable.wallet_icon).into(holder.getIcon());
+               case 3:
+                   Picasso.with(context).load((data.isSelected()) ? R.drawable.wallet_icon : R.drawable.wallet_icon).into(holder.getIcon());
                     break;
-                case 5:
+                case 4:
                     Picasso.with(context).load((data.isSelected()) ? R.drawable.purchase_icon : R.drawable.purchase_icon).into(holder.getIcon());
                     break;
-                case 6:
+                case 5:
                     Picasso.with(context).load((data.isSelected()) ? R.drawable.settings_icon : R.drawable.settings_icon).into(holder.getIcon());
                     break;
                 default:

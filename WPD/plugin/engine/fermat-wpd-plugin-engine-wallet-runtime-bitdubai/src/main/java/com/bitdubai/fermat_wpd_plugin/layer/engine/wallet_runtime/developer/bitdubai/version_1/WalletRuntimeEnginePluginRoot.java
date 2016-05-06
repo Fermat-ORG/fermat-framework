@@ -5670,12 +5670,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
+       /* runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Send Btc to wallets");
         runtimeMenuItem.setIcon("request");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SEND_WALLET);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Payment requests");

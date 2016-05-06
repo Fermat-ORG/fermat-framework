@@ -29,7 +29,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
-import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -44,7 +43,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -87,8 +85,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
  */
 public class SendFormFragment extends AbstractFermatFragment<LossProtectedWalletSession,ResourceProviderManager> implements View.OnClickListener{
 
-    private AndroidCoreManager androidCoreManager;
-    private NetworkStatus networkStatus;
+
     /**
      * Plaform reference
      */
@@ -411,11 +408,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
-                    //Long amount = Long.parseLong(editTextAmount.getText().toString());
-                    //if (amount > 0) {
-                    //long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                    //editTextAmount.setHint("Available amount: " + actualBalance + " bits");
-                    //}
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -657,33 +650,13 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     cryptoWalletWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                                     blockchainNetworkType,
-                                                    appSession.getActualExchangeRate());
+                                                    appSession);
                                             confirm_dialog.show();
                                         }
                                         else
                                         {
-                                            try {
-
-                                                lossProtectedWallet.send(
-                                                        amountDecimal.longValueExact(),
-                                                        validAddress,
-                                                        notes,
-                                                        appSession.getAppPublicKey(),
-                                                        lossProtectedWallet.getActiveIdentities().get(0).getPublicKey(),
-                                                        Actors.INTRA_USER,
-                                                        cryptoWalletWalletContact.getActorPublicKey(),
-                                                        cryptoWalletWalletContact.getActorType(),
-                                                        ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                                        blockchainNetworkType
-                                                );
-                                                Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                                onBack(null);
-
-                                            } catch (LossProtectedInsufficientFundsException e) {
-                                                e.printStackTrace();
-                                                Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
-                                            }
-
+                                            //setting protected eneabled can't send
+                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. ", Toast.LENGTH_LONG).show();
                                         }
                                     }
                                    else{
@@ -706,7 +679,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                         } catch (LossProtectedInsufficientFundsException e) {
                                         e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "Action not allowed, Insufficient Funds. ", Toast.LENGTH_LONG).show();
                                         }
                                     }
 

@@ -226,7 +226,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             progressBar_percent = (ProgressBar) rootView.findViewById(R.id.progressBarLine);
             //info_into_progress = (TextView) rootView.findViewById(R.id.info_into_progress);
 
-            chunckAmount          = WalletUtils.formatAmountString(transaction.getAmount());
+            chunckAmount          = WalletUtils.formatBalanceString(transaction.getAmount(), lossProtectedWalletSession.getTypeAmount());
             chunckExchangeRate    = WalletUtils.formatExchangeRateString(transaction.getExchangeRate());
             chunckAmountSpent     = WalletUtils.formatAmountString(getTotalSpent());
             chunckPercentageSpent = WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction));

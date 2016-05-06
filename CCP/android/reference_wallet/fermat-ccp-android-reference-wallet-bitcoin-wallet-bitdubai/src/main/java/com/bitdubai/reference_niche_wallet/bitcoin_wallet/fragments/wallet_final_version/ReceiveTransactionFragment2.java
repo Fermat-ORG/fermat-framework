@@ -132,7 +132,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         } catch (SettingsNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println("Network Type" + blockchainNetworkType);
+
 
         openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }

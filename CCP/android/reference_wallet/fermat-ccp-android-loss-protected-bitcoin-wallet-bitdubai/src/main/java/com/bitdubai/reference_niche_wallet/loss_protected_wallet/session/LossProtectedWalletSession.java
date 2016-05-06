@@ -51,7 +51,7 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     *
     */
 
-    public static String typeBalanceSelected =BalanceType.AVAILABLE.getCode();
+    public static String typeBalanceSelected =BalanceType.REAL.getCode();
 
     public static int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 

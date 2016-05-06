@@ -226,13 +226,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             //get Blockchain Download Progress status
            int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
-
+            final Toolbar toolBar = getToolbar();
             if(pendingBlocks > 0) {
                 //paint toolbar on red
-                final Toolbar toolBar = getToolbar();
                 toolBar.setBackgroundColor(Color.RED);
                 if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
                     setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
+            }
+            else{
+                toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
             }
 
         } catch (Exception ex) {
