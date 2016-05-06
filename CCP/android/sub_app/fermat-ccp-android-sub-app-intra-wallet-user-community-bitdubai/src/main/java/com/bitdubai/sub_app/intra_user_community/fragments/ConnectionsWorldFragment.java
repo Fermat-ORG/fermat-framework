@@ -108,7 +108,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
-
+    List<IntraUserInformation> userCacheList = new ArrayList<>();
     /**
      * Create a new instance of this fragment
      *
@@ -213,9 +213,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-            List list = getSuggestionCache();
-            if(list!=null) {
-                dataSet.addAll(list);
+            userCacheList = getSuggestionCache();
+            if(userCacheList!=null) {
+                dataSet.addAll(userCacheList);
             }
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
@@ -528,12 +528,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
          try {
             //verifico la cache para mostrar los que tenia antes y los nuevos
-             List<IntraUserInformation> userCacheList = new ArrayList<>();
-             try {
-                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-             } catch (CantGetIntraUsersListException e) {
-                 e.printStackTrace();
-             }
+
+//             try {
+//                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+//             } catch (CantGetIntraUsersListException e) {
+//                 e.printStackTrace();
+//             }
 
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
              //dataSet.addAll(userList);
