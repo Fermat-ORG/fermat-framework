@@ -478,7 +478,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                 @Override
                                 public void onErrorOccurred(Exception ex) {
                                     dialog.dismiss();
-                                    Toast.makeText(getActivity(), R.string.create_before_action, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
 
                                 }
                             });

@@ -31,8 +31,8 @@ android {
         applicationId "org.fermat"
         minSdkVersion 20
         targetSdkVersion 23
-        versionCode 34
-        versionName "0.67"
+        versionCode 37
+        versionName "0.70"
         multiDexEnabled true
     }
 
@@ -164,8 +164,8 @@ dependencies {
     //    compile files('src/main/libs/additionnal.jar')
 
     //    compile files('src/main/libs/mail.jar')
-    compile 'com.sun.mail:android-mail:1.5.5'
-    compile 'com.sun.mail:android-activation:1.5.5'
+   // compile 'com.sun.mail:android-mail:1.5.5'
+    //compile 'com.sun.mail:android-activation:1.5.5'
     compile project(':horizontalscrollview')
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     compile 'com.android.support:appcompat-v7:23.1.1'

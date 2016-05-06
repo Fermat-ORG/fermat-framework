@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.events.BlockchainDownloadUpToDateEvent;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoIrreversibleEvent;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoOnBlockchainEvent;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.events.OutgoingCryptoOnCryptoNetworkEvent;
@@ -41,6 +42,7 @@ import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.Incomin
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnBlockchainWaitingTransferenceIntraUserEvent;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceExtraUserEvent;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.events.IncomingCryptoReversedOnCryptoNetworkWaitingTransferenceIntraUserEvent;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.BlockchainDownloadUpToDateEventListener;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceAssetIssuerEventListener;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceAssetUserEventListener;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.listeners.IncomingAssetOnBlockchainWaitingTransferenceRedeemPointEventListener;
@@ -80,6 +82,16 @@ public enum EventType implements FermatEventEnum {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
+    BLOCKCHAIN_DOWNLOAD_UP_TO_DATE("BCDUTD") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new BlockchainDownloadUpToDateEventListener(fermatEventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new BlockchainDownloadUpToDateEvent();
+        }
+    },
+
 
     INCOMING_CRYPTO_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_EXTRA_USER("ICOBWTEU") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {

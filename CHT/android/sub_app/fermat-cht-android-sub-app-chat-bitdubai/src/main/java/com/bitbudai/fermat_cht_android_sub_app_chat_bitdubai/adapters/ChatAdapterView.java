@@ -126,7 +126,6 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSettings = chatSettings;
         //this.background=background;
         initControls();
-
     }
 
     public ChatAdapterView(Context context, AttributeSet attrs) {
@@ -143,7 +142,6 @@ public class ChatAdapterView extends LinearLayout {
 
     void findValues(Contact contact) { //With contact Id find chatId,pkremote,actortype
         try {
-
             if (contact != null) {
                 remotePk = contact.getRemoteActorPublicKey();
                 remotePCT = PlatformComponentType.ACTOR_CHAT;
@@ -158,11 +156,11 @@ public class ChatAdapterView extends LinearLayout {
                 } catch (CantGetOnlineStatus cantGetOnlineStatus) {
                     cantGetOnlineStatus.printStackTrace();
                 }
-
-                if (cht != null)
+                if (cht != null){
                     chatId = cht.getChatId();
+                    appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId));
+                }
                 else chatId = null;
-                appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId));
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -175,17 +173,14 @@ public class ChatAdapterView extends LinearLayout {
         try {
             //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
             findValues(chatSession.getSelectedContact());
-
             if (chatSession.getData("whocallme").equals("chatlist")) {
                 //if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
-
             } else if (chatSession.getData("whocallme").equals("contact")) {  //fragment contact call this fragment
                 //if I choose a contact, this will search the chat previously created with this contact
                 //Here it is define if we need to create a new chat or just add the message to chat created previously
                 chatWasCreate = chatId != null;
             }
-
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -251,10 +246,7 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-
-
-
-            }
+           }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
@@ -286,9 +278,6 @@ public class ChatAdapterView extends LinearLayout {
             return null;
         }
     }
-
-
-
 
     public class BackgroundAsyncTask extends
             AsyncTask<Message, Integer, Message> {
@@ -392,7 +381,6 @@ public class ChatAdapterView extends LinearLayout {
                     }
                 });
 
-        
         messageET.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -424,8 +412,6 @@ public class ChatAdapterView extends LinearLayout {
             public void afterTextChanged(Editable s) {
             }
         });
-
-
 
         //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
@@ -629,8 +615,6 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void getFilter(String s) {
-//        findMessage();
-//        refreshEvents();
         adapter.getFilter().filter(s);
     }
 
@@ -642,6 +626,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void refreshEvents() {
         //whatToDo();
+        findValues(chatSession.getSelectedContact());
         findMessage();
         checkStatus();
         scroll();
