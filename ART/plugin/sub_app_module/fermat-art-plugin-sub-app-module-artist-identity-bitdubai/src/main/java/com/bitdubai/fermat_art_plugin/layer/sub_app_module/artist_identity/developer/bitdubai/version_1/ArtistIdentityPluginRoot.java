@@ -28,7 +28,7 @@ public class ArtistIdentityPluginRoot extends AbstractModule<ArtistIdentitySetti
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.PLATFORM_ART,               layer = Layers.IDENTITY,            plugin = Plugins.ARTIST_IDENTITY)
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,               layer = Layers.IDENTITY,            plugin = Plugins.ARTIST_IDENTITY)
     private ArtistIdentityManager artistIdentityManager;
 
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API,       layer = Layers.SYSTEM,              addon  = Addons.PLUGIN_FILE_SYSTEM)

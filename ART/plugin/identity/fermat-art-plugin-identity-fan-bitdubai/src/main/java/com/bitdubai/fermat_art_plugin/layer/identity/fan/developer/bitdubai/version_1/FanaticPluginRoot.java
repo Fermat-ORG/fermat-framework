@@ -86,10 +86,10 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform =  Platforms.PLATFORM_ART, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN)
+    @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN)
     private FanManager fanManager;
 
-    @NeededPluginReference(platform =  Platforms.PLATFORM_ART, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST)
+    @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST)
     private ArtistManager artistActorNetWorkServiceManager;
 
     @NeededPluginReference(platform = Platforms.TOKENLY,layer = Layers.IDENTITY, plugin = Plugins.TOKENLY_FAN)
@@ -149,8 +149,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             //Another listener
             FermatEventListener acceptListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT);
-
-            updatesListener.setEventHandler(
+            acceptListener.setEventHandler(
                     new FanaticConnectionRequestAcceptedEventHandler(
                             this.fanIdentityEventActions,
                             this));

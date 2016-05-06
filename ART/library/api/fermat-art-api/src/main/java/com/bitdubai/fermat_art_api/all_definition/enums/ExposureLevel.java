@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_api.all_definitions.enums;
+package com.bitdubai.fermat_art_api.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;

@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 
+import java.io.Serializable;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public interface User {
+public interface User extends Serializable {
 
     /**
      * This method returns the tokenly id.

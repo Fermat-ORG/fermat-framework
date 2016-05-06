@@ -128,7 +128,7 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
 
     private void sendErrorReport(Platforms platforms){
         switch (platforms){
-            case PLATFORM_ART:
+            case ART_PLATFORM:
 
                     break;
             case BLOCKCHAINS:

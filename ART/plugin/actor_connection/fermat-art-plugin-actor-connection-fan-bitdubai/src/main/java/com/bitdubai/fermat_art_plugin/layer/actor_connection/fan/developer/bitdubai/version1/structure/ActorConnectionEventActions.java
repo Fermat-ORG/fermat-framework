@@ -315,7 +315,7 @@ public class ActorConnectionEventActions {
                             this.handleAcceptConnection(request.getRequestId(),EventSource.ACTOR_NETWORK_SERVICE_ARTIST);
                             break;
                         case DISCONNECT:
-                            this.handleDisconnect(request.getRequestId());
+                            this.handleDisconnect(request.getRequestId(), Actors.ART_ARTIST);
                             break;
                         case CANCEL:
                             this.handleCancelConnection(request.getRequestId());
@@ -350,17 +350,17 @@ public class ActorConnectionEventActions {
             final List<FanConnectionRequest> list = fanNetworkService.
                     listPendingConnectionUpdates();
             for (final FanConnectionRequest request : list) {
-                if (request.getRequestType() == RequestType.SENT  /*&&
-                        request.getSenderActorType() == PlatformComponentType.ART_FAN*/) {
+                /*if (request.getRequestType() == RequestType.SENT  &&
+                        request.getSenderActorType() == PlatformComponentType.ART_FAN) {*/
                     switch (request.getRequestAction()) {
                         case ACCEPT:
                             this.handleAcceptConnection(request.getRequestId(),EventSource.ACTOR_NETWORK_SERVICE_FAN);
                             break;
                         case DISCONNECT:
-                            this.handleDisconnect(request.getRequestId());
+                            this.handleDisconnect(request.getRequestId(), Actors.ART_FAN);
                             break;
                     }
-                }
+                //}
             }
         } catch(CantListPendingConnectionRequestsException |
                 ActorConnectionNotFoundException |
@@ -381,7 +381,7 @@ public class ActorConnectionEventActions {
      * @throws ActorConnectionNotFoundException
      * @throws UnexpectedConnectionStateException
      */
-    public void handleDisconnect(final UUID connectionId) throws
+    public void handleDisconnect(final UUID connectionId, Actors actorSource) throws
             CantDisconnectFromActorException ,
             ActorConnectionNotFoundException   ,
             UnexpectedConnectionStateException {
@@ -396,7 +396,14 @@ public class ActorConnectionEventActions {
                             connectionId,
                             ConnectionState.DISCONNECTED_REMOTELY
                     );
-                    artistNetworkService.confirm(connectionId);
+                    switch (actorSource){
+                        case ART_ARTIST:
+                            artistNetworkService.confirm(connectionId);
+                            break;
+                        case ART_FAN:
+                            fanNetworkService.confirm(connectionId);
+                            break;
+                    }
                     break;
                 default:
                     throw new UnexpectedConnectionStateException(
