@@ -529,21 +529,17 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         if (ArtistImageBytes == null){
             WarningCircle.setVisibility(View.VISIBLE);}
 
-        //if (ArtistImageBytes.length > 0){WarningCircle.setVisibility(View.GONE);}
-
-/*
-        if (ArtistExternalName.isEmpty()){mAlias.setHintTextColor(Color.parseColor("#DF0101"));}
-        else{mAlias.setHintTextColor(Color.parseColor("#000000"));}
-*/
         if(mArtistExternalPlatform.getSelectedItemPosition()==0){
             mArtistExternalPlatform.setBackgroundColor(Color.parseColor("#DF0101"));
         }else{mArtistExternalPlatform.setBackgroundColor(Color.parseColor("#0080FF"));}
 
+
+        /*
         if(mArtistExternalName.getSelectedItemPosition()==0){
             mArtistExternalName.setBackgroundColor(Color.parseColor("#DF0101"));
         }else{
             mArtistExternalName.setBackgroundColor(Color.parseColor("#0080FF"));}
-
+*/
 
         if (ArtistExternalName.isEmpty()){
             mArtistUserName.setHintTextColor(Color.parseColor("#DF0101"));

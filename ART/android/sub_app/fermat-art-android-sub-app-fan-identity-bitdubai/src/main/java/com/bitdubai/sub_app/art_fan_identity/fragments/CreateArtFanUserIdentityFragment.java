@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -92,6 +93,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     private Handler handler;
     private boolean updateCheck = false;
+    private View WarningCircle;
 
     public static CreateArtFanUserIdentityFragment newInstance(){
         return new CreateArtFanUserIdentityFragment();
@@ -286,10 +288,16 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "get in on fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
             }
         });
+
+        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+
+        WarningCircle.setVisibility(View.GONE);
+
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -424,6 +432,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             String fanExternalName,
             byte[] fanImageBytes,
             UUID externalIdentityID) {
+
+        ShowWarnings(fanExternalName,fanImageBytes);
+
+
+
         if (fanExternalName.isEmpty())
             return false;
         /*if (externalPlatformID==null)
@@ -443,6 +456,45 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         /*if(externalPlatform != null)
             return  true;*/
         return true;
+    }
+
+    private void ShowWarnings(String fanExternalName, byte[] fanImageBytes) {
+
+        if (fanExternalName.isEmpty()){
+            mFanExternalUserName.setHintTextColor(Color.parseColor("#DF0101"));
+        }
+
+        if (fanImageBytes == null){
+            WarningCircle.setVisibility(View.VISIBLE);
+        }
+
+
+
+
+        if(mFanExternalPlatform.getSelectedItemPosition()==0){
+            mFanExternalPlatform.setBackgroundColor(Color.parseColor("#DF0101"));
+        }else{mFanExternalPlatform.setBackgroundColor(Color.parseColor("#0080FF"));
+        }
+/*
+        if(mFanExternalUser.getSelectedItemPosition()==0){
+            mFanExternalUser.setBackgroundColor(Color.parseColor("#DF0101"));
+        }else{
+            mFanExternalUser.setBackgroundColor(Color.parseColor("#0080FF"));
+        }
+*/
+        mFanExternalUser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                mFanExternalUser.setBackgroundColor(Color.parseColor("#0080FF"));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     @Override
@@ -582,6 +634,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
+                    mFanExternalPlatform.setBackgroundColor(Color.parseColor("#0080FF"));
                     if (!updateCheck) {
                         List<String> arraySpinner = new ArrayList<>();
                         arraySpinner.add("Select an Identity...");
