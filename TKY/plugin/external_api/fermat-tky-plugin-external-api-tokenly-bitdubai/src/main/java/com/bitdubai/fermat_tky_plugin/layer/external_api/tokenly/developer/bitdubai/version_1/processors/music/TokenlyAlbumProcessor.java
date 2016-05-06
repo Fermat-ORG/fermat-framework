@@ -48,7 +48,7 @@ public class TokenlyAlbumProcessor extends AbstractTokenlyProcessor {
     }
 
     private static Album getAlbumFromJsonObject(JsonObject jsonObject)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException, CantConnectWithTokenlyException {
         //Id
         String id = getStringFromJsonObject(jsonObject, TokenlyAlbumAttNames.ID);
         //Name

@@ -38,7 +38,9 @@ public class TokenlyManager implements TokenlyApiManager {
      * @throws CantGetBotException
      */
     @Override
-    public Bot getBotByBotId(String botId) throws CantGetBotException {
+    public Bot getBotByBotId(String botId) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         Bot bot = TokenlySwapBotProcessor.getBotByBotId(botId);
         return bot;
     }
@@ -50,7 +52,9 @@ public class TokenlyManager implements TokenlyApiManager {
      * @throws CantGetBotException
      */
     @Override
-    public Bot getBotBySwapbotUsername(String username) throws CantGetBotException {
+    public Bot getBotBySwapbotUsername(String username) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         Bot bot = TokenlySwapBotProcessor.getBotByTokenlyUsername(username);
         return bot;
     }
