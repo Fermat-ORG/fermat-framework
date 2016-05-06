@@ -15,7 +15,7 @@ public enum SongStatus implements FermatEnum {
      */
     AVAILABLE       ("AVA", "AVAILABLE"),
     DELETED         ("DEL", "DELETED"),
-    DOWNLOADED      ("DED", "DOWNLOADED"),
+    CANCELLED      ("CAN", "CANCELLED"),
     DOWNLOADING     ("DNG", "DOWNLOADING"),
     NOT_AVAILABLE   ("NAV", "NOT_AVAILABLE"),
     ;

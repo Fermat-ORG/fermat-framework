@@ -160,11 +160,13 @@ public class SongFragment extends AbstractFermatFragment {
         if (swipeContainer.isRefreshing()){
             swipeContainer.setRefreshing(false);
         }
-     /*   Toast.makeText(
+        if(code.equals("Connection Error")) {
+              Toast.makeText(
                 getActivity(),
                 "Connection Problem With External Platform",
                 Toast.LENGTH_LONG)
-                .show();*/
+                .show();
+        }
     }
 
     @Override
@@ -212,7 +214,6 @@ public class SongFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 
-        if(true) {
             view = inflater.inflate(R.layout.tky_fan_wallet_song_fragment, container, false);
 
             swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
@@ -250,9 +251,9 @@ public class SongFragment extends AbstractFermatFragment {
                         public void onItemClick(View view, int position) {
 
                             System.out.println("click position:" + position);
-                            if (items.get(position).getStatus().equals(SongStatus.AVAILABLE.getFriendlyName()) || items.get(position).getStatus().equals(SongStatus.DELETED.getFriendlyName())) {
+                            if (items.get(position).getStatus().equals(SongStatus.CANCELLED.getFriendlyName()) || items.get(position).getStatus().equals(SongStatus.DELETED.getFriendlyName())) {
                                 askQuestion(position, null, 1);
-                            } else if (items.get(position).getStatus().equals(SongStatus.DOWNLOADED.getFriendlyName())) {
+                            } else if (items.get(position).getStatus().equals(SongStatus.AVAILABLE.getFriendlyName())) {
                                 playSong();
                             } else if (items.get(position).getStatus().equals(SongStatus.DOWNLOADING.getFriendlyName())) {
                                 askQuestion(position, null, 2);
@@ -284,12 +285,6 @@ public class SongFragment extends AbstractFermatFragment {
                 setUpHelpFanWallet(false);
             }
 
-        }else{
-
-
-
-
-        }
 
         return view;
     }
@@ -317,15 +312,39 @@ public class SongFragment extends AbstractFermatFragment {
 
     void syncTokenlyAndUpdateThreads(boolean autosync){
 
-        syncThread =new SyncThreadClass(autosync); // Firstthread
-        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Above Api Level 13
-            {
+        if(autosync){
+
+            syncThread =new SyncThreadClass(autosync); // Firstthread
+            if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){ // Above Api Level 13
                 syncThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            syncThread.execute();
-            } else{
-                // Below Api Level 13
+            } else{    // Below Api Level 13
                 syncThread.execute();
             }
+
+        }else{
+
+            if( syncThread!=null) {
+                if (syncThread.getStatus() != AsyncTask.Status.RUNNING
+                        && syncThread.getStatus() != AsyncTask.Status.FINISHED) {
+
+                    syncThread =new SyncThreadClass(autosync); // Firstthread
+                    if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){ // Above Api Level 13
+                        syncThread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    } else{  // Below Api Level 13
+                        syncThread.execute();
+                    }
+
+                }else{
+                    swipeContainer.setRefreshing(false);
+                }
+            }else{
+                swipeContainer.setRefreshing(false);
+            }
+
+
+
+        }
+
 
 
     }
@@ -383,7 +402,7 @@ public class SongFragment extends AbstractFermatFragment {
                 listComposerAndSongNameOnView.add(songitems.getArtist_name()+"@#@#"+songitems.getSong_name());
             }
         }
-        if(songsInDatabase.size()>listComposerAndSongNameOnView.size()){
+
             for (WalletSong walletitems :songsInDatabase){
                 databaseInfo=walletitems.getComposers()+"@#@#"+walletitems.getName();
               //  System.out.println("TKY_WALLET songs"+walletitems.getComposers()+"@#@#"+walletitems.getName());
@@ -398,10 +417,15 @@ public class SongFragment extends AbstractFermatFragment {
                             walletitems.getSongId(),
                             0,
                             false), false,  items.size()-1);
+                }else{
+                    int position=searchInViewBySongId(walletitems.getSongId());
+                    items.get(position).setProgressbarvissible(false);
+                    items.get(position).setStatus(walletitems.getSongStatus().getFriendlyName());
+                    adapter.setFilter(items.get(position), true, position);
                 }
             }
 
-        }
+
     }
 
     void swipeEffect(){
@@ -429,7 +453,7 @@ public class SongFragment extends AbstractFermatFragment {
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 final int swipeFlags = ItemTouchHelper.END;       // delete one in case you want just one direction
                 if(position>=0) {
-                    if (items.get(position).getStatus() == SongStatus.DOWNLOADING.getFriendlyName() || items.get(position).getStatus() == SongStatus.NOT_AVAILABLE.getFriendlyName()) {
+                    if (items.get(position).getStatus() == SongStatus.DOWNLOADING.getFriendlyName() ) {
                         return 0;
                     } else {
                         return makeMovementFlags(dragFlags, swipeFlags);
@@ -585,7 +609,7 @@ public class SongFragment extends AbstractFermatFragment {
 
     public void updateViewForBroadcaster(FermatBundle bundle) {
 
-        int position=0;
+        int position;
 
             try {
                 if(bundle.contains(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode())) {
@@ -634,7 +658,7 @@ public class SongFragment extends AbstractFermatFragment {
         items.get(position).setProgress(Integer.valueOf(progress));
         if(progress.equals("100")){
             items.get(position).setProgressbarvissible(false);
-            items.get(position).setStatus(SongStatus.DOWNLOADED.getFriendlyName());
+            items.get(position).setStatus(SongStatus.AVAILABLE.getFriendlyName());
         }
         adapter.setFilter(items.get(position),true,position);
     }
@@ -642,7 +666,7 @@ public class SongFragment extends AbstractFermatFragment {
     void cancelNotification(int position){
         items.get(position).setProgressbarvissible(false);
         items.get(position).setProgress(Integer.valueOf(0));
-        items.get(position).setStatus(SongStatus.AVAILABLE.getFriendlyName());
+        items.get(position).setStatus(SongStatus.CANCELLED.getFriendlyName());
         adapter.setFilter(items.get(position),true,position);
     }
     // TODO: 04/04/16 what happen here?
