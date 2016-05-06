@@ -251,8 +251,8 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
         try {
             if(clientConnection.isOpen()) {
-                System.out.println(" WsCommunicationsTyrusCloudClientChannel - close connection");
-                clientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+                System.out.println(" WsCommunicationsTyrusCloudClientChannel - closing the main connection");
+                clientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the main connection, intentionally."));
                 raiseClientConnectionCloseNotificationEvent();
             }
         } catch (IOException e) {
@@ -277,7 +277,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
     public void sendPing() throws IOException {
 
-        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Sending ping to the node...");
+        //System.out.println(" WsCommunicationsTyrusCloudClientChannel - Sending ping to the node...");
 
         String pingString = "PING";
         ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
@@ -289,7 +289,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
     @OnMessage
     public void onPongMessage(PongMessage message) {
-        System.out.println(" WsCommunicationsTyrusCloudClientChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
+        //System.out.println(" WsCommunicationsTyrusCloudClientChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
     }
 
 

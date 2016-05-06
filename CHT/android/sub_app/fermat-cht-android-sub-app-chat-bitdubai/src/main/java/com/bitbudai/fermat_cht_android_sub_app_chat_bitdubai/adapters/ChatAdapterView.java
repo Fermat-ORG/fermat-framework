@@ -139,7 +139,6 @@ public class ChatAdapterView extends LinearLayout {
 
     void findValues(Contact contact) { //With contact Id find chatId,pkremote,actortype
         try {
-
             if (contact != null) {
                 remotePk = contact.getRemoteActorPublicKey();
                 remotePCT = PlatformComponentType.ACTOR_CHAT;
@@ -149,10 +148,11 @@ public class ChatAdapterView extends LinearLayout {
                 contactIcon = bmd.getBitmap();
                 leftName = contact.getAlias();
                 Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
-                if (cht != null)
+                if (cht != null) {
                     chatId = cht.getChatId();
+                    appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId));
+                }
                 else chatId = null;
-                appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId));
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -604,8 +604,6 @@ public class ChatAdapterView extends LinearLayout {
     }
 
     public void getFilter(String s) {
-//        findMessage();
-//        refreshEvents();
         adapter.getFilter().filter(s);
     }
 
@@ -617,6 +615,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void refreshEvents() {
         //whatToDo();
+        findValues(chatSession.getSelectedContact());
         findMessage();
         scroll();
     }

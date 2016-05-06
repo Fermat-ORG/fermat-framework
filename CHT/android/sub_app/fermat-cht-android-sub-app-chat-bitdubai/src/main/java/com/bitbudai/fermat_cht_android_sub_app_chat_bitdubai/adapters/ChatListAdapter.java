@@ -85,11 +85,11 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
             //contactname.setTypeface(tf, Typeface.NORMAL);
 
             TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
-            /*if(message.get(position).equals("Writing..")) {
+            if(message.get(position).equals("Typing..")) {
                 lastmessage.setTextColor(Color.parseColor("#FF33A900"));
-            }else{*/
-             //   lastmessage.setTextColor(Color.parseColor("#757575"));
-            //}
+            }else{
+                lastmessage.setTextColor(Color.parseColor("#757575"));
+            }
             lastmessage.setText(message.get(position));
 
             TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);

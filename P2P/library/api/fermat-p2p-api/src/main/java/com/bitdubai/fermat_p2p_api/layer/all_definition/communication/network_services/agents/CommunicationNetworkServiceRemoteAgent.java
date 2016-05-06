@@ -173,8 +173,10 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         executorService.shutdownNow();
         //Disconnect from the service
-        if(communicationsVPNConnection.isConnected())
+        if(communicationsVPNConnection.isConnected()) {
+            System.out.println("CommunicationNetworkServiceConnectionManager - stop() -- Calling communicationsVPNConnection.close()");
             communicationsVPNConnection.close();
+        }
 
         System.out.println("CommunicationNetworkServiceRemoteAgent - stopped ");
     }
@@ -238,8 +240,6 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
                 }
 
-            }else{
-                communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
             }
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
@@ -333,10 +333,7 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
                 }
 
 
-            }else{
-                communicationNetworkServiceConnectionManager.closeConnection(communicationsVPNConnection.getRemoteParticipant().getIdentityPublicKey());
             }
-
 
             if(Thread.currentThread().isInterrupted() == Boolean.FALSE){
                 //Sleep for a time

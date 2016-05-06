@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Actors</code>

@@ -73,6 +73,8 @@ public interface MiddlewareChatManager extends FermatManager{
 
     public boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
 
+    public void activeOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
+
     void notificationNewIncomingMessage(
             String publicKey,
             String tittle,

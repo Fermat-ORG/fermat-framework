@@ -1,7 +1,7 @@
 package unit.com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 
-import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 import com.bitdubai.fermat_api.layer.dmp_identity.designer.exceptions.CantSingMessageException;
+import com.bitdubai.fermat_api.layer.dmp_identity.designer.interfaces.DesignerIdentity;
 
 /**
  * Created by rodrigo on 9/10/15.
