@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music;
 
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
@@ -23,7 +24,9 @@ public class TokenlyDownloadSongProcessor extends AbstractTokenlyProcessor {
      * @return
      * @throws CantGetSongException
      */
-    public static DownloadSong getDownloadSongById(String id) throws CantGetSongException {
+    public static DownloadSong getDownloadSongById(String id) throws
+            CantGetSongException,
+            CantConnectWithTokenlyException {
         //Request URL to get a download song by tokenly Id.
         String requestedURL=swabotTokenlyURL+"song/download/"+id;
         try{
