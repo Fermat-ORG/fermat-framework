@@ -208,23 +208,25 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                         if( data.getAmount() > availableBalance) //Balance value is greater than send amount
                         {
 
+                            Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+
                             if (!lossProtectedEnabled) {
                                 //show dialog confirm
-                                Toast.makeText(context, "Action not allowed, you will lose money. Restricted by LossProtected Configuration.", Toast.LENGTH_LONG).show();
+                                lossProtectedWallet.approveRequest(data.getRequestId()
+                                        , appSession.getIntraUserModuleManager().getPublicKey());
+                                Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
+                                notifyDataSetChanged();
+                                onRefreshList.onRefresh();
                             }
                             else
                             {
                                 Toast.makeText(context, "Action not allowed, you will lose money. Restricted by LossProtected Configuration.", Toast.LENGTH_LONG).show();
                             }
 
-                        }
-                        else
-                        {
-                            lossProtectedWallet.approveRequest(data.getRequestId()
-                                    , appSession.getIntraUserModuleManager().getPublicKey());
-                            Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
-                            notifyDataSetChanged();
-                            onRefreshList.onRefresh();
+
                         }
 
 
