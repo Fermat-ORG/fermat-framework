@@ -62,6 +62,7 @@ import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderExcept
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,8 @@ import java.util.UUID;
  * Created by nelson on 22/09/15.
  * Updated by Manuel Perez on 24/01/2016
  */
-public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManager<CryptoCustomerWalletPreferenceSettings, ActiveActorIdentityInformation> {
+public interface CryptoCustomerWalletModuleManager
+        extends CBPWalletsModuleManager<CryptoCustomerWalletPreferenceSettings, ActiveActorIdentityInformation>, Serializable {
 
     /**
      * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)

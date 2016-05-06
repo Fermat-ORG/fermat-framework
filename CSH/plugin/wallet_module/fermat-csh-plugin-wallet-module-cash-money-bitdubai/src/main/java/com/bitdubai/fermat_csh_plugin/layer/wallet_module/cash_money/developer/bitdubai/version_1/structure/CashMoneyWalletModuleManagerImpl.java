@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,8 @@ import java.util.UUID;
 /**
  * Created by Alex on 21/1/2016.
  */
-public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<CashTransactionParameters> implements CashMoneyWalletModuleManager  {
+public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMoneyWalletPreferenceSettings>
+        implements CashMoneyWalletModuleManager, Serializable {
 
 
     private final ErrorManager errorManager;
@@ -53,12 +56,15 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
     private final CashDepositTransactionManager cashDepositTransactionManager;
     private final CashWithdrawalTransactionManager cashWithdrawalTransactionManager;
     private final Broadcaster broadcaster;
+    private CashWalletAsyncTransactionAgent agent;
 
 
 
     public CashMoneyWalletModuleManagerImpl(final CashMoneyWalletManager cashMoneyWalletManager, final UUID pluginId, final PluginFileSystem pluginFileSystem,
                                            final ErrorManager errorManager, final CashDepositTransactionManager cashDepositTransactionManager,
                                             final CashWithdrawalTransactionManager cashWithdrawalTransactionManager, final Broadcaster broadcaster) {
+        super(pluginFileSystem, pluginId);
+
         this.errorManager = errorManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
@@ -67,44 +73,8 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
         this.cashWithdrawalTransactionManager = cashWithdrawalTransactionManager;
         this.broadcaster = broadcaster;
 
-        this.setTransactionDelayMillis(15000);
-
-        //CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.CREDIT);
-        //CashTransactionParameters params2 = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(200.3), FiatCurrency.US_DOLLAR, "testDeposit AVAIL/BOOK 200.3USD", TransactionType.DEBIT);
-        //this.queueNewTransaction(params);
-        //this.queueNewTransaction(params2);
+        agent = new CashWalletAsyncTransactionAgent(broadcaster, this);
     }
-
-
-    /*
-     * AsyncTransactionAgent abstract overrides
-     */
-    @Override
-    public void processTransaction(CashTransactionParameters transaction) {
-
-        try{
-            if(transaction.getTransactionType() == TransactionType.CREDIT)
-                this.doCreateCashDepositTransaction(transaction);
-            else
-                this.doCreateCashWithdrawalTransaction(transaction);
-
-            //Send Broadcast to android wallet so it can refresh the screen
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
-
-        }catch(CantCreateDepositTransactionException e){
-            //Send Broadcast to android wallet so it can refresh the screen, indicating an error
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_TRANSACTION_FAILED);
-
-        }catch(CantCreateWithdrawalTransactionException e){
-            //Send Broadcast to android wallet so it can refresh the screen, indicating an error
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_TRANSACTION_FAILED);
-
-        }catch(CashMoneyWalletInsufficientFundsException e){
-            //Send Broadcast to android wallet so it can refresh the screen, indicating an error of insufficient funds
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CashMoneyWalletBroadcasterConstants.CSH_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_INSUFICCIENT_FUNDS);
-        }
-    }
-
 
 
     /*
@@ -155,13 +125,13 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
 
     @Override
     public void createAsyncCashTransaction(CashTransactionParameters depositParameters) {
-        this.queueNewTransaction(depositParameters);
+        agent.queueNewTransaction(depositParameters);
     }
 
     @Override
     public void cancelAsyncCashTransaction(CashMoneyWalletTransaction t)  throws Exception {
         CashTransactionParameters tp = new CashTransactionParametersImpl(t.getTransactionId(), t.getPublicKeyWallet(), t.getPublicKeyActor(), t.getPublicKeyPlugin(), t.getAmount(), t.getCurrency(), t.getMemo(), t.getTransactionType());
-        this.cancelTransaction(tp);
+        agent.cancelTransaction(tp);
     }
 
     @Override
@@ -178,7 +148,7 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
     public List<CashMoneyWalletTransaction> getPendingTransactions() {
 
         List<CashMoneyWalletTransaction> transactionList = new ArrayList<>();
-        for(CashTransactionParameters tp : getQueuedTransactions()) {
+        for(CashTransactionParameters tp : agent.getQueuedTransactions()) {
             transactionList.add(new CashMoneyWalletTransactionImpl(tp.getTransactionId(), tp.getPublicKeyWallet(), tp.getPublicKeyActor(), tp.getPublicKeyPlugin(),
                     tp.getTransactionType(), null, tp.getAmount(), tp.getMemo(), System.currentTimeMillis()/1000L, true));
         }
@@ -229,24 +199,19 @@ public class CashMoneyWalletModuleManagerImpl extends AsyncTransactionAgent<Cash
     }
 
 
+//    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
 
-
-
-
-
-    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
-
-    @Override
-    public SettingsManager<CashMoneyWalletPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;    }
+//    @Override
+//    public SettingsManager<CashMoneyWalletPreferenceSettings> getSettingsManager() {
+//        if (this.settingsManager != null)
+//            return this.settingsManager;
+//
+//        this.settingsManager = new SettingsManager<>(
+//                pluginFileSystem,
+//                pluginId
+//        );
+//
+//        return this.settingsManager;    }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
