@@ -30,6 +30,7 @@ import android.widget.GridView;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
@@ -48,6 +49,20 @@ public class Utils {
 
     public static SimpleDateFormat getDateFormat(String type) {
         return new SimpleDateFormat(type);
+    }
+
+    public static boolean isNumeric(String str)
+    {
+        return str.matches("-?\\d+(\\.\\d+)?");  //match a number with optional '-' and decimal.
+    }
+
+    public static String avoidingScientificNot(String str)
+    {
+        if(isNumeric(str)){
+            str = new BigDecimal(str).toPlainString();
+        }
+        return str;
+
     }
 
     public static int safeLongToInt(long l) {
