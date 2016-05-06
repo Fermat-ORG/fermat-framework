@@ -22,6 +22,10 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdenti
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentitySettings;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.io.Serializable;
 import java.util.HashMap;

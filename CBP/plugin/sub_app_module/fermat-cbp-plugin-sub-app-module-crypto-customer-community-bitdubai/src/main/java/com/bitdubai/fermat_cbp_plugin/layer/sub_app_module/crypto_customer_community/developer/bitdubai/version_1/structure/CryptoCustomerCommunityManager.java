@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -20,16 +20,14 @@ import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.exceptions.CantListCryptoCustomersException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.interfaces.CryptoCustomerManager;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListIdentitiesToSelectException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerListException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantLoginCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CryptoCustomerCancellingFailedException;
@@ -40,9 +38,10 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.LinkedCryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -51,15 +50,14 @@ import java.util.UUID;
  * Created by Alejandro Bicelis on 2/2/2016.
  */
 
-public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySubAppModuleManager {
+public class CryptoCustomerCommunityManager
+        extends ModuleManagerImpl<CryptoCustomerCommunitySettings>
+        implements CryptoCustomerCommunitySubAppModuleManager, Serializable {
 
     private final CryptoBrokerIdentityManager          cryptoBrokerIdentityManager              ;
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager     ;
     private final CryptoCustomerManager                cryptoCustomerActorNetworkServiceManager ;
-    private final CryptoCustomerIdentityManager        cryptoCustomerIdentityManager            ;
     private final ErrorManager                         errorManager                             ;
-    private final PluginFileSystem                     pluginFileSystem                         ;
-    private final UUID                                 pluginId                                 ;
     private final PluginVersionReference               pluginVersionReference                   ;
 
     private       String                              subAppPublicKey                           ;
@@ -67,19 +65,16 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     public CryptoCustomerCommunityManager(final CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
                                           final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager,
                                           final CryptoCustomerManager cryptoCustomerActorNetworkServiceManager,
-                                          final CryptoCustomerIdentityManager cryptoCustomerIdentityManager,
                                           final ErrorManager errorManager,
                                           final PluginFileSystem pluginFileSystem,
                                           final UUID pluginId,
                                           final PluginVersionReference pluginVersionReference) {
+        super(pluginFileSystem, pluginId);
 
         this.cryptoBrokerIdentityManager              = cryptoBrokerIdentityManager              ;
         this.cryptoCustomerActorConnectionManager     = cryptoCustomerActorConnectionManager     ;
         this.cryptoCustomerActorNetworkServiceManager = cryptoCustomerActorNetworkServiceManager ;
-        this.cryptoCustomerIdentityManager            = cryptoCustomerIdentityManager            ;
         this.errorManager                             = errorManager                             ;
-        this.pluginFileSystem                         = pluginFileSystem                         ;
-        this.pluginId                                 = pluginId                                 ;
         this.pluginVersionReference                   = pluginVersionReference                   ;
     }
 
@@ -154,9 +149,9 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     @Override
     public void setSelectedActorIdentity(CryptoCustomerCommunitySelectableIdentity identity) {
         //Try to get appSettings
-        CryptoCustomerCommunitySettings appSettings = null;
+        CryptoCustomerCommunitySettings appSettings;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
         //If appSettings exist, save identity
@@ -164,7 +159,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
             if(identity.getPublicKey() != null)
                 appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
@@ -326,29 +321,13 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
 
     }
 
-    private SettingsManager<CryptoCustomerCommunitySettings> settingsManager;
-
-    @Override
-    public SettingsManager<CryptoCustomerCommunitySettings> getSettingsManager() {
-
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
-
     @Override
     public CryptoCustomerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
 
         //Try to get appSettings
-        CryptoCustomerCommunitySettings appSettings = null;
+        CryptoCustomerCommunitySettings appSettings;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ return null; }
 
         //Get all broker identities on local device
@@ -392,7 +371,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
 
-        String createdPublicKey = null;
+        String createdPublicKey;
 
         try{
             final CryptoBrokerIdentity createdIdentity = cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
@@ -415,9 +394,9 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
 
 
         //Try to get appSettings
-        CryptoCustomerCommunitySettings appSettings = null;
+        CryptoCustomerCommunitySettings appSettings;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
 
@@ -425,7 +404,7 @@ public class CryptoCustomerCommunityManager implements CryptoCustomerCommunitySu
         if(appSettings != null){
             appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }

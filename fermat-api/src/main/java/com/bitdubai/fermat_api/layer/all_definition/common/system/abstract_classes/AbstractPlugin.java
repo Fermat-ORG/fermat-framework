@@ -12,19 +12,20 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetFeatureForDevelopersException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantListNeededReferencesException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.IncompatibleReferenceException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FeatureForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -35,13 +36,20 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+
 /**
  * The abstract class <code>AbstractPlugin</code>
  * contains the basic functionality of a Fermat Plugin.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
+ * Modified by Matias Furszyfer, todo: tenemos que sacar esos concurrentMaps leon, no sirve que esten así.
  */
 public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
+
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+    private ErrorManager errorManager;
+
 
     private final ConcurrentHashMap<AddonVersionReference , Field> addonNeededReferences         ;
     private final ConcurrentHashMap<PluginVersionReference, Field> pluginNeededReferences        ;
@@ -50,7 +58,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
 
     private boolean referencesCollected;
 
-    private final PluginVersionReference pluginVersionReference;
+    protected final PluginVersionReference pluginVersionReference;
 
     protected volatile ServiceStatus serviceStatus;
 
@@ -347,7 +355,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
     }
 
     public final void assignPluginReference(final AbstractPlugin abstractPlugin) throws CantAssignReferenceException   ,
-                                                                                        IncompatibleReferenceException {
+            IncompatibleReferenceException {
 
         final PluginVersionReference pvr = abstractPlugin.getPluginVersionReference();
 
@@ -372,7 +380,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
             } else {
                 throw new IncompatibleReferenceException(
                         "Working plugin: "+this.getPluginVersionReference().toString3()+
-                        " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
+                                " ------------ classExpected: "+refManager.getName() + " --- classReceived: " + abstractPlugin.getClass().getName(),
                         "Field is not assignable by the given reference (bad definition, different type expected). Check the expected plugin and the defined type."
                 );
             }
@@ -389,7 +397,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
 
     public final void assignPluginReference(final PluginVersionReference pluginVersion,
                                             final FermatManager          fermatManager) throws CantAssignReferenceException   ,
-                                                                                               IncompatibleReferenceException {
+            IncompatibleReferenceException {
 
         try {
 
@@ -437,7 +445,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
 
     public final void assignLayerReference(final LayerReference layerReference,
                                            final FermatManager  fermatManager) throws CantAssignReferenceException   ,
-                                                                                      IncompatibleReferenceException {
+            IncompatibleReferenceException {
 
         try {
 
@@ -480,6 +488,17 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
                     "Working plugin: "+this.getPluginVersionReference().toString3()+ " +++++ Reference to assign: "+ layerReference.toString3(),
                     "Error assigning references for the plugin."
             );
+        }
+    }
+
+
+    protected void reportError(UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception){
+        PluginInfo pluginInfo = getClass().getAnnotation(PluginInfo.class);
+        if(pluginInfo!=null) {
+            String[] mailTo = new String[]{pluginInfo.maintainerMail()};
+            errorManager.reportUnexpectedPluginException(pluginInfo.plugin(),pluginVersionReference.getPlatform(),unexpectedPluginExceptionSeverity,exception,mailTo);
+        }else {
+            System.err.println("The plugin is not implementing the annotation class,Error in Plugin: "+getClass().getName());
         }
     }
 

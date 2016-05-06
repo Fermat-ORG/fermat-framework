@@ -125,6 +125,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         } catch (Exception e){
             e.printStackTrace();
         }
+        Log.i(TAG,"SendMessage return from server");
 
 
         if(objectArrived!=null){
@@ -139,6 +140,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         Log.i(TAG,"SendMessage almost end");
         if(isDataChuncked){
             if(Looper.myLooper() == Looper.getMainLooper()) throw new LargeWorkOnMainThreadException(proxy,method);
+            //test reason
+            mReceiverSocketSession.addWaitingMessage();
+
             o = bufferChannelAIDL.getBufferObject(dataId);
             //Log.i(TAG, o != null ? o.toString() : "");
             return (o instanceof EmptyObject)?null:o;

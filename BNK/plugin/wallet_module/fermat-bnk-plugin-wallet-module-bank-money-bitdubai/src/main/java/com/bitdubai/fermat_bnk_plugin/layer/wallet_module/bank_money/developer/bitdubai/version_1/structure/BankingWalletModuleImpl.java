@@ -24,9 +24,9 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -36,7 +36,7 @@ import java.util.UUID;
 /**
  * Created by memo on 08/12/15.
  */
-public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransactionParametersImpl> implements BankingWallet {
+public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransactionParametersImpl> implements BankingWallet, Serializable {
 
     private final BankMoneyWalletManager bankMoneyWalletManager;
     private final DepositManager depositManager;

@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * Created by Matias Furszyfer on 2016.04.18..
  */
-public class FermatModuleObjectWrapper implements Parcelable {
+public class FermatModuleObjectWrapper implements Parcelable,Serializable {
 
     private String objectRequestId;
     private Serializable object;

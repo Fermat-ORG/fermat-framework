@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -165,6 +165,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -183,7 +184,9 @@ import java.util.UUID;
  * @since 05/11/15
  * Modified by Franklin Marcano 23/12/15
  */
-public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements CryptoBrokerWalletModuleManager {
+public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
+        extends ModuleManagerImpl<CryptoBrokerWalletPreferenceSettings> implements CryptoBrokerWalletModuleManager, Serializable {
+
     private final WalletManagerManager walletManagerManager;
     private final com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final BankMoneyWalletManager bankMoneyWalletManager;
@@ -212,10 +215,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final MatchingEngineManager matchingEngineManager;
     private final CustomerBrokerCloseManager customerBrokerCloseManager;
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
-    private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
-
 
     public CryptoBrokerWalletModuleCryptoBrokerWalletManager(WalletManagerManager walletManagerManager,
                                                              com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager,
@@ -244,7 +243,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                                                              BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                              MatchingEngineManager matchingEngineManager,
                                                              CustomerBrokerCloseManager customerBrokerCloseManager,
-                                                             CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager, PluginFileSystem pluginFileSystem, UUID pluginId) {
+                                                             CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager,
+                                                             PluginFileSystem pluginFileSystem, UUID pluginId) {
+        super(pluginFileSystem, pluginId);
+
         this.walletManagerManager = walletManagerManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.bankMoneyWalletManager = bankMoneyWalletManager;
@@ -273,8 +275,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         this.matchingEngineManager = matchingEngineManager;
         this.customerBrokerCloseManager = customerBrokerCloseManager;
         this.cryptoCustomerActorConnectionManager = cryptoCustomerActorConnectionManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
     }
 
     @Override
@@ -1102,19 +1102,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public SettingsManager<CryptoBrokerWalletPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
-
-    @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         return null;
     }
@@ -1213,7 +1200,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
             /*//TODO: remove this mock
             customerBrokerSaleNegotiation = new SaleNegotiationOnlineMock();*/
-            ContractClauseType contractClauseType = getContractClauseType(customerBrokerSaleNegotiation,ClauseType.BROKER_PAYMENT_METHOD);
+            ContractClauseType contractClauseType = getContractClauseType(customerBrokerSaleNegotiation, ClauseType.BROKER_PAYMENT_METHOD);
 
             // Case: sending crypto merchandise.
             if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
