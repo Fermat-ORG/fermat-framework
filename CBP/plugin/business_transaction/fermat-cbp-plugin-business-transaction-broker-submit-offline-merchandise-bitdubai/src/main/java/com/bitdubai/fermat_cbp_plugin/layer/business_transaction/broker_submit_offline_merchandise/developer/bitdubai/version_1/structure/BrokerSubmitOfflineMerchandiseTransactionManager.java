@@ -110,9 +110,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             final CustomerBrokerSaleNegotiation saleNegotiation = getCustomerBrokerSaleNegotiation(saleContract.getNegotiatiotId());
 
             final Collection<Clause> clauses = saleNegotiation.getClauses();
-            //TODO YORDIN: DEBERIA SER EL CUSTOMER_PAYMENT_METHOD. POR QUE ES LO QUE RECIBIRA EL CUSTOMER.
-//            final String moneyTypeCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_PAYMENT_METHOD);
-            final String moneyTypeCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+            final String moneyTypeCode = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_PAYMENT_METHOD);
             final MoneyType moneyType = MoneyType.getByCode(moneyTypeCode);
             final String merchandiseCurrencyCode =  NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
             final FiatCurrency merchandiseCurrency = FiatCurrency.getByCode(merchandiseCurrencyCode);
@@ -321,8 +319,6 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
 
-                //TODO YORDIN: DEBERIA SER CUSTOMER_CURRENCY_QUANTITY. YA QUE ES LA CANTIDAD QUE RECIBE EL CUSTOMER, LA QUE SE ENVIARA.
-//                if (clauseType == ClauseType.BROKER_CURRENCY_QUANTITY) {
                 if (clauseType == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
                     brokerAmountDouble = parseToDouble(clause.getValue());
             }
