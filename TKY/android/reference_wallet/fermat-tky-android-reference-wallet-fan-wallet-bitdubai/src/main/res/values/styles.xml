@@ -12,9 +12,11 @@
 
         <style name="ActionBarThemeOverlay" parent="">
             <item name="android:textColorPrimary">@color/colortoolbartext</item>
-            <item name="colorControlNormal">@color/colortoolbar</item>
-            <item name="colorControlHighlight">@color/colortoolbar</item>
+            <item name="colorControlNormal">@color/colortoolbartext</item>
+            <item name="colorControlHighlight">@color/colortoolbartext</item>
         </style>
+
+
 
         <style name="HeaderBar">
             <item name="android:background">@color/colortoolbar</item>
