@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -106,6 +107,12 @@ import java.util.Random;
 /**
  * Created by Nerio on 09/09/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "nindriago",
+        layer = Layers.ACTOR,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.ASSET_USER)
 public class AssetUserActorPluginRoot extends AbstractPlugin implements
         ActorAssetUserManager,
         ActorNetworkServiceAssetUser,
