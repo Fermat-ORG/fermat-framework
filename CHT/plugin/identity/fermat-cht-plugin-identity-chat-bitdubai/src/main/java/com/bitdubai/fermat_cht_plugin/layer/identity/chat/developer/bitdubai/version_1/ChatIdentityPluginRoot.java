@@ -148,7 +148,7 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
     }
 
     private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException, CantExposeIdentityException {
-        //List<ChatExposingData> chatExposingDatas = new ArrayList<>();
+        List<ChatExposingData> chatExposingDatas = new ArrayList<>();
 
         for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
         {
@@ -162,9 +162,9 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                     }
                 }
             }.start();
-            //chatExposingDatas.add(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
+            chatExposingDatas.add(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
         }
 
-        //chatManager.exposeIdentities(chatExposingDatas);
+        chatManager.exposeIdentities(chatExposingDatas);
     }
 }
