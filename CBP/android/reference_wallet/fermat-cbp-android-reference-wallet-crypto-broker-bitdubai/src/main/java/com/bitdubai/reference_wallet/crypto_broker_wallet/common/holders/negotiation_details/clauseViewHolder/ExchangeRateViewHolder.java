@@ -35,6 +35,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private final FermatButton yourExchangeRateValue;
     private List<IndexInfoSummary> marketRateList;
     private Quote suggestedRate;
+    private float spread;
     private boolean suggestedRateLoaded;
 
 
@@ -65,19 +66,31 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValue.setText(clause.getValue());
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
 
-        if (marketRateList != null)
-            markerRateReference.setText(String.format("1 %1$s / %2$s %3$s",
-                    currencyToBuy.getValue(), getMarketRateValue(clauses), currencyToPay.getValue()));
-        else
-            markerRateReference.setText("Can't get Market Exchange Rate");
+        BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
+        String marketExchangeRateStr = DecimalFormat.getInstance().format(marketRateReferenceValue.doubleValue());
+        String suggestedExchangeRateStr = DecimalFormat.getInstance().format(marketRateReferenceValue.doubleValue() * (1+(spread/100)));
 
-        if (suggestedRate != null)
-            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$.3f %3$s",
-                    suggestedRate.getMerchandise().getCode(), suggestedRate.getPriceReference(), suggestedRate.getFiatCurrency().getCode()));
-        else if (suggestedRateLoaded)
+
+        if (marketRateList != null) {
+            markerRateReference.setText(String.format("1 %1$s / %2$s %3$s",
+                    currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
+            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s",
+                    suggestedRate.getMerchandise().getCode(), suggestedExchangeRateStr, suggestedRate.getFiatCurrency().getCode()));
+        }
+        else {
+            markerRateReference.setText("Can't get Market Exchange Rate");
             exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
-        else
-            exchangeRateReferenceValue.setText("Loading...");
+        }
+
+//
+//
+//        if (suggestedRate != null)
+//            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$.3f %3$s",
+//                    suggestedRate.getMerchandise().getCode(), suggestedRate.getPriceReference(), suggestedRate.getFiatCurrency().getCode()));
+//        else if (suggestedRateLoaded)
+//            exchangeRateReferenceValue.setText("Can't get suggested Exchange Rate");
+//        else
+//            exchangeRateReferenceValue.setText("Loading...");
     }
 
     @Override
@@ -89,6 +102,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     public void setSuggestedRate(Quote suggestedRate, boolean loaded) {
         this.suggestedRate = suggestedRate;
         this.suggestedRateLoaded = loaded;
+    }
+
+    public void setSpread(float spread) {
+        this.spread = spread;
     }
 
     @Override
@@ -149,10 +166,12 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         this.marketRateList = marketRateList;
     }
 
-    private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
+    private BigDecimal getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+
+        BigDecimal exchangeRate = new BigDecimal(0);
 
         ExchangeRate currencyQuotation = getExchangeRate(currencyOver, currencyUnder);
         String exchangeRateStr = "0.0";
@@ -160,16 +179,15 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         if (currencyQuotation == null) {
             currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
-                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
+                exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
                 exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
                 exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
             }
         } else {
-            BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
-            exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
+            exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
         }
 
-        return exchangeRateStr;
+        return exchangeRate;
     }
 
     private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
