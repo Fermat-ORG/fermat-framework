@@ -355,7 +355,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(),
                     "wallet_crypto_broker_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.ALPHA);
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             Item item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_broker);
@@ -371,7 +371,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(),
                     "wallet_crypto_customer_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.ALPHA);
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_customer);
@@ -437,7 +437,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
                     "wallet_banking_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.ALPHA);
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.bank_wallet_xxhdpi);
@@ -454,7 +454,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.CSH_MONEY_WALLET.getCode(),
                     "wallet_cash_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.ALPHA);
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.cash_wallet_xxhdpi);
