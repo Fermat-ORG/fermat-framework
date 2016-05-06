@@ -1,5 +1,7 @@
 package com.bitdubai.reference_wallet.fan_wallet.common.models;
 
+import android.graphics.Bitmap;
+
 import java.util.UUID;
 
 /**
@@ -8,13 +10,13 @@ import java.util.UUID;
 public class SongItems {
 
     private String song_name;
-    private int imagen;
+    private Bitmap imagen;
     private String artist_name;
     private String status;
     private UUID song_id;
     private int progress;
     private boolean progressbarvissible;
-    public SongItems(int imagen, String song_name, String artist_name, String status,UUID song_id, int progress, boolean progressbarvissible){
+    public SongItems(Bitmap imagen, String song_name, String artist_name, String status,UUID song_id, int progress, boolean progressbarvissible){
 
         this.imagen = imagen;
         this.song_name = song_name;
@@ -27,7 +29,7 @@ public class SongItems {
 
     // getters & setters
 
-    public int getImagen(){return imagen;}
+    public Bitmap getImagen(){return imagen;}
 
     public String getSong_name(){return song_name;}
 
