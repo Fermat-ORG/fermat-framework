@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantExposeActorIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -109,6 +110,9 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
         } catch (CantExposeIdentitiesException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant Expose Identity.", FermatException.wrapException(e), null, null);
+        } catch (CantExposeIdentityException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Cant Update Expose Identity.", FermatException.wrapException(e), null, null);
         }
     }
 
@@ -143,11 +147,21 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
         return developerDatabaseTableRecordList;
     }
 
-    private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException {
+    private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException, CantExposeIdentityException {
         List<ChatExposingData> chatExposingDatas = new ArrayList<>();
 
-        for (ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
+        for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
         {
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        chatManager.updateIdentity(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
+                    } catch (CantExposeIdentityException e) {
+                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+                    }
+                }
+            }.start();
             chatExposingDatas.add(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
         }
 
