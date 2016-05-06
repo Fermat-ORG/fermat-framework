@@ -202,12 +202,7 @@ public class CashMoneyWalletModuleManagerImpl extends ModuleManagerImpl<CashMone
     }
 
 
-
-
-
-
-
-    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
+//    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
 
 //    @Override
 //    public SettingsManager<CashMoneyWalletPreferenceSettings> getSettingsManager() {

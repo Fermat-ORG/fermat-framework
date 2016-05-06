@@ -24,7 +24,6 @@ public class CashWalletAsyncTransactionAgent extends AsyncTransactionAgent<CashT
         this.setTransactionDelayMillis(15000);
     }
 
-
     /*
      * AsyncTransactionAgent abstract overrides
      */
