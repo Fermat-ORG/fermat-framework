@@ -315,7 +315,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.aai_layout_user_image);
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mArtistUserName.requestFocus();
-       // mAlias = (TextView) layout.findViewById(R.id.aai_username);
+
+
 
         WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
 
@@ -544,7 +545,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             mArtistExternalName.setBackgroundColor(Color.parseColor("#0080FF"));}
 
 
-
+        if (ArtistExternalName.isEmpty()){
+            mArtistUserName.setHintTextColor(Color.parseColor("#DF0101"));
+            }
 
         if (ArtistExternalName.isEmpty()){
 
