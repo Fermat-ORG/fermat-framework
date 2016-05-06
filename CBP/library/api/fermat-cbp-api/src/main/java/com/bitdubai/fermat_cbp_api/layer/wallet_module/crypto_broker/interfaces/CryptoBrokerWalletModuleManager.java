@@ -745,6 +745,13 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
             throws CantSubmitMerchandiseException;
 
     /**
+     * This method send a merchandise according the contract elements.
+     *
+     * @param contractHash
+     */
+    boolean stockInTheWallet(String contractHash)
+            throws CantSubmitMerchandiseException;
+    /**
      * This method execute a Broker Ack payment Business Transaction
      *
      * @param contractHash
