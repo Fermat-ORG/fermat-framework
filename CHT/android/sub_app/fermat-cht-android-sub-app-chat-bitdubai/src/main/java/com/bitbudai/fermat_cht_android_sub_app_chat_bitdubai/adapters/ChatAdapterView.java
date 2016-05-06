@@ -53,15 +53,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-<<<<<<< HEAD
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-
-=======
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
->>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 
 import java.io.ByteArrayInputStream;

@@ -66,8 +66,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -829,10 +829,7 @@ public class ChatMiddlewareDatabaseDao {
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
 
             // I will add the message information from the database
-<<<<<<< HEAD
-=======
 
->>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
                 final Message message = getMessageTransaction(getMessageDataDesceding(filter).get(0));
 
             database.closeDatabase();
@@ -841,12 +838,6 @@ public class ChatMiddlewareDatabaseDao {
                 return null;
             }
 
-<<<<<<< HEAD
-            System.out.println("12345 MESSAGE = "+message.getCount());
-            System.out.println("12345 COUNT = " + message.getMessage());
-
-=======
->>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
             return message;
         }
         catch (Exception e) {
@@ -1439,22 +1430,15 @@ public class ChatMiddlewareDatabaseDao {
 
     private List<DatabaseTableRecord> getMessageData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException
     {
+
         DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
 
         if (filter != null)
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
-<<<<<<< HEAD
-//        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
         table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.ASCENDING);
 
         table.loadToMemory();
-
-=======
-        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseFilterOrder.ASCENDING);
-
-        table.loadToMemory();
->>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
         return table.getRecords();
     }
 
@@ -2039,17 +2023,9 @@ public class ChatMiddlewareDatabaseDao {
             database.closeDatabase();
 
             if(messages.isEmpty()){
-<<<<<<< HEAD
-                System.out.println("**12345 LAST MESSAGE = NO MESSAGE");
                 return 0;
             }
 
-            System.out.println("**12345 LAST MESSAGE = " + messages.get(0).getCount());
-=======
-                return 0;
-            }
-
->>>>>>> f780df0a2ecbf6969e8e2901a36c5b50746f6938
             return messages.get(0).getCount();
         }
         catch (Exception e) {
