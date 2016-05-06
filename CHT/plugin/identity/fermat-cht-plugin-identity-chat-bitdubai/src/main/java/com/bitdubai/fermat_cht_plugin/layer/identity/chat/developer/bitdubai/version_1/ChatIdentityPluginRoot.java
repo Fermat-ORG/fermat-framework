@@ -152,16 +152,6 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
 
         for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
         {
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        chatManager.updateIdentity(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
-                    } catch (CantExposeIdentityException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
-                    }
-                }
-            }.start();
             chatExposingDatas.add(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
         }
 
