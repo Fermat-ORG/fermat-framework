@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
@@ -21,15 +22,22 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
     private List<ResultDiscoveryTraceActor> profileList;
 
     /**
+     * Represent the networkServiceTypeIntermediate
+     */
+    private NetworkServiceType networkServiceTypeIntermediate;
+
+    /**
      * Constructor with parameters
      *
      * @param status
      * @param details
      * @param profileList
+     * @param networkServiceTypeIntermediate
      */
-    public ActorsProfileListMsgRespond(STATUS status, String details, List<ResultDiscoveryTraceActor> profileList) {
+    public ActorsProfileListMsgRespond(STATUS status, String details, List<ResultDiscoveryTraceActor> profileList, NetworkServiceType networkServiceTypeIntermediate) {
         super(status, details);
         this.profileList = profileList;
+        this.networkServiceTypeIntermediate = networkServiceTypeIntermediate;
     }
 
     /**
@@ -39,6 +47,14 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
      */
     public List<ResultDiscoveryTraceActor> getProfileList() {
         return profileList;
+    }
+
+    /**
+     * Gets the value of networkServiceTypeIntermediate and returns
+     * @return networkServiceTypeIntermediate
+     */
+    public NetworkServiceType getNetworkServiceTypeIntermediate() {
+        return networkServiceTypeIntermediate;
     }
 
     /**

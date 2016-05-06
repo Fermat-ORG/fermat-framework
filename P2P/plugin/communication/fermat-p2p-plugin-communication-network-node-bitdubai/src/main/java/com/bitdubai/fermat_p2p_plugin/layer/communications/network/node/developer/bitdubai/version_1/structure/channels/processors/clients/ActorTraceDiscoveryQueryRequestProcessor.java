@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
@@ -72,6 +73,7 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
         List<ResultDiscoveryTraceActor> profileList = null;
+        NetworkServiceType networkServiceTypeIntermediate = null;
 
         try {
 
@@ -91,6 +93,11 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
                  * Get the parameters to filters
                  */
                 DiscoveryQueryParameters discoveryQueryParameters = messageContent.getDiscoveryQueryParameters();
+
+                /*
+                 * get the NetworkServiceIntermediate
+                 */
+                networkServiceTypeIntermediate = discoveryQueryParameters.getNetworkServiceTypeIntermediate();
 
                 /*
                  * Validate if a network service search
@@ -134,7 +141,7 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
                 /*
                  * If all ok, respond whit success message
                  */
-                ActorsProfileListMsgRespond actorsProfileListMsgRespond = new ActorsProfileListMsgRespond(ActorsProfileListMsgRespond.STATUS.SUCCESS, ActorsProfileListMsgRespond.STATUS.SUCCESS.toString(), profileList);
+                ActorsProfileListMsgRespond actorsProfileListMsgRespond = new ActorsProfileListMsgRespond(ActorsProfileListMsgRespond.STATUS.SUCCESS, ActorsProfileListMsgRespond.STATUS.SUCCESS.toString(), profileList, networkServiceTypeIntermediate);
                 Package packageRespond = Package.createInstance(actorsProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -153,7 +160,7 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                ActorsProfileListMsgRespond actorsProfileListMsgRespond = new ActorsProfileListMsgRespond(ActorsProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileList);
+                ActorsProfileListMsgRespond actorsProfileListMsgRespond = new ActorsProfileListMsgRespond(ActorsProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileList, networkServiceTypeIntermediate);
                 Package packageRespond = Package.createInstance(actorsProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
