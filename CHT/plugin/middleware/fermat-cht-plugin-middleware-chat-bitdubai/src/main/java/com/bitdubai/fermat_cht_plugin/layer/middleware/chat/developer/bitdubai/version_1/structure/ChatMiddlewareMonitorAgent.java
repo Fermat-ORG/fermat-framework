@@ -68,6 +68,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -525,7 +528,11 @@ public class ChatMiddlewareMonitorAgent implements
                 boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 actionOnline.setValue(isOnline);
                 System.out.println("12345 is online " + isOnline);
-                if(!isOnline) actionOnline.setLastConnection(new Timestamp(new Date().getDate()));
+                if(!isOnline){
+                    DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+                    Date today = Calendar.getInstance().getTime();
+                    actionOnline.setLastConnection(df.format(today));
+                }
                 chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
             }
 
@@ -622,7 +629,9 @@ public class ChatMiddlewareMonitorAgent implements
 
         for(ActionOnline actionOnline : actionOnlines){
             actionOnline.setValue(false);
-            actionOnline.setLastConnection(new Timestamp(new Date().getDate()));
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+            Date today = Calendar.getInstance().getTime();
+            actionOnline.setLastConnection(df.format(today));
             chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
             changes = true;
         }
