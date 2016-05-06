@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -64,6 +65,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "victor",
+        layer = Layers.DIGITAL_ASSET_TRANSACTION,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.ASSET_TRANSFER)
 public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
         AssetTransferManager,
         AssetTransfer,
