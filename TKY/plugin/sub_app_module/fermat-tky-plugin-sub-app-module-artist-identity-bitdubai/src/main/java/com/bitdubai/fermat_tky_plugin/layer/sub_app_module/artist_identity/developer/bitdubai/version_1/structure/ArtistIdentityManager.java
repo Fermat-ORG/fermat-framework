@@ -8,7 +8,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
@@ -30,11 +34,20 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
 
     private final ErrorManager errorManager;
     private final TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
+    private final TokenlyApiManager tokenlyApiManager;
 
+    /**
+     * Default constructor with parameters.
+     * @param errorManager
+     * @param tokenlyArtistIdentityManager
+     * @param tokenlyApiManager
+     */
     public ArtistIdentityManager(ErrorManager errorManager,
-                                 TokenlyArtistIdentityManager tokenlyArtistIdentityManager) {
+                                 TokenlyArtistIdentityManager tokenlyArtistIdentityManager,
+                                 TokenlyApiManager tokenlyApiManager) {
         this.errorManager = errorManager;
         this.tokenlyArtistIdentityManager = tokenlyArtistIdentityManager;
+        this.tokenlyApiManager = tokenlyApiManager;
     }
 
     @Override
@@ -43,7 +56,7 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     }
 
     @Override
-    public Artist createArtistIdentity(String username, byte[] profileImage,String password, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+    public Artist createArtistIdentity(String username, byte[] profileImage,String password, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
         return tokenlyArtistIdentityManager.createArtistIdentity(
                 username,
                 profileImage,
@@ -54,8 +67,8 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     }
 
     @Override
-    public void updateArtistIdentity(String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        tokenlyArtistIdentityManager.updateArtistIdentity(
+    public Artist updateArtistIdentity(String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException, WrongTokenlyUserCredentialsException {
+        return tokenlyArtistIdentityManager.updateArtistIdentity(
                 username,
                 password,
                 id,
@@ -69,6 +82,16 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     @Override
     public Artist getArtistIdentity(UUID publicKey) throws CantGetArtistIdentityException, IdentityNotFoundException {
         return tokenlyArtistIdentityManager.getArtistIdentity(publicKey);
+    }
+
+    /**
+     * This method checks if the Tokenly Music API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    @Override
+    public TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException {
+        return tokenlyApiManager.getMusicAPIStatus();
     }
 
     @Override

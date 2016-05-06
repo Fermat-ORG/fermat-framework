@@ -2,12 +2,16 @@ package com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
@@ -26,6 +30,8 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -128,7 +134,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
     }
 
-    public Artist getIdentitArtist() throws CantGetArtistIdentityException {
+    public Artist getIdentityArtist() throws CantGetArtistIdentityException {
         Artist artist = null;
         try {
             artist = getArtistIdentityDao().getIdentityArtist();
@@ -137,7 +143,8 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
         return artist;
     }
-    public Artist getIdentitArtist(String publicKey) throws CantGetArtistIdentityException {
+
+    public Artist getIdentityArtist(String publicKey) throws CantGetArtistIdentityException {
         Artist artist = null;
         try {
             artist = getArtistIdentityDao().getIdentityArtist(publicKey);
@@ -146,17 +153,56 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
         return artist;
     }
-    public Artist createNewIdentityArtist(String alias, byte[] profileImage, UUID externalIdentityID) throws CantCreateArtistIdentityException {
+
+    public Artist createNewIdentityArtist(
+            String alias,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            String externalUsername,
+            ArtExternalPlatform artExternalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType) throws CantCreateArtistIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey = keyPair.getPublicKey();
+            final String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getArtistIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage,externalIdentityID);
+            getArtistIdentityDao().createNewUser(
+                    alias,
+                    publicKey,
+                    privateKey,
+                    loggedUser,
+                    profileImage,
+                    exposureLevel,
+                    acceptConnectionsType,
+                    externalIdentityID,
+                    artExternalPlatform,
+                    externalUsername);
 
-            return new ArtistIdentityImp(alias, publicKey, profileImage,externalIdentityID, pluginFileSystem, pluginId);
+
+            Thread registerToAns = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        registerIdentitiesANS(publicKey);
+                    }catch (Exception e){
+
+                    }
+                }},"Artist Identity register ANS");
+            registerToAns.start();
+            return new ArtistIdentityImp(
+                    alias,
+                    publicKey,
+                    profileImage,
+                    externalIdentityID,
+                    pluginFileSystem,
+                    pluginId,
+                    artExternalPlatform,
+                    exposureLevel ,
+                    acceptConnectionsType,
+                    externalUsername);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -164,9 +210,46 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
     }
 
-    public void updateIdentityArtist(String alias,String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateArtistIdentityException {
+    public void updateIdentityArtist(
+            String alias,
+            String publicKey,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            String externalUsername,
+            ArtExternalPlatform artExternalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType) throws CantUpdateArtistIdentityException {
+
         try {
-            getArtistIdentityDao().updateIdentityArtistUser(publicKey, alias, profileImage,externalIdentityID);
+            getArtistIdentityDao().updateIdentityArtistUser(
+                    publicKey,
+                    alias,
+                    profileImage,
+                    exposureLevel,
+                    acceptConnectionsType,
+                    externalIdentityID,
+                    artExternalPlatform,
+                    externalUsername);
+            HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
+            externalInformation.put(artExternalPlatform,externalUsername);
+            List data = new ArrayList();
+            data.add(profileImage);
+            data.add(externalInformation);
+            final ArtistExposingData artistExposingData = new ArtistExposingData(
+                    publicKey,
+                    alias,
+                    XMLParser.parseObject(data));
+
+            Thread registerToAns = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        artistManager.updateIdentity(artistExposingData);
+                    }catch (Exception e){
+
+                    }
+                }},"Artist Identity update ANS");
+            registerToAns.start();
 
         } catch (CantInitializeArtistIdentityDatabaseException e) {
             e.printStackTrace();
@@ -175,8 +258,16 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
 
     public void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
-            Artist artist = getIdentitArtist(publicKey);
-            ArtistExposingData artistExposingData = new ArtistExposingData(artist.getPublicKey(),artist.getAlias(),artist.getProfileImage());
+            Artist artist = getIdentityArtist(publicKey);
+            HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
+            externalInformation.put(artist.getExternalPlatform(),artist.getExternalUsername());
+            List data = new ArrayList();
+            data.add(artist.getProfileImage());
+            data.add(externalInformation);
+            ArtistExposingData artistExposingData = new ArtistExposingData(
+                    artist.getPublicKey(),
+                    artist.getAlias(),
+                    XMLParser.parseObject(data));
             artistManager.exposeIdentity(artistExposingData);
         } catch (CantGetArtistIdentityException | CantExposeIdentityException e) {
             e.printStackTrace();

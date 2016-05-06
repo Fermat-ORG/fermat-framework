@@ -2,21 +2,22 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interface
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
-public interface FanCommunityInformation {
+public interface FanCommunityInformation extends Serializable{
     /**
      * This method returns the public key
-     * @return the public key of the crypto broker
+     * @return the public key of the Fan
      */
     String getPublicKey();
 
     /**
      * This method returns the alias     *
-     * @return the name of the crypto broker
+     * @return the name of the Fan
      */
     String getAlias();
 

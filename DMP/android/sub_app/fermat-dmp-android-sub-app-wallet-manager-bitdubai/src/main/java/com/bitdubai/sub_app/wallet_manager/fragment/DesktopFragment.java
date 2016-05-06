@@ -463,7 +463,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
 
 
             //TKY Fan Wallet
-            /*installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
                     WalletType.REFERENCE,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
@@ -472,12 +472,12 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                     "wallet_fan_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.DEV);
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
-            item.setIconResource(R.drawable.banner_tky);
+            item.setIconResource(R.drawable.subapp_fan_wallet_icon);
             item.setPosition(9);
-            lstItemsWithIcon.add(item);*/
+            lstItemsWithIcon.add(item);
 
 
 

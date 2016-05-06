@@ -19,8 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
@@ -49,8 +47,10 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListIdentitiesToSelectException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -73,6 +73,8 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
 
     private       String                                        subAppPublicKey                       ;
     private       SettingsManager<ArtistCommunitySettings>      settingsManager                       ;
+
+    private boolean isDialog = true;
 
 
     public ArtistCommunityManager(final ArtistIdentityManager           artistIdentityManager                 ,
@@ -448,80 +450,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         } catch (Exception e) {}
 
         return ConnectionState.DISCONNECTED_LOCALLY;    }
-
-    @Override
-    public void createArtistIdentity(String name, String phrase, byte[] profile_img, UUID externalIdentityID) throws Exception {
-        String createdPublicKey = null;
-
-        if(name.equals("Fan"))
-        {
-            try{
-                final Fanatic createdIdentity = fanaticIdentityManager.createFanaticIdentity(name, profile_img,externalIdentityID);
-                createdPublicKey = createdIdentity.getPublicKey();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            fanaticIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch(CantPublishIdentityException | IdentityNotFoundException e) {
-                            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                        }
-                    }
-                }.start();
-            }catch(Exception e) {
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                return;
-            }
-        }
-        else if( name.equals("Artist"))
-        {
-            try{
-                final Artist createdIdentity = artistIdentityManager.createArtistIdentity(name, profile_img, externalIdentityID);
-                createdPublicKey = createdIdentity.getPublicKey();
-
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            artistIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch(Exception e) {
-                            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                        }
-                    }
-                }.start();
-            }catch(Exception e) {
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                return;
-            }
-        }
-
-
-
-        //Try to get appSettings
-        ArtistCommunitySettings appSettings = null;
-        try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ appSettings = null; }
-
-
-        //If appSettings exist
-        if(appSettings != null){
-            if(createdPublicKey != null)
-                appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
-            if(name.equals("Fan"))
-                appSettings.setLastSelectedActorType(Actors.ART_FAN);
-            else if(name.equals("Artist"))
-                appSettings.setLastSelectedActorType(Actors.ART_ARTIST);
-
-            try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
-            }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
-        }
-    }
-
-    @Override
+    
     public SettingsManager<ArtistCommunitySettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
@@ -557,8 +486,10 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         } catch(CantListArtistIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0)
+        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0 && isDialog){
+            isDialog = false;
             throw new CantGetSelectedActorIdentityException("", null, "", "");
+        }
 
 
 
@@ -593,10 +524,13 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
 
                 return selectedIdentity;
             }
-            else
+            else if(isDialog){
+                isDialog = false;
                 throw new ActorIdentityNotSelectedException("", null, "", "");
+            }
         }
 
+        isDialog = true;
         return null;    }
 
     @Override

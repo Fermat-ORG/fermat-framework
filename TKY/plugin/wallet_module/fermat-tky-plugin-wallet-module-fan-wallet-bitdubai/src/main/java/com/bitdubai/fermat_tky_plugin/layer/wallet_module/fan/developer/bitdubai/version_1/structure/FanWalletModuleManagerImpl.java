@@ -7,6 +7,9 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
@@ -141,8 +144,23 @@ public class FanWalletModuleManagerImpl implements FanWalletModule {
         return tokenlyApiManager.getDownloadSongBySongId(id);
     }
 
+    /**
+     * This method returns a User object by a username and key pair
+     * @param username Tokenly username.
+     * @param userKey user password
+     * @return
+     * @throws CantGetUserException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * @throws WrongTokenlyUserCredentialsException
+     */
     @Override
-    public User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException {
+    public User validateTokenlyUser(String username, String userKey)
+            throws
+            CantGetUserException,
+            ExecutionException,
+            InterruptedException,
+            WrongTokenlyUserCredentialsException {
         return tokenlyApiManager.validateTokenlyUser(username,userKey);
     }
 
@@ -154,6 +172,26 @@ public class FanWalletModuleManagerImpl implements FanWalletModule {
     @Override
     public Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId) throws CantGetSongException {
         return tokenlyApiManager.getSongByAuthenticatedUser(musicUser,tokenlySongId);
+    }
+
+    /**
+     * This method checks if the Tokenly Music API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    @Override
+    public TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException {
+        return tokenlyApiManager.getMusicAPIStatus();
+    }
+
+    /**
+     * This method checks if the Tokenly Swapbot API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    @Override
+    public TokenlyAPIStatus getSwapBotAPIStatus() throws TokenlyAPINotAvailableException {
+        return tokenlyApiManager.getSwapBotAPIStatus();
     }
 
     @Override

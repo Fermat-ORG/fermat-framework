@@ -8,8 +8,6 @@ public enum ArtistIdentityEnumType implements FermatFragmentsEnumType<ArtistIden
 
 
     ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE("ASAAICP")
-
-
     ;
 
 

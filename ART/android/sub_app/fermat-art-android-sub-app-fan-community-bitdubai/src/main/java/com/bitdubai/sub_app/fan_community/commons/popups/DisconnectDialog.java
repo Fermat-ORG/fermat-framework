@@ -46,11 +46,11 @@ public class DisconnectDialog extends
     FanCommunitySelectableIdentity identity;
 
     public DisconnectDialog(Activity a,
-                            FanCommunitySubAppSession cryptoCustomerCommunitySubAppSession,
+                            FanCommunitySubAppSession fanCommunitySubAppSession,
                             SubAppResourcesProviderManager subAppResources,
                             FanCommunityInformation cryptoCustomerCommunityInformation,
                             FanCommunitySelectableIdentity identity) {
-        super(a, cryptoCustomerCommunitySubAppSession, subAppResources);
+        super(a, fanCommunitySubAppSession, subAppResources);
         this.fanCommunityInformation = cryptoCustomerCommunityInformation;
         this.identity = identity;
     }

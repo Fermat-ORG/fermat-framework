@@ -6,9 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEvent
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.ArtistConnectionRequestUpdatesEvent</code>
- * represents a CRYPTO_BROKER_CONNECTION_REQUEST_UPDATES event.
- * The event is raised when the Actor Network Service Crypto Broker receives a notification of updates over
+ * This class represents a ARTIST_CONNECTION_REQUEST_UPDATES event.
+ * The event is raised when the Actor Network Service  Artist receives a notification of updates over
  * one of its requests and an action must be done.
  *
  * Created by Gabriel Araujo 31/03/2016.

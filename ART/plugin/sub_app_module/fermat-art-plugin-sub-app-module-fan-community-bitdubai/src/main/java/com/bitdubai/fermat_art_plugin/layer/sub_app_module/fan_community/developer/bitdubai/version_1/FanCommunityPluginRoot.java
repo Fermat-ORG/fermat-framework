@@ -20,6 +20,7 @@ import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActo
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.developer.bitdubai.version_1.structure.FanCommunityManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.LOW, maintainerMail = "alex_jimenez76@hotmail.com", createdBy = "alexanderejm", layer = Layers.SUB_APP_MODULE, platform = Platforms.ART_PLATFORM, plugin = Plugins.FAN_COMMUNITY_SUB_APP_MODULE)
 public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, ActiveActorIdentityInformation> {
+public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, FanCommunitySelectableIdentity> {
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
     private ArtistIdentityManager artistIdentityManager;
@@ -93,7 +95,7 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
     }
 
     @Override
-    public ModuleManager<FanCommunitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<FanCommunitySettings, FanCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
         if(fanCommunityManager == null)
             initPluginManager();
         return fanCommunityManager;

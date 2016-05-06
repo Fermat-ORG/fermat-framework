@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -14,10 +15,9 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanId
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentityManagerModule;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -42,7 +42,7 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serial
     }
 
     @Override
-    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+    public HashMap<ArtExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
         return fanaticIdentityManager.listExternalIdentitiesFromCurrentDeviceUser();
     }
 
@@ -52,13 +52,36 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serial
     }
 
     @Override
-    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes, UUID externalIdentityID) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-        return fanaticIdentityManager.createFanaticIdentity(alias,imageBytes,externalIdentityID);
+    public Fanatic createFanaticIdentity(
+            String alias,
+            byte[] imageBytes,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
+            CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+        return fanaticIdentityManager.createFanaticIdentity(
+                alias,
+                imageBytes,
+                externalIdentityID,
+                artExternalPlatform,
+                externalUsername);
     }
 
     @Override
-    public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) throws CantUpdateFanIdentityException {
-        fanaticIdentityManager.updateFanIdentity(alias,publicKey,imageProfile,externalIdentityID);
+    public void updateFanIdentity(
+            String alias,
+            String publicKey,
+            byte[] imageProfile,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateFanIdentityException {
+        fanaticIdentityManager.updateFanIdentity(
+                alias,
+                publicKey,
+                imageProfile,
+                externalIdentityID,
+                artExternalPlatform,
+                externalUsername);
     }
 
     @Override

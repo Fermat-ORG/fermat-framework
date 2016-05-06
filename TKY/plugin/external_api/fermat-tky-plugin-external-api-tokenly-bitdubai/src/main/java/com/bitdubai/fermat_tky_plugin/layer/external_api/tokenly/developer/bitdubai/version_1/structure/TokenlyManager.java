@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
@@ -13,6 +16,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.TokenlyAPIStatusProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyAlbumProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyDownloadSongProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlyMusicUserProcessor;
@@ -68,13 +72,21 @@ public class TokenlyManager implements TokenlyApiManager {
     }
 
     /**
-     * This method returns a User object by a username and key pair.
-     * @param username
-     * @param userKey
+     * This method returns a User object by a username and key pair
+     * @param username Tokenly username.
+     * @param userKey user password
      * @return
+     * @throws CantGetUserException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * @throws WrongTokenlyUserCredentialsException
      */
     @Override
-    public User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException {
+    public User validateTokenlyUser(String username, String userKey) throws
+            CantGetUserException,
+            ExecutionException,
+            InterruptedException,
+            WrongTokenlyUserCredentialsException {
         User user = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(username, userKey);
         return user;
     }
@@ -129,5 +141,25 @@ public class TokenlyManager implements TokenlyApiManager {
         } catch (ObjectNotSetException e) {
             throw new CantGetSongException("Any MusicUser argument is null");
         }
+    }
+
+    /**
+     * This method checks if the Tokenly Music API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    @Override
+    public TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException {
+        return TokenlyAPIStatusProcessor.getMusicAPIStatus();
+    }
+
+    /**
+     * This method checks if the Tokenly Swapbot API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    @Override
+    public TokenlyAPIStatus getSwapBotAPIStatus() throws TokenlyAPINotAvailableException {
+        return TokenlyAPIStatusProcessor.getSwapBotAPIStatus();
     }
 }
