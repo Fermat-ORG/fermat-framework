@@ -110,22 +110,18 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                     fragment.goToWalletHome();
                     break;
                 case 3:
-                    if(stockInWallet(contractDetail.getContractId())) {
-                        //Send the merchandise to the customer
-                        walletManager.submitMerchandise(contractDetail.getContractId());
+                    //Send the merchandise to the customer
+                    walletManager.submitMerchandise(contractDetail.getContractId());
 
-                        //itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
-                        //confirmButton.setVisibility(View.INVISIBLE);
-                        Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
+                    //itemView.setBackgroundColor(res.getColor(R.color.card_background_status_changed));
+                    //confirmButton.setVisibility(View.INVISIBLE);
+                    Toast.makeText(this.parentFragment.getActivity(), "The merchandise has been accepted", Toast.LENGTH_SHORT).show();
 
-                        //Set internal status of this contract to MERCHANDISE_DELIVERY_IN_PROCESS
-                        walletSession.setData(contractDetail.getContractId(), MERCHANDISE_DELIVERY_IN_PROCESS);
+                    //Set internal status of this contract to MERCHANDISE_DELIVERY_IN_PROCESS
+                    walletSession.setData(contractDetail.getContractId(), MERCHANDISE_DELIVERY_IN_PROCESS);
 
-                        fragment.goToWalletHome();
-                        break;
-                    }else{
-                        Toast.makeText(this.parentFragment.getActivity(), "Not had enough stock to send merchandise", Toast.LENGTH_SHORT).show();
-                    }
+                    fragment.goToWalletHome();
+                    break;
             }
         } catch (Exception ex) {
             Toast.makeText(this.parentFragment.getActivity(), "Please try again, an error occurred.", Toast.LENGTH_SHORT).show();
@@ -334,6 +330,11 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         return df2.format(date);
     }
 
+    /**
+     * This method validate if has enough stock for send a merchandise according the contract elements.
+     *
+     * @param contractId
+     */
     private boolean stockInWallet(String contractId){
         try {
             return walletManager.stockInTheWallet(contractId);

@@ -1254,16 +1254,15 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
             Currency merchandiseCurrency = null;
 
-            CustomerBrokerContractSale customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
-
-            String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            CustomerBrokerContractSale customerBrokerContractSale       = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+            String negotiationId                                        = customerBrokerContractSale.getNegotiatiotId();
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
             final Collection<Clause> clauses        = customerBrokerSaleNegotiation.getClauses();
             final String moneyTypeCode              = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.BROKER_PAYMENT_METHOD);
             final MoneyType moneyType               = MoneyType.getByCode(moneyTypeCode);
             final String merchandiseCurrencyCode    = NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY);
-            double amount = parseToDouble(NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY_QUANTITY));
+            final double amount                     = parseToDouble(NegotiationClauseHelper.getNegotiationClauseValue(clauses, ClauseType.CUSTOMER_CURRENCY_QUANTITY));
 
             switch (moneyType) {
                 case CRYPTO:
@@ -1280,10 +1279,6 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     merchandiseWalletPlatform   = Platforms.BANKING_PLATFORM;
                     merchandiseCurrency         = FiatCurrency.getByCode(merchandiseCurrencyCode);
                     walletAssociated            = getWalletAssociated(cryptoBrokerPublicKey, merchandiseWalletPlatform, merchandiseCurrency);
-                    System.out.print("\nHAD STOCK - BANK\n" +
-                                    " - merchandiseWalletPlatform: "+merchandiseWalletPlatform+
-                                    " - publicKeyWalletAssociated: "+walletAssociated.getWalletPublicKey()+
-                                    " - bankAccount: "+walletAssociated.getBankAccount());
                     if(walletAssociated.getWalletPublicKey().isEmpty())
                         throw new CantSubmitMerchandiseException(null,"Submitting the merchandise, Validate Stock", "getPublicKeyWalletAssociated IS NULL");
                     balance = bankMoneyWalletManager.loadBankMoneyWallet(walletAssociated.getWalletPublicKey()).getAvailableBalance().getBalance(walletAssociated.getBankAccount());
@@ -1299,9 +1294,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     break;
             }
 
-            System.out.print("\n HAD STOCK: balance ("+balance+") >= amount ("+amount+")");
             if(balance >= amount) return Boolean.TRUE;
-
             return Boolean.FALSE;
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
@@ -1488,20 +1481,17 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
         try {
 
-            final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey);
-            final CryptoBrokerWalletSetting cryptoBrokerWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+            final CryptoBrokerWallet cryptoBrokerWallet                 = cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey);
+            final CryptoBrokerWalletSetting cryptoBrokerWalletSetting   = cryptoBrokerWallet.getCryptoWalletSetting();
             List<CryptoBrokerWalletAssociatedSetting> associatedWallets = cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
 
             if (!associatedWallets.isEmpty()) {
 
                 for (CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting : associatedWallets) {
 
-                    Platforms associatedWalletPlatform = cryptoBrokerWalletAssociatedSetting.getPlatform();
-                    Currency associatedWalletMerchandise = cryptoBrokerWalletAssociatedSetting.getMerchandise();
+                    Platforms associatedWalletPlatform      = cryptoBrokerWalletAssociatedSetting.getPlatform();
+                    Currency associatedWalletMerchandise    = cryptoBrokerWalletAssociatedSetting.getMerchandise();
 
-                    System.out.print("\n ASSOCIATED WALLET: getPublicKeyWalletAssociated()\n" +
-                            " - associatedWalletPlatform ("+associatedWalletPlatform+") == merchandiseWalletPlatform ("+merchandiseWalletPlatform+")\n" +
-                            " - associatedWalletMerchandise ("+associatedWalletMerchandise+") == merchandiseCurrency ("+merchandiseCurrency+")");
                     if (associatedWalletPlatform == merchandiseWalletPlatform && associatedWalletMerchandise == merchandiseCurrency)
                         return cryptoBrokerWalletAssociatedSetting;
 
