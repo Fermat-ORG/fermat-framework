@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -32,8 +31,8 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.database.BitcoinCryptoNetworkDatabaseDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
@@ -45,7 +44,6 @@ import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Context;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Peer;
-import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
@@ -57,9 +55,7 @@ import org.bitcoinj.params.RegTestParams;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -92,7 +88,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
-    Broadcaster broadcaster;
     final EventManager eventManager;
 
 
@@ -105,7 +100,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                                        PluginFileSystem pluginFileSystem,
                                        ErrorManager errorManager,
                                        Context context,
-                                       Broadcaster broadcaster,
                                        BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao,
                                        EventManager eventManager) {
         /**
@@ -117,7 +111,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.pluginFileSystem = pluginFileSystem;
         this.errorManager = errorManager;
         this.context = context;
-        this.broadcaster = broadcaster;
         this.dao = bitcoinCryptoNetworkDatabaseDao;
         this.eventManager = eventManager;
 
@@ -134,7 +127,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I define the MonitorAgent private class
          */
-        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, this.context, broadcaster, dao);
+        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, this.context, dao);
 
         // I define the thread name and start it.
         threadName = "CryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
@@ -199,7 +192,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         UUID pluginId;
         PluginFileSystem pluginFileSystem;
         ErrorManager errorManager;
-        Broadcaster broadcaster;
 
 
         /**
@@ -220,7 +212,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                             NetworkParameters networkParameters,
                             BlockchainNetworkType blockchainNetworkType,
                             Context context,
-                            Broadcaster broadcaster,
                             BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
 
             this.wallet = wallet;
@@ -231,7 +222,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             this.NETWORK_PARAMETERS = networkParameters;
             this.BLOCKCHAIN_NETWORKTYPE = blockchainNetworkType;
             this.context = context;
-            this.broadcaster = broadcaster;
             this.dao = bitcoinCryptoNetworkDatabaseDao;
         }
 
@@ -268,7 +258,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * add the events
                  */
-                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, this.walletFileName, this.context, this.broadcaster, wallet, dao, eventManager);
+                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, this.walletFileName, this.context, wallet, dao, eventManager);
                 peerGroup.addEventListener(events);
                 this.wallet.addEventListener(events);
                 blockChain.addListener(events);
@@ -393,17 +383,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
              transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
 
-            //the broadcaster id that I will be using to notify the progress
-            final int broadcasterId = broadcastProgress(0, txHash, 0);
-
-            transactionBroadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-                @Override
-                public void onBroadcastProgress(double progress) {
-                    System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
-                    broadcastProgress((int) Math.round(progress * 100), txHash, broadcasterId);
-                }
-            });
-
 
              ListenableFuture<Transaction> future = transactionBroadcast.future();
             /**
@@ -445,9 +424,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 public void onFailure(Throwable t) {
                     System.out.println("***CryptoNetwork*** Error bradcasting transaction " + txHash + "...");
 
-                    //will close the open broadcaster
-                    broadcastProgress(100, txHash, broadcasterId);
-
                     try {
                         dao.setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                     } catch (CantExecuteDatabaseOperationException e) {
@@ -461,21 +437,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
              * starts the broadcasting.
              */
             transactionBroadcast.broadcast();
-        }
-
-
-        private int broadcastProgress(int progress, String txHash, int broadcasterId) {
-            FermatBundle fermatBundle = new FermatBundle();
-            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Broadcasting tx " +txHash);
-            fermatBundle.put(Broadcaster.PROGRESS_BAR, progress);
-
-            if (broadcasterId != 0){
-                fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterId);
-                broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
-            } else
-                broadcasterId = broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
-
-            return broadcasterId;
         }
 
         /**
