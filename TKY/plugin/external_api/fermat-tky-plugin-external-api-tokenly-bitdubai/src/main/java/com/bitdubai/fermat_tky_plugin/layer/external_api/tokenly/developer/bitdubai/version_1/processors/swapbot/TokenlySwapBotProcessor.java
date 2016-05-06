@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot;
 
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
@@ -32,7 +33,9 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
      * @return
      * @throws CantGetBotException
      */
-    public static Bot getBotByBotId(String botId) throws CantGetBotException {
+    public static Bot getBotByBotId(String botId) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         //Request URL to get a bot by tokenly Id.
         String requestedURL=swabotTokenlyURL+"bot/"+botId;
         try{
@@ -53,7 +56,9 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
      * @return
      * @throws CantGetBotException
      */
-    public static Bot getBotByTokenlyUsername(String username) throws CantGetBotException {
+    public static Bot getBotByTokenlyUsername(String username) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         //Request URL to get a bot by tokenly Id.
         String requestedURL=swabotTokenlyURL+"bots?username="+username;
         String id;
