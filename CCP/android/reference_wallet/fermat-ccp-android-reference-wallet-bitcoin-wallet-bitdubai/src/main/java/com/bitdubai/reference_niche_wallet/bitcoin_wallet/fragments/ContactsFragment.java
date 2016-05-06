@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -204,13 +205,14 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         return container;
     }
 
+    private SubActionButton button1;
+    private SubActionButton button2;
     @SuppressWarnings("ResourceType")
     private void setUpFAB() {
         // in Activity Context
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
         frameLayout.setLayoutParams(lbs);
 
         ImageView icon = new ImageView(getActivity());
@@ -219,21 +221,27 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                 .setContentView(frameLayout)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
+
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-        // repeat many times:
+
         ImageView itemIcon = new ImageView(getActivity());
         itemIcon.setImageResource(R.drawable.extra_user_button);
-
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button)).setText("External User").build();
+        button1 = itemBuilder
+                .setContentView(itemIcon)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button))
+                .setText("External User")
+                .build();
         button1.setId(ID_BTN_EXTRA_USER);
-
 
         ImageView itemIcon2 = new ImageView(getActivity());
         itemIcon2.setImageResource(R.drawable.intra_user_button);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button)).setText("Fermat User").build();
+        button2 = itemBuilder.setContentView(itemIcon2)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button))
+                .setText("Fermat User")
+                .build();
         button2.setId(ID_BTN_INTRA_USER);
 
-         actionMenu = new FloatingActionMenu.Builder(getActivity())
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(button1)
                 .addSubActionView(button2)
                 .attachTo(actionButton)
@@ -241,7 +249,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
-
     }
 
     @Override
@@ -255,14 +262,18 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     }
 
     @Override
-    public void onDrawerClose() {
-        FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
-
+    public void onDrawerOpen() {
+        actionButton.setVisibility(View.GONE);
+        button1.setVisibility(View.GONE);
+        button2.setVisibility(View.GONE);
     }
 
     @Override
-    public void onDrawerSlide(View drawerView, float offset) {
-        FermatAnimationsUtils.showEmpty(getActivity(), false, actionMenu.getActivityContentView());
+    public void onDrawerClose() {
+        FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+        actionButton.setVisibility(View.VISIBLE);
+        button1.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -838,8 +849,6 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             loadingView.setVisibility(View.GONE);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyView);
         }
-
-
     }
 
     /**
@@ -888,33 +897,4 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         }
 
     }
-
-    @Override
-    public void onDrawerOpen() {
-
-        //close add contacts menu - FloatingActionButton
-
-    }
-
-   /* @Override
-    public void onDrawerSlide(View drawerView, float offset){
-
-        try{
-
-            if(offset == 1) {
-                actionButton.setAlpha(0);
-                actionMenu.close(false);
-            }
-            esle
-            {
-                actionButton.setAlpha(1);
-            }
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-
-    }*/
-
 }
