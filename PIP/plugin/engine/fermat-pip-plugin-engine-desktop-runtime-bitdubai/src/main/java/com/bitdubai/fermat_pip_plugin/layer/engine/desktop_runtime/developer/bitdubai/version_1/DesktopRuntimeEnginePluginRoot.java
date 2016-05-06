@@ -133,7 +133,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             pluginTextFile.loadFromMedia();
             dev = pluginTextFile.getContent();
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             dev = "false";
         }
         return dev.equals("true");

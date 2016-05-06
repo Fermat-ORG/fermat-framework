@@ -27,6 +27,8 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
@@ -42,10 +44,8 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin
 import com.bitdubai.fermat_api.layer.dmp_module.AppManagerSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.WalletsListFailedToLoadException;
 import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
@@ -67,7 +67,7 @@ import static android.widget.Toast.makeText;
  */
 
 
-public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubAppResources> implements SearchView.OnCloseListener,
+public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,ResourceProviderManager> implements SearchView.OnCloseListener,
         SearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener,
         OnStartDragListener,

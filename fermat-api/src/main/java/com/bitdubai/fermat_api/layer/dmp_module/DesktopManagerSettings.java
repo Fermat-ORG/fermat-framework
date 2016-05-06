@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_api.layer.dmp_module;
 
-public class DesktopManagerSettings implements AppManagerSettings {
+import java.io.Serializable;
+
+public class DesktopManagerSettings implements AppManagerSettings,Serializable{
 
     private boolean isHelpEnabled;
     private boolean notificationEnabled;

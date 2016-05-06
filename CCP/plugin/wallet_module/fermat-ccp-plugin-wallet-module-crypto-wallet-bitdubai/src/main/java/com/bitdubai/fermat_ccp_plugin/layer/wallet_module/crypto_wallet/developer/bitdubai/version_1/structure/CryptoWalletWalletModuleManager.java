@@ -10,9 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -1520,11 +1517,5 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         return new int[0];
     }
 
-    public final void persistSettings(String publicKey,final BitcoinWalletSettings settings) throws CantPersistSettingsException {
-        getSettingsManager().persistSettings(publicKey, settings);
-    }
 
-    public final BitcoinWalletSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
-        return getSettingsManager().loadAndGetSettings(publicKey);
-    }
 }

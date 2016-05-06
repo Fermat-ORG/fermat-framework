@@ -41,5 +41,12 @@ public class ModuleManagerImpl<Z extends FermatSettings> {
     }
 
 
+    public final void persistSettings(String publicKey,final Z settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey, settings);
+    }
+
+    public final Z loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+        return getSettingsManager().loadAndGetSettings(publicKey);
+    }
 
 }

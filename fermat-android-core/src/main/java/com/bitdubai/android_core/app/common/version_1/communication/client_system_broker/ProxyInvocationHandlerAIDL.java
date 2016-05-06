@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- * Created by mati on 2016.03.29..
+ * Created by Matias Furszyfer on 2016.03.29..
  */
 public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements InvocationHandler {
 
@@ -29,9 +29,11 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {
 
+
         Log.i(TAG,"object: "+ proxy.getClass().getInterfaces());
         Log.i(TAG,"method: "+ method.getName());
         Log.i(TAG, "args: " + args);
+
 
         return clientSystemBrokerService.sendMessage(
                 pluginVersionReference,
