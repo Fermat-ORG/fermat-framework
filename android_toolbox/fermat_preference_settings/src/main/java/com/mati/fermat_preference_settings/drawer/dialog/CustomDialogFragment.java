@@ -40,12 +40,11 @@ public class CustomDialogFragment
     private static Context context;
 
 
-    public static CustomDialogFragment newInstance(Context contextFragment, Bundle data, String itemsArray[]) {
+    public static CustomDialogFragment newInstance(Context contextFragment, Bundle data) {
         try {
-            if(itemsArray == null)
-                items = data.getInt("items");
-            else {
-                itemsList = itemsArray;
+            items = data.getInt("items");
+            if(items == 0) {
+                itemsList = data.getStringArray("items_array");
                 withArray = true;
             }
             mode = data.getString("mode");
