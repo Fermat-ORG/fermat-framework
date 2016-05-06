@@ -29,19 +29,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.art_fan_identity.R;
 
 import java.io.ByteArrayOutputStream;
@@ -584,18 +581,18 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         mFanExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                try{
-                    if(!updateCheck){
-                            List<String> arraySpinner = new ArrayList<>();
-                            arraySpinner.add("Select an Identity...");
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                    getActivity(),
-                                    android.R.layout.simple_spinner_item,
-                                    arraySpinner
-                            );
-                        if(!mFanExternalPlatform.getSelectedItem().equals(mFanExternalPlatform.getItemAtPosition(0))){
+                try {
+                    if (!updateCheck) {
+                        List<String> arraySpinner = new ArrayList<>();
+                        arraySpinner.add("Select an Identity...");
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                getActivity(),
+                                android.R.layout.simple_spinner_item,
+                                arraySpinner
+                        );
+                        if (!mFanExternalPlatform.getSelectedItem().equals(mFanExternalPlatform.getItemAtPosition(0))) {
                             ArtExternalPlatform externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString());
-                            if(externalPlatform != null){
+                            if (externalPlatform != null) {
                                 List<String> identityByPlatformList = getFanIdentityByPlatform(externalPlatform);
                                 if (!identityByPlatformList.isEmpty()) {
                                     arraySpinner.addAll(identityByPlatformList);
@@ -612,7 +609,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         mFanExternalUser.setSelection(0);
                     }
                     updateCheck = false;
-                }catch (Exception e){
+                } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(
                             SubApps.ART_FAN_IDENTITY,
                             UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
@@ -620,6 +617,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
