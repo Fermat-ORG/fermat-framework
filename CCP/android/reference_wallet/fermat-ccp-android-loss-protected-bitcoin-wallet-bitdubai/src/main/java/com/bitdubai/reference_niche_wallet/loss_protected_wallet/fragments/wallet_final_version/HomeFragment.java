@@ -435,9 +435,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
 
             //set Earning or Losts Values
-            double total = 0;
+            //double total = 0;
             //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
-            if (total > 0){
+
+            /*if (total > 0){
                 txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(total)+" earned");
                 earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
             }
@@ -448,7 +449,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             if (total< 0){
                 txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(total)+" earned");
                 earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
-            }
+            }*/
 
             //set Actual Date
 
@@ -887,10 +888,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
                 if (e.getVal()>=0){
 
-                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(e.getVal())+" earned");
+                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(e.getVal())+" earned");
                     earnOrLostImage.setImageResource(R.drawable.earning_icon);
                 }else {
-                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(e.getVal())+" losted");
+                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(e.getVal())+" losted");
                     earnOrLostImage.setImageResource(R.drawable.lost_icon);
                 }
                 chart.invalidate(); // refresh

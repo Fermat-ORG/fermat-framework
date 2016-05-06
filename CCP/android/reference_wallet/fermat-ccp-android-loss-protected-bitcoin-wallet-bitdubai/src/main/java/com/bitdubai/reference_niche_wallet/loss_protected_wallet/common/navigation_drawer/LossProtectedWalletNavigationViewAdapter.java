@@ -22,6 +22,7 @@ public class LossProtectedWalletNavigationViewAdapter extends FermatAdapter<Menu
 
 
     Typeface tf;
+    int MAX_DIVIDER_ROW = 3;
     protected LossProtectedWalletNavigationViewAdapter(Context context) {
         super(context);
     }
@@ -68,7 +69,10 @@ public class LossProtectedWalletNavigationViewAdapter extends FermatAdapter<Menu
 
             //holder.getRow_container().setBackgroundColor(Color.parseColor("#80000000"));
             if(data.isSelected())
-                holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+                //holder.getRow_container().setBackgroundResource(R.color.black_overlay_2);
+                holder.getNavigation_row_divider().setBackgroundResource(R.color.navigation_divider_color);
+                holder.getNavigation_row_divider().getLayoutParams().height = MAX_DIVIDER_ROW;
+
 
             switch (position) {
                 case 0:
