@@ -46,8 +46,8 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDeveloperFactory;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;

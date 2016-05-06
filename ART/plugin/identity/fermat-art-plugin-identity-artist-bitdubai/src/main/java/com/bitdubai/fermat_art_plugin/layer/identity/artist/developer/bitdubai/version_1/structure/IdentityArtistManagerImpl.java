@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
@@ -23,12 +25,10 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.database.ArtistIdentityDao;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantInitializeArtistIdentityDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,7 +159,9 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             byte[] profileImage,
             UUID externalIdentityID,
             String externalUsername,
-            ArtExternalPlatform artExternalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType) throws CantCreateArtistIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType) throws CantCreateArtistIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -214,7 +216,9 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             byte[] profileImage,
             UUID externalIdentityID,
             String externalUsername,
-            ArtExternalPlatform artExternalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType) throws CantUpdateArtistIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType) throws CantUpdateArtistIdentityException {
 
         try {
             getArtistIdentityDao().updateIdentityArtistUser(

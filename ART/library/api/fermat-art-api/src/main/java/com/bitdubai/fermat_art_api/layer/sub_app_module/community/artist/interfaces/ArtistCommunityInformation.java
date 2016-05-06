@@ -2,13 +2,14 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interf
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/6/16.
  */
-public interface ArtistCommunityInformation {
+public interface ArtistCommunityInformation extends Serializable {
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented Artist

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums;
+package com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
