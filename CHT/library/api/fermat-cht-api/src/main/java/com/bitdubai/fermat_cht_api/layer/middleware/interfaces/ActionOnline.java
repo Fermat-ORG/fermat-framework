@@ -21,6 +21,6 @@ public interface ActionOnline {
     boolean getValue();
     void setValue(boolean value);
 
-    Timestamp getLastConnection();
-    void setLastConnection(Timestamp lastConnection);
+    String getLastConnection();
+    void setLastConnection(String lastConnection);
 }

@@ -1426,7 +1426,7 @@ public class ChatMiddlewareDatabaseDao {
         return record;
     }
 
-    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState writingState, Boolean value, Timestamp lastConnection) throws DatabaseOperationException{
+    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState writingState, Boolean value, String lastConnection) throws DatabaseOperationException{
         DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -1435,7 +1435,7 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, writingState.getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
         if(lastConnection!=null)
-        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection.toString());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection);
 
         return record;
     }
@@ -1604,7 +1604,7 @@ public class ChatMiddlewareDatabaseDao {
         actionOnline.setActionState(ActionState.getByCode(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE)));
         actionOnline.setValue(Boolean.valueOf(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE)));
         String lastConnection = actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION);
-        if(lastConnection!=null) actionOnline.setLastConnection(Timestamp.valueOf(lastConnection));
+        if(lastConnection!=null) actionOnline.setLastConnection(lastConnection);
 
         return actionOnline;
     }
@@ -1931,7 +1931,7 @@ public class ChatMiddlewareDatabaseDao {
 
             ActionOnline actionOnline = getOnlineActionByPk(publicKey);
             UUID actionId;
-            Timestamp lastConnection;
+            String lastConnection;
             boolean value;
             if(actionOnline==null){
                 actionId=UUID.randomUUID();
