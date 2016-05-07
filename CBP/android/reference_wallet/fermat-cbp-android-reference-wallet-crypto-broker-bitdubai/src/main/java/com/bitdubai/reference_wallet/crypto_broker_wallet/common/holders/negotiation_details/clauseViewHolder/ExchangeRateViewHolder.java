@@ -15,6 +15,7 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.Negotiat
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -37,10 +38,14 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private Quote suggestedRate;
     private float spread;
     private boolean suggestedRateLoaded;
+    private NumberFormat formatter;
+
 
 
     public ExchangeRateViewHolder(View itemView, int holderType) {
         super(itemView, holderType);
+
+
 
         exchangeRateReferenceText = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_text);
         exchangeRateReferenceValue = (FermatTextView) itemView.findViewById(R.id.cbw_exchange_rate_reference_value);
@@ -51,6 +56,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValueRightSide = (FermatTextView) itemView.findViewById(R.id.cbw_your_exchange_rate_value_right_side);
         yourExchangeRateValue = (FermatButton) itemView.findViewById(R.id.cbw_your_exchange_rate_value);
         yourExchangeRateValue.setOnClickListener(this);
+
+        formatter = DecimalFormat.getInstance();
+        formatter.setMaximumFractionDigits(2);
+        formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override
@@ -67,15 +76,16 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
 
         BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
-        String marketExchangeRateStr = DecimalFormat.getInstance().format(marketRateReferenceValue.doubleValue());
-        String suggestedExchangeRateStr = DecimalFormat.getInstance().format(marketRateReferenceValue.doubleValue() * (1+(spread/100)));
+
+        String marketExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue());
+        String suggestedMaxExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue() * (1+(spread/100)));
 
 
         if (marketRateList != null) {
             markerRateReference.setText(String.format("1 %1$s / %2$s %3$s",
                     currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
-            exchangeRateReferenceValue.setText(String.format("1 %1$s / %2$s %3$s",
-                    suggestedRate.getMerchandise().getCode(), suggestedExchangeRateStr, suggestedRate.getFiatCurrency().getCode()));
+            exchangeRateReferenceValue.setText(String.format("Min: %1$s %3$s    Max: %2$s %3$s",
+                    marketExchangeRateStr, suggestedMaxExchangeRateStr, suggestedRate.getFiatCurrency().getCode()));
         }
         else {
             markerRateReference.setText("Can't get Market Exchange Rate");
@@ -174,14 +184,12 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         BigDecimal exchangeRate = new BigDecimal(0);
 
         ExchangeRate currencyQuotation = getExchangeRate(currencyOver, currencyUnder);
-        String exchangeRateStr = "0.0";
 
         if (currencyQuotation == null) {
             currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
                 exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
                 exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
-                exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
             }
         } else {
             exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
