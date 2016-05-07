@@ -154,7 +154,7 @@
     <string name="title">title</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
-    <string name="cbw_your_exchange_rate">Your Exchange Rate</string>
+    <string name="cbw_your_exchange_rate">Selected Rate</string>
     <string name="cbw_value">value</string>
     <string name="cbw_cancel_negotiation">Cancel Negotiation</string>
     <string name="cbw_reason">Reason</string>
