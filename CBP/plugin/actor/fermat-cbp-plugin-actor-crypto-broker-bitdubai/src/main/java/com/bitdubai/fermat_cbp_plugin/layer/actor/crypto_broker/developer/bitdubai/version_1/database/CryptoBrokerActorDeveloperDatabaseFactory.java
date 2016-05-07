@@ -157,23 +157,6 @@ public class CryptoBrokerActorDeveloperDatabaseFactory implements DealsWithPlugi
         DeveloperDatabaseTable quoteExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME, quoteExtraDataColumns);
         tables.add(quoteExtraDataTable);
 
-        /**
-         * Table Platforms Extra Data columns.
-         */
-        List<String> platformsExtraDataColumns = new ArrayList<String>();
-
-        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME);
-        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME);
-        platformsExtraDataColumns.add(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME);
-        /**
-         * Table Platforms Extra Data addition.
-         */
-        DeveloperDatabaseTable platformsExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoBrokerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME, platformsExtraDataColumns);
-        tables.add(platformsExtraDataTable);
-
-
-
         return tables;
     }
 

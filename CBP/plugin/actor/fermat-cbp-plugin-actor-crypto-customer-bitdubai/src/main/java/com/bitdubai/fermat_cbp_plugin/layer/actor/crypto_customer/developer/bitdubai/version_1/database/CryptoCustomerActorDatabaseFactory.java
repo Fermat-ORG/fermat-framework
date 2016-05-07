@@ -113,6 +113,7 @@ public class CryptoCustomerActorDatabaseFactory implements DealsWithPluginDataba
             table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME, DatabaseDataType.REAL, 100, Boolean.FALSE);
+            table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
             table.addIndex(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_FIRST_KEY_COLUMN);
 
@@ -121,24 +122,8 @@ public class CryptoCustomerActorDatabaseFactory implements DealsWithPluginDataba
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Platforms Extra Data table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME);
-
-            table.addColumn(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, Boolean.TRUE);
-            table.addColumn(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-            table.addColumn(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
-
-            table.addIndex(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

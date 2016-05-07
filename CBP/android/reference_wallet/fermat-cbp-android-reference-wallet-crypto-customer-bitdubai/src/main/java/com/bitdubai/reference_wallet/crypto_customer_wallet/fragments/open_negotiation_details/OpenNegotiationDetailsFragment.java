@@ -26,6 +26,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -57,6 +59,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -805,6 +808,45 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         ArrayList<MoneyType> paymentMethods = new ArrayList<>();
 
+        negotiationInfo.getCustomer().getPublicKey();
+        negotiationInfo.getBroker().getPublicKey();
+
+        try {
+            Collection<Platforms> platforms = moduleManager.getPlatformsSupported(negotiationInfo.getCustomer().getPublicKey(), negotiationInfo.getBroker().getPublicKey(), currency);
+
+            for(Platforms p : platforms){
+                ArrayList<MoneyType> temp = getMoneyType(p);
+                for(MoneyType m : temp){
+                    paymentMethods.add(m);
+                }
+            }
+
+        } catch (CantGetListActorExtraDataException e) {
+            // TODO: revisar el manejo de excepciones
+        }
+
+        /*
+
+        //ADD FIAT CURRENCY IF IS FIAT
+        if (FiatCurrency.codeExists(currency)) {
+            paymentMethods.add(MoneyType.BANK);
+            paymentMethods.add(MoneyType.CASH_DELIVERY);
+            paymentMethods.add(MoneyType.CASH_ON_HAND);
+        }
+
+        //ADD CRYPTO CURRENCY IF IS CRYPTO
+        if (CryptoCurrency.codeExists(currency)) {
+            paymentMethods.add(MoneyType.CRYPTO);
+        }
+        */
+
+        return paymentMethods;
+    }
+
+    private ArrayList<MoneyType> getPaymentMethod2(String currency) {
+
+        ArrayList<MoneyType> paymentMethods = new ArrayList<>();
+
         //ADD FIAT CURRENCY IF IS FIAT
         if (FiatCurrency.codeExists(currency)) {
             paymentMethods.add(MoneyType.BANK);
@@ -818,6 +860,31 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
 
         return paymentMethods;
+    }
+
+    private ArrayList<MoneyType> getMoneyType(Platforms p){
+
+        ArrayList<MoneyType> moneys = new ArrayList<>();
+
+        switch (p){
+
+            case BANKING_PLATFORM:
+                moneys.add(MoneyType.BANK);
+            break;
+
+            case CASH_PLATFORM:
+                moneys.add(MoneyType.CASH_DELIVERY);
+                moneys.add(MoneyType.CASH_ON_HAND);
+            break;
+
+            case CRYPTO_BROKER_PLATFORM:
+                moneys.add(MoneyType.CRYPTO);
+            break;
+
+        }
+
+        return moneys;
+
     }
 
     /**

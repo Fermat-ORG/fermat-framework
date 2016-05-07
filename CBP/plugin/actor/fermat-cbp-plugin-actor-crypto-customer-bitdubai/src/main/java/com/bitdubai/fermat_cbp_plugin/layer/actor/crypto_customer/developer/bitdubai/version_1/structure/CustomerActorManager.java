@@ -252,13 +252,6 @@ public final class CustomerActorManager implements ActorExtraDataManager {
     }
 
     @Override
-    public Collection<Platforms> getPlatformsSupport(final String   customerPublicKey,
-                                                     final Currency currency         ) throws CantGetListPlatformsException {
-
-        return new ArrayList<>();
-    }
-
-    @Override
     public void requestBrokerExtraData(final ActorExtraData actorExtraData) throws CantRequestBrokerExtraDataException {
 
         try {
@@ -281,4 +274,10 @@ public final class CustomerActorManager implements ActorExtraDataManager {
             throw new CantRequestBrokerExtraDataException(FermatException.wrapException(e), "actorExtraData: "+actorExtraData, "Unhandled error.");
         }
     }
+
+    @Override
+    public Collection<Platforms> getPlatformsSupported(String customerPublicKey, String brokerPublicKey, String paymentCurrency) throws CantGetListActorExtraDataException {
+        return this.dao.getPlatformsSupported(customerPublicKey, brokerPublicKey, paymentCurrency);
+    }
+
 }
