@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Curve;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
+
 import java.math.BigInteger;
 import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
-
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Curve;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
 
 public class AsymmetricPublicKey extends EllipticCurvePoint implements PublicKey {
 
