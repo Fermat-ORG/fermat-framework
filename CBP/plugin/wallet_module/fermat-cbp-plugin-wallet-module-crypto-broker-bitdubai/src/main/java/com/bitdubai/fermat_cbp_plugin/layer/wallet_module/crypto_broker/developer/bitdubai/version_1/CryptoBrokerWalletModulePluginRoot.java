@@ -234,7 +234,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @Override
     public void start() throws CantStartPluginException {
         super.start();
-        preConfigureWallet();
+        //preConfigureWallet();
     }
 
     @Override
