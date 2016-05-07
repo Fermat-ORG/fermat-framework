@@ -46,6 +46,7 @@ public class CryptoCustomerActorDatabaseConstants {
     static final String QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME = "merchandise";
     static final String QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME = "payment_currency";
     static final String QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME = "price";
+    static final String QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME = "supported_platforms";
 
     static final String QUOTE_EXTRA_DATA_FIRST_KEY_COLUMN = "quote_id";
 
