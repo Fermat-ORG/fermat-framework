@@ -277,11 +277,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 try {
                     moduleManager.updateNegotiation(negotiationInfo);
 
-                    Toast.makeText(getActivity(), "Send Negotiation. ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
                     changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
 
                 } catch (CouldNotUpdateNegotiationException e) {
-                    Toast.makeText(getActivity(), "Error sending the negotiation.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
                 }
             }
         }

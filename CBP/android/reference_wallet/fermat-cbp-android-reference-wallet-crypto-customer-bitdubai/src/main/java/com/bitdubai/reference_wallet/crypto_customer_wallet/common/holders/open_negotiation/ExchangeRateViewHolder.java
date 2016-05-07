@@ -16,6 +16,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.Broker
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +34,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     private TextView yourExchangeRateText;
     private FermatButton yourExchangeRateValue;
     private List<IndexInfoSummary> marketRateList;
+    private NumberFormat formatter;
 
 
     public ExchangeRateViewHolder(View itemView) {
@@ -45,6 +47,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         markerRateReference = (TextView) itemView.findViewById(R.id.ccw_market_rate_value);
         markerRateText = (TextView) itemView.findViewById(R.id.ccw_market_rate_text);
         yourExchangeRateValue.setOnClickListener(this);
+
+        formatter = DecimalFormat.getInstance();
+        formatter.setMaximumFractionDigits(2);
+        formatter.setRoundingMode(RoundingMode.DOWN);
     }
 
     @Override
@@ -55,13 +61,12 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final ClauseInformation currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY);
         final ClauseInformation currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY);
 
-//        double marketRate = 212.48; // TODO cambiar por valor que devuelve el proveedor asociado a la wallet para este par de monedas
-//        String formattedMarketRate = NumberFormat.getInstance().format(marketRate);
 
-        //final BigDecimal marketRate = new BigDecimal(getMarketRate(clauses).replace("," ,""));
-        //String formattedMarketRate  = DecimalFormat.getInstance().format(marketRate.doubleValue());
+        BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
+        String marketExchangeRateStr = formatter.format(marketRateReferenceValue.doubleValue());
 
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), getMarketRateValue(clauses), currencyToPay.getValue()));
+
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy.getValue(), marketExchangeRateStr, currencyToPay.getValue()));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy.getValue()));
         yourExchangeRateValue.setText(clause.getValue());
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay.getValue()));
@@ -137,27 +142,25 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return brokerMarketRate;
     }
 
-    private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
+    private BigDecimal getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
 
         String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+        BigDecimal exchangeRate = new BigDecimal(0);
 
         ExchangeRate currencyQuotation = getExchangeRate(currencyOver, currencyUnder);
-        String exchangeRateStr = "0.0";
 
         if (currencyQuotation == null) {
             currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
             if (currencyQuotation != null) {
-                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
+                exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
                 exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
-                exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
             }
         } else {
-            BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
-            exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
+            exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
         }
 
-        return exchangeRateStr;
+        return exchangeRate;
     }
 
     private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
