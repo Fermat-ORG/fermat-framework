@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -54,8 +55,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -66,7 +67,7 @@ import java.util.UUID;
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
  * Edited by Miguel Rincon on 18/04/2016
  */
-public class ChatActorCommunityManager implements ChatActorCommunitySubAppModuleManager, Serializable {
+public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommunitySettings> implements ChatActorCommunitySubAppModuleManager, Serializable {
 
     private final ChatIdentityManager                   chatIdentityManager;
     private ChatActorCommunityInformation               chatActorCommunityManager             ;
@@ -81,6 +82,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
     private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ErrorManager errorManager, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
+        super(pluginFileSystem, pluginId);
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
         this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
@@ -428,18 +430,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         return ConnectionState.DISCONNECTED_REMOTELY;
     }
 
-    @Override
-    public SettingsManager<ChatActorCommunitySettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
 
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
 
     @Override
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
@@ -542,5 +533,15 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return notifications;
+    }
+
+    @Override
+    public void persistSettings(String publicKey, ChatActorCommunitySettings settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey, settings);
+    }
+
+    @Override
+    public ChatActorCommunitySettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+        return getSettingsManager().loadAndGetSettings(publicKey);
     }
 }

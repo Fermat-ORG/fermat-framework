@@ -11,17 +11,17 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.SessionConstantsAssetIssuerCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,33 +125,44 @@ public class ConnectDialog extends FermatDialog<AssetIssuerCommunitySubAppSessio
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-            try {
-                if (actorIssuer != null) {
-                    issuerConnect = new ArrayList<>();
+            if (actorIssuer != null) {
+                issuerConnect = new ArrayList<>();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
 
-                    issuerConnect.add(actorIssuer.getRecord());
+                        issuerConnect.add(actorIssuer.getRecord());
 
-                    getSession().getModuleManager().askActorAssetIssuerForConnection(issuerConnect);
+                        getSession().getModuleManager().askActorAssetIssuerForConnection(issuerConnect);
 
-                    Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
-                    broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
-                    sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-                } else {
-                    super.toastDefaultError();
-                }
-            } catch (CantAskConnectionActorAssetException e) {
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            } catch (CantRequestAlreadySendActorAssetException e) {
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                        Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
+                        broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                        sendLocalBroadcast(broadcast);
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dismiss();
+                        Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dismiss();
+                        Toast.makeText(getActivity(), R.string.before_action, Toast.LENGTH_LONG).show();
+
+                    }
+                });
+                worker.execute();
+//                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+            } else {
                 super.toastDefaultError();
             }
-            dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();
         }
     }
-
-
 }

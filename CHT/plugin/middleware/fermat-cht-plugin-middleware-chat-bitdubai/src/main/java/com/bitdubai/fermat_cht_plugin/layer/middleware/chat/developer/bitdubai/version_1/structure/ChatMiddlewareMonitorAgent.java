@@ -58,8 +58,8 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -640,8 +640,9 @@ public class ChatMiddlewareMonitorAgent implements
             CantGetMessageException, SendStatusUpdateMessageNotificationException {
         UUID messageId = chatMetadata.getMessageId();
         System.out.println("12345 SAVING MESSAGE");
-        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
-        if (messageRecorded == null) {
+//        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+                Message messageRecorded = null;
+//        if (messageRecorded == null) {
             /**
              * In this case, the message is not created in database, so, is an incoming message,
              * I need to create a new message
@@ -649,7 +650,7 @@ public class ChatMiddlewareMonitorAgent implements
             messageRecorded = getMessageFromChatMetadata(
                     chatMetadata);
             if (messageRecorded == null) return;
-        }
+//        }
 
         messageRecorded.setStatus(MessageStatus.RECEIVE);
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);

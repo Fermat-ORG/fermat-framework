@@ -38,7 +38,7 @@ public class ProvisoryData {
                 null, AppsStatus.DEV);
 
         Item item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.icon_settings_menu);
+        item2.setIconResource(R.drawable.settings72);
         item2.setPosition(0);
         lst.add(item2);
 
@@ -218,7 +218,7 @@ public class ProvisoryData {
 
         FermatFolder fermatFolder = new FermatFolder("Profiles",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
-        identityFolder.setIconResource(R.drawable.identities_xxhdpi);
+        identityFolder.setIconResource(R.drawable.identities72);
         identityFolder.setPosition(2);
         lst.add(identityFolder);
 
@@ -378,7 +378,7 @@ public class ProvisoryData {
 
         fermatFolder = new FermatFolder("Communities",lstCommunities,1);
         item2 = new Item(fermatFolder);
-        item2.setIconResource(R.drawable.fermat_comunities);
+        item2.setIconResource(R.drawable.communities72);
         item2.setPosition(3);
         lst.add(item2);
 
@@ -392,7 +392,7 @@ public class ProvisoryData {
                 "wallet_store",new Version(1,0,0),
                 null, AppsStatus.DEV);
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.ic_03);
+        item2.setIconResource(R.drawable.store72);
         item2.setPosition(4);
         lst.add(item2);
 

@@ -115,7 +115,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment_factory.DesktopFragmentsEnumType;
 
@@ -288,6 +288,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 //            makeText(getApplicationContext(), "Oooops! recovering from system error",
 //                    LENGTH_LONG).show();
+            e.printStackTrace();
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -365,6 +366,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
+            e.printStackTrace();
             handleExceptionAndRestart();
         }
     }
@@ -1067,6 +1069,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -1115,6 +1118,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
+            e.printStackTrace();
         }
     }
 
@@ -1253,6 +1257,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         } catch (Exception ex) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
             makeText(getApplicationContext(), "Recovering from system error", LENGTH_SHORT).show();
+            ex.printStackTrace();
             handleExceptionAndRestart();
         }
     }
@@ -1709,8 +1714,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Report error
      */
     public void reportError(String mailUserTo) throws Exception {
-        YourOwnSender yourOwnSender = new YourOwnSender(this);
-        yourOwnSender.send(mailUserTo, LogReader.getLog().toString());
+//        YourOwnSender yourOwnSender = new YourOwnSender(this);
+//        String log = LogReader.getLog().toString();
+//        yourOwnSender.send(mailUserTo,log );
+        LogReader.getLog(this,mailUserTo);
+      //  AndroidExternalAppsIntentHelper.sendMail(this,new String[]{mailUserTo},"Error report",log);
+
+
     }
 
     //send mail

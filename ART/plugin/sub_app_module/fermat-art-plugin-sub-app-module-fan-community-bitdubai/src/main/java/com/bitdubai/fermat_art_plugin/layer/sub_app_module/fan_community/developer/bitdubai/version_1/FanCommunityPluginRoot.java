@@ -19,11 +19,10 @@ import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActo
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.developer.bitdubai.version_1.structure.FanCommunityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
