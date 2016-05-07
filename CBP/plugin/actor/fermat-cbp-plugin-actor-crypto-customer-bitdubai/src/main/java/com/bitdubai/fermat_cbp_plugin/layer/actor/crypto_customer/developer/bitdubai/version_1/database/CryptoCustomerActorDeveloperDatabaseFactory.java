@@ -154,6 +154,7 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME);
         /**
          * Table Quote Extra Data addition.
          */
