@@ -4,7 +4,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -55,11 +59,10 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class ChatSupAppModuleManager implements ChatManager, Serializable {
+public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSettings> implements ChatManager, Serializable {
 
     private final MiddlewareChatManager middlewareChatManager;
     private final ChatIdentityManager chatIdentityManager;
-    private SettingsManager<ChatPreferenceSettings> settingsManager;
     private final ChatActorConnectionManager chatActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
@@ -72,6 +75,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
                                    UUID pluginId,
                                    ErrorManager errorManager)
     {
+        super(pluginFileSystem, pluginId);
         this.middlewareChatManager          = middlewareChatManager         ;
         this.chatIdentityManager            = chatIdentityManager           ;
         this.pluginFileSystem               = pluginFileSystem              ;
@@ -286,18 +290,6 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-    @Override
-    public SettingsManager<ChatPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
 
     /**
      * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
@@ -331,5 +323,15 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public void persistSettings(String publicKey, ChatPreferenceSettings settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey, settings);
+    }
+
+    @Override
+    public ChatPreferenceSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+        return getSettingsManager().loadAndGetSettings(publicKey);
     }
 }
