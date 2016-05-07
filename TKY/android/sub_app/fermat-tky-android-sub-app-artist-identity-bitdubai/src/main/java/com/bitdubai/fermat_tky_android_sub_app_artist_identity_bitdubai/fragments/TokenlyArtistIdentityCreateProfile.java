@@ -103,6 +103,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private View WarningCircle;
+    private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
 
     private Handler handler;
 
@@ -214,6 +216,9 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
 
         WarningCircle.setVisibility(View.GONE);
+
+        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        WarningLabel.setVisibility(View.GONE);
 
         text.setTextColor(Color.parseColor("#000000"));
         text2.setTextColor(Color.parseColor("#000000"));
@@ -508,16 +513,16 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
         if (ArtistExternalName.isEmpty()){
             mArtistExternalUserName.setHint("Username");
-            mArtistExternalUserName.setHintTextColor(Color.parseColor("#DF0101"));
+            mArtistExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (ArtistPassWord.isEmpty()){
             mArtistExternalPassword.setHint("Password");
-            mArtistExternalPassword.setHintTextColor(Color.parseColor("#DF0101"));
+            mArtistExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (ArtistImageBytes == null){
-            WarningCircle.setVisibility(View.VISIBLE);
+           // WarningCircle.setVisibility(View.VISIBLE);
         }
 
 

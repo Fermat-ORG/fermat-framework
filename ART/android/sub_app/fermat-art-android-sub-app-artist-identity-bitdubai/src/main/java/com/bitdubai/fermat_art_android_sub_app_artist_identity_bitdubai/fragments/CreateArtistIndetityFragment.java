@@ -107,7 +107,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private boolean contextMenuInUse = false;
     private boolean updateCheck = false;
     private View WarningCircle;
-    private TextView mAlias;
+    private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
+    private String NormalColor  =  "#0080FF";
+
 
 
     private static final int ERROR_IMAGE_VIEW = 5;
@@ -322,6 +325,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
         WarningCircle.setVisibility(View.GONE);
 
+        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        WarningLabel.setVisibility(View.GONE);
         /*
 
 
@@ -347,7 +352,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                mArtistExternalName.setBackgroundColor(Color.parseColor("#0080FF"));
+                mArtistExternalName.setBackgroundColor(Color.parseColor(NormalColor));
             }
 
             @Override
@@ -378,7 +383,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         artistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WarningCircle.setVisibility(View.GONE);
+                WarningLabel.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
                 getActivity().openContextMenu(artistImage);
             }
@@ -527,11 +532,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             UUID externalIdentityID) {
 
         if (ArtistImageBytes == null){
-            WarningCircle.setVisibility(View.VISIBLE);}
+           // WarningCircle.setVisibility(View.VISIBLE);
+            WarningLabel.setVisibility(View.VISIBLE);
+        }
 
         if(mArtistExternalPlatform.getSelectedItemPosition()==0){
-            mArtistExternalPlatform.setBackgroundColor(Color.parseColor("#DF0101"));
-        }else{mArtistExternalPlatform.setBackgroundColor(Color.parseColor("#0080FF"));}
+            mArtistExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
+        }else{mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));}
 
 
         /*
@@ -542,7 +549,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 */
 
         if (ArtistExternalName.isEmpty()){
-            mArtistUserName.setHintTextColor(Color.parseColor("#DF0101"));
+            mArtistUserName.setHintTextColor(Color.parseColor(WarningColor));
             }
 
         if (ArtistExternalName.isEmpty()){
@@ -579,7 +586,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mArtistExternalPlatform.setBackgroundColor(Color.parseColor("#0080FF"));
+                mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
                 try {
                     if (!updateCheck) {
                         List<String> arraySpinner = new ArrayList<>();

@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -93,6 +94,8 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private View WarningCircle;
+    private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
 
 
     private Handler handler;
@@ -252,14 +255,17 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         mFanExternalPlatform.setVisibility(View.GONE);
 
         WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
-
         WarningCircle.setVisibility(View.GONE);
+
+        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        WarningLabel.setVisibility(View.GONE);
 
 
         registerForContextMenu(fanImage);
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WarningLabel.setVisibility(View.GONE);
                 WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
@@ -282,7 +288,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                             Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
                             break;
                         case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                            Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "fill required items", Toast.LENGTH_LONG).show();
                             break;
                         case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
                             Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
@@ -389,15 +395,16 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
 
         if (fanExternalName.isEmpty()){
-            mFanExternalUserName.setHintTextColor(Color.parseColor("#DF0101"));
+            mFanExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (fanPassWord.isEmpty()){
-            mFanExternalPassword.setHintTextColor(Color.parseColor("#DF0101"));
+            mFanExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (fanImageBytes == null){
-            WarningCircle.setVisibility(View.VISIBLE);
+                WarningLabel.setVisibility(View.VISIBLE);
+           // WarningCircle.setVisibility(View.VISIBLE);
         }
 
 
