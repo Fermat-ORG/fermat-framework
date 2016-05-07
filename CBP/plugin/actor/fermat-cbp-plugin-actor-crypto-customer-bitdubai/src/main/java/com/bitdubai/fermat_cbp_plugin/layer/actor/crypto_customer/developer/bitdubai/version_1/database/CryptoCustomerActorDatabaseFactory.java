@@ -113,6 +113,7 @@ public class CryptoCustomerActorDatabaseFactory implements DealsWithPluginDataba
             table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME, DatabaseDataType.REAL, 100, Boolean.FALSE);
+            table.addColumn(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
 
             table.addIndex(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_FIRST_KEY_COLUMN);
 
