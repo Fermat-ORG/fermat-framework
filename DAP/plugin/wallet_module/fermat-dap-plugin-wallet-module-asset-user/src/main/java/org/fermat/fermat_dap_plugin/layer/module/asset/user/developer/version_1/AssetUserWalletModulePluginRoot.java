@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -30,6 +32,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
@@ -43,6 +49,10 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAsse
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
+import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.interfaces.AssetBuyerManager;
+import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
+import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_seller.interfaces.AssetSellerManager;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
@@ -52,10 +62,6 @@ import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfac
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_appropriation.interfaces.AssetAppropriationManager;
-import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
-import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.interfaces.AssetBuyerManager;
-import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
-import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_seller.interfaces.AssetSellerManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_transfer.interfaces.AssetTransferManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
@@ -68,11 +74,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.asset.user.developer.version_1.structure.AssetUserWalletModule;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -87,7 +88,7 @@ import java.util.UUID;
  * Created by Franklin on 07/09/15.
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM,
-        maintainerMail = "nerioindriago@gmail.com",
+        maintainerMail = "marsvicam@gmail.com",
         createdBy = "franklin",
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
