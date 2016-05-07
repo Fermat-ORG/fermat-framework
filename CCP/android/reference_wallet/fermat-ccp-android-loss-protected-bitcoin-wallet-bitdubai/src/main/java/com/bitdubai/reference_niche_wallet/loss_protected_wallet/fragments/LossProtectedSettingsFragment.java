@@ -144,25 +144,25 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
             // Exchange Rate Provider
-            if (lossProtectedWallet.getExchangeProvider() != null)
+           /* if (lossProtectedWallet.getExchangeProvider() != null)
                 exchangeProviderId =  lossProtectedWallet.getExchangeProvider();
 
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWallet.getExchangeRateProviderManagers());
-            String items[] = new String[providers.size()];
+            String itemsProviders[] = new String[providers.size()];
             for (int i=0; i<providers.size(); i++) {
                 CurrencyExchangeRateProviderManager provider = providers.get(i);
-                items[i] = provider.getProviderName();
+                itemsProviders[i] = provider.getProviderName();
                 if(provider.getProviderId().equals(exchangeProviderId))
                     previousSelectedItemExchange = provider.getProviderName();
             }
             final Bundle providerDialog = new Bundle();
-            providerDialog.putStringArray("items_array", items);
+            providerDialog.putStringArray("items_array", itemsProviders);
             providerDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
             providerDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
             providerDialog.putString("title", getResources().getString(R.string.exchange_title_label));
             providerDialog.putString("mode", "single_option");
             providerDialog.putString("previous_selected_item", previousSelectedItemExchange);
-            list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+            list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));*/
 
 
             list.add(new PreferenceSettingsLinkText(11, "Received Regtest Bitcoins", "", 15, Color.GRAY));

@@ -381,7 +381,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                     if (cryptoWalletWalletContact != null) {
                         walletContact.name = cryptoWalletWalletContact.getActorName();
                         walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
+                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) == null) {
                             appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
                                     appSession.getIntraUserModuleManager().getPublicKey(),
                                     Actors.INTRA_USER,
@@ -394,16 +394,19 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                     blockchainNetworkType
                             );
-                        }
-                    } else {
-                        if (cryptoWalletWalletContact != null)
+
+                            Toast.makeText(getActivity(), "Contact don't have an Address from red " + blockchainNetworkType.getCode() + "\nplease wait 2 minutes.", Toast.LENGTH_LONG).show();
+
+                        } else {
+
                             walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                            walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                            walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                            walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+                        }
+
                     }
-                    if (cryptoWalletWalletContact != null) {
-                        walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                        walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                        walletContact.isConnection = cryptoWalletWalletContact.isConnection();
-                    }
+
                     setUpUIData();
 
                 } catch ( CantCreateLossProtectedWalletContactException e)

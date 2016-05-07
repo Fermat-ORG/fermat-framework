@@ -323,55 +323,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             getAndShowMarketExchangeRateData(rootView);
 
 
-           /* txt_type_balance.setOnLongClickListener(new View.OnLongClickListener() {
-                public boolean onLongClick(View arg0) {
-                    Runnable _longPressed = new Runnable() {
-                        public void run() {
-                            Log.i("info", "LongPress");
-                            Toast.makeText(getActivity(), "Regtest download Init", Toast.LENGTH_SHORT).show();
-                            GET("", getActivity());
-                        }
-                    };
-                    return true;    // <- set to true
-                }
-
-            });*/
-
-
-
-       /*     txt_type_balance.setOnTouchListener(new View.OnTouchListener() {
-                long TIME_HOLD_TO_PRESS = 2000;
-
-                final Handler _handler = new Handler();
-                Runnable _longPressed = new Runnable() {
-                    public void run() {
-                        Log.i("info", "LongPress");
-                        GET("", getActivity());
-                    }
-                };
-
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        before = System.currentTimeMillis();
-                        return true;
-                    } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                        after = System.currentTimeMillis();
-                        if (after - before <= TIME_HOLD_TO_PRESS) {
-                            changeBalanceType(txt_type_balance, txt_balance_amount);
-                            return true;
-                        } else {
-                            GET("", getActivity());
-                            return true;
-                        }
-                    }
-                    return false;
-                }
-            });*/
-
-         
-
             //Event Click For change the balance type
             txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
 
@@ -461,7 +412,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
 
             //Get all wallet spending from the manager
-            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey());
+            //for especific network
+            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey(),this.blockchainNetworkType,);
 
             LineData data = getData(allWalletSpendingList);
             //LineData data = new LineData(labels, dataset);
@@ -470,13 +422,13 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             if (totalEarnedAndLostForToday!=0){
 
                 if (totalEarnedAndLostForToday > 0){
-                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
+                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
                     earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
                 }else if (totalEarnedAndLostForToday==0){
-                    txt_earnOrLost.setText("USD 0.00");
+                    txt_earnOrLost.setText("$ 0.00");
                     earnOrLostImage.setVisibility(View.INVISIBLE);
                 }else if (totalEarnedAndLostForToday< 0){
-                    txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
+                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
                     earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
                 }
 
@@ -525,8 +477,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
         }catch (CantListLossProtectedSpendingException e) {
         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-        makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedSpendingException",
-                Toast.LENGTH_SHORT).show();
+            makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedSpendingException",
+                    Toast.LENGTH_SHORT).show();
         }catch (CantLoadWalletException e) {
         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         makeText(getActivity(), "Oooops! Error Exception : CantLoadWalletException",
@@ -538,109 +490,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         }
     }
 
-    private String getWalletAddress(String actorPublicKey) {
-        String walletAddres="";
-        try {
-            //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = lossProtectedWallet.requestAddressToKnownUser(
-                    lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey(),
-                    Actors.INTRA_USER,
-                    actorPublicKey,
-                    Actors.EXTRA_USER,
-                    Platforms.CRYPTO_CURRENCY_PLATFORM,
-                    VaultType.CRYPTO_CURRENCY_VAULT,
-                    "BITV",
-                    appSession.getAppPublicKey(),
-                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                    blockchainNetworkType
-            );
-            walletAddres = cryptoAddress.getAddress();
-        } catch (CantRequestLossProtectedAddressException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            e.printStackTrace();
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
-            e.printStackTrace();
-        }
-        return walletAddres;
-    }
-
-
-    public void GET(String url, final Context context){
-        final Handler mHandler = new Handler();
-        try {
-            if(lossProtectedWallet.getRealBalance(appSession.getAppPublicKey(), blockchainNetworkType)<500000000L) {
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        String receivedAddress = "";
-                        final HttpClient Client = new DefaultHttpClient();
-                        try {
-                            String SetServerString = "";
-
-                            // Create Request to server and get response
-
-                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/address/");
-                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                            SetServerString = Client.execute(httpget, responseHandler);
-                            // Show response on activity
-
-                            receivedAddress = SetServerString;
-                        } catch (ClientProtocolException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-
-                        final String finalReceivedAddress = receivedAddress;
-
-                        String response = "";
-                        try {
-
-
-                            String SetServerString = "";
-                            CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
-                            LossProtectedWalletContact cryptoWalletWalletContact = null;
-                            try {
-                                cryptoWalletWalletContact = lossProtectedWallet.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
-
-                            } catch (Exception e) {
-
-                            }
-
-                            assert cryptoWalletWalletContact != null;
-                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-                            HttpGet httpget = new HttpGet("http://52.27.68.19:15400/mati/hello/?address=" + myCryptoAddress);
-                            ResponseHandler<String> responseHandler = new BasicResponseHandler();
-                            SetServerString = Client.execute(httpget, responseHandler);
-
-                            response = SetServerString;
-                        } catch (IOException e) {
-
-                        }
-
-
-                        final String finalResponse = response;
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-
-                                if (!finalResponse.equals("transaccion fallida")) {
-                                    Toast.makeText(context, "Regtest bitcoin arrived", Toast.LENGTH_SHORT).show();
-                                }
-
-                            }
-                        });
-                    }
-                });
-                thread.start();
-            }
-        } catch (CantGetLossProtectedBalanceException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * Get the LineData for the chart based on the all wallet Spending List
@@ -686,7 +536,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             }
             chart.setVisibility(View.VISIBLE);
         }else{
-            txt_earnOrLost.setText("$0 earned");
+            txt_earnOrLost.setText("$0.00 earned");
             earnOrLostImage.setImageResource(R.drawable.earning_icon);
             chart.setVisibility(View.GONE);
             noDataInChart.setVisibility(View.VISIBLE);
@@ -742,7 +592,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     Toast.LENGTH_SHORT).show();
         }
 
-        return 0;
     }
 
 

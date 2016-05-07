@@ -242,17 +242,21 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     public List<LossProtectedPaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<LossProtectedPaymentRequest> lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
-        try {
-            //when refresh offset set 0
-            if (refreshType.equals(FermatRefreshTypes.NEW))
-                offset = 0;
-            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
-            offset += MAX_TRANSACTIONS;
-        } catch (Exception e) {
-            referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
-                    UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            e.printStackTrace();
+        if(blockchainNetworkType != null)
+        {
+            try {
+                //when refresh offset set 0
+                if (refreshType.equals(FermatRefreshTypes.NEW))
+                    offset = 0;
+                lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
+                offset += MAX_TRANSACTIONS;
+            } catch (Exception e) {
+                referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                e.printStackTrace();
+            }
         }
+
 
         return lstPaymentRequest;
     }

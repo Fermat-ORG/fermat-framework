@@ -185,11 +185,11 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     }
 
     @Override
-    public List<BitcoinLossProtectedWalletSpend> listAllWalletSpending() throws CantListSpendingException {
+    public List<BitcoinLossProtectedWalletSpend> listAllWalletSpending(BlockchainNetworkType blockchainNetworkType) throws CantListSpendingException {
         try {
             BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
 
-            return BitcoinWalletLossProtectedWalletDao.listAllWalletSpending();
+            return BitcoinWalletLossProtectedWalletDao.listAllWalletSpending(blockchainNetworkType);
 
         } catch (CantListTransactionsException exception) {
             throw new CantListSpendingException(CantListTransactionsException.DEFAULT_MESSAGE, exception, null, null);
@@ -262,7 +262,8 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     public List<BitcoinLossProtectedWalletTransaction> listLastActorTransactionsByTransactionType(final BalanceType balanceType,
                                                                                      final TransactionType transactionType,
                                                                                      final int max,
-                                                                                     final int offset) throws CantListTransactionsException {
+                                                                                     final int offset,
+                                                                                      final BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException {
 
         try {
             BitcoinWalletLossProtectedWalletDao BitcoinWalletLossProtectedWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
@@ -271,7 +272,8 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
                     balanceType,
                     transactionType,
                     max,
-                    offset
+                    offset,
+                    blockchainNetworkType
             );
         } catch (CantListTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));

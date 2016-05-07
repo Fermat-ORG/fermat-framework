@@ -31,6 +31,7 @@ import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 
 import java.util.UUID;
@@ -53,7 +54,10 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
    private UUID exchangeProviderId;
 
-    private String WALLET_PUBLIC_KEY = "loss_protected_wallet";
+
+    CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+    CurrencyExchangeRateProviderManager rateProviderManager;
+
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -67,6 +71,12 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         this.broadcaster = broadcaster;
         this.exchangeProviderId = exchangeProviderId;
         this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
+
+        try {
+            rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(exchangeProviderId);
+        } catch (CantGetProviderException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -128,7 +138,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             double purchasePrice = 0;
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, String.valueOf(purchasePrice));
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, String.valueOf(purchasePrice),exchangeProviderFilterManagerproviderFilter, exchangeProviderId,rateProviderManager);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
             //get exchange rate on background
@@ -193,9 +203,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
                 @Override
                 public void run() {
                     try {
-                        CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
-                        CurrencyExchangeRateProviderManager rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
-                        //your exchange rate.
+                          //your exchange rate.
                         rate[0] = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
 
                         //update transaction record

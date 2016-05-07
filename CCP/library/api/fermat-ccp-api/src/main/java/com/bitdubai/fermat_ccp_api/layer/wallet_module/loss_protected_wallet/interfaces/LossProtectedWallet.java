@@ -484,7 +484,7 @@ public interface LossProtectedWallet extends Serializable {
      * @return
      * @throws CantListLossProtectedSpendingException
      */
-    List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey) throws CantListLossProtectedSpendingException, CantLoadWalletException;
+    List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey,BlockchainNetworkType blockchainNetworkType) throws CantListLossProtectedSpendingException, CantLoadWalletException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.

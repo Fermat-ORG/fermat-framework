@@ -151,6 +151,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+import sun.org.mozilla.javascript.internal.ast.Block;
+
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager</code>
  * haves all methods for the contacts activity of a bitcoin wallet
@@ -966,14 +968,14 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             }
         }
 
-        @Override
-    public List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey) throws CantListLossProtectedSpendingException, CantLoadWalletException {
+    @Override
+    public List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue( String walletPublicKey,BlockchainNetworkType blockchainNetworkType) throws CantListLossProtectedSpendingException, CantLoadWalletException {
         List<BitcoinLossProtectedWalletSpend> allWalletSpendingList = new ArrayList<>();
         try {
 
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            allWalletSpendingList = bitcoinWalletWallet.listAllWalletSpending();
+            allWalletSpendingList = bitcoinWalletWallet.listAllWalletSpending(blockchainNetworkType);
 
             return allWalletSpendingList;
 
@@ -1016,7 +1018,8 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                         balanceType,
                         transactionType,
                         max,
-                        offset
+                        offset,
+                        blockchainNetworkType
                 );
 
                 List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
@@ -1055,7 +1058,8 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                         balanceType,
                         transactionType,
                         max,
-                        offset
+                        offset,
+                        blockchainNetworkType
                 );
 
                 List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();

@@ -157,7 +157,7 @@
                     android:textSize="20sp"
                     android:textColor="#fff"
                     android:id="@+id/txt_amount_lost_or_earn"
-                    android:text="U$D 0.00 earning"/>
+                    android:text="$ 0.00 earning"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
