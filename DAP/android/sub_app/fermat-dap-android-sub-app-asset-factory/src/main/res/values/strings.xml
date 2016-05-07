@@ -11,6 +11,7 @@
     <string name="home_asset_state_published">Published</string>
     <string name="dap_asset_factory_delete_menu_item">Delete</string>
     <string name="dap_asset_factory_editor_name_hint">Name</string>
+    <string name="dap_asset_factory_editor_bitcoins_note">Note: Values are displayed in Bitcoins</string>
     <string name="dap_asset_factory_editor_description_hint">Description</string>
     <string name="dap_asset_factory_editor_quantity_hint">Quantity</string>
     <string name="dap_asset_factory_editor_bitcoin_price_hint">Asset Value</string>
