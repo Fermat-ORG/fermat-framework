@@ -877,7 +877,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 moneys.add(MoneyType.CASH_ON_HAND);
             break;
 
-            case CRYPTO_BROKER_PLATFORM:
+            case CRYPTO_CURRENCY_PLATFORM:
                 moneys.add(MoneyType.CRYPTO);
             break;
 
