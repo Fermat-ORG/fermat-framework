@@ -252,6 +252,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             @Override
             public void onClick(View view) {
                 WarningCircle.setVisibility(View.GONE);
+                WarningLabel.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
                 getActivity().openContextMenu(ArtistImage);
             }
@@ -522,6 +523,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         }
 
         if (ArtistImageBytes == null){
+            WarningLabel.setVisibility(View.VISIBLE);
            // WarningCircle.setVisibility(View.VISIBLE);
         }
 
