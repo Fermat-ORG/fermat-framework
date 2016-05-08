@@ -3,7 +3,6 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.graphics.Bitmap;
 import android.widget.AdapterView;
-import android.widget.AlphabetIndexer;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,10 +41,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorComm
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
-import org.w3c.dom.Text;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

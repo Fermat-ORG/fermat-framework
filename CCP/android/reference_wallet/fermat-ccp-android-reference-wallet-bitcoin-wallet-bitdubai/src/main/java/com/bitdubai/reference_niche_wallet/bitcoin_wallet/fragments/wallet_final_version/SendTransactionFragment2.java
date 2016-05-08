@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -62,7 +63,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
@@ -1090,21 +1091,31 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public void onUpdateViewOnUIThread(String code){
         try {
+            if(code.equals("BlockchainDownloadComplete")) {
+                //update toolbar color
+                final Toolbar toolBar = getToolbar();
+                toolBar.setBackgroundColor(Color.parseColor("#12aca1 "));
+                makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
+            } else {
+                if(code.equals("Btc_arrive"))
+                {
+                    //update balance amount
+                    final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(
+                            moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),
+                                    blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
-            //update balance amount
+                    changeBalanceType(txt_type_balance, txt_balance_amount);
+                    //System.out.println(System.currentTimeMillis());
 
-            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(),blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
+                    circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
+                    circularProgressBar.setProgressValue2(getBalanceAverage());
+                }
 
-             changeBalanceType(txt_type_balance, txt_balance_amount);
-            //System.out.println(System.currentTimeMillis());
-
-            circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
-            circularProgressBar.setProgressValue2(getBalanceAverage());
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 }
 

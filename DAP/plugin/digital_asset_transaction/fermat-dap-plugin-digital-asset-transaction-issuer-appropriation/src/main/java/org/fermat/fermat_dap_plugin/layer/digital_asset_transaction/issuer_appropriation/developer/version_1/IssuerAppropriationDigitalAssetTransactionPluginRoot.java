@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -48,8 +49,8 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.database.IssuerAppropriationDatabaseConstants;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -62,6 +63,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 16/09/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "manuel",
+        layer = Layers.DIGITAL_ASSET_TRANSACTION,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.ISSUER_APPROPRIATION)
 public class IssuerAppropriationDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
         IssuerAppropriationManager,
         LogManagerForDevelopers,

@@ -11,15 +11,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.hardware.HardwareManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.util.GMailSender;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -36,8 +37,12 @@ import java.io.IOException;
 public final class ErrorManagerPlatformServiceManager implements ErrorManager {
 
 
+    private final HardwareManager hardwareManager;
     GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
 
+    public ErrorManagerPlatformServiceManager(HardwareManager hardwareManager) {
+        this.hardwareManager = hardwareManager;
+    }
 
     /**
      * ErrorManager Interface implementation.
@@ -52,11 +57,20 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
     }
 
     @Override
-    public final void reportUnexpectedPluginException(final Plugins exceptionSource                  ,
-                                                      final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
-                                                      final Exception                         exception                        ) {
-
+    public void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
         processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
+    }
+
+    @Override
+    public final void reportUnexpectedPluginException(final Plugins exceptionSource,
+                                                      final Platforms platform,
+                                                      final UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity,
+                                                      final Exception exception,
+                                                      final String[] mailTo) {
+
+        String msgException = processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
+        sendReport(mailTo, msgException);
+
     }
 
     @Override
@@ -114,58 +128,36 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
         processException(exceptionSource.toString(), "Unknow", exception);
     }
 
-    private void processException(final String source, final String severity, final Exception exception){
-        printErrorReport(source, severity, FermatException.wrapException(exception));
+    private String processException(final String source, final String severity, final Exception exception){
+        return printErrorReport(source, severity, FermatException.wrapException(exception));
     }
 
-    private void printErrorReport(final String source, final String severity, final FermatException exception){
+    private String printErrorReport(final String source, final String severity, final FermatException exception){
         String report =  new ErrorReport(source, severity, exception).generateReport();
         System.err.println(report);
+        return report;
         //saveToFile(report);
 
     }
 
 
     private void sendErrorReport(Platforms platforms){
-        switch (platforms){
-            case ART_PLATFORM:
 
-                    break;
-            case BLOCKCHAINS:
-                break;
-            case BANKING_PLATFORM:
-                break;
-            case COMMUNICATION_PLATFORM:
-                break;
-            case CRYPTO_BROKER_PLATFORM:
-                break;
-            case CHAT_PLATFORM:
-                //franklinmarcano1970@gmail.com
-                break;
-            case CURRENCY_EXCHANGE_RATE_PLATFORM:
-                break;
-            case CASH_PLATFORM:
-                break;
-            case CRYPTO_COMMODITY_MONEY:
-                break;
-            case CRYPTO_CURRENCY_PLATFORM:
-                break;
-            case DIGITAL_ASSET_PLATFORM:
-                break;
-            case OPERATIVE_SYSTEM_API:
-                break;
-            case PLUG_INS_PLATFORM:
-                break;
-            case WALLET_PRODUCTION_AND_DISTRIBUTION:
-                break;
-            case TOKENLY:
-                break;
-        }
     }
 
     private void sendReport(String[] mailTo,String body){
         try {
-            gMailSender.sendMail("error report",body,"fermatmatiasreport@gmail.com",mailTo);
+            StringBuilder strToSend = new StringBuilder();
+            strToSend.append("Error report\n");
+            if(hardwareManager!=null) {
+                strToSend.append("Device info:").append("\n")
+                        .append("OS: " + hardwareManager.getOperativeSystem().toString()).append("\n")
+                        .append("Device: " + hardwareManager.getDevice()).append("\n")
+                        .append("Model: " + hardwareManager.getModel()).append("\n")
+                        .append("OS Version: " + hardwareManager.getOSVersion()).append("\n");
+            }
+            strToSend.append("Execption: \n\n" + body);
+            gMailSender.sendMail("error report", strToSend.toString(), "fermatmatiasreport@gmail.com", mailTo);
         } catch (Exception e) {
             e.printStackTrace();
         }

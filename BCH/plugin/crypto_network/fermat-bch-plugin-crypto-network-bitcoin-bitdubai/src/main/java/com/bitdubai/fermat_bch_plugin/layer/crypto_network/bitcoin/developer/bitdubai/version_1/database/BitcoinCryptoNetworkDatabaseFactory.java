@@ -74,7 +74,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
              */
             table = databaseFactory.newTableFactory(ownerId, BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TABLE_NAME);
 
-            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCK_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.TRANSACTIONS_BLOCKCHAIN_NETWORK_TYPE, DatabaseDataType.STRING, 20, Boolean.FALSE);
@@ -142,7 +142,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
              */
             table = databaseFactory.newTableFactory(ownerId, BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_TABLE_NAME);
 
-            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.TRUE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_EXECUTION_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_LAST_EXECUTION_DATE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_PENDING_INCOMING_TRANSACTIONS_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.EVENTAGENT_STATS_PENDING_OUTGOING_TRANSACTIONS_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
@@ -165,7 +165,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_EXECUTION_NUMBER_COLUMN_NAME, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_NETWORK, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TRANSACTION_ID, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_COUNT, DatabaseDataType.INTEGER, 10, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_PEER_BROADCAST_IP, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_RETRIES_COUNT, DatabaseDataType.INTEGER, 5, Boolean.FALSE);
@@ -189,7 +189,7 @@ class BitcoinCryptoNetworkDatabaseFactory implements DealsWithPluginDatabaseSyst
              */
             table = databaseFactory.newTableFactory(ownerId, BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_TABLE_NAME);
 
-            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE, DatabaseDataType.STRING, 20, Boolean.TRUE);
+            table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_NETWORKTYPE, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_KEYS, DatabaseDataType.INTEGER, 0, Boolean.FALSE);
             table.addColumn(BitcoinCryptoNetworkDatabaseConstants.ACTIVENETWORKS_LAST_UPDATE, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 

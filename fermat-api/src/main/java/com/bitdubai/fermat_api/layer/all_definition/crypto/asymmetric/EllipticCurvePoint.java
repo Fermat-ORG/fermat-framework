@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
-import java.math.BigInteger;
-
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Point;
+
+import java.math.BigInteger;
 
 public class EllipticCurvePoint implements Point {
 	

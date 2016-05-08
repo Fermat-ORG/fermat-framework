@@ -10,12 +10,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
@@ -32,7 +35,7 @@ import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.i
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,6 +46,12 @@ import java.util.concurrent.Executors;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16. - Jose Briceño josebricenor@gmail.com (22/02/16)
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "victor",
+        layer = Layers.NETWORK_SERVICE,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.BITDUBAI_DAP_ASSET_TRANSMISSION_NETWORK_SERVICE)
 public class AssetTransmissionNetworkServicePluginRoot extends AbstractNetworkServiceBase implements AssetTransmissionNetworkServiceManager, DatabaseManagerForDevelopers {
 
     //VARIABLE DECLARATION
