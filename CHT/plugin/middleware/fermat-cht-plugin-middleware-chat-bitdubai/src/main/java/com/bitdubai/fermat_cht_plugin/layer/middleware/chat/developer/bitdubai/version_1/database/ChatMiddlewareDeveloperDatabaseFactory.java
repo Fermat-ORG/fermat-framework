@@ -123,6 +123,8 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_IS_WRITING);
         /**
          * Table Chats addition.
          */
@@ -141,6 +143,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME);
         messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID);
+        messageColumns.add(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT);
         /**
          * Table Message addition.
          */

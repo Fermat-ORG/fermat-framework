@@ -22,7 +22,6 @@ public class MessageImpl implements Message {
     private Timestamp messageDate;
     private UUID contactId;
     private long count;
-
     public MessageImpl(){}
 
     public MessageImpl(
@@ -32,8 +31,8 @@ public class MessageImpl implements Message {
             TypeMessage typeMessage,
             UUID contactId
     ){
-//        messageId=chatMetadata.getMessageId();
-        messageId=UUID.randomUUID();
+        messageId=chatMetadata.getMessageId();
+//        messageId=UUID.randomUUID();
         this.chatId=chatId;
         message=chatMetadata.getMessage();
         status=messageStatus;

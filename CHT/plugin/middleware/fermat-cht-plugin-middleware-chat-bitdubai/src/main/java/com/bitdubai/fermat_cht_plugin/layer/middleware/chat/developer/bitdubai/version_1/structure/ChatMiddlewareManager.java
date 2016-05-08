@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendOnlineStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
@@ -780,6 +782,45 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "");
         } catch (DatabaseOperationException e) {
             throw new CantGetWritingStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
+    public void sendOnlineStatus(UUID chatId) throws SendOnlineStatusMessageNotificationException {
+        try {
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            if (chat == null) {
+                throw new SendWritingStatusMessageNotificationException("Chat not found");
+            }
+            String localActorPublicKey = chat.getLocalActorPublicKey();
+            String remoteActorPublicKey = chat.getRemoteActorPublicKey();
+            networkServiceChatManager.sendOnlineStatus(
+                    localActorPublicKey,
+                    chat.getLocalActorType(),
+                    remoteActorPublicKey,
+                    chat.getRemoteActorType(),
+                    chat.getChatId()
+            );
+        }catch(Exception e){
+            throw new SendOnlineStatusMessageNotificationException(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
+    public boolean checkOnlineStatus(UUID chatId) throws CantGetOnlineStatus {
+        try {
+            return chatMiddlewareDatabaseDao.getChatByChatId(chatId).isOnline();
+        }catch(CantGetChatException e){
+            throw new CantGetOnlineStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        } catch (DatabaseOperationException e) {
+            throw new CantGetOnlineStatus(
                     e,
                     "Something went wrong",
                     "");

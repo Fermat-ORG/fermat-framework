@@ -1,6 +1,10 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -21,18 +25,20 @@ import java.util.UUID;
 /**
  * Created by franklin on 03/04/16.
  */
-public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManager, Serializable {
+public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdentityPreferenceSettings> implements ChatIdentityModuleManager, Serializable {
 
     private ChatIdentityManager chatIdentityManager;
-    private SettingsManager<ChatIdentityPreferenceSettings> settingsManager;
+
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
     public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager,
                                            PluginFileSystem pluginFileSystem,
                                            UUID pluginId){
+        super(pluginFileSystem, pluginId);
         this.chatIdentityManager = chatIdentityManager;
         this.pluginFileSystem    = pluginFileSystem                         ;
         this.pluginId            = pluginId;
+
     }
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -74,18 +80,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-    @Override
-    public SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
 
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
 
     /**
      * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
@@ -126,5 +121,15 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public void persistSettings(String publicKey, ChatIdentityPreferenceSettings settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey, settings);
+    }
+
+    @Override
+    public ChatIdentityPreferenceSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+       return getSettingsManager().loadAndGetSettings(publicKey);
     }
 }
