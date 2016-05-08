@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -50,6 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesDetailAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -59,6 +61,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.makeText;
+import static com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R.color.color_noSpent_progressBar;
 import static com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R.color.color_spent_progressBar;
 import static com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R.color.design_textinput_error_color;
 
@@ -89,7 +92,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private String chunckAmount = "";
     private double chunckExchangeRate = 0;
     private double chunckAmountSpent = 0;
-    private double chunckPercentageSpent =0;
+    private int chunckPercentageSpent =0;
 
     private View rootView;
     private LinearLayout empty;
@@ -104,6 +107,8 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private TextView info_into_progress;
     private ProgressBar progressBar_percent;
     private int offset = 0;
+
+    private int MAX_PERCENTAGE = 100;
 
     private ErrorManager errorManager;
 
@@ -216,27 +221,28 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk);
 
-            //set transaction data header
+            //Component UI
             txt_chunck_detail_balance = (TextView) rootView.findViewById(R.id.txt_amount_chunck_detail);
             txt_chunck_detail_balance_type = (TextView) rootView.findViewById(R.id.txt_amount_chunck_detail_type);
             txt_chunck_detail_exchangeRate = (TextView) rootView.findViewById(R.id.txt_exchange_rate_chunck_detail);
             txt_chunck_detail_amountSpent = (TextView) rootView.findViewById(R.id.txt_amount_spent);
-
             txt_percent_spent = (TextView) rootView.findViewById(R.id.txt_percentage_spent);
             progressBar_percent = (ProgressBar) rootView.findViewById(R.id.progressBarLine);
             info_into_progress = (TextView) rootView.findViewById(R.id.info_into_progress);
 
+
             chunckAmount          = WalletUtils.formatBalanceString(transaction.getAmount(), lossProtectedWalletSession.getTypeAmount());
             chunckExchangeRate    = transaction.getExchangeRate();
             chunckAmountSpent     = getTotalSpent();
-            chunckPercentageSpent = getSpendingPercentage(transaction);
+            chunckPercentageSpent = Integer.parseInt(WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction)));
 
+            //stylize the progress bar
             info_into_progress.setText(chunckPercentageSpent + "%");
+            progressBar_percent.setProgress(chunckPercentageSpent);
+            progressBar_percent.setBackgroundColor(Color.BLUE);
+            progressBar_percent.setSecondaryProgress(chunckPercentageSpent-MAX_PERCENTAGE);
 
-            progressBar_percent.setProgress(getSpendingPercentage(transaction));
-            progressBar_percent.setBackgroundColor(Color.parseColor("#1D85B8"));
-
-
+            //set data in header
             txt_chunck_detail_balance.setText(chunckAmount);
             txt_chunck_detail_exchangeRate.setText("(1 BTC = " + chunckExchangeRate + " USD)");
             txt_chunck_detail_amountSpent.setText("BTC Spent: " + chunckAmountSpent + " BTC");
@@ -405,7 +411,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
             for (BitcoinLossProtectedWalletSpend spendingData : listBitcoinLossProtectedWalletSpend) {
                 if (spendingData.getAmount() != 0){
-                    spendingAmount =+ spendingData.getAmount();
+                    spendingAmount += Double.parseDouble(WalletUtils.formatBalanceString(spendingData.getAmount(),ShowMoneyType.BITCOIN.getCode()));
                 }
             }
             return spendingAmount;
@@ -425,7 +431,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             //call spending list
             spendingAmount = getTotalSpent();
 
-            totalAmount = transaction.getAmount();
+            totalAmount = Double.parseDouble(WalletUtils.formatBalanceString(transaction.getAmount(), ShowMoneyType.BITCOIN.getCode()));
 
             totalSpendingPercentage = (int) ((spendingAmount * 100)/totalAmount);
 

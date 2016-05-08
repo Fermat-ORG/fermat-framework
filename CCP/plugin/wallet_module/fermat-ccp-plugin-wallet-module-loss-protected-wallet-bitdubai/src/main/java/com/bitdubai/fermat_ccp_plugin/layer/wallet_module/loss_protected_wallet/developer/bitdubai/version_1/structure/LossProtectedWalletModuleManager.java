@@ -151,7 +151,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
-import sun.org.mozilla.javascript.internal.ast.Block;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager</code>
