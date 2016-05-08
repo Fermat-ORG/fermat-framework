@@ -103,10 +103,12 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         }
 
         try{
-            final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
-            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
+            if(selectableIdentity!=null) {
+                final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
+                final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
-            actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
         }
