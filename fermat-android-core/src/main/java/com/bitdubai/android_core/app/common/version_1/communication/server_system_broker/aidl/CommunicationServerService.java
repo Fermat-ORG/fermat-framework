@@ -38,6 +38,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -188,6 +189,13 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             byte[] yourBytes = byteArrayOutputStream.toByteArray();
 
             return (yourBytes.length>BLOCK_SYZE);
+        } catch (NotSerializableException e){
+           if(data instanceof SettingsManager){
+               Log.e(TAG,"ERROR: NO USAR getSettingsManager DEL MODULE");
+           }else{
+               Log.e(TAG,"ERROR: NO USAR getSettingsManager DEL MODULE");
+           }
+            throw new RuntimeException("Class is not Serializable");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

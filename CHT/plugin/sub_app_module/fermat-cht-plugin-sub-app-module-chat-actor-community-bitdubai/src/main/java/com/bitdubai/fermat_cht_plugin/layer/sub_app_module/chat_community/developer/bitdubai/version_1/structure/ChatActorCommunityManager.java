@@ -535,13 +535,5 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         return notifications;
     }
 
-    @Override
-    public void persistSettings(String publicKey, ChatActorCommunitySettings settings) throws CantPersistSettingsException {
-        getSettingsManager().persistSettings(publicKey, settings);
-    }
 
-    @Override
-    public ChatActorCommunitySettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
-        return getSettingsManager().loadAndGetSettings(publicKey);
-    }
 }

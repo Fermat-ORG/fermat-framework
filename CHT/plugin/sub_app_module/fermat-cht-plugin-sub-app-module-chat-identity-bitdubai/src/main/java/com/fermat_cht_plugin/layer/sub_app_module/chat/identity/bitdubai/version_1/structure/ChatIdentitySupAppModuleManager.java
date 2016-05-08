@@ -1,9 +1,5 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -123,13 +119,5 @@ public class ChatIdentitySupAppModuleManager extends ModuleManagerImpl<ChatIdent
         return new int[0];
     }
 
-    @Override
-    public void persistSettings(String publicKey, ChatIdentityPreferenceSettings settings) throws CantPersistSettingsException {
-        getSettingsManager().persistSettings(publicKey, settings);
-    }
 
-    @Override
-    public ChatIdentityPreferenceSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
-       return getSettingsManager().loadAndGetSettings(publicKey);
-    }
 }
