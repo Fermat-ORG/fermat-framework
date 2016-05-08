@@ -101,7 +101,7 @@ public class ConnectionsWorldFragment
     private ImageView closeSearch;
     private CommunityListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
-    private View searchView;
+    private SearchView searchView;//private View searchView;
     private android.support.v7.widget.Toolbar toolbar;
     private List<ChatActorCommunityInformation> dataSetFiltered;
     private LinearLayout searchEmptyView;
@@ -188,9 +188,9 @@ public class ConnectionsWorldFragment
 
             rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-            searchView = inflater.inflate(R.layout.cht_comm_search_edit_text, null);
-            searchEditText = (EditText) searchView.findViewById(R.id.search);
-            closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
+            //searchView = inflater.inflate(R.layout.cht_comm_search_edit_text, null);
+            //searchEditText = (EditText) searchView.findViewById(R.id.search);
+            ///closeSearch = (ImageView) searchView.findViewById(R.id.close_search);
             searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
             showEmpty(true, emptyView);
 
@@ -355,112 +355,130 @@ public class ConnectionsWorldFragment
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.cht_comm_menu, menu);
+        // Locate the search item
+//        MenuItem searchItem = menu.findItem(R.id.menu_search);
+//        searchView = (SearchView) searchItem.getActionView();
+//        searchView.setQueryHint(getResources().getString(R.string.description_search));
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                if (s.equals(searchView.getQuery().toString())) {
+//                    adapter.getFilter().filter(s);
+//                }
+//                return false;
+//            }
+//        });
 
-        try {
-            final MenuItem searchItem = menu.findItem(R.id.action_search);
-            menu.findItem(R.id.action_help).setVisible(true);
-            menu.findItem(R.id.action_search).setVisible(true);
-            searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    menu.findItem(R.id.action_help).setVisible(false);
-                    menu.findItem(R.id.action_search).setVisible(false);
-                    toolbar = getToolbar();
-                    toolbar.setTitle("");
-                    toolbar.addView(searchView);
-                    if (closeSearch != null)
-                        closeSearch.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                menu.findItem(R.id.action_help).setVisible(true);
-                                menu.findItem(R.id.action_search).setVisible(true);
-                                toolbar = getToolbar();
-                                toolbar.removeView(searchView);
-                                toolbar.setTitle("Chat Users");
-                                onRefresh();
-                            }
-                        });
-
-                    if (searchEditText != null) {
-                        searchEditText.addTextChangedListener(new TextWatcher() {
-                            @Override
-                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                            }
-
-                            @Override
-                            public void onTextChanged(final CharSequence s, int start, int before, int count) {
-                                if (s.length() > 0) {
-                                    worker = new FermatWorker() {
-                                        @Override
-                                        protected Object doInBackground() throws Exception {
-                                            return getQueryData(s);
-                                        }
-                                    };
-                                    worker.setContext(getActivity());
-                                    worker.setCallBack(new FermatWorkerCallBack() {
-                                        @SuppressWarnings("unchecked")
-                                        @Override
-                                        public void onPostExecute(Object... result) {
-                                            isRefreshing = false;
-                                            if (swipeRefresh != null)
-                                                swipeRefresh.setRefreshing(false);
-                                            if (result != null &&
-                                                    result.length > 0) {
-                                                if (getActivity() != null && adapter != null) {
-                                                    dataSetFiltered = (ArrayList<ChatActorCommunityInformation>) result[0];
-                                                    adapter.changeDataSet(dataSetFiltered);
-                                                    if (dataSetFiltered != null) {
-                                                        if (dataSetFiltered.isEmpty()) {
-                                                            showEmpty(true, searchEmptyView);
-                                                            showEmpty(false, emptyView);
-
-                                                        } else {
-                                                            showEmpty(false, searchEmptyView);
-                                                            showEmpty(false, emptyView);
-                                                        }
-                                                    } else {
-                                                        showEmpty(true, searchEmptyView);
-                                                        showEmpty(false, emptyView);
-                                                    }
-                                                }
-                                            } else {
-                                                showEmpty(true, searchEmptyView);
-                                                showEmpty(false, emptyView);
-                                            }
-                                        }
-                                        @Override
-                                        public void onErrorOccurred(Exception ex) {
-                                            isRefreshing = false;
-                                            if (swipeRefresh != null)
-                                                swipeRefresh.setRefreshing(false);
-                                            showEmpty(true, searchEmptyView);
-                                            if (getActivity() != null)
-                                                Toast.makeText(getActivity(), ex.getMessage(),
-                                                        Toast.LENGTH_LONG).show();
-                                            ex.printStackTrace();
-
-                                        }
-                                    });
-                                    worker.execute();
-                                } else {
-                                    menu.findItem(R.id.action_help).setVisible(true);
-                                    menu.findItem(R.id.action_search).setVisible(true);
-                                    toolbar = getToolbar();
-                                    toolbar.removeView(searchView);
-                                    //toolbar.setTitle("Cripto wallet users");
-                                    onRefresh();
-                                }
-                            }
-
-                            @Override
-                            public void afterTextChanged(Editable s) {
-                            }
-                        });
-                    }
-                    return false;
-                }
-            });
-        } catch (Exception e) { }
+//        try {
+//            final MenuItem searchItem = menu.findItem(R.id.action_search);
+//            menu.findItem(R.id.action_help).setVisible(true);
+//            menu.findItem(R.id.action_search).setVisible(true);
+//            searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+//                @Override
+//                public boolean onMenuItemClick(MenuItem item) {
+//                    menu.findItem(R.id.action_help).setVisible(false);
+//                    menu.findItem(R.id.action_search).setVisible(false);
+//                    toolbar = getToolbar();
+//                    toolbar.setTitle("");
+//                    toolbar.addView(searchView);
+//                    if (closeSearch != null)
+//                        closeSearch.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                menu.findItem(R.id.action_help).setVisible(true);
+//                                menu.findItem(R.id.action_search).setVisible(true);
+//                                toolbar = getToolbar();
+//                                toolbar.removeView(searchView);
+//                                toolbar.setTitle("Chat Users");
+//                                onRefresh();
+//                            }
+//                        });
+//
+//                    if (searchEditText != null) {
+//                        searchEditText.addTextChangedListener(new TextWatcher() {
+//                            @Override
+//                            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                            }
+//
+//                            @Override
+//                            public void onTextChanged(final CharSequence s, int start, int before, int count) {
+//                                if (s.length() > 0) {
+//                                    worker = new FermatWorker() {
+//                                        @Override
+//                                        protected Object doInBackground() throws Exception {
+//                                            return getQueryData(s);
+//                                        }
+//                                    };
+//                                    worker.setContext(getActivity());
+//                                    worker.setCallBack(new FermatWorkerCallBack() {
+//                                        @SuppressWarnings("unchecked")
+//                                        @Override
+//                                        public void onPostExecute(Object... result) {
+//                                            isRefreshing = false;
+//                                            if (swipeRefresh != null)
+//                                                swipeRefresh.setRefreshing(false);
+//                                            if (result != null &&
+//                                                    result.length > 0) {
+//                                                if (getActivity() != null && adapter != null) {
+//                                                    dataSetFiltered = (ArrayList<ChatActorCommunityInformation>) result[0];
+//                                                    adapter.changeDataSet(dataSetFiltered);
+//                                                    if (dataSetFiltered != null) {
+//                                                        if (dataSetFiltered.isEmpty()) {
+//                                                            showEmpty(true, searchEmptyView);
+//                                                            showEmpty(false, emptyView);
+//
+//                                                        } else {
+//                                                            showEmpty(false, searchEmptyView);
+//                                                            showEmpty(false, emptyView);
+//                                                        }
+//                                                    } else {
+//                                                        showEmpty(true, searchEmptyView);
+//                                                        showEmpty(false, emptyView);
+//                                                    }
+//                                                }
+//                                            } else {
+//                                                showEmpty(true, searchEmptyView);
+//                                                showEmpty(false, emptyView);
+//                                            }
+//                                        }
+//                                        @Override
+//                                        public void onErrorOccurred(Exception ex) {
+//                                            isRefreshing = false;
+//                                            if (swipeRefresh != null)
+//                                                swipeRefresh.setRefreshing(false);
+//                                            showEmpty(true, searchEmptyView);
+//                                            if (getActivity() != null)
+//                                                Toast.makeText(getActivity(), ex.getMessage(),
+//                                                        Toast.LENGTH_LONG).show();
+//                                            ex.printStackTrace();
+//
+//                                        }
+//                                    });
+//                                    worker.execute();
+//                                } else {
+//                                    menu.findItem(R.id.action_help).setVisible(true);
+//                                    menu.findItem(R.id.action_search).setVisible(true);
+//                                    toolbar = getToolbar();
+//                                    toolbar.removeView(searchView);
+//                                    //toolbar.setTitle("Cripto wallet users");
+//                                    onRefresh();
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void afterTextChanged(Editable s) {
+//                            }
+//                        });
+//                    }
+//                    return false;
+//                }
+//            });
+//        } catch (Exception e) { }
     }
 
     private synchronized List<ChatActorCommunityInformation> getQueryData(final CharSequence charSequence) {
