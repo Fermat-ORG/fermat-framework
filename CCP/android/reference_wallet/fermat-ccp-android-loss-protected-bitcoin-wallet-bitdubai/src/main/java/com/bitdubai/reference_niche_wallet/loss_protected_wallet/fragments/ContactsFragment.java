@@ -230,18 +230,18 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
 
         ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.drawable.extra_user_button);
+        itemIcon.setImageResource(R.drawable.loss_externaluser_button);
         button1 = itemBuilder
                 .setContentView(itemIcon)
-                .setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button))
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.loss_externaluser_button))
                 .setText("External User")
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
         ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.drawable.intra_user_button);
+        itemIcon2.setImageResource(R.drawable.loss_fermatuser_button);
         button2 = itemBuilder.setContentView(itemIcon2)
-                .setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button))
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.loss_fermatuser_button))
                 .setText("Fermat User")
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
