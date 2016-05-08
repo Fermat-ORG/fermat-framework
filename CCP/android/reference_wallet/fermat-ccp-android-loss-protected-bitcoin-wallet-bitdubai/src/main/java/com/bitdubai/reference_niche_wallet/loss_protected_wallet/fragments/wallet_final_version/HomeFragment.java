@@ -84,6 +84,7 @@ import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -117,7 +118,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      * */
     private List<BitcoinLossProtectedWalletSpend> allWalletSpendingList;
 
-    private float totalEarnedAndLostForToday = 0;
+    private double totalEarnedAndLostForToday = 0;
 
     // Fermat Managers
     private TextView txt_type_balance;
@@ -387,23 +388,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             noDataInChart           = (TextView) rootView.findViewById(R.id.noDataInChart);
 
 
-            //set Earning or Losts Values
-            //double total = 0;
-            //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
-
-            /*if (total > 0){
-                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(total)+" earned");
-                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
-            }
-            if (total==0){
-                txt_earnOrLost.setText("USD 0.00");
-                earnOrLostImage.setVisibility(View.INVISIBLE);
-            }
-            if (total< 0){
-                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(total)+" earned");
-                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
-            }*/
-
             //set Actual Date
 
             SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
@@ -413,25 +397,21 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //Get all wallet spending from the manager
             //for especific network
-            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey(),this.blockchainNetworkType,);
+            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType);
 
             LineData data = getData(allWalletSpendingList);
             //LineData data = new LineData(labels, dataset);
 
             //Set Earned and Lost For To day en UI
-            if (totalEarnedAndLostForToday!=0){
-
-                if (totalEarnedAndLostForToday > 0){
-                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
-                    earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
-                }else if (totalEarnedAndLostForToday==0){
-                    txt_earnOrLost.setText("$ 0.00");
-                    earnOrLostImage.setVisibility(View.INVISIBLE);
-                }else if (totalEarnedAndLostForToday< 0){
-                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" earned");
-                    earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
-                }
-
+            if (totalEarnedAndLostForToday > 0){
+                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString((totalEarnedAndLostForToday))+" earned");
+                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+            }else if (totalEarnedAndLostForToday==0){
+                txt_earnOrLost.setText("USD 0.00");
+                earnOrLostImage.setVisibility(View.INVISIBLE);
+            }else if (totalEarnedAndLostForToday< 0){
+                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" lost");
+                earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
             }
 
             data.setValueTextSize(12f);
@@ -503,7 +483,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         ArrayList<String> xValues = new ArrayList<>();
 
         //Date format for earned and lost for today
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         Date actualDate = new Date();
 
         //look for the size number of the spendings list
@@ -516,22 +496,23 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 BitcoinLossProtectedWalletSpend listSpendig = ListSpendigs.get(i);
 
+                final String dateActual = sdf.format(actualDate);
+                final String dateSpend = sdf.format(listSpendig.getTimestamp());
                 //get the total earned and lost
-                if(sdf.format(actualDate)==sdf.format(listSpendig.getTimestamp())){
-
-                totalEarnedAndLostForToday =+ getEarnOrLostOfSpending(
+                if(dateActual.compareTo(dateSpend) > 0){
+                totalEarnedAndLostForToday += getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
                 }
                 //get the entry value for chart with getEarnOrLostOfSpending method
-                final float valueEntry = getEarnOrLostOfSpending(
+                final double valueEntry = getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
                         listSpendig.getExchangeRate(),
                         listSpendig.getTransactionId());
 
                 //Set entries values for the chart
-                entryList.add(new Entry(valueEntry, i));
+                entryList.add(new Entry((float) valueEntry, i));
                 xValues.add(String.valueOf(i));
             }
             chart.setVisibility(View.VISIBLE);
@@ -548,13 +529,13 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         dataset.setDrawValues(false);
         dataset.setDrawCircles(false);
         dataset.setValueFormatter(new LargeValueFormatter());
-        dataset.setDrawHighlightIndicators(false);
+        dataset.setDrawHighlightIndicators(true);
 
         return new LineData(xValues, dataset);
 
     }
 
-    private float getEarnOrLostOfSpending(float spendingAmount,double spendingExchangeRate, UUID transactionId){
+    private double getEarnOrLostOfSpending(long spendingAmount,double spendingExchangeRate, UUID transactionId){
 
         double totalInDollars = 0;
 
@@ -572,11 +553,17 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     transactionId,
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk);
-            //calculate the Earned/Losted in dollars of the spending value
-            totalInDollars = (spendingAmount*spendingExchangeRate)-(spendingAmount * transaction.getExchangeRate());
+
+            //convert satoshis to bitcoin
+            final double amount = Double.parseDouble(WalletUtils.formatBalanceString(spendingAmount, ShowMoneyType.BITCOIN.getCode()));
+
+            //calculate the Earned/Lost in dollars of the spending value
+            totalInDollars = (amount * spendingExchangeRate)-(amount * transaction.getExchangeRate());
 
             //return the total
-            return (float) totalInDollars;
+
+
+            return totalInDollars;
 
         } catch (CantListLossProtectedTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -591,7 +578,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             makeText(getActivity(), "Oooops! Error Exception : CantGetCryptoLossProtectedWalletException",
                     Toast.LENGTH_SHORT).show();
         }
-
+        return 0;
     }
 
 
@@ -763,16 +750,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 Log.i("VAL SELECTED",
                         "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
                                 + ", DataSet index: " + dataSetIndex);
-
-                //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
-                if (e.getVal()>=0){
-
-                    txt_earnOrLost.setText("USD "+e.getVal()+" earned");
-                    earnOrLostImage.setImageResource(R.drawable.earning_icon);
-                }else {
-                    txt_earnOrLost.setText("USD "+e.getVal()+" lost");
-                    earnOrLostImage.setImageResource(R.drawable.lost_icon);
-                }
                 chart.invalidate(); // refresh
 
             }catch (Exception el){
