@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
@@ -113,16 +114,18 @@ public abstract class RemoteJSonProcessor {
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) urlObject.openConnection();
             //Add request headers - In this kind of request I'll use POST request
             httpsURLConnection.setRequestMethod(TokenlyRequestMethod.POST.getCode());
-            Iterator it = parameters.entrySet().iterator();
-            while(it.hasNext()){
-                Map.Entry parameter = (Map.Entry)it.next();
-                httpsURLConnection.addRequestProperty(
-                        parameter.getKey().toString(),
-                        parameter.getValue().toString());
+            if(parameters!=null){
+                Iterator it = parameters.entrySet().iterator();
+                while(it.hasNext()){
+                    Map.Entry parameter = (Map.Entry)it.next();
+                    httpsURLConnection.addRequestProperty(
+                            parameter.getKey().toString(),
+                            parameter.getValue().toString());
+                }
             }
             //Send post request
             httpsURLConnection.setDoOutput(true);
-            if(!urlParameters.isEmpty()){
+            if(urlParameters!=null && !urlParameters.isEmpty()){
                 DataOutputStream dataOutputStream = new DataOutputStream(
                         httpsURLConnection.getOutputStream());
                 dataOutputStream.writeBytes(urlParameters);
@@ -135,9 +138,11 @@ public abstract class RemoteJSonProcessor {
             System.out.println("Response Code : " + responseCode);
             if(responseCode!=200){
                 String errorResponse = httpsURLConnection.getResponseMessage();
+                HTTPErrorResponse httpErrorResponse = HTTPErrorResponse.getByCode(""+responseCode);
                 throw new HTTPErrorResponseException(
                         responseCode,
-                        errorResponse);
+                        errorResponse,
+                        httpErrorResponse);
             }
             //Get the response String
             BufferedReader bufferedReader = new BufferedReader(
@@ -185,12 +190,14 @@ public abstract class RemoteJSonProcessor {
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) urlObject.openConnection();
             //Add request headers
             httpsURLConnection.setRequestMethod(TokenlyRequestMethod.GET.getCode());
-            Iterator it = parameters.entrySet().iterator();
-            while(it.hasNext()){
-                Map.Entry parameter = (Map.Entry)it.next();
-                httpsURLConnection.addRequestProperty(
-                        parameter.getKey().toString(),
-                        parameter.getValue().toString());
+            if(parameters!=null){
+                Iterator it = parameters.entrySet().iterator();
+                while(it.hasNext()){
+                    Map.Entry parameter = (Map.Entry)it.next();
+                    httpsURLConnection.addRequestProperty(
+                            parameter.getKey().toString(),
+                            parameter.getValue().toString());
+                }
             }
             if(!urlParameters.isEmpty()){
                 DataOutputStream dataOutputStream = new DataOutputStream(
@@ -203,9 +210,11 @@ public abstract class RemoteJSonProcessor {
             int responseCode = httpsURLConnection.getResponseCode();
             if(responseCode!=200){
                 String errorResponse = httpsURLConnection.getResponseMessage();
+                HTTPErrorResponse httpErrorResponse = HTTPErrorResponse.getByCode("" + responseCode);
                 throw new HTTPErrorResponseException(
                         responseCode,
-                        errorResponse);
+                        errorResponse,
+                        httpErrorResponse);
             }
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(httpsURLConnection.getInputStream()));

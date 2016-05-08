@@ -23,10 +23,10 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.Connec
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtArtistExtraData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.ArtistActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
@@ -93,7 +93,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
 
             } else {
 
-                final String imageString = Base64.encodeToString(artist.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(artist.getExtraData().getBytes(), Base64.DEFAULT);
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         artist.getPublicKey(),
@@ -127,7 +127,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
         try {
             if (isRegistered()) {
 
-                final String imageString = Base64.encodeToString(actor.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(actor.getExtraData().getBytes(), Base64.DEFAULT);
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
@@ -350,7 +350,34 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     @Override
     public final void cancelConnection(final UUID requestId) throws CantCancelConnectionRequestException,
             ConnectionRequestNotFoundException  {
+        try {
 
+            final ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+
+            artistActorNetworkServiceDao.cancelConnection(
+                    requestId,
+                    protocolState
+            );
+
+            ArtistConnectionRequest connectionRequest = artistActorNetworkServiceDao.getConnectionRequest(requestId);
+
+            sendMessage(
+                    buildJsonInformationMessage(connectionRequest),
+                    connectionRequest.getSenderPublicKey(),
+                    connectionRequest.getSenderActorType(),
+                    connectionRequest.getDestinationPublicKey(),
+                    connectionRequest.getDestinationActorType()
+            );
+
+        } catch (final CantCancelConnectionRequestException | ConnectionRequestNotFoundException e){
+            // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCancelConnectionRequestException(e, null, "Unhandled Exception.");
+        }
     }
 
     /**
@@ -417,6 +444,31 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     }
 
     /**
+     * This method returns all completed request connections.
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    @Override
+    public final List<ArtistConnectionRequest> listCompletedConnections() throws
+            CantListPendingConnectionRequestsException{
+        try{
+            return artistActorNetworkServiceDao.listCompletedConnections();
+        } catch (final CantListPendingConnectionRequestsException e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw e;
+        } catch (final Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    /**
      * we'll return all the request updates with a pending local action.
      * State : PENDING_LOCAL_ACTION.
      *
@@ -472,19 +524,20 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
      */
     @Override
     public ArtArtistExtraData<ArtistExternalPlatformInformation> requestExternalPlatformInformation(
+            UUID requestId,
             String requesterPublicKey,
             PlatformComponentType requesterActorType,
             String artistPublicKey) throws CantRequestExternalPlatformInformationException {
         try {
 
-            final UUID newId = UUID.randomUUID();
+            //final UUID newId = UUID.randomUUID();
 
             final ProtocolState state  = ProtocolState.PROCESSING_SEND;
             final RequestType type = RequestType.SENT;
 
             ArtistActorNetworkServiceExternalPlatformInformationRequest informationRequest =
                     artistActorNetworkServiceDao.createExternalPlatformInformationRequest(
-                            newId,
+                            requestId,
                             requesterPublicKey,
                             requesterActorType,
                             artistPublicKey,

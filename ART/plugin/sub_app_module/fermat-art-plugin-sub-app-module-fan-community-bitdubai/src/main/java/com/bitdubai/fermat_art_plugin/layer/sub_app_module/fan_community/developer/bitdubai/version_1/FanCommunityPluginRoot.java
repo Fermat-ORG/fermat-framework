@@ -12,13 +12,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.developer.bitdubai.version_1.structure.FanCommunityManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -27,14 +27,13 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
  */
-public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, ActiveActorIdentityInformation> {
+public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, FanCommunitySelectableIdentity> {
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
     private ArtistIdentityManager artistIdentityManager;
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
     private FanActorConnectionManager fanActorConnectionManager;
-
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN   )
     private FanManager fanNetworkServiceManager;
@@ -91,7 +90,7 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
     }
 
     @Override
-    public ModuleManager<FanCommunitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<FanCommunitySettings, FanCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
         if(fanCommunityManager == null)
             initPluginManager();
         return fanCommunityManager;

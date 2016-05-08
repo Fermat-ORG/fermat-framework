@@ -44,12 +44,12 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
 
 
     public DisconnectDialog(Activity a,
-                            ArtistSubAppSession cryptoBrokerCommunitySubAppSession,
+                            ArtistSubAppSession artistSubAppSession,
                             SubAppResourcesProviderManager subAppResources,
                             ArtistCommunityInformation artistCommunityInformation,
                             ArtistCommunitySelectableIdentity identity) {
 
-        super(a, cryptoBrokerCommunitySubAppSession, subAppResources);
+        super(a, artistSubAppSession, subAppResources);
 
         this.artistCommunityInformation = artistCommunityInformation;
         this.identity = identity;
@@ -63,9 +63,9 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
 
         mDescription = (FermatTextView) findViewById(R.id.aac_description);
         mUsername = (FermatTextView) findViewById(R.id.aac_user_name);
-        mTitle = (FermatTextView)findViewById(R.id.title);
-        positiveBtn = (FermatButton) findViewById(R.id.afc_positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.afc_negative_button);
+        mTitle = (FermatTextView)findViewById(R.id.aac_title);
+        positiveBtn = (FermatButton) findViewById(R.id.aac_positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.aac_negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
@@ -101,7 +101,7 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.afc_positive_button) {
+        if (i == R.id.aac_positive_button) {
             try {
                 if (artistCommunityInformation != null && identity != null) {
 
@@ -124,7 +124,7 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
             }
 
             dismiss();
-        }else if( i == R.id.afc_negative_button){
+        }else if( i == R.id.aac_negative_button){
             dismiss();
         }
     }

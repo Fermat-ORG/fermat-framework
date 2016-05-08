@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
@@ -23,6 +22,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListE
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetWalletSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeWithExternalAPIException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
@@ -31,7 +31,6 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetLastUpdateDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongNameException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
-import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSongException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSynchronizeDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
@@ -77,6 +76,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      * In this version is fixed to 3
      */
     private final long TIME_BETWEEN_SYNC = TimeUnit.DAYS.toMillis(3);
+
+    /**
+     * This represents if this class is in develop version, please, set in false in beta.
+     */
+    private final boolean DEVELOP_VERSION = true;
 
     /**
      * Constructor with parameters
@@ -212,20 +216,40 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             FermatBundle fermatBundle;
             //SongId
             UUID songId;
-            for(Song song : songs){
-                //Check if song is in database
-                tokenlySongId = song.getId();
-                if(!databaseSongsId.contains(tokenlySongId)){
-                    /**
-                     * If the databaseSongList doesn't contains the song Id, I'll add in the
-                     * toDownloadList
-                     */
-                    toDownloadSongList.add(song);
+            /**
+             * This runs only in develop version, we need to download the last songs from the album,
+             * the first songs had frame rate issues, so the song duration is wrong displayed.
+             */
+            if(DEVELOP_VERSION){
+                Song song;
+                int lastIndex = songs.length-1;
+                for(int i=lastIndex; i>lastIndex-limit; i--){
+                    song = songs[i];
+                    tokenlySongId = song.getId();
+                    if(!databaseSongsId.contains(tokenlySongId)){
+                        /**
+                         * If the databaseSongList doesn't contains the song Id, I'll add in the
+                         * toDownloadList
+                         */
+                        toDownloadSongList.add(song);
+                    }
                 }
-                c++;
-                //TODO: remove in production
-                if(c==limit){
-                    break;
+            }else{
+                for(Song song : songs){
+                    //Check if song is in database
+                    tokenlySongId = song.getId();
+                    if(!databaseSongsId.contains(tokenlySongId)){
+                        /**
+                         * If the databaseSongList doesn't contains the song Id, I'll add in the
+                         * toDownloadList
+                         */
+                        toDownloadSongList.add(song);
+                    }
+                    c++;
+                    //TODO: remove in production
+                    if(c==limit){
+                        break;
+                    }
                 }
             }
             System.out.println("TKY - Songs to download "+toDownloadSongList.size());
@@ -240,10 +264,13 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     songId = UUID.randomUUID();
                     fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(),song);
                     fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
-                    broadcaster.publish(
-                            BroadcasterType.UPDATE_VIEW,
-                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                            fermatBundle);
+                    fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
+                            BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
+                    try {
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    }catch (Exception ex){
+                        System.out.println("TKY_BROADCAST_SONG:"+ex);
+                    }
                     //Download the song.
                     downloadSong(song, user.getUsername(), songId);
                     /**
@@ -263,10 +290,9 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     //Inform to UI this download exception.
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_EXCEPTION.getCode(),song);
-                    broadcaster.publish(
-                            BroadcasterType.UPDATE_VIEW,
-                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                            fermatBundle);
+                    fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
+                            BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                 }
             }
             /**
@@ -280,8 +306,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     toDownloadSongList.size());
         } catch (CantGetAlbumException e) {
             broadcaster.publish(BroadcasterType.UPDATE_VIEW,
-                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                    "Conection Error");
+                    "Connection Error");
             throw new CantSynchronizeWithExternalAPIException(
                     e,
                     "Synchronizing songs by user request",
@@ -382,7 +407,8 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             throw new CantDownloadSongException(
                     e,
                     "Downloading song by id:"+songId,
-                    "Cannot get the song from external API");
+                    "Cannot get the song from external API",
+                    e);
         } catch (CancelDownloadException e) {
             throw new CantDownloadSongException(
                     e,

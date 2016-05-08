@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.music_player.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -29,11 +30,11 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/29/16.
  */
-public class MusicPlayerManager implements MusicPlayerModuleManager, Serializable{
+public class MusicPlayerManager
+        extends ModuleManagerImpl<MusicPlayerPreferenceSettings>
+        implements MusicPlayerModuleManager, Serializable{
     private final ErrorManager errorManager;
     private final SongWalletTokenlyManager songWalletTokenlyManager;
-    private final PluginFileSystem pluginFileSystem;
-    private final UUID pluginId;
 
     private SettingsManager<MusicPlayerPreferenceSettings> settingsManager;
 
@@ -42,10 +43,9 @@ public class MusicPlayerManager implements MusicPlayerModuleManager, Serializabl
                               SongWalletTokenlyManager songWalletTokenlyManager,
                               PluginFileSystem pluginFileSystem,
                               UUID pluginId) {
+        super(pluginFileSystem, pluginId);
         this.errorManager = errorManager;
         this.songWalletTokenlyManager = songWalletTokenlyManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
     }
 
 
@@ -95,7 +95,7 @@ public class MusicPlayerManager implements MusicPlayerModuleManager, Serializabl
     }
 
 
-    @Override
+    /*@Override
     public SettingsManager<MusicPlayerPreferenceSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
@@ -106,7 +106,7 @@ public class MusicPlayerManager implements MusicPlayerModuleManager, Serializabl
         );
 
         return this.settingsManager;
-    }
+    }*/
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.Identity;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**

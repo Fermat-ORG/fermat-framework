@@ -319,7 +319,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             item.setPosition(2);
             lstItemsWithIcon.add(item);
             installedSubApp = new InstalledSubApp(SubApps.CWP_DEVELOPER_APP, null, null, "developer_sub_app", "Developer Tools", SubAppsPublicKeys.PIP_DEVELOPER.getCode(), "developer_sub_app", new Version(1, 0, 0));
-            installedSubApp.setAppStatus(AppsStatus.DEV);
+            installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.developer);
             item.setPosition(3);

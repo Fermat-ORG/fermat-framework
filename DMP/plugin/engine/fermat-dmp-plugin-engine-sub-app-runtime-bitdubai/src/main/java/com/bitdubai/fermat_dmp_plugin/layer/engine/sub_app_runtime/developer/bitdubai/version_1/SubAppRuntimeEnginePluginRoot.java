@@ -802,6 +802,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * CCP INTRA USER IDENTITY
              */
 
+            /*
+            *ART MusicPlayer
+            */
+
+            createMusicPlayerSubAppNavigationStructure();
+
            /*
             *ART ARTIST IDENTITY
             */
@@ -838,6 +844,45 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
+
+
+
+            /**
+             * ART FAN IDENTITY
+             */
+
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.ART_FAN_IDENTITY);
+            String artFanUserIdentityPublicKey = SubAppsPublicKeys.ART_FAN_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(artFanUserIdentityPublicKey);
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.ART_FAN_IDENTITY_CREATE_PROFILE);
+            runtimeActivity.setActivityType(Activities.ART_FAN_IDENTITY_CREATE_PROFILE.getCode());
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            //runtimeSubApp.addPosibleStartActivity(Activities.ART_FAN_IDENTITY_CREATE_PROFILE);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Art Fan Identity");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#1189a4");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+
             /*
              *TKY ARTIST IDENTITY
              */
@@ -856,6 +901,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
 
             createArtistCommunitySubAppNavigationStructure();
+
+
+
 
             /**
              * End ART
@@ -3983,10 +4031,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         Activity runtimeActivity;
         Fragment runtimeFragment;
 
-        RuntimeSubApp subAppCustomerCommunity = new RuntimeSubApp();
-        subAppCustomerCommunity.setType(SubApps.ART_FAN_COMMUNITY);
+        RuntimeSubApp subAppFanCommunity = new RuntimeSubApp();
+        subAppFanCommunity.setType(SubApps.ART_FAN_COMMUNITY);
         String communityPublicKey = SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode();
-        subAppCustomerCommunity.setPublicKey(communityPublicKey);
+        subAppFanCommunity.setPublicKey(communityPublicKey);
 
         //Side Menu definition
         runtimeSideMenu = new SideMenu();
@@ -4015,7 +4063,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppCustomerCommunity.changeActualStartActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getCode());
+        subAppFanCommunity.changeActualStartActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
@@ -4023,7 +4071,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Crypto Customer Users");
+        runtimeTitleBar.setLabel("Fan Users");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -4036,14 +4084,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getKey());
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppCustomerCommunity.addActivity(runtimeActivity);
+        subAppFanCommunity.addActivity(runtimeActivity);
 
 
         // Activity: CONNECTION_FRIEND_LIST
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
-        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -4069,14 +4117,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppCustomerCommunity.addActivity(runtimeActivity);
+        subAppFanCommunity.addActivity(runtimeActivity);
 
 
         // Activity: CONNECTION_NOTIFICATIONS
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
-        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -4102,14 +4150,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppCustomerCommunity.addActivity(runtimeActivity);
+        subAppFanCommunity.addActivity(runtimeActivity);
 
 
         // Activity: CONNECTION_OTHER_PROFILE
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
-        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE);
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -4135,10 +4183,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
 
-        subAppCustomerCommunity.addActivity(runtimeActivity);
+        subAppFanCommunity.addActivity(runtimeActivity);
 
 
-        listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
+        listSubApp.put(subAppFanCommunity.getPublicKey(), subAppFanCommunity);
     }
 
     private void createArtistCommunitySubAppNavigationStructure() throws InvalidParameterException {
@@ -4209,7 +4257,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
-        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -4242,7 +4290,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
-        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -4275,7 +4323,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
-        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE);
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -4305,6 +4353,48 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
 
         listSubApp.put(subAppArtistCommunity.getPublicKey(), subAppArtistCommunity);
+    }
+
+    private void createMusicPlayerSubAppNavigationStructure() throws InvalidParameterException {
+        RuntimeSubApp runtimeSubApp;
+        Activity runtimeActivity;
+        StatusBar statusBar;
+        TitleBar runtimeTitleBar;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+        Fragment runtimeFragment;
+        final int titleBarLabelSize = 20;
+
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.ART_MUSIC_PLAYER);
+        runtimeSubApp.setPublicKey(SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode());
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getCode());
+        runtimeActivity.setColor("#ffffff");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#000000");
+        runtimeActivity.setStatusBar(statusBar);
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getCode());
+        //   runtimeSubApp.addPosibleStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Fermat Music Player");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#000000");
+        runtimeTitleBar.setColor("#fafafa");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey());
+
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
 

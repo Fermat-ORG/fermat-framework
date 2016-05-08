@@ -102,10 +102,15 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
         this.tokenlyApiManager = tokenlyApiManager;
     }
 
-    private TokenlyFanIdentityDao getFantIdentityDao() throws CantInitializeTokenlyFanIdentityDatabaseException {
+    private TokenlyFanIdentityDao getFanIdentityDao() throws CantInitializeTokenlyFanIdentityDatabaseException {
         return new TokenlyFanIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
     }
 
+    /**
+     * This method returns the Fan identity logged in current device user
+     * @return
+     * @throws CantListFanIdentitiesException
+     */
     public List<Fan> getIdentityFanFromCurrentDeviceUser() throws CantListFanIdentitiesException {
 
         try {
@@ -114,22 +119,22 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
 
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            fans = getFantIdentityDao().getIdentityFansFromCurrentDeviceUser(loggedUser);
+            fans = getFanIdentityDao().getIdentityFansFromCurrentDeviceUser(loggedUser);
 
 
             return fans;
 
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListFanIdentitiesException("CAN'T GET ASSET NEW ARTIST IDENTITIES", e, "Error get logged user device", "");
+            throw new CantListFanIdentitiesException("CAN'T GET NEW ARTIST IDENTITIES", e, "Error get logged user device", "");
         } catch (Exception e) {
-            throw new CantListFanIdentitiesException("CAN'T GET ASSET NEW ARTIST IDENTITIES", FermatException.wrapException(e), "", "");
+            throw new CantListFanIdentitiesException("CAN'T GET NEW ARTIST IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
 
     public Fan getIdentitFan() throws CantGetFanIdentityException {
         Fan fan = null;
         try {
-            fan = getFantIdentityDao().getIdentityFan();
+            fan = getFanIdentityDao().getIdentityFan();
         } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
             e.printStackTrace();
         }
@@ -138,7 +143,7 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
     public Fan getIdentitFan(UUID id) throws CantGetFanIdentityException {
         Fan fan = null;
         try {
-            fan = getFantIdentityDao().getIdentityFan(id);
+            fan = getFanIdentityDao().getIdentityFan(id);
         } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
             e.printStackTrace();
         }
@@ -154,7 +159,7 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getFantIdentityDao().createNewUser(user, id, publicKey, privateKey, deviceUser, profileImage, password, externalPlatform);
+            getFanIdentityDao().createNewUser(user, id, publicKey, privateKey, deviceUser, profileImage, password, externalPlatform);
 
 
             return new TokenlyFanIdentityImp(user,id,publicKey,profileImage,externalPlatform,pluginFileSystem, pluginId);
@@ -165,10 +170,10 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
         }
     }
 
-    public void updateIdentityFan(User user,String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public Fan updateIdentityFan(User user, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
         try {
-            getFantIdentityDao().updateIdentityFanUser(user, password, id, publicKey, profileImage, externalPlatform);
-
+            getFanIdentityDao().updateIdentityFanUser(user, password, id, publicKey, profileImage, externalPlatform);
+            return getFanIdentityDao().getIdentityFan(id);
         } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
             throw new CantUpdateFanIdentityException(
                     e.getMessage(),
@@ -181,6 +186,12 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
                     e,
                     "Can't update the fan identity",
                     "Unexpected error in database");
+        } catch (CantGetFanIdentityException e) {
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Can't get the fan identity",
+                    "Unexpected error in database");
         }
     }
 
@@ -191,7 +202,7 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
      */
     public void updateIdentityFan(Fan fan) throws CantUpdateFanIdentityException{
         try{
-            getFantIdentityDao().updateIdentityFanUser(fan);
+            getFanIdentityDao().updateIdentityFanUser(fan);
         } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
             throw new CantUpdateFanIdentityException(
                     e.getMessage(),

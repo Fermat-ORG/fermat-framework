@@ -341,7 +341,7 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
     private void testCreateAndList(){
         ECCKeyPair identity = new ECCKeyPair();
         try {
-            fanActorNetworkServiceManager.exposeIdentity(new FanExposingData(identity.getPublicKey(), "El Gabo fan", new byte[0]));
+            fanActorNetworkServiceManager.exposeIdentity(new FanExposingData(identity.getPublicKey(), "El Gabo fan", ""));
             ActorSearch<FanExposingData> artistActorNetworkServiceSearch = fanActorNetworkServiceManager.getSearch();
             List<FanExposingData> artistExposingDatas = artistActorNetworkServiceSearch.getResult(PlatformComponentType.ART_ARTIST);
             for (FanExposingData artistExposingData:
