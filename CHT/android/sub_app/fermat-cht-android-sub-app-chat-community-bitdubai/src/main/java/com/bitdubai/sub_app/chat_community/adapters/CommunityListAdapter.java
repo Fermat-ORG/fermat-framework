@@ -5,14 +5,18 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.filters.CommunityFilter;
 import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +27,10 @@ import java.util.List;
  */
 
 @SuppressWarnings("unused")
-public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder> {
+public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder> /*implements Filterable*/ {
+
+    List<ChatActorCommunityInformation> filteredData;
+    private String filterString;
 
     public CommunityListAdapter(Context context) {
         super(context);
@@ -124,4 +131,43 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
             return dataSet.size();
         return 0;
     }
+
+//    @Override
+//    public int getItemCount() {
+//        if(filterString!=null)
+//            return filteredData == null ? 0 : filteredData.size();
+//        else
+//            return dataSet == null ? 0 : dataSet.size();
+//    }
+//
+//    @Override
+//    public ChatActorCommunityInformation getItem(int position) {
+//        if(filterString!=null)
+//            return filteredData != null ? (!filteredData.isEmpty()
+//                    && position < filteredData.size()) ? filteredData.get(position) : null : null;
+//        else
+//            return dataSet != null ? (!dataSet.isEmpty()
+//                    && position < dataSet.size()) ? dataSet.get(position) : null : null;
+//    }
+
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    public void changeDataSet(List<ChatActorCommunityInformation> data) {
+//        this.filteredData = data;
+//    }
+//
+//    public Filter getFilter() {
+//        return new CommunityFilter(dataSet, this);
+//    }
+//
+//    public void setFilterString(String filterString) {
+//        this.filterString = filterString;
+//    }
+//
+//    public String getFilterString() {
+//        return filterString;
+//    }
 }

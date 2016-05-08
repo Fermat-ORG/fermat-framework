@@ -102,6 +102,7 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     public void chatlistview (){
         UUID chatidtemp;
+        int chatscounter=0;
         try {
             List<Chat> chats = chatManager.getChats();
             if (chats != null && chats.size() > 0) {
@@ -173,11 +174,28 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
                                     BitmapDrawable bmd = new BitmapDrawable(bytes);
                                     imgId.add(bmd.getBitmap());
+                                    chatscounter++;
                                     break;
                                 }
                             }
                         }else setUpHelpChat(false);
                     }
+                }
+                if (chatscounter==0)
+                {
+                    layout.setBackgroundResource(R.drawable.cht_background_color);
+                    noData.setVisibility(View.VISIBLE);
+                    noDatalabel.setVisibility(View.VISIBLE);
+                    getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
+                    contactName.clear();
+                    message.clear();
+                    chatId.clear();
+                    dateMessage.clear();
+                    contactId.clear();
+                    status.clear();
+                    typeMessage.clear();
+                    noReadMsgs.clear();
+                    imgId.clear();
                 }
             }
         } catch (CantGetChatException e) {
