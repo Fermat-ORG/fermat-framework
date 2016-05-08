@@ -448,7 +448,13 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try {
             appSettings = this.getSettingsManager().loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            appSettings = new ChatActorCommunitySettings();
+            try {
+                this.getSettingsManager().persistSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode(), appSettings);
+            } catch (CantPersistSettingsException e1) {
+                //e1.printStackTrace();
+            }
             return null;
         }
 
@@ -485,12 +491,12 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                     }
                 }
                 if(selectedIdentity == null)
-                    throw new ActorIdentityNotSelectedException("", null, "", "");
+                    //throw new ActorIdentityNotSelectedException("", null, "", "");
 
                 return selectedIdentity;
             }
-            else
-                throw new ActorIdentityNotSelectedException("", null, "", "");
+            else{}
+                //throw new ActorIdentityNotSelectedException("", null, "", "");
         }
 
         return null;
