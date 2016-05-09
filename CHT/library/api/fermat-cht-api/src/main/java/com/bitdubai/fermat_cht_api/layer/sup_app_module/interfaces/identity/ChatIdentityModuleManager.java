@@ -63,6 +63,5 @@ public interface ChatIdentityModuleManager extends ModuleManager, ModuleSettings
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-    @Override
-    SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager();
+
 }

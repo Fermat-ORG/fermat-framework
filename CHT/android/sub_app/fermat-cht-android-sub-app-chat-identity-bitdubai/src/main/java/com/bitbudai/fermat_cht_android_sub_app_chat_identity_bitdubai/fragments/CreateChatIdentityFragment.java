@@ -102,7 +102,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
             chatIdentitySettings = null;
             try {
-                chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 chatIdentitySettings = null;
             }
@@ -111,7 +111,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 chatIdentitySettings = new ChatIdentityPreferenceSettings();
                 chatIdentitySettings.setIsPresentationHelpEnabled(true);
                 try {
-                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }

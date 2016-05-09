@@ -105,7 +105,7 @@ public class ConnectionNotificationsFragment
             chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = moduleManager.getSettingsManager();
+
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
             lstChatUserInformations = new ArrayList<>();
@@ -113,7 +113,7 @@ public class ConnectionNotificationsFragment
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
-                appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             }catch (Exception e){ appSettings = null; }
 
             if(appSettings == null){
