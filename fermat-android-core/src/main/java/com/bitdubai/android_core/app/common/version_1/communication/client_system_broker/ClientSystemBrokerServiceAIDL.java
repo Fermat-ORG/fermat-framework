@@ -130,10 +130,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
         if(objectArrived!=null){
             if(objectArrived.getE()!=null) throw objectArrived.getE();
-
             isDataChuncked = objectArrived.isLargeData();
         }else{
-            Log.e(TAG,"Object arrived null, please check your module");
+            Log.e(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module, please check your module and contact furszy if the error persist,");
             return null;
         }
         Object o = null;
