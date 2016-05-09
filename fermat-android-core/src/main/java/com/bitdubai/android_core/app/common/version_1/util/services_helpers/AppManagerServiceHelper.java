@@ -35,9 +35,13 @@ public class AppManagerServiceHelper {
         public void onServiceConnected(ComponentName className,
                                        IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            FermatAppsManagerService.AppManagerLocalBinder binder = (FermatAppsManagerService.AppManagerLocalBinder) service;
-            fermatAppsManagerService = binder.getService();
-            appsManagerBoundService = true;
+            try {
+                FermatAppsManagerService.AppManagerLocalBinder binder = (FermatAppsManagerService.AppManagerLocalBinder) service;
+                fermatAppsManagerService = binder.getService();
+                appsManagerBoundService = true;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
         @Override

@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app.common.version_1.receivers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -15,13 +15,13 @@ import java.lang.ref.WeakReference;
 /**
  * Created by mati on 2016.05.03..
  */
-public class NotificationReceiver extends BroadcastReceiver {
+public class UpdateViewReceiver extends BroadcastReceiver {
 
-    public static final String INTENT_NAME = "NotificationReceiver";
+    public static final String INTENT_NAME = "update_view_receiver";
 
     private final WeakReference<FermatActivity> weakReference;
 
-    public NotificationReceiver(FermatActivity fermatActivity) {
+    public UpdateViewReceiver(FermatActivity fermatActivity) {
         this.weakReference = new WeakReference<FermatActivity>(fermatActivity);
     }
 
