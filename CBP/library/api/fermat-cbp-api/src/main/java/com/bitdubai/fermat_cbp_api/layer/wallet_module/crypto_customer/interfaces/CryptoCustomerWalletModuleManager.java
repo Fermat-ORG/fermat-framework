@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfac
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
@@ -139,6 +140,13 @@ public interface CryptoCustomerWalletModuleManager
      */
     Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises()
             throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
+
+    /**
+     *
+     * @param paymentCurrency
+     * @return list of platforms supporteds
+     */
+    Collection<Platforms> getPlatformsSupported(String customerPublicKey, String brokerPublicKey, String paymentCurrency) throws CantGetListActorExtraDataException;
 
     /**
      * Verify if thew wallet is configured or not

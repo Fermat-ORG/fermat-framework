@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,12 +16,14 @@ public class QuotesExtraDataInformation implements QuotesExtraData {
     private Currency mechandise;
     private Currency paymentCurrency;
     private Float price;
+    private List<Platforms> platformsSupported;
 
-    public QuotesExtraDataInformation(UUID quoteId, Currency mechandise, Currency paymentCurrency, Float price){
+    public QuotesExtraDataInformation(UUID quoteId, Currency mechandise, Currency paymentCurrency, Float price, List<Platforms> platformsSupported){
         this.mechandise = mechandise;
         this.paymentCurrency = paymentCurrency;
         this.price = price;
         this.quoteId = quoteId;
+        this.platformsSupported = platformsSupported;
     }
 
     @Override
@@ -40,5 +44,10 @@ public class QuotesExtraDataInformation implements QuotesExtraData {
     @Override
     public Float getPrice() {
         return this.price;
+    }
+
+    @Override
+    public List<Platforms> getPlatformsSupported() {
+        return platformsSupported;
     }
 }

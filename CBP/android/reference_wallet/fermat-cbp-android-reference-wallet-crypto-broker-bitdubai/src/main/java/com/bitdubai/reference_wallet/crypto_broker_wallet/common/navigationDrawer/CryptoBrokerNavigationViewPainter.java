@@ -13,7 +13,10 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -148,7 +151,11 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
             for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
                 Currency currency = associatedWallet.getMerchandise();
-                float balance = moduleManager.getAvailableBalance(currency, session.getAppPublicKey());
+                double balance = moduleManager.getAvailableBalance(currency, session.getAppPublicKey());
+
+                String currencyCode = currency.getCode();
+                if(currency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+                    balance = BitcoinConverter.convert(balance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
                 stockItems.add(new NavViewFooterItem(currency.getFriendlyName(), numberFormat.format(balance)));
             }
@@ -169,17 +176,24 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         try {
             final List<EarningsPair> earningsPairs = moduleManager.getEarningsPairs(session.getAppPublicKey());
             for (EarningsPair earningsPair : earningsPairs) {
-                final String linkedCurrency = earningsPair.getLinkedCurrency().getCode();
-                final String earningCurrency = earningsPair.getEarningCurrency().getCode();
+                final Currency linkedCurrency = earningsPair.getLinkedCurrency();
+                final String linkedCurrencyCode = linkedCurrency.getCode();
 
-                String currencies = linkedCurrency + " / " + earningCurrency;
+                final Currency earningCurrency = earningsPair.getEarningCurrency();
+                final String earningCurrencyCode = earningCurrency.getCode();
+
+                String currencies = linkedCurrencyCode + " / " + earningCurrencyCode;
                 String value = "0.0";
 
                 final EarningsSearch search = earningsPair.getSearch();
 
                 final List<EarningsDetailData> earningsDetails = EarningsDetailData.generateEarningsDetailData(search.listResults(), TimeFrequency.DAILY);
                 if (!earningsDetails.isEmpty()) {
-                    final double amount = earningsDetails.get(0).getAmount();
+                    double amount = earningsDetails.get(0).getAmount();
+
+                    if(earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(earningCurrencyCode))
+                        amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
+
                     value = numberFormat.format(amount);
                 }
 
