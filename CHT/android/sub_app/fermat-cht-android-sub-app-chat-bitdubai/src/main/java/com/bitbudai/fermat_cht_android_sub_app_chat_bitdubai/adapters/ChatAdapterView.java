@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -354,7 +355,7 @@ public class ChatAdapterView extends LinearLayout {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
                 if(date != null && date != "no record") {
-                    toolbar.setSubtitle("Last time "+date);
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>Last time "+date+"</small></small>"));
                 }else{
                     Log.i("159753**LastTimeOnChat", "No show");
                 }
