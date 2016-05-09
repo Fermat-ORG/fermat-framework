@@ -126,8 +126,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         try {
             if (isRegistered()) {
 
-                final String imageString = Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT);
-
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         chatExposingData.getPublicKey(),
@@ -135,7 +133,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                         (chatExposingData.getAlias().toLowerCase() + "_" + this.platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CHAT,
-                        imageString);
+                        extraDataToJson(chatExposingData));
 
                 Thread thread = new Thread(new Runnable() {
                     @Override
