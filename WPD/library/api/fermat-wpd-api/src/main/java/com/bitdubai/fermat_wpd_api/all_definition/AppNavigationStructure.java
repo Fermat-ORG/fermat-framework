@@ -19,10 +19,10 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.23..
  */
 
-public class WalletNavigationStructure implements FermatWallet,Serializable{
+public class AppNavigationStructure implements FermatWallet,Serializable{
 
     /**
-     * WalletNavigationStructure identifiers
+     * AppNavigationStructure identifiers
      */
 
     private String publicKey;
@@ -35,7 +35,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
 
 
     /**
-     * Screens in a WalletNavigationStructure
+     * Screens in a AppNavigationStructure
      */
 
     private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
@@ -59,16 +59,16 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     private Platforms platform;
 
     /**
-     * WalletNavigationStructure constructor
+     * AppNavigationStructure constructor
      */
-    public WalletNavigationStructure() {
+    public AppNavigationStructure() {
     }
 
     /**
      *
      * @param activities
      */
-    public WalletNavigationStructure(Map<Activities, Activity> activities) {
+    public AppNavigationStructure(Map<Activities, Activity> activities) {
         this.activities = activities;
     }
 
@@ -92,7 +92,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     }
 
     /**
-     * WalletNavigationStructure interface implementation.
+     * AppNavigationStructure interface implementation.
      */
 
     @Override
@@ -163,7 +163,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     }
 
     /**
-     *  Screens in a WalletNavigationStructure
+     *  Screens in a AppNavigationStructure
      *
      * @return Map<Activities, Activity>
      */
@@ -177,7 +177,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     }
 
     /**
-     *  Add Screen to WalletNavigationStructure
+     *  Add Screen to AppNavigationStructure
      *
      * @param activity
      */

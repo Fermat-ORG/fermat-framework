@@ -73,7 +73,7 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 23.07.15.
  */
 
-public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
+public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         WalletRuntimeManager,
         XML {
 
@@ -97,7 +97,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    public WalletRuntimeEnginePluginRoot() {
+    public AppRuntimeEnginePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
