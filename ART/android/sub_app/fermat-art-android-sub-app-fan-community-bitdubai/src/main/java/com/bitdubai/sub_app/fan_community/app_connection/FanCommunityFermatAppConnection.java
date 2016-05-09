@@ -71,7 +71,7 @@ public class FanCommunityFermatAppConnection extends AppConnections<FanCommunity
     public NotificationPainter getNotificationPainter(final String code) {
         return CommunityNotificationPainterBuilder.getNotification(
                 code,
-                this.getSession()
+                getFullyLoadedSession()
         );
     }
 }

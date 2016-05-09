@@ -45,7 +45,7 @@ public class CommunityNotificationPainterBuilder {
                                 lastListIndex);
                         notification = new CommunityNotificationPainter(
                                 "Artist Community",
-                                "A Fermat Artist, "+linkedFanIdentity.getAlias()+", " +
+                                "A Fermat Fan, "+linkedFanIdentity.getAlias()+", " +
                                         "wants to connect with you.",
                                 "",
                                 "",
@@ -61,7 +61,7 @@ public class CommunityNotificationPainterBuilder {
                                 lastListIndex);
                         notification = new CommunityNotificationPainter(
                                 "Artist Community",
-                                "A Fermat Artist, "+fanConnectedInformation.getAlias()+", accepts" +
+                                "A Fermat Fan, "+fanConnectedInformation.getAlias()+", accepts" +
                                         " your connection request.",
                                 "",
                                 "",
