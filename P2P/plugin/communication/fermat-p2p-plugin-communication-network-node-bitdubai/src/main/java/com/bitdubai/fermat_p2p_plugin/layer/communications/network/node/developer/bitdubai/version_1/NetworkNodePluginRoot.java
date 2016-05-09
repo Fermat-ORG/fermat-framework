@@ -247,8 +247,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent(this);
             this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent(this);
-          //  propagateNodeCatalogAgent.start();
-          //  propagateActorCatalogAgent.start();
+            propagateNodeCatalogAgent.start();
+            propagateActorCatalogAgent.start();
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
@@ -340,13 +340,13 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         //TODO: CHANGE
         nodeProfile.setIp(serverIp);
-        nodeProfile.setIp("localhost");
+      //  nodeProfile.setIp("localhost");
 
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
-        nodeProfile.setDefaultPort(8080);
+       // nodeProfile.setDefaultPort(8080);
 
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
-        nodeProfile.setName("Other Server");
+       // nodeProfile.setName("Other Server");
 
         nodeProfile.setLocation(locationManager.getLocation());
 
@@ -547,8 +547,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private FermatWebSocketClientNodeChannel getFermatWebSocketClientNodeChannelInstanceSeedNode(){
 
-        //return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-        return new FermatWebSocketClientNodeChannel("localhost", 8080);
+        return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+        //return new FermatWebSocketClientNodeChannel("localhost", 8080);
 
     }
 
@@ -698,7 +698,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             }
 
             requestNodesCatalogTransactions();
-          //  requestActorsCatalogTransactions();
+            requestActorsCatalogTransactions();
 
         }
 

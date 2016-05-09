@@ -6,11 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
-import java.util.LinkedHashSet;
+import com.google.common.collect.ImmutableSet;
+
 import java.util.Set;
 
-import javax.enterprise.inject.Instance;
-import javax.inject.Inject;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -25,7 +24,7 @@ import javax.ws.rs.core.Application;
 @ApplicationPath("/rest/api/v1")
 public class JaxRsActivator extends Application {
 
-    @Inject
+   /* @Inject
     private Instance<RestFulServices> services;
 
     @Override
@@ -38,6 +37,18 @@ public class JaxRsActivator extends Application {
         }
 
         return resourceList;
+    } */
+
+    private static final ImmutableSet services = ImmutableSet.of(
+            AvailableNodes.class,
+            DeveloperDatabaseResource.class,
+            HelloResource.class,
+            OnlineComponents.class
+    );
+
+    @Override
+    public Set<Class<?>> getClasses() {
+        return services;
     }
 
 }

@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 

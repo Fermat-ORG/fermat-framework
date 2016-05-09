@@ -144,8 +144,8 @@ public class FermatEmbeddedNodeServer {
                         .setContextPath(APP_NAME)
                         .setDeploymentName(WAR_APP_NAME)
                         .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, appWebSocketDeploymentInfo)
-                        .addServlets(Servlets.servlet("HomeServlet", HomeServlet.class).addMapping("/home"))
-                        .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
+                        .addServlets(Servlets.servlet("HomeServlet", HomeServlet.class).addMapping("/home"));
+                        //.addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 
 
         /*
@@ -173,7 +173,7 @@ public class FermatEmbeddedNodeServer {
          */
         ResteasyDeployment restEasyDeploymentInfo = new ResteasyDeployment();
         restEasyDeploymentInfo.setApplicationClass(JaxRsActivator.class.getName());
-        restEasyDeploymentInfo.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
+        //restEasyDeploymentInfo.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
 
         /*
          * Create the restAppDeploymentInfo and configure
@@ -181,8 +181,8 @@ public class FermatEmbeddedNodeServer {
         DeploymentInfo restAppDeploymentInfo = undertowJaxrsServer.undertowDeployment(restEasyDeploymentInfo, "/rest/api/v1");
         restAppDeploymentInfo.setClassLoader(FermatEmbeddedNodeServer.class.getClassLoader())
                              .setContextPath(APP_NAME)
-                             .setDeploymentName("FermatRestApi.war")
-                             .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
+                             .setDeploymentName("FermatRestApi.war");
+                           //  .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 
         /*
          * Deploy the app
