@@ -491,6 +491,9 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
         }
     }
 
+    public ErrorManager getErrorMAnager(){
+        return errorManager;
+    }
 
     protected void reportError(UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception){
         PluginInfo pluginInfo = getClass().getAnnotation(PluginInfo.class);
