@@ -208,12 +208,16 @@ public class ConnectionsWorldFragment extends
 
             if(moduleManager!=null){
                 //Get notification requests count
-                mNotificationsCount = moduleManager.getFansWaitingYourAcceptance(
-                        MAX,
-                        offset)
-                        .size();
-                //mNotificationsCount = 4;
-                new FetchCountTask().execute();
+                List<FanCommunityInformation> fanCommunityInformation =
+                        moduleManager.getFansWaitingYourAcceptance(
+                                MAX,
+                                offset);
+                if(fanCommunityInformation!=null){
+                    mNotificationsCount = fanCommunityInformation.size();
+                    //mNotificationsCount = 4;
+                    new FetchCountTask().execute();
+                }
+
             }
 
         } catch (Exception ex) {

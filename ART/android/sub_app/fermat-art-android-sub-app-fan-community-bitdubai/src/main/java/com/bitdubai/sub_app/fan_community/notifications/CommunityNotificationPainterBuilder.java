@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.fan_community.notifications;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.LinkedActorIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanLinkedActorIdentity;
@@ -29,7 +30,9 @@ public class CommunityNotificationPainterBuilder {
             FanCommunityModuleManager moduleManager = fanSubAppSession.getModuleManager();
             try{
                 FanActorConnectionNotificationType notificationType = FanActorConnectionNotificationType.getByCode(code);
-
+                if(moduleManager==null){
+                    return getDefaultNotification(code);
+                }
                 switch (notificationType) {
                     case CONNECTION_REQUEST_RECEIVED:
                         List<LinkedFanIdentity> fanPendingList= moduleManager.
@@ -72,31 +75,43 @@ public class CommunityNotificationPainterBuilder {
             }
         }else{
             try {
-                FanActorConnectionNotificationType notificationType = FanActorConnectionNotificationType.getByCode(code);
-
-                switch (notificationType) {
-                    case CONNECTION_REQUEST_RECEIVED:
-                        notification = new CommunityNotificationPainter(
-                                "Fan Community",
-                                "A Fermat Fan wants to connect with you.",
-                                "",
-                                "",
-                                R.drawable.afc_ic_nav_connections);
-                        break;
-                    case ACTOR_CONNECTED:
-                        notification = new CommunityNotificationPainter(
-                                "Artist Community",
-                                "A Fermat Fan accept your connection request.",
-                                "",
-                                "",
-                                R.drawable.afc_ic_nav_connections);
-                        break;
-                }
+                notification = getDefaultNotification(code);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
 
+        return notification;
+    }
+
+    /**
+     * This method returns a Fan community notification
+     * @param code
+     * @return
+     * @throws InvalidParameterException
+     */
+    private static NotificationPainter getDefaultNotification(final String code)
+            throws InvalidParameterException {
+        FanActorConnectionNotificationType notificationType = FanActorConnectionNotificationType.getByCode(code);
+        NotificationPainter notification = null;
+        switch (notificationType) {
+            case CONNECTION_REQUEST_RECEIVED:
+                notification = new CommunityNotificationPainter(
+                        "Fan Community",
+                        "A Fermat Fan wants to connect with you.",
+                        "",
+                        "",
+                        R.drawable.afc_ic_nav_connections);
+                break;
+            case ACTOR_CONNECTED:
+                notification = new CommunityNotificationPainter(
+                        "Artist Community",
+                        "A Fermat Fan accept your connection request.",
+                        "",
+                        "",
+                        R.drawable.afc_ic_nav_connections);
+                break;
+        }
         return notification;
     }
 }

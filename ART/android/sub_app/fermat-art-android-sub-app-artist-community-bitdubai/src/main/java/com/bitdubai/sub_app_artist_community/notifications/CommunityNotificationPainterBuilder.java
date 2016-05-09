@@ -2,6 +2,7 @@ package com.bitdubai.sub_app_artist_community.notifications;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -24,7 +25,9 @@ public class CommunityNotificationPainterBuilder {
             ArtistCommunitySubAppModuleManager moduleManager = artistSubAppSession.getModuleManager();
             try{
                 ArtistActorConnectionNotificationType notificationType = ArtistActorConnectionNotificationType.getByCode(code);
-
+                if(moduleManager==null){
+                    return getDefaultNotification(code);
+                }
                 switch (notificationType) {
                     case CONNECTION_REQUEST_RECEIVED:
                         List<ArtistCommunityInformation> artistPendingList= moduleManager.
@@ -67,27 +70,7 @@ public class CommunityNotificationPainterBuilder {
             }
         }else{
             try {
-                ArtistActorConnectionNotificationType notificationType = ArtistActorConnectionNotificationType.getByCode(code);
-
-                switch (notificationType) {
-                    case CONNECTION_REQUEST_RECEIVED:
-                        notification = new CommunityNotificationPainter(
-                                "Artist Community",
-                                "A Fermat Artist wants to connect with you.",
-                                "",
-                                "",
-                                R.drawable.aac_ic_nav_connections);
-                        break;
-                    case ACTOR_CONNECTED:
-                        notification = new CommunityNotificationPainter(
-                                "Artist Community",
-                                "A Fermat Artist accept your connection request.",
-                                "",
-                                "",
-                                R.drawable.aac_ic_nav_connections);
-                        break;
-
-                }
+                getDefaultNotification(code);
             } catch (Exception e) {
                 //TODO: improve this catch
                 e.printStackTrace();
@@ -95,4 +78,38 @@ public class CommunityNotificationPainterBuilder {
         }
         return notification;
     }
+
+    /**
+     * This method returns an Artist community notification
+     * @param code
+     * @return
+     * @throws InvalidParameterException
+     */
+    private static NotificationPainter getDefaultNotification(final String code)
+            throws InvalidParameterException {
+        ArtistActorConnectionNotificationType notificationType =
+                ArtistActorConnectionNotificationType.getByCode(code);
+        NotificationPainter notification = null;
+        switch (notificationType) {
+            case CONNECTION_REQUEST_RECEIVED:
+                notification = new CommunityNotificationPainter(
+                        "Artist Community",
+                        "A Fermat Artist wants to connect with you.",
+                        "",
+                        "",
+                        R.drawable.aac_ic_nav_connections);
+                break;
+            case ACTOR_CONNECTED:
+                notification = new CommunityNotificationPainter(
+                        "Artist Community",
+                        "A Fermat Artist accept your connection request.",
+                        "",
+                        "",
+                        R.drawable.aac_ic_nav_connections);
+                break;
+
+        }
+        return notification;
+    }
+
 }

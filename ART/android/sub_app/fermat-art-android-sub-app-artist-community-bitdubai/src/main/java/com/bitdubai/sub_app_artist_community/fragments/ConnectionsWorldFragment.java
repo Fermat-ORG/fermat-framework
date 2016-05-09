@@ -144,13 +144,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
 
             if(moduleManager!=null){
                 //Get notification requests count
-                mNotificationsCount = moduleManager.listArtistsPendingLocalAction(
-                        moduleManager.getSelectedActorIdentity(),
-                        MAX,
-                        offset)
-                        .size();
-                //mNotificationsCount = 4;
-                new FetchCountTask().execute();
+                List<ArtistCommunityInformation> artistCommunityInformation =
+                        moduleManager.listArtistsPendingLocalAction(
+                                moduleManager.getSelectedActorIdentity(),
+                                MAX,
+                                offset);
+                if(artistCommunityInformation!=null){
+                    mNotificationsCount = artistCommunityInformation
+                            .size();
+                    //mNotificationsCount = 4;
+                    new FetchCountTask().execute();
+                }
+
             }
 
 
