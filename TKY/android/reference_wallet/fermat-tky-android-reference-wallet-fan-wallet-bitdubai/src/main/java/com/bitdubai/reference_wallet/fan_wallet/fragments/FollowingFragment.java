@@ -124,7 +124,6 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tky_fan_wallet_menu, menu);
-        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.fanwallet_background_viewpager);
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
@@ -172,6 +171,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         loaditems();
         adapter = new FollowingAdapter(items);
         recyclerView.setAdapter(adapter);
+        recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
         swipe_effect();
 
         recyclerView.addOnItemTouchListener(

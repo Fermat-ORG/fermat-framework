@@ -36,7 +36,8 @@ public interface FanIdentityManagerModule extends ModuleManager<FanIdentitySetti
      * @return
      * @throws CantListArtistIdentitiesException
      */
-    HashMap<ArtExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    HashMap<ArtExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser()
+            throws CantListFanIdentitiesException;
 
     /**
      * Return an Object with the basic data from the linked identity and its respectible

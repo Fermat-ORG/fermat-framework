@@ -2,6 +2,8 @@ package com.bitdubai.fermat_art_api.layer.identity.artist.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -11,8 +13,6 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtis
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 
 import java.util.HashMap;
 import java.util.List;
@@ -60,7 +60,9 @@ public interface ArtistIdentityManager extends FermatManager{
             final String alias,
             final byte[] imageBytes,
             final String externalUsername,
-            ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, final UUID externalIdentityID,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType,
+            final UUID externalIdentityID,
             final ArtExternalPlatform artExternalPlatform) throws    CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
     /**
@@ -74,9 +76,14 @@ public interface ArtistIdentityManager extends FermatManager{
      * @throws CantUpdateArtistIdentityException
      */
     void updateArtistIdentity(
-            String alias, String publicKey, byte[] profileImage,
-            ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform,String externalUserName) throws
+            String alias,
+            String publicKey,
+            byte[] profileImage,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType acceptConnectionsType,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUserName) throws
             CantUpdateArtistIdentityException;
 
     /**

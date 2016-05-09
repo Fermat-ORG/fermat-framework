@@ -9,12 +9,13 @@ import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.except
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
-public class FanCommunitySettings implements SubAppSettings {
+public class FanCommunitySettings implements SubAppSettings, Serializable {
 
     private String lastSelectedIdentityPublicKey;
     private Actors lastSelectedActorType;

@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Group;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 
 import java.util.UUID;

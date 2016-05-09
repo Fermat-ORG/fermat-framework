@@ -1,19 +1,26 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
+import android.content.ClipData;
 import android.content.Context;
+import android.os.Build;
+import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 
@@ -31,7 +38,8 @@ import java.util.List;
  * @version 1.0
  */
 
-public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> /*implements Filterable*/ {
+public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
+        /*implements Filterable*/ {
 
     List<ChatMessage> chatMessages = new ArrayList<>();
     ArrayList<String> messagesData = new ArrayList<>();
@@ -61,6 +69,22 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> /*implem
         if (data != null) {
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg, data);
+//            final String copiedMessage = holder.txtMessage.getText().toString();
+//            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View v) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+//                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+//                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
+//                        clipboard.setPrimaryClip(clip);}
+//                    else{
+//                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+//                        clipboard.setText(copiedMessage);
+//                    }
+//                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
+//                    return true;
+//                }
+//            });
         }
     }
 
@@ -136,55 +160,17 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> /*implem
             layoutParams.gravity = Gravity.LEFT;
             holder.txtInfo.setLayoutParams(layoutParams);
         }
-//        if (!isMe) {
-//            holder.contentWithBG.setBackgroundResource(R.drawable.out_message_bg);
-//
-//            LinearLayout.LayoutParams layoutParams =
-//                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-//            layoutParams.gravity = Gravity.START;
-//            holder.contentWithBG.setLayoutParams(layoutParams);
-//
-//            RelativeLayout.LayoutParams lp =
-//                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            holder.content.setLayoutParams(lp);
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-//            layoutParams.gravity = Gravity.START;
-//            holder.txtMessage.setLayoutParams(layoutParams);
-//
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-//            layoutParams.gravity = Gravity.START;
-//            holder.txtInfo.setLayoutParams(layoutParams);
-//        } else {
-//            holder.contentWithBG.setBackgroundResource(R.drawable.in_message_bg);
-//
-//            LinearLayout.LayoutParams layoutParams =
-//                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-//            layoutParams.gravity = Gravity.END;
-//            holder.contentWithBG.setLayoutParams(layoutParams);
-//
-//            RelativeLayout.LayoutParams lp =
-//                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-//            holder.content.setLayoutParams(lp);
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-//            layoutParams.gravity = Gravity.END;
-//            holder.txtMessage.setLayoutParams(layoutParams);
-//
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-//            layoutParams.gravity = Gravity.END;
-//            holder.txtInfo.setLayoutParams(layoutParams);
-//        }
     }
 
 //    public int getCount() {
 //        if (chatMessages != null) {
-//            if(filteredData.size()<chatMessages.size()) {
-//                return filteredData.size();
-//            }else{
-//                return chatMessages.size();}
+//            if (filteredData != null) {
+//                if (filteredData.size() <= chatMessages.size()) {
+//                    return filteredData.size();
+//                } else {
+//                    return chatMessages.size();
+//                }
+//            }else  return chatMessages.size();
 //        } else {
 //            return 0;
 //        }
@@ -192,7 +178,19 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> /*implem
 //
 //    @Override
 //    public ChatMessage getItem(int position) {
-//        return filteredData.get(position);
+//        ChatMessage dataM;
+//        if (chatMessages != null) {
+//            if (filteredData != null) {
+//                if (filteredData.size() <= chatMessages.size()) {
+//                    dataM= filteredData.get(position);
+//                } else {
+//                    dataM= chatMessages.get(position);
+//                }
+//            }else dataM=chatMessages.get(position);
+//        } else {
+//            dataM=chatMessages.get(position);
+//        }
+//        return dataM;
 //    }
 //
 //    @Override

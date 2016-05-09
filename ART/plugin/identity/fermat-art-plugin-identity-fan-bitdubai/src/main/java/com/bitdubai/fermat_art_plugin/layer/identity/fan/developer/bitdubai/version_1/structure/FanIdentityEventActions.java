@@ -194,6 +194,10 @@ public class FanIdentityEventActions {
             CantAddNewArtistConnectedException {
         try{
             UUID tkyId = fanatic.getExternalIdentityID();
+            if(tkyId==null){
+                //If tkyId is null, the artist doesn't have a TKY Identity
+                return;
+            }
             Fan tkyFan = this.tokenlyFanIdentityManager.getFanIdentity(tkyId);
 
             String artistUsername;
@@ -256,7 +260,10 @@ public class FanIdentityEventActions {
         try{
             UUID tkyId = fanatic.getExternalIdentityID();
             Fan tkyFan = this.tokenlyFanIdentityManager.getFanIdentity(tkyId);
-
+            if(tkyId==null){
+                //If tkyId is null, the artist doesn't have a TKY Identity
+                return;
+            }
             String artistUsername;
             String remoteArtistPublicKey;
             for(ArtistExposingData artistExposingData : artistExposingDataList){
