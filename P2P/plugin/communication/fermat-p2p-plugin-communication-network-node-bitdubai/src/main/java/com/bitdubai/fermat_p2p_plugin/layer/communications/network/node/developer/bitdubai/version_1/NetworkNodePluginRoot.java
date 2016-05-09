@@ -340,13 +340,13 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         //TODO: CHANGE
         nodeProfile.setIp(serverIp);
-        nodeProfile.setIp("localhost");
+      //  nodeProfile.setIp("localhost");
 
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
-        nodeProfile.setDefaultPort(8080);
+       // nodeProfile.setDefaultPort(8080);
 
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
-        nodeProfile.setName("Other Server");
+       // nodeProfile.setName("Other Server");
 
         nodeProfile.setLocation(locationManager.getLocation());
 
