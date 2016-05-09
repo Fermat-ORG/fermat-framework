@@ -41,6 +41,8 @@ public enum PackageType {
     ACTOR_CALL_REQUEST,
     NETWORK_SERVICE_CALL_REQUEST,
 
+    MESSAGE_TRANSMIT,
+
     /*
      * Respond packet types
      */
@@ -59,7 +61,9 @@ public enum PackageType {
     CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND,
     ACTOR_TRACE_DISCOVERY_QUERY_RESPOND,
 
-    // Definition types Client channel
+    MESSAGE_TRANSMIT_RESPOND,
+
+    // Definition types NODE channel
 
     /*
      * Request packet types

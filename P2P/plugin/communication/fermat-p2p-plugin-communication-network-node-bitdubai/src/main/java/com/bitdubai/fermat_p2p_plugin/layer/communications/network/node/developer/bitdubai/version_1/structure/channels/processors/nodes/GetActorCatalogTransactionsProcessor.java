@@ -123,6 +123,9 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
      */
     public List<ActorsCatalogTransaction> loadData(Integer offset, Integer max) throws CantReadRecordDataBaseException {
 
+        LOG.info("offset = "+offset);
+        LOG.info("max = "+max);
+
         List<ActorsCatalogTransaction> transactionList = null;
 
         if (offset > 0 && max > 0){

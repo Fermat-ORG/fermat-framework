@@ -139,8 +139,12 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
         LOG.info("Executing method processTransaction");
 
-        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())){
+
+        if ((getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())) &&
+                (actorsCatalogTransaction.getTransactionType() == ActorsCatalogTransaction.ADD_TRANSACTION_TYPE)){
+
             return 1;
+
         }else {
 
             switch (actorsCatalogTransaction.getTransactionType()){

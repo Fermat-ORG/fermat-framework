@@ -125,6 +125,9 @@ public class GetNodeCatalogTransactionsProcessor extends PackageProcessor {
 
         List<NodesCatalogTransaction> nodesCatalogTransactionList = null;
 
+        LOG.info("offset = "+offset);
+        LOG.info("max = "+max);
+
         if (offset > 0 && max > 0){
 
             nodesCatalogTransactionList = getDaoFactory().getNodesCatalogTransactionDao().findAll(offset, max);

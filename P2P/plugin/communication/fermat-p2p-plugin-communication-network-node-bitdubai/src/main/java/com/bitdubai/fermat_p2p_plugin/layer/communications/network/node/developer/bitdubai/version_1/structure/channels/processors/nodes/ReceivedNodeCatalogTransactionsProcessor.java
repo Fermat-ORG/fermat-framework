@@ -137,10 +137,11 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
 
         LOG.info("Executing method processTransaction");
 
-        int lateNotificationsCounter = 0;
+        if ((getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())) &&
+                nodesCatalogTransaction.getTransactionType() == NodesCatalogTransaction.ADD_TRANSACTION_TYPE){
 
-        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())){
-            lateNotificationsCounter++;
+            return 1;
+
         }else {
 
             switch (nodesCatalogTransaction.getTransactionType()){
@@ -163,7 +164,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
 
         }
 
-        return lateNotificationsCounter;
+        return 0;
     }
 
     /**

@@ -83,6 +83,9 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                      */
                     List<NodesCatalogTransaction>  transactionList = messageContent.getNodesCatalogTransactions();
 
+                    long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
+
+                    LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("transactionList size = "+transactionList.size());
 
                     for (NodesCatalogTransaction nodesCatalogTransaction : transactionList) {
@@ -93,8 +96,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                         processTransaction(nodesCatalogTransaction);
                     }
 
-
-                    long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
+                    totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("Row in catalog seed node = "+messageContent.getCount());
@@ -103,7 +105,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
                         LOG.info("Requesting more transactions.");
 
-                        GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(transactionList.size(), 250);
+                        GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest((int) totalRowInDb, 250);
                         Package packageRespond = Package.createInstance(nodeCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                         /*
@@ -137,36 +139,27 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
      * Process the transaction
      * @param nodesCatalogTransaction
      */
-    private int processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException, InvalidParameterException {
+    private void processTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantReadRecordDataBaseException, RecordNotFoundException, CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, CantDeleteRecordDataBaseException, InvalidParameterException {
 
         LOG.info("Executing method processTransaction");
 
-        int lateNotificationsCounter = 0;
+        switch (nodesCatalogTransaction.getTransactionType()){
 
-        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())){
-            lateNotificationsCounter++;
-        }else {
+            case NodesCatalogTransaction.ADD_TRANSACTION_TYPE :
+                insertNodesCatalog(nodesCatalogTransaction);
+                break;
 
-            switch (nodesCatalogTransaction.getTransactionType()){
+            case NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE :
+                updateNodesCatalog(nodesCatalogTransaction);
+                break;
 
-                case NodesCatalogTransaction.ADD_TRANSACTION_TYPE :
-                    insertNodesCatalog(nodesCatalogTransaction);
-                    break;
-
-                case NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE :
-                    updateNodesCatalog(nodesCatalogTransaction);
-                    break;
-
-                case NodesCatalogTransaction.DELETE_TRANSACTION_TYPE :
-                    deleteNodesCatalog(nodesCatalogTransaction.getIdentityPublicKey());
-                    break;
-            }
-
-            insertNodesCatalogTransaction(nodesCatalogTransaction);
-
+            case NodesCatalogTransaction.DELETE_TRANSACTION_TYPE :
+                deleteNodesCatalog(nodesCatalogTransaction.getIdentityPublicKey());
+                break;
         }
 
-        return lateNotificationsCounter;
+        insertNodesCatalogTransaction(nodesCatalogTransaction);
+
     }
 
     /**

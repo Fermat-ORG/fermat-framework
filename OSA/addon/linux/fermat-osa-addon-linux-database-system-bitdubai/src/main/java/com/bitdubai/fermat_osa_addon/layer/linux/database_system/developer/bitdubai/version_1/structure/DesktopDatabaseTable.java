@@ -273,9 +273,13 @@ public class DesktopDatabaseTable implements DatabaseTable {
         this.records = new ArrayList<>();
 
         String topSentence = "";
+        String offsetSentence = "";
 
-        if (this.top.length() > 0)
+        if (!this.top.isEmpty())
             topSentence = " LIMIT " + this.top;
+
+        if (!this.offset.isEmpty())
+            offsetSentence = " OFFSET " + this.offset;
 
         Connection conn = null;
         Statement stmt = null;
@@ -286,7 +290,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             conn = this.database.getConnection();
             stmt = conn.createStatement();
 
-            String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence;
+            String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
 
             System.out.println("QUERY = "+SQL_QUERY);
 
