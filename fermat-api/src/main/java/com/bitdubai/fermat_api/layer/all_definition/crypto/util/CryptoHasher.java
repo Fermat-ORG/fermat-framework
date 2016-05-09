@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.util;
 
+import org.bouncycastle.crypto.digests.RIPEMD160Digest;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
-
-import org.bouncycastle.crypto.digests.RIPEMD160Digest;
 
 public class CryptoHasher {
 

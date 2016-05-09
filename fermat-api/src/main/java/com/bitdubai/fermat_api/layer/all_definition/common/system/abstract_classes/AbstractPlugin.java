@@ -58,7 +58,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
 
     private boolean referencesCollected;
 
-    private final PluginVersionReference pluginVersionReference;
+    protected final PluginVersionReference pluginVersionReference;
 
     protected volatile ServiceStatus serviceStatus;
 
@@ -495,7 +495,8 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
     protected void reportError(UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception){
         PluginInfo pluginInfo = getClass().getAnnotation(PluginInfo.class);
         if(pluginInfo!=null) {
-            errorManager.reportUnexpectedPluginException(pluginInfo.plugin(),unexpectedPluginExceptionSeverity,exception);
+            String[] mailTo = new String[]{pluginInfo.maintainerMail()};
+            errorManager.reportUnexpectedPluginException(pluginInfo.plugin(),pluginVersionReference.getPlatform(),unexpectedPluginExceptionSeverity,exception,mailTo);
         }else {
             System.err.println("The plugin is not implementing the annotation class,Error in Plugin: "+getClass().getName());
         }

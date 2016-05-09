@@ -1,9 +1,5 @@
 package unit.com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
-import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-
-import junit.framework.TestCase;
 /*
 import org.junit.Test;
 

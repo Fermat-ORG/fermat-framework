@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Curve;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Point;
+
 import java.math.BigInteger;
 import java.security.spec.ECFieldFp;
 import java.security.spec.ECParameterSpec;
 import java.security.spec.ECPoint;
 import java.security.spec.EllipticCurve;
-
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Curve;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Point;
 
 public class EllipticCryptographyCurve extends EllipticCurve implements Curve {
 	
