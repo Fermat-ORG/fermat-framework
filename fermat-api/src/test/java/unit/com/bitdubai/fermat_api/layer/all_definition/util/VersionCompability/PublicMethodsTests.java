@@ -1,8 +1,8 @@
 package unit.com.bitdubai.fermat_api.layer.all_definition.util.VersionCompability;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 
 import org.junit.Assert;
 import org.junit.Test;
