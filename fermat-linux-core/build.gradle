@@ -5,6 +5,7 @@ apply plugin: 'gradle-one-jar'
 
 sourceCompatibility = 1.7
 targetCompatibility = 1.7
+version = '1.6.1'
 
 
 buildscript {
@@ -24,6 +25,13 @@ dependencies {
     compile project(':fermat-osa-linux-core')
 }
 
+sourceSets {
+    main {
+        resources {
+            srcDir 'src/main/resources'
+        }
+    }
+}
 
 
 ext.sharedManifest = manifest {
