@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import java.util.Map;
  * Created by Matias Furszyfer on 24/07/15.
  */
 
-public class RuntimeSubApp implements SubApp {
+public class RuntimeSubApp implements SubApp,Serializable {
 
     SubApps type;
 

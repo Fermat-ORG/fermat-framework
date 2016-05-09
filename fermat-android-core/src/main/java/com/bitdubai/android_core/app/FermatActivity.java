@@ -52,7 +52,7 @@ import com.bitdubai.android_core.app.common.version_1.base_structure.config.Ferm
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
-import com.bitdubai.android_core.app.common.version_1.classes.NotificationReceiver;
+import com.bitdubai.android_core.app.common.version_1.receivers.UpdateViewReceiver;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
@@ -217,7 +217,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * receivers
      */
-    NotificationReceiver notificationReceiver;
+    UpdateViewReceiver updateViewReceiver;
 
 
 
@@ -250,9 +250,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
             AndroidCoreUtils.getInstance().setStarted(true);
         runtimeStructureManager = new RuntimeStructureManager(this);
 
-        notificationReceiver = new NotificationReceiver(this);
-        IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
-        registerReceiver(notificationReceiver, intentFilter);
+        updateViewReceiver = new UpdateViewReceiver(this);
+        IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
+        registerReceiver(updateViewReceiver, intentFilter);
 
     }
 
@@ -310,8 +310,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                e.printStackTrace();
 //            }
 //
-            unregisterReceiver(notificationReceiver);
-            notificationReceiver.clear();
+            unregisterReceiver(updateViewReceiver);
+            updateViewReceiver.clear();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1428,7 +1428,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
-            ApplicationSession.getInstance().getNotificationService().notificate(code, ApplicationSession.getInstance().getAppManager().getAppStructure(appPublicKey));
+            ApplicationSession.getInstance().getNotificationService().notificate(code, appPublicKey);
         }catch (Exception e){
             e.printStackTrace();
         }

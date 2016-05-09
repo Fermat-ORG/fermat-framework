@@ -663,7 +663,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                        Boolean isBackPressed = null;
+                        try {
+                            isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS,Boolean.TRUE);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                         if (isBackPressed != null) {
                             if (isBackPressed) {
                                 getActivity().onBackPressed();

@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ import java.util.Map;
  * Created by Matias Furszyfer 16/9/2015
  */
 
-public class RuntimeDesktopObject implements DesktopObject {
+public class RuntimeDesktopObject implements DesktopObject,Serializable {
 
     //SubApps type;
 

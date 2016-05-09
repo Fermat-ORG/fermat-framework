@@ -4,12 +4,13 @@ package com.bitdubai.fermat_wpd_plugin.layer.network_service.wallet_store.develo
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantSingMessageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 7/23/15.
  */
-public class Developer implements DeveloperIdentity {
+public class Developer implements DeveloperIdentity,Serializable {
     UUID id;
     String alias;
     String publicKey;
