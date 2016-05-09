@@ -377,7 +377,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             long cryptoAmount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
-            BlockchainNetworkType blockchainNetworkType)
+            BlockchainNetworkType blockchainNetworkType,String intraActorPK)
             throws CantInsertRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseSubmitTable();
@@ -390,7 +390,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     cryptoAmount,
                     cbpWalletPublicKey,
                     referencePrice,
-                    blockchainNetworkType
+                    blockchainNetworkType,intraActorPK
             );
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException exception){
@@ -466,7 +466,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             long cryptoAmount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
-            BlockchainNetworkType blockchainNetworkType) {
+            BlockchainNetworkType blockchainNetworkType,String intraActorPk) {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
@@ -488,6 +488,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME,
                 brokerCryptoAddress);
+        record.setStringValue(
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME,
+                intraActorPk);
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 walletPublicKey);
@@ -738,7 +741,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getCustomerBusinessTransactionRecord(contractHash);
+            businessTransactionRecord = getBrokerBusinessTransactionRecord(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
@@ -768,7 +771,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
             businessTransactionRecord.setCustomerPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                     SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setTransactionHash(contractHash);
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME));
 
             businessTransactionRecord.setBrokerPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                     SUBMIT_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
@@ -883,7 +886,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                                     SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setTransactionHash(contractHash);
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME));
             businessTransactionRecord.setTransactionId(
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
@@ -894,6 +897,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+
+            businessTransactionRecord.setActorPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME));
+
             businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.

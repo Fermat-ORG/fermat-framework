@@ -9,7 +9,7 @@ import com.bitdubai.fermat_p2p_core.layer.communication.CommunicationsLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_p2p_core.P2PPlatform</code>
- * haves all the necessary business logic to start the P2P Communication platform.
+ * contains all the necessary business logic to start the P2P Communication platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/11/2015.
  */
@@ -35,4 +35,5 @@ public class P2PPlatform extends AbstractPlatform {
             );
         }
     }
+
 }

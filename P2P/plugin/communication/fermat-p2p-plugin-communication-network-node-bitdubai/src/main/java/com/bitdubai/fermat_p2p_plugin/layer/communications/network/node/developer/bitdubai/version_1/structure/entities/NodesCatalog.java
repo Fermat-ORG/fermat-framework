@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
@@ -118,6 +120,15 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
 
 	public void setRegisteredTimestamp(Timestamp registeredTimestamp) {
 		this.registeredTimestamp = registeredTimestamp;
+	}
+
+	public void setLocation(Location location) {
+
+		if(location != null) {
+
+			this.lastLatitude  = location.getLatitude() ;
+			this.lastLongitude = location.getLongitude();
+		}
 	}
 
 	@Override

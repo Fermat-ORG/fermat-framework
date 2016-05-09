@@ -28,6 +28,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantSendPackageException;
@@ -319,9 +320,10 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
             packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
         else if (profile instanceof ClientProfile)
             packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
-        else if (profile instanceof NetworkServiceProfile)
+        else if (profile instanceof NetworkServiceProfile) {
             packageType = PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST;
-        else {
+            ((NetworkServiceProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+        } else {
             CantRegisterProfileException fermatException = new CantRegisterProfileException(
                     "profile:" + profile,
                     "Unsupported profile type."
@@ -604,9 +606,15 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         }
     }
 
+    @Override
+    public CommunicationChannels getCommunicationChannelType() {
+
+        return CommunicationChannels.P2P_SERVERS;
+    }
+
     /*
-     * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
-     */
+         * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
+         */
     public void setNodesListPosition() {
         this.nodesListPosition = -1;
     }

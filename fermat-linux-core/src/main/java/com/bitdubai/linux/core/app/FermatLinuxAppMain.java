@@ -61,6 +61,7 @@ public class FermatLinuxAppMain {
              */
             fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE  , Developers.BITDUBAI, new Version()));
             //fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
+            //fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.ACTOR_NETWORK_SERVICE, Plugins.CRYPTO_CUSTOMER, Developers.BITDUBAI, new Version()));
 
         } catch (Exception e) {
 

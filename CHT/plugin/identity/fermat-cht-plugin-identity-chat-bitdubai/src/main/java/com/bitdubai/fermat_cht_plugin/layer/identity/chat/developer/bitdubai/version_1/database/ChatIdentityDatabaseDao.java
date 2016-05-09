@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.ve
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -34,6 +35,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPersistProfileI
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure.ChatIdentityImpl;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -42,8 +45,11 @@ import java.util.UUID;
 
 /**
  * Created by franklin on 30/03/16.
+ * Edited by Miguel Rincon on 19/04/2016
  */
 public class ChatIdentityDatabaseDao {
+
+    private ErrorManager errorManager;
 
     Database database;
     UUID pluginId;
@@ -71,8 +77,10 @@ public class ChatIdentityDatabaseDao {
         try {
             database = openDatabase();
         } catch (CantOpenDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantOpenDatabaseException("Cant Open Database Exception", e);
         } catch (CantCreateDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantOpenDatabaseException("Cant Create Database Exception", e);
         }
     }
@@ -85,15 +93,16 @@ public class ChatIdentityDatabaseDao {
     private Database openDatabase() throws CantOpenDatabaseException, CantCreateDatabaseException {
         try {
             database = pluginDatabaseSystem.openDatabase(this.pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
-
         } catch (DatabaseNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
+
             ChatIdentityDatabaseFactory chatIdentityDatabaseFactory = new ChatIdentityDatabaseFactory(pluginDatabaseSystem);
             database = chatIdentityDatabaseFactory.createDatabase(this.pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
         }
         return database;
     }
 
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -108,6 +117,10 @@ public class ChatIdentityDatabaseDao {
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
 
             table.insertRecord(record);
 
@@ -116,12 +129,15 @@ public class ChatIdentityDatabaseDao {
 
         } catch (CantInsertRecordException e) {
             // Cant insert record.
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat Identity", "Cant create new Chat, insert database problems.");
         } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat Identity", "Cant create new Chat,persist private key error.");
         } catch (Exception e) {
             // Failure unknown.
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant create new Asset Issuer, unknown failure.");
         }
     }
@@ -154,14 +170,16 @@ public class ChatIdentityDatabaseDao {
             }
 
         } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantUpdateChatIdentityException(e.getMessage(), e, "Chat Identity", "Cant update Chat Identity, database problems.");
         }  catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateChatIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant update Chat Identity, unknown failure.");
         }
     }
 
 
-    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage) throws CantUpdateChatIdentityException {
+    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -184,6 +202,10 @@ public class ChatIdentityDatabaseDao {
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
                 record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
                 table.updateRecord(record);
             }
 
@@ -191,10 +213,13 @@ public class ChatIdentityDatabaseDao {
                 persistNewUserProfileImage(publicKey, profileImage);
 
         } catch (CantUpdateRecordException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantUpdateChatIdentityException(e.getMessage(), e, "Chat Identity", "Cant update Chat Identity, database problems.");
         } catch (CantPersistProfileImageException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantUpdateChatIdentityException(e.getMessage(), e, "Chat Identity", "Cant update Chat Identity, persist image error.");
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateChatIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant update Chat Identity, unknown failure.");
         }
     }
@@ -233,11 +258,17 @@ public class ChatIdentityDatabaseDao {
                 chatIdentity = new ChatIdentityImpl(
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME),
-                        getChatProfileImagePrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)));
+                        getChatProfileImagePrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME));
             }
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantGetChatUserIdentityException(e.getMessage(), e, "Chat Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetChatUserIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cahat identity list, unknown failure.");
         }
 
@@ -283,15 +314,22 @@ public class ChatIdentityDatabaseDao {
                         getChatIdentityPrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
                         getChatProfileImagePrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
-                        pluginId));
+                        pluginId,
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME)));
             }
         } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantListIdentitiesException(e.getMessage(), e, "Chat Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
         } catch (CantGetPrivateKeyException e) {
             // Failure unknown.
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantListIdentitiesException(e.getMessage(), e, "Chat Identity", "Can't get private key.");
 
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Chat identity list, unknown failure.");
         }
 
@@ -321,10 +359,12 @@ public class ChatIdentityDatabaseDao {
             return table.getRecords().size() > 0;
 
 
-        } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Chat  Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
+        } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat  Identity", "Cant load " + ChatIdentityDatabaseConstants.CHAT_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "unknown failure.");
         }
     }
@@ -342,10 +382,13 @@ public class ChatIdentityDatabaseDao {
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
         } catch (CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
     }
@@ -363,10 +406,13 @@ public class ChatIdentityDatabaseDao {
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
         } catch (CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
         }
     }
@@ -386,11 +432,15 @@ public class ChatIdentityDatabaseDao {
             profileImage = file.getContent();
 
         } catch (CantLoadFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantGetProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
         } catch (FileNotFoundException | CantCreateFileException e) {
             profileImage = new byte[0];
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            // TODO: Revisar este manejo de excepcion
             // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetProfileImageException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
         }
 
@@ -413,11 +463,13 @@ public class ChatIdentityDatabaseDao {
             privateKey = file.getContent();
 
         } catch (CantLoadFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantGetPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
-
         } catch (FileNotFoundException | CantCreateFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantGetPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
 

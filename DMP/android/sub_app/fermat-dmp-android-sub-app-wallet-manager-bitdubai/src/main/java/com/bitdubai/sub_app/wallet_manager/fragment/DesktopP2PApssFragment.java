@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
@@ -360,7 +362,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(3);
             lstItemsWithIcon.add(item);
 
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM);
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
             installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.chat_subapp);
@@ -380,7 +382,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             int pos = 0;
             for(int i = 0;i<lstItemsWithIcon.size();i++){
                 Item itemIcon = lstItemsWithIcon.get(i);
-                if((itemIcon.getAppStatus() == AppsStatus.ALPHA)){
+                if((itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus())){
                     arrItemsWithoutIcon[pos]= itemIcon;
                     pos++;
                 }
@@ -407,9 +409,9 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
         try {
             switch (data.getType()) {
                 case SUB_APP:
-                    if(((InstalledSubApp)data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)){
-                        Toast.makeText(getActivity(),"Coming soon",Toast.LENGTH_SHORT).show();
-                    } else{
+                    if (((InstalledSubApp) data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)) {
+                        Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+                    } else {
                         selectSubApp((InstalledSubApp) data.getInterfaceObject());
                     }
                     break;
@@ -419,17 +421,13 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
                 case EMPTY:
                     break;
                 case FOLDER:
-                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,appSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
-//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
-//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
-//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
-//                    folderDialog.getWindow().setAttributes(lp);
-                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    folderDialog.show();
-                    break;
-                case P2P_APP:
-                    selectApp((InstalledApp) data.getInterfaceObject());
+                    if (data.getInterfaceObject().getName().equals("Communities")) {
+                        changeActivity(Activities.DESKTOP_COMMUNITY_ACTIVITY);
+                    } else {
+                        FolderDialog folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this, ((FermatActivityManager) getActivity()).getAppStatus());
+                        folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        folderDialog.show();
+                    }
                     break;
                 default:
                     break;

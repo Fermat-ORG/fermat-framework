@@ -3,9 +3,12 @@ package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantMarkEarningTransactionAsExtractedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningTransactionNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction</code>
@@ -34,6 +37,14 @@ public interface EarningTransaction {
      * @return a list of the input transactions where we define the earning.
      */
     List<InputTransaction> listInputTransactions() throws CantListInputTransactionsException;
+
+    /**
+     * Change the Earning Transaction state from {@link EarningTransactionState#CALCULATED} to {@link EarningTransactionState#EXTRACTED}
+     *
+     * @throws EarningTransactionNotFoundException
+     * @throws CantMarkEarningTransactionAsExtractedException
+     */
+    void markAsExtracted() throws EarningTransactionNotFoundException, CantMarkEarningTransactionAsExtractedException;
 
     /**
      * @return the state of the earning transaction.

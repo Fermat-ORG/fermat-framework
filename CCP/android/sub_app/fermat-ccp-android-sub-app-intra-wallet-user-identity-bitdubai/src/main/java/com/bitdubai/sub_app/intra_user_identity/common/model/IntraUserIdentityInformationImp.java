@@ -4,10 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 
+import java.io.Serializable;
+
 /**
  * Created by nelson on 09/10/15.
  */
-public class IntraUserIdentityInformationImp implements IntraUserModuleIdentity {
+public class IntraUserIdentityInformationImp implements IntraUserModuleIdentity,Serializable {
 
     private String intraUserName;
     private String intraUserPhrase;

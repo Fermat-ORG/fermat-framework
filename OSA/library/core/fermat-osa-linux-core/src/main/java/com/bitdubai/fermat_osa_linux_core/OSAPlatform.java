@@ -9,7 +9,7 @@ import com.bitdubai.fermat_osa_linux_core.layer.system.SystemLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_osa_linux_core.OSAPlatform</code>
- * haves all the necessary business logic to start the OSA platform.
+ * contains all the necessary business logic to start the OSA platform.
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
  */

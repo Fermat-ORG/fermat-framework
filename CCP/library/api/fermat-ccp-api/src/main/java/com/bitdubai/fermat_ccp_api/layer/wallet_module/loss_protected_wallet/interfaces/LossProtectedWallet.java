@@ -68,6 +68,18 @@ import java.util.concurrent.BlockingDeque;
 public interface LossProtectedWallet extends Serializable {
 
     /**
+     * Calculate Earnings or Losts.
+     *
+     * @param walletPublicKey public key of the wallet in which we are working.
+     *
+     * @return a double with Losts or Earnings
+     *
+     * @throws
+     */
+
+    double getEarningOrLostsWallet(String walletPublicKey);
+
+    /**
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.

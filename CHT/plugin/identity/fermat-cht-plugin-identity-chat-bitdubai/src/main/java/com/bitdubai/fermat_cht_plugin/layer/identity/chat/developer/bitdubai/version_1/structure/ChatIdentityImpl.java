@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -12,19 +14,27 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
 /**
  * Created by franklin on 02/11/15.
+ * Edited by Miguel Rincon on 19/04/2016
  */
 public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, ChatIdentity {
     private static final String ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME = "chatIdentityProfileImage";
     private static final String ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME = "chatIdentityPrivateKey";
+    private ErrorManager errorManager;
     private String alias;
     private String publicKey;
     private byte[] profileImage;
     private String privateKey;
+    private String country;
+    private String state;
+    private String city;
+    private String connectionState;
 
     /**
      * DealsWithPluginFileSystem Interface member variables.
@@ -56,19 +66,27 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     /**
      * Constructor
      */
-    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId, String country, String state, String city, String connectionState) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.privateKey = privateKey;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.connectionState = connectionState;
     }
 
-    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage) {
+    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city, String connectionState) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
+        this.country = country;
+        this.state = state;
+        this.city = city;
+        this.connectionState = connectionState;
     }
 
     public ChatIdentityImpl() {
@@ -87,7 +105,7 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
 
     @Override
     public Actors getActorType() {
-        return Actors.DAP_ASSET_ISSUER;
+        return Actors.CHAT;
     }
 
     @Override
@@ -110,9 +128,9 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantCreateFileException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
         //TODO: Revisar este manejo de excepciones
 //        } catch (CantPersistFileException e) {
@@ -131,8 +149,8 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
         try {
             return AsymmetricCryptography.createMessageSignature(message, this.privateKey);
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             //TODO: Revisar este manejo de excepciones
-            e.printStackTrace();
             // throw new CantSignIntraWalletUserMessageException("Fatal Error Signed message", e, "", "");
         }
         return null;
@@ -146,5 +164,45 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     @Override
     public boolean getIsPaymetForChat() {
         return false;
+    }
+
+    /**
+     * This method return String with Country
+     *
+     * @return the String
+     */
+    @Override
+    public String getCountry() {
+        return this.country;
+    }
+
+    /**
+     * This method return String with State
+     *
+     * @return the String
+     */
+    @Override
+    public String getState() {
+        return this.state;
+    }
+
+    /**
+     * This method return String with City
+     *
+     * @return the String
+     */
+    @Override
+    public String getCity() {
+        return this.city;
+    }
+
+    /**
+     * This method return String with ConnectionState
+     *
+     * @return the String
+     */
+    @Override
+    public String getConnectionState() {
+        return this.connectionState;
     }
 }

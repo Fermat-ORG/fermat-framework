@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.DevelopersUtilReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -68,6 +69,8 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
         this.serviceStatus          = ServiceStatus.CREATED;
     }
 
+
+
     public final PluginVersionReference getPluginVersionReference() {
         return pluginVersionReference;
     }
@@ -102,9 +105,11 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
     }
 
     public synchronized final void startPlugin() throws CantStartPluginException {
-        this.start();
-        this.serviceStatus = ServiceStatus.STARTED;
 
+        if (!this.isStarted()) {
+            this.start();
+            this.serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
     @Override

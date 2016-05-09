@@ -70,10 +70,9 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             DatabaseFactory databaseFactory = database.getDatabaseFactory();
 
             /**
-             * Create Bank Money table.
+             * Create Bank Money Transactions table.
              */
             table = databaseFactory.newTableFactory(ownerId, BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
-
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
@@ -91,18 +90,17 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_TRANSACTION_ID_COLUMN_NAME);
-
             try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table);  //Create the table
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create Bank Money Total Balances table.
+            }
+
+            /**
+             * Create Bank Money Accounts table.
              */
             table = databaseFactory.newTableFactory(ownerId, BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
-
-            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
@@ -112,29 +110,28 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
 
             table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
             try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table); //Create the table
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
+            /**
+             * Create Bank Money Bank Name table.
+             */
             table = databaseFactory.newTableFactory(ownerId, BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_TABLE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_PUBLIC_KEY_COLUMN);
-
             try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
+                databaseFactory.createTable(ownerId, table); //Create the table
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
-            /**
-             * This shouldn't happen here because I was the one who gave the owner id to the database file system,
-             * but anyway, if this happens, I can not continue.
-             */
+            // This shouldn't happen here because I was the one who gave the owner id to the database file system,
+            // but anyway, if this happens, I can not continue.
             throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
         }
         return database;

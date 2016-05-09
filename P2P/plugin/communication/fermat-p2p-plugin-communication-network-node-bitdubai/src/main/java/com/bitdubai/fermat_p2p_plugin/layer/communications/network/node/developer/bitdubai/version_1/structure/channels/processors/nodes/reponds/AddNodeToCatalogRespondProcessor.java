@@ -69,7 +69,7 @@ public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
                 if (messageContent.getStatus() == MsgRespond.STATUS.SUCCESS){
 
                     LOG.info("MsgRespond status "+messageContent.getStatus());
-                    ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+                    ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
                     ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(messageContent.getNodeProfileAdded().toJson().getBytes("UTF-8")));
 
                 }else if (messageContent.getStatus() == MsgRespond.STATUS.FAIL) {
@@ -78,7 +78,7 @@ public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
                     LOG.info("MsgRespond details "+messageContent.getDetails());
 
                     if (messageContent.getAlreadyExists()){
-                        ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+                        ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
                         ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(messageContent.getNodeProfileAdded().toJson().getBytes("UTF-8")));
                     }
 

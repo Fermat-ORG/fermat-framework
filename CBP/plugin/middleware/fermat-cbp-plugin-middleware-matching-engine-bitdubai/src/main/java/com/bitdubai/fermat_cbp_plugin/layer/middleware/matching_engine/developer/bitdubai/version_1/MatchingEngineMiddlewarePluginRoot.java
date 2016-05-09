@@ -20,7 +20,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
+import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareEarningsTransactionGeneratorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareTransactionMonitorAgent;
@@ -28,25 +30,29 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareManager;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.BankEarningExtractor;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.CashEarningExtractor;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.CryptoEarningExtractor;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 
+
 /**
  * Matching Engine Middleware CBP Plug-In;
- *
+ * <p/>
  * Description:
- *   This plug-in has the mission of:
- *     - Calculation of the earnings between a pair of currencies.
- *     - Extraction of this calculated earning from the specified wallet, and deposited in another specified wallet.
- *
- *   To accomplish this task it contains a series of features:
- *     - CRUD of Earning Settings (pairs of currencies related with a wallet, and the specified wallet to deposit the earnings).
- *     - An agent with the responsibility of getting all the new confirmed transactions in the wallet where we will extract the earnings.
- *     - An agent with the responsibility of calculate the earnings between pair of currencies and to execute the respective extract and deposit actions.
- *
+ * This plug-in has the mission of:
+ * - Calculation of the earnings between a pair of currencies.
+ * - Extraction of this calculated earning from the specified wallet, and deposited in another specified wallet.
+ * <p/>
+ * To accomplish this task it contains a series of features:
+ * - CRUD of Earning Settings (pairs of currencies related with a wallet, and the specified wallet to deposit the earnings).
+ * - An agent with the responsibility of getting all the new confirmed transactions in the wallet where we will extract the earnings.
+ * - An agent with the responsibility of calculate the earnings between pair of currencies and to execute the respective extract and deposit actions.
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/01/2015.
  *
  * @author lnacosta
@@ -54,27 +60,36 @@ import java.util.List;
  */
 public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
-    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons. ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons. EVENT_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons. PLUGIN_FILE_SYSTEM    )
-    protected PluginFileSystem pluginFileSystem        ;
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons. PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET          , plugin = Plugins.CRYPTO_BROKER_WALLET  )
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET, plugin = Plugins.CRYPTO_BROKER_WALLET)
     private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.BANK_MONEY_DESTOCK)
+    private BankMoneyDestockManager bankMoneyDestockManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CASH_MONEY_DESTOCK)
+    private CashMoneyDestockManager cashMoneyDestockManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.STOCK_TRANSACTIONS, plugin = Plugins.CRYPTO_MONEY_DESTOCK)
+    private CryptoMoneyDestockManager cryptoMoneyDestockManager;
 
 
     public MatchingEngineMiddlewarePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
-    private MatchingEngineManager fermatManager;
+    private MatchingEngineMiddlewareManager fermatManager;
 
     private MatchingEngineMiddlewareTransactionMonitorAgent monitorAgent;
 
@@ -97,29 +112,15 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
             dao.initialize();
 
-            fermatManager = new MatchingEngineMiddlewareManager(
-                    dao,
-                    errorManager,
-                    this.getPluginVersionReference()
-            );
+            fermatManager = new MatchingEngineMiddlewareManager(dao, errorManager, getPluginVersionReference(), cryptoBrokerWalletManager);
+            fermatManager.addEarningsExtractor(new BankEarningExtractor(bankMoneyDestockManager));
+            fermatManager.addEarningsExtractor(new CashEarningExtractor(cashMoneyDestockManager));
+            fermatManager.addEarningsExtractor(new CryptoEarningExtractor(cryptoMoneyDestockManager));
 
-            monitorAgent = new MatchingEngineMiddlewareTransactionMonitorAgent(
-                    cryptoBrokerWalletManager,
-                    errorManager,
-                    dao,
-                    getPluginVersionReference()
-
-            );
-
+            monitorAgent = new MatchingEngineMiddlewareTransactionMonitorAgent(cryptoBrokerWalletManager, errorManager, dao, getPluginVersionReference());
             monitorAgent.start();
 
-            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(
-                    errorManager,
-                    dao,
-                    getPluginVersionReference()
-
-            );
-
+            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(errorManager, dao, getPluginVersionReference());
             transactionGeneratorAgent.start();
 
             super.start();
@@ -127,7 +128,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
         } catch (final CantInitializeDatabaseException cantInitializeActorConnectionDatabaseException) {
 
             errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference()                           ,
+                    getPluginVersionReference(),
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantInitializeActorConnectionDatabaseException
             );
@@ -150,7 +151,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
         } catch (CantStopAgentException cantStopAgentException) {
             errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference()                           ,
+                    getPluginVersionReference(),
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantStopAgentException
             );
@@ -169,7 +170,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
         } catch (CantStartAgentException cantStartAgentException) {
             errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference()                           ,
+                    getPluginVersionReference(),
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantStartAgentException
             );
@@ -201,7 +202,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory,
-                                                             final DeveloperDatabase      developerDatabase     ) {
+                                                             final DeveloperDatabase developerDatabase) {
 
         return new MatchingEngineMiddlewareDeveloperDatabaseFactory(
                 pluginDatabaseSystem,
@@ -213,7 +214,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
-                                                                      final DeveloperDatabase      developerDatabase     ,
+                                                                      final DeveloperDatabase developerDatabase,
                                                                       final DeveloperDatabaseTable developerDatabaseTable) {
 
         return new MatchingEngineMiddlewareDeveloperDatabaseFactory(

@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develop
 
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 
+import java.io.Serializable;
+
 /**
  * The class <code>CryptoWalletWalletModuleIntraUserActor</code>
  * implements the interface CryptoWalletIntraUserActor and all its methods.
@@ -9,7 +11,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/15.
  * @version 1.0
  */
-public class CryptoWalletWalletModuleIntraUserActor implements CryptoWalletIntraUserActor {
+public class CryptoWalletWalletModuleIntraUserActor implements CryptoWalletIntraUserActor,Serializable {
 
     private final String     alias;
     private final boolean    isContact;

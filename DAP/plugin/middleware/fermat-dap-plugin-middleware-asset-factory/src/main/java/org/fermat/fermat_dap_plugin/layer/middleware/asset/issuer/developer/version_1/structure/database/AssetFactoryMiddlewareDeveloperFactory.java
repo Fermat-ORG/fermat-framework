@@ -164,6 +164,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Asset Factory Contract properties addition.
          */
+        assetFactoryContractColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ID_COLUMN);
         assetFactoryContractColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN);
         assetFactoryContractColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN);
         assetFactoryContractColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN);
@@ -177,6 +178,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         /**
          * Table Asset Factory Identity Issuer properties addition.
          */
+        assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ID_COLUMN);
         assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN);
         assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN);
         assetFactoryIdentityColumns.add(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN);

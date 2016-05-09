@@ -22,26 +22,28 @@ public class CreateChatIdentityExecutor {
 
     private byte[] imageInBytes;
     private String identityName;
+    private String identityConnectionState;
 
     private ChatIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
     private ChatIdentity identity;
 
-    public CreateChatIdentityExecutor(byte[] imageInBytes, String identityName) {
+    public CreateChatIdentityExecutor(byte[] imageInBytes, String identityName, String identityConnectionState) {
         this.imageInBytes = imageInBytes;
         this.identityName = identityName;
+        this.identityConnectionState = identityConnectionState;
     }
 
-    public CreateChatIdentityExecutor(ChatIdentityModuleManager moduleManager, ErrorManager errorManager, byte[] imageInBytes, String identityName) {
-        this(imageInBytes, identityName);
+    public CreateChatIdentityExecutor(ChatIdentityModuleManager moduleManager, ErrorManager errorManager, byte[] imageInBytes, String identityName, String identityConnectionState) {
+        this(imageInBytes, identityName, identityConnectionState);
 
         this.moduleManager = moduleManager;
         this.errorManager = errorManager;
         identity = null;
     }
 
-    public CreateChatIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) throws CantGetChatIdentityException {
-        this(imageInBytes, identityName);
+    public CreateChatIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes, String identityConnectionState) throws CantGetChatIdentityException {
+        this(imageInBytes, identityName, identityConnectionState);
         identity = null;
 
         if (session != null) {
@@ -61,7 +63,8 @@ public class CreateChatIdentityExecutor {
 
         try {
             Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
-            moduleManager.createNewIdentityChat(identityName, imageInBytes);
+            //TODO: Buscar la manera de que esta informacion venga desde android puede ser por la geolocalizacion
+            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city", identityConnectionState);
 
 
         } catch (CantCreateNewChatIdentityException e) {

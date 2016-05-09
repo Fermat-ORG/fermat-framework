@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -22,8 +21,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
-import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
@@ -48,6 +47,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkNodeIdentityException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
@@ -68,8 +68,9 @@ import java.sql.Timestamp;
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 11/11/15.
  *
+ * @author  Rart3001
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNodeManager {
 
@@ -99,6 +100,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
+
+    /**
+     * EventManager references definition.
+     */
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
+    private LocationManager locationManager;
 
     /**
      * PluginFileSystem references definition.
@@ -172,7 +179,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     @Override
     public void start() throws CantStartPluginException {
 
-        LOG.info("Calling the method - start() ");
+        LOG.info("Calling method - start()...");
         LOG.info("pluginId = " + pluginId);
 
         /*
@@ -197,7 +204,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Get the server ip
              */
             serverIp = IPAddressHelper.getCurrentIPAddress();
-            LOG.info("Server ip " + serverIp);
+            LOG.info("Server ip: " + serverIp);
 
             /*
              * Initialize the configuration file
@@ -205,7 +212,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             initializeConfigurationFile();
 
             /*
-             *  Generate the profile of the node
+             * Generate the profile of the node
              */
             generateNodeProfile();
 
@@ -234,15 +241,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             initializeNodeCatalog();
 
-
-            LOG.info("Initialize propagate catalog agents ...");
+            LOG.info("Initializing propagate catalog agents ...");
             /*
              * Initialize propagate catalog agents
              */
             this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent(this);
             this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent(this);
-          //  propagateNodeCatalogAgent.start();
-          //  propagateActorCatalogAgent.start();
+            propagateNodeCatalogAgent.start();
+            propagateActorCatalogAgent.start();
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
@@ -258,10 +264,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             contextBuffer.append("Database Name: " + CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
-            String possibleCause = "The  Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
+            String possibleCause = "The Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         } catch (Exception exception) {
@@ -270,49 +276,90 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             exception.printStackTrace();
 
             String context = "Plugin ID: " + pluginId;
-            String possibleCause = "The  Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
+            String possibleCause = "The Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
         }
 
     }
 
-    /**
-     * Generate the node profile of this
-     * node
-     */
-    private void generateNodeProfile() throws CantAcquireLocationException {
+    @Override
+    public void pause() {
 
-        LOG.info("Generating Node Profile");
+        try {
+
+            this.propagateActorCatalogAgent.pause();
+            this.propagateNodeCatalogAgent.pause();
+
+        } catch (Exception e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+    }
+
+    @Override
+    public void resume() {
+
+        try {
+
+            this.propagateActorCatalogAgent.resume();
+            this.propagateNodeCatalogAgent.resume();
+
+        } catch (Exception e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+    }
+
+    @Override
+    public void stop() {
+
+        try {
+
+            this.propagateActorCatalogAgent.stop();
+            this.propagateNodeCatalogAgent.stop();
+
+        } catch (Exception e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+    }
+
+    /**
+     * Generate the node profile of this node
+     */
+    private void generateNodeProfile() throws CantGetDeviceLocationException {
+
+        LOG.info("Generating Node Profile...");
 
         nodeProfile = new NodeProfile();
         nodeProfile.setIdentityPublicKey(identity.getPublicKey());
 
         //TODO: CHANGE
         nodeProfile.setIp(serverIp);
-        nodeProfile.setIp("localhost");
+      //  nodeProfile.setIp("localhost");
 
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
-        nodeProfile.setDefaultPort(8080);
+       // nodeProfile.setDefaultPort(8080);
 
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
-        nodeProfile.setName("Otro Server");
+       // nodeProfile.setName("Other Server");
 
-        nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
+        nodeProfile.setLocation(locationManager.getLocation());
 
         LOG.info(nodeProfile);
 
     }
 
     /**
-     * Initialize the configuration file
+     * Initializes the configuration file
      */
     private void initializeConfigurationFile() throws ConfigurationException, IOException {
 
-        LOG.info("Starting initializeConfigurationFile()");
+        LOG.info("Starting initializeConfigurationFile()...");
 
         if(ConfigurationManager.isExist()){
 
@@ -320,7 +367,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         }else {
 
-            LOG.info("Configuration file don't exit");
+            LOG.info("Configuration file doesn't exit");
             ConfigurationManager.create(identity.getPublicKey());
             ConfigurationManager.load();
         }
@@ -328,10 +375,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
-     * This method validate is all required resource are injected into
-     * the plugin root by the platform
+     * This method validates if all required resources are injected into
+     * the plugin root by the fermat system.
      *
-     * @throws CantStartPluginException
+     * @throws CantStartPluginException if something goes wrong.
      */
     private void validateInjectedResources() throws CantStartPluginException {
 
@@ -356,7 +403,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
@@ -364,15 +411,15 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
-     * Initialize the identity of this plugin
+     * Initializes the identity of this plugin
      */
-    private void initializeIdentity() throws CantInitializeCommunicationsNetworkNodeP2PDatabaseException {
+    private void initializeIdentity() throws CantInitializeNetworkNodeIdentityException {
 
-        System.out.println("Calling the method - initializeIdentity() ");
+        System.out.println("Calling method - initializeIdentity()...");
 
         try {
 
-            System.out.println("Loading identity");
+            System.out.println("Loading identity...");
 
          /*
           * Load the file with the identity
@@ -387,12 +434,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         } catch (FileNotFoundException e) {
 
             /*
-             * The file no exist may be the first time the plugin is running on this device,
-             * We need to create the new identity
+             * The file does not exist, maybe is the first time that the plugin is running on this device,
+             * We need to create a new identity for the network node.
              */
             try {
 
-                System.out.println("No previous identity found - Proceed to create new one");
+                System.out.println("No previous identity found - Proceeding to create new one...");
 
                 /*
                  * Create the new identity
@@ -403,7 +450,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                 System.out.println("identity.getPublicKey() = " + identity.getPublicKey());
 
                 /*
-                 * save into the file
+                 * save the identity into the identity file
                  */
                 PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(identity.getPrivateKey());
@@ -413,8 +460,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                 /*
                  * The file cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-                throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(exception.getLocalizedMessage());
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                throw new CantInitializeNetworkNodeIdentityException(exception, "", "Unhandled Error.");
             }
 
 
@@ -423,25 +470,25 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * The file cannot be load. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
-            throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantCreateFileException.getLocalizedMessage());
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            throw new CantInitializeNetworkNodeIdentityException(cantCreateFileException, "", "Error trying to create the file.");
 
         }
 
     }
 
     /**
-     * This method initialize the database
+     * This method initializes the database.
      *
      * @throws CantInitializeCommunicationsNetworkNodeP2PDatabaseException
      */
     private void initializeDb() throws CantInitializeCommunicationsNetworkNodeP2PDatabaseException {
 
-        System.out.println("Calling the method - initializeDb() ");
+        System.out.println("Calling method - initializeDb()...");
 
         try {
 
-            System.out.println("Loading database");
+            System.out.println("Loading database...");
             /*
              * Open new database connection
              */
@@ -452,7 +499,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -463,7 +510,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             try {
 
-                System.out.println("No previous data base found - Proceed to create new one");
+                System.out.println("No previous data base found - Proceeding to create new one...");
 
                 /*
                  * We create the new database
@@ -471,23 +518,22 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                 this.communicationsNetworkNodeP2PDatabaseFactory = new CommunicationsNetworkNodeP2PDatabaseFactory(pluginDatabaseSystem);
                 this.dataBase = communicationsNetworkNodeP2PDatabaseFactory.createDatabase(pluginId, CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME);
 
-
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
                 /*
-                 * The database cannot be created. I can not handle this situation.
+                 * The database cannot be created. We can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
         }
 
-        //Validate if database is ok
+        //Validate if database is correctly instantiated
         if (dataBase != null) {
 
             /*
-             * Create the daoFactory
+             * Instantiate daoFactory
              */
             this.daoFactory = new DaoFactory(dataBase);
 
@@ -496,22 +542,22 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
-     * Create  a new instance of the client to the seed node
+     * Create a new instance of the client to the seed node
      * @return
      */
     private FermatWebSocketClientNodeChannel getFermatWebSocketClientNodeChannelInstanceSeedNode(){
 
-        //return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-        return new FermatWebSocketClientNodeChannel("localhost", 9090);
+        return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+        //return new FermatWebSocketClientNodeChannel("localhost", 8080);
 
     }
 
     /**
-     * Validate if the node is the seed server
+     * Validate if the current node belongs to the list of seed servers
      *
      * @return boolean
      */
-    private boolean iAmSeedServer(){
+    private boolean isSeedServer(String serverIp){
 
         if (serverIp.equals(SeedServerConf.DEFAULT_IP)){
             return Boolean.TRUE;
@@ -521,14 +567,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
-     * Method that validate if the node profile register change
+     * Method that validate if the node profile registered had changed
      * from the registration
      */
-    private boolean validateNodeProfileRegisterChange(){
+    private boolean validateNodeProfileRegisterChange() {
 
         String jsonString = new String(HexadecimalConverter.convertHexStringToByteArray(ConfigurationManager.getValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE)));
 
-        LOG.info("Last Profile Register = " + jsonString);
+        LOG.info("Last Profile Registered = " + jsonString);
 
         NodeProfile lastNodeProfileRegister = NodeProfile.fromJson(jsonString);
         if (!nodeProfile.equals(lastNodeProfileRegister)){
@@ -540,12 +586,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
-     * Method that request to the seed server to register
-     * the profile of this node
+     * Method that requests to the seed server the registration of
+     * the current node profile.
      */
     private void requestRegisterProfileInTheNodeCatalog(){
 
-        LOG.info("Request register profile in the node catalog");
+        LOG.info("Requesting registration of the node profile in the node catalog...");
 
         FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
         AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
@@ -554,12 +600,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
-     * Method that request to the seed server to update
+     * Method that requests to the seed server to update
      * the profile of this node
      */
     private void requestUpdateProfileInTheNodeCatalog(){
 
-        LOG.info("Request update profile in the node catalog");
+        LOG.info("Requesting update of the profile on the node catalog...");
 
         FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
         UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
@@ -568,9 +614,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
-     * Validate if the catalog if empty request the data to the seed server
+     * Validate if the catalog is empty
+     * if it is, we'll request the data to the seed server
      *
-     * @throws CantReadRecordDataBaseException
+     * @throws CantReadRecordDataBaseException if something goes wrong.
      */
     private void requestNodesCatalogTransactions() throws CantReadRecordDataBaseException {
 
@@ -608,24 +655,24 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private void initializeNodeCatalog() throws Exception {
 
         LOG.info("Initialize node catalog");
-        boolean iAm = iAmSeedServer();
-        LOG.info("i Am Seed Server() = " + iAm);
+        boolean isSeedServer = isSeedServer(this.serverIp);
+        LOG.info("Am I a Seed Server? = " + isSeedServer);
 
         /*
          * Validate if the node are the seed server
          */
-        if (iAm){
+        if (isSeedServer){
 
             /*
-             * Validate if the node are register in the node catalog
+             * Validate if the node is registered in the node catalog
              */
-            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTER_IN_CATALOG))){
+            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG))){
 
                 /*
-                 * Validate if the node server profile register has change
+                 * Validate if the node server profile register had changed
                  */
                 if (validateNodeProfileRegisterChange()){
-                    updateNodeProfileIntoCatalog();
+                    updateNodeProfileOnCatalog();
                 }
 
             }else {
@@ -635,12 +682,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         } else {
 
             /*
-             * Validate if the node are register in the node catalog
+             * Validate if the node is registered in the node catalog
              */
-            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTER_IN_CATALOG))){
+            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG))){
 
                     /*
-                     * Validate if the node server profile register has change
+                     * Validate if the node server profile register had changed
                      */
                 if (validateNodeProfileRegisterChange()){
                     requestUpdateProfileInTheNodeCatalog();
@@ -651,7 +698,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             }
 
             requestNodesCatalogTransactions();
-          //  requestActorsCatalogTransactions();
+            requestActorsCatalogTransactions();
 
         }
 
@@ -663,12 +710,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void insertNodeProfileIntoCatalog() throws Exception {
 
-        LOG.info("Inserting my profile in the node catalog");
+        LOG.info("Inserting my profile in the node catalog...");
 
         if (!daoFactory.getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())){
 
             /*
-             * Create the NodesCatalog
+             * Create the NodesCatalog entity
              */
             NodesCatalog nodeCatalog = new NodesCatalog();
             nodeCatalog.setIp(nodeProfile.getIp());
@@ -677,12 +724,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             nodeCatalog.setName(nodeProfile.getName());
             nodeCatalog.setOfflineCounter(0);
             nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-            //Validate if location are available
-            if (nodeProfile.getLocation() != null){
-                nodeCatalog.setLastLatitude(nodeProfile.getLocation().getLatitude());
-                nodeCatalog.setLastLongitude(nodeProfile.getLocation().getLongitude());
-            }
+            nodeCatalog.setLocation(nodeProfile.getLocation());
 
             /*
              * Save into the data base
@@ -690,7 +732,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             daoFactory.getNodesCatalogDao().create(nodeCatalog);
 
             /*
-             * Create the NodesCatalog
+             * Create the NodesCatalogTransaction entity
              */
             NodesCatalogTransaction transaction = new NodesCatalogTransaction();
             transaction.setIp(nodeProfile.getIp());
@@ -700,12 +742,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
             transaction.setHashId(transaction.getHashId());
             transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-            //Validate if location are available
-            if (nodeProfile.getLocation() != null){
-                transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
-                transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
-            }
+            transaction.setLocation(nodeProfile.getLocation());
 
             /*
              * Save into the data base
@@ -713,7 +750,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             daoFactory.getNodesCatalogTransactionDao().create(transaction);
 
             /*
-             * Create the NodesCatalog
+             * Create the NodesCatalogTransactionsPendingForPropagation entity
              */
             NodesCatalogTransactionsPendingForPropagation pendingForPropagation = new NodesCatalogTransactionsPendingForPropagation();
             pendingForPropagation.setIp(nodeProfile.getIp());
@@ -723,24 +760,19 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             pendingForPropagation.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
             pendingForPropagation.setHashId(transaction.getHashId());
             pendingForPropagation.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-            //Validate if location are available
-            if (nodeProfile.getLocation() != null){
-                pendingForPropagation.setLastLatitude(nodeProfile.getLocation().getLatitude());
-                pendingForPropagation.setLastLongitude(nodeProfile.getLocation().getLongitude());
-            }
+            pendingForPropagation.setLocation(nodeProfile.getLocation());
 
             /*
              * Save into the data base
              */
             daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(pendingForPropagation);
 
-            ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+            ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
             ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
 
         }else {
 
-            ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+            ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
             ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
         }
 
@@ -750,14 +782,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Update the node profile into the catalog
      * @throws CantInsertRecordDataBaseException
      */
-    private void updateNodeProfileIntoCatalog() throws Exception {
+    private void updateNodeProfileOnCatalog() throws Exception {
 
         LOG.info("Updating my profile in the node catalog");
 
         if (daoFactory.getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())) {
 
             /*
-             * Create the NodesCatalog
+             * Create the NodesCatalog entity
              */
             NodesCatalog nodeCatalog = new NodesCatalog();
             nodeCatalog.setIp(nodeProfile.getIp());
@@ -766,12 +798,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             nodeCatalog.setName(nodeProfile.getName());
             nodeCatalog.setOfflineCounter(0);
             nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-            //Validate if location are available
-            if (nodeProfile.getLocation() != null) {
-                nodeCatalog.setLastLatitude(nodeProfile.getLocation().getLatitude());
-                nodeCatalog.setLastLongitude(nodeProfile.getLocation().getLongitude());
-            }
+            nodeCatalog.setLocation(nodeProfile.getLocation());
 
             /*
              * Save into the data base
@@ -779,7 +806,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             daoFactory.getNodesCatalogDao().update(nodeCatalog);
 
             /*
-             * Create the NodesCatalog
+             * Create the NodesCatalogTransaction entity
              */
             NodesCatalogTransaction transaction = new NodesCatalogTransaction();
             transaction.setIp(nodeProfile.getIp());
@@ -789,12 +816,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             transaction.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
             transaction.setHashId(transaction.getHashId());
             transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-            //Validate if location are available
-            if (nodeProfile.getLocation() != null) {
-                transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
-                transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
-            }
+            transaction.setLocation(nodeProfile.getLocation());
 
             /*
              * Save into the data base
@@ -802,7 +824,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             daoFactory.getNodesCatalogTransactionDao().create(transaction);
 
             /*
-             * Create the NodesCatalog
+             * Create the NodesCatalogTransactionsPendingForPropagation entity
              */
             NodesCatalogTransactionsPendingForPropagation pendingForPropagation = new NodesCatalogTransactionsPendingForPropagation();
             pendingForPropagation.setIp(nodeProfile.getIp());
@@ -812,19 +834,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             pendingForPropagation.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
             pendingForPropagation.setHashId(transaction.getHashId());
             pendingForPropagation.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-
-            //Validate if location are available
-            if (nodeProfile.getLocation() != null) {
-                pendingForPropagation.setLastLatitude(nodeProfile.getLocation().getLatitude());
-                pendingForPropagation.setLastLongitude(nodeProfile.getLocation().getLongitude());
-            }
+            pendingForPropagation.setLocation(nodeProfile.getLocation());
 
             /*
              * Save into the data base
              */
             daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(pendingForPropagation);
 
-            ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+            ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
             ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
 
         } else {

@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -16,6 +18,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatIdentityDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +31,14 @@ import java.util.UUID;
  * <p/>
  *
  * Created by Franklin Marcano - (franklinmarcano970@gmail.com) on 30-03-2016.
+ * Edited by Miguel Rincon on 19/04/2016
  *
  * @version 1.0
  * @since Java JDK 1.7
  */public class ChatIdentityDeveloperFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+
+    private ErrorManager errorManager;
+
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -76,14 +84,14 @@ import java.util.UUID;
             database.closeDatabase();
 
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantOpenDatabaseException));
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
             throw new CantInitializeChatIdentityDatabaseException(cantOpenDatabaseException.getMessage());
 
         }catch (DatabaseNotFoundException e) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
@@ -98,6 +106,7 @@ import java.util.UUID;
                 database.closeDatabase();
             }
             catch(CantCreateDatabaseException cantCreateDatabaseException) {
+                errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(cantCreateDatabaseException));
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
@@ -131,6 +140,10 @@ import java.util.UUID;
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME);
 
         DeveloperDatabaseTable chatIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME, projectColumns);
         tables.add(chatIdentityTable);

@@ -34,6 +34,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -92,6 +93,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
     Broadcaster broadcaster;
+    final EventManager eventManager;
 
 
     /**
@@ -104,7 +106,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                                        ErrorManager errorManager,
                                        Context context,
                                        Broadcaster broadcaster,
-                                       BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao ) {
+                                       BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao,
+                                       EventManager eventManager) {
         /**
          * I initialize the local variables
          */
@@ -116,6 +119,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.context = context;
         this.broadcaster = broadcaster;
         this.dao = bitcoinCryptoNetworkDatabaseDao;
+        this.eventManager = eventManager;
 
         /**
          * Define the constants
@@ -264,7 +268,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * add the events
                  */
-                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, this.walletFileName, this.context, this.broadcaster, wallet, dao);
+                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, this.walletFileName, this.context, this.broadcaster, wallet, dao, eventManager);
                 peerGroup.addEventListener(events);
                 this.wallet.addEventListener(events);
                 blockChain.addListener(events);
