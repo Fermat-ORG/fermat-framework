@@ -85,7 +85,10 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
         appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
         //if(appsInstalledInDevice.isEmpty()){
-            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+        appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+        if(!appsInstalledInDevice.containsKey("main_desktop")){
+            Log.e(TAG,"Not contains desktop");
+        }
         //}
     }
 

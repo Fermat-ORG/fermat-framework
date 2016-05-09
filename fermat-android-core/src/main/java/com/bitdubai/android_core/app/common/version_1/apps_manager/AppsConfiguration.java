@@ -37,11 +37,11 @@ public class AppsConfiguration {
         } catch (FileNotFoundException fileNotFoundException){
             updateAppsCoreInstalled();
         } catch (IOException ioe) {
-
+            updateAppsCoreInstalled();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (NullPointerException e){
-
+            updateAppsCoreInstalled();
         }
         return new HashMap<>();
     }
