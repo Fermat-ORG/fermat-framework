@@ -10,7 +10,7 @@
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WalletNavigationStructure;
+//import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.AppNavigationStructure;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 //import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 //import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
@@ -56,7 +56,7 @@
 //    public void testCreateNAvigationStructure() {
 ////        Activity runtimeActivity;
 ////        Fragment runtimeFragment;
-////        WalletNavigationStructure runtimeWalletNavigationStructure;
+////        AppNavigationStructure runtimeWalletNavigationStructure;
 ////        TitleBar runtimeTitleBar;
 ////        SideMenu runtimeSideMenu;
 ////        MainMenu runtimeMainMenu;
@@ -68,7 +68,7 @@
 ////
 ////        String publicKey;
 ////
-////        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+////        runtimeWalletNavigationStructure = new AppNavigationStructure();
 ////        publicKey="reference_wallet";
 ////        runtimeWalletNavigationStructure.setPublicKey(publicKey);
 ////        //listWallets.put(publicKey, runtimeWalletNavigationStructure);

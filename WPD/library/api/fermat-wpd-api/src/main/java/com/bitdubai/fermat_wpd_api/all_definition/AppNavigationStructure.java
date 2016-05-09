@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWallet;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 
 import java.io.Serializable;
@@ -19,20 +19,13 @@ import java.util.Map;
  * Created by Matias Furszyfer on 2015.07.23..
  */
 
-public class AppNavigationStructure implements FermatWallet,Serializable{
+public class AppNavigationStructure implements FermatStructure,Serializable{
 
     /**
      * AppNavigationStructure identifiers
      */
 
     private String publicKey;
-
-    /**
-     * Wallet identifiers
-     */
-    private String walletCategory;
-    private String walletType;
-
 
     /**
      * Screens in a AppNavigationStructure
@@ -146,7 +139,7 @@ public class AppNavigationStructure implements FermatWallet,Serializable{
         this.actualStart = activityCode;
     }
 
-    @Override
+
     public void setPublicKey(String publicKey) {
         this.publicKey=publicKey;
     }
@@ -186,22 +179,6 @@ public class AppNavigationStructure implements FermatWallet,Serializable{
             actualStart = activity.getType().getCode();
         }
         activities.put(activity.getType(), activity);
-    }
-
-    public String getWalletCategory() {
-        return walletCategory;
-    }
-
-    public void setWalletCategory(String walletCategory) {
-        this.walletCategory = walletCategory;
-    }
-
-    public String getWalletType() {
-        return walletType;
-    }
-
-    public void setWalletType(String walletType) {
-        this.walletType = walletType;
     }
 
     public int getSize() {

@@ -194,7 +194,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
            }else{
                Log.e(TAG,"ERROR: NO USAR getSettingsManager DEL MODULE");
            }
-            throw new RuntimeException("Class is not Serializable");
+            throw new RuntimeException("ERROR: Class is not Serializable, class name: "+data.getClass().getName());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

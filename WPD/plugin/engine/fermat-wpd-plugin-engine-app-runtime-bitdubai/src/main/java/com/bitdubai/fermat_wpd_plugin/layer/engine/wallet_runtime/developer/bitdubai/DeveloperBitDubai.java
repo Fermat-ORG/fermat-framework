@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeEnginePluginRoot;
+import com.bitdubai.fermat_wpd_plugin.layer.engine.wallet_runtime.developer.bitdubai.version_1.AppRuntimeEnginePluginRoot;
 
 /**
  * Created by loui on 04/02/15.
@@ -23,7 +23,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new WalletRuntimeEnginePluginRoot());
+            this.registerVersion(new AppRuntimeEnginePluginRoot());
 
         } catch (CantRegisterVersionException e) {
 

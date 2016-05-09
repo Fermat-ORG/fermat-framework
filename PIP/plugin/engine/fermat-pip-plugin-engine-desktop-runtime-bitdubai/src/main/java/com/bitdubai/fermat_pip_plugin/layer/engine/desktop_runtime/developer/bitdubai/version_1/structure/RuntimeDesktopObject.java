@@ -139,6 +139,11 @@ public class RuntimeDesktopObject implements DesktopObject,Serializable {
         }
     }
 
+    @Override
+    public void clear() {
+
+    }
+
     public void setStartActivity(Activities activity) {
         this.startActivity=activity;
     }

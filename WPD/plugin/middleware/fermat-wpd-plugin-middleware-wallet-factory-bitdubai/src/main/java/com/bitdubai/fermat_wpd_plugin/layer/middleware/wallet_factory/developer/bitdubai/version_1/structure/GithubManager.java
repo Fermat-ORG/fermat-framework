@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.github.GitHubConnection;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -82,7 +82,7 @@ public class GithubManager {
         gitHubConnection.createGitHubTextFile(savingPath, XMLParser.parseObject(language), "new language");
     }
 
-    private void saveNavigationStructure (WalletNavigationStructure navigationStructure){
+    private void saveNavigationStructure (AppNavigationStructure navigationStructure){
         String savingPath = walletPath + "navigation_structure/navigation_structure.xml";
         String content = XMLParser.parseObject(navigationStructure);
 

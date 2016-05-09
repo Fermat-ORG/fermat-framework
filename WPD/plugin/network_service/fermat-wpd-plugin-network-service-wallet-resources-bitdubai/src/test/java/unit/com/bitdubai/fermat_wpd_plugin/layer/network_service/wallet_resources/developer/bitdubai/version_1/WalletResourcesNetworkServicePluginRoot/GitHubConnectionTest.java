@@ -94,12 +94,12 @@ public class GitHubConnectionTest {
     @Test
     public void testuploadFilesFromRepo1() throws Exception {
 
-        String c ="<com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>\n" +
+        String c ="<com.bitdubai.fermat__api.layer.all__definition.navigation__structure.AppNavigationStructure>\n" +
                 "    <activities/>\n" +
                 "    <publicKey>04ffe37e-e5e5-4dd7-bade-d4fd4b4801a0</publicKey>\n" +
                 "    <size>100</size>\n" +
                 "    <walletCategory>Sssd</walletCategory>\n" +
-                "    </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.WalletNavigationStructure>";
+                "    </com.bitdubai.fermat__api.layer.all__definition.navigation__structure.AppNavigationStructure>";
 
 
         GitHubConnection gitHubConnection = new GitHubConnection("acostarodrigo/fermat","acostarodrigo","passs");
