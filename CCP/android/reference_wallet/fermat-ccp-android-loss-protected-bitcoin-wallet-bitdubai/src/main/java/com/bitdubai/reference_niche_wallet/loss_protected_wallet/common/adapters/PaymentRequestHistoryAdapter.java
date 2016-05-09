@@ -17,6 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaym
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.PaymentHistoryItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_Send_Payment_Dialog;
 
@@ -104,7 +105,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
             holder.getContactIcon().setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), R.drawable.ic_profile_male));
         }
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), appSession.getTypeAmount()));
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), ShowMoneyType.BITCOIN.getCode())+" BTC");
         holder.getTxt_amount().setTypeface(tf) ;
 
         if(data.getContact() != null)

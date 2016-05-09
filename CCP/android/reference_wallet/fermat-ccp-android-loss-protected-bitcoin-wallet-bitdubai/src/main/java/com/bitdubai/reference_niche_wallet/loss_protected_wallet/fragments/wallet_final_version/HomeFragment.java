@@ -133,6 +133,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
     private long exchangeRate = 0;
 
+    /**
+     * Constants
+     * */
+    private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 2;
+    private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 2;
+
     public static HomeFragment newInstance(){ return new HomeFragment(); }
 
 
@@ -390,14 +396,30 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //Set Earned and Lost For To day en UI
             if (totalEarnedAndLostForToday > 0){
-                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString((totalEarnedAndLostForToday))+" earned");
+
+                txt_earnOrLost.setText("USD "+
+                        WalletUtils.formatAmountStringWithDecimalEntry(
+                                totalEarnedAndLostForToday,
+                                EARN_AND_LOST_MAX_DECIMAL_FORMAT,
+                                EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" earned");
+
                 earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+
             }else if (totalEarnedAndLostForToday==0){
+
                 txt_earnOrLost.setText("USD 0.00");
                 earnOrLostImage.setVisibility(View.INVISIBLE);
+
             }else if (totalEarnedAndLostForToday< 0){
-                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountString(totalEarnedAndLostForToday)+" lost");
+
+                txt_earnOrLost.setText("USD "+
+                        WalletUtils.formatAmountStringWithDecimalEntry(
+                            totalEarnedAndLostForToday,
+                            EARN_AND_LOST_MAX_DECIMAL_FORMAT,
+                            EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
+
                 earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
+
             }
 
             data.setValueTextSize(12f);
@@ -485,7 +507,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 final String dateActual = sdf.format(actualDate);
                 final String dateSpend = sdf.format(listSpendig.getTimestamp());
                 //get the total earned and lost
-                if(dateActual.compareTo(dateSpend) > 0){
+                if(dateActual.equals(dateSpend)){
                 totalEarnedAndLostForToday += getEarnOrLostOfSpending(
                         listSpendig.getAmount(),
                         listSpendig.getExchangeRate(),
