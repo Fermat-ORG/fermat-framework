@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -168,6 +169,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
                 bitcoinWalletSettings.setNotificationEnabled(true);
                 bitcoinWalletSettings.setLossProtectedEnabled(true);
+                bitcoinWalletSettings.setBalanceTypeSelected(BalanceType.REAL);
 
                 settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             }
@@ -399,7 +401,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 txt_earnOrLost.setText("USD "+
                         WalletUtils.formatAmountStringWithDecimalEntry(
-                                totalEarnedAndLostForToday,
+                                totalEarnedAndLostForToday * 1,
                                 EARN_AND_LOST_MAX_DECIMAL_FORMAT,
                                 EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" earned");
 
@@ -414,9 +416,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 txt_earnOrLost.setText("USD "+
                         WalletUtils.formatAmountStringWithDecimalEntry(
-                            totalEarnedAndLostForToday,
-                            EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                            EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
+                                totalEarnedAndLostForToday,
+                                EARN_AND_LOST_MAX_DECIMAL_FORMAT,
+                                EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
 
                 earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
 
@@ -589,6 +591,31 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         return 0;
     }
 
+
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try {
+            if(code.equals("BlockchainDownloadComplete")) {
+                //update toolbar color
+                final Toolbar toolBar = getToolbar();
+
+                toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+
+                makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
+            } else {
+                if(code.equals("Btc_arrive"))
+                {
+                    //update balance amount
+                    changeBalanceType(txt_type_balance, txt_balance_amount);
+
+                }
+
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private void changeAmountType(){
 

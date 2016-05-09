@@ -495,9 +495,7 @@ public class BitcoinWalletLossProtectedWalletDao {
             if (!isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.DEBIT, balanceType))
                 executeTransaction(transactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance,exchangeRate);
 
-            //calculate chunck values spent
-            if(balanceType.equals(BalanceType.AVAILABLE))
-               insertSpending(transactionRecord, exchangeRate);
+
 
         } catch (CantGetLossProtectedBalanceRecordException | CantExecuteLossProtectedBitcoinTransactionException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
@@ -1077,7 +1075,7 @@ public class BitcoinWalletLossProtectedWalletDao {
     }
 
 
-    private void insertSpending(BitcoinLossProtectedWalletTransactionRecord transactionRecord,String exchangeRate) throws CantInsertSpendingException {
+    public void insertSpending(BitcoinLossProtectedWalletTransactionRecord transactionRecord,String exchangeRate) throws CantInsertSpendingException {
 
         try {
 
@@ -1091,18 +1089,19 @@ public class BitcoinWalletLossProtectedWalletDao {
             //tomo todas las transacciones e inserto registros de gastos como perdida
 
             DatabaseTable spendingTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_NAME);
+            long recordAmount = 0;
 
             if(transactionsRecords.size() > 0)
             {
                 long rest = 0;
                 for(DatabaseTableRecord record : transactionsRecords){
 
-                    long recordAmount = transactionsRecords.get(0).getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_AMOUNT_COLUMN_NAME);
+                     recordAmount += transactionRecord.getAmount();
                     long spent = getTotalTransactionsSpending(record.getUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME));
                     long spendingAmount =  recordAmount - spent;
 
                     if(spendingAmount  != 0)
-                        if(spendingAmount >= transactionRecord.getAmount())
+                        if(spendingAmount >= recordAmount)
                         {
                             DatabaseTableRecord recordToInsert = spendingTable.getEmptyRecord();
 
@@ -1110,7 +1109,7 @@ public class BitcoinWalletLossProtectedWalletDao {
                             recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, (record.getUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME)));
                             recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME, spentId);
                             recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, timestamp);
-                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, transactionRecord.getAmount());
+                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, recordAmount);
                             recordToInsert.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME, exchangeRate);
                             recordToInsert.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_RUNNING_NETWORK_TYPE, transactionRecord.getBlockchainNetworkType().getCode());
 
@@ -1118,6 +1117,8 @@ public class BitcoinWalletLossProtectedWalletDao {
 
                             //update exchange rate
                             setSpendingRate(spentId);
+
+                            recordAmount = 0;
 
                             return;
                         }
@@ -1131,13 +1132,14 @@ public class BitcoinWalletLossProtectedWalletDao {
                             recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, (record.getUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_VERIFICATION_ID_COLUMN_NAME)));
                             recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME, spentId);
                             recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, timestamp);
-                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, transactionRecord.getAmount());
+                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, recordAmount);
                             recordToInsert.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME, exchangeRate);
+                            recordToInsert.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_RUNNING_NETWORK_TYPE, transactionRecord.getBlockchainNetworkType().getCode());
 
                             spendingTable.insertRecord(recordToInsert);
 
                             //me sobran btc tengo que gastarlos de otra transaccion
-                            rest = transactionRecord.getAmount() - spendingAmount;
+                            recordAmount = recordAmount - spendingAmount;
 
                             //update exchange rate
                             setSpendingRate(spentId);

@@ -1021,7 +1021,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                     blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
                     changeBalanceType(txt_type_balance, txt_balance_amount);
-                    //System.out.println(System.currentTimeMillis());
 
                     circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
                     circularProgressBar.setProgressValue2(getBalanceAverage());

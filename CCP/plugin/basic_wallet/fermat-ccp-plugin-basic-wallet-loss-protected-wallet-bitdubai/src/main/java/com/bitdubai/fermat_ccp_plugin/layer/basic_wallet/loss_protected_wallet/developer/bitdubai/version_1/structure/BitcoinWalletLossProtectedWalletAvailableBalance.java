@@ -142,7 +142,8 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
             //get exchange rate on background
-            setActualExchangeRate(cryptoTransaction.getTransactionId());
+            //and insert spendings
+            setActualExchangeRate(TransactionType.DEBIT,cryptoTransaction);
         } catch(CantRegisterDebitException exception){
             throw exception;
         } catch(Exception exception){
@@ -167,7 +168,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, "Btc_arrive");
 
             //get exchange rate on background
-            setActualExchangeRate(cryptoTransaction.getTransactionId());
+            setActualExchangeRate(TransactionType.CREDIT,cryptoTransaction);
         } catch(CantRegisterCreditException exception){
             throw exception;
         } catch(Exception exception){
@@ -189,7 +190,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         }
     }
 
-    private void setActualExchangeRate(final UUID transactionId)
+    private void setActualExchangeRate(final TransactionType transactionType,final BitcoinLossProtectedWalletTransactionRecord transactionRecord)
     {
         final ExchangeRate[] rate = new ExchangeRate[1];
         try {
@@ -208,7 +209,12 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
                         //update transaction record
                         bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
-                        bitcoinWalletBasicWalletDao.updateTransactionRate(transactionId, rate[0].getPurchasePrice());
+                        bitcoinWalletBasicWalletDao.updateTransactionRate(transactionRecord.getTransactionId(), rate[0].getPurchasePrice());
+
+                        //insert transaction spendings
+                        //calculate chunck values spent
+                        if(transactionType.getCode().equals(TransactionType.DEBIT.getCode()))
+                            bitcoinWalletBasicWalletDao.insertSpending(transactionRecord, String.valueOf(rate[0].getPurchasePrice()));
 
                     } catch (CantGetExchangeRateException e) {
                         e.printStackTrace();
