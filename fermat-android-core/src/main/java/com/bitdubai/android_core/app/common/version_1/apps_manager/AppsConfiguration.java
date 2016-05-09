@@ -59,7 +59,7 @@ public class AppsConfiguration {
         Context context = ApplicationSession.getInstance().getApplicationContext();
         try {
             FileOutputStream fOut = context.openFileOutput(APPS_CONFIGURATION_FILE,
-                    context.MODE_PRIVATE);
+                    Context.MODE_PRIVATE);
             ObjectOutputStream osw = new ObjectOutputStream(fOut);
             osw.writeObject(appsInstalledInDevice);
             osw.flush();

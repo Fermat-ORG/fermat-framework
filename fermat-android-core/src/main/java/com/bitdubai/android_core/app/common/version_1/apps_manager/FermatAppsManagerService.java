@@ -64,6 +64,8 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }
     }
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -127,9 +129,10 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                 orderStackWithThisPkLast(appPublicKey);
                 return fermatSessionManager.getAppsSession(appPublicKey);
             } else {
+                FermatAppType fermatAppType = appsInstalledInDevice.get(appPublicKey);
+                if(fermatAppType==null) Log.e(TAG,"App with publicKey: "+appPublicKey+ " is not loaded in memory");
                 return openApp(
-                        selectAppManager(
-                                appsInstalledInDevice.get(appPublicKey)).getApp(appPublicKey),
+                        selectAppManager(fermatAppType).getApp(appPublicKey),
                         FermatAppConnectionManager.getFermatAppConnection(
                                 appPublicKey,ApplicationSession.getInstance().getApplicationContext()
                         )

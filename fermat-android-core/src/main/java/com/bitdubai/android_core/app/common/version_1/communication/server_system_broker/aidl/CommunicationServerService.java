@@ -58,7 +58,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -555,18 +554,18 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                             if (m != null) {
                                 s = m.invoke(moduleManager, params);
                             } else {
-                                Log.e(TAG, "Method: " + method + " is not found in interface: " + moduleManager.getClass().getName());
-                                Log.e(TAG, "Superclass name: " + moduleManager.getClass().getSuperclass().getName());
+//                                Log.e(TAG, "Method: " + method + " is not found in interface: " + moduleManager.getClass().getName());
+//                                Log.e(TAG, "Superclass name: " + moduleManager.getClass().getSuperclass().getName());
                                 for (Method method1 : moduleManager.getClass().getSuperclass().getDeclaredMethods()) {
-                                    Log.e(TAG, "Method : " + method1.getName());
-                                    for (Type type : method1.getGenericParameterTypes()) {
-                                        Log.e(TAG, "method Parameters name: " + type);Log.e(TAG, "method Parameters name: " + type);
-                                    }
+//                                    Log.e(TAG, "Method : " + method1.getName());
+//                                    for (Type type : method1.getGenericParameterTypes()) {
+//                                        Log.e(TAG, "method Parameters name: " + type);Log.e(TAG, "method Parameters name: " + type);
+//                                    }
                                     if(method1.getName().equals(method)){
-                                        Log.i(TAG,"METODO ENCONTRADO POR DEFAUTL!!");
-                                        for (Type type : method1.getParameterTypes()) {
-                                            Log.i(TAG,"Oarameters:"+type);
-                                        }
+//                                        Log.i(TAG,"METODO ENCONTRADO POR DEFAUTL!!");
+//                                        for (Type type : method1.getParameterTypes()) {
+//                                            Log.i(TAG,"Oarameters:"+type);
+//                                        }
                                         try {
                                             s = method1.invoke(moduleManager, params);
                                         }catch (Exception e){
