@@ -12,8 +12,8 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterDebit
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletBalance;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantRegisterCashMoneyWalletTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -60,7 +60,7 @@ public class CashMoneyWalletBalanceImpl implements CashMoneyWalletBalance {
     public void debit(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterDebitException, CashMoneyWalletInsufficientFundsException {
 
         try {
-            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.DEBIT, this.balanceType, amount, memo, (new Date().getTime() / 1000));
+            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.DEBIT, this.balanceType, amount, memo, (new Date().getTime() / 1000), false);
             dao.debit(this.walletPublicKey, this.balanceType, amount);
             dao.registerTransaction(transaction);
         } catch (CantRegisterCashMoneyWalletTransactionException e) {
@@ -71,7 +71,7 @@ public class CashMoneyWalletBalanceImpl implements CashMoneyWalletBalance {
     @Override
     public void credit(UUID transactionId, String publicKeyActor, String publicKeyPlugin, BigDecimal amount, String memo) throws CantRegisterCreditException {
         try {
-            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.CREDIT, this.balanceType, amount, memo, (new Date().getTime() / 1000));
+            CashMoneyWalletTransactionImpl transaction = new CashMoneyWalletTransactionImpl(transactionId, this.walletPublicKey, publicKeyActor, publicKeyPlugin, TransactionType.CREDIT, this.balanceType, amount, memo, (new Date().getTime() / 1000), false);
             dao.credit(this.walletPublicKey, this.balanceType, amount);
             dao.registerTransaction(transaction);
         } catch (CantRegisterCashMoneyWalletTransactionException e) {

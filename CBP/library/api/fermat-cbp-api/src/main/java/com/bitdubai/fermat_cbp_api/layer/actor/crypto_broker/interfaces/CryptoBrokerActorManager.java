@@ -2,11 +2,12 @@ package com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantClearBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
 import java.util.Collection;
-import java.util.UUID;
+
 
 /**
  * Created by Angel 17-11-15
@@ -14,10 +15,45 @@ import java.util.UUID;
 
 public interface CryptoBrokerActorManager extends FermatManager {
 
-    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, UUID wallet) throws CantCreateNewBrokerIdentityWalletRelationshipException;
+    /**
+     *
+     * @param identity
+     * @param walletPublicKey
+     * @return
+     * @throws CantCreateNewBrokerIdentityWalletRelationshipException
+     */
+    BrokerIdentityWalletRelationship createNewBrokerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewBrokerIdentityWalletRelationshipException;
 
-    Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException;
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(ActorIdentity identity) throws CantGetListBrokerIdentityWalletRelationshipException;
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(UUID wallet) throws CantGetListBrokerIdentityWalletRelationshipException;
+    /**
+     *
+     * @param walletPublicKey
+     * @return
+     * @throws CantCreateNewBrokerIdentityWalletRelationshipException
+     */
+    void clearBrokerIdentityWalletRelationship(String walletPublicKey) throws CantClearBrokerIdentityWalletRelationshipException;
+
+
+    /**
+     *
+     * @return
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
+     */
+    Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
+
+    /**
+     *
+     * @param publicKey
+     * @return
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
+     */
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
+
+    /**
+     *
+     * @param walletPublicKey
+     * @return
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
+     */
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
 }

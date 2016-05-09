@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
@@ -30,37 +30,56 @@ import java.util.UUID;
 public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
 
     /**
-     * The method <code>listSelectableIdentities</code> lists the login identities that can be used
-     * to log in as an Crypto Broker for the current Device User.
+     * The method <code>listWorldCryptoBrokers</code> returns the list of all crypto brokers in the world,
+     * setting their status (CONNECTED, for example) with respect to the selectedIdentity parameter
+     * logged in crypto broker
      *
-     * @return the list of identities the current Device User can use to log in
+     * @return a list of all crypto brokers in the world
+     *
+     * @throws CantListCryptoBrokersException if something goes wrong.
+     */
+    List<CryptoBrokerCommunityInformation> listWorldCryptoBrokers(CryptoBrokerCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListCryptoBrokersException;
+
+
+    /**
+     * The method <code>listSelectableIdentities</code> lists all the Crypto Broker and Crypto Customer identities
+     * stored locally in the device.
+     *
+     * @return a list of broker and customer identities the current device the user can use to log in.
      *
      * @throws CantListIdentitiesToSelectException if something goes wrong.
      */
     List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException;
 
+
     /**
-     * The method <code>searchNewCryptoBroker</code> gives us an interface to manage a search for a particular
-     * crypto broker
+     * Through the method <code>setSelectedActorIdentity</code> we can set the selected actor identity.
+     */
+    void setSelectedActorIdentity(CryptoBrokerCommunitySelectableIdentity identity);
+
+
+    /**
+     * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
+     * Crypto Brokers that are not linked to the local selectedIdentity
      *
      * @return a searching interface
      */
-    CryptoBrokerCommunitySearch searchNewCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
+    CryptoBrokerCommunitySearch getCryptoBrokerSearch();
 
     /**
-     * The method <code>searchNewCryptoBroker</code> gives us an interface to manage a search for a particular
-     * crypto broker
+     * The method <code>getCryptoBrokerSearch</code> returns an interface that allows searching for remote
+     * Crypto Brokers that are linked to the local selectedIdentity
      *
      * @return a searching interface
      */
     CryptoBrokerCommunitySearch searchConnectedCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity);
 
     /**
-     * The method <code>requestConnectionToCryptoBroker</code> initialize the request of contact between
+     * The method <code>requestConnectionToCryptoBroker</code> initialises a contact request between
      * two crypto brokers.
      *
-     * @param selectedIdentity       The identity selected to work with.
-     * @param cryptoBrokerToContact  the information of the broker to add.
+     * @param selectedIdentity       The selected local broker identity.
+     * @param cryptoBrokerToContact  The information of the remote broker to connect to.
      *
      * @throws CantRequestConnectionException           if something goes wrong.
      * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
@@ -68,8 +87,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      */
     void requestConnectionToCryptoBroker(CryptoBrokerCommunitySelectableIdentity selectedIdentity     ,
                                          CryptoBrokerCommunityInformation        cryptoBrokerToContact) throws CantRequestConnectionException          ,
-                                                                                                               ActorConnectionAlreadyRequestedException,
-                                                                                                               ActorTypeNotSupportedException          ;
+            ActorConnectionAlreadyRequestedException,
+            ActorTypeNotSupportedException          ;
 
     /**
      * The method <code>acceptCryptoBroker</code> takes the information of a connection request, accepts
@@ -123,8 +142,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listAllConnectedCryptoBrokers(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                final int                                     max             ,
-                                                                final int                                     offset          ) throws CantListCryptoBrokersException;
+                                                                         final int                                     max             ,
+                                                                         final int                                     offset          ) throws CantListCryptoBrokersException;
 
     /**
      * The method <code>listCryptoBrokersPendingLocalAction</code> returns the list of crypto brokers waiting to be accepted
@@ -148,8 +167,8 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerCommunityInformation> listCryptoBrokersPendingRemoteAction(final CryptoBrokerCommunitySelectableIdentity selectedIdentity,
-                                                                       final int max,
-                                                                       final int offset) throws CantListCryptoBrokersException;
+                                                                                final int max,
+                                                                                final int offset) throws CantListCryptoBrokersException;
 
     /**
      * Count crypto broker waiting
@@ -158,13 +177,14 @@ public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<
     int getCryptoBrokersWaitingYourAcceptanceCount();
 
     /**
-     *
+     * The method <code>getActorConnectionState</code> returns the ConnectionState of a given actor
+     * with respect to the selected actor
      * @param publicKey
      *
      * @return
      *
      * @throws CantValidateConnectionStateException if something goes wrong.
      */
-    boolean isActorConnected(String publicKey) throws CantValidateConnectionStateException;
+    ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;
 
 }

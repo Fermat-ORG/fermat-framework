@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name" translatable="false">ToolbarExpandibleMenu</string>
+
+    <string-array name="test_array">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Item with very extra super duper long name</item>
+    </string-array>
+
+    <string-array name="test_colors">
+        <item>Olive Green</item>
+        <item>Electric Blue</item>
+        <item>Apple red</item>
+        <item>Pineapple yellow </item>
+        <item>Tangerine</item>
+        <item>Black</item>
+    </string-array>
+
+</resources>

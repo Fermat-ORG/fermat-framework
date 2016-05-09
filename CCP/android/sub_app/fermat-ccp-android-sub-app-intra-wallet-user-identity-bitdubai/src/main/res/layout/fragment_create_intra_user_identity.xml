@@ -16,12 +16,13 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/crypto_broker_image"
+            android:id="@+id/img_photo"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
+            android:background="@drawable/circular_shape"
             tools:ignore="ContentDescription" />
 
     </RelativeLayout>
@@ -59,13 +60,13 @@
                 android:layout_below="@+id/crypto_broker_name_title"
                 android:layout_marginTop="4dp"
                 android:hint="Username"
-                android:lines="1"
                 android:padding="8dp"
                 android:singleLine="true"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:lines="1" />
 
         </RelativeLayout>
 

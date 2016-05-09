@@ -4,13 +4,13 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.CurrencyPairAndProvider;
 
 /**
  * Created by nelson on 31/12/15.
  */
-public class ProviderViewHolder extends SingleDeletableItemViewHolder<CurrencyExchangeRateProviderManager> {
+public class ProviderViewHolder extends SingleDeletableItemViewHolder<CurrencyPairAndProvider> {
 
     private FermatTextView title;
 
@@ -19,15 +19,13 @@ public class ProviderViewHolder extends SingleDeletableItemViewHolder<CurrencyEx
         super(itemView);
 
         title = (FermatTextView) itemView.findViewById(R.id.ccw_title);
-        itemView.findViewById(R.id.ccw_sub_title).setVisibility(View.GONE);
     }
 
     @Override
-    public void bind(CurrencyExchangeRateProviderManager data) {
+    public void bind(CurrencyPairAndProvider data) {
         try {
-            title.setText(data.getProviderName());
-        } catch (CantGetProviderInfoException e) {
-            //Nothing
+            title.setText(data.getCurrencyFrom().getCode()+"/"+data.getCurrencyTo().getCode()+" - "+data.getProvider().getProviderName());
+        } catch (CantGetProviderInfoException ignore) {
         }
     }
 

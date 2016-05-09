@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.event_handler;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -11,19 +12,28 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransactionEvent;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.events.IncomingNegotiationTransmissionConfirmNegotiationEvent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 /**
  * Created by Yordin Alayn on 22.12.15.
  */
 public class CustomerBrokerCloseServiceEventHandler implements CBPService {
 
-    private EventManager eventManager;
+    /*Represent the Event Manager*/
+    private EventManager                                        eventManager;
 
+    /*Represent the Error Manager*/
+    private ErrorManager                                        errorManager;
+
+    /*Represent the Plugins Version*/
+    private PluginVersionReference                              pluginVersionReference;
+
+    /*Represent the Dao*/
     private CustomerBrokerCloseNegotiationTransactionDatabaseDao customerBrokerCloseNegotiationTransactionDatabaseDao;
 
     private ServiceStatus serviceStatus   = ServiceStatus.CREATED;
@@ -32,10 +42,14 @@ public class CustomerBrokerCloseServiceEventHandler implements CBPService {
 
     public CustomerBrokerCloseServiceEventHandler(
             CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
-            EventManager                                            eventManager
+            EventManager                                            eventManager,
+            ErrorManager                                            errorManager,
+            PluginVersionReference                                  pluginVersionReference
     ){
         this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
         this.eventManager                                           = eventManager;
+        this.errorManager                                           = errorManager;
+        this.pluginVersionReference                                 = pluginVersionReference;
     }
 
     /*SERVICE*/
@@ -63,8 +77,9 @@ public class CustomerBrokerCloseServiceEventHandler implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
 
-        } catch (CantSetObjectException exception){
-            throw new CantStartServiceException(exception,"Starting the CustomerBrokerNewServiceEventHandler", "The CustomerBrokerNewServiceEventHandler is probably null");
+        } catch (CantSetObjectException e){
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new CantStartServiceException(e,"Starting the CustomerBrokerNewServiceEventHandler", "The CustomerBrokerNewServiceEventHandler is probably null");
         }
     }
 
@@ -86,18 +101,14 @@ public class CustomerBrokerCloseServiceEventHandler implements CBPService {
     }
 
     public void incomingNegotiationTransactionEventHandler(IncomingNegotiationTransactionEvent event) throws CantSaveEventException {
-        Logger LOG = Logger.getGlobal();
-        LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+
         this.customerBrokerCloseNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
-        LOG.info("CHECK THE DATABASE");
 
     }
 
     public void incomingNegotiationTransactionConfirmEventHandler(IncomingNegotiationTransmissionConfirmNegotiationEvent event) throws CantSaveEventException {
-        //Logger LOG = Logger.getGlobal();
-        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+
         this.customerBrokerCloseNegotiationTransactionDatabaseDao.saveNewEventTansaction(event.getEventType().getCode(), event.getSource().getCode());
-        //LOG.info("CHECK THE DATABASE");
 
     }
     /*END PUBLIC METHOD*/

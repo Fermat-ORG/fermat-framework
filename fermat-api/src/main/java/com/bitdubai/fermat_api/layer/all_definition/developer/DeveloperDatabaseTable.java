@@ -7,8 +7,8 @@ import java.util.List;
  */
 public interface DeveloperDatabaseTable {
 
-    public String getName();
+    String getName();
 
-    public List<String> getFieldNames();
+    List<String> getFieldNames();
 
 }

@@ -13,17 +13,17 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 public interface DatabaseAggregateFunction {
 
-    public void setColumn (String column);
+    void setColumn(String column);
 
-    public void setType (DataBaseAggregateFunctionType type);
+    void setType(DataBaseAggregateFunctionType type);
 
-    public void setAliasColumn (String alias);
+    void setAliasColumn(String alias);
 
-    public String  getAliasColumn ();
+    String  getAliasColumn();
 
-    public String  getColumn ();
+    String  getColumn();
 
-    public DataBaseAggregateFunctionType getType ();
+    DataBaseAggregateFunctionType getType();
 
-    public String toSQLQuery();
+    String toSQLQuery();
 }

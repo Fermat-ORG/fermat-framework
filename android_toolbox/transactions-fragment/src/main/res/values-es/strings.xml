@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TransactionsFragment</string>
+
+    <string name="transaction_to">Amazon</string>
+    <string name="transaction_from">Mi cuenta</string>
+    <string name="transaction_date">21 de Junio, 2016</string>
+    <string name="transaction_state">Pendiente</string>
+    <string name="transaction_note">Pago con intereses</string>
+    <string name="transaction_amount">120.000</string>
+    <string name="transaction_unit">$</string>
+    <string name="transaction_sign">-</string>
+    <string name="from_label">De:</string>
+    <string name="status_description_label">Estatus:</string>
+    <string name="to_label">Para:</string>
+</resources>

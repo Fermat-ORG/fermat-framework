@@ -32,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="0.5dp"
-                tools:listitem="@layout/row_connections_world" />
+                tools:listitem="@layout/cbc_row_connections_world" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout

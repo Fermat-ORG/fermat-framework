@@ -8,5 +8,5 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
  * Created by eze on 2015.09.21..
  */
 public interface OutgoingIntraActorTransactionHandler {
-    public void handleTransaction(OutgoingIntraActorTransactionWrapper transaction, CryptoStatus cryptoStatus) throws OutgoingIntraActorCantHandleTransactionException;
+    void handleTransaction(OutgoingIntraActorTransactionWrapper transaction, CryptoStatus cryptoStatus) throws OutgoingIntraActorCantHandleTransactionException;
 }

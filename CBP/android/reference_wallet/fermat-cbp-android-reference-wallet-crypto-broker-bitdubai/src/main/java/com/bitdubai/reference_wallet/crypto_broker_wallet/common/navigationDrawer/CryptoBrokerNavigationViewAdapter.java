@@ -25,8 +25,10 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
     private List<NavViewFooterItem> earningsItems;
     private List<NavViewFooterItem> stockItems;
+    private String stockTitle = "Current Stock";
+    private String earningsTitle = "Daily Earnings";
 
-    protected CryptoBrokerNavigationViewAdapter(Context context) {
+    public CryptoBrokerNavigationViewAdapter(Context context) {
         super(context);
 
         stockItems = new ArrayList<>();
@@ -37,6 +39,13 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
         earningsItems = new ArrayList<>();
         earningsItems.add(new NavViewFooterItem("US Dollar", "1,400.01"));
         earningsItems.add(new NavViewFooterItem("Bolivar", "350,251.87"));
+    }
+
+    public CryptoBrokerNavigationViewAdapter(Context context, List<NavViewFooterItem> stock, List<NavViewFooterItem> earnings) {
+        super(context);
+
+        stockItems = stock;
+        earningsItems = earnings;
     }
 
     @Override
@@ -101,7 +110,7 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
         } else if (holder instanceof NavTitleFooterViewHolder) {
             NavTitleFooterViewHolder titleFooterViewHolder = (NavTitleFooterViewHolder) holder;
-            String title = isStockTitleItemPosition(position) ? "Current Stock" : "Weekly Earnings";
+            String title = isStockTitleItemPosition(position) ? stockTitle : earningsTitle;
             titleFooterViewHolder.getNavFooterTitle().setText(title);
 
         } else {
@@ -185,5 +194,13 @@ public class CryptoBrokerNavigationViewAdapter extends FermatAdapter<MenuItem, F
 
     private boolean isEarningsItemPosition(int position) {
         return position >= getItemCount() - earningsItems.size() && position < getItemCount();
+    }
+
+    public void setEarningsTitle(String earningsTitle) {
+        this.earningsTitle = earningsTitle;
+    }
+
+    public void setStockTitle(String stockTitle) {
+        this.stockTitle = stockTitle;
     }
 }

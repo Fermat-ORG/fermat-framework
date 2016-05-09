@@ -1,12 +1,9 @@
-/*
- * @#MessageContent.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
+import com.google.gson.Gson;
+
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent</code>
@@ -24,6 +21,21 @@ public abstract class PackageContent {
     private MessageContentType messageContentType;
 
     /**
+     * Constructor
+     */
+    public PackageContent() {
+        super();
+    }
+
+    /**
+     * Constructor whit parameters
+     * @param messageContentType
+     */
+    public PackageContent(MessageContentType messageContentType) {
+        this.messageContentType = messageContentType;
+    }
+
+    /**
      * Gets the value of messageContentType and returns
      *
      * @return messageContentType
@@ -39,5 +51,16 @@ public abstract class PackageContent {
      */
     public void setMessageContentType(MessageContentType messageContentType) {
         this.messageContentType = messageContentType;
+    }
+
+    public String toJson() {
+
+        Gson gson = new Gson();
+        return gson.toJson(this, getClass());
+    }
+
+    public static PackageContent parseContent(String content) {
+
+        throw new NotImplementedException("You must override this method.");
     }
 }

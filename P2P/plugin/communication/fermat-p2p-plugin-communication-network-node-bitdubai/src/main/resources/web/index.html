@@ -1,21 +1,23 @@
 <!DOCTYPE html>
-<!-- saved from url=(0039)http://getbootstrap.com/examples/cover/ -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<html lang="en" ng-app="serverApp">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta name="description" content="Cloud Server Home Page">
+    <meta name="author" content="Fermat.org">
     <!-- <link rel="icon" href="http://getbootstrap.com/favicon.ico"> -->
 
-    <title>Fermat - Network Node</title>
+    <title>Fermat - Cloud Server</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
     <link href="./css/cover.css" rel="stylesheet">
+    <link href="./css/angular-chart.min.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="./js/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -23,10 +25,10 @@
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-  </head>
+</head>
 
   <body>
 
@@ -41,27 +43,61 @@
               <h3 class="masthead-brand">Fermat</h3>
               <nav>
                 <ul class="nav masthead-nav">
-                  <li class="active"><a href="#">Home</a></li>
-                  <li><a href="#">Features</a></li>
-                  <li><a href="#">Contact</a></li>
+                  <li class="active"><a href="index.html">Home</a></li>
+                  <li><a href="#" data-toggle="modal" data-target="#loginModal" >Monitoring</a></li>
+                  <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank" >Contact</a></li>
                 </ul>
               </nav>
             </div>
           </div>
 
           <div class="inner cover">
-            <h1 class="cover-heading"><span class="glyphicon glyphicon-thumbs-up"></span> Network Node.</h1>
-            <p class="lead">If you're seeing this page, it means that your Network Node is running and ready for use ... :)</p>
+              <img src="https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png" class="img-responsive" alt="Fermat.org" />
+              <h1 class="cover-heading"><span class="glyphicon glyphicon-thumbs-up"></span> Cloud Server.</h1>
+            <p class="lead">If you're seeing this page, it means that your Cloud Serve is running and ready for use ... :)</p>
             <p class="lead">
-              <a href="#" class="btn btn-lg btn-info">Learn more</a>
+              <a href="https://github.com/Fermat-ORG/fermat/blob/master/FERMAT-WHITE-PAPER.md" target="_blank" class="btn btn-lg btn-info">Learn more</a>
             </p>
           </div>
-
+          <br/>
+          <br/>
+          <br/>
           <div class="mastfoot">
             <div class="inner">
-              <p>Develop a <a href="http://fermat.org/">Fermat.org</a>, by <a href="https://BitDubai.com">BitDubai</a>.</p>
+              <p>© 2016 Develop at <a href="http://fermat.org/">Fermat.org</a>.</p>
             </div>
           </div>
+
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="UserCtrl" >
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Authentication Form</h4>
+                        </div>
+                        <form id="authForm" ng-submit="login()" >
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <input id="user" type="text" ng-model="credentials.user" class="form-control" placeholder="User" ng-class="{ 'has-error': authForm.user.$invalid }" required >
+                                </div>
+                                <div class="form-group">
+                                    <input id="password" type="password" ng-model="credentials.password" class="form-control" placeholder="Password" ng-class="{ 'has-error': authForm.password.$invalid }" required >
+                                </div>
+                                <div class="form-group">
+                                    <p class="help-block"><span ng-bind="loginResponse.message"></span></p>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary" >Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
@@ -72,10 +108,18 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
+
     <script src="./js/jquery.min.js"></script>
     <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/sha256.js"></script>
+    <script src="./js/angular.min.js"></script>
+    <script src="./js/app.js"></script>
+    <script src="./js/userController.js"></script>
+    <script src="./js/Chart.min.js"></script>
+    <script src="./js/angular-chart.min.js"></script>
+
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="./js/ie10-viewport-bug-workaround.js"></script>
-  
 
-</body></html>
+  </body>
+</html>

@@ -1,6 +1,7 @@
 package unit.com.bitdubai.fermat_dap_api.all_definition.digital_asset;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -8,18 +9,16 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.junit.Test;
+
+import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import org.fermat.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -28,6 +27,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
+import org.junit.Test;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/11/15.
@@ -54,7 +55,7 @@ public class LocalStorageTest {
         DigitalAsset mockedDigitalAsset=getDigitalAssetForTesting();
         DigitalAssetMetadata mockedDigitalAssetMetadata=new DigitalAssetMetadata();
         mockedDigitalAssetMetadata.setDigitalAsset(mockedDigitalAsset);
-        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
+//        mockedDigitalAssetMetadata.setGenesisTransaction("d21633ba23f70118185227be58a63527675641ad37967e2aa461559f577aec43");
         String hash=mockedDigitalAssetMetadata.getDigitalAssetHash();
         System.out.println("DAM - HASH: " + hash);
         return mockedDigitalAssetMetadata;
@@ -68,11 +69,21 @@ public class LocalStorageTest {
             }
 
             @Override
+            public byte[] getImage() {
+                return new byte[0];
+            }
+
+            @Override
             public String getPublicKey() {
                 return "ASDS-10087982";
             }
 
             @Override
+            public Actors getActorType() {
+                return null;
+            }
+
+            //@Override
             public byte[] getProfileImage() {
                 return new byte[0];
             }
@@ -104,7 +115,7 @@ public class LocalStorageTest {
         //Contract
         DigitalAssetContract contract = new DigitalAssetContract();
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, Boolean.TRUE));
-        //Expiration date - we choose 90 days from now, you can change for testing
+        Expiration date - we choose 90 days from now, you can change for testing
         Timestamp expirationDateTimestamp=getExpirationDate(90);
         contract.setContractProperty(new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, expirationDateTimestamp));
         mockedDigitalAsset.setContract(contract);
@@ -154,7 +165,8 @@ public class LocalStorageTest {
     }
 
     private ActorAssetUser getActorAssetUserForTest(){
-        ActorAssetUser mockedActorAssetUser=new ActorAssetUser() {
+        ActorAssetUser mockedActorAssetUser=new ActorAssetUser()
+        {
             @Override
             public String getPublicLinkedIdentity() {
                 return new ECCKeyPair().getPublicKey();
@@ -192,6 +204,8 @@ public class LocalStorageTest {
              *
              * @return the Location of the Asset user
              */
+
+            /*
             @Override
             public Location getLocation() {
                 return null;

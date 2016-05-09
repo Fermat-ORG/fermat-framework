@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -21,21 +22,21 @@ public interface InstalledWallet extends Serializable, FermatInterfaceObject, Fe
      *
      * @return the saud list of languages
      */
-    public List<InstalledLanguage> getLanguagesId();
+    List<InstalledLanguage> getLanguagesId();
 
     /**
      * This method gives us the list of all the skins installed for this wallet
      *
      * @return the saud list of skins
      */
-    public List<InstalledSkin> getSkinsId();
+    List<InstalledSkin> getSkinsId();
 
     /**
      * This method tell us the category of the wallet
      *
      * @return the category of the wallet
      */
-    public WalletCategory getWalletCategory();
+    WalletCategory getWalletCategory();
 
     /**
      * This method gives us a codification of the wallet identifier (the identifier is an enum that
@@ -44,14 +45,14 @@ public interface InstalledWallet extends Serializable, FermatInterfaceObject, Fe
      * @return an string that is result of the method getCode of an enum that can be inferred by the
      *         WalletCategory of the wallet.
      */
-    public String getWalletPlatformIdentifier();
+    String getWalletPlatformIdentifier();
 
     /**
      * This method gives us the name of the wallet icon used to identify the image in the wallet resources plug-in
      *
      * @return the name of the said icon
      */
-    public String getIcon();
+    String getIcon();
 
     /**
      * This method gives us the public key of the wallet in this device. It is used as identifier of
@@ -59,21 +60,23 @@ public interface InstalledWallet extends Serializable, FermatInterfaceObject, Fe
      *
      * @return the public key represented as a string
      */
-    public String getWalletPublicKey();
+    String getWalletPublicKey();
 
     /**
      * This method gives us the wallet name
      *
      * @return the name of the wallet
      */
-    public String getName();
+    String getName();
 
     /**
      * This method gives us the version of the wallet
      *
      * @return the version of the wallet
      */
-    public Version getWalletVersion();
+    Version getWalletVersion();
 
-    public WalletType getWalletType();
+    WalletType getWalletType();
+
+    void setAppStatus(AppsStatus appsStatus);
 }

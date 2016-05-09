@@ -166,17 +166,9 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        } finally {
-
-            if (getDataBase() != null) {
-                getDataBase().closeDatabase();
-            }
         }
-
         return walletPublishedMiddlewareInformation;
     }
-
-    ;
 
     /**
      * Method that list the all entities on the data base.
@@ -269,11 +261,6 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        } finally {
-
-            if (getDataBase() != null) {
-                getDataBase().closeDatabase();
-            }
         }
 
         /*
@@ -281,8 +268,6 @@ public class ScreensShotsComponentsDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -386,11 +371,6 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        } finally {
-
-            if (getDataBase() != null) {
-                getDataBase().closeDatabase();
-            }
         }
 
         /*
@@ -398,8 +378,6 @@ public class ScreensShotsComponentsDao {
          */
         return list;
     }
-
-    ;
 
 
     /**
@@ -515,11 +493,6 @@ public class ScreensShotsComponentsDao {
             CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantReadRecordDataBaseException;
 
-        } finally {
-
-            if (getDataBase() != null) {
-                getDataBase().closeDatabase();
-            }
         }
 
         /*
@@ -527,8 +500,6 @@ public class ScreensShotsComponentsDao {
          */
         return list;
     }
-
-    ;
 
     /**
      * Method that update an entity in the data base.
@@ -585,13 +556,7 @@ public class ScreensShotsComponentsDao {
             String possibleCause = "The database not exist";
             throw new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
 
-        } finally {
-
-            if (getDataBase() != null) {
-                getDataBase().closeDatabase();
-            }
         }
-
     }
 
     /**
@@ -648,13 +613,7 @@ public class ScreensShotsComponentsDao {
             CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, e, context, possibleCause);
             throw cantDeleteRecordDataBaseException;
 
-        } finally {
-
-            if (getDataBase() != null) {
-                getDataBase().closeDatabase();
-            }
         }
-
     }
 
 

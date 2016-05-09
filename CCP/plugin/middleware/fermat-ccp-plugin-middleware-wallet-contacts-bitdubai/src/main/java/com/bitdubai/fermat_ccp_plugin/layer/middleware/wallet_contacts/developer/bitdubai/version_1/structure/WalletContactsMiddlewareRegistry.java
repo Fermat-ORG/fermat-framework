@@ -2,8 +2,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.develope
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantAddCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantDeleteCryptoAddressException;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException;
@@ -18,7 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
-import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.RequestAction;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantConfirmAddressExchangeRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
@@ -30,10 +32,10 @@ import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressesNewsEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsMiddlewareDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -51,6 +53,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     private final LogManager             logManager            ;
     private final PluginDatabaseSystem   pluginDatabaseSystem  ;
     private final UUID                   pluginId              ;
+    private final Broadcaster            broadcaster;
 
     private WalletContactsMiddlewareDao walletContactsMiddlewareDao;
 
@@ -58,13 +61,16 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                                             final ErrorManager           errorManager          ,
                                             final LogManager             logManager            ,
                                             final PluginDatabaseSystem   pluginDatabaseSystem  ,
-                                            final UUID                   pluginId              ) {
+                                            final UUID                   pluginId              ,
+                                            final Broadcaster            broadcaster
+                                            ) {
 
         this.cryptoAddressesManager = cryptoAddressesManager;
         this.errorManager           = errorManager          ;
         this.logManager             = logManager            ;
         this.pluginDatabaseSystem   = pluginDatabaseSystem  ;
         this.pluginId               = pluginId              ;
+        this.broadcaster            = broadcaster ;
     }
 
     public void initialize() throws CantInitializeWalletContactsMiddlewareDatabaseException {
@@ -83,7 +89,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                                                    String              actorFirstName ,
                                                    String              actorLastName  ,
                                                    Actors              actorType      ,
-                                                   List<CryptoAddress> cryptoAddresses,
+                                                   HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses,
                                                    String              walletPublicKey) throws CantCreateWalletContactException {
         try {
 
@@ -115,7 +121,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                                                    String              actorFirstName ,
                                                    String              actorLastName  ,
                                                    Actors              actorType      ,
-                                                   String              walletPublicKey) throws CantCreateWalletContactException {
+                                                   String              walletPublicKey,
+                                                   BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException {
         try {
 
             UUID contactId = UUID.randomUUID();
@@ -127,7 +134,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     actorFirstName ,
                     actorLastName  ,
                     actorType      ,
-                    new ArrayList<CryptoAddress>(),
+                    new HashMap<BlockchainNetworkType, CryptoAddress>(),
                     walletPublicKey
             );
 
@@ -145,7 +152,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                                     String              actorAlias     ,
                                     String              actorFirstName ,
                                     String              actorLastName  ,
-                                    List<CryptoAddress> cryptoAddresses) throws CantUpdateWalletContactException,
+                                    HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses) throws CantUpdateWalletContactException,
                                                                                 WalletContactNotFoundException  {
 
         try {
@@ -210,17 +217,9 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     walletPublicKey
             );
 
-        } catch (WalletContactNotFoundException e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
-        } catch (CantGetWalletContactException  e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (WalletContactNotFoundException | CantGetWalletContactException e){
             throw e;
         } catch (Exception e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
@@ -269,22 +268,17 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
     @Override
     public void addCryptoAddressToWalletContact(UUID          contactId    ,
-                                                CryptoAddress cryptoAddress) throws CantAddCryptoAddressException ,
+                                                CryptoAddress cryptoAddress,
+                                                BlockchainNetworkType blockchainNetworkType) throws CantAddCryptoAddressException ,
                                                                                     WalletContactNotFoundException {
 
         try {
             // check if exists
-            walletContactsMiddlewareDao.findWalletContactByContactId(contactId);
+            WalletContactRecord walletContactRecord =  walletContactsMiddlewareDao.findWalletContactByContactId(contactId);
             // add crypto address
-            walletContactsMiddlewareDao.addCryptoAddress(
-                    contactId,
-                    cryptoAddress
-            );
+            walletContactRecord.getCryptoAddresses().put(blockchainNetworkType, cryptoAddress);
+            walletContactsMiddlewareDao.updateWalletContact(walletContactRecord);
 
-        } catch (CantAddCryptoAddressException e){
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
         } catch (CantGetWalletContactException e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -301,7 +295,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
     @Override
     public void deleteCryptoAddressToWalletContact(UUID          contactId    ,
-                                                   CryptoAddress cryptoAddress) throws CantDeleteCryptoAddressException,
+                                                   CryptoAddress cryptoAddress,
+                                                   BlockchainNetworkType blockchainNetworkType) throws CantDeleteCryptoAddressException,
                                                                                        WalletContactNotFoundException  {
 
         try {
@@ -310,7 +305,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
             // delete crypto address
             walletContactsMiddlewareDao.deleteCryptoAddress(
                     contactId,
-                    cryptoAddress
+                    cryptoAddress,
+                    blockchainNetworkType
             );
 
         } catch (CantDeleteCryptoAddressException e){
@@ -330,8 +326,9 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
     @Override
     public void addCryptoAddressToWalletContact(String        actorPublicKey ,
                                                 String        walletPublicKey,
-                                                CryptoAddress cryptoAddress  ) throws CantAddCryptoAddressException,
-                                                                                      WalletContactNotFoundException {
+                                                CryptoAddress cryptoAddress,
+                                                BlockchainNetworkType blockchainNetworkType) throws CantAddCryptoAddressException,
+            WalletContactNotFoundException {
 
         try {
             // get contact id if exists
@@ -339,16 +336,19 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                     actorPublicKey,
                     walletPublicKey
             );
-            // add crypto address
-            walletContactsMiddlewareDao.addCryptoAddress(
-                    walletContactRecord.getContactId(),
-                    cryptoAddress
-            );
 
-        } catch (CantAddCryptoAddressException e){
+            walletContactRecord.getCryptoAddresses().put(blockchainNetworkType,cryptoAddress);
+            // add crypto address
+            walletContactsMiddlewareDao.updateWalletContact(walletContactRecord);
+
+        } catch ( CantGetWalletContactException e){
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw e;
+            try {
+                throw e;
+            } catch (CantGetWalletContactException e1) {
+                e1.printStackTrace();
+            }
         } catch (WalletContactNotFoundException e){
 
             throw e;
@@ -370,20 +370,42 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
                 if (request.getCryptoAddressDealer().equals(CryptoAddressDealers.CRYPTO_WALLET)) {
 
-                    if (request.getAction().equals(RequestAction.ACCEPT))
-                        this.handleCryptoAddressReceivedEvent(request);
-                    if (request.getAction().equals(RequestAction.DENY))
-                        this.handleCryptoAddressDeniedEvent(request);
+                    switch (request.getAction()){
+                        case ACCEPT:
+                            this.handleCryptoAddressReceivedEvent(request);
+                            break;
+                        case DENY:
+                            this.handleCryptoAddressDeniedEvent(request);
+                            break;
+                        case RECEIVED:
+                            this.handleCryptoAddressReceivedEvent(request);
+                            break;
+                        default:
+                            //TODO: mejorar esto que es una mierda por favor
+//                            if(request.getCryptoAddress()!=null) {
+//                                if(request.getCryptoAddress().getAddress()!=null)
+//                                    this.handleCryptoAddressReceivedEvent(request);
+//                            }
+                            break;
+                    }
+                    if(request.getCryptoAddress()!=null) {
+                        if (request.getCryptoAddress().getAddress() != null)
+                            if (request.getIdentityTypeResponding() == Actors.CCP_INTRA_WALLET_USER)
+                                cryptoAddressesManager.markReceivedRequest(request.getRequestId());
+                    }
 
                 }
 
             }
+
 
         } catch(CantListPendingCryptoAddressRequestsException |
                 CantHandleCryptoAddressDeniedActionException |
                 CantHandleCryptoAddressReceivedActionException e) {
 
             throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
+        } catch (CantConfirmAddressExchangeRequestException e) {
+            e.printStackTrace();
         }
     }
 
@@ -398,20 +420,30 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                         request.getIdentityPublicKeyResponding(),
                         request.getWalletPublicKey()
                 );
+                // SI ES WALLET CONTACT ES NULL PASA DIRECTO A CONFIRMAR EL ADDRESS YA QUE ES SOLO UN REQUEST DE ADDRESS
+                // SI POR EL CONTRARIO NO ES NULL ACTUALIZA EL CONTACTO CON EL ADDRESS
+                if (walletContactRecord != null){
 
-                this.addCryptoAddressToWalletContact(
-                    walletContactRecord.getContactId(),
-                    request.getCryptoAddress()
-                );
+                    this.addCryptoAddressToWalletContact(
+                            walletContactRecord.getContactId(),
+                            request.getCryptoAddress(),
+                            request.getBlockchainNetworkType()
+                    );
 
-                System.out.println("----------------------------\n" +
-                        "ACTUALIZO ADDRESS PARA EL CONTACTO :" +  walletContactRecord.getContactId()
-                        + "\n-------------------------------------------------");
+                    System.out.println("----------------------------\n" +
+                            "ACTUALIZO ADDRESS PARA EL CONTACTO :" + walletContactRecord.getContactId()
+                            + "\n-------------------------------------------------");
 
-                walletContactsMiddlewareDao.updateCompatibility(
-                        walletContactRecord.getContactId(),
-                        Compatibility.COMPATIBLE
-                );
+                    walletContactsMiddlewareDao.updateCompatibility(
+                            walletContactRecord.getContactId(),
+                            Compatibility.COMPATIBLE
+                    );
+
+                    this.broadcaster.publish(BroadcasterType.UPDATE_VIEW, walletContactRecord.getWalletPublicKey(),walletContactRecord.getContactId().toString() );
+
+                }
+
+
 
                 cryptoAddressesManager.confirmAddressExchangeRequest(request.getRequestId());
 
@@ -452,7 +484,8 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
 
                 this.addCryptoAddressToWalletContact(
                         walletContactRecord.getContactId(),
-                        request.getCryptoAddress()
+                        request.getCryptoAddress(),
+                        request.getBlockchainNetworkType()
                 );
 
                 walletContactsMiddlewareDao.updateCompatibility(

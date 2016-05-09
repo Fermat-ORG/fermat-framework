@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
@@ -68,8 +69,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
         try {
             WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
             InstalledWallet installedWallet = walletManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
-            if (installedWallet != null) return true;
-            else return false;
+            return installedWallet != null;
         } catch (CantExecuteDatabaseOperationException exception) {
             throw new CantExecuteDatabaseOperationException(exception, "Error checking if the wallet is installed", "Please, check the cause");
         } catch (CantGetInstalledWalletsException exception) {
@@ -129,7 +129,7 @@ public class WalletManagerMiddlewareInstallationProcess implements WalletInstall
                  */
                 WalletManagerMiddlewareDao walletManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 
-                walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey, deviceUserPublicKey, walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion, developerName, screenSize, navigationStructureVersion);
+                walletManagerDao.persistWallet(walletPublicKey, walletPrivateKey, deviceUserPublicKey, walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion, developerName, screenSize, navigationStructureVersion, BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
                 walletManagerDao.persistWalletSkin(walletCatalogueId, skinId, skinName, skinPreview, skinVersion);
 

@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.desktop;
 
+import com.bitdubai.fermat_api.AppsStatus;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 
 /**
@@ -18,5 +20,35 @@ public class InstalledDesktop implements FermatApp {
     @Override
     public String getAppPublicKey() {
         return publicKey;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
+    }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.DESKTOP;
+    }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
+    @Override
+    public int getIconResource() {
+        return 0;
+    }
+
+    @Override
+    public void setBanner(int res) {
+
+    }
+
+    @Override
+    public int getBannerRes() {
+        return 0;
     }
 }

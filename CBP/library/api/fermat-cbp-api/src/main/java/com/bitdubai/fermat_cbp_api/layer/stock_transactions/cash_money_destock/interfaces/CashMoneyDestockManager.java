@@ -36,6 +36,7 @@ public interface CashMoneyDestockManager extends FermatManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
         ) throws CantCreateCashMoneyDestockException;
 }

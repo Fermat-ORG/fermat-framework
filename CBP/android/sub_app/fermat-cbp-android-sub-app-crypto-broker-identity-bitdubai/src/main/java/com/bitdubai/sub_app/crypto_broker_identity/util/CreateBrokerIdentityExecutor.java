@@ -1,13 +1,12 @@
 package com.bitdubai.sub_app.crypto_broker_identity.util;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.sub_app.crypto_broker_identity.session.CryptoBrokerIdentitySubAppSession;
 
 /**
@@ -19,6 +18,7 @@ public class CreateBrokerIdentityExecutor {
     public static final int EXCEPTION_THROWN = 3;
     public static final int SUCCESS = 1;
     public static final int INVALID_ENTRY_DATA = 2;
+    public static final int MISSING_IMAGE = 4;
 
     private byte[] imageInBytes;
     private String identityName;
@@ -52,6 +52,10 @@ public class CreateBrokerIdentityExecutor {
     }
 
     public int execute() {
+
+        if (imageIsInvalid())
+            return MISSING_IMAGE;
+
         if (entryDataIsInvalid())
             return INVALID_ENTRY_DATA;
 
@@ -75,12 +79,16 @@ public class CreateBrokerIdentityExecutor {
         return identity;
     }
 
+    private boolean imageIsInvalid() {
+        if (imageInBytes == null) return true;
+        return imageInBytes.length == 0;
+    }
+
     private boolean entryDataIsInvalid() {
         if (moduleManager == null) return true;
         if (imageInBytes == null) return true;
         if (imageInBytes.length == 0) return true;
         if (identityName == null) return true;
-        if (identityName.isEmpty()) return true;
-        return false;
+        return identityName.isEmpty();
     }
 }

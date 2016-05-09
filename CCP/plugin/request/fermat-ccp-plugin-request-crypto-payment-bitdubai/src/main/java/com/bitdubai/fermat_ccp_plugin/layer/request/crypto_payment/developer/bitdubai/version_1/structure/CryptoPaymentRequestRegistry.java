@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformApprovalException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformRefusalException;
@@ -33,8 +35,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantExecuteUnfinishedActionsException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestRegistryException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
 import java.util.UUID;
@@ -52,6 +54,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     private final OutgoingIntraActorManager   outgoingIntraActorManager  ;
     private final PluginDatabaseSystem        pluginDatabaseSystem       ;
     private final UUID                        pluginId                   ;
+    private Broadcaster                       broadcaster;
 
     private CryptoPaymentRequestDao cryptoPaymentRequestDao;
 
@@ -59,13 +62,15 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                         final ErrorManager                errorManager               ,
                                         final OutgoingIntraActorManager   outgoingIntraActorManager  ,
                                         final PluginDatabaseSystem        pluginDatabaseSystem       ,
-                                        final UUID                        pluginId                   ) {
+                                        final UUID                        pluginId                   ,
+                                        final Broadcaster                 broadcaster) {
 
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
         this.errorManager                = errorManager               ;
         this.outgoingIntraActorManager   = outgoingIntraActorManager  ;
         this.pluginDatabaseSystem        = pluginDatabaseSystem       ;
         this.pluginId                    = pluginId                   ;
+        this.broadcaster                 = broadcaster                ;
     }
 
     public void initialize() throws CantInitializeCryptoPaymentRequestRegistryException {
@@ -91,7 +96,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                              String                description      ,
                                              long                  amount           ,
                                              BlockchainNetworkType networkType      ,
-                                             ReferenceWallet       referenceWallet) throws CantGenerateCryptoPaymentRequestException {
+                                             ReferenceWallet       referenceWallet
+                                             ) throws CantGenerateCryptoPaymentRequestException {
 
 
         System.out.println("********** Crypto Payment Request -> generating request. SENT - NOT_SENT_YET.");
@@ -146,7 +152,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     amount,
                     startTimeStamp,
                     networkType,
-                    referenceWallet
+                    referenceWallet,
+                    walletPublicKey
             );
 
             System.out.println("********** Crypto Payment Request -> generating request. SENT - WAITING RECEPTION CONFIRMATION -> OK.");
@@ -180,7 +187,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                                               long                  amount           ,
                                                               long                  startTimeStamp   ,
                                                               BlockchainNetworkType networkType,
-                                                              ReferenceWallet       referenceWallet) throws CantSendRequestException                     ,
+                                                              ReferenceWallet       referenceWallet,
+                                                              String walletPublicKey) throws CantSendRequestException                     ,
                                                                                                               CantChangeCryptoPaymentRequestStateException ,
                                                                                                               CryptoPaymentRequestNotFoundException        {
 
@@ -197,7 +205,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                 amount,
                 startTimeStamp,
                 networkType,
-                referenceWallet
+                referenceWallet,
+                walletPublicKey
         );
 
         // change the state to waiting reception confirmation
@@ -336,7 +345,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                     cryptoPayment.getActorPublicKey(),
                     cryptoPayment.getIdentityType(),
                     cryptoPayment.getActorType(),
-                    cryptoPayment.getReferenceWallet()
+                    cryptoPayment.getReferenceWallet(),
+                    cryptoPayment.getNetworkType()
             );
 
             cryptoPaymentRequestDao.changeState(
@@ -467,6 +477,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     @Override
     public List<CryptoPayment> listCryptoPaymentRequestsByType(String            walletPublicKey,
                                                                CryptoPaymentType type           ,
+                                                               BlockchainNetworkType blockchainNetworkType,
                                                                Integer           max            ,
                                                                Integer           offset         ) throws CantListCryptoPaymentRequestsException {
 
@@ -475,6 +486,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             return cryptoPaymentRequestDao.listCryptoPaymentRequestsByType(
                     walletPublicKey,
                     type,
+                    blockchainNetworkType,
                     max,
                     offset
             );
@@ -490,6 +502,36 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         }
 
     }
+
+    @Override
+    public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String            walletPublicKey,
+                                                               CryptoPaymentType type           ,
+                                                                BlockchainNetworkType blockchainNetworkType,
+                                                               Integer           max            ,
+                                                               Integer           offset         ) throws CantListCryptoPaymentRequestsException {
+
+        try {
+
+            return cryptoPaymentRequestDao.listCryptoPaymentRequestsByTypeAndNetwork(
+                    walletPublicKey,
+                    type,
+                    blockchainNetworkType,
+                    max,
+                    offset
+            );
+
+        } catch(CantListCryptoPaymentRequestsException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
+        }
+
+    }
+
 
     @Override
     public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndState(String             walletPublicKey,
@@ -545,7 +587,8 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                     cryptoPayment.getAmount(),
                                     cryptoPayment.getStartTimeStamp(),
                                     cryptoPayment.getNetworkType(),
-                                    cryptoPayment.getReferenceWallet()
+                                    cryptoPayment.getReferenceWallet(),
+                                    cryptoPayment.getWalletPublicKey()
                             );
 
                         } catch(CantSendRequestException                     |
@@ -660,6 +703,9 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         try
         {
             cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.ERROR);
+
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "PAYMENTERROR|" + requestId.toString());
+
         }
         catch(CantChangeCryptoPaymentRequestStateException e)
         {

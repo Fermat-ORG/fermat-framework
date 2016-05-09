@@ -1,14 +1,16 @@
 package com.bitdubai.sub_app.crypto_broker_identity.common.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.SpannableString;
 import android.view.View;
-import android.widget.Filter;
 import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.TextUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityModuleManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_identity.R;
 import com.bitdubai.sub_app.crypto_broker_identity.common.holders.CryptoBrokerIdentityInfoViewHolder;
 import com.bitdubai.sub_app.crypto_broker_identity.util.CryptoBrokerIdentityListFilter;
@@ -24,10 +26,23 @@ public class CryptoBrokerIdentityInfoAdapter
         extends FermatAdapter<CryptoBrokerIdentityInformation, CryptoBrokerIdentityInfoViewHolder>
         implements Filterable {
 
+    private ErrorManager errorManager;
+    private Activity     activity ;
+
+    private CryptoBrokerIdentityModuleManager moduleManager;
+
     CryptoBrokerIdentityListFilter filter;
 
-    public CryptoBrokerIdentityInfoAdapter(Context context, ArrayList<CryptoBrokerIdentityInformation> dataSet) {
+    public CryptoBrokerIdentityInfoAdapter(final Activity                                   context      ,
+                                           final CryptoBrokerIdentityModuleManager          moduleManager,
+                                           final ErrorManager                               errorManager ,
+                                           final ArrayList<CryptoBrokerIdentityInformation> dataSet      ) {
+
         super(context, dataSet);
+
+        this.activity = context;
+        this.errorManager = errorManager;
+        this.moduleManager = moduleManager;
     }
 
     public CryptoBrokerIdentityInfoAdapter(Context context) {
@@ -35,8 +50,11 @@ public class CryptoBrokerIdentityInfoAdapter
     }
 
     @Override
-    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder, final CryptoBrokerIdentityInformation data, final int position) {
-        filter = (CryptoBrokerIdentityListFilter) getFilter();
+    protected void bindHolder(final CryptoBrokerIdentityInfoViewHolder holder  ,
+                              final CryptoBrokerIdentityInformation    data    ,
+                              final int                                position) {
+
+        filter = getFilter();
 
         SpannableString spannedText = TextUtils.getSpannedText(
                 context.getResources(),
@@ -46,11 +64,21 @@ public class CryptoBrokerIdentityInfoAdapter
 
         holder.setText(spannedText);
         holder.setImage(data.getProfileImage());
+        holder.setPublished(data.isPublished());
+        holder.setIdentityPublicKey(data.getPublicKey());
+        if( data.isPublished() ){
+            holder.setStatus("Visible");
+        }else{
+            holder.setStatus("Not visible");
+        }
+
+        holder.itemView.setMinimumHeight(800);
+
     }
 
     @Override
     protected CryptoBrokerIdentityInfoViewHolder createHolder(View itemView, int type) {
-        return new CryptoBrokerIdentityInfoViewHolder(itemView);
+        return new CryptoBrokerIdentityInfoViewHolder(itemView, errorManager, moduleManager, activity);
     }
 
     @Override
@@ -59,7 +87,7 @@ public class CryptoBrokerIdentityInfoAdapter
     }
 
     @Override
-    public Filter getFilter() {
+    public CryptoBrokerIdentityListFilter getFilter() {
         if (filter == null)
             filter = new CryptoBrokerIdentityListFilter(dataSet, this);
 

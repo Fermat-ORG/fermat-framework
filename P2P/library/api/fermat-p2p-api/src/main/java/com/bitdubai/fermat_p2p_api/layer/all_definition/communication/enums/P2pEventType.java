@@ -8,21 +8,30 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionLooseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteUpdateActorNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureRequestedListNotAvailableNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureUpdateActorNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.RegisterServerRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VpnSuccessReconnectNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteClientComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentConnectionRequestNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteComponentRegistrationNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteRequestListComponentRegisteredNotificationEventListener;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteUpdateActorNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.FailureComponentConnectionRequestNotificationEventListener;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.RegisterServerRequestNotificationEventListener;
 
 /**
  * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType</code>
@@ -54,12 +63,27 @@ public enum P2pEventType implements FermatEventEnum {
         }
     },
 
+    FAILURE_UPDATE_ACTOR_REQUEST_NOTIFICATION("FUPDACTRN"){
+        public FermatEvent getNewEvent() {
+            return new FailureUpdateActorNotificationEvent(this);
+        }
+    },
+
     COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION("CL_CCRCN") {
         public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
             return new CompleteClientComponentRegistrationNotificationEventListener(this, eventMonitor);
         }
         public FermatEvent getNewEvent() {
             return new CompleteClientComponentRegistrationNotificationEvent(this);
+        }
+    },
+
+    REGISTER_SERVER_REQUEST_NOTIFICATION("REG_SER_REN"){
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new RegisterServerRequestNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new RegisterServerRequestNotificationEvent(this);
         }
     },
 
@@ -84,6 +108,15 @@ public enum P2pEventType implements FermatEventEnum {
         }
         public FermatEvent getNewEvent() {
             return new CompleteComponentConnectionRequestNotificationEvent(this);
+        }
+    },
+
+    COMPLETE_UPDATE_ACTOR_NOTIFICATION("CL_UPDACT") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new CompleteUpdateActorNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new CompleteUpdateActorNotificationEvent(this);
         }
     },
 
@@ -114,11 +147,36 @@ public enum P2pEventType implements FermatEventEnum {
         }
     },
 
+    CLIENT_CONNECTION_LOOSE("CCL"){
+        public FermatEvent getNewEvent() {
+            return new ClientConnectionLooseNotificationEvent(this);
+        }
+    },
+
+    CLIENT_SUCCESS_RECONNECT("CSC"){
+        public FermatEvent getNewEvent() {
+            return new ClientSuccessReconnectNotificationEvent(this);
+        }
+    },
+
     VPN_CONNECTION_CLOSE("VCC"){
         public FermatEvent getNewEvent() {
             return new VPNConnectionCloseNotificationEvent(this);
         }
+    },
+
+    VPN_CONNECTION_LOOSE("VCL"){
+        public FermatEvent getNewEvent() {
+            return new VPNConnectionLooseNotificationEvent(this);
+        }
+    },
+
+    VPN_SUCCESS_RECONNECT("VSR"){
+        public FermatEvent getNewEvent() {
+            return new VpnSuccessReconnectNotificationEvent(this);
+        }
     }
+
     ;
 
     /**

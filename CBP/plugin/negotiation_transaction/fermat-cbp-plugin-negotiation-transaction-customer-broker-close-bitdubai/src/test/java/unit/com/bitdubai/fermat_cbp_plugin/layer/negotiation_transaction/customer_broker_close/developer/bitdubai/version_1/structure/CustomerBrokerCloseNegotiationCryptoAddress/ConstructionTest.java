@@ -1,12 +1,14 @@
 package unit.com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseNegotiationCryptoAddress;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseNegotiationCryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import org.junit.Before;
@@ -35,6 +37,12 @@ public class ConstructionTest {
     @Mock
     private WalletManagerManager walletManagerManager;
 
+    @Mock
+    private ErrorManager errorManager;
+
+    @Mock
+    private PluginVersionReference pluginVersionReference;
+
     private CustomerBrokerCloseNegotiationCryptoAddress testObj1;
 
     @Before
@@ -43,7 +51,9 @@ public class ConstructionTest {
         testObj1 = new CustomerBrokerCloseNegotiationCryptoAddress(
             cryptoAddressBookManager,
             cryptoVaultManager,
-            walletManagerManager
+            walletManagerManager,
+            errorManager,
+            pluginVersionReference
         );
 
     }

@@ -17,13 +17,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransaction;
-import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionParameters;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.deposit.developer.bitdubai.version_1.exceptions.CantGetDepositTransactionException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.deposit.developer.bitdubai.version_1.exceptions.CantInitializeDepositCashMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.deposit.developer.bitdubai.version_1.exceptions.DepositCashMoneyTransactionInconsistentTableStateException;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.deposit.developer.bitdubai.version_1.structure.CashDepositTransactionImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class DepositCashMoneyTransactionDao {
 
 
 
-    public CashDepositTransaction createCashDepositTransaction(CashDepositTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
+    public CashDepositTransaction createCashDepositTransaction(CashTransactionParameters depositParameters) throws CantCreateDepositTransactionException {
 
         DatabaseTable transactionTable = this.database.getTable(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TABLE_NAME);
         DatabaseTableRecord newRecord = transactionTable.getEmptyRecord();
@@ -155,7 +155,7 @@ public class DepositCashMoneyTransactionDao {
     }
 
 
-    private void newDepositTransactionRecord(DatabaseTableRecord newRecord, CashDepositTransactionParameters depositParameters) {
+    private void newDepositTransactionRecord(DatabaseTableRecord newRecord, CashTransactionParameters depositParameters) {
 
         newRecord.setUUIDValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_TRANSACTION_ID_COLUMN_NAME, depositParameters.getTransactionId());
         newRecord.setStringValue(DepositCashMoneyTransactionDatabaseConstants.DEPOSIT_WALLET_PUBLIC_KEY_COLUMN_NAME, depositParameters.getPublicKeyWallet());

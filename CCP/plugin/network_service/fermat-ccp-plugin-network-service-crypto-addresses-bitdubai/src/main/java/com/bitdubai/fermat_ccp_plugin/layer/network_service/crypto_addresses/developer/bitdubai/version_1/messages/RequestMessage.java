@@ -19,7 +19,6 @@ import java.util.UUID;
  */
 public class RequestMessage extends NetworkServiceMessage {
 
-    private final UUID                  requestId                  ;
     private final CryptoCurrency        cryptoCurrency             ;
     private final Actors                identityTypeRequesting     ;
     private final Actors                identityTypeResponding     ;
@@ -27,6 +26,7 @@ public class RequestMessage extends NetworkServiceMessage {
     private final String                identityPublicKeyResponding;
     private final CryptoAddressDealers  cryptoAddressDealer        ;
     private final BlockchainNetworkType blockchainNetworkType      ;
+    private final String walletPublicKey;
 
     public RequestMessage(final UUID                  requestId                  ,
                           final CryptoCurrency        cryptoCurrency             ,
@@ -35,11 +35,11 @@ public class RequestMessage extends NetworkServiceMessage {
                           final String                identityPublicKeyRequesting,
                           final String                identityPublicKeyResponding,
                           final CryptoAddressDealers  cryptoAddressDealer        ,
-                          final BlockchainNetworkType blockchainNetworkType      ) {
+                          final BlockchainNetworkType blockchainNetworkType      ,
+                          final String walletPublicKey) {
 
-        super(MessageTypes.REQUEST);
+        super(requestId,MessageTypes.REQUEST,identityPublicKeyResponding,identityPublicKeyRequesting);
 
-        this.requestId                   = requestId                  ;
         this.cryptoCurrency              = cryptoCurrency             ;
         this.identityTypeRequesting      = identityTypeRequesting     ;
         this.identityTypeResponding      = identityTypeResponding     ;
@@ -47,10 +47,7 @@ public class RequestMessage extends NetworkServiceMessage {
         this.identityPublicKeyResponding = identityPublicKeyResponding;
         this.cryptoAddressDealer         = cryptoAddressDealer        ;
         this.blockchainNetworkType       = blockchainNetworkType      ;
-    }
-
-    public UUID getRequestId() {
-        return requestId;
+        this.walletPublicKey = walletPublicKey;
     }
 
     public CryptoCurrency getCryptoCurrency() {
@@ -81,10 +78,14 @@ public class RequestMessage extends NetworkServiceMessage {
         return blockchainNetworkType;
     }
 
+    public String getWalletPublicKey() {
+        return walletPublicKey;
+    }
+
     @Override
     public String toString() {
         return "RequestMessage{" +
-                "requestId=" + requestId +
+                "requestId=" + getRequestId() +
                 ", cryptoCurrency=" + cryptoCurrency +
                 ", identityTypeRequesting=" + identityTypeRequesting +
                 ", identityTypeResponding=" + identityTypeResponding +

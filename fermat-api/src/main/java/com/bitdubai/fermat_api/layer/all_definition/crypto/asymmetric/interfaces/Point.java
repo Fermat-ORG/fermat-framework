@@ -3,10 +3,10 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interface
 import java.math.BigInteger;
 
 public interface Point {
-	public BigInteger getX();
-	public BigInteger getY();
-	public String toUncompressedString();
-	public String toCompressedString();
-	public boolean equals(Object obj);
-	public int hashCode();
+	BigInteger getX();
+	BigInteger getY();
+	String toUncompressedString();
+	String toCompressedString();
+	boolean equals(Object obj);
+	int hashCode();
 }

@@ -8,9 +8,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
  */
 public interface PluginLicensor {
     
-    public int getAmountToPay();
-    public CryptoCurrency getCryptoCurrency();
-    public String getAddress();
-    public TimeFrequency getTimePeriod();
+    int getAmountToPay();
+    CryptoCurrency getCryptoCurrency();
+    String getAddress();
+    TimeFrequency getTimePeriod();
 
 }

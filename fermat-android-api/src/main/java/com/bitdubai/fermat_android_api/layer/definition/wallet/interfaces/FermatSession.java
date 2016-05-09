@@ -2,8 +2,7 @@ package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 
@@ -17,14 +16,14 @@ public interface FermatSession<A extends FermatApp,M extends ModuleManager>{
      * @param key
      * @param object
      */
-    public void setData (String key,Object object);
+    void setData(String key, Object object);
 
     /**
      *
      * @param key
      * @return
      */
-    public Object getData (String key);
+    Object getData(String key);
 
     /**
      *
@@ -35,7 +34,7 @@ public interface FermatSession<A extends FermatApp,M extends ModuleManager>{
      *
      * @return
      */
-    public ErrorManager getErrorManager();
+    ErrorManager getErrorManager();
 
 
     String getAppPublicKey();
@@ -54,5 +53,10 @@ public interface FermatSession<A extends FermatApp,M extends ModuleManager>{
      * Devuelve el module manager
      */
     M getModuleManager();
+
+    /**
+     *  Devuelve la identidad activa
+     */
+    //I getIdentity();
 
 }

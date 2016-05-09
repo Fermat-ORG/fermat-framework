@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime;
 
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
 
@@ -16,7 +16,7 @@ public interface SubAppRuntimeManager extends RuntimeManager {
      * @return Wallet in use
      */
 
-    public SubApp getLastSubApp ();
+    SubApp getLastApp();
 
     /**
      *  Search SubApp in the subApp installed list
@@ -33,8 +33,8 @@ public interface SubAppRuntimeManager extends RuntimeManager {
      * @return SubApp HomeScreen
      */
 
-    public SubApp getSubAppByPublicKey(String subAppPublicKey);
+    SubApp getSubAppByPublicKey(String subAppPublicKey);
 
 
-
+    void recordNAvigationStructure(FermatStructure fermatStructure);
 }

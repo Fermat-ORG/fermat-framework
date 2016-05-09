@@ -1,5 +1,6 @@
 package com.bitdubai.sub_app.intra_user_community.common.popups;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserC
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
@@ -24,6 +25,7 @@ import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
  * Created by Joaquin C on 12/11/15.
  * Modified by Jose Manuel De Sousa 08/12/2015
  */
+@SuppressWarnings("FieldCanBeLocal")
 public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
@@ -51,6 +53,7 @@ public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppRes
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

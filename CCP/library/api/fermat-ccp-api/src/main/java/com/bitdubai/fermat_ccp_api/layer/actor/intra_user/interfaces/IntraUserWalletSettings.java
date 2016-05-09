@@ -3,10 +3,13 @@ package com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
+import java.io.Serializable;
+
 /**
  * Created by Joaquin C. on 05/01/16.
  */
-public class IntraUserWalletSettings  implements FermatSettings {
+public class IntraUserWalletSettings  implements FermatSettings,Serializable {
+
 
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;

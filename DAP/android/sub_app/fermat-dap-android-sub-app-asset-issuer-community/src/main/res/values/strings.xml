@@ -1,0 +1,56 @@
+<resources>
+    <string name="app_name">fermat-dap-android-sub-app-asset-issuer-community-bitdubai</string>
+    <string name="connect">Connect</string>
+    <string name="select_all">Select All</string>
+    <string name="unselect_all">Unselect All</string>
+
+
+    <string name="help">Help</string>
+
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="status_connecting">Connecting</string>
+    <string name="loading_connections">Loading Connections</string>
+    <string name="status_denied">Connection Denied</string>
+    <string name="status_canceled">Connection Canceled</string>
+
+    <string name="dap_other_profile_last_connection_date">Last Connection Date</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_issuer_community_welcome_subTitle">Welcome to the Asset Issuer Community.</string>
+    <string name="dap_issuer_community_welcome_body">This application will help you discover and connect to Asset Issuers registered in our network.!\n\nIf you are identified as a Redeem Point, you will need to connect to Assets Issuers in order to get approval to redeem assets created by that Asset Issuer.\n\nSelect any available Asset Issuer and click connect to start the process. If your network speed is low, you may have to retry several times.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Settings Notifications Help - Init-->
+    <string name="dap_issuer_community_settings_notification_subTitle">Welcome to the settings notification screen.</string>
+    <string name="dap_issuer_community_settings_notification_body">Here you can edit your notification settings configurations.</string>
+    <!--Dialog Settings Notifications Help - End-->
+
+    <string name="dap_issuer_community_opps_system_error">Oooops! recovering from system error</string>
+    <string name="dap_issuer_community_system_error">Issuer Community system error</string>
+
+
+    <string name="none">None</string>
+    <string name="disconnected">Disconnected</string>
+
+
+       <string name="connection_request">The connection request has been sent\n
+ you need to wait until the user responds</string>
+    <string name="connection_request_send">Connection request sent</string>
+    <string name="connection_rejected">The connection request has been rejected</string>
+    <string name="connection_success">The connection was accepted successfully.\n It can not be unmade</string>
+    <string name="connection_request_title">Connection Request</string>
+    <string name="connection_request_desc">Do you want to send </string>
+    <string name="connection_request_accept"> Do you want to accept</string>
+    <string name="connection_request_accepted"> Accepted connection request</string>
+    <string name="connection_request_deny"> Deny connection request</string>
+
+    <string name="connection_request_desc_two">a connection request</string>
+    <string name="create_before_action">Redeem Point or Asset Issuer Identities must be created before using this app.</string>
+    <string name="before_action">Redeem Point Identity must be created before action.</string>
+    <string name="no_issuers_selected">No Issuers selected to Connect</string>
+    <string name="connecting">Connecting please wait...</string>
+
+
+
+</resources>

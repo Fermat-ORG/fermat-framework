@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
 /**
@@ -25,7 +24,7 @@ public interface NetworkServiceConnectionManager {
      *
      * @param remotePlatformComponentProfile the remote PlatformComponentProfile
      */
-    public void connectTo(PlatformComponentProfile remotePlatformComponentProfile);
+    void connectTo(PlatformComponentProfile remotePlatformComponentProfile);
 
     /**
      * Create a new connection to from another platform component type, it is mean tha the who made the request is not a network service
@@ -34,7 +33,7 @@ public interface NetworkServiceConnectionManager {
      * @param applicantNetworkService the profile of the network service which it makes the request
      * @param remoteParticipant the remote participant of the vpn
      */
-    public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws FermatException;
+    void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws FermatException;
 
 
     /**
@@ -42,13 +41,13 @@ public interface NetworkServiceConnectionManager {
      *
      * @param remoteNetworkServicePublicKey he remote network service public key
      */
-    public void closeConnection(String remoteNetworkServicePublicKey);
+    void closeConnection(String remoteNetworkServicePublicKey);
 
 
     /**
      * Close all previous connections
      */
-    public void closeAllConnection();
+    void closeAllConnection();
 
 
     /**
@@ -57,5 +56,15 @@ public interface NetworkServiceConnectionManager {
      * @param remoteNetworkServicePublicKey the remote network service public key
      * @return NetworkServiceLocal the local instance that represent
      */
-    public NetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey);
+    NetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey);
+
+    /*
+     * Stop the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    void stop();
+
+    /*
+     * restart the internal threads of the CommunicationNetworkServiceRemoteAgent
+     */
+    void restart();
 }

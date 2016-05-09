@@ -27,14 +27,19 @@
         <layer name="Contract" language="java"></layer>
         <layer name="Negotiation" language="java"></layer>
         <layer name="Composite Wallet" language="java"></layer>
+	<layer name="Song Wallet" language="java"></layer>
         <layer name="Wallet" language="java"></layer>
         <layer name="World" language="java"></layer>
         <layer name="Identity" language="java"></layer>
         <layer name="Actor Connection" language="java"></layer>
         <layer name="Actor Network Service" language="java"></layer>
         <layer name="Network Service" language="java"></layer>
+	<layer name="External API" language="java"></layer>
         <!-- separator or empty layer -->
+        <layer name="Search" language="java" super_layer="CER"></layer>
         <layer name="Provider" language="java" super_layer="CER"></layer>
+        <!-- separator or empty layer -->
+        <layer name="World API" language="java" super_layer="WRD"></layer>
         <!-- separator or empty layer -->
         <layer name="Communication" language="java" super_layer="P2P"></layer>
         <!-- separator or empty layer -->
@@ -81,8 +86,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="implementation" percentage="70"></author>
-                            <author name="furszy" scope="implementation" percentage="30"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
                             <maintainer name="furszy"></maintainer>
@@ -373,7 +377,7 @@
                     <android name="Sub App Manager" description="" difficulty="3" code-level="production">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
                             <author name="furszy" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
@@ -789,11 +793,11 @@
         <platform code="CHT" name="Chat Platform" logo="" dependsOn="PIP">
             <layer name="Sub App" language="java-android">
                 <androids>
-                    <android name="Chat" description="" difficulty="4" code-level="concept">
+                    <android name="Chat Sub App" description="" difficulty="4" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="josejcb" scope="implementation" percentage="0"></author>
+                            <author name="josejcb" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -802,11 +806,11 @@
             </layer>
             <layer name="Sub App Module" language="java">
                 <plugins>
-                    <plugin name="Chat" description="" difficulty="4" code-level="concept">
+                    <plugin name="Chat Sub App Module" description="" difficulty="4" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="josejcb" scope="implementation" percentage="0"></author>
+                            <author name="josejcb" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -815,11 +819,11 @@
             </layer>
             <layer name="Middleware" language="java">
                 <plugins>
-                    <plugin name="Chat" description="" difficulty="10" code-level="concept">
+                    <plugin name="Chat Middleware" description="" difficulty="10" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="lostwood" scope="implementation" percentage="0"></author>
+                            <author name="lostwood" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -828,11 +832,11 @@
             </layer>
             <layer name="Network Service" language="java">
                 <plugins>
-                    <plugin name="Transaction Transmission" description="" difficulty="8" code-level="concept">
+                    <plugin name="Chat Network Service" description="" difficulty="8" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="GaboHub" scope="implementation" percentage="0"></author>
+                            <author name="GaboHub" scope="implementation" percentage="90"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -1154,6 +1158,21 @@
                     </android>
                 </androids>
             </layer>
+            <layer name="Wallets">
+                <androids>
+                    <android name="Bitcoin wallet" description="" difficulty="4" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
+            </layer>
             <layer name="Wallet Module" language="java">
                 <plugins>
                     <plugin name="Crypto Wallet" description="" difficulty="6" code-level="qa">
@@ -1331,6 +1350,20 @@
                             <certification signed-by="EzequielPostan" type="implementation"></certification>
                         </certifications>
                     </plugin>
+                    
+                    <plugin name="Outgoing Draft Transaction" description="" difficulty="10" code-level="qa">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification signed-by="furszy" type="implementation"></certification>
+                        </certifications>
+                    </plugin>
                     <plugin name="Inter Account" description="" difficulty="0" code-level="concept">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -1497,7 +1530,7 @@
                             <author name="furszy" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers>
-                            <maintainer name="lnacosta"></maintainer>
+                            <maintainer name="furszy"></maintainer>
                         </maintainers>
                         <certifications> </certifications>
                     </plugin>
@@ -2065,7 +2098,7 @@
             </layer>
             <layer name="Sub App">
                 <androids>
-                    <android name="Asset Factory" description="" difficulty="4" code-level="development">
+                    <android name="Asset Factory" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2076,7 +2109,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset Issuer Community" description="" difficulty="4" code-level="development">
+                    <android name="Asset Issuer Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2087,7 +2120,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset User Community" description="" difficulty="4" code-level="development">
+                    <android name="Asset User Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2098,7 +2131,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Redeem Point Community" description="" difficulty="4" code-level="development">
+                    <android name="Redeem Point Community" description="" difficulty="4" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2109,7 +2142,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset Issuer Identity" description="" difficulty="3" code-level="development">
+                    <android name="Asset Issuer Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2120,7 +2153,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="Asset User Identity" description="" difficulty="3" code-level="development">
+                    <android name="Asset User Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2131,7 +2164,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </android>
-                    <android name="RedeemPoint Identity" description="" difficulty="3" code-level="development">
+                    <android name="Redeem Point Identity" description="" difficulty="3" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -2374,6 +2407,33 @@
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
                             <author name="darkestpriest" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Transfer" description="" difficulty="5" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Buyer" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Asset Seller" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="yayotron" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -2688,6 +2748,181 @@
                     </plugin>
                 </plugins>
             </layer>
+        </platform>
+	<platform code="TKY" name="Tokenly Platform" logo="" dependsOn="MKT">
+            <layer name="Reference Wallet">
+                <androids>
+                    <android name="Fan Wallet" description="" difficulty="6" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="lostwood" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
+            </layer>
+        </platform>
+	<platform code="ART" name="Artist Platform" logo="" dependsOn="DAP">
+	    <layer name="Sub App">
+                <androids>
+                    <android name="Artist Community" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                    <android name="Fan Community" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                    <android name="Artist Identity" description="" difficulty="3" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </android>
+                    <android name="Fan Identity" description="" difficulty="3" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="juanaso" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+			</maintainers>
+                        <certifications> </certifications>
+                    </android>
+                </androids>
+            </layer>	
+            <layer name="Wallet Module" language="java">
+                <plugins>
+                    <plugin name="Fan Wallet" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+	    <layer name="Sub App Module" language="java">
+                <plugins>
+                    <plugin name="Fan Community" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Artist Community" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+		    <plugin name="Fan Identity" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Artist Identity" description="" difficulty="2" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="alexanderejm" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+            <layer name="Wallet" language="java">
+                <plugins>
+                    <plugin name="Fan Wallet" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+	    <layer name="Identity" language="java">
+                <plugins>
+                    <plugin name="Artist" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Fan" description="" difficulty="4" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+	    <layer name="Actor Network Service" language="java">
+                <plugins>
+                    <plugin name="Artist" description="" difficulty="8" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="gabohub" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                    <plugin name="Fan" description="" difficulty="8" code-level="concept">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="gabohub" scope="implementation" percentage="0"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+	    </layer>
         </platform>
         <platform code="CSH" name="Cash Handling Platform" logo="CSH_logo.png" dependsOn="WPD">
             <layer name="Reference Wallet">
@@ -3413,7 +3648,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="yalayn" scope="implementation" percentage="100"></author>
+                            <author name="franklinmarcano1970" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -3988,13 +4223,37 @@
     </platforms>
     <super_layers>
         <super_layer code="CER" name="Currency Exchange Rates" dependsOn="COR">
-            <layer name="Provider" language="java">
+            <layer name="Search" language="java">
                 <plugins>
-                    <plugin name="Dolar Today" description="" difficulty="5" code-level="development">
+                    <plugin name="Provider Filter" description="" difficulty="10" code-level="production">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="abicelis"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>
+            <layer name="Provider" language="java">
+            	<plugins>
+                    <plugin name="Bitcoin Venezuela" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers> </maintainers>
+                        <certifications> </certifications>
+                    </plugin>                    
+                    <plugin name="DolarToday" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4003,7 +4262,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4012,7 +4271,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4021,7 +4280,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4030,16 +4289,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
-                        </authors>
-                        <maintainers> </maintainers>
-                        <certifications> </certifications>
-                    </plugin>
-                    <plugin name="SurBitcoin" description="" difficulty="5" code-level="development">
-                        <authors>
-                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
-                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="100"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4048,7 +4298,7 @@
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
-                            <author name="abicelis" scope="implementation" percentage="10"></author>
+                            <author name="abicelis" scope="implementation" percentage="0"></author>
                         </authors>
                         <maintainers> </maintainers>
                         <certifications> </certifications>
@@ -4056,7 +4306,24 @@
                 </plugins>
             </layer>
         </super_layer>
-        <super_layer code="P2P" name="Peer to Peer Network" dependsOn="OSA">
+	<super_layer code="WRD" name="World" dependsOn="COR">
+            <layer name="World API" language="java">
+                <plugins>
+                    <plugin name="Tokenly" description="" difficulty="10" code-level="development">
+                        <authors>
+                            <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
+                            <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
+                            <author name="darkestpriest" scope="implementation" percentage="10"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="darkestpriest"></maintainer>
+                        </maintainers>
+                        <certifications> </certifications>
+                    </plugin>
+                </plugins>
+            </layer>            
+        </super_layer>        
+	<super_layer code="P2P" name="Peer to Peer Network" dependsOn="OSA">
             <layer name="Communication" language="java">
                 <plugins>
                     <plugin name="Cloud Client" description="" difficulty="10" code-level="production">
@@ -4174,7 +4441,7 @@
             </layer>
             <layer name="Crypto Vault" language="java">
                 <plugins>
-                    <plugin name="Bitcoin Currency" description="" difficulty="10" code-level="development">
+                    <plugin name="Bitcoin Currency" description="" difficulty="10" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4196,7 +4463,7 @@
                         </maintainers>
                         <certifications> </certifications>
                     </plugin>
-                    <plugin name="Bitcoin Watch Only" description="" difficulty="10" code-level="development">
+                    <plugin name="Bitcoin Watch Only" description="" difficulty="10" code-level="qa">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
                             <author name="Luis-Fernando-Molina" scope="design" percentage="100"></author>
@@ -4344,6 +4611,19 @@
                             <certification type="testing" signed-by="jorgeejgonzalez"></certification>
                         </certifications>
                     </addon>
+                    <addon name="Broadcaster" description="" difficulty="5" code-level="production">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification type="implementation" signed-by="furszy"></certification>
+                        </certifications>
+                    </addon>
                     <addon name="Logger" description="" difficulty="4" code-level="production">
                         <authors>
                             <author name="Luis-Fernando-Molina" scope="architecture" percentage="100"></author>
@@ -4365,6 +4645,19 @@
                             <maintainer name="nattyco"></maintainer>
                         </maintainers>
                         <certifications> </certifications>
+                    </addon>
+                    <addon name="Broadcaster" description="Is the connection between the platform and the outside world" difficulty="7" code-level="production">
+                        <authors>
+                            <author name="furszy" scope="architecture" percentage="100"></author>
+                            <author name="furszy" scope="design" percentage="100"></author>
+                            <author name="furszy" scope="implementation" percentage="100"></author>
+                        </authors>
+                        <maintainers>
+                            <maintainer name="furszy"></maintainer>
+                        </maintainers>
+                        <certifications>
+                            <certification type="implementation" signed-by="furszy"></certification>
+                        </certifications>
                     </addon>
                     <addon name="Device Connectivity" description="" difficulty="0" code-level="concept">
                         <authors>
@@ -4409,57 +4702,77 @@
         </super_layer>
     </super_layers>
     <processes>
-        <process platform="DAP" name="Digital Asset Platform" description="" previous="">
-            <step id="0" type="start" title="Asset Issuer - Reference Wallet" description="Represents UI Android for job with wallet" platform="DAP" superlayer="" layer="Reference Wallet" name="Asset Issuer">
-                <next>
-                    <step id="1" type="direct call"></step>
-                </next>
-            </step>
-            <step id="1" type="activity" title="Asset Factory" description="Represents UI Android for creation the Asset" platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
-                <next>
-                    <step id="2" type="direct call"></step>
-                </next>
-            </step>
-            <step id="2" type="activity" title="Asset Issuer - Wallet Module" description="" platform="DAP" superlayer="Connection layer and the representation of the business layer" component="Plugin" layer="Wallet Module" name="Asset Issuer">
-                <next>
-                    <step id="3" type="direct call"></step>
-                </next>
-            </step>
-            <step id="3" type="activity" title="Asset Factory" description="" platform="DAP" superlayer="Connection layer and the representation of the business layer" component="Plugin" layer="Sub App Module" name="Asset Factory">
-                <next>
-                    <step id="4" type="direct call"></step>
-                </next>
-            </step>
-            <step id="4" type="activity" title="Asset Issuer - Actor" description="" platform="DAP" superlayer="Connection layer and the representation of the business layer" component="Plugin" layer="Actor" name="Asset Issuer">
-                <next>
-                    <step id="5" type="direct call"></step>
-                </next>
-            </step>
-            <step id="5" type="activity" title="Asset Factory" description="" platform="DAP" superlayer="Interlayer for the implementation of the Asset Factory" component="Plugin" layer="Middleware" name="Asset Factory">
-                <next>
-                    <step id="6" type="direct call"></step>
-                </next>
-            </step>
-            <step id="6" type="activity" title="Asset Issuer - Wallet" description="" platform="DAP" superlayer="Implementation Logic the Wallet" component="Plugin" layer="Wallet" name="Asset Issuer Wallet">
-                <next>
-                    <step id="7" type="direct call"></step>
-                </next>
-            </step>
-            <step id="7" type="activity" title="Asset Issuer - Identity" description="" platform="DAP" superlayer="Implementation Logic the Identity" component="Plugin" layer="Identity" name="Asset Issuer Identity">
-                <next>
-                    <step id="8" type="direct call"></step>
-                </next>
-            </step>
-            <step id="8" type="activity" title="Asset Issuer - Actor Network Service" description="" platform="DAP" superlayer="Layer comunication" component="Plugin" layer="Actor Network Service" name="Asset Issuer Actor Network Service">
-                <next>
-                    <step id="9" type="direct call"></step>
-                </next>
-            </step>
-            <step id="9" type="activity" title="Asset Transmission - Network Service" description="" platform="DAP" superlayer="Layer comunication" component="Plugin" layer="Network Service" name="Asset Transmission Network Service">
-                <next>
-                    <step id="9" type="direct call"></step>
-                </next>
-            </step>
+        <process platform="DAP" name="Asset Transmission" description="Describes the process of transmitting an asset from and to an specific actor. The process involves delivering metadata, crypto transactions and statistics." previous="">
+            <steps>
+                <step id="0" type="start" title="Device A. Process Start" description="User selects Transmission operation to execute. Valids are: Asset Transfer \b Asset Redemption \b Asset Distribution." platform="DAP" superlayer="" layer="Wallet Module" name="Asset User">
+                    <next>
+                        <step id="1" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="1" type="activity" title="Device A. Creation of Transaction" description="New Business Transaction is created in Asset Transmission" platform="DAP" superlayer="" layer="Business Transaction" name="Asset Transmission">
+                    <next>
+                        <step id="2" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="2" type="activity" title="Device A. Contract Creation" description="New Contract is created defining Digital Asset Properties." platform="DAP" superlayer="" layer="Contract" name="Asset Transmission">
+                    <next>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="3" type="activity" title="Device A. Transaction Timeout definition" description="Time out agent is subscribed to start monitoring elapsed time and rollback if time limit is reached.." platform="PIP" superlayer="" layer="System Transaction" name="Timeout Notifier">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="4" type="activity" title="Device A. Asset blocking" description="The asset is blocked so more operations are permitted for this asset." platform="DAP" superlayer="" layer="Stock Transactions" name="Asset Block">
+                    <next>
+                        <step id="5" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="5" type="activity" title="Device A. Sends Asset Metadata" description="An Outgoing Asset Metadata is prepared to be send to the corresponding actor." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Outgoing Asset Metadata">
+                    <next>
+                        <step id="6" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="6" type="activity" title="Device A. Delivers Metadata on P2P" description="We send the metadata over the network. NS retries are defined in the contract of this transaction." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="7" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="7" type="activity" title="Device A. Statistics are stored." description="Initial Asset Transmission statistics are stored with asset and actor information." platform="DAP" superlayer="" layer="Statistics Transaction" name="Asset Transmission">
+                    <next>
+                        <step id="8" type="direct call"></step>
+                        <step id="3" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="8" type="activity" title="Device B. Receives metadata from P2P" description="New metadata is received by NS and event trigger to notify upper layers." platform="DAP" superlayer="" layer="Network Service" name="Asset Transmission">
+                    <next>
+                        <step id="9" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="9" type="activity" title="Device B. Incoming Metadata detected" description="We received the send metadata and is locally stored. New local contract will be stored." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Incoming Asset Metadata">
+                    <next>
+                        <step id="10" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="10" type="activity" title="Device B. New contract is created." description="The received metadata is stored as a new contract." platform="DAP" superlayer="" layer="Contract" name="Asset Transmission">
+                    <next>
+                        <step id="11" type="direct call"></step>
+                    </next>
+                </step>
+                <step id="11" type="activity" title="Device B. Contract is validated." description="The contract properties are validated to confirm if we are ok to receive the new asset or not.." platform="DAP" superlayer="" layer="Sub App" name="Asset Factory">
+                    <next>
+                    </next>
+                </step>
+                <step id="20" type="activity" title="Process Interrupted" description="A validation did not pass, or error was thrown. We rollback the process and Asset is again editable." platform="DAP" superlayer="" layer="Digital Asset Transaction" name="Asset Issuing">
+                    <next>
+                        <step id="4" type="direct call"></step>
+                    </next>
+                </step>
+            </steps>
         </process>
         <process platform="CBP" name="Crypto Broker Reference Wallet Installation" description="Wallet Store installation procedure for the Crypto Broker Reference Wallet" previous="">
             <steps>
@@ -4848,17 +5161,17 @@
                         <step id="3" type="direct call" name="Bank Money Restock"></step>
                     </next>
                 </step>
-                <step id="4" title="CBP-Business Transaction-Bank Money Restock" description="The transactional agent start to review the records according to the transaction status to proceed with the flow." type="activity" platform="CBP" name="Bank Money Restock" layer="Stock Transactions" component="Plugin">
+                <step id="3" title="CBP-Business Transaction-Bank Money Restock" description="The transactional agent start to review the records according to the transaction status to proceed with the flow." type="activity" platform="CBP" name="Bank Money Restock" layer="Stock Transactions" component="Plugin">
                     <next>
-                        <step id="5" type="direct call" name="Hold"></step>
+                        <step id="4" type="direct call" name="Hold"></step>
                     </next>
                 </step>
-                <step id="5" title="BNK-Bank Hold Transaction" description="Records the transaction and generates a debit to the Available Balance." type="activity" platform="BNK" name="Hold" layer="Bank Money Transaction" component="Plugin">
+                <step id="4" title="BNK-Bank Hold Transaction" description="Records the transaction and generates a debit to the Available Balance." type="activity" platform="BNK" name="Hold" layer="Bank Money Transaction" component="Plugin">
                     <next>
-                        <step id="6" type="direct call" name="Crypto Broker"></step>
+                        <step id="5" type="direct call" name="Crypto Broker"></step>
                     </next>
                 </step>
-                <step id="6" title="CBP-Wallet-Crypto Broker" description="Booked and credit records Available" type="activity" platform="CBP" name="Crypto Broker" layer="Wallet" component="Plugin"> </step>
+                <step id="5" title="CBP-Wallet-Crypto Broker" description="Booked and credit records Available" type="activity" platform="CBP" name="Crypto Broker" layer="Wallet" component="Plugin"> </step>
             </steps>
         </process>
         <process platform="CBP" name="Bank Account Destock">
@@ -6146,107 +6459,994 @@
                 <step id="3" type="activity" title="Tries to unhold available funds" description="Processes the unhold request by making a debit on the available balance of the cash wallet" component="plugin" platform="CSH" superlayer="" layer="Wallet" name="Cash Money"> </step>
             </steps>
         </process>
-        <process platform="CCP" name="Payment Request to Intra user" description="A Wallet's Intra User sends a payment request to another intra user contact to request payment for a specific amount." previous="List Wallet Contacts">
-            <steps>
-                <step id="0" type="start" title="Select Intra User contact and submit payment request" description="The customer selects a contact from the list and submits the payment request." platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet">
-                    <next>
-                        <step id="1" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="1" type="activity" title="Route request to network service" description="The module routes this payment request to the Crypto Payment Request Plugin to reach the selected intra user." platform="CCP" superlayer="" component="Plugin" layer="Wallet Module" name="Crypto Wallet">
-                    <next>
-                        <step id="2" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="2" type="activity" title="Route request to network service" description="The module routes this payment request to the network service to reach the selected intra user." platform="CCP" superlayer="" component="Plugin" layer="Request" name="Crypto Payment Request">
-                    <next>
-                        <step id="3" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="3" type="activity" title="Call the intra user to deliver the payment request" description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network." platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="4" type="communication" title="Transport request" description="The payment request is transported through the communication layer and one of the available channels." platform="" superlayer="P2P" layer="communication" name="Communication Layer">
-                    <next>
-                        <step id="5" type="fermat message"></step>
-                    </next>
-                </step>
-                <step id="5" type="activity" title="Receive the payment request" description="The network service receives the payment request and informs that to Request Crypto Payment Plugin." platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
-                    <next>
-                        <step id="6" type="event"></step>
-                    </next>
-                </step>
-                <step id="6" type="activity" title="Records the request" description="The payment request is saved with the type received and associated to intra user actor ." platform="CCP" superlayer="" component="Plugin" layer="Request" name="Crypto Payment">
-                    <next>
-                        <step id="7" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="7" type="activity" title="Return payment request list" description="The module returns the payement request receive list." platform="CCP" superlayer="" component="Plugin" layer="Wallet Module" name="Crypto Wallet">
-                    <next>
-                        <step id="8" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="8" type="end" title="List Received Payment Request" description="The wallet's user go to Payment Request menu and list payment request receive." platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet"> </step>
-            </steps>
-        </process>
-        <process platform="CCP" name="Refuse Payment Request from Intra user" description="A Wallet's Intra User refuse a payment request sent by another actor." previous="List Payment Request">
-            <steps>
-                <step id="0" type="start" title="Select payment request record to refuse " description="The actor selects a payment request from the list and press deny button." platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet">
-                    <next>
-                        <step id="1" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="1" type="activity" title="Route request to payment request plugin" description="The module routes this payment request refuse to the Crypto Payment Request Plugin to reach the selected intra user." platform="CCP" superlayer="" component="Plugin" layer="Wallet Module" name="Crypto Wallet">
-                    <next>
-                        <step id="2" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="2" type="activity" title="Route refuse to network service" description="The module routes this refuse to the network service to reach the selected intra user." platform="CCP" superlayer="" component="Plugin" layer="Request" name="Crypto Payment Request">
-                    <next>
-                        <step id="3" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="3" type="activity" title="Call the intra user to deliver the refuse" description="The network service places a call to the intra user and then it delivers the refuse via the Fermat network." platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
-                    <next>
-                        <step id="4" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="4" type="communication" title="Transport request" description="The payment request is transported through the communication layer and one of the available channels." platform="" superlayer="P2P" layer="communication" name="Communication Layer">
-                    <next>
-                        <step id="5" type="fermat message"></step>
-                    </next>
-                </step>
-                <step id="5" type="activity" title="Receive the payment request" description="The network service receives the refuse and informs that to Request Crypto Payment Plugin." platform="CCP" superlayer="" component="Plugin" layer="Network Service" name="Crypto Payment Request">
-                    <next>
-                        <step id="6" type="event"></step>
-                    </next>
-                </step>
-                <step id="6" type="activity" title="Update the request status" description="The payment request is update with the status deny." platform="CCP" superlayer="" component="Plugin" layer="Request" name="Crypto Payment">
-                    <next>
-                        <step id="7" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="7" type="activity" title="Return payment request send list" description="The module returns the payement request send list." platform="CCP" superlayer="" component="Plugin" layer="Wallet Module" name="Crypto Wallet">
-                    <next>
-                        <step id="8" type="direct call"></step>
-                    </next>
-                </step>
-                <step id="8" type="end" title="List Send Payment Request" description="The wallet's user go to Payment Request menu and list payment request send, and show this status." platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet"> </step>
-            </steps>
-        </process>
+        <process platform="CCP" name="Send Crypto to Intra user" description="A Wallet's Intra User sends a crypto to another intra user contact for a specific amount." previous="List Wallet Contacts">
+     <steps>
+         <step id="0"
+             type="start"
+             title="Select Intra User contact and send crypto"
+             description="The customer selects a contact from the list and press send button, then complete Send forms and confirms the operation."
+             platform="CCP"
+             superlayer=""
+             layer="Reference Wallet"
+             name="Bitcoin Wallet"
+             >
+             <next>
+                 <step id="1" type="direct call"></step>
+             </next>
+         </step>
+         <step id="1"
+             type="activity"
+             title="Route send crypto to outgoing intra user plugin"
+             description="The module sends it to the outgoing intra user plugin to create the crypto transaction."
+             platform="CCP"
+             superlayer=""
+             component="Plugin"
+             layer="Wallet Module"
+             name="Crypto Wallet"
+             >
+             <next>
+                 <step id="2" type="direct call"></step>
+             </next>
+         </step>
+         <step id="2"
+             type="activity"
+             title="Route send crypto metadata to network service"
+             description="The outgoing intra user plugin routes this crypto transaction to the crypto transmission network service to send metadata."
+             platform="CCP"
+             superlayer=""
+             component="Plugin"
+             layer="Crypto Transaction"
+             name="Outgoing Intra Actor"
+             >
+             <next>
+                 <step id="3" type="direct call"></step>
+             </next>
+         </step>
+         <step id="3"
+             type="activity"
+             title="Route send crypto to Crypto Bitcoin Vault"
+             description="The outgoing intra user plugin routes this crypto transaction to the Crypto Bitcoin Vault to send btc to another actor and debit amount to Available Balance."
+             platform="CCP"
+             superlayer=""
+             component="Plugin"
+             layer="Crypto Transaction"
+             name="Outgoing Intra Actor"
+             >
+             <next>
+                 <step id="4" type="direct call"></step>
+             </next>
+         </step>
+         <step id="4"
+             type="activity"
+             title="Send the crypto metadata"
+             description="The network service sends the crypto metadata and informs that to Incoming Intra User Plugin."
+             platform="CCP"
+             superlayer=""
+             component="Plugin"
+             layer="Network Service"
+             name="Crypto Transmission"
+             >
+             <next>
+                 <step id="5" type="event"></step>
+             </next>
+         </step>
+         <step id="5"
+             type="communication"
+             title="Transport request"
+             description="The send metadata is transported through the communication layer and one of the available channels."
+             platform=""
+             superlayer="P2P"
+             layer="communication"
+             name="Communication Layer"
+             >
+             <next>
+                 <step id="6" type="fermat message"></step>
+             </next>
+         </step>
+         <step id="6"
+             type="activity"
+             title="Receive the crypto metadata"
+             description="The network service receives the crypto metadata and informs that to Incoming Intra User Plugin."
+             platform="CCP"
+             superlayer=""
+             component="Plugin"
+             layer="Network Service"
+             name="Crypto Transmission"
+             >
+             <next>
+                 <step id="7" type="event"></step>
+             </next>
+         </step>
+ 
+         <step id="7"
+             type="activity"
+             title="Call the incoming intra user plugin to deliver the sends bitcoins"
+             description="The crypto network bitcoin places a call to the incoming intra user plugin and then it delivers the sends crypto."
+             platform="BCH"
+             superlayer=""
+             component="Plugin"
+             layer="Crypto Network"
+             name="Crypto Network Bitcoin"
+             >
+             <next>
+                 <step id="8" type="direct call"></step>
+             </next>
+         </step>
+         <step id="8"
+             type="activity"
+             title="Apply transaction"
+             description="The incoming intra user actor merge transaction metada with the bitcoin received and credited its on actor available balance."
+             platform="CCP"
+             superlayer=""
+             component="Plugin"
+             layer="Crypto Transaction"
+             name="Incoming Intra User"
+             >
+             <next>
+                 <step id="8" type="direct call"></step>
+             </next>
+         </step>
+         <step id="8"
+             type="end"
+             title="List Received Transaction"
+             description="The wallet's user go to Home menu and list receive transactions."
+             platform="CCP"
+             superlayer=""
+             layer="Reference Wallet"
+             name="Bitcoin Wallet"
+             >
+ 
+         </step>
+ 
+     </steps>
+ </process>
+ 	<process platform="CCP" name="Send Payment Request to Intra user" description="A Wallet's Intra User sends a payment request to another intra user contact to request payment for a specific amount." previous="List Wallet Contacts">
+ 	<steps>
+ 	    <step id="0"
+ 	        type="start"
+ 	        title="Select Intra User contact and submit payment request"
+ 	        description="The customer selects a contact from the list and submits the payment request."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        layer="Reference Wallet"
+ 	        name="Bitcoin Wallet"
+ 	        >
+ 	        <next>
+ 	            <step id="1" type="direct call"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="1"
+ 	        type="activity"
+ 	        title="Route Send to Outgoing Intra Actor Plugin"
+ 	        description="The module routes this crypto send to the Outgoing Intra Actor Plugin to send the actor selected."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        component="Plugin"
+ 	        layer="Wallet Module"
+ 	        name="Crypto Wallet"
+ 	        >
+ 	        <next>
+ 	            <step id="2" type="direct call"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="2"
+ 	        type="activity"
+ 	        title="Send metadata to network service"
+ 	        description="The Outgoing Intra Actor plugin routes the send metadata to the network service to send payment information to actor selected."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        component="Plugin"
+ 	        layer="Network Service"
+ 	        name="Crypto Payment"
+ 	        >
+ 	        <next>
+ 	            <step id="3" type="direct call"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="3"
+ 	        type="activity"
+ 	        title="Call the intra user to deliver the payment request"
+ 	        description="The network service places a call to the intra user and then it delivers the payment request via the Fermat network."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        component="Plugin"
+ 	        layer="Network Service"
+ 	        name="Crypto Payment Request"
+ 	        >
+ 	        <next>
+ 	            <step id="4" type="direct call"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="4"
+ 	        type="communication"
+ 	        title="Transport request"
+ 	        description="The payment request is transported through the communication layer and one of the available channels."
+ 	        platform=""
+ 	        superlayer="P2P"
+ 	        layer="communication"
+ 	        name="Communication Layer"
+ 	        >
+ 	        <next>
+ 	            <step id="5" type="fermat message"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="5"
+ 	        type="activity"
+ 	        title="Receive the payment request"
+ 	        description="The network service receives the payment request and informs that to Request Crypto Payment Plugin."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        component="Plugin"
+ 	        layer="Network Service"
+ 	        name="Crypto Payment Request"
+ 	        >
+ 	        <next>
+ 	            <step id="6" type="event"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="6"
+ 	        type="activity"
+ 	        title="Records the request"
+ 	        description="The payment request is saved with the type received and associated to intra user actor ."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        component="Plugin"
+ 	        layer="Request"
+ 	        name="Crypto Payment"
+ 	        >
+ 	        <next>
+ 	            <step id="7" type="direct call"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="7"
+ 	        type="activity"
+ 	        title="Return payment request list"
+ 	        description="The module returns the payement request receive list."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        component="Plugin"
+ 	        layer="Wallet Module"
+ 	        name="Crypto Wallet"
+ 	        >
+ 	        <next>
+ 	            <step id="8" type="direct call"></step>
+ 	        </next>
+ 	    </step>
+ 	    <step id="8"
+ 	        type="end"
+ 	        title="List Received Payment Request"
+ 	        description="The wallet's user go to Payment Request menu and list payment request receive."
+ 	        platform="CCP"
+ 	        superlayer=""
+ 	        layer="Reference Wallet"
+ 	        name="Bitcoin Wallet"
+ 	        >
+ 	
+ 	    </step>
+ 	
+ </steps>
+ </process>
+ 	<process platform="CCP" name="Refuse Payment Request from Intra user" description="A Wallet's Intra User refuse a payment request sent by another actor." previous="List Payment Request">
+ <steps>
+     <step id="0"
+         type="start"
+         title="Select payment request record to refuse "
+         description="The actor selects a payment request from the list and press deny button."
+         platform="CCP"
+         superlayer=""
+         layer="Reference Wallet"
+         name="Bitcoin Wallet"
+         >
+         <next>
+             <step id="1" type="direct call"></step>
+         </next>
+     </step>
+     <step id="1"
+         type="activity"
+         title="Route request to payment request plugin"
+         description="The module routes this payment request refuse to the Crypto Payment Request Plugin to reach the selected intra user."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Wallet Module"
+         name="Crypto Wallet"
+         >
+         <next>
+             <step id="2" type="direct call"></step>
+         </next>
+     </step>
+     <step id="2"
+         type="activity"
+         title="Route refuse to network service"
+         description="The module routes this refuse to the network service to reach the selected intra user."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Request"
+         name="Crypto Payment Request"
+         >
+         <next>
+             <step id="3" type="direct call"></step>
+         </next>
+     </step>
+     <step id="3"
+         type="activity"
+         title="Call the intra user to deliver the refuse"
+         description="The network service places a call to the intra user and then it delivers the refuse via the Fermat network."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Network Service"
+         name="Crypto Payment Request"
+         >
+         <next>
+             <step id="4" type="direct call"></step>
+         </next>
+     </step>
+     <step id="4"
+         type="communication"
+         title="Transport request"
+         description="The payment request is transported through the communication layer and one of the available channels."
+         platform=""
+         superlayer="P2P"
+         layer="communication"
+         name="Communication Layer"
+         >
+         <next>
+             <step id="5" type="fermat message"></step>
+         </next>
+     </step>
+     <step id="5"
+         type="activity"
+         title="Receive the payment request"
+         description="The network service receives the refuse and informs that to Request Crypto Payment Plugin."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Network Service"
+         name="Crypto Payment Request"
+         >
+         <next>
+             <step id="6" type="event"></step>
+         </next>
+     </step>
+     <step id="6"
+         type="activity"
+         title="Update the request status"
+         description="The payment request is update with the status deny."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Request"
+         name="Crypto Payment"
+         >
+         <next>
+             <step id="7" type="direct call"></step>
+         </next>
+     </step>
+     <step id="7"
+         type="activity"
+         title="Return payment request send list"
+         description="The module returns the payement request send list."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Wallet Module"
+         name="Crypto Wallet"
+         >
+         <next>
+             <step id="8" type="direct call"></step>
+         </next>
+     </step>
+     <step id="8"
+         type="end"
+         title="List Send Payment Request"
+         description="The wallet's user go to Payment Request menu and list payment request send, and show this status."
+         platform="CCP"
+         superlayer=""
+         layer="Reference Wallet"
+         name="Bitcoin Wallet"
+         >
+ 
+     </step>
+ 
+ </steps>
+ </process>
+ 	<process platform="CCP" name="Accept  Payment Request From Intra user" description="A Wallet's Intra User accept a payment request sent by another actor." previous="List Payment Request">
+ <steps>
+     <step id="0"
+         type="start"
+         title="Select payment request receive and accept it"
+         description="The customer selects a payment request from the receive list and press accept button."
+         platform="CCP"
+         superlayer=""
+         layer="Reference Wallet"
+         name="Bitcoin Wallet"
+         >
+         <next>
+             <step id="1" type="direct call"></step>
+         </next>
+     </step>
+     <step id="1"
+         type="activity"
+         title="Route request acceptance to plugin"
+         description="The module routes this acceptance to the Crypto Payment Request Plugin to apply the payment to the intra user actor."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Wallet Module"
+         name="Crypto Wallet"
+         >
+         <next>
+             <step id="2" type="direct call"></step>
+         </next>
+     </step>
+     <step id="2"
+         type="activity"
+         title="Route acceptance to network service"
+         description="The Crypto Payment Request Plugin routes this acceptance to the network service to inform the actor intra user about payment acceptance."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Request"
+         name="Crypto Payment Request"
+         >
+         <next>
+             <step id="3" type="direct call"></step>
+         </next>
+     </step>
+     <step id="3"
+         type="activity"
+         title="Route acceptance to Outgoing Intra User"
+         description="The Crypto Payment Request Plugin notifies the outgoing intra user plugin to generate the send crypto transaction. And continuous workflow of sending btc an intra user actor "
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Crypto Transaction"
+         name="Outgoing Intra User"
+         >
+         <next>
+             <step id="4" type="direct call"></step>
+         </next>
+     </step>
+     <step id="4"
+         type="activity"
+         title="Call the intra user to deliver the acceptance message"
+         description="The network service places a call to the intra user and then it delivers the message via the Fermat network."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Network Service"
+         name="Crypto Payment Request"
+         >
+         <next>
+             <step id="5" type="direct call"></step>
+         </next>
+     </step>
+     <step id="5"
+         type="communication"
+         title="Transport request"
+         description="The acceptance message is transported through the communication layer and one of the available channels."
+         platform=""
+         superlayer="P2P"
+         layer="communication"
+         name="Communication Layer"
+         >
+         <next>
+             <step id="6" type="fermat message"></step>
+         </next>
+     </step>
+     <step id="6"
+         type="activity"
+         title="Receive the acceptance notification"
+         description="The network service receives the acceptance notification and informs that to Request Crypto Payment Plugin."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Network Service"
+         name="Crypto Payment Request"
+         >
+         <next>
+             <step id="7" type="event"></step>
+         </next>
+     </step>
+     <step id="7"
+         type="end"
+         title="Update the Payment request"
+         description="The payment request is updated  with the Request Action in state INFORM_APPROVAL ."
+         platform="CCP"
+         superlayer=""
+         component="Plugin"
+         layer="Request"
+         name="Crypto Payment"
+         >
+ 
+     </step>
+ 
+ 
+ </steps>
+ </process>
+ 	<process platform="CCP"	name="Creates an Intra Wallet User" description="Creates an Intra Wallet User Identity." previous="">
+ <steps>
+     <step id="0"	title="Open the wallet to create a new Identity"
+         description="The user open the Wallet User Identity and proceed to fill the requested data inside the form and press the save button."
+         type="start"
+         platform="CCP"
+         superlayer=""
+         layer="SubApp"
+         component=""
+         >
+ 
+         <next>
+             <step id="1" type="direct call"></step>
+         </next>
+     </step>
+     <step id="1"	title="Process Intra User Identity creation request"
+         description="The module routes the data containing the name and profile picture to the  IntraWalletUserModule plugin.	"
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         >
+         <next>
+             <step id="2" type="direct call"></step>
+         </next>
+     </step>
+     <step id="2"	title="Process Intra User Identity creation request"
+         description="The module routes the name and profile picture to the  IntraWalletIdentityPluginRoot  plugin."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User Module"
+         superlayer=""
+         layer="sub-app module"
+         component="Plugin"
+         >
+         <next>
+             <step id="3" type="direct call"></step>
+         </next>
+     </step>
+     <step id="3"	title="Process Intra User Identity creation request"
+         description="Within this plugin, two different keys are created, a public one and a private one, after that the plugin routes the data to the IntraWalletUserIdentityDao."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet Identity"
+         superlayer=""
+         layer="Identity"
+         component="Plugin"
+         >
+         <next>
+             <step id="4" type="direct call"></step>
+         </next>
+     </step>
+     <step id="4"	title="Creates the Intra User Identity"
+         description="The dao  inserts the data in the DB."
+         type="end"
+         platform="CCP"
+         name="Intra Wallet User Identity Dao."
+         superlayer=""
+         layer="Database"
+         component="Plugin"
+         >
+     </step>
+ </steps>
+ </process>
+ 	<process platform="CCP"	name="Open Intra Wallet Community" description="List all discovered connections." previous="">
+ <steps>
+     <step id="0"	title="Start "
+         description="The user opens the Intra Wallet Community and the fragment proceeds to initialize all required components."
+         type="start"
+         platform="CCP"
+         name="Intra User Community"
+         layer="SubApp"
+         >
+         <next>
+             <step id="1" type="direct call"></step>
+         </next>
+     </step>
+     <step id="1"	title="Processing the requested list "
+         description="The module routes the requested list.	"
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         layer="Sub App Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="2" type="direct call"></step>
+         </next>
+     </step>
+     <step id="2"	title="Routing the requested list."
+         description="The NS routes the request to the WS."
+         type="activity"
+         platform="CCP"
+         name="Actor Network Service"
+         superlayer=""
+         layer="Network Service"
+         component="Plugin"
+         >
+         <next>
+             <step id="3" type="direct call"></step>
+         </next>
+     </step>
+     <step id="3"	title="Processing the list"
+         description="The ws gets the connected list of components and send it back to the ns"
+         type="activity"
+         platform="CCP"
+         name="WS Cloud Client Connection"
+         superlayer=""
+         layer="p2p"
+         component="Plugin"
+         >
+         <next>
+             <step id="4" type="direct call"></step>
+         </next>
+     </step>
+     <step id="4"	title="Getting the list of connected users."
+         description="The NS routes the request back to the module."
+         type="activity"
+         platform="CCP"
+         name="Actor Network Service"
+         superlayer=""
+         layer="Network Service"
+         component="Plugin"
+         >
+         <next>
+             <step id="5" type="direct call"></step>
+         </next>
+     </step>
+     <step id="5"	title="Sends the list back to the view"
+         description="The module routes the requested list to the fragment."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         layer="Sub App Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="6" type="direct call"></step>
+         </next>
+     </step>
+     <step id="6"	title="Display the list of users "
+         description="The fragment displays the list of discovered users."
+         type="end"
+         platform="CCP"
+         name="Intra User Community"
+         superlayer=""
+         layer="Community Wallet Users"
+         component=""
+         >
+     </step>
+ </steps>
+ </process>
+ 	<process platform="CCP"	name="Open the Intra Wallet Community Connections" description="List all connected users." previous="Open Intra Wallet Community">
+ <steps>
+     <step id="0"	title="Start "
+         description="The user opens the Community Connections and the fragment proceeds to initialize all required components."
+         type="start"
+         platform="CCP"
+         name="Intra Wallet Community"
+         layer="SubApp"
+         >
+         <next>
+             <step id="1" type="direct call"></step>
+         </next>
+     </step>
+     <step id="1"	title="Processing the requested list "
+         description="The module routes the requested list to the IntraWalletUser plugin."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User Module"
+         superlayer=""
+         layer="Sub App Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="2" type="direct call"></step>
+         </next>
+     </step>
+     <step id="2"	title="Routing the requested list."
+         description="The plugin routes the request to the IntraWalletUserDao."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         layer="module"
+         component="plugin"
+         >
+         <next>
+             <step id="3" type="direct call"></step>
+         </next>
+     </step>
+     <step id="3"	title="Processing the list"
+         description="The list is retrived from the DB and send back to the plugin."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User Dao"
+         superlayer=""
+         layer="database"
+         component="plugin"
+         >
+         <next>
+             <step id="4" type="direct call"></step>
+         </next>
+     </step>
+     <step id="4"	title="Getting the list of connected users."
+         description="The plugin send the request back to the module."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         layer="Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="5" type="direct call"></step>
+         </next>
+     </step>
+     <step id="5"	title="Sends the list back to the view"
+         description="The module routes the requested list to the fragment."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         layer="Sub App Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="6" type="direct call"></step>
+         </next>
+     </step>
+     <step id="6"	title="Display list of users"
+         description="The fragment displays the list of connected users."
+         type="end"
+         platform="CCP"
+         name="Intra User Community"
+         superlayer=""
+         layer="Community Connections"
+         component=""
+         >
+     </step>
+ </steps>
+ </process>
+ 	<process platform="CCP" name="Open Intra Wallet Community Requested Connections" description="List all users pending for acceptance." previous="Open Intra Wallet Community">
+ <steps>
+     <step id="0"	title="Start "
+         description="The user opens the Community Request Connections and the fragment proceeds to initialize all required components."
+         type="start"
+         platform="CCP"
+         name="Intra User Community"
+         superlayer=""
+         layer="SubApp"
+         >
+         <next>
+             <step id="1" type="direct call"></step>
+         </next>
+     </step>
+     <step id="1"	title="Processing the requested list of users pending for acceptance. "
+         description="The module routes the requested list to the IntraWalletUserActor plugin."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         layer="Sub App Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="2" type="direct call"></step>
+         </next>
+     </step>
+     <step id="2"	title="Routing the requested list."
+         description="The plugin routes the request to the IntraWalletUserDao."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User Actor"
+         superlayer=""
+         layer="Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="3" type="direct call"></step>
+         </next>
+     </step>
+     <step id="3"	title="Processing the list"
+         description="The list is retrived from the DB and send back to the plugin."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User Dao"
+         superlayer=""
+         layer="Database"
+         component="Plugin"
+         >
+         <next>
+             <step id="4" type="direct call"></step>
+         </next>
+     </step>
+     <step id="4"	title="Getting the list of connected users."
+         description="The plugin send the request back to the module."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User Actor"
+         superlayer=""
+         layer="Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="5" type="direct call"></step>
+         </next>
+     </step>
+     <step id="5"	title="Sends the list back to the view"
+         description="The module routes the requested list to the fragment."
+         type="activity"
+         platform="CCP"
+         name="Intra Wallet User"
+         superlayer=""
+         layer="Sub App Module"
+         component="Plugin"
+         >
+         <next>
+             <step id="6" type="direct call"></step>
+         </next>
+     </step>
+     <step id="6"	title="Display the list of users. "
+         description="The fragment displays the list of users pending for acceptance."
+         type="end"
+         platform="CCP"
+         name="Intra Wallet Community"
+         superlayer=""
+         layer="SubApp"
+         >
+     </step>
+ </steps>
+ </process>
+ 	<process platform="CCP" name="Add Intra User Actor as a Wallet Contact" description="A Wallet's User sends a payment to an intra user is not your wallet contact." previous="Connect with other intra user">
+         <steps>
+             <step id="0"
+                 type="start"
+                 title="Select Send btc options."
+                 description="The wallet user selects Send btc options and write contact name in in the sending form, then select a intra user connection"
+                 platform="CCP"
+                 superlayer=""
+                 layer="Reference Wallet"
+                 name="Bitcoin Wallet"
+                 >
+                 <next>
+                     <step id="1" type="direct call"></step>
+                 </next>
+             </step>
+             <step id="1"
+                 type="activity"
+                 title="Convert connection as wallet contact"
+                 description="The module create a new contact through the Wallet Contact Middleware and send crypto address request for network services."
+                 platform="CCP"
+                 superlayer=""
+                 component="Plugin"
+                 layer="Wallet Module"
+                 name="Crypto Wallet"
+                 >
+                 <next>
+                     <step id="2" type="direct call"></step>
+                 </next>
+             </step>
+ 
+             <step id="2"
+                 type="activity"
+                 title="Call the intra user to deliver the address request"
+                 description="The network service places a call to the intra user and then it delivers the address request via the Fermat network."
+                 platform="CCP"
+                 superlayer=""
+                 component="Plugin"
+                 layer="Network Service"
+                 name="Crypto Addresses"
+                 >
+                 <next>
+                     <step id="3" type="direct call"></step>
+                 </next>
+             </step>
+             <step id="3"
+                 type="communication"
+                 title="Transport request"
+                 description="The address request is transported through the communication layer and one of the available channels."
+                 platform=""
+                 superlayer="P2P"
+                 layer="communication"
+                 name="Communication Layer"
+                 >
+                 <next>
+                     <step id="4" type="fermat message"></step>
+                 </next>
+             </step>
+             <step id="4"
+                 type="activity"
+                 title="Receive the address request"
+                 description="The network service receives the address request and informs that to Crypto Addresses Middleware."
+                 platform="CCP"
+                 superlayer=""
+                 component="Plugin"
+                 layer="Network Service"
+                 name="Crypto Addresses"
+                 >
+                 <next>
+                     <step id="5" type="event"></step>
+                 </next>
+             </step>
+             <step id="5"
+                 type="activity"
+                 title="Get the address of intra user"
+                 description="Crypto Addresses Middleware gets a new address through the Crypto Address Manager and the return to Crypto Address Network Services."
+                 platform="BCH"
+                 superlayer=""
+                 component="Plugin"
+                 layer="Middleware"
+                 name="Crypto Address"
+                 >
+                 <next>
+                     <step id="6" type="direct call"></step>
+                 </next>
+             </step>
+             <step id="6"
+                 type="activity"
+                 title="Call the Wallet Contacts middleware to deliver the intra user address"
+                 description="The network service places a call to the Wallet Contacts middleware and then it delivers the crypto address via the Fermat network."
+                 platform="CCP"
+                 superlayer=""
+                 component="Plugin"
+                 layer="Network Service"
+                 name="Crypto Addresses"
+                 >
+                 <next>
+                     <step id="7" type="direct call"></step>
+                 </next>
+             </step>
+             <step id="7"
+                 type="communication"
+                 title="Transport request"
+                 description="The crypto address is transported through the communication layer and one of the available channels."
+                 platform=""
+                 superlayer="P2P"
+                 layer="communication"
+                 name="Communication Layer"
+                 >
+                 <next>
+                     <step id="8" type="fermat message"></step>
+                 </next>
+             </step>
+             <step id="8"
+                 type="activity"
+                 title="Update wallet contact crypto address"
+                 description="The crypto address network services returns the address of the contact, which is updated in the database ."
+                 platform="CCP"
+                 superlayer=""
+                 component="Plugin"
+                 layer="Middleware"
+                 name="Wallet Contact"
+                 >
+                 <next>
+                     <step id="9" type="direct call"></step>
+                 </next>
+             </step>
+             <step id="9"
+                 type="end"
+                 title="List wallets contacts"
+                 description="The wallet's user will contact list and select the new contact to view his address."
+                 platform="CCP"
+                 superlayer=""
+                 layer="Reference Wallet"
+                 name="Bitcoin Wallet"
+                 >
+ 
+             </step>
+ 
+         </steps>
+     </process>
         <process platform="COR" name="Test Process" description="This is a process intended to test the workflow drawing" previous="">
 			<steps>
 				<step id="0"
 					type="start"
 					title="Start step"
 					description="This is the first step"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet">
 					<next>
 						<step id="1" type="direct call"></step>
 					</next>
@@ -6255,11 +7455,7 @@
 					type="activity"
 					title="Next step"
 					description="This is the first step, this one has a bifurcation, which can be parallel process or an 'if'"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet">
 					<next>
 						<step id="2" type="direct call"></step>
 						<step id="3" type="direct call"></step>
@@ -6269,11 +7465,7 @@
 					type="activity"
 					title="True state"
 					description="This step is executed if the sentence is true"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet">
 					<next>
 						<step id="4" type="direct call"></step>
 					</next>
@@ -6282,11 +7474,7 @@
 					type="activity"
 					title="False state"
 					description="This step is executed if the sentence is false, it loops back"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet">
 					<next>
 						<step id="1" type="direct call"></step>
 					</next>
@@ -6295,15 +7483,1565 @@
 					type="end"
 					title="Out of loop"
 					description="This is out of the loop"
-					platform=""
-					superlayer=""
-					component=""
-					layer=""
-					name="">
+					platform="CCP" superlayer="" layer="Reference Wallet" name="Bitcoin Wallet">
 					<next>
 					</next>
 				</step>
 			</steps>
 		</process>
+		
+	<process 
+		platform="TKY" 
+		name="Sync songs manually with External System" 
+		description="A Tokenly wallet user request a synchronization with a external platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="User request a sync from tab songs."
+			 description="The user proceeds to request the synchronization list of songs"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the Tokenly tokens owned by the user."
+			 description="The Fan Wallet Module requests information from the tokens associated with the identity of the user to the external system"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request the Tokenly tokens owned by the user to external platform."
+			 description="Request Tokenly API the tokens associated with the Tokenly identity"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request the tokens owned by the user to Tokenly music manager public API."
+			 description="Asks Tokenly public API (external) the information available of the associated tokens with the Tokenly identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Download the missing songs."
+			 description="Proceed to download the songs not present on the device."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Persist songs on device storage."
+			 description="Downloaded songs are persisted in the local storage."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			 <next>
+			     <step id="6" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="6"
+			 type="activity"
+			 title="Set the song status in database."
+			 description="Song status is change to available."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="7" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="7"
+			 type="activity"
+			 title="Update the songs tab."
+			 description="The list of available songs is received and updates the view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Restore deleted song" 
+		description="The user wants to restore a deleted song." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="User request to restore a deleted song."
+			 description="When pressing the list item that represents the song that is not available on the device"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the deleted song."
+			 description="Request to restore the deleted song to the Tokenly Song Wallet"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request the song download URL."
+			 description="Request to the Tokenly API the download URL of the requested song"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request the song download URL to the Tokenly public API."
+			 description="Request to the public Tokenly API (external) the download URL"
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Download the requested song."
+			 description="Starts the process of downloading song."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Persist songs on device storage."
+			 description="Downloaded songs are persisted in the local storage."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			 <next>
+			     <step id="6" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="6"
+			 type="activity"
+			 title="Set the song status in database."
+			 description="Song status is change to available."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="7" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="7"
+			 type="activity"
+			 title="Update the songs tab."
+			 description="The view is updated with the new status of the song."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Delete song" 
+		description="The user wants to delete a song." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="User request to delete a song."
+			 description="The user makes a deleting request in the view element that represents the song to delete."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request to delete a song."
+			 description="Performs the request to delete the song from the device storage"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Requesto to delete a song from device storage."
+			 description="Check that the song is available and proceeds to request the song to be deleted"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Delete the requested song file."
+			 description="Deletes the file corresponding the song the user wants to delete."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Set the song status in database."
+			 description="Song status is change to deleted."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Update the songs tab."
+			 description="The view is updated with the new status of the song."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Synchronize list of connected Artist identities" 
+		description="The user wants to get the connected artists list." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Enter to Following tab."
+			 description="Request the list of connected artists to the user."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the connected artist list."
+			 description="Request the connection information associated with the fan identity"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Return the Artis connected list."
+			 description="Fan identity provides the list of the artist linked to this identity"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Updates the view with the connected artist."
+			 description="Gets the list of connected artists and updates the view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Browse to the site of the Artist" 
+		description="The user select an artist list element to browse to its web site." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an artist element."
+			 description="The list item representing the artist is pressed."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist website URL."
+			 description="The URL to the artist site is requested"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Wallet Module"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request the URL to the artist site to Tokenly API."
+			 description="Request to the Tokenly external API the URL belonging to the artist in Tokenly Swapbot"
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Updates the view with the connected artist."
+			 description="Gets the URL of the selected artist and updates view."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song Wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Browse to the artist site."
+			 description="Opens the default browser of the device with the URL of the artist."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Reference Wallet"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Create Artist identity" 
+		description="An artist creates a Artist identity in Tokenly platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user submit the data to create the Artist identity."
+			 description="Includes the data to create an identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Send the artist data."
+			 description="Sends acces data to Tokenly to verify the access data"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request user verification"
+			 description="Sends the necessary data to check a Tokenly user"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request to the Tokenly API the user verification"
+			 description="Checks with the public API if the user data is correct."
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Create the identity."
+			 description="With authenticated data, proceeds to create the new identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="TKY" 
+		name="Create Fan identity" 
+		description="A Fanatic creates a fan identity in Tokenly platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user submit the data to create the Fan identity."
+			 description="Includes the data to create an identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Send the fanatic data."
+			 description="Sends acces data to Tokenly to verify the access data"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Request user verification"
+			 description="Sends the necessary data to check a Tokenly user"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Request to the Tokenly API the user verification"
+			 description="Checks with the public API if the user data is correct."
+			 platform="TKY"
+			 superlayer=""
+			 layer="External API"
+			 name="Tokenly"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Create the identity."
+			 description="With authenticated data, proceeds to create the new identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="List available songs" 
+		description="A Fanatic wants to list the available songs in the device." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user opens the Music player."
+			 description="Request the list of available songs."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the available songs from external platforms."
+			 description="Request to the External API the list of available songs in the device"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Get the available songs list"
+			 description="Search in the database the available songs"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Updates the Music player view"
+			 description="Organizes the information received and updates the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub App Module"
+			 name="Fan Wallet"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Play a song" 
+		description="The user wants to play a available song." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user presses a song element."
+			 description="A song in the setlist is pressed."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the available song."
+			 description="Request the necessary data to play the song"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Get the song local storage path"
+			 description="Search the file path corresponding the song in database"
+			 platform="TKY"
+			 superlayer=""
+			 layer="Song wallet"
+			 name="Fan Wallet"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Open the song file"
+			 description="The requested file is opened and its contents is obtained."
+			 platform=""
+			 superlayer="OSA"
+			 layer="Multi OS"
+			 name="File System"
+			 >
+			<next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Update the view"
+			 description="Submit the data to pla the song and updates the view"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Music Player"
+			 >
+			 <next>
+			     <step id="5" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Play the song"
+			 description="Play the song provided"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Music Player"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Create Artist identity" 
+		description="An artist creates a Artist identity in Artist platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user submit the data to create the Artist identity."
+			 description="Includes the data to create an identity."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Send the artist data."
+			 description="Send the necessary data to create the identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Create the identity."
+			 description="The Artist Identity is persisted."
+			 platform="ART"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Create Fan identity" 
+		description="An artist creates a Fan identity in Artist platform." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user submit the data to create the Fan identity."
+			 description="Includes the data to create an identity."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Send the Fan data."
+			 description="Send the necessary data to create the identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Create the identity."
+			 description="The Fan Identity is persisted."
+			 platform="ART"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Artist accepts all connections" 
+		description="The artist indicates that accepts all connections requested by fans." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="The user set the acceptance of all fans requested connections."
+			 description="Change the status of accepting all connections."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request to update the Identity."
+			 description="Sends the change to the Artist Identity plugin"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Update identity."
+			 description="Updates the information in the database."
+			 platform="ART"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="List Fan identities in external systems" 
+		description="The fan list the available external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="List external platforms identities."
+			 description="The user request the list of available external identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the external identities."
+			 description="Request the identity created in the external platform"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Submit external platform identities list."
+			 description="Returns the list of identities created in external platforms registered in the Fan Identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Provides the identities list."
+			 description="The identities list is returned."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the identities list."
+			 description="Shows the external platform identities list."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="List Artists identities in external systems" 
+		description="The artist list the available external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="List external platforms identities."
+			 description="The user request the list of available external identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the external identities."
+			 description="Request the identity created in the external platform"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Submit external platform identities list."
+			 description="Returns the list of identities created in external platforms registered in the Fan Identity."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Provides the identities list."
+			 description="The identities list is returned."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the identities list."
+			 description="Shows the external platform identities list."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Link Artist Identity to an account in an external system" 
+		description="The artist makes a connection with external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an external platforms identity."
+			 description="The user selects an element of external identities list displayed on the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request link with external platform identity."
+			 description="Requests to persist the selected identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="The Artist identity is updated."
+			 description="The Artist identity perists the external platform identity in database."
+			 platform="ART"
+			 superlayer=""
+			 layer="Identity"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Link Fan Identity to an account in an external system" 
+		description="The fanatic makes a connection with external platforms identities." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an external platforms identity."
+			 description="The user selects an element of external identities list displayed on the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request link with external platform identity."
+			 description="Requests to persist the selected identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Identity"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="The Fan identity is updated."
+			 description="The Fan identity perists the external platform identity in database."
+			 platform="ART"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="View Artist profile" 
+		description="The Artist community user want to see the artist associated profile." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Select an artist picture."
+			 description="The user presses the image of the artist to see the associated profile."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist profile."
+			 description="Request the profile of the selected artist identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Provide the selected artist profile."
+			 description="The artist profile is get from database."
+			 platform="ART"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Provides the profile data."
+			 description="The identities profile data is returned."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the artist profile."
+			 description="Shows the identities profile."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Request list of Artist identities" 
+		description="The user get in the Artist Community screen." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Request the artist actors availables."
+			 description="Request the module the list of artist identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist list."
+			 description="Request a list of available artist identities"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Provide the artist list."
+			 description="Provides the list of artist Identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Submit the artist list."
+			 description="The artist list is returned to update the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the artist list."
+			 description="The view is updated with the available artists identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Request list of Fan identities" 
+		description="The user get in the Fan Community screen." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Request the fan actors availables."
+			 description="Request the module the list of fan identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the artist list."
+			 description="Request a list of available fan identities"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Provide the fan list."
+			 description="Provides the list of fan Identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Submit the fan list."
+			 description="The fan list is returned to update the view."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Fan Community"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Show the fan list."
+			 description="The view is updated with the available fan identities."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Fan Community"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="Request connection of a Fan to an Artist" 
+		description="The user request a connection between a fan identity and an artist identity." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Request an artist identity connection."
+			 description="The artist to request connection is selected."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Request the identities connection."
+			 description="Request a connection with an artist identity"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Send request to a remote device."
+			 description="Send the connection request to a remote device."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Route the connection request to a remote device."
+			 description="Route the connection request to a remote device through the P2P network."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Receive the connection request."
+			 description="Receive a message with the connection request."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="5" type="event"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Send notification to OS."
+			 description="Raises an event indicating the arrival of a new connection request."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="An artist accepts a fan connection" 
+		description="The artist sees a connection request and accepts it." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Register the acceptance of a connection."
+			 description="A request connection request is selected to approve it."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Submit request acceptance."
+			 description="Route the acceptance to notify to the connection petitioner"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Send acceptance to a remote device."
+			 description="Send the connection acceptance to a remote device."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Route the connection acceptance to a remote device."
+			 description="Route the connection acceptance to a remote device through the P2P network."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Receive the connection acceptance."
+			 description="Receive a message with the connection acceptance."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="5" type="event"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Send notification to OS."
+			 description="Raises an event indicating the arrival of a new connection acceptance."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="6" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="6"
+			 type="activity"
+			 title="The connection is registered in Fan identity."
+			 description="The Fan identity is updated with the connection."
+			 platform="ART"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+			 <next>
+			     <step id="7" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="7"
+			 type="activity"
+			 title="The external platform identity is updated."
+			 description="The Tokenly Fan identity is updated with the connection."
+			 platform="TKY"
+			 superlayer=""
+			 layer="Identity"
+			 name="Fan"
+			 >
+		     </step>
+		</steps>
+	</process>
+	<process 
+		platform="ART" 
+		name="The fan to artist connection request  is not accepted" 
+		description="The artist sees a connection request and rejects it." 
+		previous="">
+		<steps>
+		     <step id="0"
+			 type="start"
+			 title="Register the denial of a connection."
+			 description="A request connection request is selected to reject it."
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="1" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="1"
+			 type="activity"
+			 title="Submit request rejection."
+			 description="Route the rejection to notify to the connection petitioner"
+			 platform="ART"
+			 superlayer=""
+			 layer="Sub app module"
+			 name="Artist Community"
+			 >
+			 <next>
+			     <step id="2" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="2"
+			 type="activity"
+			 title="Send rejection to a remote device."
+			 description="Send the connection rejection to a remote device."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor Connection"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="3" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="3"
+			 type="activity"
+			 title="Route the connection rejection to a remote device."
+			 description="Route the connection rejection to a remote device through the P2P network."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="4" type="direct call"></step>
+			 </next>
+		     </step>
+		     <step id="4"
+			 type="activity"
+			 title="Receive the connection rejection."
+			 description="Receive a message with the connection rejection."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+			 <next>
+			     <step id="5" type="event"></step>
+			 </next>
+		     </step>
+		     <step id="5"
+			 type="activity"
+			 title="Send notification to OS."
+			 description="Raises an event indicating the arrival of a new connection rejection."
+			 platform="ART"
+			 superlayer=""
+			 layer="Actor network Service"
+			 name="Artist"
+			 >
+		     </step>
+		</steps>
+	</process>
     </processes>
 </fermat>

@@ -28,7 +28,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      *
      * @return the Id of resources being represented
      */
-    public UUID getResourcesId();
+    UUID getResourcesId();
 
 
     /**
@@ -39,7 +39,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @throws CantGetSkinFileException
      * @throws CantGetResourcesException
      */
-    public Skin getSkinFile(UUID skinId,String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
+    Skin getSkinFile(UUID skinId, String walletPublicKey) throws CantGetSkinFileException,CantGetResourcesException;
 
     /**
      * This method let us get a language file referenced by a name
@@ -48,7 +48,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @return The content of the file
      * @throws CantGetLanguageFileException
      */
-    public String getLanguageFile(UUID skinId,String walletPublicKey,String fileName) throws CantGetLanguageFileException;
+    String getLanguageFile(UUID skinId, String walletPublicKey, String fileName) throws CantGetLanguageFileException;
 
 
     /**
@@ -58,7 +58,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @return the image represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getImageResource(String imageName, UUID skinId,String walletPublicKey) throws CantGetImageResourceException;
+    byte[] getImageResource(String imageName, UUID skinId, String walletPublicKey) throws CantGetImageResourceException;
 
     /**
      * This method let us get a video referenced by a name
@@ -67,7 +67,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @return the video represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getVideoResource(String videoName, UUID skinId) throws CantGetResourcesException;
+    byte[] getVideoResource(String videoName, UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a sound referenced by a name
@@ -76,7 +76,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @return the sound represented as a byte array
      * @throws CantGetResourcesException
      */
-    public byte[] getSoundResource(String soundName, UUID skinId) throws CantGetResourcesException;
+    byte[] getSoundResource(String soundName, UUID skinId) throws CantGetResourcesException;
 
     /**
      * This method let us get a font style referenced by a name
@@ -85,7 +85,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @return the font style represented as the content of a ttf file
      * @throws CantGetResourcesException
      */
-    public String getFontStyle(String styleName, UUID skinId);
+    String getFontStyle(String styleName, UUID skinId);
 
     /**
      * This method let us get a layout referenced by a name
@@ -94,7 +94,7 @@ public interface SubAppResourcesProviderManager extends ResourceProviderManager 
      * @return the layiut represented as String
      * @throws CantGetResourcesException
      */
-    public String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId,String walletPublicKey) throws CantGetResourcesException;
+    String getLayoutResource(String layoutName, ScreenOrientation orientation, UUID skinId, String walletPublicKey) throws CantGetResourcesException;
 
 
 

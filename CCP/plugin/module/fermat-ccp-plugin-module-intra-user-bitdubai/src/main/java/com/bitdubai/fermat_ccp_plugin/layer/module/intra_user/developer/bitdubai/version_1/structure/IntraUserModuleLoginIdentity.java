@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
+import java.io.Serializable;
+
 /**
  * The class <code>com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity</code>
  * is the implementation of IntraUserLoginIdentity interface.
@@ -9,7 +11,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
  *
  * Created by natalia on 11/08/15.
  */
-public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
+public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity,Serializable {
 
     private String alias;
     private String publicKey;
@@ -24,7 +26,7 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
     {
         this.alias = alias;
         this.publicKey = publicKey;
-        this.profileImage = (profileImage!=null) ? (byte[] )profileImage.clone() : null;
+        this.profileImage = (profileImage!=null) ? profileImage.clone() : null;
     }
     /**
      * That method returns the alias of the intra user identity
@@ -54,6 +56,6 @@ public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
      */
     @Override
     public byte[] getProfileImage() {
-        return (byte[] )this.profileImage.clone();
+        return this.profileImage.clone();
     }
 }

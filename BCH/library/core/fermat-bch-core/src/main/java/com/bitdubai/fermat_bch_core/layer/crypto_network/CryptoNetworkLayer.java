@@ -5,7 +5,6 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantR
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_bch_core.layer.crypto_network.bitcoin_network.BitcoinNetworkPluginSubsystem;
-import com.bitdubai.fermat_bch_core.layer.crypto_network.old_bitcoin_network.OldBitcoinNetworkPluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/10/2015.
@@ -24,7 +23,6 @@ public class CryptoNetworkLayer extends AbstractLayer {
         try {
 
             registerPlugin(new BitcoinNetworkPluginSubsystem());
-            registerPlugin(new OldBitcoinNetworkPluginSubsystem());
 
         } catch(CantRegisterPluginException e) {
 

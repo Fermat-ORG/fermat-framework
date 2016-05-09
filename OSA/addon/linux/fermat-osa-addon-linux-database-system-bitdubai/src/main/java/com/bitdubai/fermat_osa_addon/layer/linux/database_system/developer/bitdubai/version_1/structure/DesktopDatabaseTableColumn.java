@@ -1,9 +1,3 @@
-/*
-* @#DesktopDatabaseTableColumn.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -23,10 +17,21 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * DatabaseTableColumn Member Variables.
      */
 
-    String name ="";
-    DatabaseDataType type;
-    int dataTypeSize;
-    boolean primaryKey;
+    private final String           name        ;
+    private final DatabaseDataType type        ;
+    private final int              dataTypeSize;
+    private final boolean          primaryKey  ;
+
+    public DesktopDatabaseTableColumn(final String           name        ,
+                                      final DatabaseDataType type        ,
+                                      final int              dataTypeSize,
+                                      final boolean          primaryKey  ) {
+
+        this.name         = name        ;
+        this.type         = type        ;
+        this.dataTypeSize = dataTypeSize;
+        this.primaryKey   = primaryKey  ;
+    }
 
     /**
      * DatabaseTableColumn interface implementation.
@@ -43,16 +48,6 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
         return this.name;
     }
 
-    /**
-     *<p>Set the column name
-     *
-     * @param name column name to set
-     */
-    @Override
-    public void setName (String name)
-    {
-        this.name = name;
-    }
 
     /**
      * <p>Gets the data type of the column
@@ -60,30 +55,9 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return DatabaseDataType enum
      */
     @Override
-    public DatabaseDataType getType ()
+    public DatabaseDataType getDataType ()
     {
         return this.type;
-    }
-
-
-    /**
-     * <p>Sets the data type of the column
-     * @param type DatabaseDataType enum
-     */
-    @Override
-    public void setType(DatabaseDataType type)
-    {
-        this.type = type;
-    }
-
-    /**
-     *<p>Sets the data size of the column
-     *
-     * @param dataTypeSize data size column
-     */
-    @Override
-    public void setDataTypeSize (int dataTypeSize){
-        this.dataTypeSize = dataTypeSize;
     }
 
     /**
@@ -96,22 +70,12 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
     }
 
     /**
-     * <p>Sets if the primary key column of the table
-     *
-     * @param primaryKey boolean if primary key
-     */
-    @Override
-    public void setPrimaryKey (boolean primaryKey){
-        this.primaryKey = primaryKey;
-    }
-
-    /**
      * <p>Gets if the primary key column of the table
      *
      * @return boolean if primary key
      */
     @Override
-    public boolean getPrimaryKey (){
+    public boolean isPrimaryKey (){
         return primaryKey;
     }
 

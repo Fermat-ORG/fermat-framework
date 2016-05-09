@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 
@@ -11,21 +12,24 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
 
     private CryptoCurrency cryptoCurrency;
 
-    private String cryWalletPublicKey;
+    private String cryptoWalletPublicKey;
+
+    private BlockchainNetworkType blockchainNetworkType;
 
     public CryptoMoneyDeStockRecord(
             BusinessTransactionRecord businessTransactionRecord){
 
-        this.publicKeyActor=businessTransactionRecord.getBrokerPublicKey();
+        this.publicKeyActor = businessTransactionRecord.getBrokerPublicKey();
         //For this version, the crypto currency is set to BITCOIN
-        this.cryptoCurrency=CryptoCurrency.BITCOIN;
-        this.cbpWalletPublicKey=businessTransactionRecord.getCBPWalletPublicKey();
-        this.cryWalletPublicKey=businessTransactionRecord.getExternalWalletPublicKey();
-        this.amount=parseLongToBigDecimal(
+        this.cryptoCurrency = CryptoCurrency.BITCOIN;
+        this.cbpWalletPublicKey = businessTransactionRecord.getCBPWalletPublicKey();
+        this.cryptoWalletPublicKey = businessTransactionRecord.getExternalWalletPublicKey();
+        this.amount = parseLongToBigDecimal(
                 businessTransactionRecord.getCryptoAmount());
         this.memo=generateMemo(businessTransactionRecord.getContractHash());
-        this.priceReference=businessTransactionRecord.getPriceReference();
-        this.originTransaction=OriginTransaction.STOCK_INITIAL;
+        this.priceReference = businessTransactionRecord.getPriceReference();
+        this.originTransaction = OriginTransaction.SALE;
+        this.blockchainNetworkType = businessTransactionRecord.getBlockchainNetworkType();
 
     }
 
@@ -38,20 +42,28 @@ public class CryptoMoneyDeStockRecord extends AbstractDeStockRecord {
     }
 
 
-    public String getCryWalletPublicKey() {
-        return cryWalletPublicKey;
+    public String getCryptoWalletPublicKey() {
+        return cryptoWalletPublicKey;
     }
 
-    public void setCryWalletPublicKey(String cryWalletPublicKey) {
-        this.cryWalletPublicKey = cryWalletPublicKey;
+    public void setCryptoWalletPublicKey(String cryptoWalletPublicKey) {
+        this.cryptoWalletPublicKey = cryptoWalletPublicKey;
+    }
+
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
     @Override
     public String toString() {
         return "CryptoMoneyDeStockRecord{" +
-                abstractToString()+
                 "cryptoCurrency=" + cryptoCurrency +
-                ", cryWalletPublicKey='" + cryWalletPublicKey + '\'' +
+                ", cryptoWalletPublicKey='" + cryptoWalletPublicKey + '\'' +
+                ", blockchainNetworkType=" + blockchainNetworkType +
                 '}';
     }
 }

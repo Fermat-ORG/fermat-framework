@@ -1,22 +1,29 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
 import java.util.Calendar;
-import java.util.Random;
 import java.util.UUID;
 
 /**
  * Created by nelson on 11/11/15.
  */
 public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation {
-    private static Random random = new Random(321515131);
+
     private static Calendar instance = Calendar.getInstance();
 
     private String customerAlias;
-    private byte[] imageBytes;
+    private byte[] customerImage;
+    private String brokerAlias;
+    private byte[] brokerImage;
+
     private UUID negotiationId;
+    private String contractId;
     private float amount;
     private String merchandise;
     private String typeOfPayment;
@@ -25,21 +32,48 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     private long date;
     private ContractStatus status;
     private String cancellationReason;
+    private boolean nearExpirationDatetime;
 
-    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status) {
+    public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, byte[] customerImage, String brokerAlias, byte[] brokerImage, String merchandise, String typeOfPayment,
+                                                            String paymentCurrency, ContractStatus status, boolean nearExpirationDatetime, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
+                                                            String contractId,
+                                                            String cancellationReason) {
         this.customerAlias = customerAlias;
+        this.customerImage = customerImage;
+        this.brokerAlias = brokerAlias;
+        this.brokerImage = brokerImage;
+
+        this.contractId = contractId;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
-        this.cancellationReason ="";
+        this.amount = 0;
+        this.exchangeRateAmount = 0;
+        this.nearExpirationDatetime = nearExpirationDatetime;
 
-        amount = random.nextFloat() * 100;
-        exchangeRateAmount = random.nextFloat();
+        if (customerBrokerPurchaseNegotiation != null) {
+            this.cancellationReason = cancellationReason;
+            negotiationId = customerBrokerPurchaseNegotiation.getNegotiationId(); //UUID.randomUUID();
+            date = customerBrokerPurchaseNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis();
+            try {
+                for (Clause clause : customerBrokerPurchaseNegotiation.getClauses()) {
+                    if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY) {
+                        amount = Float.valueOf(clause.getValue().replace(",",""));
+                    }
+                    if (clause.getType()== ClauseType.EXCHANGE_RATE) {
+                        exchangeRateAmount = Float.valueOf(clause.getValue().replace(",",""));
+                    }
+                }
+            } catch (CantGetListClauseException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            this.cancellationReason = "";
+            negotiationId = UUID.randomUUID();
+            date = instance.getTimeInMillis();
+        }
 
-        imageBytes = new byte[0];
-        negotiationId = UUID.randomUUID();
-
-        date = instance.getTimeInMillis();
         this.status = status;
     }
 
@@ -49,14 +83,21 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     }
 
     @Override
-    public byte[] getCryptoCustomerImage() {
+    public byte[] getCryptoCustomerImage() { return customerImage; }
 
-        return imageBytes;
+    @Override
+    public String getCryptoBrokerAlias() {
+        return brokerAlias;
     }
 
     @Override
-    public UUID getContractId() {
-        return negotiationId;
+    public byte[] getCryptoBrokerImage() {
+        return brokerImage;
+    }
+
+    @Override
+    public String getContractId() {
+        return contractId;
     }
 
     @Override
@@ -77,12 +118,17 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
     @Override
     public UUID getNegotiationId() {
         //TODO
-        return null;
+        return negotiationId;
     }
 
     @Override
     public String getTypeOfPayment() {
         return typeOfPayment;
+    }
+
+    @Override
+    public Boolean getNearExpirationDatetime() {
+        return nearExpirationDatetime;
     }
 
     @Override

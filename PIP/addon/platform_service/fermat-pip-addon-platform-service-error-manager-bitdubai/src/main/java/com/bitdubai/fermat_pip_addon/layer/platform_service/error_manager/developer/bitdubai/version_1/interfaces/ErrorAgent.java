@@ -7,8 +7,8 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
  */
 public interface ErrorAgent {
 
-    public void start () throws CantStartAgentException;
+    void start() throws CantStartAgentException;
 
-    public void stop();
+    void stop();
 
 }

@@ -7,16 +7,16 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
  */
 public interface NotificationEvent {
 
-    public String getAlertTitle();
+    String getAlertTitle();
 
-    public String getTextTitle();
+    String getTextTitle();
 
-    public String getTextBody();
+    String getTextBody();
 
-    public Activities getScreen();
+    Activities getScreen();
 
-    public String getWalletPublicKey();
+    String getWalletPublicKey();
 
-    public String getNotificationType();
+    String getNotificationType();
 
 }

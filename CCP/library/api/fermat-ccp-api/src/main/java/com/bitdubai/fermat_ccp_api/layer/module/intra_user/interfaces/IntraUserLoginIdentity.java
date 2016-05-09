@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
+import java.io.Serializable;
+
 /**
  * The interface <code>IntraUserLoginIdentity</code>
  * provides the methods to get the information of an identity a user can use to log in.
  */
-public interface IntraUserLoginIdentity {
+public interface IntraUserLoginIdentity extends Serializable {
 
 
 

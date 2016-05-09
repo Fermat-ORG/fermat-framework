@@ -25,6 +25,15 @@ public interface CryptoCustomerManager extends FermatManager {
     void exposeIdentity(final CryptoCustomerExposingData cryptoCustomerExposingData) throws CantExposeIdentityException;
 
     /**
+     * Through the method <code>exposeIdentity</code> we can expose the crypto identities created in the device..
+     *
+     * @param CryptoCustomerExposingData  crypto customer exposing information.
+     *
+     * @throws CantExposeIdentityException   if something goes wrong.
+     */
+    void updateIdentity(CryptoCustomerExposingData CryptoCustomerExposingData) throws CantExposeIdentityException;
+
+    /**
      * Through the method <code>exposeIdentities</code> we can expose the crypto identities created in the device.
      * The information given will be shown to all the crypto customers.
      *
@@ -38,7 +47,7 @@ public interface CryptoCustomerManager extends FermatManager {
      * Through the method <code>getSearch</code> we can get a new instance of Crypto Customer Search.
      * This Crypto Customer search provides all the necessary functionality to make a Crypto Customer Search.
      *
-     * @return a CryptoCustomerSearch instance.
+     * @return a CryptoCustomerCommunitySearch instance.
      */
     CryptoCustomerSearch getSearch();
 

@@ -16,7 +16,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_csh_api.all_definition.exceptions.CashMoneyWalletInsufficientFundsException;
@@ -30,8 +32,8 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletMa
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDeveloperDatabaseFactory;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantInitializeCashMoneyWalletDatabaseException;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure.CashMoneyWalletManagerImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.math.BigDecimal;
@@ -41,7 +43,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 11/17/2015
  */
-
+@PluginInfo(createdBy = "abicelis", maintainerMail = "abicelis@gmail.com", platform = Platforms.CASH_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY)
 public class WalletCashMoneyPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CashMoneyWalletManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -74,9 +76,9 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
     private void createTestWalletIfNotExists() {
         //System.out.println("CASHWALLET - createTestWalletIfNotExists CALLED");
 
-        if(!cashMoneyWalletExists("cash_wallet")) {
+        if(!cashMoneyWalletExists(WalletsPublicKeys.CSH_MONEY_WALLET.getCode())) {
             try {
-                createCashMoneyWallet("cash_wallet", FiatCurrency.US_DOLLAR);
+                createCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), FiatCurrency.US_DOLLAR);
             } catch (CantCreateCashMoneyWalletException e) {}
         }
     }
@@ -85,7 +87,7 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         //System.out.println("CASHWALLET - testDeposits CALLED");
 
         try {
-            CashMoneyWallet wallet = loadCashMoneyWallet("cash_wallet");
+            CashMoneyWallet wallet = loadCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode());//"cash_wallet");
             wallet.getAvailableBalance().credit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(10000), "testCreditFromWallet");
             wallet.getAvailableBalance().debit(UUID.randomUUID(), "pkeyActor", "pkeyPlugin", new BigDecimal(8000), "testDebitFromWallet");
 
@@ -178,97 +180,4 @@ public class WalletCashMoneyPluginRoot extends AbstractPlugin implements Databas
         return tableRecordList;
     }
 
-
-
-
-
-
-
-
-    //TODO: Legacy code, review and decide fate.
-
-/*
-
-    @Override
-    public double getBookBalance(BalanceType balanceType) throws CantTransactionCashMoneyException {
-        return implementCashMoney.getBookBalance(balanceType);
-    }
-
-    @Override
-    public double getAvailableBalance(BalanceType balanceType) throws CantTransactionCashMoneyException {
-        return implementCashMoney.getAvailableBalance(balanceType);
-    }
-
-    @Override
-    public List<CashMoneyWalletTransaction> getTransactions(BalanceType balanceType, int max, int offset) throws CantTransactionCashMoneyException {
-        return implementCashMoney.getTransactions(balanceType,max,offset);
-    }
-
-    @Override
-    public CashMoneyTransactionSummary getBrokerTransactionSummary(BalanceType balanceType) throws CantTransactionSummaryCashMoneyException {
-        return null;
-    }
-
-    @Override
-    public double getBalance() throws CantGetBalanceException {
-        return implementCashMoney.getBalance();
-    }
-
-    @Override
-    public void debit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterDebitException {
-        implementCashMoney.debit(cashMoneyBalanceRecord,balanceType);
-    }
-
-    @Override
-    public void credit(CashMoneyBalanceRecord cashMoneyBalanceRecord, BalanceType balanceType) throws CantRegisterCreditException {
-        implementCashMoney.credit(cashMoneyBalanceRecord,balanceType);
-    }
-
-    @Override
-    public List<CashMoneyWallet> getTransactionsCashMoney() throws CantTransactionCashMoneyException {
-        try {
-            return cashMoneyWalletDao.getTransactionsCashMoney();
-        } catch (CantCreateCashMoneyException e) {
-            throw new CantTransactionCashMoneyException(
-                    CantTransactionCashMoneyException.DEFAULT_MESSAGE,
-                    e,
-                    "Cant Transaction CashMoneyManagerImp Exception",
-                    "Cant Transaction CashMoneyManagerImp Exception"
-            );
-        }
-    }
-
-    @Override
-    public CashMoneyWallet registerCashMoney(
-            String cashTransactionId,
-            String publicKeyActorFrom,
-            String publicKeyActorTo,
-            String status,
-            String balanceType,
-            String transactionType,
-            double amount,
-            String cashCurrencyType,
-            String cashReference,
-            long runningBookBalance,
-            long runningAvailableBalance,
-            long timestamp,
-            String memo) throws CantCreateCashMoneyException {
-
-
-
-        return null;
-    }
-
-    @Override
-    public CashMoneyWallet loadCashMoneyWallet(String walletPublicKey) throws CantLoadCashMoneyWalletException {
-
-        return null;
-    }
-
-    @Override
-    public void createCashMoneyWallet(String walletPublicKey) throws CantCreateCashMoneyException {
-
-    }
-
-    */
 }

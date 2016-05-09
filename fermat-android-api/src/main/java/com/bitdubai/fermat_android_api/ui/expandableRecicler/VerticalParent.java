@@ -59,6 +59,16 @@ public class VerticalParent implements ParentListItem {
         return mInitiallyExpanded;
     }
 
+    @Override
+    public int getChildCount() {
+        return 0;
+    }
+
+    @Override
+    public Object getItem() {
+        return null;
+    }
+
     public void setInitiallyExpanded(boolean initiallyExpanded) {
         mInitiallyExpanded = initiallyExpanded;
     }

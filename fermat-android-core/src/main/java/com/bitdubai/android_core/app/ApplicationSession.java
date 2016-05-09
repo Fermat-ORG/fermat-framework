@@ -1,30 +1,46 @@
 package com.bitdubai.android_core.app;
 
 
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
+import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.sessions.SubAppSessionManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.WalletSessionManager;
+import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
+import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
+import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
+import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_core.FermatSystem;
+
+import org.acra.ACRA;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.List;
 
 /**
- * Reformated by Matias Furszyfer
+ * Matias Furszyfer
  */
 
-/**
- * This class, is created by the Android OS before any Activity. That means its constructor is run before any other code
- * written by ourselves.
- *
- * -- Luis.
- */
 
+@ReportsCrashes(//formUri = "http://yourserver.com/yourscript",
+        mailTo = "matiasfurszyfer@gmail.com",
+        customReportContent = { ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.PHONE_MODEL, ReportField.CUSTOM_DATA, ReportField.STACK_TRACE, ReportField.LOGCAT},
+        mode = ReportingInteractionMode.TOAST,
+        resToastText = R.string.crash_toast_text)
 
 public class ApplicationSession extends MultiDexApplication implements Serializable,FermatApplicationSession {
 
+    private final String TAG = "ApplicationSession";
+
+    private static ApplicationSession instance;
     /**
      * Application states
      */
@@ -39,28 +55,23 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     private FermatSystem fermatSystem;
 
     /**
-     * Sub App session Manager
-     */
-
-    private SubAppSessionManager subAppSessionManager;
-
-    /**
-     * Wallet session manager
-     */
-
-    private WalletSessionManager walletSessionManager;
-
-    /**
      *  Application state
      */
     public static int applicationState=STATE_NOT_CREATED;
+    private boolean fermatRunning;
+
+
+    public static ApplicationSession getInstance(){
+        return instance;
+    }
+
+    private Thread.UncaughtExceptionHandler defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler();
+
 
     /**
-     *  SubApps fragment factories
+     * Services helpers
      */
-    private HashMap<String,FermatFragmentFactory> subAppsFragmentfFactories;
-
-
+    private ServicesHelpers servicesHelpers;
 
     /**
      *  Application session constructor
@@ -68,10 +79,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public ApplicationSession() {
         super();
+        instance = this;
+        fermatSystem = FermatSystem.getInstance();
 
-        fermatSystem = new FermatSystem();
-        subAppSessionManager=new SubAppSessionManager();
-        walletSessionManager = new WalletSessionManager();
+
     }
 
 
@@ -80,25 +91,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      * @return FermatSystem
      */
     public FermatSystem getFermatSystem() {
+        if(fermatSystem==null){
+            fermatSystem = FermatSystem.getInstance();
+        }
         return fermatSystem;
-    }
-
-    /**
-     * Method to get subAppSessionManager which can manipulate the active session of subApps
-     * @return SubAppSessionManager
-     */
-
-    public SubAppSessionManager getSubAppSessionManager(){
-        return subAppSessionManager;
-    }
-
-    /**
-     * Method to get subWalletSessionManager which can manipulate the active session of wallets
-     * @return WalletSessionManager
-     */
-
-    public WalletSessionManager getWalletSessionManager(){
-        return walletSessionManager;
     }
 
     /**
@@ -108,7 +104,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
 
     public void changeApplicationState(int applicationState){
-        this.applicationState=applicationState;
+        ApplicationSession.applicationState =applicationState;
     }
 
     /**
@@ -121,16 +117,119 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return applicationState;
     }
 
-    /**
-     *  Add supApp fragment factory
-     */
-    public void addSubAppFragmentFactory(String subAppType,FermatFragmentFactory fermatSubAppFragmentFactory){
-        subAppsFragmentfFactories.put(subAppType,fermatSubAppFragmentFactory);
-    }
 
     @Override
     public void onTerminate(){
+        servicesHelpers.unbindServices();
         super.onTerminate();
     }
 
+    @Override
+    public void onCreate() {
+        ACRA.init(this);
+        YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
+        ACRA.getErrorReporter().setReportSender(yourSender);
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable e) {
+                e.printStackTrace();
+                handleUncaughtException(thread, e);
+//                ACRA.getErrorReporter().handleSilentException(e);
+                ACRA.getErrorReporter().handleException(e);
+            }
+        });
+
+//        loadProcessInfo();
+
+        if(!isFermatOpen()) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext());
+                    servicesHelpers.bindServices();
+
+
+                }
+            }).start();
+        }
+
+//        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction("org.fermat.SYSTEM_RUNNING");
+//        bManager.registerReceiver(new FermatSystemRunningReceiver(this), intentFilter);
+
+//        new ANRWatchDog().start();
+
+        super.onCreate();
+    }
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+       // MultiDex.install(this);
+    }
+
+
+    private void handleUncaughtException (Thread thread, Throwable e) {
+        Toast.makeText(this,"Sorry, The app is not working",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,StartActivity.class);
+        startActivity(intent);
+    }
+
+    public FermatAppsManagerService getAppManager(){
+        return getServicesHelpers().getAppManager();
+    }
+
+    public NotificationService getNotificationService(){
+        return getServicesHelpers().getNotificationService();
+    }
+
+    public ClientBrokerService getClientSideBrokerService(){
+        return getServicesHelpers().getClientSideBrokerService();
+    }
+
+    public ServicesHelpers getServicesHelpers() {
+        return servicesHelpers;
+    }
+
+    /**
+     * Get the list of currently running process.
+     */
+    private void loadProcessInfo() {
+        int processId = android.os.Process.myPid();
+
+        String myProcessName =getApplicationContext().getPackageName();
+        Log.i(TAG,"context:"+myProcessName);
+
+
+
+
+
+    }
+
+    public boolean isFermatOpen() {
+        int pId = android.os.Process.myPid();
+        ActivityManager activityManager = (ActivityManager) this
+                .getSystemService(ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager
+                .getRunningAppProcesses();
+        for (int idx = 0; idx < procInfos.size(); idx++) {
+            ActivityManager.RunningAppProcessInfo process = procInfos.get(idx);
+            String processName = process.processName;
+            if(pId != process.pid) {
+                if (processName.equals("org.fermat")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void setFermatRunning(boolean fermatRunning) {
+        Log.i(TAG,"Fermat running");
+        this.fermatRunning = fermatRunning;
+    }
+
+    public boolean isFermatRunning() {
+        return fermatRunning;
+    }
 }

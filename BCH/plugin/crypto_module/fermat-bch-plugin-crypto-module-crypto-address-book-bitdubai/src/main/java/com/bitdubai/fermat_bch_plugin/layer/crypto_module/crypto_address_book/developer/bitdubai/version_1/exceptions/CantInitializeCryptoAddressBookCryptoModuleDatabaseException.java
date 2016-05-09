@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_bch_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_cry_api.CryptoException;
+import com.bitdubai.fermat_bch_api.CryptoException;
 
 /**
  * The Class <code>package com.bitdubai.fermat_bch_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.exceptions.CantInitializeCryptoAddressBookCryptoModuleDatabaseException</code>

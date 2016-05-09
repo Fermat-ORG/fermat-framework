@@ -3,10 +3,12 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 
+import java.io.Serializable;
+
 /**
  * Created by natalia on 05/01/16.
  */
-public interface IntraUserModuleIdentity extends ActiveActorIdentityInformation {
+public interface IntraUserModuleIdentity extends ActiveActorIdentityInformation,Serializable {
 
 
     /**

@@ -9,6 +9,7 @@ public enum Wallets {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
+
     BNK_BANKING_WALLET("BNKBW"),
     CBP_CRYPTO_BROKER_WALLET("CBPCBW"),
     CBP_CRYPTO_CUSTOMER_WALLET("CBPCCW"),
@@ -20,7 +21,8 @@ public enum Wallets {
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI("BASIC"),
     DAP_ASSET_ISSUER_WALLET("dap_asset_issuer_wallet"),
     DAP_ASSET_USER_WALLET("dap_asset_user_wallet"),
-    DAP_REDEEM_POINT_WALLET("dap_redeem_point_wallet");
+    DAP_REDEEM_POINT_WALLET("dap_redeem_point_wallet"),
+    TKY_FAN_WALLET("TKYFW");
 
     private final String code;
 
@@ -59,6 +61,8 @@ public enum Wallets {
                 return DAP_ASSET_USER_WALLET;
             case "dap_redeem_point_wallet":
                 return DAP_REDEEM_POINT_WALLET;
+            case "TKYFW":
+                return TKY_FAN_WALLET;
             default:
                 throw new InvalidParameterException(
                         InvalidParameterException.DEFAULT_MESSAGE,

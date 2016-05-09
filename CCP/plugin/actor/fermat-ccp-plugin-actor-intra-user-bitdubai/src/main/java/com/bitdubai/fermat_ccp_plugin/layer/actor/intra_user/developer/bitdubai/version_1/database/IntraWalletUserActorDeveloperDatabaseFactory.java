@@ -83,7 +83,7 @@ public class IntraWalletUserActorDeveloperDatabaseFactory implements DealsWithPl
                   /*
                    * We create the new database
                    */
-                database = intraUserIdentityDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = intraUserIdentityDatabaseFactory.createDatabase(pluginId, IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.

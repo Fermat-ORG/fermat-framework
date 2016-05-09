@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 
@@ -37,6 +38,8 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     private long timestamp;
 
     private String memo;
+
+    private BlockchainNetworkType blockchainNetworkType;
 
     @Override
     public CryptoAddress getAddressFrom() {
@@ -107,6 +110,12 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         return transactionHash;
     }
 
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        this.blockchainNetworkType = blockchainNetworkType;
+    }
 
     public String getActorFromPublicKey() {
         return actorFromPublicKey;

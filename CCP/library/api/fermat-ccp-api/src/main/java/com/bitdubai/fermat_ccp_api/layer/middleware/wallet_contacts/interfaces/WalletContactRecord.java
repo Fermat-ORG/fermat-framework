@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -70,9 +72,9 @@ public interface WalletContactRecord {
     /**
      * Return the crypto addresses
      *
-     * @return list of CryptoAddresses of the wallet contact
+     * @return HashMap of CryptoAddresses of the wallet contact
      */
-    List<CryptoAddress> getCryptoAddresses();
+    HashMap<BlockchainNetworkType,CryptoAddress> getCryptoAddresses();
 
     Compatibility getCompatibility();
 

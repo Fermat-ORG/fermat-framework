@@ -3,7 +3,6 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,39 +19,32 @@ import java.util.UUID;
 
  public interface DatabaseTableRecord {
     
-    public String getStringValue(String columnName);
+    String getStringValue(String columnName);
     
-    public UUID getUUIDValue(String columnName);
+    UUID getUUIDValue(String columnName);
     
-    public long getLongValue(String columnName);
+    long getLongValue(String columnName);
 
-    public Integer getIntegerValue(String columnName);
+    Integer getIntegerValue(String columnName);
 
-    public float getFloatValue(String columnName);
+    float getFloatValue(String columnName);
 
-    public double getDoubleValue(String columnName);
+    double getDoubleValue(String columnName);
 
-    public String getVariableName(String columnName);
+    void setStringValue (String columnName, String value);
 
-    public void setStringValue (String columnName, String value);
+    void setUUIDValue (String columnName, UUID value);
 
-    public void setUUIDValue (String columnName, UUID value);
+    void setLongValue(String columnName, long value);
 
-    public void setLongValue(String columnName, long value);
+    void setIntegerValue(String columnName, Integer value);
 
-    public void setIntegerValue(String columnName, Integer value);
+    void setFloatValue(String columnName, float value);
 
-    public void setFloatValue(String columnName, float value);
+    void setDoubleValue(String columnName, double value);
 
-    public void setDoubleValue(String columnName, double value);
+    void setFermatEnum(String columnName, FermatEnum state);
 
-    public void setVariableValue (String columnName, String variableName);
+    List<DatabaseRecord> getValues();
 
-    public void setSelectField (String columnName);
-
-    public void setFermatEnum(String columnName, FermatEnum state);
-
-    public List<DatabaseRecord> getValues();
-
-    public void setValues( List<DatabaseRecord> values );
 }

@@ -8,9 +8,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantM
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.database.BitcoinWatchOnlyCryptoVaultDao;
-import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinWatchOnlyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantLoadHierarchyAccountsException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.KeyMaintainerStatisticException;
@@ -112,7 +113,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
         /**
          * Sleep time of the agent between iterations
          */
-        final long AGENT_SLEEP_TIME = 600000; //default time is 10 minutes
+        final long AGENT_SLEEP_TIME = 10000; //default time is 10 minutes
 
 
         @Override
@@ -158,7 +159,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * I will calculate the current threshold to see if we need to create new keys
                  */
-                currentThreshold = (int) Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
+                currentThreshold = Math.round(100 - ((currentUsedKeys * 100) / currentGeneratedKeys));
 
                 List<ECKey> keys;
                 if (currentThreshold <= VaultKeyMaintenanceParameters.KEY_PERCENTAGE_GENERATION_THRESHOLD) {
@@ -248,7 +249,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 /**
                  * the default network is always active, so I will add this.
                  */
-                blockchainNetworkTypes.add(BlockchainNetworkType.DEFAULT);
+                blockchainNetworkTypes.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
             return blockchainNetworkTypes;
@@ -268,7 +269,7 @@ class VaultKeyHierarchyMaintainer implements Agent {
                 // I derive the key at position i
                 DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
                 // I add this key to the ECKey list
-                childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
+                childKeys.add(ECKey.fromPublicOnly(derivedKey.getPubKeyPoint()));
             }
 
             return childKeys;

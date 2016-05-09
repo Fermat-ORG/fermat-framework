@@ -105,5 +105,19 @@ public class JsonAttNamesConstants {
      */
     public static final String PROFILE_TO_REGISTER = "pr";
 
+    /**
+     * Represent the value of PROFILE_TO_REGISTER
+     */
+    public static final String PROFILE_TO_UPDATE = "pu";
+
+    /**
+     * Represent the value of RECONNECTED
+     */
+    public static final String RECONNECTED = "rc";
+
+    /*
+     * Represent the value of IPSERVER
+     */
+    public static final String IPSERVER = "ipserver";
 
 }

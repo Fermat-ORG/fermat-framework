@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -42,8 +43,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offlin
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -52,10 +53,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+
 /**
  * Created by Manuel Perez on 12/12/2015.
  */
-
+@PluginInfo(createdBy = "darkestpriest", maintainerMail = "darkpriestrelative@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.BUSINESS_TRANSACTION, plugin = Plugins.CUSTOMER_OFFLINE_PAYMENT)
 public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
@@ -101,6 +103,9 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
     public CustomerOfflinePaymentPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -110,6 +115,193 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         List<String> returnedClasses = new ArrayList<String>();
         returnedClasses.add("com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot");
         return returnedClasses;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        try {
+            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+                if (CustomerOfflinePaymentPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                } else {
+                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                }
+            }
+        } catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+        }
+    }
+
+    @Override
+    public void start() throws CantStartPluginException {
+        try {
+
+            /**
+             * Initialize database
+             */
+            initializeDb();
+
+            /**
+             * Initialize Developer Database Factory
+             */
+            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory = new
+                    CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
+                    pluginId);
+            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
+
+            /**
+             * Initialize Dao
+             */
+            CustomerOfflinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
+                    new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
+                            pluginId,
+                            database,
+                            errorManager);
+
+            /**
+             * Init the plugin manager
+             */
+        //TODO: only for testing
+            //customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
+            this.customerOfflinePaymentTransactionManager=new CustomerOfflinePaymentTransactionManager(
+                    this.customerBrokerContractPurchaseManager,
+                    customerOnlinePaymentBusinessTransactionDao,
+                    this.errorManager);
+
+            /**
+             * Init event recorder service.
+             */
+            CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService=new CustomerOfflinePaymentRecorderService(
+                    customerOnlinePaymentBusinessTransactionDao,
+                    eventManager,errorManager);
+            customerOfflinePaymentRecorderService.start();
+
+            /**
+             * Init monitor Agent
+             */
+            CustomerOfflinePaymentMonitorAgent customerOnlinePaymentMonitorAgent=new CustomerOfflinePaymentMonitorAgent(
+                    pluginDatabaseSystem,
+                    logManager,
+                    errorManager,
+                    eventManager,
+                    pluginId,
+                    transactionTransmissionManager,
+                    customerBrokerContractPurchaseManager,
+                    customerBrokerContractSaleManager);
+            customerOnlinePaymentMonitorAgent.start();
+
+            this.serviceStatus = ServiceStatus.STARTED;
+            //System.out.println("Customer offline payment starting");
+            //testPayment();
+        } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Offline Payment Plugin",
+                    "Cannot initialize the plugin database factory");
+        } catch (CantInitializeDatabaseException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Offline Payment Plugin",
+                    "Cannot initialize the database plugin");
+        } catch (CantStartAgentException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Offline Payment Plugin",
+                    "Cannot initialize the plugin monitor agent");
+        } catch (CantStartServiceException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(
+                    FermatException.wrapException(exception),
+                    "Starting Customer Offline Payment Plugin",
+                    "Cannot initialize the plugin recorder service");
+        }catch (Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantStartPluginException(FermatException.wrapException(exception),
+                    "Starting Customer Offline Payment Plugin",
+                    "Unexpected error");
+        }
+    }
+
+    @Override
+    public void pause() {
+
+        try{
+            this.serviceStatus = ServiceStatus.PAUSED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
+    }
+
+    @Override
+    public void resume() {
+
+        try{
+            this.serviceStatus = ServiceStatus.STARTED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
+    }
+
+    @Override
+    public void stop() {
+        try{
+            this.serviceStatus = ServiceStatus.STOPPED;
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return this.customerOfflinePaymentTransactionManager;
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
+
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            /**
+             * sometimes the classname may be passed dynamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return CustomerOfflinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            /**
+             * If I couldn't get the correct logging level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
     }
 
     /**
@@ -163,7 +355,7 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                  */
                 errorManager.reportUnexpectedPluginException(
                         Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
@@ -171,157 +363,13 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
         }
 
     }
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        try {
-            for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-                if (CustomerOfflinePaymentPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                } else {
-                    CustomerOfflinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-                }
-            }
-        } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
+
+    private void testPayment(){
+        try{
+            this.customerOfflinePaymentTransactionManager.sendPayment("888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
+        } catch(Exception e) {
+            System.out.println("Customer Offline Payment TEST EXCEPTION:");
+            e.printStackTrace();
         }
-    }
-
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-
-            /**
-             * Initialize database
-             */
-            initializeDb();
-
-            /**
-             * Initialize Developer Database Factory
-             */
-            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory = new
-                    CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory(pluginDatabaseSystem,
-                    pluginId);
-            customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.initializeDatabase();
-
-            /**
-             * Initialize Dao
-             */
-            CustomerOfflinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
-                    new CustomerOfflinePaymentBusinessTransactionDao(pluginDatabaseSystem,
-                            pluginId,
-                            database);
-
-            /**
-             * Init the plugin manager
-             */
-            this.customerOfflinePaymentTransactionManager=new CustomerOfflinePaymentTransactionManager(
-                    this.customerBrokerContractPurchaseManager,
-                    customerOnlinePaymentBusinessTransactionDao,
-                    this.errorManager);
-
-            /**
-             * Init event recorder service.
-             */
-            CustomerOfflinePaymentRecorderService customerOfflinePaymentRecorderService=new CustomerOfflinePaymentRecorderService(
-                    customerOnlinePaymentBusinessTransactionDao,
-                    eventManager);
-            customerOfflinePaymentRecorderService.start();
-
-            /**
-             * Init monitor Agent
-             */
-            CustomerOfflinePaymentMonitorAgent customerOnlinePaymentMonitorAgent=new CustomerOfflinePaymentMonitorAgent(
-                    pluginDatabaseSystem,
-                    logManager,
-                    errorManager,
-                    eventManager,
-                    pluginId,
-                    transactionTransmissionManager,
-                    customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager);
-            customerOnlinePaymentMonitorAgent.start();
-
-            this.serviceStatus = ServiceStatus.STARTED;
-            //System.out.println("Customer offline payment starting");
-        } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException exception) {
-            throw new CantStartPluginException(
-                    FermatException.wrapException(exception),
-                    "Starting Customer Offline Payment Plugin",
-                    "Cannot initialize the plugin database factory");
-        } catch (CantInitializeDatabaseException exception) {
-            throw new CantStartPluginException(
-                    FermatException.wrapException(exception),
-                    "Starting Customer Offline Payment Plugin",
-                    "Cannot initialize the database plugin");
-        } catch (CantStartAgentException exception) {
-            throw new CantStartPluginException(
-                    FermatException.wrapException(exception),
-                    "Starting Customer Offline Payment Plugin",
-                    "Cannot initialize the plugin monitor agent");
-        } catch (CantStartServiceException exception) {
-            throw new CantStartPluginException(
-                    FermatException.wrapException(exception),
-                    "Starting Customer Offline Payment Plugin",
-                    "Cannot initialize the plugin recorder service");
-        }
-    }
-
-    @Override
-    public void pause() {
-        this.serviceStatus = ServiceStatus.PAUSED;
-    }
-
-    @Override
-    public void resume() {
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void stop() {
-        this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public FermatManager getManager() {
-        return this.customerOfflinePaymentTransactionManager;
-    }
-
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            /**
-             * sometimes the classname may be passed dynamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split((Pattern.quote("$")));
-            return CustomerOfflinePaymentPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            /**
-             * If I couldn't get the correct logging level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
-    }
-
-
-    @Override
-    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
-    }
-
-    @Override
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        return customerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 }

@@ -2,7 +2,14 @@ package com.bitdubai.fermat_cht_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_cht_core.layer.actor_connection.ActorConnectionLayer;
+import com.bitdubai.fermat_cht_core.layer.actor_network_service.ActorNetworkServiceLayer;
+import com.bitdubai.fermat_cht_core.layer.identity.IdentityLayer;
+import com.bitdubai.fermat_cht_core.layer.middleware.MiddlewareLayer;
+import com.bitdubai.fermat_cht_core.layer.network_service.NetworkServiceLayer;
+import com.bitdubai.fermat_cht_core.layer.sup_app_module.SupAppModuleLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 
 /**
@@ -18,16 +25,21 @@ public class CHTPlatform extends AbstractPlatform {
     @Override
     public void start() throws CantStartPlatformException {
 
-        /*try {
+        try {
+            registerLayer(new ActorConnectionLayer());
+            registerLayer(new ActorNetworkServiceLayer());
+            registerLayer(new IdentityLayer());
+            registerLayer(new NetworkServiceLayer());
+            registerLayer(new MiddlewareLayer());
+            registerLayer(new SupAppModuleLayer());
 
-            //TODO: fill with layers
         } catch (CantRegisterLayerException e) {
 
             throw new CantStartPlatformException(
                     e,
-                    "CBP Platform.",
+                    "CHT Platform.",
                     "Problem trying to register a layer."
             );
-        }*/
+        }
     }
 }

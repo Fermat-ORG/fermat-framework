@@ -1,0 +1,27 @@
+
+<resources>
+
+    <string name="app_name" translatable="false">FermatCustomViews</string>
+
+    <string-array name="coins_name_array">
+        <item>BTC</item>
+        <item>mBTC</item>
+        <item>bits</item>
+        <item>Satoshis</item>
+        <item>Test1 Test2 Test3 Test4 Test5 Test6 Test7 Test8 Test9 Test10 Test11 Test12 Test13</item>
+        <item>Generic Coin 1</item>
+        <item>Generic Coin 2</item>
+        <item>Generic Coin 3</item>
+        <item>Generic Coin 4</item>
+        <item>Generic Coin 5</item>
+        <item>Generic Coin 6</item>
+        <item>Generic Coin 7</item>
+        <item>Generic Coin 8</item>
+        <item>Generic Coin 9</item>
+        <item>Generic Coin 10</item>
+    </string-array>
+
+    <string name="amount_label">Amount</string>
+    <string name="editor_hint_label">0</string>
+
+</resources>

@@ -14,13 +14,13 @@ public interface DesignerIdentity {
      * Get the alias of the represented designer identity
      * @return String alias
      */
-    public String getAlias();
+    String getAlias();
 
     /**
      * Get the public key of the represented designer
      * @return String publicKey
      */
-    public String getPublicKey();
+    String getPublicKey();
 
     /**
      Sign a message with designer private key
@@ -29,6 +29,6 @@ public interface DesignerIdentity {
      * @throws CantSingMessageException
      */
 
-    public String createMessageSignature(String mensage) throws CantSingMessageException;
+    String createMessageSignature(String mensage) throws CantSingMessageException;
 
 }

@@ -14,6 +14,7 @@ public enum MessageTypes implements FermatEnum {
     ACCEPT       ("ACC"),
     DENY         ("DEN"),
     REQUEST      ("REQ"),
+    RECEIVED     ("REC"),
 
     ;
 
@@ -30,7 +31,7 @@ public enum MessageTypes implements FermatEnum {
             case "ACC": return ACCEPT      ;
             case "DEN": return DENY        ;
             case "REQ": return REQUEST     ;
-
+            case "REC": return RECEIVED    ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

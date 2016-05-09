@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -44,5 +45,10 @@ public class CheckInProfileListMsgRespond extends MsgRespond {
      */
     public List<Profile> getProfileList() {
         return profileList;
+    }
+
+    public static CheckInProfileListMsgRespond parseContent(String content) {
+
+        return new Gson().fromJson(content, CheckInProfileListMsgRespond.class);
     }
 }

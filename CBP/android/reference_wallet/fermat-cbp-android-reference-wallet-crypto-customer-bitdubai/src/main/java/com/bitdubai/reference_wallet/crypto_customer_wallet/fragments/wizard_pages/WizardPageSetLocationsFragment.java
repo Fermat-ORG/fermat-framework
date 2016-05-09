@@ -2,9 +2,11 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,13 +14,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
@@ -38,12 +40,13 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     private List<String> locationList;
 
     // UI
+    boolean hideHelperDialogs = false;
     private RecyclerView recyclerView;
     private LocationsAdapter adapter;
     private View emptyView;
 
     // Fermat Managers
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
@@ -56,9 +59,17 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
+
+            //Delete potential previous configurations made by this wizard page so that they can be reconfigured cleanly
+            moduleManager.clearLocations();
+
+
+            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
+            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
+            if(aux != null && aux instanceof Boolean)
+                hideHelperDialogs = (boolean) aux;
 
             Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
             if (data == null) {
@@ -67,7 +78,12 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
             } else {
                 locationList = (List<String>) data;
             }
-
+            if(locationList.size()>0) {
+                int pos = locationList.size() - 1;
+                if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
+                    locationList.remove(pos);
+                }
+            }
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -79,6 +95,18 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
+
+        if(!hideHelperDialogs) {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
+                    .setIconRes(R.drawable.cbp_crypto_customer)
+                    .setSubTitle(R.string.ccw_wizard_locations_dialog_sub_title)
+                    .setBody(R.string.ccw_wizard_locations_dialog_body)
+                    .setCheckboxText(R.string.ccw_wizard_not_show_text)
+                    .build();
+            presentationDialog.show();
+        }
 
         View layout = inflater.inflate(R.layout.ccw_wizard_step_set_locations, container, false);
 
@@ -95,6 +123,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         addLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                locationList.add("wizard");
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CREATE_NEW_LOCATION_IN_WIZARD, appSession.getAppPublicKey());
             }
         });
@@ -109,7 +138,21 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
 
         showOrHideRecyclerView();
 
+
+        configureToolbar();
+
         return layout;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -135,14 +178,9 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     }
 
     private void saveSettingAndGoNextStep() {
-        if (locationList.isEmpty()) {
-            Toast.makeText(getActivity(), R.string.ccw_add_location_warning_msg, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         try {
             for (String location : locationList) {
-                walletManager.createNewLocation(location, appSession.getAppPublicKey());
+                moduleManager.createNewLocation(location, appSession.getAppPublicKey());
             }
 
         } catch (FermatException ex) {

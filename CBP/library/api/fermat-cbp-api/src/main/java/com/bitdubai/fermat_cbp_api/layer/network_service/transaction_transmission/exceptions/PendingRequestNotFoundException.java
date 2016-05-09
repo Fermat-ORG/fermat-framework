@@ -7,7 +7,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CBPException;
  */
 public class PendingRequestNotFoundException extends CBPException {
 
-    private static final String DEFAULT_MESSAGE = "PENDING REQUEST NOT FOUND EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "PENDING REQUEST NOT FOUND EXCEPTION";
 
     public PendingRequestNotFoundException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);

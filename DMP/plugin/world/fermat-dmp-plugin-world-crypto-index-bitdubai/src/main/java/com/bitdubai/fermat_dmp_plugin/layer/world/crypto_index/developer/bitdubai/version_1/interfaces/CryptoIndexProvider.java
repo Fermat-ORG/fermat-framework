@@ -19,12 +19,31 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitduba
  */
 public interface CryptoIndexProvider {
 
+    /**
+     * @param cryptoCurrency crypto currency
+     * @param fiatCurrency   fiat currency
+     * @param time           the amount of time
+     * @return the exchange rate for the given timestamp
+     * @throws FiatCurrencyNotSupportedException
+     * @throws CryptoCurrencyNotSupportedException
+     * @throws CantGetMarketPriceException
+     */
     double getMarketPrice(CryptoCurrency cryptoCurrency,
                           FiatCurrency fiatCurrency,
                           long time) throws FiatCurrencyNotSupportedException,
             CryptoCurrencyNotSupportedException,
             CantGetMarketPriceException;
 
+    /**
+     * @param cryptoCurrency crypto currency
+     * @param fiatCurrency   fiat currency
+     * @param time           the amount of time
+     * @return the historical exchange rate
+     * @throws FiatCurrencyNotSupportedException
+     * @throws CryptoCurrencyNotSupportedException
+     * @throws CantGetHistoricalExchangeRateException
+     * @throws HistoricalExchangeRateNotFoundException
+     */
    double getHistoricalExchangeRate(CryptoCurrency cryptoCurrency,
                                               FiatCurrency fiatCurrency,
                                               long time)

@@ -3,13 +3,15 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
 
+import java.io.Serializable;
+
 /**
  * The class <code>PluginReference</code>
  * haves all the information of a PluginReference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public class PluginReference {
+public class PluginReference implements Serializable{
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD     = 2819;

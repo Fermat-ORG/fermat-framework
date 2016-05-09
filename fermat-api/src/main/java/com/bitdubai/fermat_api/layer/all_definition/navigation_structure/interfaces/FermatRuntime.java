@@ -5,5 +5,22 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
  */
 public interface FermatRuntime {
 
-    public void changeActivityBack(String appBackPublicKey,String activityCode);
+
+    /**
+     * Change the back activity
+     * This is for communication between apps
+     *
+     * @param appBackPublicKey
+     * @param activityCode
+     */
+    void changeActivityBack(String appBackPublicKey,String activityCode);
+
+    /**
+     *  Change start activity of an app,
+     *
+     * @param activityCode  is the position added in the runtime
+     * @return
+     */
+
+    void changeStartActivity(String activityCode);
 }

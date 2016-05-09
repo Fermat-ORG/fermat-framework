@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_android_api.ui.dialogs;
 
-import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -12,8 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * Created by Matias Furszyfer on 2015.10.18..
@@ -21,7 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 public abstract class FermatDialog <S extends FermatSession,R extends ResourceProviderManager> extends Dialog {
 
 
-    private final Activity activity;
+    private final Context activity;
     private S fermatSession;
 
     private R resources;
@@ -37,14 +37,14 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      * @param fermatSession parent class of walletSession and SubAppSession
      * @param resources parent class of WalletResources and SubAppResources
      */
-    public FermatDialog(Activity activity,S fermatSession,R resources) {
+    public FermatDialog(Context activity,S fermatSession,R resources) {
         super(activity);
         this.activity = activity;
         this.fermatSession = fermatSession;
         this.resources = resources;
     }
 
-    public FermatDialog(Activity activity, int themeResId,S fermatSession,R resources) {
+    public FermatDialog(Context activity, int themeResId,S fermatSession,R resources) {
         super(activity, themeResId);
         this.activity = activity;
         this.fermatSession = fermatSession;
@@ -108,7 +108,7 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
      * @return error manager from session
      */
     public ErrorManager getErrorManager(){
-       return fermatSession.getErrorManager();
+        return fermatSession != null ? fermatSession.getErrorManager() : null;
     }
 
     protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {
@@ -118,11 +118,13 @@ public abstract class FermatDialog <S extends FermatSession,R extends ResourcePr
         return (FermatScreenSwapper) activity;
     }
 
-    protected Activity getActivity(){
+    protected Context getActivity(){
         return activity;
     }
 
     protected void toastDefaultError() {
         Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
     }
+
+
 }

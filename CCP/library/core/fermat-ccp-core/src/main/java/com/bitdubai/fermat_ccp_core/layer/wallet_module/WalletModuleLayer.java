@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_core.layer.wallet_module;
 
+import com.bitdubai.fermat_ccp_core.layer.wallet_module.loss_protected.LossProtectedPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
@@ -23,6 +24,7 @@ public class WalletModuleLayer extends AbstractLayer {
         try {
 
             registerPlugin(new CryptoPluginSubsystem());
+            registerPlugin(new LossProtectedPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

@@ -29,4 +29,8 @@
     <string name="installing_message">Installing&#8230;</string>
     <string name="uninstalling_message">Uninstalling&#8230;</string>
     <string name="wait_please_message">Wait please&#8230;</string>
+    <string name="help">Help</string>
+    <string name="presentation_dialog_body_app_store_list">This is the App Store. Here you can install the many apps that can run in the platform. Right now you can see only the pre-installed apps</string>
+    <string name="presentation_dialog_title_app_store_list">Welcome</string>
+    <string name="presentation_dialog_subtitle_app_store_list">Welcome to the App Store</string>
 </resources>

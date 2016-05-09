@@ -11,8 +11,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -20,14 +22,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForBrokerException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantGetContractsWaitingForCustomerException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenContractsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
@@ -37,15 +36,21 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW;
+
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
+public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSession, ResourceProviderManager>
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
+
+    private View emptyListViewsContainer;
 
     // Data
     private ArrayList<GrouperItem<ContractBasicInformation>> openContractList;
@@ -60,7 +65,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -85,11 +90,18 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
+        emptyListViewsContainer = layout.findViewById(R.id.empty);
+        FermatTextView emptyText = (FermatTextView) layout.findViewById(R.id.cbw_empty_message);
+        ImageView emptyImage = (ImageView) layout.findViewById(R.id.cbw_empty_image);
+        emptyText.setText(R.string.no_new_open_contracts);
+        emptyImage.setImageResource(R.drawable.cbw_no_contracts);
 
         if (openContractList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
@@ -130,12 +142,12 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.cbw_fragment_open_contracts_tab;
+        return R.layout.cbw_fragment_open_negotiations_and_contracts_tab;
     }
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.open_contracts_recycler_view;
+        return R.id.cbw_open_negotiations_and_contracts_recycler_view;
     }
 
     @Override
@@ -149,29 +161,30 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         String grouperText;
 
         if (moduleManager != null) {
+            GrouperItem<ContractBasicInformation> grouper;
+            List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
+            List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
+
             try {
-                CryptoBrokerWalletManager cryptoBrokerWallet = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-                GrouperItem<ContractBasicInformation> grouper;
 
-                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-                List<ContractBasicInformation> waitingForCustomer = new ArrayList<>();
-                waitingForCustomer.addAll(cryptoBrokerWallet.getContractsWaitingForCustomer(10, 0));
-                grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-                data.add(grouper);
+                waitingForBroker.addAll(moduleManager.getContractsWaitingForBroker(10, 0));
+                waitingForCustomer.addAll(moduleManager.getContractsWaitingForCustomer(10, 0));
 
-                grouperText = getActivity().getString(R.string.waiting_for_you);
-                List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
-                waitingForBroker.addAll(cryptoBrokerWallet.getContractsWaitingForBroker(10, 0));
-                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(grouper);
+                if (!waitingForCustomer.isEmpty() || !waitingForBroker.isEmpty()) {
+                    grouperText = getActivity().getString(R.string.waiting_for_you);
+                    grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                    data.add(grouper);
 
-            } catch (CantGetContractsWaitingForCustomerException | CantGetContractsWaitingForBrokerException | CantGetCryptoBrokerWalletException ex) {
+                    grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                    grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                    data.add(grouper);
+                }
+
+            } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
-                    errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                            ex);
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 }
             }
         } else {
@@ -189,7 +202,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         appSession.setData("contract_data", data);
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override
@@ -207,6 +220,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                     adapter.changeDataSet(openContractList);
             }
         }
+        if (openContractList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -215,6 +235,18 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case CBW_CONTRACT_UPDATE_VIEW:
+                onRefresh();
+                break;
+            case CBW_NEGOTIATION_UPDATE_VIEW:
+                onRefresh();
+                break;
         }
     }
 }

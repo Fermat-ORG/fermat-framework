@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
  * The enum class <code>com.bitdubai.fermat_api.layer.all_definition.enums.Actors</code>
@@ -30,7 +29,14 @@ public enum Actors implements FermatEnum {
     DAP_ASSET_REDEEM_POINT  ("DAPARP"),
     DAP_ASSET_USER          ("DAPASUS"),
 
-    ;
+    ART_ARTIST              ("AART"),
+    ART_FAN                 ("AFAN"),
+
+    CHAT                    ("CHT"),
+
+    LOSS_PROTECTED_USER     ("LPU"),
+    BITCOIN_BASIC_USER    ("BBW");
+
 
     private final String code;
 
@@ -55,6 +61,14 @@ public enum Actors implements FermatEnum {
             case "DAPASIS": return DAP_ASSET_ISSUER;
             case "DAPARP":  return DAP_ASSET_REDEEM_POINT;
             case "DAPASUS": return DAP_ASSET_USER;
+
+            case "AART":    return ART_ARTIST;
+            case "AFAN":    return ART_FAN;
+
+            case "CHT":      return CHAT;
+
+            case "LPU":     return LOSS_PROTECTED_USER;
+            case "BBW":     return BITCOIN_BASIC_USER;
 
             default:
                 throw new IllegalArgumentException(

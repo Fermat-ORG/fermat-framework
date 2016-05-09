@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
+import java.io.Serializable;
+
 /**
  * The class <code>com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation</code>
  * is the implementation of IntraUserInformation interface.
@@ -10,22 +12,26 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
  *
  * Created by natalia on 11/08/15.
  */
-public class IntraUserModuleInformation implements IntraUserInformation {
+public class IntraUserModuleInformation implements IntraUserInformation,Serializable {
 
     private String name;
     private String phrase;
     private String publicKey;
     private byte[] profileImage;
     private ConnectionState connectionState;
+    private String state = "Online";
 
 
-    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState)
+
+    public IntraUserModuleInformation(String name,String phrase,String publicKey,byte[] profileImage, ConnectionState connectionState,String state)
     {
         this.name = name;
         this.publicKey = publicKey;
-        this.profileImage = (byte[] )profileImage.clone();
+        this.profileImage = profileImage.clone();
         this.connectionState = connectionState;
         this.phrase = phrase;
+        this.state = state;
+
     }
     /**
      * That method returns the public key of the represented Intra User
@@ -62,7 +68,7 @@ public class IntraUserModuleInformation implements IntraUserInformation {
      */
     @Override
     public byte[] getProfileImage() {
-        return (profileImage!=null) ? (byte[] )this.profileImage.clone() : null;
+        return (profileImage!=null) ? this.profileImage.clone() : null;
     }
 
     /**
@@ -73,5 +79,10 @@ public class IntraUserModuleInformation implements IntraUserInformation {
     @Override
     public ConnectionState getConnectionState() {
         return this.connectionState;
+    }
+
+    @Override
+    public String getState() {
+        return this.state ;
     }
 }

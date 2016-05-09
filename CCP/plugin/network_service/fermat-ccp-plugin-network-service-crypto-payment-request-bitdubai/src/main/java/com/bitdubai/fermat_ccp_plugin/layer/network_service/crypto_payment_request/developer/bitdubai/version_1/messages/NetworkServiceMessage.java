@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_requ
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.enums.MessageTypes;
 import com.google.gson.Gson;
 
+import java.util.UUID;
+
 /**
  * The interface <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.NetworkServiceMessage</code>
  * indicates all the basic functionality of a network service message,
@@ -12,9 +14,16 @@ import com.google.gson.Gson;
 public class NetworkServiceMessage {
 
     private MessageTypes messageType;
+    private String identitySender;
+    private String actorDestination;
 
-    public NetworkServiceMessage() {
+    public NetworkServiceMessage(final MessageTypes messageType,String identitySender,String actorDestination) {
+        this.messageType = messageType;
+        this.identitySender = identitySender;
+        this.actorDestination = actorDestination;
     }
+
+
 
     public NetworkServiceMessage(final MessageTypes messageType) {
         this.messageType = messageType;
@@ -26,8 +35,17 @@ public class NetworkServiceMessage {
         return gson.toJson(this);
     }
 
+
     public MessageTypes getMessageType() {
         return messageType;
+    }
+
+    public String getIdentitySender() {
+        return identitySender;
+    }
+
+    public String getActorDestination() {
+        return actorDestination;
     }
 
 }

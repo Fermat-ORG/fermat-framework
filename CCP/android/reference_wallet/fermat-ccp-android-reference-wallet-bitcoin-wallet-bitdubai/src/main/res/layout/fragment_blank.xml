@@ -38,8 +38,6 @@
 
             </LinearLayout>
 
-
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,14 +48,9 @@
                 android:orientation="vertical"
                 >
 
-
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="35dp" />
-
-
-
-
 
                 <TextView
                     android:id="@+id/txtViewTypeBalance"
@@ -87,11 +80,10 @@
                     android:text="mBTC     0"
                     />
 
-
             </LinearLayout>
-
 
         </LinearLayout>
 
     </ScrollView>
+
 </android.support.v4.widget.SwipeRefreshLayout>

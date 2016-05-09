@@ -3,9 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -13,7 +11,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
@@ -22,17 +19,14 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
 import java.io.ByteArrayOutputStream;
-import java.nio.ByteBuffer;
 
 /**
  * Created by mati on 2015.11.27..
@@ -41,6 +35,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
+    private static final String TAG = "WelcomeWallet";
 
     private final Activity activity;
     private final int type;
@@ -131,7 +126,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
             case TYPE_PRESENTATION:
                 return R.layout.presentation_wallet;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
-                return R.layout.presentation_wallet_without_identities;
+                return R.layout.presentation_bitcoin_wallet_without_identities;
         }
         return 0;
     }
@@ -147,11 +142,11 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
         if(id == R.id.btn_left){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.ic_profile_male));
+                getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
-            } catch (CantGetCryptoWalletException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             saveSettings();
@@ -159,7 +154,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         }
         else if(id == R.id.btn_right){
             try {
-                final CryptoWallet cryptoWallet = getSession().getModuleManager().getCryptoWallet();
+                final CryptoWallet cryptoWallet = getSession().getModuleManager();
                 //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
@@ -172,7 +167,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
                             e.printStackTrace();
                         }
 
-            } catch (CantGetCryptoWalletException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             saveSettings();
@@ -187,16 +182,17 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         if(type!=TYPE_PRESENTATION)
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
         if(checkbox_not_show.isChecked()){
-            SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
             try {
-                BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+                    BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                    getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
                 e.printStackTrace();
             } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
@@ -205,14 +201,14 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
     private byte[] convertImage(int resImage){
         Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
-        //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        //bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
         return stream.toByteArray();
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        Toast.makeText(activity,String.valueOf(isChecked),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(activity,String.valueOf(isChecked),Toast.LENGTH_SHORT).show();
         if(isChecked){
             getSession().setData(SessionConstant.PRESENTATION_SCREEN_ENABLED,Boolean.TRUE);
         }else {

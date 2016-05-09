@@ -19,6 +19,8 @@ public class WalletManagerSelector {
         switch(platform) {
 
             case CRYPTO_CURRENCY_PLATFORM: return walletManagerManager;
+            case CRYPTO_BROKER_PLATFORM: return walletManagerManager;
+
             default:throw new CantIdentifyWalletManagerException("CBP-NEGOTIATION TRANSACTION-CUSTOMER BROKER CLOSE. Unexpected Platform: "+platform.toString()+" - "+ platform.getCode());
 
         }

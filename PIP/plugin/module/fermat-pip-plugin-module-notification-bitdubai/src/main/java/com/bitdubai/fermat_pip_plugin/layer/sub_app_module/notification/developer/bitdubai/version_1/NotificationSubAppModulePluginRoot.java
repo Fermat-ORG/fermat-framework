@@ -19,23 +19,26 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
-import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
-import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
-import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
+//import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
+//import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
+//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
+//import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_pip_api.layer.notifications.FermatNotificationListener;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationHandler;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.ClientConnectionLooseNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.CloudClientNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.IncomingMoneyNotificationHandler;
 import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.exceptions.CantCreateNotification;
+import com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -60,11 +63,11 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.INTRA_WALLET_USER)
-    private IntraWalletUserActorManager intraWalletUserActorManager;
-
-    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.EXTRA_WALLET_USER)
-    private ExtraUserManager extraUserManager;
+//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.INTRA_WALLET_USER)
+//    private IntraWalletUserActorManager intraWalletUserActorManager;
+//
+//    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.EXTRA_WALLET_USER)
+//    private ExtraUserManager extraUserManager;
 
     // TODO MAKE USE OF THE ERROR MANAGER
 
@@ -118,17 +121,18 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     private void setUpEventListeners(){
 
-        FermatEventListener fermatEventListenerNewNotification = eventManager.getNewListener(EventType.INCOMING_MONEY_NOTIFICATION);
-        FermatEventHandler fermatEventHandlerNewNotification = new IncomingMoneyNotificationHandler(this);
-        fermatEventListenerNewNotification.setEventHandler(fermatEventHandlerNewNotification);
-        eventManager.addListener(fermatEventListenerNewNotification);
-        listenersAdded.add(fermatEventListenerNewNotification);
-
         FermatEventListener fermatEventListenerCloudClientConnectedNotification = eventManager.getNewListener(P2pEventType.COMPLETE_CLIENT_COMPONENT_REGISTRATION_NOTIFICATION);
         FermatEventHandler CloudClietNotificationHandler = new CloudClientNotificationHandler(this);
         fermatEventListenerCloudClientConnectedNotification.setEventHandler(CloudClietNotificationHandler);
         eventManager.addListener(fermatEventListenerCloudClientConnectedNotification);
         listenersAdded.add(fermatEventListenerCloudClientConnectedNotification);
+
+      /*  FermatEventListener fermatEventListenerNewNotification = eventManager.getNewListener(EventType.INCOMING_MONEY_NOTIFICATION);
+        FermatEventHandler fermatEventHandlerNewNotification = new IncomingMoneyNotificationHandler(this);
+        fermatEventListenerNewNotification.setEventHandler(fermatEventHandlerNewNotification);
+        eventManager.addListener(fermatEventListenerNewNotification);
+        listenersAdded.add(fermatEventListenerNewNotification);
+
 
         FermatEventListener fermatEventListenerIncomingRequestConnectionNotification = eventManager.getNewListener(EventType.INCOMING_INTRA_ACTOR_REQUUEST_CONNECTION_NOTIFICATION);
         FermatEventHandler incomingRequestConnectionNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.IncomingRequestConnectionNotificationHandler(this);
@@ -154,7 +158,27 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         FermatEventHandler deniedPaymentRequestNotificationHandler = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.event_handlers.DeniedPaymentRequestNotificationHandler(this);
         deniedPaymentRequestNotificationEventListener.setEventHandler(deniedPaymentRequestNotificationHandler);
         eventManager.addListener(deniedPaymentRequestNotificationEventListener);
-        listenersAdded.add(deniedPaymentRequestNotificationEventListener);
+        listenersAdded.add(deniedPaymentRequestNotificationEventListener);*/
+
+        //close connection server
+        FermatEventListener clientConnectionCloseNotificationEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_CLOSE);
+        FermatEventHandler clientConnectionCloseNotificationHandler = new ClientConnectionCloseNotificationHandler(this);
+        clientConnectionCloseNotificationEventListener.setEventHandler(clientConnectionCloseNotificationHandler);
+        eventManager.addListener(clientConnectionCloseNotificationEventListener);
+        listenersAdded.add(clientConnectionCloseNotificationEventListener);
+
+        //loose connection server
+        FermatEventListener clientConnectionLooseNotificationEventListener = eventManager.getNewListener(P2pEventType.CLIENT_CONNECTION_LOOSE);
+        FermatEventHandler clientConnectionLooseNotificationHandler = new ClientConnectionLooseNotificationHandler(this);
+        clientConnectionLooseNotificationEventListener.setEventHandler(clientConnectionLooseNotificationHandler);
+        eventManager.addListener(clientConnectionLooseNotificationEventListener);
+        listenersAdded.add(clientConnectionLooseNotificationEventListener);
+
+        //connect connection server
+        FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+        fermatEventListener.setEventHandler(new CloudClientNotificationHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
 
 
     }
@@ -208,57 +232,57 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
     }
 
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource,String intraUserIdentityPublicKey,String walletPublicKey, long amount, CryptoCurrency cryptoCurrency, String actorId, Actors actorType) throws CantCreateNotification {
-        try {
+//        try {
 
-            Actor actor = null;
-            try{
-                actor = getActor(intraUserIdentityPublicKey,actorId,actorType);
-            } catch (IntraUserNotFoundException e) {
-                e.printStackTrace();
-            }
+//            Actor actor = null;
+//            try{
+//                actor = getActor(intraUserIdentityPublicKey,actorId,actorType);
+//            } catch (IntraUserNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//
+//
+//            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+//            notification.setAlertTitle(getSourceString(eventSource) + " " + WalletUtils.formatBalanceString(amount));
+//
+//            if(actor != null)
+//            {
+//                notification.setImage(actor.getPhoto());
+//                if(cryptoCurrency!=null)
+//                notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+//                else{
+//                    notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
+//                }
+//
+//            }
+//            else
+//            {
+//                if(cryptoCurrency!=null)
+//                notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
+//                else notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
+//
+//            }
 
-
-            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
-            notification.setAlertTitle(getSourceString(eventSource) + " " + WalletUtils.formatBalanceString(amount));
-
-            if(actor != null)
-            {
-                notification.setImage(actor.getPhoto());
-                if(cryptoCurrency!=null)
-                notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
-                else{
-                    notification.setTextBody(actor.getName() + makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
-                }
-
-            }
-            else
-            {
-                if(cryptoCurrency!=null)
-                notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in " + cryptoCurrency.getCode());
-                else notification.setTextBody( makeString(eventSource) + WalletUtils.formatBalanceString(amount) + " in BTC");
-
-            }
-
-
-            notification.setTextTitle(getTextTitleBySource(eventSource));
-
-            notification.setWalletPublicKey(walletPublicKey);
-
-
-            return notification;
-
-        } catch (CantGetExtraUserException e) {
-            e.printStackTrace();
-            throw new CantCreateNotification();
-
-        } catch (CantGetIntraUserException e) {
-            e.printStackTrace();
-            throw new CantCreateNotification();
-        } catch (ExtraUserNotFoundException e) {
-            e.printStackTrace();
-            throw new CantCreateNotification();
-        }
-
+//
+//            notification.setTextTitle(getTextTitleBySource(eventSource));
+//
+//            notification.setWalletPublicKey(walletPublicKey);
+//
+//
+//            return notification;
+//
+//        } catch (CantGetExtraUserException e) {
+//            e.printStackTrace();
+//            throw new CantCreateNotification();
+//
+//        } catch (CantGetIntraUserException e) {
+//            e.printStackTrace();
+//            throw new CantCreateNotification();
+//        } catch (ExtraUserNotFoundException e) {
+//            e.printStackTrace();
+//            throw new CantCreateNotification();
+//        }
+return null;
     }
 
     private com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification createNotification(EventSource eventSource, String actorId, String actorName, Actors actorType, byte[] profileImage) throws CantCreateNotification {
@@ -322,7 +346,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
             notification.setNotificationType(NotificationType.INCOMING_INTRA_ACTOR_REQUEST_CONNECTION_NOTIFICATION.getCode());
             poolNotification.add(notification);
 
-            notificationListener.notificate(notification);
+            //notificationListener.notificate(notification);
         } catch (CantCreateNotification cantCreateNotification) {
             cantCreateNotification.printStackTrace();
         }
@@ -338,7 +362,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
              notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("Sent Transaction reversed");
-            notification.setTextBody("Sending " + WalletUtils.formatBalanceString(amount)  + " BTC could not be completed.");
+//            notification.setTextBody("Sending " + WalletUtils.formatBalanceString(amount)  + " BTC could not be completed.");
             notification.setNotificationType(NotificationType.OUTGOING_INTRA_ACTOR_ROLLBACK_TRANSACTION_NOTIFICATION.getCode());
 
             poolNotification.add(notification);
@@ -361,7 +385,7 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("A Payment Request was received for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
+//            notification.setTextBody("You have received a Payment Request, for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode());
             notification.setNotificationType(NotificationType.RECEIVE_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);
@@ -380,11 +404,11 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
     {
         try {
-            com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
+            Notification notification = new com.bitdubai.fermat_pip_plugin.layer.sub_app_module.notification.developer.bitdubai.version_1.structure.Notification();
 
             notification.setAlertTitle(getSourceString(source));
             notification.setTextTitle("");
-            notification.setTextBody("Your Payment Request for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + " was denied.");
+//            notification.setTextBody("Your Payment Request, for " + WalletUtils.formatBalanceString(amount)  + " " + cryptoCurrency.getCode() + ", was deny.");
             notification.setNotificationType(NotificationType.DENIED_REQUEST_PAYMENT_NOTIFICATION.getCode());
 
             poolNotification.add(notification);
@@ -396,6 +420,35 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
 
         // notify observers
         notifyNotificationArrived();
+    }
+
+    @Override
+    public void addNotificacion(NotificationType notificationType) {
+        Notification notification = new Notification();
+        switch (notificationType){
+            case CLOUD_CLIENT_CONNECTED:
+                notification.setAlertTitle("running");
+                notification.setTextTitle("");
+                notification.setTextBody("running");
+                notification.setNotificationType(NotificationType.CLOUD_CONNECTED_NOTIFICATION.getCode());
+                break;
+            case CLOUD_CLIENT_CLOSED:
+                notification.setAlertTitle("closed");
+                notification.setTextTitle("");
+                notification.setTextBody("closed");
+                notification.setNotificationType(NotificationType.CLOUD_CLIENT_CLOSED.getCode());
+                break;
+            case CLOUD_CLIENT_CONNECTION_LOOSE:
+                notification.setAlertTitle("stopped");
+                notification.setTextTitle("");
+                notification.setTextBody("stopped");
+                notification.setNotificationType(NotificationType.CLOUD_CLIENT_CONNECTION_LOOSE.getCode());
+                break;
+        }
+
+
+        poolNotification.add(notification);
+       // notificationListener.notificate(notification);
     }
 
     @Override
@@ -455,31 +508,31 @@ public class NotificationSubAppModulePluginRoot extends AbstractPlugin implement
         }
 
     }
-    private Actor getActor(String intraUserLoggedInPublicKey,String actorId, Actors actorType) throws CantGetExtraUserException, ExtraUserNotFoundException , CantGetIntraUserException, IntraUserNotFoundException{
-        switch (actorType) {
-            case EXTRA_USER:
-
-                    return extraUserManager.getActorByPublicKey(actorId);
-
-            case INTRA_USER:
-
-                    //find actor connected with logget identity
-                try {
-                    return intraWalletUserActorManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorId);
-                }catch (Exception e){
-                    return null;
-                }
-
-
-            default:
-                return null;
-        }
-
-    }
+//    private Actor getActor(String intraUserLoggedInPublicKey,String actorId, Actors actorType) throws CantGetExtraUserException, ExtraUserNotFoundException , CantGetIntraUserException, IntraUserNotFoundException{
+//        switch (actorType) {
+//            case EXTRA_USER:
+//
+//                    return extraUserManager.getActorByPublicKey(actorId);
+//
+//            case INTRA_USER:
+//
+//                    //find actor connected with logget identity
+//                try {
+//                    return intraWalletUserActorManager.getActorByPublicKey(intraUserLoggedInPublicKey,actorId);
+//                }catch (Exception e){
+//                    return null;
+//                }
+//
+//
+//            default:
+//                return null;
+//        }
+//
+//    }
 
 
     @Override
-    public Queue<NotificationEvent> getPoolNotification() {
+    public synchronized Queue<NotificationEvent> getPoolNotification() {
         return poolNotification;
     }
 

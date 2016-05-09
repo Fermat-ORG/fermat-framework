@@ -90,4 +90,11 @@ public interface CryptoAddressBookManager extends FermatManager {
                                String walletPublicKey,
                                ReferenceWallet walletType) throws CantRegisterCryptoAddressBookRecordException;
 
+    /**
+     * Gets the list of CryptoAddresses registered to an specific actor type
+     * @param actorType
+     * @return
+     * @throws CantRegisterCryptoAddressBookRecordException
+     */
+    List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantRegisterCryptoAddressBookRecordException;
 }

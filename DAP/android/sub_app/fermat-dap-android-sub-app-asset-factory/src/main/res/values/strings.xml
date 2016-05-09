@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">fermat-dap-android-sub-app-asset-factory-bitdubai</string>
+    <string name="asset_factory_main_publish_menu">Publish</string>
+    <string name="asset_factory_main_edit_menu">Edit</string>
+    <string name="asset_factory_main_delete_menu">Delete</string>
+    <string name="home_asset_state_draft">Draft</string>
+    <string name="app_unnamed">No name given&#8230;</string>
+    <string name="home_row_asset_amount">amount: %1$d</string>
+    <string name="home_row_asset_bitcoins">bitcoins: "%.6f" BTC</string>
+    <string name="home_asset_state_publishing">Publishing</string>
+    <string name="home_asset_state_published">Published</string>
+    <string name="dap_asset_factory_delete_menu_item">Delete</string>
+    <string name="dap_asset_factory_editor_name_hint">Name</string>
+    <string name="dap_asset_factory_editor_description_hint">Description</string>
+    <string name="dap_asset_factory_editor_quantity_hint">Quantity</string>
+    <string name="dap_asset_factory_editor_bitcoin_price_hint">Asset Value</string>
+    <string name="dap_asset_factory_editor_expiration_date_hint">Expiration Date</string>
+    <string name="dap_identity_alias_default_text">Asset Issuer</string>
+
+    <string name="help">Help</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_asset_factory_welcome_subTitle">Welcome to the Asset Factory application.</string>
+    <string name="dap_asset_factory_welcome_body">From here you will be able to create, define and publish all your assets.\n\nIn order to start, tap over the + button below where you will be able to "\n" define all the properties of your asset.</string>
+    <string name="dap_asset_factory_welcome_Footer"></string>
+    <string name="dap_asset_factory_welcome_name_left">Asset Issuer</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_asset_factory_editor_subTitle">Asset Editor section.</string>
+    <string name="dap_asset_factory_editor_body">On this section you are able to define all your assets properties.\n\nA digital asset is formed by an image which represents it, a set of properties like description, expiration date and quantity.\nAnd a value expressed in bitcoin.\n\nYou will be able to modify any of this properties as needed before publishing your asset.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_asset_factory_published_subTitle">Published Tab of Asset Factory.</string>
+    <string name="dap_asset_factory_published_body">This tab shows all the Assets that you have already created and were  successfully published.\n\nPublished assets are read-only and cannot be changed.</string>
+    <!--Dialog Help - End-->
+
+    <string name="dap_asset_factory_welcome_title">Welcome!</string>
+    <string name="dap_asset_factory_welcome_identity_button">New Identity</string>
+    <string name="dap_asset_factory_welcome_checkbox">Don\'t show this again</string>
+    <string name="dap_asset_factory_welcome_close">Close</string>
+</resources>

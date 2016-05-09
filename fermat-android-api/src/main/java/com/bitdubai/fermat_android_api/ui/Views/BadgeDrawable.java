@@ -26,7 +26,7 @@ public class BadgeDrawable extends Drawable {
     private String mCount = "";
     private boolean mWillDraw = false;
     private int color=0;
-    private Position position = Position.TOP_RIGHT;
+    private Position position = Position.CENTER;
 
     public BadgeDrawable(Context context) {
         mTextSize = 96;//context.getResources().getDimension(R.dimen.badge_text_size);
@@ -132,7 +132,7 @@ public class BadgeDrawable extends Drawable {
         private int color;
         private int alpha;
         private int textSize = 0;
-        private Position position = Position.TOP_RIGHT;
+        private Position position = Position.CENTER;
 
         public BadgeDrawableBuilder(Context context) {
             this.context = context;

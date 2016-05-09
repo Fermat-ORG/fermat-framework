@@ -34,8 +34,8 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_module.crypto_address_book.de
 import com.bitdubai.fermat_bch_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.database.CryptoAddressBookCryptoModuleDao;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.exceptions.InvalidCryptoAddressBookRecordParametersException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_module.crypto_address_book.developer.bitdubai.version_1.structure.CryptoAddressBookCryptoModuleRecord;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 
@@ -312,6 +312,21 @@ public class CryptoAddressBookCryptoModulePluginRoot extends AbstractPlugin impl
             return CryptoAddressBookCryptoModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e) {
             return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    /**
+     * Gets the list of CryptoAddresses registered to an specific actor type
+     * @param actorType
+     * @return
+     * @throws CantRegisterCryptoAddressBookRecordException
+     */
+    @Override
+    public List<CryptoAddressBookRecord> listCryptoAddressBookRecordsByDeliveredToActorType(Actors actorType) throws CantRegisterCryptoAddressBookRecordException {
+        try {
+            return cryptoAddressBookCryptoModuleDao.listCryptoAddressBookRecordsByDeliveredToActorType(actorType);
+        } catch (CantListCryptoAddressBookRecordsException e) {
+            throw new CantRegisterCryptoAddressBookRecordException(CantRegisterCryptoAddressBookRecordException.DEFAULT_MESSAGE, e, "Can't get list of cryptpo addresses from database", "database issue");
         }
     }
 }

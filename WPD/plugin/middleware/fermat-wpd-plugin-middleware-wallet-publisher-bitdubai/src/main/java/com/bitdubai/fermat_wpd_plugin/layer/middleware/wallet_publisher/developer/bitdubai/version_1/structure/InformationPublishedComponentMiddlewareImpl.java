@@ -157,7 +157,7 @@ public class InformationPublishedComponentMiddlewareImpl implements InformationP
      */
     @Override
     public List<ComponentVersionDetail> getComponentVersionDetailList() {
-        return (List<ComponentVersionDetail>) componentVersionDetailList;
+        return componentVersionDetailList;
     }
 
 

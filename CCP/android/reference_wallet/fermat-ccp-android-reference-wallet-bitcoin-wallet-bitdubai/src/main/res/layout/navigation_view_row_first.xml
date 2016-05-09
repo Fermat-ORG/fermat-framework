@@ -4,8 +4,6 @@
     android:layout_height="180dp"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-
     <ImageView
         android:id="@+id/image_view_profile"
         android:layout_width="match_parent"
@@ -20,16 +18,14 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-
         >
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/txt_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:background="@color/black_overlay"
-            android:gravity="left"
+            android:gravity="start"
             android:paddingLeft="20dp"
             android:paddingBottom="10dip"
             android:paddingRight="20dp"
@@ -37,8 +33,6 @@
             android:textColor="#ffffff"
             android:textSize="16sp"
             />
-
-
     </FrameLayout>
 
     <ImageView
@@ -50,6 +44,5 @@
         android:layout_alignParentRight="true"
         android:visibility="gone"
         />
-
 
 </RelativeLayout>

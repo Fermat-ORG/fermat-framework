@@ -5,6 +5,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantR
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_pip_core.layer.agent.AgentLayer;
 import com.bitdubai.fermat_pip_core.layer.engine.EngineLayer;
 import com.bitdubai.fermat_pip_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_pip_core.layer.platform_service.PlatformServiceLayer;
@@ -27,7 +28,7 @@ public final class PIPPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-
+            registerLayer(new AgentLayer());
             registerLayer(new EngineLayer());
             registerLayer(new NetworkServiceLayer());
             registerLayer(new PlatformServiceLayer());

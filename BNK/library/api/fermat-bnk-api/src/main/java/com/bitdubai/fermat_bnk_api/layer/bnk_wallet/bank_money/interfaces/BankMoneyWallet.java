@@ -31,4 +31,7 @@ public interface BankMoneyWallet {
 
     void addNewAccount(BankAccountNumber bankAccountNumber) throws CantAddNewAccountException;
 
+    void createBankName(String bankName);
+
+    String getBankName();
 }

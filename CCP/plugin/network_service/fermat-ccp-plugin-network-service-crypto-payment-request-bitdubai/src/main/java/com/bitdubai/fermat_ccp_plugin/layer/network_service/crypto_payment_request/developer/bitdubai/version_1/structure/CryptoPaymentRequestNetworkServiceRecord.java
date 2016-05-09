@@ -34,6 +34,8 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
     private final BlockchainNetworkType networkType;
     private final ReferenceWallet referenceWallet;
     private final int sentNumber;
+    private final String messageType;
+    private final String walletPublicKey;
 
     public CryptoPaymentRequestNetworkServiceRecord(final UUID requestId,
                                                     final String identityPublicKey,
@@ -49,7 +51,9 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
                                                     final RequestProtocolState protocolState,
                                                     final BlockchainNetworkType networkType,
                                                     final ReferenceWallet referenceWallet,
-                                                    final int sentNumber) {
+                                                    final int sentNumber,
+                                                    final String messageType,
+                                                    final String walletPublicKey) {
 
         this.requestId = requestId;
         this.identityPublicKey = identityPublicKey;
@@ -66,6 +70,8 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
         this.networkType = networkType;
         this.referenceWallet = referenceWallet;
         this.sentNumber = sentNumber;
+        this.messageType = messageType;
+        this.walletPublicKey = walletPublicKey;
     }
 
     @Override
@@ -143,6 +149,15 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
         return sentNumber;
     }
 
+    @Override
+    public String getMessageType() {
+        return this.messageType;
+    }
+
+    @Override
+    public String getWalletPublicKey() {
+        return walletPublicKey;
+    }
 
 
     @Override
@@ -161,6 +176,7 @@ public class CryptoPaymentRequestNetworkServiceRecord implements CryptoPaymentRe
                 ", action=" + action +
                 ", protocolState=" + protocolState +
                 ", networkType=" + networkType +
+                ", walletPublicKey=" + walletPublicKey +
                 '}';
     }
 }

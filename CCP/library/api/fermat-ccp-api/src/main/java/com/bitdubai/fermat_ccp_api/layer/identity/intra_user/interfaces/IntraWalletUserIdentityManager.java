@@ -7,7 +7,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDele
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * The interface <code>IntraWalletUserIdentityManager</code>
@@ -22,7 +22,7 @@ public interface IntraWalletUserIdentityManager  extends ModuleManager<FermatSet
      *
      * @throws CantListIntraWalletUsersException if something goes wrong.
      */
-    List<IntraWalletUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraWalletUsersException;
+    ArrayList<com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraWalletUsersException;
 
     /**
      * The method <code>createNewIntraWalletUser</code> creates a new intra wallet user Identity for the logged in Device User and returns the

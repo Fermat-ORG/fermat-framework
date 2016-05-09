@@ -11,37 +11,40 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointAddressesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetActiveRedeemPointsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantGetExtendedPublicKeyException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
-import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
-import org.bitcoinj.crypto.DeterministicKey;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -55,6 +58,7 @@ import javax.annotation.Nullable;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH, maintainerMail = "acosta_rodrigo@hotmail.com", createdBy = "acostarodrigo", layer = Layers.CRYPTO_VAULT, platform = Platforms.BLOCKCHAINS, plugin = Plugins.BITCOIN_ASSET_VAULT)
 public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin implements
         AssetVaultManager,
         PlatformCryptoVault,
@@ -145,16 +149,13 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
                     pluginFileSystem,
                     pluginDatabaseSystem,
                     deviceUserLoggedPublicKey,
-                    bitcoinNetworkManager);
+                    bitcoinNetworkManager,
+                    errorManager);
         } catch (Exception e){
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
+            CantStartPluginException exception = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
-
-        /**
-         * Test
-         */
-        //generateAddress();
-        //sendBitcoinsTest();
 
         /**
          * Nothing left to do.
@@ -170,32 +171,10 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     private void generateAddress() {
         try{
             Thread.sleep(5000);
-            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.DEFAULT).getAddress());
+            System.out.println("Asset vault address: " + this.getNewAssetVaultCryptoAddress(BlockchainNetworkType.getDefaultBlockchainNetworkType()).getAddress());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (GetNewCryptoAddressException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendBitcoinsTest(){
-        try {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Thread.sleep(15000);
-                        CryptoAddress address = new CryptoAddress("msXC2m8zeJMVvBo4vHkgn3uih2uxFZex7Y", CryptoCurrency.BITCOIN);
-                        assetCryptoVaultManager.sendAssetBitcoins("9a4244b25430b3c6ffc869eabc6230916113b9b44059bdccf85b954bcf3ae8c6", address, 123333);
-                    } catch (CantSendAssetBitcoinsToUserException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-
-        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -210,9 +189,17 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
         return assetCryptoVaultManager.getAvailableBalanceForTransaction(genesisTransaction);
     }
 
+    /**
+     * Sends the bitcoins generated from the genesisTransactionId to the specified User Actor addres.
+     * @param genesisTransactionId
+     * @param genesisBlock
+     * @param addressTo
+     * @return
+     * @throws CantSendAssetBitcoinsToUserException
+     */
     @Override
-    public String sendAssetBitcoins(String genesisTransactionId, CryptoAddress addressTo, long amount) throws CantSendAssetBitcoinsToUserException {
-        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, addressTo, amount);
+    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantSendAssetBitcoinsToUserException {
+        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo, blockchainNetworkType);
     }
 
     /**
@@ -258,18 +245,6 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
         assetCryptoVaultManager.deriveKeys(plugin, keysToDerive);
     }
 
-    /**
-     * * Creates a new hierarchy Account in the vault.
-     * This will create the sets of keys and start monitoring the default network with these keys.
-     * @param description
-     * @param hierarchyAccountType
-     * @return
-     * @throws CantAddHierarchyAccountException
-     */
-    @Override
-    public HierarchyAccount addHierarchyAccount(String description, HierarchyAccountType hierarchyAccountType) throws CantAddHierarchyAccountException {
-        return assetCryptoVaultManager.addHierarchyAccount(description, hierarchyAccountType);
-    }
 
     /**
      * Gets the Extended Public Key from the specified account. Can't be from a master account.
@@ -281,4 +256,84 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
     public ExtendedPublicKey getRedeemPointExtendedPublicKey(String redeemPointPublicKey) throws CantGetExtendedPublicKeyException {
         return assetCryptoVaultManager.getRedeemPointExtendedPublicKey(redeemPointPublicKey);
     }
+
+    /**
+     * If the redeem point keys are initialized, will return all the generated addresses
+     * @param redeemPointPublicKey
+     * @return
+     * @throws CantGetActiveRedeemPointAddressesException
+     */
+    @Override
+    public List<CryptoAddress> getActiveRedeemPointAddresses(String redeemPointPublicKey) throws CantGetActiveRedeemPointAddressesException {
+        return assetCryptoVaultManager.getActiveRedeemPointAddresses(redeemPointPublicKey);
+    }
+
+    /**
+     * Returns the private Keys of all the active Redeem Points hierarchies in the asset vault
+     * @return
+     */
+    @Override
+    public List<String> getActiveRedeemPoints() throws CantGetActiveRedeemPointsException {
+        return assetCryptoVaultManager.getActiveRedeemPoints();
+    }
+
+    /**
+     * When we receive assets from a Redeemption processes, the Issuer that granted the extended public key to the redeem point
+     * needs to inform us when an address is used, so we can generate more if needed.
+     * @param cryptoAddress
+     * @param redeemPointPublicKey
+     */
+    @Override
+    public void notifyUsedRedeemPointAddress(CryptoAddress cryptoAddress, String redeemPointPublicKey) {
+        assetCryptoVaultManager.notifyUsedRedeemPointAddress(cryptoAddress, redeemPointPublicKey);
+    }
+
+    /**
+     * Will create a Bitcoin transaction and prepare it to be broadcasted later.
+     * This transaction locks the bitcoins associated with the passed input (if valid).
+     * @param inputTransaction the Transaction hash that will be used to get the funds from.
+     * @param addressTo the destination of the bitcoins.
+     * @return the Transaction Hash of the new transaction
+     * @throws CantCreateBitcoinTransactionException
+     */
+    @Override
+    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo, blockchainNetworkType);
+    }
+
+    /**
+     * generates a final transaction based on a draft transaction and prepares it to be broadcasted.
+     * @param draftTransaction the completed and signed transaction
+     * @return the final transactionHash
+     * @throws CantCreateBitcoinTransactionException
+     */
+    @Override
+    public String createBitcoinTransaction(DraftTransaction draftTransaction) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(draftTransaction);
+    }
+
+    /**
+     * Creates a non complete, unsigned draft bitcoin transaction given the passed input and address to.
+     * @param inputTransaction the Input transaction hash used to take funds from.
+     * @param addressTo the address to whom we are giving the funds.
+     * @return a DraftTransaction class
+     * @throws CantCreateDraftTransactionException
+     */
+    @Override
+    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
+        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo, blockchainNetworkType);
+    }
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    @Override
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        return assetCryptoVaultManager.signTransaction(draftTransaction);
+    }
+
+
 }

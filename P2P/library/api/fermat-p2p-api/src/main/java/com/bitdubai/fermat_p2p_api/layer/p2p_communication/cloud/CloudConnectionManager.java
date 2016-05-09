@@ -6,11 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud;
 
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
+
+import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.CloudConnectionManager</code> is

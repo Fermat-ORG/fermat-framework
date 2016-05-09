@@ -3,13 +3,14 @@ package com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 
 import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.09.16..
  */
-public interface DesktopObject{
+public interface DesktopObject extends FermatStructure{
 
 
     /**
@@ -52,4 +53,5 @@ public interface DesktopObject{
      */
 
     public Map<String,LanguagePackage> getLanguagePackages();
+
 }

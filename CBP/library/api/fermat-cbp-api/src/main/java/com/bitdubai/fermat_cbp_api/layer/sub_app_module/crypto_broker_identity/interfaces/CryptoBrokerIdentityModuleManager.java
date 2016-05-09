@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantListCryptoBrokersException;
@@ -17,7 +19,7 @@ import java.util.List;
  * <p/>
  * Created by natalia on 16/09/15.
  */
-public interface CryptoBrokerIdentityModuleManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface CryptoBrokerIdentityModuleManager extends ModuleManager<IdentityBrokerPreferenceSettings, ActiveActorIdentityInformation> {
 
     /**
      * The method <code>createCryptoBrokerIdentity</code> is used to create a new crypto Broker identity
@@ -28,6 +30,12 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<FermatS
      * @throws CantCreateCryptoBrokerException if something goes wrong.
      */
     CryptoBrokerIdentityInformation createCryptoBrokerIdentity(String alias, byte[] image) throws CantCreateCryptoBrokerException;
+
+    /**
+     *
+     * @param cryptoBrokerIdentity
+     */
+    void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity) throws CantUpdateBrokerIdentityException;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity
@@ -52,5 +60,7 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<FermatS
      * @throws CantListCryptoBrokersException if something goes wrong.
      */
     List<CryptoBrokerIdentityInformation> listIdentities(int max, int offset) throws CantListCryptoBrokersException;
+
+
 
 }

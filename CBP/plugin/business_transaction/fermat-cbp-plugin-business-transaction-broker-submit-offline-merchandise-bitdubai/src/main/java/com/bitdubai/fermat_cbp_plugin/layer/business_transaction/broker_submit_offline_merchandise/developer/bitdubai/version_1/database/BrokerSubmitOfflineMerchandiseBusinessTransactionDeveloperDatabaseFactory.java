@@ -113,6 +113,8 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDeveloperDatabaseF
         onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME);
+
         /**
          * Table Offline Payment addition.
          */

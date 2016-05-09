@@ -38,6 +38,12 @@ public class WalletManagerMiddlewareDatabaseConstants {
     public static final String WALLET_MANAGER_WALLETS_TABLE_FIRST_KEY_COLUMN = "wallet_public_key";
 
     /**
+     * Wallet Manager BlockChain Network Type
+     */
+    public static final String WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "blockchain_network_type";
+
+
+    /**
      * Wallet Manager Skins Table database table definition.
      */
     public static final String WALLET_MANAGER_SKINS_TABLE_TABLE_NAME = "wallet_manager_skins_table";

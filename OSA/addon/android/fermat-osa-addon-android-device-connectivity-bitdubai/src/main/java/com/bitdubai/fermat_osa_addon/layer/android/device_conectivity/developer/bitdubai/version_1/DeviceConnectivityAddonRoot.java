@@ -3,31 +3,24 @@ package com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer
 import android.content.Context;
 import android.net.NetworkInfo;
 
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetActiveConnectionException;
+import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetConnectionsException;
+import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetIsConnectedException;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectionType;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityAgent;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.ConnectivityManager;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.interfaces.Network;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.DeviceConnectivityAgent;
 import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.DeviceNetwork;
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetActiveConnectionException;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetConnectionsException;
-import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.exceptions.CantGetIsConnectedException;
-import com.bitdubai.fermat_api.CantStartPluginException;
-
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.CantStartAgentException;
-
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.NetworkStateReceiver;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +56,7 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
      * Plugin Interface member variables.
      */
     private UUID pluginId;
+    private NetworkStateReceiver networkState = NetworkStateReceiver.getInstance();
 
     @Override
     public FermatManager getManager() {
@@ -96,6 +90,11 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
     @Override
     public void setContext (Object context){
         this.context = (Context)context;
+    }
+
+    @Override
+    public void addListener(NetworkStateReceiver.NetworkStateReceiverListener networkStateReceiver) {
+        this.networkState.addListener(networkStateReceiver);
     }
 
     /**
@@ -311,27 +310,27 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
         /**
          * I will start the Monitor Agent.
          */
-        try {
-            this.monitor = new DeviceConnectivityAgent(getActiveConnection().getType());
-        }
-        catch (CantGetActiveConnectionException cantGetActiveConnectionException) {
-        	cantGetActiveConnectionException.printStackTrace();
-        }
-        try {
-
-            ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
-            this.monitor.start();
-        }
-        catch (CantStartAgentException cantStartAgentException) {
-
-        	cantStartAgentException.printStackTrace();
-            /**
-             * I cant continue if this happens.
-             */
-            errorManager.reportUnexpectedAddonsException(Addons.DEVICE_CONNECTIVITY, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, cantStartAgentException);
-
-            throw new CantStartPluginException(Plugins.BITDUBAI_DEVICE_CONNECTIVITY);
-        }
+//        try {
+//            this.monitor = new DeviceConnectivityAgent(getActiveConnection().getType());
+//        }
+//        catch (CantGetActiveConnectionException cantGetActiveConnectionException) {
+//        	cantGetActiveConnectionException.printStackTrace();
+//        }
+//        try {
+//
+//            ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
+//            this.monitor.start();
+//        }
+//        catch (CantStartAgentException cantStartAgentException) {
+//
+//        	cantStartAgentException.printStackTrace();
+//            /**
+//             * I cant continue if this happens.
+//             */
+//            errorManager.reportUnexpectedAddonsException(Addons.DEVICE_CONNECTIVITY, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, cantStartAgentException);
+//
+//            throw new CantStartPluginException(Plugins.BITDUBAI_DEVICE_CONNECTIVITY);
+//        }
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -354,7 +353,8 @@ public class DeviceConnectivityAddonRoot implements Addon,ConnectivityManager,De
     @Override
     public void stop() {
 
-       this.monitor.stop();
+//       this.monitor.stop();
+        this.networkState.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 

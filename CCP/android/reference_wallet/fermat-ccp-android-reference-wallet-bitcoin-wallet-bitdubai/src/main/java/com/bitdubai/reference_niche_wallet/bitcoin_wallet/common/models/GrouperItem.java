@@ -2,7 +2,6 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.models;
 
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 
 import java.util.List;
 
@@ -28,8 +27,13 @@ public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
     public int getChildCount() {
         if (childItemList != null)
             // Le resto uno porque el ultimo es el total
-            childCount = this.childItemList.size()-1;
+            childCount = this.childItemList.size();
         return childCount;
+    }
+
+    @Override
+    public CHILD_TYPE getItem() {
+        return null;
     }
 
     /**

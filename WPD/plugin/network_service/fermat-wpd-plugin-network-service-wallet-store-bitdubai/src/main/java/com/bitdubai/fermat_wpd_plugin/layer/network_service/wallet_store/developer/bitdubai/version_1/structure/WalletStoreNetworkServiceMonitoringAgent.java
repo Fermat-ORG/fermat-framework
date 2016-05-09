@@ -11,8 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.CatalogItems;
@@ -154,17 +154,18 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
         }
 
         private void doTheMainTask() throws InvalidParameterException, CantExecuteDatabaseOperationException {
-            if (areMissingIds(CatalogItems.LANGUAGE)){
-                insertValidLanguagesFromPeer();
-                raiseEvent();
-            }
-
-
-            if (areMissingIds(CatalogItems.SKIN))
-                raiseEvent();
-
-            if (areMissingIds(CatalogItems.WALLET))
-                raiseEvent();
+            //TODO: comentado porqué está molestando
+//            if (areMissingIds(CatalogItems.LANGUAGE)){
+//                insertValidLanguagesFromPeer();
+//                raiseEvent();
+//            }
+//
+//
+//            if (areMissingIds(CatalogItems.SKIN))
+//                raiseEvent();
+//
+//            if (areMissingIds(CatalogItems.WALLET))
+//                raiseEvent();
         }
 
         private void insertValidLanguagesFromPeer() throws InvalidParameterException, CantExecuteDatabaseOperationException {
@@ -185,10 +186,7 @@ public class WalletStoreNetworkServiceMonitoringAgent implements Agent, DealsWit
         }
 
         private boolean areMissingIds(CatalogItems catalogItems) throws CantExecuteDatabaseOperationException, InvalidParameterException {
-            if (getDatabaseDao().getCatalogIdsForNetworkService(catalogItems).size() != 0)
-                return true;
-            else
-                return false;
+            return getDatabaseDao().getCatalogIdsForNetworkService(catalogItems).size() != 0;
         }
 
         private List<UUID> getIdsFromMyCatalog(CatalogItems catalogItems) throws CantExecuteDatabaseOperationException, InvalidParameterException {

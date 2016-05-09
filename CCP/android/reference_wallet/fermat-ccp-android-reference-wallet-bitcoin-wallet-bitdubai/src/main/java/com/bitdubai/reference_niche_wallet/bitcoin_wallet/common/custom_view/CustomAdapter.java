@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
@@ -137,7 +136,7 @@ public class CustomAdapter extends BaseAdapter implements View.OnClickListener {
              public void onClick(View view) {
 
 
-                 Toast.makeText(activity,"holas"+mPosition,Toast.LENGTH_SHORT).show();
+                 //Toast.makeText(activity,"holas"+mPosition,Toast.LENGTH_SHORT).show();
                  data.set(0, data.get(mPosition+1));
                  notifyDataSetChanged();
                //CustomListViewAndroidExample sct = (CustomListViewAndroidExample)activity;

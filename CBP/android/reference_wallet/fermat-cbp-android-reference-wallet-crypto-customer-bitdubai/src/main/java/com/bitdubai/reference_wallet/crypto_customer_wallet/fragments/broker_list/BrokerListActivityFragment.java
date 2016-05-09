@@ -14,25 +14,19 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BrokerListAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer.CustomerNavigationViewPainter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.widget.Toast.makeText;
 
 
 /**
@@ -49,8 +43,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     private ErrorManager errorManager;
 
     // Data
-    private ArrayList<BrokerIdentityBusinessInfo> brokerList;
-    private CryptoCustomerWalletManager walletManager;
+    private List<BrokerIdentityBusinessInfo> brokerList;
 
     //UI
     private View noBrokersView;
@@ -66,10 +59,9 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
         try {
             moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            brokerList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            brokerList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -90,18 +82,6 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        try {
-            CustomerNavigationViewPainter navigationViewPainter = new CustomerNavigationViewPainter(getActivity(), null);
-        } catch (Exception e) {
-            makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
-            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
-    }
-
-    @Override
     protected boolean hasMenu() {
         return false;
     }
@@ -109,7 +89,7 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new BrokerListAdapter(getActivity(), brokerList, walletManager);
+            adapter = new BrokerListAdapter(getActivity(), brokerList);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -161,8 +141,11 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
     @Override
     public void onItemClickListener(BrokerIdentityBusinessInfo data, int position) {
-        appSession.setData("broker_data", data);
-        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION, appSession.getAppPublicKey());
+        final CryptoCustomerWalletSession walletSession = (CryptoCustomerWalletSession) this.appSession;
+        walletSession.setCurrencyToBuy(data.getMerchandise());
+        walletSession.setSelectedBrokerIdentity(data);
+        walletSession.setQuotes(data.getQuotes());
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_START_NEGOTIATION, this.appSession.getAppPublicKey());
     }
 
     @Override
@@ -175,21 +158,18 @@ public class BrokerListActivityFragment extends FermatWalletListFragment<BrokerI
 
         if (moduleManager != null) {
             try {
-                data.addAll(walletManager.getListOfConnectedBrokersAndTheirMerchandises("customer_1"));
+                //data.addAll(TestData.getBrokerListTestData());
+
+                data.addAll(moduleManager.getListOfConnectedBrokersAndTheirMerchandises());
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                            ex);
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             }
         } else {
-            Toast.makeText(getActivity(),
-                    "Sorry, an error happened in BrokerListActivityFragment (Module == null)",
-                    Toast.LENGTH_SHORT).
-                    show();
+            Toast.makeText(getActivity(),"Sorry, an error happened in BrokerListActivityFragment (Module == null)", Toast.LENGTH_SHORT).show();
         }
 
         return data;

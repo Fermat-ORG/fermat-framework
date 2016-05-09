@@ -129,6 +129,8 @@ public class CustomerBrokerNewNegotiationTransactionDeveloperDatabaseFactory imp
         customerBrokerNewColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME);
         customerBrokerNewColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME);
         customerBrokerNewColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME);
+        customerBrokerNewColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_SEND_TRANSACTION_COLUMN_NAME);
+        customerBrokerNewColumns.add(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_CONFIRM_TRANSACTION_COLUMN_NAME);
         /**
          * Table Customer Broker New addition.
          */

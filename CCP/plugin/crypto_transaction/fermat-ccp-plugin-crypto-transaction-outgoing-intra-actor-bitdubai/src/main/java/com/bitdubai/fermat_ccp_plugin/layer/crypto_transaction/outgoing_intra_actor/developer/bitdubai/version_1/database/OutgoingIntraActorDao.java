@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_a
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -29,8 +30,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_ac
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantSetTranactionHashException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.util.OutgoingIntraActorTransactionWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,12 +89,16 @@ public class OutgoingIntraActorDao {
                                         String          deliveredToActorPublicKey,
                                         Actors          deliveredToActorType,
                                         ReferenceWallet referenceWallet,
-                                        boolean sameDevice) throws OutgoingIntraActorCantInsertRecordException {
+                                        boolean sameDevice,
+                                        BlockchainNetworkType blockchainNetworkType) throws OutgoingIntraActorCantInsertRecordException {
         try {
             DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
-            DatabaseTableRecord recordToInsert   = transactionTable.getEmptyRecord();
-            loadRecordAsNew(recordToInsert, transactionId, requestId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet, sameDevice);
-            transactionTable.insertRecord(recordToInsert);
+          //check transaction Id not exist
+            if(!isTransactionInTable(transactionId)) {
+                DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
+                loadRecordAsNew(recordToInsert, transactionId, requestId, walletPublicKey, destinationAddress, cryptoAmount, op_Return, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet, sameDevice, blockchainNetworkType);
+                transactionTable.insertRecord(recordToInsert);
+            }
         } catch (CantInsertRecordException e) {
             throw new OutgoingIntraActorCantInsertRecordException("An exception happened",e,"","");
         } catch (Exception exception) {
@@ -210,7 +215,8 @@ public class OutgoingIntraActorDao {
                                  String              deliveredToActorPublicKey,
                                  Actors              deliveredToActorType,
                                  ReferenceWallet referenceWallet,
-                                 boolean sameDevice) {
+                                 boolean sameDevice,
+                                 BlockchainNetworkType blockchainNetworkType) {
 
         UUID transactionId = trxId;
 
@@ -245,6 +251,8 @@ public class OutgoingIntraActorDao {
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_ACTOR_TO_TYPE_COLUMN_NAME, deliveredToActorType.getCode());
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_SAME_DEVICE_COLUMN_NAME, String.valueOf(sameDevice));
         databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_WALLET_REFERENCE_TYPE_COLUMN_NAME, referenceWallet.getCode());
+        databaseTableRecord.setStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE, blockchainNetworkType.getCode());
+
     }
 
 
@@ -339,6 +347,8 @@ public class OutgoingIntraActorDao {
                                                     CryptoCurrency.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_CRYPTO_CURRENCY_COLUMN_NAME))
                                                   );
 
+        BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_RUNNING_NETWORK_TYPE));
+
 
         bitcoinTransaction.setWalletPublicKey(walletPublicKey);
         bitcoinTransaction.setIdTransaction(transactionId);
@@ -358,6 +368,8 @@ public class OutgoingIntraActorDao {
         bitcoinTransaction.setActorToType(actorToType);
         bitcoinTransaction.setReferenceWallet(referenceWallet);
         bitcoinTransaction.setSameDevice(sameDevice);
+        bitcoinTransaction.setBlockchainNetworkType(blockchainNetworkType);
+
 
         return bitcoinTransaction;
     }
@@ -411,5 +423,13 @@ public class OutgoingIntraActorDao {
             throw new OutgoingIntraActorCantGetTransactionHashException("There was an error getting the transaction hash of the transaction.", e, null, "database issue");
         }
 
+    }
+
+    private boolean isTransactionInTable(final UUID transactionId) throws CantLoadTableToMemoryException {
+        DatabaseTable       transactionTable = this.database.getTable(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TABLE_NAME);
+
+        transactionTable.addUUIDFilter(OutgoingIntraActorTransactionDatabaseConstants.OUTGOING_INTRA_ACTOR_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+        transactionTable.loadToMemory();
+        return !transactionTable.getRecords().isEmpty();
     }
 }

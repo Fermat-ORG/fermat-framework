@@ -29,7 +29,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String ACK_OFFLINE_MERCHANDISE_MERCHANDISE_AMOUNT_COLUMN_NAME = "merchandise_amount";
     public static final String ACK_OFFLINE_MERCHANDISE_MERCHANDISE_TYPE_COLUMN_NAME = "merchandise_type";
     public static final String ACK_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME = "currency_type";
-
+    public static final String ACK_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 
     public static final String ACK_OFFLINE_MERCHANDISE_FIRST_KEY_COLUMN = "transaction_id";
 

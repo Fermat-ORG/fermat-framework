@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
@@ -32,6 +31,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This class define methods to execute query and transactions on database
@@ -145,7 +146,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
-        List<DatabaseVariable> variablesResult = new ArrayList<>();
+        List<AndroidVariable> variablesResult = new ArrayList<>();
 
         List<DatabaseTable> selectTables = transaction.getTablesToSelect();
         List<DatabaseTable> insertTables = transaction.getTablesToInsert();
@@ -191,11 +192,11 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         }
     }
 
-    public List<DatabaseVariable> selectTransactionRecord(final SQLiteDatabase      database,
+    public List<AndroidVariable> selectTransactionRecord(final SQLiteDatabase      database,
                                                           final DatabaseTable       table   ,
                                                           final DatabaseTableRecord record  ) throws CantSelectRecordException {
 
-        List<DatabaseVariable> variablesResult = new ArrayList<>();
+        List<AndroidVariable> variablesResult = new ArrayList<>();
 
         try {
 
@@ -251,10 +252,10 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                      * Get columns name to read values of files
                      *
                      */
-                    DatabaseVariable variable = new AndroidVariable();
-
-                    variable.setName("@" + c.getColumnName(columnsCant));
-                    variable.setValue(c.getString(columnsCant));
+                    AndroidVariable variable = new AndroidVariable(
+                            "@" + c.getColumnName(columnsCant),
+                            c.getString(columnsCant)
+                    );
 
                     variablesResult.add(variable);
                     columnsCant++;
@@ -486,18 +487,28 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
          * Get the columns of the table and write the query to create it
          */
         try {
+            List<String> primaryKey = new ArrayList<>();
             String query = "CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                query += tableColumns.get(i).getName() + " " + tableColumns.get(i).getType().name();
-                if (tableColumns.get(i).getType() == DatabaseDataType.STRING)
+                query += tableColumns.get(i).getName() + " " + tableColumns.get(i).getDataType().name();
+                if (tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
                     query += "(" + String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
+
+                if (tableColumns.get(i).isPrimaryKey())
+                    primaryKey.add(tableColumns.get(i).getName());
 
                 if (i < tableColumns.size() - 1)
                     query += ",";
             }
+
+            /**
+             * add primary key
+             */
+            if (!primaryKey.isEmpty())
+                query += ", PRIMARY KEY (" + StringUtils.join(primaryKey, ",") + ") ";
 
             query += ")";
 
@@ -506,8 +517,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             /**
              * get index column
              */
-            if (table.getIndex() != null && !table.getIndex().isEmpty()) {
-                query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
+            List<List<String>> indexes = table.listIndexes();
+            for (List<String> indexColumns : indexes) {
+                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
                 executeQuery(query);
             }
         } catch (Exception ex) {
@@ -571,7 +583,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         return new AndroidDatabaseTableFactory(tableName);
     }
 
-    private void updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variablesResult) throws CantUpdateRecordException {
+    private void updateTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variablesResult) throws CantUpdateRecordException {
 
         try {
             List<DatabaseRecord> records = record.getValues();
@@ -579,12 +591,12 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
 
             for (DatabaseRecord dbRecord : records) {
 
-                if (dbRecord.getChange()) {
+                if (dbRecord.isChange()) {
 
                     if (strRecords.length() > 0)
                         strRecords.append(",");
 
-                    if (dbRecord.getUseValueofVariable()) {
+                    if (dbRecord.isUseOfVariable()) {
                         for (int j = 0; j < variablesResult.size(); ++j) {
 
                             if (variablesResult.get(j).getName().equals(dbRecord.getValue())){
@@ -610,7 +622,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
         }
     }
 
-    private void insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<DatabaseVariable> variableResultList) throws CantInsertRecordException {
+    private void insertTransactionRecord(SQLiteDatabase database, DatabaseTable table, DatabaseTableRecord record, List<AndroidVariable> variableResultList) throws CantInsertRecordException {
 
         try {
             StringBuilder strRecords = new StringBuilder("");
@@ -628,8 +640,8 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 if (strValues.length() > 0)
                     strValues.append(",");
 
-                if (records.get(i).getUseValueofVariable()) {
-                    for (DatabaseVariable variableResult :  variableResultList) {
+                if (records.get(i).isUseOfVariable()) {
+                    for (AndroidVariable variableResult :  variableResultList) {
 
                         if (variableResult.getName().equals(records.get(i).getValue())) {
                             strValues.append("'")

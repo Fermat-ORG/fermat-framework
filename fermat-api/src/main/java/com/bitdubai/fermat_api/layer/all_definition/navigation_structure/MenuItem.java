@@ -22,6 +22,7 @@ public class MenuItem implements FermatMenuItem {
 
     boolean selected=false;
     private int notifications;
+    private int itemId;
 
     /**
      * SideMenu class constructors
@@ -91,5 +92,9 @@ public class MenuItem implements FermatMenuItem {
 
     public void setNotifications(int notifications) {
         this.notifications = notifications;
+    }
+
+    public int getItemId() {
+        return itemId;
     }
 }

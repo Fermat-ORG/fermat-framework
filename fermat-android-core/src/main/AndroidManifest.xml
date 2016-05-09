@@ -2,12 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bitdubai.fermat">
 
-    <uses-sdk android:minSdkVersion="17" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_LOGS"/>
     <!-- to get location using GPS -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -18,20 +17,20 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="18" />
+        android:maxSdkVersion="23" />
 
     <application
         android:name="com.bitdubai.android_core.app.ApplicationSession"
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         >
 
 
         <activity
             android:name="com.bitdubai.android_core.app.StartActivity"
 
-            android:icon="@drawable/ic_launcher"
+            android:icon="@mipmap/ic_launcher"
             android:theme="@style/AppTheme.NoActionBarStart"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
@@ -55,20 +54,10 @@
 
         <!-- Falta darle el permiso a alguien para que pueda o no apagar el servicio este -->
         <service
-            android:name="com.bitdubai.android_core.app.LoaderService"
-            android:enabled="true" />
+            android:name="com.bitdubai.android_core.app.BoundService"
+            />
 
 
-        <activity
-            android:name="com.bitdubai.android_core.app.SubAppActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.StartActivity" />
-        </activity>
         <activity
             android:name="com.bitdubai.android_core.app.EditableWalletActivity"
             android:configChanges="orientation"
@@ -76,17 +65,17 @@
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity"/>
+                android:value="com.bitdubai.android_core.app.AppActivity"/>
         </activity>
         <activity
-            android:name="com.bitdubai.android_core.app.WalletActivity"
+            android:name="com.bitdubai.android_core.app.AppActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity"
+                android:value="com.bitdubai.android_core.app.StartActivity"
                 android:configChanges="orientation"
                 android:screenOrientation="portrait"/>
         </activity>
@@ -108,6 +97,8 @@
 
         </activity>
 
+        <service android:name="com.bitdubai.android_core.app.common.version_1.notifications.NotificationService"/>
+
 
         <activity
             android:name="com.bitdubai.android_core.app.WizardActivity"
@@ -116,6 +107,66 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             />
+
+        <activity android:name="org.acra.CrashReportDialog"
+            android:theme="@style/Theme.Dialog"
+            android:process=":error_report"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:finishOnTaskLaunch="true" />
+
+
+        <activity android:name="com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity"
+            android:process=":recents"
+            android:theme="@style/AppThemeDesktop"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:launchMode="singleInstance"
+            android:hardwareAccelerated="true"
+            />
+
+        <receiver android:name="com.bitdubai.android_core.app.AppLauncherReceiver">
+
+            <intent-filter>
+                <action android:name="org.fermat.APP_LAUNCHER">
+                </action>
+            </intent-filter>
+
+        </receiver>
+
+        <receiver android:name="com.bitdubai.android_core.app.FermatSystemRunningReceiver">
+
+            <intent-filter>
+                <action android:name="org.fermat.SYSTEM_RUNNING">
+                </action>
+            </intent-filter>
+
+        </receiver>
+
+
+
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"
+            android:label="CommService"
+            android:exported="true"
+            >
+            <intent-filter>
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <!-- Service name -->
+                <action android:name="org.fermat.COMM_SERVICE" />
+            </intent-filter>
+        </service>
+
+        <activity android:name="com.bitdubai.android_core.app.LoadingScreenActivity"
+            android:theme="@style/AppThemeDesktop"
+            />
+
+        <service android:name="com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerServiceAIDL"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService"
+            android:process=":commerverSerice"
+            android:exported="true"/>
 
     </application>
 </manifest>

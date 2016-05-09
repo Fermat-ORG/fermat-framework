@@ -7,5 +7,5 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.develo
  */
 public interface DealsWithRegistry {
 
-    public void setRegistry(IncomingCryptoRegistry registry);
+    void setRegistry(IncomingCryptoRegistry registry);
 }

@@ -35,7 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.R;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.common.custom_anim.Fx;
 import com.bitdubai.fermat_dmp_android_clone_reference_nich_wallet.session.ReferenceWalletSession;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.google.zxing.WriterException;
 
 import java.util.UUID;
@@ -159,15 +159,15 @@ public  class ReceiveFragment extends AbstractFermatFragment {
 
         linear_layout_receive_form = (LinearLayout)rootView.findViewById(R.id.receive_form);
 
-        ((Button) rootView.findViewById(R.id.btn_expand_receive_form)).setOnClickListener(new View.OnClickListener() {
+        rootView.findViewById(R.id.btn_expand_receive_form).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isShow =linear_layout_receive_form.isShown();
+                boolean isShow = linear_layout_receive_form.isShown();
                 //linear_layout_send_form.setVisibility(isShow?View.GONE:View.VISIBLE);
-                if(isShow){
+                if (isShow) {
                     Fx.slide_up(getActivity(), linear_layout_receive_form);
                     linear_layout_receive_form.setVisibility(View.GONE);
-                } else{
+                } else {
                     linear_layout_receive_form.setVisibility(View.VISIBLE);
                     Fx.slide_down(getActivity(), linear_layout_receive_form);
                 }
@@ -225,23 +225,13 @@ public  class ReceiveFragment extends AbstractFermatFragment {
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
-                if (groupPosition == 0) {
-
-                   /* Intent intent;
-                    intent = new Intent(getActivity(), ReceiveFromNewContactActivity.class);
-                    startActivity(intent);*/
-
-
-//                    Intent intent;
+                /* Intent intent;
+                 intent = new Intent(getActivity(), ReceiveFromNewContactActivity.class);
+                 startActivity(intent);*///                    Intent intent;
 //                    appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_NEW_RECEIVE);
 //                    intent = new Intent(getActivity(), com.bitdubai.android_core.app.FragmentActivity.class);
 //                    startActivity(intent);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return groupPosition == 0;
             }
         });
 

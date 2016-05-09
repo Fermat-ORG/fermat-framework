@@ -19,7 +19,7 @@ public interface ContractBasicInformation {
     /**
      * @return the contract ID
      */
-    UUID getContractId();
+    String getContractId();
 
     /**
      * @return the crypto customer name (or alias)
@@ -30,6 +30,16 @@ public interface ContractBasicInformation {
      * @return the image of the crypto customer has a byte array
      */
     byte[] getCryptoCustomerImage();
+
+    /**
+     * @return the crypto broker name (or alias)
+     */
+    String getCryptoBrokerAlias();
+
+    /**
+     * @return the image of the crypto broker has a byte array
+     */
+    byte[] getCryptoBrokerImage();
 
     /**
      * @return the exchange rate amount for the merchandise
@@ -65,4 +75,6 @@ public interface ContractBasicInformation {
      * @return the type of payment in a human readable way
      */
     String getTypeOfPayment();
+
+    Boolean getNearExpirationDatetime();
 }

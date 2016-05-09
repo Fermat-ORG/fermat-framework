@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_ccp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,7 +28,7 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     private String              actorPublicKey ;
     private Actors              actorType      ;
     private Compatibility       compatibility  ;
-    private List<CryptoAddress> cryptoAddresses;
+    private   HashMap<BlockchainNetworkType,CryptoAddress> cryptoAddresses;
     private UUID                contactId      ;
 
     private String        walletPublicKey;
@@ -43,7 +45,7 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
                                           String actorAlias,
                                           String actorFirstName,
                                           String actorLastName,
-                                          List<CryptoAddress> cryptoAddresses) {
+                                          HashMap cryptoAddresses) {
         this.contactId = contactId;
         this.actorAlias = actorAlias;
         this.actorFirstName = actorFirstName;
@@ -57,7 +59,7 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
                                           String              actorFirstName ,
                                           String              actorLastName  ,
                                           Actors              actorType      ,
-                                          List<CryptoAddress> cryptoAddresses,
+                                          HashMap cryptoAddresses,
                                           String              walletPublicKey,
                                           Compatibility       compatibility  ) {
 
@@ -103,7 +105,7 @@ public class WalletContactsMiddlewareRecord implements WalletContactRecord {
     }
 
     @Override
-    public List<CryptoAddress> getCryptoAddresses() {
+    public   HashMap<BlockchainNetworkType,CryptoAddress> getCryptoAddresses() {
         return cryptoAddresses;
     }
 

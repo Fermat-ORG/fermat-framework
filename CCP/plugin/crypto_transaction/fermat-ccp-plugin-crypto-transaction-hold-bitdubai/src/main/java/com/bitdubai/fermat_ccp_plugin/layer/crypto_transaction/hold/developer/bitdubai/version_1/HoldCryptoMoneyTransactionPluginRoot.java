@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -43,8 +42,8 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bi
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.HoldCryptoMoneyTransactionManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.structure.events.HoldCryptoMoneyTransactionMonitorAgent;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.utils.HoldCryptoMoneyTransactionImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
@@ -96,6 +95,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
         {
             try
             {
+                startMonitorAgent();
                 HoldCryptoMoneyTransactionDatabaseFactory holdCryptoMoneyTransactionDatabaseFactory = new HoldCryptoMoneyTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 holdCryptoMoneyTransactionDatabaseFactory.createDatabase(this.pluginId, HoldCryptoMoneyTransactionDatabaseConstants.HOLD_DATABASE_NAME);
             }
@@ -172,6 +172,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
             cryptoMoneyTransaction.setAmount(holdParameters.getAmount().floatValue());
             cryptoMoneyTransaction.setCurrency(holdParameters.getCurrency());
             cryptoMoneyTransaction.setMemo(holdParameters.getMemo());
+            cryptoMoneyTransaction.setBlockchainNetworkType(holdParameters.getBlockchainNetworkType());
              holdCryptoMoneyTransactionManager.saveHoldCryptoMoneyTransactionData(cryptoMoneyTransaction);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -220,7 +221,9 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
 
 
         try {
-            cryptoTransactionStatus = holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter).get(0).getStatus();
+            if(!holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter).isEmpty()){
+                cryptoTransactionStatus = holdCryptoMoneyTransactionManager.getHoldCryptoMoneyTransactionList(filter).get(0).getStatus();
+            }
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (InvalidParameterException e) {

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
@@ -28,6 +29,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     private final String           walletPublicKey   ;
     private final TransactionState state             ;
     private final CryptoStatus     cryptoStatus      ;
+    private final BlockchainNetworkType blockchainNetworkType;
 
     public TransactionWrapper(final UUID             transactionId     ,
                               final String           actorFromPublicKey,
@@ -42,7 +44,8 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
                               final String           memo              ,
                               final String           walletPublicKey   ,
                               final TransactionState state             ,
-                              final CryptoStatus     cryptoStatus      ) {
+                              final CryptoStatus     cryptoStatus      ,
+                              final BlockchainNetworkType blockchainNetworkType) {
 
         this.transactionId      = transactionId     ;
         this.actorFromPublicKey = actorFromPublicKey;
@@ -58,6 +61,7 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.walletPublicKey    = walletPublicKey   ;
         this.state              = state             ;
         this.cryptoStatus       = cryptoStatus      ;
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
     @Override
@@ -89,6 +93,9 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     public Actors getActorToType() {
         return actorToType;
     }
+
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
 
     @Override
     public String getTransactionHash() {

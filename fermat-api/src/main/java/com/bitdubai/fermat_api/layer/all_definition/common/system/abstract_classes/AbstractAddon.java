@@ -103,7 +103,7 @@ public abstract class AbstractAddon implements Addon, Service {
 
     public List<DevelopersUtilReference> getAvailableDeveloperUtils() {
         return new ArrayList<>();
-    };
+    }
 
     public FeatureForDevelopers getFeatureForDevelopers(final DevelopersUtilReference developersUtilReference) throws CantGetFeatureForDevelopersException {
         return null;

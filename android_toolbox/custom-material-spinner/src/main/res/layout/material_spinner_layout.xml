@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <material_spinner.MaterialSpinner
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/grey_dark"
+        android:textSize="15sp"
+        android:gravity="start|center"
+        android:background="@color/white" />
+
+    <material_spinner.TriangleShape
+        android:layout_width="9dp"
+        android:layout_height="5dp"
+        android:layout_marginTop="2dp"
+        android:layout_gravity="center_vertical|end"
+        android:background="@color/grey_light"
+        android:visibility="visible"
+        app:direction="south" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/grey_light"
+        android:visibility="visible"/>
+</FrameLayout>

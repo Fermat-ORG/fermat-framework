@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 
@@ -24,6 +25,7 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
     private final long          amount            ;
     private final long          timestamp         ;
     private final String        memo              ;
+    private final BlockchainNetworkType blockchainNetworkType;
 
     public IncomingIntraUserTransactionWrapper(final UUID          transactionId     ,
                                                final UUID          requestId     ,
@@ -36,7 +38,8 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
                                                final CryptoAddress addressTo         ,
                                                final long          amount            ,
                                                final long          timestamp         ,
-                                               final String        memo              ) {
+                                               final String        memo              ,
+                                               final BlockchainNetworkType blockchainNetworkType) {
 
         this.transactionId      = transactionId     ;
         this.requestId          = requestId         ;
@@ -50,6 +53,7 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
         this.amount             = amount            ;
         this.timestamp          = timestamp         ;
         this.memo               = memo              ;
+        this.blockchainNetworkType = blockchainNetworkType;
     }
 
     @Override
@@ -111,5 +115,9 @@ public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransac
     public String getMemo() {
         return memo;
     }
+
+    @Override
+    public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
 
 }

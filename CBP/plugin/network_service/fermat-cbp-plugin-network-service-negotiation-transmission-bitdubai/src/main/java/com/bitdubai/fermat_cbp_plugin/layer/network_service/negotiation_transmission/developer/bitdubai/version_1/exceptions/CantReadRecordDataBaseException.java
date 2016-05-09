@@ -20,4 +20,8 @@ public class CantReadRecordDataBaseException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantReadRecordDataBaseException(String message, String context, String possibleReason) {
+        this(message, null, context, possibleReason);
+    }
+
 }

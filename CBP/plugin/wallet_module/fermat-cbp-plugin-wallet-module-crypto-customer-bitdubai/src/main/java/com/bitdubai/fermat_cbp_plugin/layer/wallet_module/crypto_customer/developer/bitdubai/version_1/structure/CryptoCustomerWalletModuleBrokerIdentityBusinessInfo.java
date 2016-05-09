@@ -1,11 +1,18 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSignatureException;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by nelson on 24/11/15.
@@ -15,14 +22,25 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
     private String publicKey;
     private String alias;
     private byte[] img;
-    private FermatEnum merchandiseCurrency;
+    private Currency merchandiseCurrency;
+
+    private List<MerchandiseExchangeRate> quotes;
 
 
-    public CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(String alias, byte[] img, String publicKey, FermatEnum merchandiseCurrency) {
+    public CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(String alias, byte[] img, String publicKey, Currency merchandiseCurrency) {
         this.alias = alias;
         this.img = img;
         this.publicKey = publicKey;
         this.merchandiseCurrency = merchandiseCurrency;
+        quotes = new ArrayList<>();
+    }
+
+    public CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(ActorIdentity brokerIdentity, Currency merchandiseCurrency) {
+        this.alias = brokerIdentity.getAlias();
+        this.img = brokerIdentity.getProfileImage();
+        this.publicKey = brokerIdentity.getPublicKey();
+        this.merchandiseCurrency = merchandiseCurrency;
+        quotes = new ArrayList<>();
     }
 
     @Override
@@ -31,7 +49,7 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
     }
 
     @Override
-    public FermatEnum getMerchandiseCurrency() {
+    public FermatEnum getMerchandise() {
         return merchandiseCurrency;
     }
 
@@ -43,6 +61,11 @@ public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements Bro
     @Override
     public byte[] getProfileImage() {
         return img;
+    }
+
+    @Override
+    public List<MerchandiseExchangeRate>  getQuotes() {
+        return quotes;
     }
 
     @Override

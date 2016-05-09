@@ -88,6 +88,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cashMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cashMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
@@ -95,13 +96,10 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
-    private List<DatabaseTableRecord> getCashMoneyRestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+    private List<DatabaseTableRecord> getCashMoneyDestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TABLE_NAME);
 
         if (filter != null)
@@ -129,6 +127,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         cashMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         cashMoneyDestockTransaction.setPriceReference(new BigDecimal(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cashMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
+        cashMoneyDestockTransaction.setOriginTransactionId(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
 
         return cashMoneyDestockTransaction;
     }
@@ -139,6 +138,9 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
+
+            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
+            cashMoneyTransaction.setPriceReference(new BigDecimal(0));
 
             DatabaseTable table = getDatabaseTable(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TABLE_NAME);
             DatabaseTableRecord bankMoneyRestockRecord = getCashMoneyDestockRecord(cashMoneyTransaction);
@@ -165,27 +167,22 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         }
     }
 
-    public List<CashMoneyTransaction> getCashMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
-    {
-        Database database = null;
+    public List<CashMoneyTransaction> getCashMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         try {
-            database = openDatabase();
+            openDatabase();
             List<CashMoneyTransaction> cashMoneyTransactions = new ArrayList<>();
-            // I will add the Asset Factory information from the database
-            for (DatabaseTableRecord cashMoneyRestockRecord : getCashMoneyRestockData(filter)) {
-                final CashMoneyTransaction cashMoneyTransaction = getCashMoneyDestockTransaction(cashMoneyRestockRecord);
 
+            final List<DatabaseTableRecord> cashMoneyDestockData = getCashMoneyDestockData(filter);
+            for (DatabaseTableRecord cashMoneyRestockRecord : cashMoneyDestockData) {
+                final CashMoneyTransaction cashMoneyTransaction = getCashMoneyDestockTransaction(cashMoneyRestockRecord);
                 cashMoneyTransactions.add(cashMoneyTransaction);
             }
-
-            database.closeDatabase();
 
             return cashMoneyTransactions;
         }
         catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e,
+                    "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
         }
     }
 }

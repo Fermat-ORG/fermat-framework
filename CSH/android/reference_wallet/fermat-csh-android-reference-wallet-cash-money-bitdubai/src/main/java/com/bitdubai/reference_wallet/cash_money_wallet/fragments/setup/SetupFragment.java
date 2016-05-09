@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,10 +20,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
+import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
@@ -35,16 +38,22 @@ import java.util.List;
 public class SetupFragment extends AbstractFermatFragment implements View.OnClickListener, Spinner.OnItemSelectedListener {
 
     // Fermat Managers
+    private CashMoneyWalletSession walletSession;
     private CashMoneyWalletModuleManager moduleManager;
+    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
 
     //Data
     List<String> fiatCurrenciesFriendly =  new ArrayList<>();
     List<String> fiatCurrencies =  new ArrayList<>();
     FiatCurrency selectedCurrency;
+    private CashMoneyWalletPreferenceSettings walletSettings;
+
 
     //UI
-    LinearLayout setupContainer;
+    FrameLayout setupContainer;
+    LinearLayout setupHeader;
+    LinearLayout setupBody;
     Spinner currencySpinner;
     ArrayAdapter<String> currencySpinnerAdapter;
     Button okBtn;
@@ -58,12 +67,32 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CashMoneyWalletSession) appSession).getModuleManager();
+            walletSession = ((CashMoneyWalletSession) appSession);
+            moduleManager = walletSession.getModuleManager();
+            settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
+
         } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CSH_CASH_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
+
+        //Obtain walletSettings or create new wallet settings if first time opening wallet
+        walletSettings = null;
+        try {
+            walletSettings = this.settingsManager.loadAndGetSettings(walletSession.getAppPublicKey());
+        }catch (Exception e){ walletSettings = null; }
+
+        if(walletSettings == null){
+            walletSettings = new CashMoneyWalletPreferenceSettings();
+            walletSettings.setIsHomeTutorialDialogEnabled(true);
+            try {
+                settingsManager.persistSettings(walletSession.getAppPublicKey(),walletSettings);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+
 
         //Get fermat FiatCurrencies
         for (FiatCurrency f : FiatCurrency.values()) {
@@ -76,12 +105,14 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.setup_page, container, false);
+        View layout = inflater.inflate(R.layout.csh_setup_page, container, false);
 
 
         //getToolbar().setBackgroundColor(getResources().getColor(R.color.csh_setup_background_color));
 
-        setupContainer = (LinearLayout) layout.findViewById(R.id.setup_container);
+        setupContainer = (FrameLayout) layout.findViewById(R.id.csh_setup_container);
+        setupHeader = (LinearLayout) layout.findViewById(R.id.csh_setup_header);
+        setupBody = (LinearLayout) layout.findViewById(R.id.csh_setup_body);
 
         okBtn = (Button) layout.findViewById(R.id.csh_setup_ok_btn);
         okBtn.setOnClickListener(this);
@@ -102,9 +133,12 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
                 if(moduleManager.cashMoneyWalletExists(appSession.getAppPublicKey()))
                     changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
                 else {  //otherwise, fade in setup page
-                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
-                    setupContainer.setVisibility(View.VISIBLE);
-                    setupContainer.startAnimation(fadeInAnimation);
+                    Animation headerAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.csh_setup_header);
+                    Animation bodyAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.csh_setup_body);
+
+                    setupHeader.startAnimation(headerAnim);
+                    setupBody.setVisibility(View.VISIBLE);
+                    setupBody.startAnimation(bodyAnim);
                 }
             }
         }, 500);

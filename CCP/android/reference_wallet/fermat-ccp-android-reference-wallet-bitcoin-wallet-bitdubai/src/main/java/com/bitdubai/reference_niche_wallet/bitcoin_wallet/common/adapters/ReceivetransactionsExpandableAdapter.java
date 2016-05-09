@@ -35,6 +35,8 @@ public class ReceivetransactionsExpandableAdapter
         this.res = res;
     }
 
+
+
     /**
      * OnCreateViewHolder implementation for parent items. The desired ParentViewHolder should
      * be inflated here
@@ -60,6 +62,8 @@ public class ReceivetransactionsExpandableAdapter
         View view = mInflater.inflate(R.layout.ccp_transaction_list_item, parent, false);
         return new TransactionViewHolder(view);
     }
+
+
 
     /**
      * OnBindViewHolder implementation for parent items. Any data or view modifications of the

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <attr name="direction" format="enum">
+        <enum name="north" value="0" />
+        <enum name="south" value="1" />
+        <enum name="east" value="2" />
+        <enum name="west" value="3" />
+    </attr>
+
+    <declare-styleable name="TriangleShape">
+        <attr name="direction" />
+    </declare-styleable>
+
+    <declare-styleable name="MenuButton">
+        <attr name="pointColor" format="color"/>
+        <attr name="pointsBackgroundColor" format="color"/>
+    </declare-styleable>
+</resources>

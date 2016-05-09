@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantConfirmRequestException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformDenialException;
@@ -26,10 +26,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bit
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantHandleCryptoPaymentRequestRefusedEventException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.request.crypto_payment.developer.bitdubai.version_1.exceptions.CantInitializeCryptoPaymentRequestEventActionsException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeniedPaymentRequestNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.ReceivePaymentRequestNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.DefaultWalletNotFoundException;
@@ -52,6 +48,7 @@ public class CryptoPaymentRequestEventActions {
     private final UUID                        pluginId                   ;
     private final WalletManagerManager        walletManagerManager       ;
     private final   EventManager eventManager;
+    private final Broadcaster                 broadcaster;
 
     private CryptoPaymentRequestDao cryptoPaymentRequestDao;
 
@@ -59,13 +56,15 @@ public class CryptoPaymentRequestEventActions {
                                             final PluginDatabaseSystem        pluginDatabaseSystem       ,
                                             final UUID                        pluginId                   ,
                                             final WalletManagerManager        walletManagerManager       ,
-                                            final   EventManager eventManager) {
+                                            final   EventManager eventManager,
+                                            final Broadcaster broadcaster) {
 
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
         this.pluginDatabaseSystem        = pluginDatabaseSystem       ;
         this.pluginId                    = pluginId                   ;
         this.walletManagerManager        = walletManagerManager       ;
         this.eventManager                = eventManager               ;
+        this.broadcaster                = broadcaster;
     }
 
     public void initialize() throws CantInitializeCryptoPaymentRequestEventActionsException {
@@ -207,7 +206,14 @@ public class CryptoPaymentRequestEventActions {
 
             CryptoPayment record = cryptoPaymentRequestDao.getRequestById(requestId);
 
-            launchDeniedNotification(record);
+            InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
+                    record.getCryptoAddress().getCryptoCurrency(),
+                    record.getIdentityType(),
+                    record.getNetworkType()
+            );
+
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENTDENIED_" + requestId.toString());
+
 
         } catch(CantChangeCryptoPaymentRequestStateException |
                 CryptoPaymentRequestNotFoundException        e) {
@@ -241,7 +247,13 @@ public class CryptoPaymentRequestEventActions {
 
                 cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
 
-                launchRequestNotification(cryptoPaymentRequest);
+                /*InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
+                        cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency(),
+                        cryptoPaymentRequest.getIdentityType(),
+                        cryptoPaymentRequest.getNetworkType()
+                );*/
+
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, cryptoPaymentRequest.getWalletPublicKey(), "PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
 
             } catch (CantGetCryptoPaymentRequestException e) {
 
@@ -257,39 +269,40 @@ public class CryptoPaymentRequestEventActions {
             try {
                 // then i go to find the new request and a compatible installed wallet to assign it.
 
-                try {
-                    InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
+                   /* InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
                             cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency(),
                             cryptoPaymentRequest.getIdentityType(),
                             cryptoPaymentRequest.getNetworkType()
-                    );
+                    );*/
 
-                    CryptoPaymentType  type  = CryptoPaymentType .RECEIVED        ;
-                    CryptoPaymentState state = CryptoPaymentState.PENDING_RESPONSE;
+                CryptoPaymentType type = CryptoPaymentType.RECEIVED;
+                CryptoPaymentState state = CryptoPaymentState.PENDING_RESPONSE;
 
-                    // save the record in database
+                // save the record in database
 
-                    cryptoPaymentRequestDao.generateCryptoPaymentRequest(
-                            cryptoPaymentRequest.getRequestId()        ,
-                            installedWallet     .getWalletPublicKey()  ,
-                            cryptoPaymentRequest.getIdentityPublicKey(),
-                            cryptoPaymentRequest.getIdentityType()     ,
-                            cryptoPaymentRequest.getActorPublicKey()   ,
-                            cryptoPaymentRequest.getActorType()        ,
-                            cryptoPaymentRequest.getCryptoAddress()    ,
-                            cryptoPaymentRequest.getDescription()      ,
-                            cryptoPaymentRequest.getAmount()           ,
-                            cryptoPaymentRequest.getStartTimeStamp()   ,
-                            type                                       ,
-                            state                                      ,
-                            cryptoPaymentRequest.getNetworkType()      ,
-                            cryptoPaymentRequest.getReferenceWallet()
-                    );
+                cryptoPaymentRequestDao.generateCryptoPaymentRequest(
+                        cryptoPaymentRequest.getRequestId(),
+                        cryptoPaymentRequest.getWalletPublicKey(),
+                        cryptoPaymentRequest.getIdentityPublicKey(),
+                        cryptoPaymentRequest.getIdentityType(),
+                        cryptoPaymentRequest.getActorPublicKey(),
+                        cryptoPaymentRequest.getActorType(),
+                        cryptoPaymentRequest.getCryptoAddress(),
+                        cryptoPaymentRequest.getDescription(),
+                        cryptoPaymentRequest.getAmount(),
+                        cryptoPaymentRequest.getStartTimeStamp(),
+                        type,
+                        state,
+                        cryptoPaymentRequest.getNetworkType(),
+                        cryptoPaymentRequest.getReferenceWallet()
+                );
 
-                    cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
+                cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
 
-                    this.launchRequestNotification(cryptoPaymentRequest);
-                } catch(DefaultWalletNotFoundException z) {
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, cryptoPaymentRequest.getWalletPublicKey(), "PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
+
+
+               /* } catch(DefaultWalletNotFoundException z) {
 
                     cryptoPaymentRequestManager.informDenial(cryptoPaymentRequest.getRequestId());
 
@@ -302,18 +315,14 @@ public class CryptoPaymentRequestEventActions {
                 throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in network service.");
             } catch(CantGetInstalledWalletException z ) {
 
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in wallet manager manager.");
-            } catch(CantGenerateCryptoPaymentRequestException z ) {
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in wallet manager manager.");*/
+            } catch (CantGenerateCryptoPaymentRequestException z) {
 
                 throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in the generation of the request.");
-            } catch(Exception z ) {
+            } catch (Exception z) {
 
                 throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Unhandled Exception.");
             }
-
-        } catch(Exception e) {
-
-            throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: "+cryptoPaymentRequest.getRequestId(), "Unhandled exception.");
         }
 
     }
@@ -334,7 +343,15 @@ public class CryptoPaymentRequestEventActions {
             cryptoPaymentRequestManager.confirmRequest(requestId);
 
             CryptoPayment record = cryptoPaymentRequestDao.getRequestById(requestId);
-            launchDeniedNotification(record);
+
+            InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
+                    record.getCryptoAddress().getCryptoCurrency(),
+                    record.getIdentityType(),
+                    record.getNetworkType()
+            );
+
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENTDENIED_" + requestId.toString());
+
 
         } catch(CantChangeCryptoPaymentRequestStateException |
                 CryptoPaymentRequestNotFoundException        e) {
@@ -350,30 +367,5 @@ public class CryptoPaymentRequestEventActions {
         }
     }
 
-    private void launchRequestNotification(CryptoPaymentRequest cryptoPaymentRequest)
-    {
-        //send notification to device
 
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.RECEIVE_PAYMENT_REQUEST_NOTIFICATION);
-        ReceivePaymentRequestNotificationEvent receivePaymentRequestNotificationEvent = (ReceivePaymentRequestNotificationEvent) platformEvent;
-        receivePaymentRequestNotificationEvent.setSource(EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST);
-        receivePaymentRequestNotificationEvent.setAmount(cryptoPaymentRequest.getAmount());
-        receivePaymentRequestNotificationEvent.setCryptoCurrency(cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency());
-
-        eventManager.raiseEvent(platformEvent);
-    }
-
-
-    private void launchDeniedNotification(CryptoPayment cryptoPaymentRequest)
-    {
-        //send notification to device
-
-        FermatEvent platformEvent = eventManager.getNewEvent(EventType.DENIED_PAYMENT_REQUEST_NOTIFICATION);
-        DeniedPaymentRequestNotificationEvent incomingMoneyNotificationEvent = (DeniedPaymentRequestNotificationEvent) platformEvent;
-        incomingMoneyNotificationEvent.setSource(EventSource.NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST);
-        incomingMoneyNotificationEvent.setAmount(cryptoPaymentRequest.getAmount());
-        incomingMoneyNotificationEvent.setCryptoCurrency(cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency());
-
-        eventManager.raiseEvent(platformEvent);
-    }
 }

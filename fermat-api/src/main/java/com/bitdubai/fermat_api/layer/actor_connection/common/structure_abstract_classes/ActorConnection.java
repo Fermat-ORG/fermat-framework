@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import org.apache.commons.lang.Validate;
 
@@ -113,5 +112,19 @@ public abstract class ActorConnection<T extends LinkedActorIdentity> {
      */
     public final long getUpdateTime() {
         return updateTime;
+    }
+
+    @Override
+    public String toString() {
+        return "ActorConnection{" +
+                "connectionId=" + connectionId +
+                ", linkedIdentity=" + linkedIdentity +
+                ", publicKey='" + publicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", image=" + (image != null) +
+                ", connectionState=" + connectionState +
+                ", creationTime=" + creationTime +
+                ", updateTime=" + updateTime +
+                '}';
     }
 }

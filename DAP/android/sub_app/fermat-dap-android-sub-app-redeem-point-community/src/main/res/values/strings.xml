@@ -1,0 +1,44 @@
+<resources>
+    <string name="app_name">fermat-dap-android-sub-app-asset-redeem-point-community-bitdubai</string>
+    <string name="connect">Connect</string>
+
+    <string name="help">Help</string>
+
+    <string name="status_online">Online</string>
+    <string name="status_offline">Offline</string>
+    <string name="status_connecting">Connecting</string>
+    <string name="status_denied">Connection Denied</string>
+    <string name="status_canceled">Connection Canceled</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_redeem_community_welcome_subTitle">Welcome to the Redeem Point Community.</string>
+    <string name="dap_redeem_community_welcome_body">This application will help you discover and connect to Redeem Points registered in our network.!\n\nIf you are identified as an Asset User, you will need to connect to Redeem Points in order to be able to redeem your assets with them.\n\nSelect any available Redeem Point and click connect to start the process. If your network speed is low, you may have to retry several times.</string>
+    <!--Dialog Help - End-->
+    <!--Connections Other Profile - Init-->
+    <string name="dap_other_profile_accept_button">Accept Connection</string>
+    <string name="dap_other_profile_disconnect_button">This application will help you discover and connect to Redeem Points registered in our network.!\n\nIf you are identified as an Asset User, you will need to connect to Redeem Points in order to be able to redeem your assets with them.\n\nSelect any available Redeem Point and click connect to start the process. If your network speed is low, you may have to retry several times.</string>
+    <string name="dap_other_profile_name">Name</string>
+    <string name="dap_other_profile_cryptoaddres">CryptoAddress</string>
+    <string name="dap_other_profile_crypto_currency">CryptoCurrency</string>
+    <string name="dap_other_profile_last_connection_date">Last Connection Date</string>
+    <string name="dap_other_profile_connection_rejected">Connection Canceled</string>
+    <string name="dap_other_profile_request_send">Connection request Sent</string>
+    <string name="dap_other_profile_request_send_toast">The connection request has been sent you need to wait until the user responds</string>
+    <string name="create_before_action">Asset User or Redeem Point Identities must be created before using this app.</string>
+    <string name="before_action_redeem">Asset User Identity must be created before action.</string>
+    <string name="dap_other_profile_request_reject_toast">The connection request has been rejected</string>
+    <string name="dap_other_profile_disconect">Disconnect</string>
+    <string name="dap_other_profile_connect">Connect</string>
+    <string name="dap_other_profile_dialog_description">Want to disconnect from</string>
+    <string name="dap_other_profile_system_error_toast">Oooops! recovering from system error</string>
+
+    <!--Connections Other Profile - End-->
+
+    <!--Dialog Settings Notifications Help - Init-->
+    <string name="dap_redeem_point_community_settings_notification_subTitle">Welcome to the settings notification screen.</string>
+    <string name="dap_redeem_point_community_settings_notification_body">Here you can edit your notification settings configurations.</string>
+    <!--Dialog Settings Notifications Help - End-->
+
+    <string name="dap_redeem_point_community_opps_system_error">Oooops! recovering from system error</string>
+    <string name="dap_redeem_point_community_system_error">Redeem Point Community system error</string>
+</resources>

@@ -1,14 +1,13 @@
 package com.bitdubai.android_core.app;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -16,12 +15,13 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
+import com.bitdubai.android_core.app.common.version_1.util.task.GetTaskV2;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartAllRegisteredPlatformsException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -33,16 +33,9 @@ import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
-
-import org.apache.log4j.Level;
-
-import java.util.ArrayList;
-
-import de.mindpipe.android.logging.log4j.LogConfigurator;
 
 
 /**
@@ -55,29 +48,53 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
  * -- Luis.
  */
 
-public class StartActivity extends FragmentActivity implements FermatWorkerCallBack{
+public class StartActivity extends AppCompatActivity implements  FermatWorkerCallBack /**,ServiceCallback */{
 
 
-    public static final String START_ACTIVITY_INIT = "Init";
-    public static final String ACTIVE_PLATFORMS = "active";
-
+    private static final String TAG = "StartActivity";
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
 
-    ArrayList<Platforms> activePlatforms;
-
-    private ProgressDialog mDialog;
-
     private ImageView imageView_fermat;
-
 
     Animation animation1;
     Animation animation2;
+
+    /**
+     * Service
+     */
+    private BoundService mBoundService;
+    boolean mServiceConnected = false;
+
+
+    private StartReceiver startReceiver;
+    private boolean myReceiverIsRegistered;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final FermatSystem fermatSystem =ApplicationSession.getInstance().getFermatSystem();
+
+        try {
+            AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
+//            AndroidCoreUtils.getInstance().setContextAndResume(this);
+            fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
+        } catch (FermatException e) {
+
+            System.err.println(e.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        startReceiver = new StartReceiver();
+
+        if(!myReceiverIsRegistered) {
+            registerReceiver(startReceiver, new IntentFilter("org.fermat.SYSTEM_RUNNING"));
+            myReceiverIsRegistered = true;
+        }
 
             // Indicate if the app was loaded, for not load again the start activity.
             if (WAS_START_ACTIVITY_LOADED) {
@@ -96,7 +113,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                         Toast.LENGTH_LONG).show();
             }
 
-            int applicationState = ((ApplicationSession)getApplication()).getApplicationState();
+            int applicationState = ApplicationSession.getInstance().getApplicationState();
 
             if(applicationState==ApplicationSession.STATE_NOT_CREATED) {
 //                mDialog = new ProgressDialog(this);
@@ -137,7 +154,7 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
                 //animation2.setStartOffset(5000);
 
                 //animation2 AnimationListener
-                animation2.setAnimationListener(new Animation.AnimationListener(){
+                animation2.setAnimationListener(new Animation.AnimationListener() {
 
                     @Override
                     public void onAnimationEnd(Animation arg0) {
@@ -163,9 +180,11 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
 
 
-                GetTask getTask = new GetTask(this,this);
+                GetTaskV2 getTask = new GetTaskV2(this,this);
                 getTask.setCallBack(this);
                 getTask.execute();
+
+
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
                 fermatInit();
             }
@@ -173,32 +192,88 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (myReceiverIsRegistered) {
+            unregisterReceiver(startReceiver);
+            myReceiverIsRegistered = false;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    boolean b = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+//                    if (b) {
+//                        fermatInit();
+//                    }
+//                }catch (Exception e){
+//                    Log.e(TAG, "error getting client");
+//                }
+//            }
+//        }).start();
+        if(!myReceiverIsRegistered){
+            registerReceiver(startReceiver, new IntentFilter("org.fermat.SYSTEM_RUNNING"));
+            myReceiverIsRegistered = true;
+        }
+        if(ApplicationSession.getInstance().isFermatRunning()){
+            fermatInit();
+        }
+    }
+
     public void handleTouch(View view) {
         fermatInit();
     }
 
-    private boolean fermatInit() {
+    public boolean fermatInit() {
         //Intent intent = new Intent(this, SubAppActivity.class);
+        WAS_START_ACTIVITY_LOADED = true;
         Intent intent = new Intent(this, DesktopActivity.class);
-        intent.putExtra(ACTIVE_PLATFORMS,activePlatforms);
-        intent.putExtra(START_ACTIVITY_INIT, "init");
+        intent.putExtra(ApplicationConstants.START_ACTIVITY_INIT, "init");
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        startActivity(intent);
+        finish();
         return true;
     }
 
+
+
+
     /**
-     * implement this function to handle the result object through dynamic array
-     *
-     * @param result array of native object (handle result field with result[0], result[1],... result[n]
+     * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
      */
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        Intent intent = new Intent(this, BoundService.class);
+//        intent.putExtra(BoundService.LOG_TAG,"Activity 1");
+//        startService(intent);
+//        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(myReceiverIsRegistered) {
+            unregisterReceiver(startReceiver);
+            myReceiverIsRegistered = false;
+        }
+
+    }
+
     @Override
     public void onPostExecute(Object... result) {
-
         try {
 
-            final FermatSystem fermatSystem = ((ApplicationSession)getApplication()).getFermatSystem();
+            final FermatSystem fermatSystem = ApplicationSession.getInstance().getFermatSystem();
 
             PlatformInfoManager platformInfoManager = (PlatformInfoManager) fermatSystem.startAndGetAddon(
                     new AddonVersionReference(
@@ -215,73 +290,26 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
             System.out.println(e.toString());
         }
-        //mDialog.dismiss();
-
-        imageView_fermat.clearAnimation();
 
         // Indicate that app was loaded.
         WAS_START_ACTIVITY_LOADED = true;
         fermatInit();
     }
 
-    /**
-     * Implement this function to handle errors during the execution of any fermat worker instance
-     *
-     * @param ex Throwable object
-     */
     @Override
     public void onErrorOccurred(Exception ex) {
-        //mDialog.dismiss();
         ex.printStackTrace();
         Toast.makeText(getApplicationContext(), "Application crash, re open the app please",
                 Toast.LENGTH_LONG).show();
     }
 
-    class GetTask extends FermatWorker{
-
-
-        public GetTask(Activity activity,FermatWorkerCallBack fermatWorkerCallBack){
-            super(activity,fermatWorkerCallBack);
-        }
-
-
-        /**
-         * This function is used for the run method of the fermat background worker
-         *
-         * @throws Exception any type of exception
-         */
-        @Override
-        protected Object doInBackground() throws Exception {
-
-            final FermatSystem fermatSystem =((ApplicationSession) getApplication()).getFermatSystem();
-
-            try {
-                Context context = getApplicationContext();
-                fermatSystem.start(context, new OSAPlatform());
-                fermatSystem.startAllRegisteredPlatforms();
-
-            } catch (CantStartAllRegisteredPlatformsException e) {
-                e.printStackTrace();
-            }
-            catch (FermatException e) {
-                System.err.println(e.toString());
-                System.out.println(e.getPossibleReason());
-                System.out.println(e.getFormattedContext());
-                System.out.println(e.getFormattedTrace());
-            }
-
-            return true;
-        }
-    }
-
     private void setPlatformDeviceInfo(PlatformInfoManager platformInfoManager){
         try {
             PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
-            activePlatforms = loadActivePlatforms(platformInfo);
             platformInfo.setScreenSize(getScreenSize());
             platformInfoManager.setPlatformInfo(platformInfo);
-        } catch(CantLoadPlatformInformationException |
-                CantSetPlatformInformationException  e) {
+        } catch(
+                CantSetPlatformInformationException | com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException e) {
             e.printStackTrace();
         }
     }
@@ -292,17 +320,16 @@ public class StartActivity extends FragmentActivity implements FermatWorkerCallB
 
         float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
-        return DeviceInfoUtils.toScreenSize(dpHeight,dpWidth);
+        return DeviceInfoUtils.toScreenSize(dpHeight, dpWidth);
 
     }
 
-    private ArrayList<Platforms> loadActivePlatforms(PlatformInfo platformInfo){
-        ArrayList<Platforms> list;
-        //if(platformInfo.getActivePlatforms().size()==0){
-           list = platformInfo.addActivePlatform(Platforms.CRYPTO_CURRENCY_PLATFORM);
-        //}else{
-         //  list = platformInfo.getActivePlatforms();
-        //}
-        return list;
+
+    private class StartReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fermatInit();
+        }
     }
 }

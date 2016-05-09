@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class LaNacionSubsystem extends AbstractPluginSubsystem {
 
     public LaNacionSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_LANACION));
+        super(new PluginReference(Plugins.LANACION));
     }
 
     @Override

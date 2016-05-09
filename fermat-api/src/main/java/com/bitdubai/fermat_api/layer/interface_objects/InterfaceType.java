@@ -11,7 +11,8 @@ public enum InterfaceType {
     SUB_APP("SA"),
     WALLET("W"),
     EMPTY("E"),
-    FOLDER("F");
+    FOLDER("F"),
+    P2P_APP("P2P");
 
     private String code;
 
@@ -30,6 +31,7 @@ public enum InterfaceType {
             case "W": return WALLET;
             case "E": return EMPTY;
             case "F": return FOLDER;
+            case "P2P": return P2P_APP;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Developers enum");
         }

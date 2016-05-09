@@ -135,7 +135,7 @@ public class SubAppResourcesNetworkService {
      * @throws IOException
      * @throws FileNotFoundException
      */
-    private String getRepositoryStringFile(String repoResource,String fileName) throws MalformedURLException, IOException, FileNotFoundException {
+    private String getRepositoryStringFile(String repoResource,String fileName) throws IOException, FileNotFoundException {
         String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
 
         URL url = new URL(link);
@@ -171,7 +171,7 @@ public class SubAppResourcesNetworkService {
      * @throws FileNotFoundException
      */
 
-    private byte[] getRepositoryImageFile(String repoResource ,String fileName) throws MalformedURLException, IOException, FileNotFoundException {
+    private byte[] getRepositoryImageFile(String repoResource ,String fileName) throws IOException, FileNotFoundException {
 
         String link = REPOSITORY_LINK + repoResource +"/master/" + fileName;
 

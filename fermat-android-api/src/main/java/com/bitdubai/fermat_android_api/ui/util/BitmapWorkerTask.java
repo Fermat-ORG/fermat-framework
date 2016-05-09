@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 
-import com.bitdubai.android_api.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.squareup.picasso.Picasso;
@@ -57,4 +56,6 @@ public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
                 Picasso.with(imageView.getContext()).load(resImageInCaseOfError).into(imageView);
         }
     }
+
+
 }

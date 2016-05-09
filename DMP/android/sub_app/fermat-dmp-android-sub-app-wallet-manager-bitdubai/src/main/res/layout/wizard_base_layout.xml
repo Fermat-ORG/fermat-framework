@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff">
+
+
+
+    <android.support.v4.view.ViewPager
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/view_pager_welcome"
+        android:layout_weight="12"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:id="@+id/txt_dont_show_me_again"
+        android:layout_weight="1"
+        android:layout_marginBottom="7dp"
+        >
+
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/checkbox"
+            android:layout_gravity="center"
+            android:checked="false"
+            android:buttonTint="#58595B"
+            android:textColor="#58595B"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Don't show again"
+            android:gravity="center"
+            android:paddingLeft="3dp"
+            android:textColor="#58595B"
+            app:typeface="CAVIAR_DREAMS"
+            />
+
+    </LinearLayout>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:id="@+id/radio_group"
+        >
+
+        <RadioButton
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
+            android:checked="true"
+            android:layout_marginRight="9dp"
+            android:id="@+id/radio_first"
+            />
+
+        <RadioButton
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
+            android:checked="false"
+            android:layout_marginRight="9dp"
+            android:id="@+id/radio_second"
+
+            />
+
+        <RadioButton
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
+            android:checked="false"
+            android:background="@drawable/radio_selector"
+            android:layout_marginRight="9dp"
+            android:id="@+id/radio_third"
+
+            />
+
+        <RadioButton
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
+            android:checked="false"
+            android:id="@+id/radio_fourth"
+            android:layout_marginRight="9dp"
+            android:background="@drawable/radio_selector"
+            />
+
+        <RadioButton
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
+            android:checked="false"
+            android:id="@+id/radio_fifth"
+            android:background="@drawable/radio_selector"
+            />
+
+
+
+    </RadioGroup>
+
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="38dp"
+        android:text="Got it"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginBottom="28dp"
+        android:textColor="#fff"
+        android:id="@+id/btn_got_it"
+        android:background="#00B397"/>
+
+</LinearLayout>

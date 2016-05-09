@@ -3,13 +3,15 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 
+import java.io.Serializable;
+
 /**
  * The class <code>LayerReference</code>
  * haves all the information of a Layer Reference.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
  */
-public class LayerReference {
+public class LayerReference implements Serializable{
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD = 2819;

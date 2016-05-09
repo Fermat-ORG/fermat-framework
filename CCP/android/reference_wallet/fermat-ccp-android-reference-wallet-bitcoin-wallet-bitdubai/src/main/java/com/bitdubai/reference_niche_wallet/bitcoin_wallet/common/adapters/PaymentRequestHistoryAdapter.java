@@ -109,8 +109,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         holder.getTxt_notes().setText(data.getReason());
         holder.getTxt_notes().setTypeface(tf);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        holder.getTxt_time().setText(data.getDate());
+
+        holder.getTxt_time().setText(data.getDate() + " hs");
         holder.getTxt_time().setTypeface(tf);
 
         String state = "";
@@ -150,14 +150,14 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 break;
 
         }
+
+
         if(data.getType() == 0) //SEND
         {
-            if(data.getState() != null) {
-                holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-                holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-                holder.getTxt_state().setText(state);
-                holder.getTxt_state().setTypeface(tf);
-            }
+            holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
+            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
+            holder.getTxt_state().setText(state);
+            holder.getTxt_state().setTypeface(tf);
         }
         else
         {
@@ -168,19 +168,16 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                 holder.getTxt_state().setText(state);
                 holder.getTxt_state().setTypeface(tf);
             }
+            else
+            {
+                holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
+                holder.getLinear_layour_container_state().setVisibility(View.GONE);
+
+                holder.getTxt_state().setText(state);
+                holder.getTxt_state().setTypeface(tf);
+            }
         }
 
-
-
-      /*  if(data.getState() != null) {
-          holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-            holder.getTxt_state().setText(data.getState());
-            holder.getTxt_state().setTypeface(tf);
-        }else{
-           holder.getLinear_layour_container_state().setVisibility(View.GONE);
-            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
-        }*/
 
 
             holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
@@ -191,11 +188,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                                 , referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                         Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                         notifyDataSetChanged();
-                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
-                        //onRefreshList.onRefresh();
+//                        FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
+//                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+                        onRefreshList.onRefresh();
                     } catch (Exception e) {
-                        showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                        showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
                     }
 
                 }
@@ -208,10 +205,11 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
                     cryptoWallet.refuseRequest(data.getRequestId());
                     Toast.makeText(context, "Request denied", Toast.LENGTH_SHORT).show();
                     notifyDataSetChanged();
-                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
-                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+//                    FermatAnimationsUtils.showEmpty(context, true, holder.getLinear_layour_container_state());
+//                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
+                    onRefreshList.onRefresh();
                 } catch (Exception e) {
-                    showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                    showMessage(context, "Cant Denied Receive Payment Exception- " + e.getMessage());
                 }
             }
         });

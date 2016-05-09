@@ -16,9 +16,9 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
 
     private final UUID      relationshipId;
     private final String    identity;
-    private final UUID      wallet;
+    private final String      wallet;
 
-    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final UUID Wallet){
+    public BrokerIdentityWalletRelationshipInformation(final UUID relationshipId, final String identity, final String Wallet){
         this.identity = identity;
         this.wallet = Wallet;
         this.relationshipId = relationshipId;
@@ -35,7 +35,7 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
     }
 
     @Override
-    public UUID getWallet() {
+    public String getWallet() {
         return this.wallet;
     }
 
@@ -50,10 +50,8 @@ public class BrokerIdentityWalletRelationshipInformation implements BrokerIdenti
             return false;
         if( !this.wallet.equals(compare.getWallet()) )
             return false;
-        if( !this.relationshipId.equals(compare.getRelationshipId()) )
-            return false;
+        return this.relationshipId.equals(compare.getRelationshipId());
 
-        return true;
     }
 
     @Override

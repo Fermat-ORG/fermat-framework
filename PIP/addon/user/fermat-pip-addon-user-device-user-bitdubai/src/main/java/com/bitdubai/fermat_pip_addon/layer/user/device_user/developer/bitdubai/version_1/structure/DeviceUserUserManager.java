@@ -25,8 +25,8 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.IncorrectUs
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.LoginFailedException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserCreatedEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.DeviceUserLoggedInEvent;
@@ -88,7 +88,7 @@ public class DeviceUserUserManager implements DeviceUserManager {
         try {
             userPublicKey = createNewDeviceUser("test1", "test1");
             DeviceUser deviceUser = getDeviceUser(userPublicKey);
-            System.out.println("soy una direccion "+deviceUser.getPublicKey());
+
             return deviceUser;
         } catch (Exception e) {
             try {

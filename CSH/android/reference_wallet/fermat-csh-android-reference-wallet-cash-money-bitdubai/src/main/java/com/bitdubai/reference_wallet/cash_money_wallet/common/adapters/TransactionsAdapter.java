@@ -27,7 +27,7 @@ public class TransactionsAdapter extends FermatAdapter<CashMoneyWalletTransactio
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.transaction_list_item;
+        return R.layout.csh_transaction_list_item;
     }
 
     @Override

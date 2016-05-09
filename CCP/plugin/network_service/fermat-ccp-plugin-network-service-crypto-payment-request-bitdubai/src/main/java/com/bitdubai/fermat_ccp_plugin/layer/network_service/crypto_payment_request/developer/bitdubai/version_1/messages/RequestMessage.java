@@ -29,6 +29,7 @@ public class RequestMessage extends NetworkServiceMessage {
     private final RequestAction         action           ;
     private final BlockchainNetworkType networkType      ;
     private final ReferenceWallet      referenceWallet;
+    private final String        walletPublicKey;
 
     public RequestMessage(final UUID                  requestId        ,
                           final String                identityPublicKey,
@@ -41,9 +42,12 @@ public class RequestMessage extends NetworkServiceMessage {
                           final long                  startTimeStamp   ,
                           final RequestAction         action           ,
                           final BlockchainNetworkType networkType     ,
-                          final ReferenceWallet      referenceWallet) {
+                          final ReferenceWallet      referenceWallet,
+                          String identitySender,
+                          String actorDestination,
+                          final String        walletPublicKey) {
 
-        super(MessageTypes.REQUEST);
+        super(MessageTypes.REQUEST,identitySender,actorDestination);
 
         this.requestId         = requestId        ;
         this.identityPublicKey = identityPublicKey;
@@ -57,6 +61,7 @@ public class RequestMessage extends NetworkServiceMessage {
         this.action            = action           ;
         this.networkType       = networkType      ;
         this.referenceWallet   = referenceWallet    ;
+        this.walletPublicKey = walletPublicKey;
     }
 
     public UUID getRequestId() {
@@ -105,6 +110,10 @@ public class RequestMessage extends NetworkServiceMessage {
 
     public ReferenceWallet getReferenceWallet() {
         return referenceWallet;
+    }
+
+    public String getWalletPublicKey() {
+        return walletPublicKey;
     }
 
     @Override

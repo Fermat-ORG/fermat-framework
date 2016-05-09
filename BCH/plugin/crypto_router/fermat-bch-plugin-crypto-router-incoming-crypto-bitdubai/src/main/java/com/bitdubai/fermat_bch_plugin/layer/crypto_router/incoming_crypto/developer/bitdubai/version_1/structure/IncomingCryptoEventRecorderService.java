@@ -6,7 +6,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoOnBlo
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoReversedOnBlockchainEvent;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.events.IncomingCryptoReversedOnCryptoNetworkEvent;
-import com.bitdubai.fermat_bch_api.layer.definition.enums.EventType;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnBlockchainEventHandler;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoOnCryptoNetworkEventHandler;

@@ -22,21 +22,21 @@ public interface InstalledSubApp extends Serializable,FermatApp{
      *
      * @return the saud list of languages
      */
-    public List<InstalledLanguage> getLanguagesId();
+    List<InstalledLanguage> getLanguagesId();
 
     /**
      * This method gives us the list of all the skins installed for this subApp
      *
      * @return the saud list of skins
      */
-    public List<InstalledSkin> getSkinsId();
+    List<InstalledSkin> getSkinsId();
 
     /**
      * This method tell us the type of the subApp
      *
      * @return the subApp type
      */
-    public SubApps getSubAppType();
+    SubApps getSubAppType();
 
     /**
      * This method gives us a codification of the wallet identifier (the identifier is an enum that
@@ -45,14 +45,14 @@ public interface InstalledSubApp extends Serializable,FermatApp{
      * @return an string that is result of the method getCode of an enum that can be inferred by the
      *         subApp
      */
-    public String getSubAppPlatformIdentifier();
+    String getSubAppPlatformIdentifier();
 
     /**
      * This method gives us the name of the wallet icon used to identify the image in the subApp resources plug-in
      *
      * @return the name of the said icon
      */
-    public String getSubAppIcon();
+    String getSubAppIcon();
 
 
     /**
@@ -60,12 +60,12 @@ public interface InstalledSubApp extends Serializable,FermatApp{
      *
      * @return the name of the subApp
      */
-    public String getSubAppName();
+    String getSubAppName();
 
     /**
      * This method gives us the version of the subApp
      *
      * @return the version of the subApp
      */
-    public Version getSubAppVersion();
+    Version getSubAppVersion();
 }

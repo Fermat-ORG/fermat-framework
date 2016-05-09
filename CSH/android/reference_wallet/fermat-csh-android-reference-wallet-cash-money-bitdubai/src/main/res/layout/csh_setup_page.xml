@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/csh_setup_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/csh_background_bottom">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/csh_background_overlay"
+        android:adjustViewBounds="true"
+         android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:id="@+id/csh_setup_header"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginTop="-180dp"
+        android:orientation="vertical"
+        android:background="@drawable/csh_top_lip_medium">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/titleBar_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/csh_setup_titlebar_margin_bottom"
+            android:layout_marginTop="@dimen/csh_setup_titlebar_margin_top"
+            android:gravity="center"
+            android:text="@string/csh_home_titlebar_title"
+            android:textColor="@color/csh_text_white"
+            android:textSize="@dimen/csh_large_text_size"
+            android:textStyle="bold" />
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="26dp"
+            android:gravity="center_horizontal"
+            android:textStyle="bold"
+            android:text="SELECT A CURRENCY"
+            android:textColor="#fff"
+            android:textSize="@dimen/csh_regular_plus_text_size" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="3dp"
+            android:gravity="center_horizontal"
+            android:text="This step cannot be undone!"
+            android:textColor="#fff"
+            android:textSize="@dimen/csh_regular_text_size" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_marginTop="280dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_weight="0.15">
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/csh_setup_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="0.7"
+            android:layout_gravity="center_horizontal"
+            android:visibility="invisible">
+
+            <!--TODO: Need to style this spinner according to design-->
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:background="@drawable/csh_background_spinner">-->
+
+                <Spinner
+                    android:id="@+id/csh_setup_currency_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"/>
+
+            <!--</RelativeLayout>-->
+
+
+            <Button
+                android:id="@+id/csh_setup_ok_btn"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginTop="48dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/csh_check_button"
+                android:textColor="#2c648f"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:layout_weight="0.15">
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+
+</FrameLayout>
