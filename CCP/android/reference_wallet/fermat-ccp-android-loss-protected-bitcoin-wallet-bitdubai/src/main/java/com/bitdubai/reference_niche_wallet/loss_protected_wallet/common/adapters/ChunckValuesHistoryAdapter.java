@@ -78,14 +78,11 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()));
         holder.getTxt_amount().setTypeface(tf) ;
 
-        //final double exchange_Rate = data.getExchangeRate();
-        //final double actualExchangeRate = lossProtectedWalletSession.getActualExchangeRate();
-
-        if (lossProtectedWalletSession.getActualExchangeRate() > data.getExchangeRate()){
-            holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
-        }else {
+        if (lossProtectedWalletSession.getActualExchangeRate() > data.getExchangeRate())
             holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
-        }
+        else
+            holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
+
 
 
         holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " + data.getExchangeRate());
