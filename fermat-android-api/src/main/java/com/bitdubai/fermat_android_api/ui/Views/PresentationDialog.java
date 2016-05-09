@@ -49,7 +49,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
     private final boolean checkButton;
 
     /**
-     * Members
+     * Fields
      */
     String title;
     int subTitle = -1;
