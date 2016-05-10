@@ -28,14 +28,15 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
@@ -78,6 +79,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     List<Fan> fanList=new ArrayList<>();
     Bot artistBot;
     final Handler myHandler = new Handler();
+    SearchView searchView;
 
 
     public static FollowingFragment newInstance(){
@@ -125,8 +127,11 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tky_fan_wallet_menu, menu);
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+
+        changeColorSearchView(searchView);
+
         searchView.setOnQueryTextListener(this);
 
         MenuItemCompat.setOnActionExpandListener(item,
@@ -192,7 +197,21 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
 
 
+
+
+
+
         return view;
+    }
+
+    void changeColorSearchView(SearchView searchview){
+
+        LinearLayout ll=(LinearLayout)searchview.getChildAt(0);
+        LinearLayout ll2=(LinearLayout)ll.getChildAt(2);
+        LinearLayout ll3=(LinearLayout)ll2.getChildAt(1);
+        SearchView.SearchAutoComplete autoComplete=((SearchView.SearchAutoComplete)ll3.getChildAt(0));
+        autoComplete.setTextColor(Color.BLACK);
+
     }
 
     List<FollowingItems> reload(){
@@ -385,7 +404,11 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                             UnexpectedUIExceptionSeverity.NOT_IMPORTANT,
                             e);
                 } catch (CantConnectWithTokenlyException e) {
-                    //TODO: Miguel, implement here how to notify to the user that tokenly website is not available
+                    Toast.makeText(
+                            getActivity(),
+                            "Connection Problem",
+                            Toast.LENGTH_LONG)
+                            .show();
                 }
 
             } catch (CantListFanIdentitiesException e) {
