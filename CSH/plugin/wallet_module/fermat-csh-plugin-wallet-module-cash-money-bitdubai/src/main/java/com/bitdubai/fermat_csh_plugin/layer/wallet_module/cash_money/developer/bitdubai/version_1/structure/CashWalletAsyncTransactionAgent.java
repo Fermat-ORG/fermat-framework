@@ -10,10 +10,13 @@ import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionPara
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.exceptions.CantCreateDepositTransactionException;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.withdrawal.exceptions.CantCreateWithdrawalTransactionException;
 
+import java.io.Serializable;
+
+
 /**
  * Created by Alejandro Bicelis on 05/05/16.
  */
-public class CashWalletAsyncTransactionAgent extends AsyncTransactionAgent<CashTransactionParameters> {
+public class CashWalletAsyncTransactionAgent extends AsyncTransactionAgent<CashTransactionParameters> implements Serializable {
 
     private final Broadcaster broadcaster;
     private final CashMoneyWalletModuleManagerImpl cashMoneyWalletModuleManagerImpl;
