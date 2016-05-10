@@ -78,7 +78,6 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     private final PluginFileSystem                      pluginFileSystem                      ;
     private final UUID                                  pluginId                              ;
     private final PluginVersionReference                pluginVersionReference                ;
-    private SettingsManager<ChatActorCommunitySettings> settingsManager                       ;
     private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ErrorManager errorManager, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
@@ -153,7 +152,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
 
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (CantGetSettingsException | SettingsNotFoundException e){
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             appSettings = null;
@@ -166,7 +165,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             if(identity.getActorType() != null)
                 appSettings.setLastSelectedActorType(identity.getActorType());
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                this.chatActorCommunitySubAppModuleManager.persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
@@ -437,7 +436,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.getSettingsManager().loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return null;
@@ -495,7 +494,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
 
@@ -504,7 +503,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
             appSettings.setLastSelectedActorType(Actors.CHAT);
 
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                this.chatActorCommunitySubAppModuleManager.persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }

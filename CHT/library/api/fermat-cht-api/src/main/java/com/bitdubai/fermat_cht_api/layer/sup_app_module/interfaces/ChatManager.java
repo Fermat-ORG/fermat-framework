@@ -126,6 +126,5 @@ public interface ChatManager extends ModuleManager, Serializable, ModuleSettings
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-    @Override
-    SettingsManager<ChatPreferenceSettings> getSettingsManager();
+
 }

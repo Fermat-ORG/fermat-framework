@@ -60,17 +60,8 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
     public void start() throws CantStartPluginException {
 
         try {
-            fermatManager = new ChatActorCommunityManager(
-                    chatIdentityManager,
-                    chatActorConnectionManager,
-                    chatActorNetworkServiceManager,
-                    errorManager,
-                    pluginFileSystem,
-                    pluginId,
-                    getPluginVersionReference()
-            );
 
-            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
+//            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
@@ -84,6 +75,17 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
 
     @Override
     public ModuleManager<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
+        if(fermatManager==null){
+            fermatManager = new ChatActorCommunityManager(
+                    chatIdentityManager,
+                    chatActorConnectionManager,
+                    chatActorNetworkServiceManager,
+                    errorManager,
+                    pluginFileSystem,
+                    pluginId,
+                    getPluginVersionReference()
+            );
+        }
         return fermatManager;
     }
 

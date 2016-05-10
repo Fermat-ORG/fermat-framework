@@ -178,7 +178,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
     }
 
-    private boolean isDataForChunk(Serializable data){
+    private boolean isDataForChunk(Serializable data) throws Exception {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byteArrayOutputStream.reset();
         ObjectOutput out = null;
@@ -194,7 +194,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
            }else{
                Log.e(TAG,"ERROR: NO USAR getSettingsManager DEL MODULE");
            }
-            throw new RuntimeException("ERROR: Class is not Serializable, class name: "+data.getClass().getName());
+            throw new Exception("ERROR: Class is not Serializable, class name: "+data.getClass().getName());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -302,16 +302,21 @@ public class CommunicationServerService extends Service implements FermatWorkerC
              * Acá se va a hacer el chunk y el envio al cliente
              */
             //chunkAndSendData(dataId,clientKey,aidlObject);
-            if (isDataForChunk(aidlObject)) {
-                try {
-                    if(!(aidlObject instanceof Serializable)) throw new NotSerializableException("Object: "+aidlObject.getClass().getName()+" is not serializable");
-                    sendFullData(dataId, clientKey, aidlObject);
-                    return new FermatModuleObjectWrapper(aidlObject, true, dataId);
-                } catch (NotSerializableException e) {
-                    return new FermatModuleObjectWrapper(dataId,aidlObject,true,e);
+            try {
+                if (isDataForChunk(aidlObject)) {
+                    try {
+                        if (!(aidlObject instanceof Serializable))
+                            throw new NotSerializableException("Object: " + aidlObject.getClass().getName() + " is not serializable");
+                        sendFullData(dataId, clientKey, aidlObject);
+                        return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+                    } catch (NotSerializableException e) {
+                        return new FermatModuleObjectWrapper(dataId, aidlObject, true, e);
+                    }
+                } else {
+                    return new FermatModuleObjectWrapper(aidlObject, false, dataId);
                 }
-            }else {
-                return new FermatModuleObjectWrapper(aidlObject,false,dataId);
+            } catch (Exception e) {
+                throw new RuntimeException("Error in Method: "+method,e);
             }
 
         }

@@ -310,8 +310,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                e.printStackTrace();
 //            }
 //
-            unregisterReceiver(updateViewReceiver);
-            updateViewReceiver.clear();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1395,6 +1394,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             resetThisActivity();
 
+            try {
+                unregisterReceiver(updateViewReceiver);
+                updateViewReceiver.clear();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             executor.shutdownNow();
             super.onDestroy();
         }catch (Exception e){
