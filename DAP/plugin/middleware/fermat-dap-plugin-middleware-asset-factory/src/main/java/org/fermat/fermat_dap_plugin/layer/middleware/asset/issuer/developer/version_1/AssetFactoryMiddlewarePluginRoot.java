@@ -74,9 +74,6 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletManagerManager;
 
@@ -106,8 +103,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
             assetFactoryMiddlewareMonitorAgent = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent(
                     assetFactoryMiddlewareManager,
                     assetIssuingManager,
-                    errorManager
-            );
+                    this);
         }
         assetFactoryMiddlewareMonitorAgent.start();
     }
@@ -142,20 +138,22 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(assetIssuingManager, pluginDatabaseSystem, pluginFileSystem, pluginId, walletManagerManager, identityAssetIssuerManager);
         try {
             pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException ex) {
             try {
                 AssetFactoryMiddlewareDatabaseFactory assetFactoryMiddlewareDatabaseFactory = new AssetFactoryMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
                 assetFactoryMiddlewareDatabaseFactory.createDatabase(this.pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+            } catch (CantCreateDatabaseException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException();
-            } catch (Exception exception) {
-                throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(exception), null, null);
+            } catch (Exception e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(e), null, null);
             }
         }
         try {
             startMonitorAgent();
         } catch (CantGetLoggedInDeviceUserException | CantSetObjectException | CantStartAgentException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(e), null, "Cannot start the agent.");
         }
         this.serviceStatus = ServiceStatus.STARTED;
@@ -227,8 +225,9 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     public boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy {
         try {
             return assetFactoryMiddlewareManager.isReadyToPublish(assetPublicKey);
-        } catch (Exception exception) {
-            throw new CantPublishAssetFactoy(exception, "Cant Publish Asset Factory", "Asset Factory incomplete");
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantPublishAssetFactoy(e, "Cant Publish Asset Factory", "Asset Factory incomplete");
         }
     }
 
@@ -237,6 +236,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         try {
             return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         return null;
