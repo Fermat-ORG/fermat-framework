@@ -49,9 +49,8 @@ public class FermatLinuxAppMain {
         try {
 
             System.out.println("***********************************************************************");
-            System.out.println("* FERMAT - Linux Core - Version 1.0 (2015)                            *");
+            System.out.println("* FERMAT - Linux Core - Version 1.0 (2016)                            *");
             System.out.println("* www.fermat.org                                                      *");
-            System.out.println("* www.bitDubai.com                                                    *");
             System.out.println("***********************************************************************");
             System.out.println("");
             System.out.println("- Starting process ...");
@@ -63,15 +62,16 @@ public class FermatLinuxAppMain {
             //fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
             //fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.ACTOR_NETWORK_SERVICE, Plugins.CRYPTO_CUSTOMER, Developers.BITDUBAI, new Version()));
 
+            System.out.println("FERMAT - Linux Core - started satisfactory...");
+
         } catch (Exception e) {
 
             System.out.println("***********************************************************************");
-            System.out.println("*FERMAT - ERROR                                                       *");
+            System.out.println("* FERMAT - ERROR                                                      *");
             System.out.println("***********************************************************************");
             e.printStackTrace();
             System.exit(1);
         }
 
-        System.out.println("FERMAT - Linux Core - started satisfactory...");
     }
 }
