@@ -597,39 +597,23 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         // I check the definition for the filter object, filter type, filter columns names
         // and build the WHERE statement
-        String filter = "";
-        StringBuffer strFilter = new StringBuffer();
+        StringBuilder strFilter = new StringBuilder();
 
         if (this.tableFilterGroup != null) {
             for (int i = 0; i < tableFilterGroup.getFilters().size(); ++i) {
 
-                strFilter.append(tableFilterGroup.getFilters().get(i).getColumn());
+                strFilter.append(makeInternalCondition(tableFilterGroup.getFilters().get(i)));
 
-                switch (tableFilterGroup.getFilters().get(i).getType()) {
-                    case EQUAL:
-                        strFilter.append(" ='" + tableFilterGroup.getFilters().get(i).getValue() + "'");
-                        break;
-                    case GREATER_THAN:
-                        strFilter.append(" > " + tableFilterGroup.getFilters().get(i).getValue());
-                        break;
-                    case LESS_THAN:
-                        strFilter.append(" < " + tableFilterGroup.getFilters().get(i).getValue());
-                        break;
-                    case LIKE:
-                        strFilter.append(" Like '%" + tableFilterGroup.getFilters().get(i).getValue() + "%'");
-                        break;
-                    default:
-                        strFilter.append(" ");
-                        break;
+                if (i < (tableFilterGroup.getFilters().size() - 1)) {
+                    strFilter.append(" ")
+                            .append(tableFilterGroup.getOperator())
+                            .append(" ");
                 }
-
-                if (i < (tableFilterGroup.getFilters().size() - 1))
-                    strFilter.append(" " + tableFilterGroup.getOperator() + " ");
 
             }
         }
 
-        filter = strFilter.toString();
+        String filter = strFilter.toString();
         if (strFilter.length() > 0) filter = " WHERE " + filter;
 
         return filter;
@@ -744,7 +728,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
                         .append("'");
                 break;
             default:
-                strFilter.append(" ");
+                throw new RuntimeException("Database Filter Type not implemented yet. "+filter.getType());
         }
         return strFilter.toString();
     }
