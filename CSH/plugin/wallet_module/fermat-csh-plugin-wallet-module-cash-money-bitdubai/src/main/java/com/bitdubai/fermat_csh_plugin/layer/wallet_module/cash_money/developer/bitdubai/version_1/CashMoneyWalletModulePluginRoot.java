@@ -1,20 +1,16 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -33,7 +29,6 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.b
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -43,8 +38,7 @@ import java.util.UUID;
  */
 
 //public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements LogManagerForDevelopers, CashMoneyWalletModuleManager {
-public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> implements
-        LogManagerForDevelopers {
+public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWalletPreferenceSettings, ActiveActorIdentityInformation>  {
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
@@ -77,7 +71,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
     private CurrencyExchangeProviderFilterManager providerFilter;
 
 
-    private CashMoneyWalletModuleManager cashMoneyWalletModuleManager;
+    private CashMoneyWalletModuleManager moduleManager;
 
 
     /*
@@ -93,45 +87,24 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
     */
     @Override
     public void start() throws CantStartPluginException {
+        super.start();
         System.out.println("CASHMONEYWALLETMODULE - PluginRoot START");
-
-        try {
-            cashMoneyWalletModuleManager = new CashMoneyWalletModuleManagerImpl(cashMoneyWalletManager, pluginId, pluginFileSystem,
-                    errorManager, cashDepositTransactionManager, cashWithdrawalTransactionManager, broadcaster);
-
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
-        }
-        serviceStatus = ServiceStatus.STARTED;
-
         //testCERPlatform();
     }
 
     @Override
-    public List<String> getClassesFullPath() {
-        return null;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
-        // I will check the current values and update the LogLevel in those which is different
-        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
-
-            // if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
-            if (CashMoneyWalletModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CashMoneyWalletModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CashMoneyWalletModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            } else {
-                CashMoneyWalletModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
-            }
-        }
-    }
-
-    @Override
     public CashMoneyWalletModuleManager getModuleManager() throws CantGetModuleManagerException {
-        return cashMoneyWalletModuleManager;
+        if (moduleManager == null)
+            moduleManager = new CashMoneyWalletModuleManagerImpl(
+                    cashMoneyWalletManager,
+                    pluginId,
+                    pluginFileSystem,
+                    errorManager,
+                    cashDepositTransactionManager,
+                    cashWithdrawalTransactionManager,
+                    broadcaster);
+
+        return moduleManager;
     }
 
 
