@@ -135,7 +135,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     }
                                     if (mess != null) {
                                         if(chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Typing..");
+                                            message.add("Typing...");
                                         }else{
                                             message.add(mess.getMessage());
                                         }
@@ -143,7 +143,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                         typeMessage.add(mess.getType().toString());
                                     }else{
                                         if(chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Typing..");
+                                            message.add("Typing...");
                                         }else {
                                             message.add("");
                                         }

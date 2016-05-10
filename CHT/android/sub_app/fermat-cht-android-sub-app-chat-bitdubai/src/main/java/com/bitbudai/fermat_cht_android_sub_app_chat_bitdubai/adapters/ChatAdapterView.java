@@ -351,11 +351,36 @@ public class ChatAdapterView extends LinearLayout {
         return isKeyboardShown;
     }
 
+    public String setFormatLastTime(String date){
+        String fecha = date;
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        SimpleDateFormat formatterhour = new SimpleDateFormat("HH:mm");
+        try {
+            Date dater = formatter.parse(date);
+            String datte = formatter.format(dater);
+            Date dhour = formatterhour.parse(datte.substring(10,15));
+            String formattedTime = formatterhour.format(dhour);
+
+        if(Validate.isDateToday(dater)){
+            fecha = "today at "+formattedTime;
+        }else{
+            Date today = new Date();
+            long dias = (today.getTime() - dater.getTime()) / (1000 * 60 * 60 * 24);
+            if(dias == 1){
+               fecha = "yesterday at "+formattedTime;
+            }
+        }
+        }catch(Exception e){
+            Log.e("ErrorOnSetFormatLastTim", e.getMessage(),e);
+        }
+
+        return fecha;
+    }
     public void ChangeStatusOnTheSubtitleBar(int state, String date) {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
                 if(date != null && date != "no record") {
-                    toolbar.setSubtitle(Html.fromHtml("<small><small>Last time "+date+"</small></small>"));
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>Last time "+setFormatLastTime(date)+"</small></small>"));
                 }else{
                     Log.i("159753**LastTimeOnChat", "No show");
                 }
@@ -366,7 +391,7 @@ public class ChatAdapterView extends LinearLayout {
 
             case ConstantSubtitle.IS_WRITING:
                 // toolbar.setSubtitleTextColor(Color.parseColor("#fff"));
-                toolbar.setSubtitle("Typing..");
+                toolbar.setSubtitle("Typing...");
                 break;
         }
     }
