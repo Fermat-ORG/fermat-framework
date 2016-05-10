@@ -131,11 +131,11 @@ public class AppNavigationStructure implements FermatStructure,Serializable{
 
     @Override
     public void changeActualStartActivity(String activityCode)throws IllegalArgumentException{
-        try {
-            if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException();
-        } catch (InvalidParameterException e) {
-            throw new IllegalArgumentException(activityCode);
-        }
+//        try {
+//            if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException();
+//        } catch (InvalidParameterException e) {
+//            throw new IllegalArgumentException(activityCode);
+//        }
         this.actualStart = activityCode;
     }
 

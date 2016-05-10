@@ -29,7 +29,9 @@ public class ProxyFactory {
         ModuleManager moduleManager = null;
         if(!openModules.containsKey(pluginVersionReference)) {
             try {
-                Class clazz = FermatSystem.getInstance().getModuleManager2(pluginVersionReference).getClass();
+                ModuleManager moduleManagerBase = FermatSystem.getInstance().getModuleManager2(pluginVersionReference);
+                if(moduleManagerBase==null) throw new RuntimeException("Module manager null in platform, please check if your plugin is connected, pluginVersionReference: "+pluginVersionReference.toString3());
+                Class clazz = moduleManagerBase.getClass();
                 moduleManager = (ModuleManager) Proxy.newProxyInstance(
                         clazz.getClassLoader(),
                         clazz.getInterfaces(),
