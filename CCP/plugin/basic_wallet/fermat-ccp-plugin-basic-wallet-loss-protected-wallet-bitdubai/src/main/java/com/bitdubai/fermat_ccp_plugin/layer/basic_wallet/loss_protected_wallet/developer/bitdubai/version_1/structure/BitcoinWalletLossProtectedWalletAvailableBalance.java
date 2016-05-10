@@ -4,16 +4,13 @@ import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
@@ -21,10 +18,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
+
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -140,7 +135,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, String.valueOf(purchasePrice),exchangeProviderFilterManagerproviderFilter, exchangeProviderId,rateProviderManager);
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "BalanceChange");
             //get exchange rate on background
             //and insert spendings
             setActualExchangeRate(TransactionType.DEBIT,cryptoTransaction);
@@ -165,7 +160,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             //calculate value blocks to spend and inserted into the table
 
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "Btc_arrive");
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "BalanceChange");
 
             //get exchange rate on background
             setActualExchangeRate(TransactionType.CREDIT,cryptoTransaction);

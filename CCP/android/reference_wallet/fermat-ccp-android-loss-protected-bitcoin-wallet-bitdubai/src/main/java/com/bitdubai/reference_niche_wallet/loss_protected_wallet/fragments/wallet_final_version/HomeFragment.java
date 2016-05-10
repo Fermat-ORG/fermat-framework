@@ -91,7 +91,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     LossProtectedWalletSession lossProtectedWalletSession;
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
-
+    LayoutInflater inflater;
 
     /**
      * Manager
@@ -274,6 +274,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
         super.onCreateView(inflater, container, savedInstanceState);
         try {
+            this.inflater = inflater;
             rootView = inflater.inflate(R.layout.lossprotected_home, container, false);
             setUp(inflater);
 
@@ -598,16 +599,20 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 //update toolbar color
                 final Toolbar toolBar = getToolbar();
 
-                toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+                //toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
 
-                makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
+               // makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
             } else {
-                if(code.equals("Btc_arrive"))
+                if(code.equals("BalanceChange"))
                 {
                     //update balance amount
                     changeBalanceType(txt_type_balance, txt_balance_amount);
 
+                    //update chart
+                    setUp(inflater);
+
                 }
+
 
             }
         }

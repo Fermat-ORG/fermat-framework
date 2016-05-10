@@ -1011,7 +1011,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
 
-                makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
+               // makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
             } else {
                 if(code.equals("Btc_arrive"))
                 {
