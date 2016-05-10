@@ -222,24 +222,69 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
         try {
 
-            List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+                //verifico la cache para mostrar los que tenia antes y los nuevos
+                List<IntraUserInformation> userCacheList = new ArrayList<>();
+                try {
+                    userCacheList = getCacheSuggestionsToContact(max, offset);
+                } catch (CantGetIntraUsersListException e) {
+                    e.printStackTrace();
+                }
 
-            List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-            intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset);
+                List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
+
+                List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
+                intraUserInformationList = intraUserNertwokServiceManager.getIntraUsersSuggestions(max, offset);
 
 
 
-            for (IntraUserInformation intraUser : intraUserInformationList) {
+                for (IntraUserInformation intraUser : intraUserInformationList) {
 
-                //get connection state status
-                ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
+                    //get connection state status
+                    ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
-                //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Online");
-                intraUserInformationModuleList.add(intraUserInformation);
+                    //return intra user information - if not connected - status return null
+                    IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Online");
+                    intraUserInformationModuleList.add(intraUserInformation);
+                }
+
+
+            if(intraUserInformationModuleList!=null) {
+                if (userCacheList.size() == 0) {
+                    return intraUserInformationModuleList;
+                }
+                else {
+                    if (intraUserInformationModuleList.size() == 0) {
+                        return userCacheList;
+                    }
+                    else {
+                        for (IntraUserInformation intraUserCache : userCacheList) {
+                            boolean exist = false;
+                            for (IntraUserInformation intraUser : intraUserInformationModuleList) {
+                                if (intraUserCache.getPublicKey().equals(intraUser.getPublicKey())) {
+                                    exist = true;
+                                    break;
+                                }
+                            }
+                            if (!exist)
+                                intraUserInformationModuleList.add(intraUserCache);
+                        }
+
+                        //save cache records
+                        try {
+                            saveCacheIntraUsersSuggestions(intraUserInformationModuleList);
+                        } catch (CantGetIntraUsersListException e) {
+                            e.printStackTrace();
+                        }
+
+                        return intraUserInformationModuleList;
+                    }
+                }
+            }
+            else {
+                return userCacheList;
             }
 
-            return intraUserInformationModuleList;
+
 
         }
         catch (ErrorSearchingSuggestionsException e) {
