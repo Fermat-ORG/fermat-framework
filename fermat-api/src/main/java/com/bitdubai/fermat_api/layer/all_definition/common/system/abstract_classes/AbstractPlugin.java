@@ -492,7 +492,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
     }
 
 
-    protected void reportError(UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception){
+    public void reportError(UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception){
         PluginInfo pluginInfo = getClass().getAnnotation(PluginInfo.class);
         if(pluginInfo!=null) {
             String[] mailTo = new String[]{pluginInfo.maintainerMail()};
