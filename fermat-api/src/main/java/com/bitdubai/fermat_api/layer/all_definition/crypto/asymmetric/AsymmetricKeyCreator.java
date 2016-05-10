@@ -1,8 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
-import java.math.BigInteger;
-import java.security.InvalidParameterException;
-
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Curve;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Point;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
@@ -11,6 +8,9 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.util.ECMat
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.Base58;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.RandomBigIntegerGenerator;
+
+import java.math.BigInteger;
+import java.security.InvalidParameterException;
 
 public class AsymmetricKeyCreator {
 

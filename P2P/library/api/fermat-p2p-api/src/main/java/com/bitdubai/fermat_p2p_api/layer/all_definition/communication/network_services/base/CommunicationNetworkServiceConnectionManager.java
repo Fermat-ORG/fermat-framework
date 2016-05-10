@@ -7,8 +7,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantEstablishConnectionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +33,7 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
      * Represents the error manager
      */
     private final ErrorManager errorManager;
+
     /**
      * Holds all references to the communication network service locals
      */
@@ -42,6 +43,11 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
      * Holds all references to the communication network service remote agents
      */
     private Map<String,CommunicationNetworkServiceRemoteAgent> communicationNetworkServiceRemoteAgentsCache;
+
+    /**
+     * Represent the requestedConnection
+     */
+    private Map<String,Boolean> requestedConnection;
 
     /**
      * Represent the incomingMessageDao
@@ -66,6 +72,7 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
         this.outgoingMessageDao = new OutgoingMessageDao(networkServiceRoot.getDataBase());
         this.communicationNetworkServiceLocalsCache = new HashMap<>();
         this.communicationNetworkServiceRemoteAgentsCache = new HashMap<>();
+        this.requestedConnection = new HashMap<>();
     }
 
 
@@ -78,11 +85,18 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
 
         try {
 
-            /*
-             * ask to the communicationLayerManager to connect to other network service
-             */
-            networkServiceRoot.getCommunicationsClientConnection().requestVpnConnection(networkServiceRoot.getNetworkServiceProfile(), remotePlatformComponentProfile);
+            if (!requestedConnection.containsKey(remotePlatformComponentProfile.getIdentityPublicKey())){
 
+                /*
+                 * ask to the communicationLayerManager to connect to other network service
+                 */
+                networkServiceRoot.getCommunicationsClientConnection().requestVpnConnection(networkServiceRoot.getNetworkServiceProfile(), remotePlatformComponentProfile);
+                requestedConnection.put(remotePlatformComponentProfile.getIdentityPublicKey(), Boolean.TRUE);
+
+            }else {
+
+                System.out.print("The connection was requested");
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(networkServiceRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
@@ -97,10 +111,21 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
     @Override
     public void connectTo(PlatformComponentProfile applicantParticipant, PlatformComponentProfile applicantNetworkService, PlatformComponentProfile remoteParticipant) throws CantEstablishConnectionException {
 
-        /*
-         * ask to the communicationLayerManager to connect to other network service
-         */
-        networkServiceRoot.getCommunicationsClientConnection().requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
+
+        if (!requestedConnection.containsKey(remoteParticipant.getIdentityPublicKey())){
+
+            /*
+             * ask to the communicationLayerManager to connect to other network service
+             */
+            networkServiceRoot.getCommunicationsClientConnection().requestDiscoveryVpnConnection(applicantParticipant, applicantNetworkService, remoteParticipant);
+            requestedConnection.put(remoteParticipant.getIdentityPublicKey(), Boolean.TRUE);
+
+        }else {
+
+            System.out.print("The connection was requested");
+        }
+
+
 
     }
 
@@ -114,9 +139,10 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
         //Remove the instance and stop his threads
         if(communicationNetworkServiceRemoteAgentsCache.containsKey(remoteNetworkServicePublicKey)) {
             communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
+            requestedConnection.remove(remoteNetworkServicePublicKey);
         }
 
-        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey)){
+        if(communicationNetworkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey)) {
             communicationNetworkServiceLocalsCache.remove(remoteNetworkServicePublicKey);
         }
 
@@ -145,6 +171,8 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
     public void handleEstablishedRequestedNetworkServiceConnection(PlatformComponentProfile remoteComponentProfile) {
 
         try {
+
+            requestedConnection.remove(remoteComponentProfile.getIdentityPublicKey());
 
             /*
              * Get the active connection
@@ -251,6 +279,14 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
             communicationNetworkServiceRemoteAgentsCache.get(key).resume();
         }
 
+    }
+
+    /**
+     * Remove a requested connection
+     * @param remotePublicKeyIdentity
+     */
+    public void removeRequestedConnection(String remotePublicKeyIdentity){
+        requestedConnection.remove(remotePublicKeyIdentity);
     }
 
     /**

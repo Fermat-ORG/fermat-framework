@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -20,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -61,7 +64,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloud
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -80,6 +83,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Gabriel Araujo 15/02/16.
  */
+@PluginInfo(createdBy = "Gabirel Araujo", maintainerMail = "franklinmarcano1970@gmail.com",platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
 public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase implements NetworkServiceChatManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
@@ -307,9 +311,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                                 launcheIncomingChatStatusNotification(chatMetadataRecord);
 
                             }
-
-                           // getCommunicationNetworkServiceConnectionManager().closeConnection(chatMetadataRecord.getRemoteActorPublicKey());
-                            //chatExecutorAgent.connectionFailure(chatMetadataRecord.getRemoteActorPublicKey());
                         }
                     }
                     break;
@@ -349,24 +350,13 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             UUID chatId = gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.ID_CHAT), UUID.class);
             ChatMessageTransactionType chatMessageTransactionType = gson.fromJson(messageData.get(ChatTransmissionJsonAttNames.MSJ_CONTENT_TYPE), ChatMessageTransactionType.class);
             if (chatMessageTransactionType==ChatMessageTransactionType.CHAT_METADATA_TRASMIT) {
-                // close connection, sender is the destination
                 launchOutgoingChatNotification(chatId);
-                System.out.println("SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
-                //getCommunicationNetworkServiceConnectionManager().closeConnection(chatMetadataRecord.getRemoteActorPublicKey());
-                //actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
+                System.out.println("ChatNetworkServicePluginRoot - SALIENDO DEL HANDLE NEW SENT MESSAGE NOTIFICATION");
             }
-
-            //done message type receive
-//            if(actorNetworkServiceRecord.getNotificationDescriptor() == NotificationDescriptor.RECEIVED) {
-//                actorNetworkServiceRecord.setActorProtocolState(ActorProtocolState.DONE);
-//                chatMetadataRecordDAO.update(actorNetworkServiceRecord);
-//                //actorNetworkServiceRecordedAgent.getPoolConnectionsWaitingForResponse().remove(actorNetworkServiceRecord.getActorDestinationPublicKey());
-//            }
-
 
         } catch (Exception e) {
             //quiere decir que no estoy reciviendo metadata si no una respuesta
-            System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT");
+            System.out.println("ChatNetworkServicePluginRoot - EXCEPCION DENTRO DEL PROCCESS EVENT");
             reportUnexpectedError(e);
         }
     }
@@ -454,7 +444,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
         {
             reportUnexpectedError(e);
         } catch (Exception e) {
-            System.out.println("INTRA USER NS EXCEPCION REPROCESANDO MESSAGEs");
+            System.out.println("ChatNetworkServicePluginRoot EXCEPCION REPROCESANDO MESSAGEs");
             reportUnexpectedError(e);
         }
     }
@@ -973,7 +963,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             if (remoteActorPubKey == null || remoteActorPubKey.length() == 0 || remoteActorPubKey.equals("null")) {
                 throw new IllegalArgumentException("Argument remoteActorPubKey can not be null");
             }
-            System.out.println("ChatPLuginRoot - Starting method sendChatMetadata");
+            System.out.println("ChatNetworkServicePluginRoot - Starting method sendChatMetadata");
 
 
             long currentTime = System.currentTimeMillis();

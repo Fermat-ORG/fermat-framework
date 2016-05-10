@@ -63,7 +63,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
@@ -1008,7 +1008,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             if(code.equals("BlockchainDownloadComplete")) {
                 //update toolbar color
                 final Toolbar toolBar = getToolbar();
+
                 toolBar.setBackgroundColor(Color.parseColor("#12aca1"));
+
                 makeText(getActivity(), "Blockchain Download Complete", Toast.LENGTH_SHORT).show();
             } else {
                 if(code.equals("Btc_arrive"))
@@ -1019,7 +1021,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                     blockchainNetworkType),ShowMoneyType.BITCOIN.getCode());
 
                     changeBalanceType(txt_type_balance, txt_balance_amount);
-                    //System.out.println(System.currentTimeMillis());
 
                     circularProgressBar.setProgressValue(Integer.valueOf(runningBalance));
                     circularProgressBar.setProgressValue2(getBalanceAverage());

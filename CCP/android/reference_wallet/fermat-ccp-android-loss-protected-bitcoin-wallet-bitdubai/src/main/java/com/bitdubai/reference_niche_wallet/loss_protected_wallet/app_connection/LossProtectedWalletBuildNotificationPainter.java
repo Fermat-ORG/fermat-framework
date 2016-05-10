@@ -31,10 +31,15 @@ public class LossProtectedWalletBuildNotificationPainter {
                 switch (notificationType){
                     case "TRANSACTIONARRIVE":
                         if(moduleManager != null){
-                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
+                            try{
+                                loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
 
-                            notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC. Confirmation pendient.","","",true,resultCode);
+                                notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC. Confirmation pendient.","","",true,resultCode);
+
+                            }catch(Exception ex) {
+                                notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived. Confirmation pendient","","",true,resultCode);
+                            }
 
                         }else{
                             notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived. Confirmation pendient","","",true,resultCode);
@@ -42,10 +47,16 @@ public class LossProtectedWalletBuildNotificationPainter {
                         break;
                     case "TRANSACTIONREVERSE":
                         if(moduleManager != null) {
-                            loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-                            transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
-                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,resultCode);
-                        }else
+                            try{
+                                    loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
+                                    transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
+                                    notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,resultCode);
+                                }
+                            catch(Exception ex) {
+                                notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,resultCode);
+                            }
+
+                       }else
                         {
                             notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,resultCode);
                         }
