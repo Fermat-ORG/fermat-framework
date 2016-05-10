@@ -478,8 +478,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
         );
 
         this.tableFilter.add(filter);
-        DatabaseTableFilterGroup filterGroup = new DesktopDatabaseTableFilterGroup(this.tableFilter, null, null);
-        this.tableFilterGroup = filterGroup;
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                this.tableFilter,
+                null            ,
+                null
+        );
 
     }
 
@@ -579,13 +582,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public void setFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
 
-        DatabaseTableFilterGroup filterGroup = new DesktopDatabaseTableFilterGroup(filters, subGroups, operator);
-
-       /* filterGroup.setFilters(filters);
-        filterGroup.setSubGroups(subGroups);
-        filterGroup.setOperator(operator);*/
-
-        this.tableFilterGroup = filterGroup;
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                filters  ,
+                subGroups,
+                operator
+        );
     }
 
     /**
@@ -735,7 +736,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     private String makeInternalConditionGroup(List<DatabaseTableFilter> filters, DatabaseFilterOperator operator) {
 
-        StringBuffer strFilter = new StringBuffer();
+        StringBuilder strFilter = new StringBuilder();
 
         for (DatabaseTableFilter filter : filters) {
             switch (operator) {
@@ -761,8 +762,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
-        StringBuffer strFilter = new StringBuffer();
-        String filter = "";
+        StringBuilder strFilter = new StringBuilder();
 
         if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
             strFilter.append("(");
@@ -790,7 +790,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             strFilter.append(")");
         }
 
-        filter = strFilter.toString();
+        String filter = strFilter.toString();
         if (strFilter.length() > 0) filter = " WHERE " + filter;
 
         return filter;
