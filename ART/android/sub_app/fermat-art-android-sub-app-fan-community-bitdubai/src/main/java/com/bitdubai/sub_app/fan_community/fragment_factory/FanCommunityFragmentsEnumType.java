@@ -9,7 +9,7 @@ public enum FanCommunityFragmentsEnumType implements
         FermatFragmentsEnumType<
                 FanCommunityFragmentsEnumType> {
 
-    ART_WALLET_STORE_ALL_FRAGMENT("AWSAF"),
+    //ART_WALLET_STORE_ALL_FRAGMENT("AWSAF"),
 
     ART_SUB_APP_FAN_COMMUNITY_CONNECTIONS("ARTSAFCC"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_DETAIL("ARTSAFCCD"),
