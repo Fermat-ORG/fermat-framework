@@ -548,8 +548,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private FermatWebSocketClientNodeChannel getFermatWebSocketClientNodeChannelInstanceSeedNode(){
 
         return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-        //return new FermatWebSocketClientNodeChannel("localhost", 8080);
-
     }
 
     /**
@@ -656,7 +654,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Initialize node catalog");
         boolean isSeedServer = isSeedServer(this.serverIp);
-        LOG.info("Am I a Seed Server? = " + isSeedServer);
+        LOG.info("Am i a Seed Node? = " + isSeedServer);
 
         /*
          * Validate if the node are the seed server
