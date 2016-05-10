@@ -70,6 +70,9 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
 
     BlockchainNetworkType blockchainNetworkType;
+
+    com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = null;
+    FloatingActionMenu actionMenu = null;
     /**
      * Create a new instance of this fragment
      *
@@ -170,11 +173,11 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_request_selector)
                 .build();
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+         actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
 
@@ -208,6 +211,18 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
         }
     }
 
+    @Override
+    public void onDrawerOpen() {
+        actionButton.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onDrawerClose() {
+        FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
+        actionButton.setVisibility(View.VISIBLE);
+
+    }
 
     @Override
     protected boolean hasMenu() {

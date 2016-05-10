@@ -275,7 +275,7 @@ public class BitcoinWalletLossProtectedWalletDao {
                 UUID spendId               = record.getUUIDValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME);
                 UUID transactionId         = record.getUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME);
                 long amount                = record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME);
-                long timeStamp             = record.getLongValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME);
+                long timeStamp             = record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME);
                 double exchangeRate        = Double.parseDouble(record.getStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME));
 
                 spendings.add(new BitcoinWalletLossProtectedWalletSpend(spendId,transactionId,amount,timeStamp,exchangeRate,blockchainNetworkType));
@@ -536,7 +536,7 @@ public class BitcoinWalletLossProtectedWalletDao {
             long availableAmount = balanceType.equals(BalanceType.AVAILABLE) ? transactionRecord.getAmount() : 0L;
             long bookAmount = balanceType.equals(BalanceType.BOOK) ? transactionRecord.getAmount() : 0L;
             long availableRunningBalance = calculateAvailableRunningBalance(availableAmount, transactionRecord.getBlockchainNetworkType());
-            long bookRunningBalance = calculateBookRunningBalance(-bookAmount, transactionRecord.getBlockchainNetworkType());
+            long bookRunningBalance = calculateBookRunningBalance(bookAmount, transactionRecord.getBlockchainNetworkType());
 
             DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance, transactionRecord.getBlockchainNetworkType());
 
@@ -550,7 +550,7 @@ public class BitcoinWalletLossProtectedWalletDao {
             database.executeTransaction(dbTransaction);
 
             //delete spendings records
-
+            this.deleteSpendings(transactionRecord.getTransactionId());
 
         } catch (CantGetLossProtectedBalanceRecordException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
@@ -703,6 +703,33 @@ public class BitcoinWalletLossProtectedWalletDao {
 
         } catch (CantUpdateRecordException cantUpdateRecord) {
             throw new CantStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error update memo of Transaction " + spentID.toString(), "");
+        } catch(Exception exception){
+            throw new CantStoreMemoException(CantStoreMemoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+
+    private final void deleteSpendings(UUID transactionId) throws CantStoreMemoException, CantFindTransactionException {
+        try {
+            // create the database objects
+            DatabaseTable bitcoinSpentTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_NAME);
+
+            bitcoinSpentTable.addUUIDFilter(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+
+            bitcoinSpentTable.loadToMemory();
+
+
+            for(DatabaseTableRecord record : bitcoinSpentTable.getRecords())
+            {
+                bitcoinSpentTable.deleteRecord(record);
+
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Spending table", "");
+
+        } catch (CantDeleteRecordException cantUpdateRecord) {
+            throw new CantStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error deleting Spendings ", "");
         } catch(Exception exception){
             throw new CantStoreMemoException(CantStoreMemoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
@@ -1080,8 +1107,13 @@ public class BitcoinWalletLossProtectedWalletDao {
         try {
 
             long timestamp = System.currentTimeMillis();
+            List<DatabaseTableRecord> transactionsRecords =
 
-            List<DatabaseTableRecord> transactionsRecords = getCreditTransactionsRecords(transactionRecord.getBlockchainNetworkType());
+            //busco transacciones para gastar sin perdidas, sino tengo voy a buscar todas
+             transactionsRecords = getRecordsLessThanRate(transactionRecord.getBlockchainNetworkType(),exchangeRate);
+
+            if(transactionsRecords.size() == 0)
+              transactionsRecords = getCreditTransactionsRecords(transactionRecord.getBlockchainNetworkType());
 
             //gasto primero de las transacciones con mayor valor de rate primero
             //tengo que traer lo que llevo gastado de cada transaccion para saber si uso eso o paso a otra

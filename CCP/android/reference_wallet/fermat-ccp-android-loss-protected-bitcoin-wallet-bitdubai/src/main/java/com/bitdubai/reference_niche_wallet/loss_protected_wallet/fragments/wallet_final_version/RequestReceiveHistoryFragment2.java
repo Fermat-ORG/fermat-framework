@@ -1,7 +1,7 @@
 
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
-import android.graphics.drawable.Drawable;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -70,6 +70,8 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
+    com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
+    FloatingActionMenu actionMenu;
 
     SettingsManager<LossProtectedWalletSettings> settingsManager;
 
@@ -112,7 +114,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
-            //CommonLogger.exception(TAG, ex.getMessage(), ex);
+
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -154,11 +156,11 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+      actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout).setBackgroundDrawable(R.drawable.floatbutton_sendbitcoin)
                 .build();
 
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .attachTo(actionButton)
                 .build();
 
@@ -185,13 +187,25 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
+            lstPaymentRequest = new ArrayList<>();
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
+    @Override
+    public void onDrawerOpen() {
+        actionButton.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onDrawerClose() {
+        FermatAnimationsUtils.showEmpty(getActivity(), true, actionMenu.getActivityContentView());
+        actionButton.setVisibility(View.VISIBLE);
+
+    }
 
     @Override
     protected boolean hasMenu() {
@@ -223,8 +237,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, cryptoWallet, referenceWalletSession, this);
+             adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, cryptoWallet, referenceWalletSession, this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
         }
@@ -266,7 +279,6 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     public void onItemClickListener(LossProtectedPaymentRequest item, int position) {
         selectedItem = item;
         onRefresh();
-        //showDetailsActivityFragment(selectedItem);
     }
 
     /**
@@ -303,7 +315,6 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            //CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
 
