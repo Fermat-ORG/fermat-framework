@@ -486,10 +486,10 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             return false;
         if (ArtistPassWord.isEmpty())
             return false;
-        if (ArtistImageBytes == null)
+        /*if (ArtistImageBytes == null)
             return false;
         if (ArtistImageBytes.length > 0)
-            return true;
+            return true;*/
 //        if(externalPlatform != null)
 //            return  true;
         return true;
@@ -620,7 +620,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             WrongTokenlyUserCredentialsException {
        return moduleManager.createArtistIdentity(
                 fanExternalName,
-                (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : ArtistImageByteArray,
+                (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
                 fanPassword,
                 externalPlatform,
                 exposureLevel,

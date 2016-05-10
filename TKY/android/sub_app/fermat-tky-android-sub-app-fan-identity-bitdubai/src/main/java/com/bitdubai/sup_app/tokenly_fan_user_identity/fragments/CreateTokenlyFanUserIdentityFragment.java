@@ -379,10 +379,10 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             return false;
         if (fanPassWord.isEmpty())
             return false;
-        if (fanImageBytes == null)
+        /*if (fanImageBytes == null)
             return false;
         if (fanImageBytes.length > 0)
-            return true;
+            return true;*/
 //        if(externalPlatform != null)
 //            return  true;
         return true;
@@ -600,7 +600,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             FanIdentityAlreadyExistsException,
             WrongTokenlyUserCredentialsException {
         return moduleManager.createFanIdentity(
-                fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
+                fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : fanImageByteArray,
                 fanPassword,
                 externalPlatform) ;
     }
