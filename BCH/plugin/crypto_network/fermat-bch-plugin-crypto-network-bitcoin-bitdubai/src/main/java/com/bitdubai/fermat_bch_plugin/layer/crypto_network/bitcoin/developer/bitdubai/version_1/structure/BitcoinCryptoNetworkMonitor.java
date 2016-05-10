@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
@@ -49,6 +50,7 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionBroadcast;
 import org.bitcoinj.core.Wallet;
+import org.bitcoinj.net.ClientConnectionManager;
 import org.bitcoinj.net.discovery.DnsDiscovery;
 import org.bitcoinj.params.RegTestParams;
 
@@ -99,7 +101,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                                        File walletFilename,
                                        PluginFileSystem pluginFileSystem,
                                        ErrorManager errorManager,
-                                       Context context,
                                        BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao,
                                        EventManager eventManager) {
         /**
@@ -110,7 +111,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.walletFileName = walletFilename;
         this.pluginFileSystem = pluginFileSystem;
         this.errorManager = errorManager;
-        this.context = context;
+        this.context = wallet.getContext();
         this.dao = bitcoinCryptoNetworkDatabaseDao;
         this.eventManager = eventManager;
 
@@ -127,7 +128,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I define the MonitorAgent private class
          */
-        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, this.context, dao);
+        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, dao);
 
         // I define the thread name and start it.
         threadName = "CryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
@@ -211,7 +212,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                             ErrorManager errorManager,
                             NetworkParameters networkParameters,
                             BlockchainNetworkType blockchainNetworkType,
-                            Context context,
                             BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
 
             this.wallet = wallet;
@@ -221,7 +221,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             this.errorManager = errorManager;
             this.NETWORK_PARAMETERS = networkParameters;
             this.BLOCKCHAIN_NETWORKTYPE = blockchainNetworkType;
-            this.context = context;
+            this.context = wallet.getContext();
             this.dao = bitcoinCryptoNetworkDatabaseDao;
         }
 
@@ -260,6 +260,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, this.walletFileName, this.context, wallet, dao, eventManager);
                 peerGroup.addEventListener(events);
+
                 this.wallet.addEventListener(events);
                 blockChain.addListener(events);
 
@@ -279,6 +280,8 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  * Define internal agent information.
                  */
                 peerGroup.setUserAgent(BitcoinNetworkConfiguration.USER_AGENT_NAME, BitcoinNetworkConfiguration.USER_AGENT_VERSION);
+                peerGroup.setMinBroadcastConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
+
 
                 /**
                  * Update stats related active networks
@@ -312,6 +315,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * Will get all transactions hashes in Broadcasting status to resume them.
          */
         private void resumeBroadcastOfPendingTransactions(BlockchainNetworkType blockchainNetworkType) {
+            // first will try to broadcast all transaction on the broadcast table
             try {
                 for (String txId :  dao.getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
                     try {
@@ -325,8 +329,16 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  * If I couldn't get the list due to a database error, then nothing left to do
                  */
                 e.printStackTrace();
-            } {
+            }
 
+            //then I will continue with the ones at the wallet.
+            for (Transaction transaction : wallet.getPendingTransactions()){
+                try {
+                    this.broadcastTransaction(transaction.getHashAsString());
+                } catch (CantBroadcastTransactionException e) {
+                    //if there was an error I just will print it.
+                    e.printStackTrace();
+                }
             }
         }
 
@@ -357,6 +369,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "No transaction was found to broadcast.", null);
                 }
 
+                // if I didn't get it I can't go on.
+                if (transaction == null)
+                    throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "No transaction was found to broadcast.", null);
+
                 // commit and save
                 try {
                     wallet.commitTx(transaction);
@@ -380,11 +396,21 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             System.out.println("***CryptoNetwork***  Broadcasting transaction " + txHash + "...");
 
 
-             TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction);
-             transactionBroadcast.setMinConnections(BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
+            TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction, BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
+
+            // I make sure I have the blockchain updated.
+            peerGroup.downloadBlockChain();
+
+            transactionBroadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
+                @Override
+                public void onBroadcastProgress(double progress) {
+                    System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
+                }
+            });
 
 
              ListenableFuture<Transaction> future = transactionBroadcast.future();
+
             /**
              * I add the future that will get the broadcast result into a call back to respond to it.
              */
@@ -408,9 +434,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                         wallet.saveToFile(walletFileName);
 
                         /**
-                         * deletes the stored transaction on disk
+                         * deletes the stored transaction on disk and DB to save space.
                          */
-                        deleteStoredTransaction(txHash);
+                        deleteStoredBroadcastTransaction(txHash);
 
                         System.out.println("***CryptoNetwork***  Transaction successfully broadcasted: " + finalTransaction.getHashAsString());
                     } catch (CantExecuteDatabaseOperationException e) {
@@ -433,10 +459,15 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 }
             });
 
-            /**
-             * starts the broadcasting.
-             */
-            transactionBroadcast.broadcast();
+//            /**
+//             * starts the broadcasting.
+//             */
+//            try {
+//                future.get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "***CryptoNetwork*** Error broadcasting Transaction: " + transaction.toString(), "Time out");
+//            }
         }
 
         /**
@@ -549,16 +580,22 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  */
                 String txHash = tx.getHashAsString();
                 if (isTransactionAlreadyStored(txHash)){
-                    deleteStoredTransaction(txHash);
+                    deleteStoredBroadcastTransaction(txHash);
                 }
 
                 if (isTransactionAlreadyStored(txHash)){
                     throw new CantStoreBitcoinTransactionException(CantStoreBitcoinTransactionException.DEFAULT_MESSAGE, null, "transaction is already stored and could not be deleted. " + txHash, "storeBitcoinTransaction on CryptoNetwork.");
                 }
 
+                /**
+                 * store the transaction as Pending submit in the transactions table
+                 */
+                CryptoTransaction cryptoTransaction = CryptoTransaction.getCryptoTransaction(BLOCKCHAIN_NETWORKTYPE, tx);
+                cryptoTransaction.setCryptoTransactionType(CryptoTransactionType.OUTGOING);
+                dao.saveCryptoTransaction(cryptoTransaction, transactionId);
 
                 /**
-                 * I store it in the database
+                 * I store it in the database in the broadcasting table
                  */
                 Peer downloadPeer = peerGroup.getDownloadPeer();
 
@@ -566,7 +603,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 if (downloadPeer != null)
                     peerAddress = downloadPeer.getAddress().toString();
 
-                dao.storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerAddress);
+                dao.storeBroadcastBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerAddress);
 
                 if (commit){
                     // commit and save the transaction
@@ -596,7 +633,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  * If there was an error, then I will make sure that the transaction is not left stored at the database.
                  */
                 try {
-                    dao.deleteStoredBitcoinTransaction(tx.getHashAsString());
+                    dao.deleteStoredBroadcastBitcoinTransaction(tx.getHashAsString());
                     deleteTransactionFromFile(tx.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e1) {
                     /**
@@ -611,10 +648,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             }
         }
 
-        private void deleteStoredTransaction(String txHash) {
+        private void deleteStoredBroadcastTransaction(String txHash) {
             if (isTransactionStoredInDB(txHash)){
                 try {
-                    this.dao.deleteStoredBitcoinTransaction(txHash);
+                    this.dao.deleteStoredBroadcastBitcoinTransaction(txHash);
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 }
