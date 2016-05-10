@@ -548,8 +548,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private FermatWebSocketClientNodeChannel getFermatWebSocketClientNodeChannelInstanceSeedNode(){
 
         return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-        //return new FermatWebSocketClientNodeChannel("localhost", 8080);
-
     }
 
     /**
@@ -656,7 +654,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Initialize node catalog");
         boolean isSeedServer = isSeedServer(this.serverIp);
-        LOG.info("Am I a Seed Server? = " + isSeedServer);
+        Boolean isRegister = Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG));
+
+        LOG.info("Is Register? = " + isRegister);
+        LOG.info("Am i a Seed Node? = " + isSeedServer);
 
         /*
          * Validate if the node are the seed server
@@ -666,7 +667,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Validate if the node is registered in the node catalog
              */
-            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG))){
+            if (isRegister){
 
                 /*
                  * Validate if the node server profile register had changed
@@ -684,7 +685,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Validate if the node is registered in the node catalog
              */
-            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG))){
+            if (isRegister){
 
                     /*
                      * Validate if the node server profile register had changed

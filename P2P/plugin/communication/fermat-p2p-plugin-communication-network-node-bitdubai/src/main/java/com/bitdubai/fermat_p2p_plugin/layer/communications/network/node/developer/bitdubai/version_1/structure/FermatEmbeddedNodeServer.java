@@ -14,7 +14,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
-import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.xnio.BufferAllocator;

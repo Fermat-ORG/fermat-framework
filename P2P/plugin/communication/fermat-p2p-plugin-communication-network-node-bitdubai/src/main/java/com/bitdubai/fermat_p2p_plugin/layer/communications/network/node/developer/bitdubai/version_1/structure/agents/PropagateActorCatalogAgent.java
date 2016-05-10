@@ -223,7 +223,9 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
                 }
             }
 
+            LOG.info("Deleting all Transactions Pending For Propagation ");
             actorsCatalogTransactionsPendingForPropagationDao.deleteAll();
+            LOG.info("Total Transactions Pending For Propagation = " + actorsCatalogTransactionsPendingForPropagationDao.getAllCount());
 
         }else {
 
