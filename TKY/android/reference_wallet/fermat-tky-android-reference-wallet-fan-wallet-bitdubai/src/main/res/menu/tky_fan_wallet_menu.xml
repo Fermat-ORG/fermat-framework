@@ -9,8 +9,10 @@
         android:icon="@android:drawable/ic_menu_search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="collapseActionView|ifRoom"
-
+        app:theme="@style/ActionBarThemeOverlay"
         ></item>
+
+
     <!--    android:id="@+id/action_search"
         android:title="@string/action_search"
         app:actionViewClass="android.support.v7.widget.SearchView"

@@ -63,7 +63,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
-        holder.image.setImageResource(items.get(i).getImagen());
+        holder.image.setImageBitmap(items.get(i).getImagen());
         holder.songName.setText(items.get(i).getSong_name());
         holder.artistName.setText(items.get(i).getArtist_name());
         holder.status.setText(items.get(i).getStatus());

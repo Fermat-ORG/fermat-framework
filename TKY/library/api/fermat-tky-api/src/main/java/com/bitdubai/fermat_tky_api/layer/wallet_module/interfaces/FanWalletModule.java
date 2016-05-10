@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
@@ -149,7 +150,7 @@ public interface FanWalletModule extends
      * @param botId represents the bot Id in swapbot site.
      * @return
      */
-    Bot getBotByBotId(String botId) throws CantGetBotException;
+    Bot getBotByBotId(String botId) throws CantGetBotException, CantConnectWithTokenlyException;
 
     /**
      * This method returns String that contains a swap bot by tokenly username
@@ -157,21 +158,21 @@ public interface FanWalletModule extends
      * @return
      * @throws CantGetBotException
      */
-    Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
+    Bot getBotBySwapbotUsername(String username) throws CantGetBotException, CantConnectWithTokenlyException;
 
     /**
      * This method returns a Tokenly Album.
      * @return
      * @throws CantGetAlbumException
      */
-    Album[] getAlbums() throws CantGetAlbumException;
+    Album[] getAlbums() throws CantGetAlbumException, CantConnectWithTokenlyException;
 
     /**
      * This method returns a download song by song Id.
      * @param id
      * @return
      */
-    DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException;
+    DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException, CantConnectWithTokenlyException;
 
     /**
      * This method returns a User object by a username and key pair

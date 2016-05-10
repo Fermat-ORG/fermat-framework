@@ -15,6 +15,16 @@ public class Hardware implements FermatManager,HardwareManager{
 
 
     @Override
+    public String getModel() {
+        return Build.MODEL;
+    }
+
+    @Override
+    public String getOSVersion() {
+        return String.valueOf(Build.VERSION.SDK_INT);
+    }
+
+    @Override
     public OS getOperativeSystem() {
         return OS.ANDROID;
     }

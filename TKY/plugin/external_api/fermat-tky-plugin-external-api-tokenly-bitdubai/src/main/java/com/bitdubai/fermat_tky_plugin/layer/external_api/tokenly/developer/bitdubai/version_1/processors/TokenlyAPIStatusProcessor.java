@@ -19,7 +19,7 @@ public class TokenlyAPIStatusProcessor extends AbstractTokenlyProcessor {
      */
     public static TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException {
 
-        return getPIStatus(TokenlyConfiguration.URL_TOKENLY_MUSIC_ALL_ALBUMS_AVAILABLE);
+        return getAPIStatus(TokenlyConfiguration.URL_TOKENLY_MUSIC_ALL_ALBUMS_AVAILABLE);
 
     }
 
@@ -30,7 +30,7 @@ public class TokenlyAPIStatusProcessor extends AbstractTokenlyProcessor {
      */
     public static TokenlyAPIStatus getSwapBotAPIStatus() throws TokenlyAPINotAvailableException {
 
-        return getPIStatus(TokenlyConfiguration.URL_TOKENLY_SWAPBOT_DEVELOPER_TEAM);
+        return getAPIStatus(TokenlyConfiguration.URL_TOKENLY_SWAPBOT_DEVELOPER_TEAM);
 
     }
 
@@ -40,7 +40,7 @@ public class TokenlyAPIStatusProcessor extends AbstractTokenlyProcessor {
      * @return
      * @throws TokenlyAPINotAvailableException
      */
-    private static TokenlyAPIStatus getPIStatus(String url) throws TokenlyAPINotAvailableException {
+    private static TokenlyAPIStatus getAPIStatus(String url) throws TokenlyAPINotAvailableException {
         try{
             /**
              * We'll make a Tokenly API call, if we got an exception, the API will be UNDEFINED.

@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -52,6 +53,12 @@ import java.util.UUID;
 /**
  * Created by Franklin on 07/09/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "franklin",
+        layer = Layers.WALLET,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.BITDUBAI_ASSET_WALLET_ISSUER)
 public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         AssetIssuerWalletManager,
         DatabaseManagerForDevelopers {

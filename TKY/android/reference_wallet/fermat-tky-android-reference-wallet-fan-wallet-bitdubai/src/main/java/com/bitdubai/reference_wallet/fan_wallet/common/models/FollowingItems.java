@@ -83,7 +83,11 @@ public class FollowingItems {
      */
     public String getDescriptionHTML(){
         String descriptionHTML = this.description.replace("<p>","").replace("</p>","");
-        descriptionHTML = "<html>"+descriptionHTML.substring(0,100)+"...</html>";
+        int stringSize = descriptionHTML.length();
+        if(stringSize>=100){
+            stringSize=100;
+        }
+        descriptionHTML = "<html>"+descriptionHTML.substring(0,stringSize)+"...</html>";
         return descriptionHTML;
     }
 

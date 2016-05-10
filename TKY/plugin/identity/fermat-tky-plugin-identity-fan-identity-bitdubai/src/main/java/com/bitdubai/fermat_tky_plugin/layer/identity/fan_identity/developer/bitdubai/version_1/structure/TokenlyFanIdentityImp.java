@@ -272,17 +272,17 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
     @Override
     public List<String> getConnectedArtists() {
         //TODO: to implement and remove this hardcode
-        List<String> hardcodedList=new ArrayList<>();
+        /*List<String> hardcodedList=new ArrayList<>();
         hardcodedList.add("TatianaMoroz");
         hardcodedList.add("adam");
         hardcodedList.add("mordorteam");
-        return hardcodedList;
+        return hardcodedList;*/
         //TODO: this is the real implementation.
-        /*if(this.artistsConnectedList==null || this.artistsConnectedList.isEmpty()){
+        if(this.artistsConnectedList==null || this.artistsConnectedList.isEmpty()){
             return new ArrayList<>();
         } else{
             return this.artistsConnectedList;
-        }*/
+        }
     }
 
     /**

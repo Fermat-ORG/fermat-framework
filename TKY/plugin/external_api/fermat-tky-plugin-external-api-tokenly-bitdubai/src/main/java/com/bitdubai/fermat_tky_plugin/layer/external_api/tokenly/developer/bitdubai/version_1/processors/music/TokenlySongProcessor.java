@@ -2,6 +2,7 @@ package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitd
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
@@ -47,7 +48,9 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
      * @return
      * @throws CantGetSongException
      */
-    public static Song getSongById(String id) throws CantGetSongException {
+    public static Song getSongById(String id) throws
+            CantGetSongException,
+            CantConnectWithTokenlyException {
         //Request URL to get a song by tokenly Id.
         String requestedURL=swabotTokenlyURL+"catalog/songs/"+id;
         try{
@@ -63,7 +66,8 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
     }
 
     public static JsonArray getSongsJsonArrayByAlbumId(String albumId)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         //Request URL to get a song by tokenly Id.
         String requestedURL=swabotTokenlyURL+"catalog/songs/"+albumId;
         JsonArray jSonArray = RemoteJSonProcessor.getJSonArray(requestedURL);

@@ -122,7 +122,6 @@ public class ActorConnectionEventsActions {
             for (final ArtistConnectionRequest request : list) {
 
                 switch (request.getRequestAction()) {
-                    //TODO: I'll use ART_ARTIST_IDENTITY until the Art community is ready
                     case ACCEPT:
                         this.handleAcceptConnection(request.getRequestId());
                         broadcaster.publish(

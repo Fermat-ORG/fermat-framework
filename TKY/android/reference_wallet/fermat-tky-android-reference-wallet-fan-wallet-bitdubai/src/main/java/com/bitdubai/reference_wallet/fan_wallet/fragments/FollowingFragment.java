@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
@@ -383,6 +384,8 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                             UISource.VIEW,
                             UnexpectedUIExceptionSeverity.NOT_IMPORTANT,
                             e);
+                } catch (CantConnectWithTokenlyException e) {
+                    //TODO: Miguel, implement here how to notify to the user that tokenly website is not available
                 }
 
             } catch (CantListFanIdentitiesException e) {
