@@ -183,7 +183,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
             }else {
 
-                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 9090 + "/fermat/ws/client-channel");
+                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/ws/client-channel");
 
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                         uri,
@@ -464,7 +464,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
         try {
 
-            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + 9090 + "/fermat/rest/api/v1/available/nodes");
+            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/available/nodes");
             conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
