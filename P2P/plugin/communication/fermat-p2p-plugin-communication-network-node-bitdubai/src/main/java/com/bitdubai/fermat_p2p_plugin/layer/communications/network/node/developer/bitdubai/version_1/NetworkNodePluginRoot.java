@@ -654,6 +654,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         LOG.info("Initialize node catalog");
         boolean isSeedServer = isSeedServer(this.serverIp);
+        Boolean isRegister = Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG));
+
+        LOG.info("Is Register? = " + isRegister);
         LOG.info("Am i a Seed Node? = " + isSeedServer);
 
         /*
@@ -664,7 +667,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Validate if the node is registered in the node catalog
              */
-            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG))){
+            if (isRegister){
 
                 /*
                  * Validate if the node server profile register had changed
@@ -682,7 +685,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Validate if the node is registered in the node catalog
              */
-            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTERED_IN_CATALOG))){
+            if (isRegister){
 
                     /*
                      * Validate if the node server profile register had changed
