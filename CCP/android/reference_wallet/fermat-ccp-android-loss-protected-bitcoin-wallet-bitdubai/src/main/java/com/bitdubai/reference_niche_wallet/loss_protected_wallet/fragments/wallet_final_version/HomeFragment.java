@@ -400,7 +400,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 txt_earnOrLost.setText("USD "+
                         WalletUtils.formatAmountStringWithDecimalEntry(
-                                totalEarnedAndLostForToday * 1,
+                                totalEarnedAndLostForToday,
                                 EARN_AND_LOST_MAX_DECIMAL_FORMAT,
                                 EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" earned");
 
