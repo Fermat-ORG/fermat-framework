@@ -172,7 +172,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
         LOG.info("Executing method insertNodesCatalog");
 
-        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())){
+        if (!getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())){
 
             /*
              * Create the NodesCatalog

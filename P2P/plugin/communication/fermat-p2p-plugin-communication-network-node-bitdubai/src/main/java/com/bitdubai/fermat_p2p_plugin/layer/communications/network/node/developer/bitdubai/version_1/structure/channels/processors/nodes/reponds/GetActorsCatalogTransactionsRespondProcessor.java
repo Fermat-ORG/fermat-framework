@@ -167,7 +167,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
 
         LOG.info("Executing method insertActorsCatalog");
 
-        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())){
+        if (!getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())){
 
             /*
              * Create the ActorsCatalog
