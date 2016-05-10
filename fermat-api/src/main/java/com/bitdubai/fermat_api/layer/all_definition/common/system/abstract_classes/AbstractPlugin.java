@@ -491,7 +491,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
         }
     }
 
-    public ErrorManager getErrorMAnager(){
+    public ErrorManager getErrorManager(){
         return errorManager;
     }
 
