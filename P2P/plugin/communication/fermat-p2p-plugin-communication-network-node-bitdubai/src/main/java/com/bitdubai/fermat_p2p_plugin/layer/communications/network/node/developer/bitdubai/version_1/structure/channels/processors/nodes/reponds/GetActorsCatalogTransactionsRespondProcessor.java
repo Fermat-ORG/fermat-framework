@@ -103,7 +103,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
 
                         LOG.info("Requesting more transactions.");
 
-                        GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest(transactionList.size(), 250);
+                        GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest((int) totalRowInDb+1, 250);
                         Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                         /*
@@ -163,29 +163,33 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
      * @param actorsCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method insertActorsCatalog");
 
-        /*
-         * Create the ActorsCatalog
-         */
-        ActorsCatalog actorsCatalog = new ActorsCatalog();
-        actorsCatalog.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
-        actorsCatalog.setActorType(actorsCatalogTransaction.getActorType());
-        actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
-        actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
-        actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
-        actorsCatalog.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
-        actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
-        actorsCatalog.setName(actorsCatalogTransaction.getName());
-        actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
-        actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
+        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())){
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getActorsCatalogDao().create(actorsCatalog);
+            /*
+             * Create the ActorsCatalog
+             */
+            ActorsCatalog actorsCatalog = new ActorsCatalog();
+            actorsCatalog.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
+            actorsCatalog.setActorType(actorsCatalogTransaction.getActorType());
+            actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
+            actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
+            actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
+            actorsCatalog.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
+            actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
+            actorsCatalog.setName(actorsCatalogTransaction.getName());
+            actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
+            actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
+
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getActorsCatalogDao().create(actorsCatalog);
+        }
+
     }
 
     /**
