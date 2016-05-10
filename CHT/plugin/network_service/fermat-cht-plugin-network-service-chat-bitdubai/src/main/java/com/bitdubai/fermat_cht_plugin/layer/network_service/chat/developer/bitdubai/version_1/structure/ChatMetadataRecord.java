@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageS
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.google.gson.Gson;
 
 
 import java.sql.Timestamp;
@@ -316,6 +317,17 @@ public class ChatMetadataRecord implements ChatMetadata{
     @Override
     public List<GroupMember> getGroupMembers() {
         return groupMembers;
+    }
+
+    @Override
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public static ChatMetadataRecord fromJson(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, ChatMetadataRecord.class);
     }
 
 
