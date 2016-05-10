@@ -66,9 +66,6 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
@@ -117,10 +114,10 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
 
         try {
             cashMoneyWalletModuleManager = new CashMoneyWalletModuleManagerImpl(cashMoneyWalletManager, pluginId, pluginFileSystem,
-                    errorManager, cashDepositTransactionManager, cashWithdrawalTransactionManager, broadcaster);
+                    this, cashDepositTransactionManager, cashWithdrawalTransactionManager, broadcaster);
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
