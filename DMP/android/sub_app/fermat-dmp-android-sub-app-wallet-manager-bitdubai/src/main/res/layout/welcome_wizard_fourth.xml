@@ -47,7 +47,7 @@
             android:textColor="#58595B"
             android:textSize="15sp"
             android:lineSpacingExtra="5dp"
-            android:text="In Fermat each type of user profile has a community app where you can browse, search and find people with that type of profile around you or globally. In order to interact with others you must send a request and wait for the other party to accept to be connected with you. After you are accepted you can use any of the apps available that allow you to be logged in with that type of profile."/>
+            android:text="In Fermat each type of user profile has a community app where you can browse, search and find people with that type of profile around you or globally. In order to interact with others you must send a connection request and wait for the other party to accept to be connected with you. After you are accepted you can use any of the apps available that allow you to be logged in with that type of profile."/>
 
     </LinearLayout>
 

@@ -79,9 +79,20 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     public void init(){
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
-        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
-        //if(appsInstalledInDevice.isEmpty()){
-            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+//        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
+//        //if(appsInstalledInDevice.isEmpty()){
+//            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+        try {
+            for (FermatAppType fermatAppType : FermatAppType.values()) {
+                RuntimeManager runtimeManager = selectRuntimeManager(fermatAppType);
+                if (runtimeManager != null)
+                    for (String key : runtimeManager.getListOfAppsPublicKey()) {
+                        appsInstalledInDevice.put(key, fermatAppType);
+                    }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //}
     }
 
