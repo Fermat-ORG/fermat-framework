@@ -2,7 +2,7 @@ package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artis
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.AbstractExposingData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,54 +15,26 @@ import java.util.List;
  * <p>
  * Created by Gabriel Araujo.
  */
-public final class ArtistExposingData implements ExposingData {
+public final class ArtistExposingData extends AbstractExposingData {
 
-    private final String publicKey;
-    private final String alias;
-    private final byte[] image;
     private final ArtistExternalPlatformInformation artistExternalPlatformInformation;
 
     public ArtistExposingData(
             final String publicKey,
             final String alias,
             String extraData) {
-        this.publicKey = publicKey;
-        this.alias     = alias    ;
-        List data = getListFromExtraData(extraData);
-        image = (byte[]) data.get(0);
-        HashMap<ArtExternalPlatform,String> externalPlatformInformationMap =
-                (HashMap<ArtExternalPlatform, String>) data.get(1);
+        super(publicKey,alias,extraData);
+        //External platform information.
+        HashMap<ArtExternalPlatform, String> externalPlatformInformationMap=
+                getExternalPlatformInformationMap(data.get(EXTERNAL_DATA_INDEX));
         artistExternalPlatformInformation = new ArtistExternalPlatformInformation(
                 externalPlatformInformationMap);
     }
 
-    private List getListFromExtraData(String extraData){
-        List data = new ArrayList();
-        data = (List) XMLParser.parseXML(extraData, data);
-        return data;
-    }
-
     /**
-     * @return a string representing the public key.
+     * This method returns the FanExternalPlatformInformation.
+     * @return
      */
-    public final String getPublicKey() {
-        return publicKey;
-    }
-
-    /**
-     * @return a string representing the alias of the artist.
-     */
-    public final String getAlias() {
-        return alias;
-    }
-
-    /**
-     * @return an array of bytes with the image exposed by the artist.
-     */
-    public final byte[] getImage() {
-        return image;
-    }
-
     public final ArtistExternalPlatformInformation getArtistExternalPlatformInformation(){
         return artistExternalPlatformInformation;
     }
@@ -84,6 +56,7 @@ public final class ArtistExposingData implements ExposingData {
                 "publicKey='" + publicKey + '\'' +
                 ", alias='" + alias + '\'' +
                 ", image=" + Arrays.toString(image) +
+                ", externalPlatform=" + artistExternalPlatformInformation +
                 '}';
     }
 
