@@ -3,6 +3,7 @@ package com.bitdubai.sub_app_artist_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -141,10 +142,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 launchListIdentitiesDialog = true;
             }
 
-            //Get notification requests count
-            //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
-            //mNotificationsCount = 4;
-            //new FetchCountTask().execute();
+            if(moduleManager!=null){
+                //Get notification requests count
+                List<ArtistCommunityInformation> artistCommunityInformation =
+                        moduleManager.listArtistsPendingLocalAction(
+                                moduleManager.getSelectedActorIdentity(),
+                                MAX,
+                                offset);
+                if(artistCommunityInformation!=null){
+                    mNotificationsCount = artistCommunityInformation
+                            .size();
+                    //mNotificationsCount = 4;
+                    new FetchCountTask().execute();
+                }
+
+            }
+
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -321,6 +334,29 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
 
     @Override
     public void onLongItemClickListener(ArtistCommunityInformation data, int position) {}
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
 
 }
 
