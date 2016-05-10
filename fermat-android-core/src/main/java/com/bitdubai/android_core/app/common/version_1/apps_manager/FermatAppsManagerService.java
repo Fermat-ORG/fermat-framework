@@ -83,13 +83,24 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     public void init(){
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
-        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
+        //appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
         //if(appsInstalledInDevice.isEmpty()){
-        appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
-        if(!appsInstalledInDevice.containsKey("main_desktop")){
-            Log.e(TAG,"Not contains desktop");
-        }
+//        appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+//        if(!appsInstalledInDevice.containsKey("main_desktop")){
+//            Log.e(TAG,"Not contains desktop");
+//        }
         //}
+        try {
+            for (FermatAppType fermatAppType : FermatAppType.values()) {
+                RuntimeManager runtimeManager = selectRuntimeManager(fermatAppType);
+                if (runtimeManager != null)
+                    for (String key : runtimeManager.getListOfAppsPublicKey()) {
+                        appsInstalledInDevice.put(key, fermatAppType);
+                    }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public FermatStructure lastAppStructure() {
@@ -227,14 +238,19 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     @Override
     public FermatStructure getAppStructure(String appPublicKey) {
-        FermatAppType fermatAppType =appsInstalledInDevice.get(appPublicKey);
-        if(fermatAppType!=null) {
-            return selectRuntimeManager(fermatAppType).getAppByPublicKey(appPublicKey);
-        }else{
+        try {
+            if (appPublicKey.equals("main_desktop")) {
+                return selectRuntimeManager(FermatAppType.DESKTOP).getAppByPublicKey(appPublicKey);
+            } else {
+                return selectRuntimeManager(FermatAppType.WALLET).getAppByPublicKey(appPublicKey);
+            }
+        }catch (Exception e){
             Log.e(TAG,"App instaled in device null: "+appPublicKey);
             Log.e(TAG,"If the public key of the app is fine, try removing data and restart app. filesystem problem..");
+            e.printStackTrace();
             return null;
         }
+
     }
 
     @Override
@@ -292,11 +308,11 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         //Este swith debe ser cambiado por una petición al core pasandole el FermatAppType
         switch (fermatAppType) {
             case WALLET:
+            case SUB_APP:
                 runtimeManager = FermatSystemUtils.getWalletRuntimeManager();
                 break;
-            case SUB_APP:
-                runtimeManager = FermatSystemUtils.getSubAppRuntimeMiddleware();
-                break;
+//                runtimeManager = FermatSystemUtils.getSubAppRuntimeMiddleware();
+//                break;
             case DESKTOP:
                 runtimeManager = FermatSystemUtils.getDesktopRuntimeManager();
 

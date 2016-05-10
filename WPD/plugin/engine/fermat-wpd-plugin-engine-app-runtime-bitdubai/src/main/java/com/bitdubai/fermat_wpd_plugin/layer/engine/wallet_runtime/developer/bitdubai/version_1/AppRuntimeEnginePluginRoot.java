@@ -368,7 +368,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          */
         SubAppAppsGenerator subAppAppsGenerator = new SubAppAppsGenerator();
         subAppAppsGenerator.factoryReset();
+        for (AppNavigationStructure appNavigationStructure : subAppAppsGenerator.listSubApp.values()) {
+            recordNAvigationStructure(appNavigationStructure);
+        }
         navigationStructureOpen.putAll(subAppAppsGenerator.listSubApp);
+
 
 
 
