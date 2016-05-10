@@ -287,8 +287,9 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 "Brokers",
                 SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(),
                 "sub_app_crypto_broker_community",
-                new Version(1, 0, 0)
-                ,Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
+                new Version(1, 0, 0),
+                Platforms.CRYPTO_BROKER_PLATFORM,
+                AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.crypto_broker_community);
         installedSubApp.setBanner(R.drawable.broker_community);
@@ -304,7 +305,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 "sub_app_crypto_customer_community",
                 new Version(1, 0, 0),
                 Platforms.CRYPTO_BROKER_PLATFORM,
-                AppsStatus.DEV);
+                AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.crypto_customer_community);
         installedSubApp.setBanner(R.drawable.customer_community);
