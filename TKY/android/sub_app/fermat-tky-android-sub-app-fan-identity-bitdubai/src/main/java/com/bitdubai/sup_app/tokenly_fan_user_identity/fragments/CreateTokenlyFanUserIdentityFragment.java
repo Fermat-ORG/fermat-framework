@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -94,6 +96,10 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private ProgressDialog tokenlyRequestDialog;
+    private View WarningCircle;
+    private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
+
 
     private Handler handler;
 
@@ -251,11 +257,19 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         mFanExternalUserName.requestFocus();
         mFanExternalPlatform.setVisibility(View.GONE);
 
+        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+        WarningCircle.setVisibility(View.GONE);
+
+        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        WarningLabel.setVisibility(View.GONE);
+
 
         registerForContextMenu(fanImage);
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WarningLabel.setVisibility(View.GONE);
+                WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
             }
@@ -375,6 +389,8 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     }
 
     private boolean validateIdentityData(String fanExternalName, String fanPassWord, byte[] fanImageBytes, ExternalPlatform externalPlatform) {
+
+        ShowWarnings(fanExternalName,fanPassWord,fanImageBytes);
         if (fanExternalName.isEmpty())
             return false;
         if (fanPassWord.isEmpty())
@@ -386,6 +402,26 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 //        if(externalPlatform != null)
 //            return  true;
         return true;
+    }
+
+    private void ShowWarnings(String fanExternalName,String fanPassWord, byte[] fanImageBytes) {
+
+
+
+        if (fanExternalName.isEmpty()){
+            mFanExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
+        }
+
+        if (fanPassWord.isEmpty()){
+            mFanExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
+        }
+
+        if (fanImageBytes == null){
+                WarningLabel.setVisibility(View.VISIBLE);
+           // WarningCircle.setVisibility(View.VISIBLE);
+        }
+
+
     }
 
     @Override

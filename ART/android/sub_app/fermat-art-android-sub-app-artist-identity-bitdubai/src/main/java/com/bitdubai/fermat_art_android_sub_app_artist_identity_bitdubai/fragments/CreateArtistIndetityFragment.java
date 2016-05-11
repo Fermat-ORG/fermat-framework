@@ -9,6 +9,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -68,8 +70,7 @@ import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
 
-public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistIdentitySubAppSession,SubAppResourcesProviderManager> {
-
+public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistIdentitySubAppSession, SubAppResourcesProviderManager> {
 
 
     private static final String TAG = "CreateArtArtistIdentity";
@@ -83,6 +84,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
+
+
     private ArtistIdentitySubAppSession artistIdentitySubAppSession;
     private byte[] artistImageByteArray;
     private ArtistIdentityManagerModule moduleManager;
@@ -103,7 +106,17 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
     private boolean updateCheck = false;
+    private View WarningCircle;
+    private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
+    private String NormalColor  =  "#0080FF";
 
+
+
+    private static final int ERROR_IMAGE_VIEW = 5;
+    private static final int ERROR_USER_DATA = 6;
+    private static final int ERROR_BOTH = 8;
+    private static final int SUCCESSFULL_DATA = 7;
 
     public static CreateArtistIndetityFragment newInstance() {
         return new CreateArtistIndetityFragment();
@@ -113,7 +126,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
+        try {
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
@@ -121,10 +134,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                     getSettingsManager();
 
             try {
-                if (appSession.getAppPublicKey()!= null){
+                if (appSession.getAppPublicKey() != null) {
                     artArtistPreferenceSettings = settingsManager.loadAndGetSettings(
                             appSession.getAppPublicKey());
-                }else{
+                } else {
                     artArtistPreferenceSettings = settingsManager.loadAndGetSettings("public_key_art_artist_identity");
                 }
 
@@ -135,16 +148,16 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             if (artArtistPreferenceSettings == null) {
                 artArtistPreferenceSettings = new ArtistIdentitySettings();
                 artArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
-                if(settingsManager != null){
-                    if (appSession.getAppPublicKey()!=null){
+                if (settingsManager != null) {
+                    if (appSession.getAppPublicKey() != null) {
                         settingsManager.persistSettings(
                                 appSession.getAppPublicKey(), artArtistPreferenceSettings);
-                    }else{
+                    } else {
                         settingsManager.persistSettings("public_key_art_artist_identity", artArtistPreferenceSettings);
                     }
                 }
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(
                     SubApps.ART_ARTIST_IDENTITY,
                     UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
@@ -158,7 +171,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootLayout = inflater.inflate(R.layout.fragment_art_create_artist_identity, container, false);
-       initViews(rootLayout);
+        initViews(rootLayout);
         setUpIdentity();
 
         return rootLayout;
@@ -173,7 +186,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 loadIdentity();
             } else {
                 List<Artist> lst = moduleManager.listIdentitiesFromCurrentDeviceUser();
-                if(!lst.isEmpty()){
+                if (!lst.isEmpty()) {
                     identitySelected = lst.get(0);
                 }
                 if (identitySelected != null) {
@@ -189,7 +202,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                     e);
         }
     }
-    private void loadIdentity(){
+
+    private void loadIdentity() {
         updateCheck = true;
         if (identitySelected.getProfileImage() != null) {
             Bitmap bitmap = null;
@@ -224,17 +238,17 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             if(externalPlatforms[i].getCode().equals(
                     identitySelected.getExternalPlatform().getCode())){
                 mArtistExternalPlatform.setSelection(i + 1);
-                try{
+                try {
                     List<UUID> externalIdentityIDList = getArtistIdentityIdByPlatform(externalPlatforms[i]);
-                    for (int j=0; j<externalIdentityIDList.size();j++){
+                    for (int j = 0; j < externalIdentityIDList.size(); j++) {
                         UUID identitySelectedExternalID;
-                        try{
+                        try {
                             identitySelectedExternalID = identitySelected.getExternalIdentityID();
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             identitySelectedExternalID = null;
                         }
                         ArtExternalPlatform externalPlatform = externalPlatforms[i];
-                        if(externalPlatform != null){
+                        if (externalPlatform != null) {
                             arraySpinner2.addAll(getArtistIdentityByPlatform(externalPlatform));
                             adapter2 = new ArrayAdapter<String>(
                                     getActivity(),
@@ -243,14 +257,14 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                             );
                         }
                         mArtistExternalName.setAdapter(adapter2);
-                        if(identitySelectedExternalID != null){
-                            if(externalIdentityIDList.get(j).equals(identitySelectedExternalID)) {
+                        if (identitySelectedExternalID != null) {
+                            if (externalIdentityIDList.get(j).equals(identitySelectedExternalID)) {
                                 mArtistExternalName.setSelection(j + 1);
                                 break;
                             }
                         }
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                 }
                 break;
@@ -274,8 +288,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistExposureLevel.setAdapter(adapter);
 
         ExposureLevel[] exposureLevels = ExposureLevel.values();
-        for (int i=0; i<exposureLevels.length;i++){
-            if(exposureLevels[i] == identitySelected.getExposureLevel()){
+        for (int i = 0; i < exposureLevels.length; i++) {
+            if (exposureLevels[i] == identitySelected.getExposureLevel()) {
                 mArtistExposureLevel.setSelection(i);
                 break;
             }
@@ -286,18 +300,19 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistAcceptConnectionsType.setAdapter(adapter);
 
         ArtistAcceptConnectionsType[] artistAcceptConnectionsTypes = ArtistAcceptConnectionsType.values();
-        for (int i=0; i<artistAcceptConnectionsTypes.length;i++){
-            if(artistAcceptConnectionsTypes[i] == identitySelected.getArtistAcceptConnectionsType()){
+        for (int i = 0; i < artistAcceptConnectionsTypes.length; i++) {
+            if (artistAcceptConnectionsTypes[i] == identitySelected.getArtistAcceptConnectionsType()) {
                 mArtistAcceptConnectionsType.setSelection(i);
                 break;
             }
         }
 
     }
+
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.create_art_artist_identity);
         mArtistUserName = (EditText) layout.findViewById(R.id.aai_username);
-        artistImage =  (ImageView) layout.findViewById(R.id.aai_artist_image);
+        artistImage = (ImageView) layout.findViewById(R.id.aai_artist_image);
         mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.aai_external_platform);
         mArtistExternalName = (Spinner) layout.findViewById(R.id.aai_userIdentityName);
         mArtistExposureLevel = (Spinner) layout.findViewById(R.id.art_exposureLevel);
@@ -306,6 +321,47 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mArtistUserName.requestFocus();
 
+
+
+        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+
+        WarningCircle.setVisibility(View.GONE);
+
+        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        WarningLabel.setVisibility(View.GONE);
+        /*
+
+
+        mArtistExternalPlatform.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mArtistExternalPlatform.setBackgroundColor(Color.parseColor("#919090"));
+            }
+        });
+
+        mArtistExternalName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mArtistExternalName.setBackgroundColor(Color.parseColor("#919090"));
+            }
+        });
+
+*/
+
+
+
+        mArtistExternalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                mArtistExternalName.setBackgroundColor(Color.parseColor(NormalColor));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         List<String> arraySpinner = new ArrayList<>();
         arraySpinner.add("Select a Platform...");
@@ -329,6 +385,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         artistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WarningLabel.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
                 getActivity().openContextMenu(artistImage);
             }
@@ -362,11 +419,28 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "fill required items", Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
                         Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
                         break;
+
+
+                    case ERROR_IMAGE_VIEW:
+                        WarningCircle.setVisibility(View.VISIBLE);
+                        Toast.makeText(getActivity(), "ERROR_IMAGE_VIEW", Toast.LENGTH_LONG).show();
+                        break;
+                    case ERROR_USER_DATA:
+
+                        Toast.makeText(getActivity(), "ERROR_USER_DATA", Toast.LENGTH_LONG).show();
+                        break;
+                    case ERROR_BOTH:
+
+                        Toast.makeText(getActivity(), "ERROR_BOTH", Toast.LENGTH_LONG).show();
+                        break;
+
+
+
                 }
 
             }
@@ -381,9 +455,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(mArtistExternalPlatform.getSelectedItem().toString());
             if(artExternalPlatform !=null){
                 List<UUID> identityByPlatformList = new ArrayList<>();
-                try{
+                try {
                     identityByPlatformList = getArtistIdentityIdByPlatform(artExternalPlatform);
-                }catch(Exception e){
+                } catch (Exception e) {
 
                 }
                 if (!identityByPlatformList.isEmpty()) {
@@ -394,10 +468,11 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         String artistName = mArtistUserName.getText().toString();
         String externalUsername = "";
         /*if(mArtistExternalPlatform.isSelected()){
+        if (mArtistExternalPlatform.isSelected()) {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mArtistExternalPlatform.getSelectedItem().toString());
         }
-        if(mArtistExternalName.getCount()>1){
+        if (mArtistExternalName.getCount() > 1) {
             externalUsername = mArtistExternalName.getSelectedItem().toString();
         }*/
 
@@ -408,10 +483,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 artistName,
                 artistImageByteArray,
                 externalIdentityID);
-        if(dataIsValid){
-            if(moduleManager != null){
-                try{
-                    if(!isUpdate){
+        if (dataIsValid) {
+            if (moduleManager != null) {
+                try {
+                    if (!isUpdate) {
                         moduleManager.createArtistIdentity(
                                 artistName,
                                 (artistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : artistImageByteArray,
@@ -442,7 +517,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                     artExternalPlatform,
                                     externalUsername);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     e.printStackTrace();
                 }
@@ -454,29 +529,55 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     }
 
 
-
     private boolean validateIdentityData(
             String ArtistExternalName,
             byte[] ArtistImageBytes,
             UUID externalIdentityID) {
-        if (ArtistExternalName.isEmpty())
-            return false;
+
+        if (ArtistImageBytes == null){
+           // WarningCircle.setVisibility(View.VISIBLE);
+            WarningLabel.setVisibility(View.VISIBLE);
+        }
+
+        if(mArtistExternalPlatform.getSelectedItemPosition()==0){
+            mArtistExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
+        }else{mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));}
+
+
+        /*
+        if(mArtistExternalName.getSelectedItemPosition()==0){
+            mArtistExternalName.setBackgroundColor(Color.parseColor("#DF0101"));
+        }else{
+            mArtistExternalName.setBackgroundColor(Color.parseColor("#0080FF"));}
+*/
+
+        if (ArtistExternalName.isEmpty()){
+            mArtistUserName.setHintTextColor(Color.parseColor(WarningColor));
+            }
+
+        if (ArtistExternalName.isEmpty()){
+
+            return false;}
+
         boolean identitySelectedHasID;
         try{
             identitySelectedHasID = identitySelected.getExternalIdentityID() != null;
         }catch(Exception e){
             identitySelectedHasID = false;
         }
-        if(externalIdentityID == null && identitySelectedHasID && isUpdate)
-            return false;
-        if (ArtistImageBytes == null)
-            return false;
-        if (ArtistImageBytes.length > 0)
-            return true;
+        if(externalIdentityID == null && identitySelectedHasID && isUpdate){
+
+            return false;}
+        if (ArtistImageBytes == null){
+
+            return false;}
+        if (ArtistImageBytes.length > 0){
+
+            return true;}
         return true;
     }
 
-    private byte[] convertImage(int resImage){
+    private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
@@ -484,13 +585,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     }
 
 
-
-    private void externalPlatformSpinnerListener(){
+    private void externalPlatformSpinnerListener() {
         mArtistExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
                 try {
-                    if(!updateCheck){
+                    if (!updateCheck) {
                         List<String> arraySpinner = new ArrayList<>();
                         arraySpinner.add("Select an Identity...");
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -498,9 +599,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                 android.R.layout.simple_spinner_item,
                                 arraySpinner
                         );
-                        if(!mArtistExternalPlatform.getSelectedItem().equals(mArtistExternalPlatform.getItemAtPosition(0))){
+                        if (!mArtistExternalPlatform.getSelectedItem().equals(mArtistExternalPlatform.getItemAtPosition(0))) {
                             ArtExternalPlatform externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString());
-                            if(externalPlatform != null){
+                            if (externalPlatform != null) {
                                 List<String> identityByPlatformList = getArtistIdentityByPlatform(externalPlatform);
                                 if (!identityByPlatformList.isEmpty()) {
                                     arraySpinner.addAll(identityByPlatformList);
@@ -532,12 +633,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     }
 
 
-    private List<String> getArtistIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
-        HashMap<UUID, String>artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
+    private List<String> getArtistIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception {
+        HashMap<UUID, String> artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
         List<String> identityNameList = new ArrayList<>();
-        if(artistIdentityByPlatform != null){
+        if (artistIdentityByPlatform != null) {
             Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
-            while(entries2.hasNext()){
+            while (entries2.hasNext()) {
                 Map.Entry<UUID, String> entry2 = entries2.next();
                 identityNameList.add(entry2.getValue());
             }
@@ -546,12 +647,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         return identityNameList;
     }
 
-    private List<UUID> getArtistIdentityIdByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
-        HashMap<UUID, String>artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
+    private List<UUID> getArtistIdentityIdByPlatform(ArtExternalPlatform externalPlatform) throws Exception {
+        HashMap<UUID, String> artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
         List<UUID> identityIdList = new ArrayList<>();
-        if(artistIdentityByPlatform != null){
+        if (artistIdentityByPlatform != null) {
             Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
-            while(entries2.hasNext()){
+            while (entries2.hasNext()) {
                 Map.Entry<UUID, String> entry2 = entries2.next();
                 identityIdList.add(entry2.getKey());
             }
@@ -559,6 +660,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         }
         return identityIdList;
     }
+
     /**
      * Bitmap to byte[]
      *
@@ -620,6 +722,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                 getResources(), imageBitmap));
         }
     }
+
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Choose mode");
@@ -629,9 +732,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
         super.onCreateContextMenu(menu, view, menuInfo);
     }
+
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if(!contextMenuInUse) {
+        if (!contextMenuInUse) {
             switch (item.getItemId()) {
                 case CONTEXT_MENU_CAMERA:
                     dispatchTakePictureIntent();
@@ -674,7 +778,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         try {
             int id = item.getItemId();
 
-            if (id == 99){
+            if (id == 99) {
 
             }
 
@@ -688,7 +792,6 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         }
         return super.onOptionsItemSelected(item);
     }
-
 
 
 }//main
