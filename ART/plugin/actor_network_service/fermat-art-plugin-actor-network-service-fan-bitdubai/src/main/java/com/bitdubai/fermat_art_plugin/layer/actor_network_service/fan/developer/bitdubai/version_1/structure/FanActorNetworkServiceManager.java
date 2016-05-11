@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
@@ -81,6 +83,14 @@ public final class FanActorNetworkServiceManager implements FanManager {
 
     private ConcurrentHashMap<String, FanExposingData> fansToExpose;
 
+    public final void exposeIdentitiesInWait() throws CantExposeIdentityException {
+        if(!Validate.isObjectNull(fansToExpose) && fansToExpose.size() > 0){
+            for (FanExposingData fanExposingData :
+                    fansToExpose.values()) {
+                exposeIdentity(fanExposingData);
+            }
+        }
+    }
     @Override
     public final void exposeIdentity(final FanExposingData fan) throws CantExposeIdentityException {
 
@@ -104,9 +114,7 @@ public final class FanActorNetworkServiceManager implements FanManager {
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
-
-                if (fansToExpose != null && fansToExpose.containsKey(fan.getPublicKey()))
-                    fansToExpose.remove(fan.getPublicKey());
+                addFansToExpose(fan);
             }
 
         } catch (final CantRegisterComponentException e) {

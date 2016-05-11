@@ -144,21 +144,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
 
             if(moduleManager!=null){
                 //Get notification requests count
-                List<ArtistCommunityInformation> artistCommunityInformation =
-                        moduleManager.listArtistsPendingLocalAction(
-                                moduleManager.getSelectedActorIdentity(),
-                                MAX,
-                                offset);
-                if(artistCommunityInformation!=null){
-                    mNotificationsCount = artistCommunityInformation
-                            .size();
-                    //mNotificationsCount = 4;
-                    new FetchCountTask().execute();
+                ArtistCommunitySelectableIdentity artistCommunitySelectableIdentity=
+                        moduleManager.getSelectedActorIdentity();
+                if(artistCommunitySelectableIdentity!=null){
+                    List<ArtistCommunityInformation> artistCommunityInformation =
+                            moduleManager.listArtistsPendingLocalAction(
+                                    artistCommunitySelectableIdentity,
+                                    MAX,
+                                    offset);
+                    if(artistCommunityInformation!=null){
+                        mNotificationsCount = artistCommunityInformation
+                                .size();
+                        //mNotificationsCount = 4;
+                        new FetchCountTask().execute();
+                    }
                 }
-
             }
-
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
