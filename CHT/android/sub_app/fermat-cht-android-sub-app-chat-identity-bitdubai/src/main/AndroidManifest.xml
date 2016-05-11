@@ -8,6 +8,6 @@
 
     </application>
 
-    <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/>
+    <!--activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/-->
 
 </manifest>

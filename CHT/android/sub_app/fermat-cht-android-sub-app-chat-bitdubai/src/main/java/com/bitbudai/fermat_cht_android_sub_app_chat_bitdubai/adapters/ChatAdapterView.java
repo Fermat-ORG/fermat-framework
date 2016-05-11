@@ -506,7 +506,7 @@ public class ChatAdapterView extends LinearLayout {
             public void onClick(View v) {
                 BackgroundAsyncTask sendMessageAsync = new BackgroundAsyncTask();
                 String messageText = messageET.getText().toString();
-                if (TextUtils.isEmpty(messageText) || messageText.matches(".*\\w.*")) {
+                if (TextUtils.isEmpty(messageText) || messageText.trim().length()>0) {
                     return;
                 }
 
