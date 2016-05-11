@@ -8,6 +8,7 @@ import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitd
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -24,134 +25,22 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetDatabaseTableContent {
 
+    @Mock
+    List<DeveloperDatabaseTableRecord> developerDatabaseTableRecords;
+    @Mock
     DeveloperObjectFactory developerObjectFactory;
+    @Mock
     DeveloperDatabase developerDatabase;
+    @Mock
     DeveloperDatabaseTable developerDatabaseTable;
 
     @Test
     public void getDatabaseTableContent() {
         TokenlyFanIdentityPluginRoot tokenlyFanIdentityPluginRoot = Mockito.mock(TokenlyFanIdentityPluginRoot.class);
 
-        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecords = new List<DeveloperDatabaseTableRecord>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<DeveloperDatabaseTableRecord> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(DeveloperDatabaseTableRecord developerDatabaseTableRecord) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends DeveloperDatabaseTableRecord> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends DeveloperDatabaseTableRecord> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public DeveloperDatabaseTableRecord get(int index) {
-                return null;
-            }
-
-            @Override
-            public DeveloperDatabaseTableRecord set(int index, DeveloperDatabaseTableRecord element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, DeveloperDatabaseTableRecord element) {
-
-            }
-
-            @Override
-            public DeveloperDatabaseTableRecord remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<DeveloperDatabaseTableRecord> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<DeveloperDatabaseTableRecord> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<DeveloperDatabaseTableRecord> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
-
         when(tokenlyFanIdentityPluginRoot.getDatabaseTableContent(developerObjectFactory,
-                developerDatabase,
-                developerDatabaseTable)).thenReturn(developerDatabaseTableRecords);
+                                                                    developerDatabase,
+                                                                    developerDatabaseTable)).thenReturn(developerDatabaseTableRecords);
 
     }
 }

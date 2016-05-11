@@ -10,6 +10,7 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -23,61 +24,12 @@ import static org.powermock.api.mockito.PowerMockito.doCallRealMethod;
 @PrepareForTest(FanActorNetworkServiceManager.class)
 public class SetPlatformComponentProfileTest {
 
+    @Mock
+    PlatformComponentProfile platformComponentProfile;
     @Test
     public void setPlatformComponentProfileTest (){
 
         FanActorNetworkServiceManager fanActorNetworkServiceManager = PowerMockito.mock(FanActorNetworkServiceManager.class);
-        final PlatformComponentProfile platformComponentProfile = new PlatformComponentProfile() {
-            @Override
-            public String getIdentityPublicKey() {
-                return null;
-            }
-
-            @Override
-            public String getAlias() {
-                return null;
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-
-            @Override
-            public Location getLocation() {
-                return null;
-            }
-
-            @Override
-            public PlatformComponentType getPlatformComponentType() {
-                return null;
-            }
-
-            @Override
-            public NetworkServiceType getNetworkServiceType() {
-                return null;
-            }
-
-            @Override
-            public String getCommunicationCloudClientIdentity() {
-                return null;
-            }
-
-            @Override
-            public String getExtraData() {
-                return null;
-            }
-
-            @Override
-            public String toJson() {
-                return null;
-            }
-
-            @Override
-            public PlatformComponentProfile fromJson(String json) {
-                return null;
-            }
-        };
 
         doCallRealMethod().when(fanActorNetworkServiceManager).setPlatformComponentProfile(platformComponentProfile);
 

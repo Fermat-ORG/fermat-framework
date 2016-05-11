@@ -6,6 +6,7 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -25,127 +26,13 @@ import static org.powermock.api.mockito.PowerMockito.doCallRealMethod;
 @PrepareForTest(ArtistActorNetworkServiceManager.class)
 public class ListCompletedConnectionsTest {
 
+    @Mock
+    List<ArtistConnectionRequest> artistConnectionRequest;
+
     @Test
     public void listCompletedConnectionsTest() throws CantListPendingConnectionRequestsException {
 
         ArtistActorNetworkServiceManager artistActorNetworkServiceManager = PowerMockito.mock(ArtistActorNetworkServiceManager.class);
-
-        final List<ArtistConnectionRequest> artistConnectionRequest = new List<ArtistConnectionRequest>() {
-            @Override
-            public int size() {
-                return 0;
-            }
-
-            @Override
-            public boolean isEmpty() {
-                return false;
-            }
-
-            @Override
-            public boolean contains(Object o) {
-                return false;
-            }
-
-            @Override
-            public Iterator<ArtistConnectionRequest> iterator() {
-                return null;
-            }
-
-            @Override
-            public Object[] toArray() {
-                return new Object[0];
-            }
-
-            @Override
-            public <T> T[] toArray(T[] a) {
-                return null;
-            }
-
-            @Override
-            public boolean add(ArtistConnectionRequest artistConnectionRequest) {
-                return false;
-            }
-
-            @Override
-            public boolean remove(Object o) {
-                return false;
-            }
-
-            @Override
-            public boolean containsAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(Collection<? extends ArtistConnectionRequest> c) {
-                return false;
-            }
-
-            @Override
-            public boolean addAll(int index, Collection<? extends ArtistConnectionRequest> c) {
-                return false;
-            }
-
-            @Override
-            public boolean removeAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public boolean retainAll(Collection<?> c) {
-                return false;
-            }
-
-            @Override
-            public void clear() {
-
-            }
-
-            @Override
-            public ArtistConnectionRequest get(int index) {
-                return null;
-            }
-
-            @Override
-            public ArtistConnectionRequest set(int index, ArtistConnectionRequest element) {
-                return null;
-            }
-
-            @Override
-            public void add(int index, ArtistConnectionRequest element) {
-
-            }
-
-            @Override
-            public ArtistConnectionRequest remove(int index) {
-                return null;
-            }
-
-            @Override
-            public int indexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public int lastIndexOf(Object o) {
-                return 0;
-            }
-
-            @Override
-            public ListIterator<ArtistConnectionRequest> listIterator() {
-                return null;
-            }
-
-            @Override
-            public ListIterator<ArtistConnectionRequest> listIterator(int index) {
-                return null;
-            }
-
-            @Override
-            public List<ArtistConnectionRequest> subList(int fromIndex, int toIndex) {
-                return null;
-            }
-        };
 
         when(artistActorNetworkServiceManager.listCompletedConnections()).thenReturn(artistConnectionRequest);
 
