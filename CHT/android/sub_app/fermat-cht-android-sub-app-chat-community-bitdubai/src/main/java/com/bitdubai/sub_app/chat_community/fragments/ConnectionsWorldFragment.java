@@ -345,8 +345,20 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
-        appSession.setData(CHAT_USER_SELECTED, data);
-        changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        try {
+            if (moduleManager.getSelectedActorIdentity() != null) {
+                appSession.setData(CHAT_USER_SELECTED, data);
+                changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+            } else {
+                showDialogHelp();
+            }
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
+        {
+            e.printStackTrace();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -561,7 +573,7 @@ public class ConnectionsWorldFragment
                         chatUserSubAppSession,
                         null,
                         moduleManager,
-                                PresentationChatCommunityDialog.TYPE_PRESENTATION);
+                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
                 presentationChatCommunityDialog.show();
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
