@@ -138,7 +138,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return sdf.format(new Date(transactionRecord.getTimestamp()))
                 + " - "
-                + DateUtils.getRelativeTimeSpanString(timestamp * 1000).toString();
+                + DateUtils.getRelativeTimeSpanString(timestamp).toString();
     }
 
     private void makeTransaction(boolean transactionUpdateCancelled) {
