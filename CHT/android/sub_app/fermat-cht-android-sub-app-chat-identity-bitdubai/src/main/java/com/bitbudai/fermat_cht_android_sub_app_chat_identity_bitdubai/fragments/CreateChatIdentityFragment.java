@@ -67,6 +67,7 @@ import static android.widget.Toast.makeText;
  * FERMAT-ORG
  * Developed by Lozadaa on 04/04/16.
  */
+
 public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
@@ -85,7 +86,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     ChatIdentitySession Session;
     Context context;
     Toolbar toolbar;
-    EditText statusView;
+    TextView statusView;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
     public static CreateChatIdentityFragment newInstance() {
@@ -143,7 +144,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
         mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
-        statusView = (EditText) layout.findViewById(R.id.statusView);
+        statusView = (TextView) layout.findViewById(R.id.statusView);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
 
@@ -207,6 +208,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 mBrokerName.setVisibility(View.GONE);
                 mChatConnectionState.setVisibility(View.GONE);
                 statusView.setVisibility(View.VISIBLE);
+                statusView.setText(state);
                 textViewChtTitle.setVisibility(View.VISIBLE);
                 textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
                 statusView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
@@ -352,6 +354,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
     private void updateIdentityInBackDevice(String donde) throws CantGetChatIdentityException {
         String brokerNameText = mBrokerName.getText().toString();
+        String state= mChatConnectionState.getText().toString();
+
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         }
@@ -361,13 +365,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState());
-
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), state);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
                             textViewChtTitle.setText(mBrokerName.getText());
+                            statusView.setText(mChatConnectionState.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
