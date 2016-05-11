@@ -51,6 +51,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.UPNPService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -241,14 +242,19 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             initializeNodeCatalog();
 
-            LOG.info("Initializing propagate catalog agents ...");
             /*
              * Initialize propagate catalog agents
              */
+            LOG.info("Initializing propagate catalog agents ...");
             this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent(this);
             this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent(this);
             propagateNodeCatalogAgent.start();
             propagateActorCatalogAgent.start();
+
+            /*
+             * Try to forwarding port
+             */
+            UPNPService.portForwarding(Integer.parseInt(ConfigurationManager.getValue(ConfigurationManager.PORT)), ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
@@ -270,6 +276,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
+
         } catch (Exception exception) {
 
 
@@ -321,6 +328,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
             this.propagateActorCatalogAgent.stop();
             this.propagateNodeCatalogAgent.stop();
+            UPNPService.removePortForwarding(Integer.parseInt(ConfigurationManager.getValue(ConfigurationManager.PORT)));
 
         } catch (Exception e) {
 
@@ -337,20 +345,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         nodeProfile = new NodeProfile();
         nodeProfile.setIdentityPublicKey(identity.getPublicKey());
-
-        //TODO: CHANGE
         nodeProfile.setIp(serverIp);
-      //  nodeProfile.setIp("localhost");
-
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
-       // nodeProfile.setDefaultPort(8080);
-
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
-       // nodeProfile.setName("Other Server");
-
         nodeProfile.setLocation(locationManager.getLocation());
 
-        LOG.info(nodeProfile);
+        LOG.info("Node Profile = "+nodeProfile);
 
     }
 

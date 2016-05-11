@@ -59,6 +59,8 @@ dependencies {
     compile 'commons-codec:commons-codec:1.9'
     compile 'commons-configuration:commons-configuration:1.10'
 
+    compile 'org.bitlet:weupnp:0.1.4'
+
     // compile 'org.xerial:sqlite-jdbc:3.7.2'
    // compile 'net.kemitix:sqlite-dialect:0.1.0'
 
