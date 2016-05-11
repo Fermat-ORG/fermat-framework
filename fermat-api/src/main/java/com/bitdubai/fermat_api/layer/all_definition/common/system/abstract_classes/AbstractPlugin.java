@@ -48,7 +48,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+    protected ErrorManager errorManager;
 
 
     private final ConcurrentHashMap<AddonVersionReference , Field> addonNeededReferences         ;
