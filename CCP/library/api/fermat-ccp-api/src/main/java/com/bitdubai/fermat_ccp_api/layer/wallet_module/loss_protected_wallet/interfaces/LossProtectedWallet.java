@@ -319,8 +319,8 @@ public interface LossProtectedWallet extends Serializable {
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType,
-              double purchasePrice) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+              BlockchainNetworkType blockchainNetworkType
+              ) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
     void sendToWallet (long cryptoAmount,
@@ -484,7 +484,7 @@ public interface LossProtectedWallet extends Serializable {
      * @return
      * @throws CantListLossProtectedSpendingException
      */
-    List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey) throws CantListLossProtectedSpendingException, CantLoadWalletException;
+    List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey,BlockchainNetworkType blockchainNetworkType) throws CantListLossProtectedSpendingException, CantLoadWalletException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
@@ -632,4 +632,24 @@ public interface LossProtectedWallet extends Serializable {
     UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException;
 
     void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException;
+
+    /**
+     *
+     * @param balanceType
+     * @param transactionType
+     * @param walletPublicKey
+     * @param intraUserLoggedInPublicKey
+     * @param blockchainNetworkType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListLossProtectedTransactionsException
+     */
+    List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
+                                                                                   final TransactionType transactionType,
+                                                                                   String walletPublicKey,
+                                                                                   String intraUserLoggedInPublicKey,
+                                                                                   BlockchainNetworkType blockchainNetworkType,
+                                                                                   int max,
+                                                                                   int offset) throws CantListLossProtectedTransactionsException;
 }

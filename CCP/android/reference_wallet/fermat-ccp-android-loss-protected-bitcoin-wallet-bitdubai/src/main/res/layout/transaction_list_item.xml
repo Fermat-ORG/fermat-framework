@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@null"
+    android:id="@+id/container_sub_item3"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/container_data3"
+        android:paddingTop="15dp"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="30dp"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_notes3"
+                android:text="@string/notes"
+                android:textSize="14sp"
+                android:textColor="#000000"
+                android:fontFamily="roboto"
+                android:layout_gravity="left"
+                app:typeface="ROBOTO_REGULAR"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/from"
+                android:text="@string/from"
+                android:textSize="12sp"
+                android:textColor="#000000"
+                android:fontFamily="roboto"
+                android:layout_gravity="left"
+                app:typeface="ROBOTO_REGULAR"
+                />
+
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

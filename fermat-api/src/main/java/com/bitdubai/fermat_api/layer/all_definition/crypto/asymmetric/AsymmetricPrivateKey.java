@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
-import java.math.BigInteger;
-import java.security.spec.ECParameterSpec;
-
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Curve;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
+
+import java.math.BigInteger;
+import java.security.spec.ECParameterSpec;
 
 public class AsymmetricPrivateKey implements PrivateKey {
 

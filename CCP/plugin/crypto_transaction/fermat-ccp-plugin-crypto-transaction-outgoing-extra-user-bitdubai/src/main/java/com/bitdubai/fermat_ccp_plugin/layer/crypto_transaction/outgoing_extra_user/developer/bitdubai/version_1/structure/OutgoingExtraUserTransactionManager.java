@@ -46,6 +46,7 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
         this.errorManager         = errorManager        ;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
+        this.bitcoinLossProtectedWalletManager = bitcoinLossProtectedWalletManager;
     }
 
     /*
@@ -61,8 +62,7 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
                      final String        deliveredToActorPublicKey,
                      final Actors        deliveredToActorType     ,
                      ReferenceWallet referenceWallet,
-                     BlockchainNetworkType blockchainNetworkType,
-                     double purchasePrice) throws InsufficientFundsException,
+                     BlockchainNetworkType blockchainNetworkType) throws InsufficientFundsException,
                                                                            CantSendFundsException    {
         /*
          * TODO: Create a class fir tge selection of the correct wallet
@@ -82,10 +82,10 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
                     BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
                     funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
-                //TODO: el disponible es en base al exchange rate del momento
+
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     BitcoinLossProtectedWallet lossProtectedWalletWallet = this.bitcoinLossProtectedWalletManager.loadWallet(walletPublicKey);
-                    funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType,String.valueOf(purchasePrice));
+                    funds = lossProtectedWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
             }
 
