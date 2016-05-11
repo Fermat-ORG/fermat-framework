@@ -214,37 +214,40 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
             PresentationDialog presentationDialog;
 
-            if (moduleManager.getListOfIdentities().isEmpty()) {
-                presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
-                        .setBannerRes(R.drawable.banner_crypto_broker)
-                        .setIconRes(R.drawable.crypto_broker)
-                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
-                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
-                        .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
-                        .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                        .build();
+            List list = moduleManager.getListOfIdentities();
+            if(list!=null) {
+                if (list.isEmpty()) {
+                    presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                            .setBannerRes(R.drawable.banner_crypto_broker)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                            .setBody(R.string.cbw_wizard_merchandise_dialog_body)
+                            .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                            .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                            .build();
 
-            } else {
-                presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setBannerRes(R.drawable.banner_crypto_broker)
-                        .setIconRes(R.drawable.crypto_broker)
-                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
-                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
-                        .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
-                        .setCheckboxText(R.string.cbw_wizard_not_show_text)
-                        .build();
+                } else {
+                    presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                            .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                            .setBannerRes(R.drawable.banner_crypto_broker)
+                            .setIconRes(R.drawable.crypto_broker)
+                            .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                            .setBody(R.string.cbw_wizard_merchandise_dialog_body)
+                            .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                            .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                            .build();
+                }
+
+
+                presentationDialog.setOnDismissListener(this);
+
+
+                final CryptoBrokerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
+                if (showDialog)
+                    presentationDialog.show();
             }
-
-
-            presentationDialog.setOnDismissListener(this);
-
-
-            final CryptoBrokerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
-            final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
-            if (showDialog)
-                presentationDialog.show();
 
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
