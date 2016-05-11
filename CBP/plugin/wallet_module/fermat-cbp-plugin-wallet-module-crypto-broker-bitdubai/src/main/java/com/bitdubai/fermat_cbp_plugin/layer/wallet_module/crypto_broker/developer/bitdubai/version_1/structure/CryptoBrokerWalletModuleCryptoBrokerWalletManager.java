@@ -828,7 +828,13 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         CryptoBrokerWalletSettingSpread spread = getCryptoBrokerWalletSpreadSetting("walletPublicKeyTest"); //TODO: quitar este hardcodeo
         List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");//TODO: quitar este hardcodeo
         List<CryptoBrokerWalletProviderSetting> associatedProviders = getCryptoBrokerWalletProviderSettings("walletPublicKeyTest");//TODO: quitar este hardcodeo
-        List<EarningsPair> earningsPairs = getEarningsPairs(publicKeyWalletCryptoBrokerInstall);
+        List<EarningsPair> earningsPairs;
+
+        try {
+            earningsPairs = getEarningsPairs(publicKeyWalletCryptoBrokerInstall);
+        } catch (Exception e) {
+            earningsPairs = new ArrayList<>();
+        }
 
         return spread != null && !associatedWallets.isEmpty() && !associatedProviders.isEmpty() && !earningsPairs.isEmpty();
     }

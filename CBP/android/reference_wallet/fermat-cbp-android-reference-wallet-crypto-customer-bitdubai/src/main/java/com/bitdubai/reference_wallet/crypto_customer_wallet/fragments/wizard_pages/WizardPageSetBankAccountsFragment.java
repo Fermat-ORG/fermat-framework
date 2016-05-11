@@ -193,9 +193,11 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
 
 
             //Obtain walletSettings and persist isWalletConfigured = true
-            CryptoCustomerWalletPreferenceSettings walletSettings = appSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            final CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
+
+            CryptoCustomerWalletPreferenceSettings walletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             walletSettings.setIsWalletConfigured(true);
-            appSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
+            moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
 
 
         } catch (FermatException ex) {

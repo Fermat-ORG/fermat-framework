@@ -122,7 +122,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(),
                 "sub_app_crypto_broker_identity",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
+                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.crypto_broker_identity);
@@ -138,7 +138,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode(),
                 "sub_app_crypto_customer_identity",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
+                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.crypto_customer_identity);
