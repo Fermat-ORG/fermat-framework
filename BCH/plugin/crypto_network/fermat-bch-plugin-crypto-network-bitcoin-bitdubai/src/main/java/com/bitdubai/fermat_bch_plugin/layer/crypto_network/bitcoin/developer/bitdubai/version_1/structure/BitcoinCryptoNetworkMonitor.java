@@ -627,6 +627,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
                 dao.storeBroadcastBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerAddress);
 
+                //mark this transaction as our own.
+                tx.getConfidence().setSource(TransactionConfidence.Source.SELF);
+
                 if (commit){
                     // commit and save the transaction
                     wallet.commitTx(tx);
