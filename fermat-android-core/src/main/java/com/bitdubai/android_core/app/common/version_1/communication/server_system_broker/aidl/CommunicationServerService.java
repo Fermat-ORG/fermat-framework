@@ -192,7 +192,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
            if(data instanceof SettingsManager){
                Log.e(TAG,"ERROR: NO USAR getSettingsManager DEL MODULE");
            }else{
-               Log.e(TAG,"ERROR: NO USAR getSettingsManager DEL MODULE");
+               Log.e(TAG,"ERROR: Class is not Serializable, class name: "+data.getClass().getName());
            }
             throw new Exception("ERROR: Class is not Serializable, class name: "+data.getClass().getName());
         } catch (IOException e) {
