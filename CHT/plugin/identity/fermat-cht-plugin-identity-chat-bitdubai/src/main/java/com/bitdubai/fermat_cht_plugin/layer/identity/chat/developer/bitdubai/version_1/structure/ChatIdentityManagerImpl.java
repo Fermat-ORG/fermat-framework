@@ -43,6 +43,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     private ErrorManager errorManager;
     private PluginFileSystem pluginFileSystem;
     private ChatManager chatManager;
+    private boolean isIdentityNew = true;
 
     /**
      * Represents the DeviceUserManager
@@ -130,7 +131,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
             chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage, country, state, city, connectionState);
-            registerIdentitiesANS(keyPair.getPublicKey());
+            registerIdentitiesANS(keyPair.getPublicKey(), true);
         } catch (CantCreateNewDeveloperException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -154,7 +155,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
         try {
             chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState);
-            registerIdentitiesANS(identityPublicKey);
+            registerIdentitiesANS(identityPublicKey, false);
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (IdentityNotFoundException e) {
@@ -173,24 +174,35 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      */
     @Override
     public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        registerIdentitiesANS(publicKey);
+        registerIdentitiesANS(publicKey, true);
     }
 
-    private void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+    private void registerIdentitiesANS(String publicKey, boolean isIdentityNew) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
             final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity());
             chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        chatManager.exposeIdentity(chatExposingData);
-                    } catch (CantExposeIdentityException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            if (isIdentityNew)
+            {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            chatManager.exposeIdentity(chatExposingData);
+                        } catch (CantExposeIdentityException e) {
+                            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+                        }
                     }
+                }.start();
+            }
+            else{
+                //TODO:Al actualizar la identidad falla la comunidad revisar
+                try {
+                    chatManager.updateIdentity(chatExposingData);
+                } catch (CantExposeIdentityException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
                 }
-            }.start();
+            }
 
         } catch (CantGetChatUserIdentityException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));

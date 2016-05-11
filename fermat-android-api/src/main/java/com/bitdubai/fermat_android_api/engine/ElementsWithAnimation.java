@@ -14,4 +14,5 @@ public interface ElementsWithAnimation{
     void startCollapseAnimation(Context context, int verticalOffset);
 
     void startExpandAnimation(Context context, int verticalOffset);
+
 }

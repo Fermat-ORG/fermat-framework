@@ -152,7 +152,6 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
             return moduleSettings;
 
         } catch (CantCreateFileException e) {
-
             throw new CantGetSettingsException(e, "", "Cant create module settings file exception.");
         } catch( FileNotFoundException e) {
            throw new SettingsNotFoundException(e, "", "Cant find module settings file exception.");

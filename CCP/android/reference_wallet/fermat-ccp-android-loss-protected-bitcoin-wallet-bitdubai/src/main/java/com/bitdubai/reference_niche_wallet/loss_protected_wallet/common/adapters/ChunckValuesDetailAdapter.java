@@ -57,7 +57,7 @@ public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtecte
 
         holder.getAmountBalance().setText(formatBalanceString(data.getAmount(),ShowMoneyType.BITCOIN.getCode())+" BTC");
 
-        holder.getExchangeRate().setText("1 BTC = "+formatExchangeRateString(data.getExchangeRate())+" US$");
+        holder.getExchangeRate().setText("1 BTC = U$D "+data.getExchangeRate());
 
 
 

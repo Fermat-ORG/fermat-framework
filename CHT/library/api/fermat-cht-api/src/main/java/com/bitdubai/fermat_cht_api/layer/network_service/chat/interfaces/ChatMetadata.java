@@ -44,4 +44,6 @@ public interface ChatMetadata {
 
     List<GroupMember> getGroupMembers();
 
+    String toJson();
+
 }

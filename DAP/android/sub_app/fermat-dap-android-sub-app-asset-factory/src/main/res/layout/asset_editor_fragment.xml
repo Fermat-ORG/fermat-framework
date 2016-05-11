@@ -184,17 +184,6 @@
                         android:layout_alignBottom="@+id/bitcoins"
                         android:layout_toRightOf="@+id/bitcoins" />
 
-                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                        android:id="@+id/bitcoinsText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/bitcoins"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginBottom="3dp"
-                        android:text="0.111111 BTC"
-                        android:textColor="@color/text_color_hint"
-                        android:textSize="14sp" />
-
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -202,11 +191,22 @@
                     android:layout_height="wrap_content">
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:id="@+id/bitcoinsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:text="0.111111 BTC"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="14sp" />
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:id="@+id/bitcoinBalanceLabelText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="35dp"
                         android:text="bitcoin Wallet Balance:"
                         android:textColor="@color/text_color_hint"
                         android:textSize="14sp" />
@@ -216,7 +216,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="35dp"
                         android:layout_toRightOf="@id/bitcoinBalanceLabelText"
                         android:text="0.111111 BTC"
                         android:textColor="@color/fab_material_orange_500"
