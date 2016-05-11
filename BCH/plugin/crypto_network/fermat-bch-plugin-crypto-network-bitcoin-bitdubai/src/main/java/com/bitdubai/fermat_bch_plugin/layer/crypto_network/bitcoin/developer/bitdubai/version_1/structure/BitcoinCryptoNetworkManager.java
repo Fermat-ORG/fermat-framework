@@ -314,9 +314,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         Wallet wallet = null;
         File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        // will get the context for this wallet.
-        Context context = new Context(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
-
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
             BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
@@ -330,6 +327,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             return wallet;
             }
          else {
+            // will get the context for this wallet.
+            Context context = new Context(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+
             wallet = new Wallet(context);
             wallet.importKeys(keyList);
 

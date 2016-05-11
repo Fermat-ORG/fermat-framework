@@ -27,7 +27,7 @@ public interface BitcoinNetworkConfiguration {
      * amount of blocks depth to consider transaction IRReversible
      */
     int IRREVERSIBLE_BLOCK_DEPTH = 3;
-    int MIN_BROADCAST_CONNECTIONS = 2;
+    int MIN_BROADCAST_CONNECTIONS = 1;
 
     /**
      * Amount of Timeout minutes for broadcasting transactions
