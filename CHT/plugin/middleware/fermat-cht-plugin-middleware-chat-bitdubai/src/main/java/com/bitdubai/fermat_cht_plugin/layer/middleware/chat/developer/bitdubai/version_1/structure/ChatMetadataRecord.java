@@ -28,7 +28,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     String chatName;
     ChatMessageStatus chatMessageStatus;
     MessageStatus messageStatus;
-    Timestamp date;
+    String date;
     UUID messageId;
     String message;
     DistributionStatus distributionStatus;
@@ -74,7 +74,7 @@ public class ChatMetadataRecord implements ChatMetadata {
             String chatName,
             ChatMessageStatus chatMessageStatus,
             MessageStatus messageStatus,
-            Timestamp date,
+            String date,
             UUID messageId,
             String message,
             DistributionStatus distributionStatus,
@@ -143,7 +143,7 @@ public class ChatMetadataRecord implements ChatMetadata {
     }
 
     @Override
-    public Timestamp getDate() {
+    public String getDate() {
         return this.date;
     }
 
@@ -220,7 +220,7 @@ public class ChatMetadataRecord implements ChatMetadata {
         this.chatMessageStatus = chatMessageStatus;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
