@@ -61,8 +61,7 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
 
         fermatManager = new CryptoCustomerActorNetworkServiceManager(
                 communicationsClientConnection         ,
-                errorManager                           ,
-                getPluginVersionReference()
+                this
         );
 
     }

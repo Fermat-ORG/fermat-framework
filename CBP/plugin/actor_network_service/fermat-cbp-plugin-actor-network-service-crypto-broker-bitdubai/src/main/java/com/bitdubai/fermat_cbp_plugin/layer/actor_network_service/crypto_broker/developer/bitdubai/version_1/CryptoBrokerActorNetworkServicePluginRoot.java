@@ -93,13 +93,12 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                     getCommunicationsClientConnection(),
                     cryptoBrokerActorNetworkServiceDao ,
                     this,
-                    errorManager                       ,
                     getPluginVersionReference()
             );
 
         } catch(final CantInitializeDatabaseException e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem initializing crypto broker ans dao.");
         }
     }
@@ -188,7 +187,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -250,7 +249,7 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
         try {
@@ -298,17 +297,17 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
                 eventManager.raiseEvent(eventToRaise);
             } catch (CantRequestQuotesException cantRequestQuotesException) {
 
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRequestQuotesException);
+                this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRequestQuotesException);
                 throw new CantHandleNewMessagesException(cantRequestQuotesException, "", "Error in Crypto Broker ANS Dao.");
             }
 
         } catch (CantFindRequestException e) {
             // i inform to error manager the error.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
         } catch (Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }
@@ -362,11 +361,11 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
         } catch(Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }
@@ -410,11 +409,11 @@ public class CryptoBrokerActorNetworkServicePluginRoot extends AbstractNetworkSe
 
         } catch(CantRequestConnectionException e) {
             // i inform to error manager the error.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
         } catch(Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }
