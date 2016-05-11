@@ -54,66 +54,109 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
     protected void bindHolder(CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
         //holder.connectionState.setVisibility(View.GONE);
         ConnectionState connectionState = data.getConnectionState();
-        if(connectionState != null && connectionState == ConnectionState.CONNECTED) {
-//
-//            switch (connectionState) {
-//                case CONNECTED:
-//                    if (holder.connectionState.getVisibility() == View.GONE)
-//                        holder.connectionState.setVisibility(View.VISIBLE);
-//                    break;
-//                case BLOCKED_LOCALLY:
-//                    break;
-//                case BLOCKED_REMOTELY:
-//                    break;
-//                case CANCELLED_LOCALLY:
-//                    break;
-//                case CANCELLED_REMOTELY:
+        if(connectionState != null) {
+            switch (connectionState) {
+                case CONNECTED:
+                        holder.connectedButton.setVisibility(View.VISIBLE);
+                        holder.blockedButton.setVisibility(View.GONE);
+                        holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case BLOCKED_LOCALLY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.VISIBLE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case BLOCKED_REMOTELY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.VISIBLE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case CANCELLED_LOCALLY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.VISIBLE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case CANCELLED_REMOTELY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.VISIBLE);
+                    holder.pendingButton.setVisibility(View.GONE);
 //                    if (holder.connectionState.getVisibility() == View.GONE) {
 //                        holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_no_conect
 //                        holder.connectionState.setVisibility(View.VISIBLE);
 //                    }
-//                    break;
-//                case NO_CONNECTED:
-//                    break;
-//                case DENIED_LOCALLY:
-//                    break;
-//                case DENIED_REMOTELY:
+                    break;
+                case NO_CONNECTED:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case DENIED_LOCALLY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.VISIBLE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case DENIED_REMOTELY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.VISIBLE);
+                    holder.pendingButton.setVisibility(View.GONE);
 //                    if (holder.connectionState.getVisibility() == View.GONE) {
 //                        holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_no_conect
 //                        holder.connectionState.setVisibility(View.VISIBLE);
 //                    }
-//                    break;
-//                case DISCONNECTED_LOCALLY:
-//                    break;
-//                case DISCONNECTED_REMOTELY:
-//                    break;
-//                case ERROR:
-//                    break;
-//                case INTRA_USER_NOT_FOUND:
-//                    break;
-//                case PENDING_LOCALLY_ACCEPTANCE:
-//                    break;
-//                case PENDING_REMOTELY_ACCEPTANCE:
+                    break;
+                case DISCONNECTED_LOCALLY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case DISCONNECTED_REMOTELY:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case ERROR:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case INTRA_USER_NOT_FOUND:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.GONE);
+                    break;
+                case PENDING_LOCALLY_ACCEPTANCE:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.VISIBLE);
+                    break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.VISIBLE);
 //                    if (holder.connectionState.getVisibility() == View.GONE) {
 //                        holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_standby
 //                        holder.connectionState.setVisibility(View.VISIBLE);
 //                    }
-//                    break;
-//                default:
+                    break;
+                default:
+                    holder.connectedButton.setVisibility(View.GONE);
+                    holder.blockedButton.setVisibility(View.GONE);
+                    holder.pendingButton.setVisibility(View.GONE);
 //                    if (holder.connectionState.getVisibility() == View.VISIBLE)
 //                        holder.connectionState.setVisibility(View.GONE);
-//                    break;
-//            }
+                    break;
+            }
             //holder.row_connection_state.setText(connectionState.toString());//data.getState()
 //            if(data.getConnectionState().toString().equals("Offline"))
 //                holder.row_connection_state.setTextColor(Color.RED);
 //            else
 //                holder.row_connection_state.setTextColor(Color.WHITE);
-        } else {
+        }
+// else {
 //            holder.row_connection_state.setText("Offline");
 //            holder.row_connection_state.setTextColor(Color.RED);
-           // holder.connectionState.setVisibility(View.GONE);
-        }
+//            holder.connectionState.setVisibility(View.GONE);
+//        }
 
 
         holder.name.setText(data.getAlias());

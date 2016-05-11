@@ -114,13 +114,16 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         }
 
         ChatActorCommunityInformation worldActor;
-        for(int i = 0; i < worldActorList.size(); i++)
-        {
-            worldActor = worldActorList.get(i);
-            for(ChatActorConnection connectedActor : actorConnections)
-            {
-                if(worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                    worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
+        if(actorConnections != null && worldActorList != null){
+            if(actorConnections.size() > 0 && worldActorList.size() > 0) {
+                for (int i = 0; i < worldActorList.size(); i++) {
+
+                    worldActor = worldActorList.get(i);
+                    for (ChatActorConnection connectedActor : actorConnections) {
+                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
+                            worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
+                    }
+                }
             }
         }
 

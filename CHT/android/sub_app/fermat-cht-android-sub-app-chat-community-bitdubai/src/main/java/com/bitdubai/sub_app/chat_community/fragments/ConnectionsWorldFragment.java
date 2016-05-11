@@ -240,7 +240,7 @@ public class ConnectionsWorldFragment
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
         return rootView;
@@ -292,7 +292,8 @@ public class ConnectionsWorldFragment
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+                    //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
                     ex.printStackTrace();
                 }
             });
@@ -486,15 +487,12 @@ public class ConnectionsWorldFragment
             if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 dataSetFiltered = new ArrayList<ChatActorCommunityInformation>();
                 for (ChatActorCommunityInformation chatUser : dataSet) {
-
                     if(chatUser.getAlias().toLowerCase().contains(charSequence.toString().toLowerCase()))
                         dataSetFiltered.add(chatUser);
                 }
             }
-
             else
                 dataSetFiltered = null;
-
         }
         return dataSetFiltered;
     }

@@ -270,11 +270,11 @@ public class ChatAdapterView extends LinearLayout {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                    try {
-                            chatManager.sendWritingStatus(chatId);
-                    } catch (CHTException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    chatManager.sendWritingStatus(chatId);
+                } catch (CHTException e) {
+                    e.printStackTrace();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -506,7 +506,7 @@ public class ChatAdapterView extends LinearLayout {
             public void onClick(View v) {
                 BackgroundAsyncTask sendMessageAsync = new BackgroundAsyncTask();
                 String messageText = messageET.getText().toString();
-                if (TextUtils.isEmpty(messageText)) {
+                if (TextUtils.isEmpty(messageText) || messageText.trim().length()==0) {
                     return;
                 }
 
