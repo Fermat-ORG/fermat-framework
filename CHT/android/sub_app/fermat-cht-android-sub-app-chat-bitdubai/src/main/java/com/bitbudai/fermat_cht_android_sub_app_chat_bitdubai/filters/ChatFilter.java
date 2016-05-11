@@ -15,8 +15,11 @@ import java.util.List;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/04/16.
  * @version 1.0
  */
-public class ChatFilter /*extends Filter*/ {
+public class ChatFilter {
 
+//    extends
+//} Filter {
+//
 //    private ArrayList<String> data;
 //    private ChatAdapter adapter;
 //

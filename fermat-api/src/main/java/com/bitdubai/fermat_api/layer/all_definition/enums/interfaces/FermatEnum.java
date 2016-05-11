@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum</code>
  * haves the representation of the basic functionality of a Fermat Enum.

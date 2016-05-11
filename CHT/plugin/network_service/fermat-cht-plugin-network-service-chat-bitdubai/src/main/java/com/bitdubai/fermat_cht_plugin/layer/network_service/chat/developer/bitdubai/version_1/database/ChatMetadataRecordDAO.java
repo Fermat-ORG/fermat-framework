@@ -39,8 +39,8 @@ import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdu
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.structure.ChatMetadataRecord;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -333,24 +333,18 @@ public class ChatMetadataRecordDAO implements DAO {
 
     public ChatMetadataRecord getNotificationByChatAndMessageId(UUID chatId,UUID messageId) throws CantGetNotificationException, NotificationNotFoundException, CantReadRecordDataBaseException {
 
+        DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
         if (chatId == null) {
-            throw new IllegalArgumentException("The id is required, can not be null");
+            OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME, messageId.toString(), DatabaseFilterType.EQUAL);
         }
-
-        if (messageId == null) {
-            throw new IllegalArgumentException("The id is required, can not be null");
+        else if (messageId == null) {
+            OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, chatId.toString(), DatabaseFilterType.EQUAL);
         }
+        else if(chatId == null && messageId == null) new IllegalArgumentException("The id is required, can not be null");
 
         ChatMetadataRecord chatMetadaTransactionRecord = null;
 
         try {
-
-            /*
-             * 1 - load the data base to memory with filter
-             */
-            DatabaseTable OUTGOINGMessageTable =  getDatabaseTable();
-            OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, chatId.toString(), DatabaseFilterType.EQUAL);
-            OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME, messageId.toString(), DatabaseFilterType.EQUAL);
             OUTGOINGMessageTable.loadToMemory();
 
             /*

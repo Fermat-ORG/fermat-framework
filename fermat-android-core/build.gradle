@@ -29,10 +29,10 @@ android {
 
     defaultConfig {
         applicationId "org.fermat"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 23
-        versionCode 35
-        versionName "0.68"
+        versionCode 45
+        versionName "0.72"
         multiDexEnabled true
     }
 
@@ -171,6 +171,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
-    compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
+    //compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
 }
