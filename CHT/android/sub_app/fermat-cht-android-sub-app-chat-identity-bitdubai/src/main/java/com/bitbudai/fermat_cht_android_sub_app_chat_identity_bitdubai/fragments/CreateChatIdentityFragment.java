@@ -144,7 +144,24 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
-
+        mBrokerName.setVisibility(View.GONE);
+        textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
+        textViewChtTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBrokerName.setVisibility(View.VISIBLE);
+                textViewChtTitle.setVisibility(View.GONE);
+            }
+        });
+      mChatConnectionState.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              if (mBrokerName.getVisibility() == View.VISIBLE) {
+                  mBrokerName.setVisibility(View.GONE);
+                  textViewChtTitle.setVisibility(View.VISIBLE);
+              }
+          }
+      });
         Bitmap bitmap = null;
         if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
         {
@@ -159,15 +176,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         createNewIdentityInBackDevice("onClick");
                     }
                 });
-                mBrokerName.requestFocus();
-                mBrokerName.performClick();
-                mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                       // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                    }
-                });
-
 
                 registerForContextMenu(mBrokerImage);
                 mBrokerImage.setOnClickListener(new View.OnClickListener() {
@@ -207,20 +215,22 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 String state = moduleManager.getIdentityChatUser().getConnectionState();
                 mChatConnectionState.setText(state);
-                mBrokerName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
-                mBrokerName.performClick();
-                botonG.setVisibility(View.GONE);
-                mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-                    @Override
-                    public void onFocusChange(View v, boolean hasFocus) {
-                        // getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        botonG.setVisibility(View.VISIBLE);
-                    }
-                });
-                mBrokerName.setOnClickListener(new View.OnClickListener() {
+                mBrokerName.setVisibility(View.GONE);
+                textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
+                textViewChtTitle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        botonG.setVisibility(View.VISIBLE);
+                        mBrokerName.setVisibility(View.VISIBLE);
+                        textViewChtTitle.setVisibility(View.GONE);
+                    }
+                });
+                mChatConnectionState.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mBrokerName.getVisibility() == View.VISIBLE) {
+                            mBrokerName.setVisibility(View.GONE);
+                            textViewChtTitle.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
                 botonG.setText("Save Changes");
