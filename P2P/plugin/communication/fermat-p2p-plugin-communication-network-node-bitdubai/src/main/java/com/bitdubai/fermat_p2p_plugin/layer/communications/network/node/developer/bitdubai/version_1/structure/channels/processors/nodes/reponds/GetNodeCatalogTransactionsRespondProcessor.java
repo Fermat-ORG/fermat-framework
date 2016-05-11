@@ -105,7 +105,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
                         LOG.info("Requesting more transactions.");
 
-                        GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest((int) totalRowInDb, 250);
+                        GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest((int) totalRowInDb+1, 250);
                         Package packageRespond = Package.createInstance(nodeCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                         /*
@@ -168,28 +168,33 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method insertNodesCatalog");
 
-        /*
-         * Create the NodesCatalog
-         */
-        NodesCatalog nodeCatalog = new NodesCatalog();
-        nodeCatalog.setIp(nodesCatalogTransaction.getIp());
-        nodeCatalog.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
-        nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
-        nodeCatalog.setName(nodesCatalogTransaction.getName());
-        nodeCatalog.setOfflineCounter(0);
-        nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-        nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
-        nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
-        nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
+        if (!getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())){
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalog nodeCatalog = new NodesCatalog();
+            nodeCatalog.setIp(nodesCatalogTransaction.getIp());
+            nodeCatalog.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
+            nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
+            nodeCatalog.setName(nodesCatalogTransaction.getName());
+            nodeCatalog.setOfflineCounter(0);
+            nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
+            nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
+            nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
+            nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
+
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+
+        }
+
     }
 
     /**
