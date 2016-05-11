@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
@@ -43,6 +44,9 @@ import java.util.List;
 /**
  * Created by loui on 20/02/15.
  */
+
+@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+
 public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         OutgoingIntraActorManager {
@@ -50,9 +54,6 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
     private BitcoinWalletManager bitcoinWalletManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
@@ -114,7 +115,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
      */
     @Override
     public IntraActorCryptoTransactionManager getTransactionManager() throws CantGetOutgoingIntraActorTransactionManagerException {
-        return new OutgoingIntraActorTransactionManager(this.pluginId,this.errorManager,this.bitcoinWalletManager,this.pluginDatabaseSystem,lossProtectedWalletManager);
+        return new OutgoingIntraActorTransactionManager(this.pluginId,getErrorManager(),this.bitcoinWalletManager,this.pluginDatabaseSystem,lossProtectedWalletManager);
     }
 
     @Override
@@ -128,10 +129,10 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     @Override
     public void start() {
         try {
-            this.outgoingIntraActorDao = new OutgoingIntraActorDao(this.errorManager, this.pluginDatabaseSystem);
+            this.outgoingIntraActorDao = new OutgoingIntraActorDao(getErrorManager(), this.pluginDatabaseSystem);
             this.outgoingIntraActorDao.initialize(this.pluginId);
             this.transactionHandlerFactory = new OutgoingIntraActorTransactionHandlerFactory(this.eventManager,this.bitcoinWalletManager, this.outgoingIntraActorDao,this.lossProtectedWalletManager);
-            this.transactionProcessorAgent = new OutgoingIntraActorTransactionProcessorAgent(this.errorManager,
+            this.transactionProcessorAgent = new OutgoingIntraActorTransactionProcessorAgent(getErrorManager(),
                                                                                             this.cryptoVaultManager,
                                                                                             this.bitcoinNetworkManager,
                                                                                             this.bitcoinWalletManager,
@@ -153,7 +154,7 @@ public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin impl
     }
 
     private void reportUnexpectedException(Exception e) {
-        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CCP_OUTGOING_INTRA_ACTOR_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
     }
 
     @Override

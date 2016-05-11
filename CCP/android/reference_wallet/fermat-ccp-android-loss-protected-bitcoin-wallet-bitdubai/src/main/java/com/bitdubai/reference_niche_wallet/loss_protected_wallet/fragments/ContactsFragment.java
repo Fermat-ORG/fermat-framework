@@ -172,7 +172,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.contact_detail_main, container, false);
+            rootView = inflater.inflate(R.layout.loss_conctact_list_main, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
@@ -208,37 +208,45 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         return container;
     }
 
+    private SubActionButton button1;
+    private SubActionButton button2;
+    private com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
+    private FloatingActionMenu actionMenu;
     @SuppressWarnings("ResourceType")
     private void setUpFAB() {
         // in Activity Context
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
         frameLayout.setLayoutParams(lbs);
 
         ImageView icon = new ImageView(getActivity());
         frameLayout.addView(icon);
-        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
-        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
-        // repeat many times:
-        ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.drawable.extra_user_button);
 
-        SubActionButton button1 = itemBuilder.setContentView(itemIcon).setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button)).setText("External User").build();
+        SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
+
+        ImageView itemIcon = new ImageView(getActivity());
+        itemIcon.setImageResource(R.drawable.loss_externaluser_button);
+        button1 = itemBuilder
+                .setContentView(itemIcon)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.loss_externaluser_button))
+                .setText("External User")
+                .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
-
         ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.drawable.intra_user_button);
-        SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button)).setText("Fermat User").build();
+        itemIcon2.setImageResource(R.drawable.loss_fermatuser_button);
+        button2 = itemBuilder.setContentView(itemIcon2)
+                .setBackgroundDrawable(getResources().getDrawable(R.drawable.loss_fermatuser_button))
+                .setText("Fermat User")
+                .build();
         button2.setId(ID_BTN_INTRA_USER);
 
-
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+        actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(button1)
                 .addSubActionView(button2)
                 .attachTo(actionButton)
@@ -246,7 +254,6 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         button1.setOnClickListener(this);
         button2.setOnClickListener(this);
-
     }
 
     @Override
@@ -259,6 +266,20 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         }
     }
 
+    @Override
+    public void onDrawerOpen() {
+        actionButton.setVisibility(View.GONE);
+        button1.setVisibility(View.GONE);
+        button2.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onDrawerClose() {
+        FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+        actionButton.setVisibility(View.VISIBLE);
+        button1.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);
+    }
 
     @Override
     public void onStart() {

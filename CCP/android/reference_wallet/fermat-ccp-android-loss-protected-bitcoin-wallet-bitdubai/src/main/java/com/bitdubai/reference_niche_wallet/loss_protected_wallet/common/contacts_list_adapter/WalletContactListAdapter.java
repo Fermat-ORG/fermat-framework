@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,7 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
         if (v == null) {
             LayoutInflater vi;
             vi = LayoutInflater.from(getContext());
-            v = vi.inflate(R.layout.wallets_bitcoin_fragment_contacts_list_item, null);
+            v = vi.inflate(R.layout.loss_contact_list_main_row, null);
         }
         if(position>=1){
             v.findViewById(R.id.separator_line).setVisibility(View.VISIBLE);
