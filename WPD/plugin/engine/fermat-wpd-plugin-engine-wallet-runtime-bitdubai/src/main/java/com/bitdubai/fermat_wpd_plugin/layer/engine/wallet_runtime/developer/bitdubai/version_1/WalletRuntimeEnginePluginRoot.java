@@ -4920,9 +4920,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip.setTabsColor("#06356f");
 
-        runtimeTabStrip.setTabsTextColor("#b9bfcd");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
-        runtimeTabStrip.setTabsIndicateColor("#12aca1");
+        runtimeTabStrip.setTabsIndicateColor("#DC5A0F");
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
@@ -4991,7 +4991,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip.setTabsTextColor("#b9bfcd");
 
-        runtimeTabStrip.setTabsIndicateColor("#12aca1");
+        runtimeTabStrip.setTabsIndicateColor("#DC5A0F");
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("sent");
@@ -5045,8 +5045,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#073487");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#073487");
-        //runtimeActivity.setColor("#d07b62");
+
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#073487");
@@ -5088,8 +5087,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setColor("#073487");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#073487");
-        //runtimeActivity.setColor("#d07b62");
+
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#073487");
@@ -5167,11 +5165,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
-        runtimeHeader = new Header();
-        runtimeHeader.setLabel("Chunck Values");
-        runtimeActivity.setHeader(runtimeHeader);
-
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Chunk Value");
         runtimeTitleBar.setLabelSize(16);
@@ -5187,15 +5180,15 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip = new TabStrip();
 
-       runtimeTabStrip.setTabsColor("#1173aa");
+        runtimeTabStrip.setTabsColor("#1173aa");
 
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
-        runtimeHeader = new Header();
+        /*runtimeHeader = new Header();
         runtimeHeader.setLabel("Balance");
-        runtimeActivity.setHeader(runtimeHeader);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
@@ -5228,7 +5221,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setColor("#073487");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
+        //runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#073487");
         //runtimeActivity.setColor("#d07b62");
@@ -5238,9 +5231,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeHeader = new Header();
+        /*runtimeHeader = new Header();
         runtimeHeader.setLabel("Chunck Detail Header");
-        runtimeActivity.setHeader(runtimeHeader);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
 
         runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT.getKey());
@@ -5336,7 +5329,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();
@@ -5685,12 +5678,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
+       /* runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Send Btc to wallets");
         runtimeMenuItem.setIcon("request");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_SEND_WALLET);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Payment requests");

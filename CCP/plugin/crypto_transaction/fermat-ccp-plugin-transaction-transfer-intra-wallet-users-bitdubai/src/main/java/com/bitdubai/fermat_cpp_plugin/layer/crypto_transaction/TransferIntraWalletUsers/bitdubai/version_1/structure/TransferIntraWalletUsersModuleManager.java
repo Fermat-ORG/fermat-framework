@@ -46,19 +46,18 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
     private final BitcoinWalletManager bitcoinWalletManager;
     private final ErrorManager errorManager;
     private final TransferIntraWalletUsersDao dao;
-    private final Broadcaster broadcaster;
+
 
 
     public TransferIntraWalletUsersModuleManager(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
                                                  final BitcoinWalletManager bitcoinWalletManager,
                                                  final ErrorManager errorManager,
-                                                 final TransferIntraWalletUsersDao dao,
-                                                 final Broadcaster broadcaster) {
+                                                 final TransferIntraWalletUsersDao dao
+                                                ) {
         this.bitcoinLossWalletManager = bitcoinLossWalletManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.errorManager = errorManager;
         this.dao = dao;
-        this.broadcaster = broadcaster;
     }
 
 
@@ -154,7 +153,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             //change transaction state to reversed and update balance to revert
                             bitcoinWalletWallet.revertTransaction(bitcoinWalletTransactionWalletRecord, false);
                             dao.setToError(transferIntraWalletUsersWrapper);
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                            //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
                         }
@@ -164,7 +163,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
 
                     } else {
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                       // broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
                         //change transaction state to error
                         dao.setToError(transferIntraWalletUsersWrapper);
                         //There are not enough funds to perform this transaction
@@ -222,7 +221,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             } catch (CantReceiveWalletTransactionException e){
 
                                 bitcoinLossProtectedWallet.revertTransaction(bitcoinLossProtectedWalletTransactionWalletRecord2, false);
-                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                                //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                                 dao.setToError(transferIntraWalletUsersWrapper);
                                 throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
@@ -235,7 +234,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                     } else {
                         dao.setToError(transferIntraWalletUsersWrapper);
                         //There are not enough funds to perform this transaction
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                        //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                         throw new TransferIntraWalletUsersNotEnoughFundsException("There are not enough funds to perform this transaction", null, "", "NotEnoughFunds");
                     }
@@ -262,6 +261,10 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantLoadTableToMemoryException e) {
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        }
+        catch(TransferIntraWalletUsersNotEnoughFundsException e){
+            throw new TransferIntraWalletUsersNotEnoughFundsException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Not Enough Funds Exception");
+
         }
         catch (Exception e){
             throw new CantSendTransactionException("I could not send the transaction", FermatException.wrapException(e), "TransferIntraWalletUsersModuleManager", "unknown reason");
