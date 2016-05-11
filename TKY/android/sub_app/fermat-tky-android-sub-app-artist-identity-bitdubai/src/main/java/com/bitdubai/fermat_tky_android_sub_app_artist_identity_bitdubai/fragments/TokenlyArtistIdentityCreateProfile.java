@@ -104,8 +104,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private ProgressDialog tokenlyRequestDialog;
-    private View WarningCircle;
-    private TextView WarningLabel;
+    //private View WarningCircle;
+    //private TextView WarningLabel;
     private String WarningColor = "#DF0101";
 
     private Handler handler;
@@ -215,12 +215,12 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         TextView text2 = (TextView) layout.findViewById(R.id.exposure_level_label);
         TextView text3 = (TextView) layout.findViewById(R.id.artist_accept_connections_type_label);
 
-        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+        //WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
 
-        WarningCircle.setVisibility(View.GONE);
+        //WarningCircle.setVisibility(View.GONE);
 
-        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
-        WarningLabel.setVisibility(View.GONE);
+        //WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        //WarningLabel.setVisibility(View.GONE);
 
         text.setTextColor(Color.parseColor("#000000"));
         text2.setTextColor(Color.parseColor("#000000"));
@@ -253,8 +253,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         ArtistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WarningCircle.setVisibility(View.GONE);
-                WarningLabel.setVisibility(View.GONE);
+                //WarningCircle.setVisibility(View.GONE);
+                //WarningLabel.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
                 getActivity().openContextMenu(ArtistImage);
             }
@@ -521,19 +521,17 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
 
         if (ArtistExternalName.isEmpty()){
-            mArtistExternalUserName.setHint("Username");
             mArtistExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (ArtistPassWord.isEmpty()){
-            mArtistExternalPassword.setHint("Password");
             mArtistExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
         }
 
-        if (ArtistImageBytes == null){
+        /*if (ArtistImageBytes == null){
             WarningLabel.setVisibility(View.VISIBLE);
            // WarningCircle.setVisibility(View.VISIBLE);
-        }
+        }*/
 
 
     }

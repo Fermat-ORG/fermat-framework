@@ -96,8 +96,8 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
     private ProgressDialog tokenlyRequestDialog;
-    private View WarningCircle;
-    private TextView WarningLabel;
+    //private View WarningCircle;
+    //private TextView WarningLabel;
     private String WarningColor = "#DF0101";
 
 
@@ -257,19 +257,19 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         mFanExternalUserName.requestFocus();
         mFanExternalPlatform.setVisibility(View.GONE);
 
-        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
-        WarningCircle.setVisibility(View.GONE);
+        //WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+        //WarningCircle.setVisibility(View.GONE);
 
-        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
-        WarningLabel.setVisibility(View.GONE);
+        //WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        //WarningLabel.setVisibility(View.GONE);
 
 
         registerForContextMenu(fanImage);
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WarningLabel.setVisibility(View.GONE);
-                WarningCircle.setVisibility(View.GONE);
+                //WarningLabel.setVisibility(View.GONE);
+                //WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
             }
@@ -416,10 +416,10 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             mFanExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
         }
 
-        if (fanImageBytes == null){
+        /*if (fanImageBytes == null){
                 WarningLabel.setVisibility(View.VISIBLE);
            // WarningCircle.setVisibility(View.VISIBLE);
-        }
+        }*/
 
 
     }
