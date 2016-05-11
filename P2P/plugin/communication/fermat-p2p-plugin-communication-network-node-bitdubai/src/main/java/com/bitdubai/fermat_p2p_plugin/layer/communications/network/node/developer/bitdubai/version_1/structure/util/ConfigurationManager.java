@@ -151,7 +151,7 @@ public class ConfigurationManager {
 
         PropertiesConfiguration newConfigurationFile = new PropertiesConfiguration();
         newConfigurationFile.setFile(file);
-        newConfigurationFile.setHeader("# ***********************************\n# * CLOUD SERVER CONFIGURATION FILE *\n# * www.fermat.org                  *\n# ***********************************");
+        newConfigurationFile.setHeader("# ***********************************\n# * NETWORK NODE CONFIGURATION FILE (V2) *\n# * www.fermat.org                  *\n# ***********************************");
 
         newConfigurationFile.getLayout().setComment(IDENTITY_PUBLIC_KEY, "\n# * SERVER IDENTITY PUBLIC KEY");
         newConfigurationFile.addProperty(IDENTITY_PUBLIC_KEY, identityPublicKey);
