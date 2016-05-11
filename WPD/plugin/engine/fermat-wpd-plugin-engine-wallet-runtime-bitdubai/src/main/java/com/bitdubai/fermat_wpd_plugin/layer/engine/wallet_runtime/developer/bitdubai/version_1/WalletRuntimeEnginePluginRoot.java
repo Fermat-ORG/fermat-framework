@@ -3741,6 +3741,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         TitleBar runtimeTitleBar;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
+        Header runtimeHeader;
         final String publicKey = WalletsPublicKeys.TKY_FAN_WALLET.getCode();
         final String statusBarColor = "#000000";
         final String titleBarLabelColor = "#000000";
@@ -3773,14 +3774,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        /*runtimeHeader = new Header();
-        runtimeHeader.setLabel("Market rate");
-        runtimeHeader.setHasExpandable(true);
-        runtimeActivity.setHeader(runtimeHeader);*/
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("root");
+        runtimeHeader.setHasExpandable(false);
+        runtimeActivity.setHeader(runtimeHeader);
 
-        /*runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);*/
 
 
         runtimeTabStrip = new TabStrip();
