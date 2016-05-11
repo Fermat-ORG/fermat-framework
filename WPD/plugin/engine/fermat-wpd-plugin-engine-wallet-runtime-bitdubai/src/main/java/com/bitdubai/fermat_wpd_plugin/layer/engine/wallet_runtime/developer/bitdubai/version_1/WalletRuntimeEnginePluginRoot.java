@@ -293,6 +293,17 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     @Override
     public Set<String> getListOfAppsPublicKey() {
+        try{
+            WalletNavigationStructure walletNavigationStructure = startWalletNavigationStructure();
+            lstWalletNavigationStructureOpen.put (WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),walletNavigationStructure);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            factoryReset();
+        } catch (CantFactoryReset cantFactoryReset) {
+            cantFactoryReset.printStackTrace();
+        }
         return lstWalletNavigationStructureOpen.keySet();
     }
 

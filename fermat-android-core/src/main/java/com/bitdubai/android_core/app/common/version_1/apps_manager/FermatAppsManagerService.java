@@ -236,6 +236,9 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }else{
             Log.e(TAG,"App instaled in device null: "+appPublicKey);
             Log.e(TAG,"If the public key of the app is fine, try removing data and restart app. filesystem problem..");
+            if(appPublicKey.equals("main_desktop")){
+                return selectRuntimeManager(FermatAppType.DESKTOP).getLastApp();
+            }
             return null;
         }
     }
