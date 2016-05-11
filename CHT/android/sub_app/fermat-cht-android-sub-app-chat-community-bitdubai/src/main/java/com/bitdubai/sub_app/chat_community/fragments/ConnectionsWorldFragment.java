@@ -335,7 +335,7 @@ public class ConnectionsWorldFragment
             dataSet.addAll(result);
             offset = dataSet.size();
         } catch (Exception e) {
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         return dataSet;
     }
