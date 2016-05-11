@@ -138,7 +138,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      * Constants
      * */
     private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 2;
-    private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 2;
+    private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 0;
 
     public static HomeFragment newInstance(){ return new HomeFragment(); }
 
