@@ -281,7 +281,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
-                tokenlyRequestDialog = new ProgressDialog(getContext());
+                tokenlyRequestDialog = new ProgressDialog(getActivity());
                 tokenlyRequestDialog.setMessage("Please Wait");
                 tokenlyRequestDialog.setTitle("Connecting to Tokenly");
                 tokenlyRequestDialog.show();
@@ -294,13 +294,13 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                                 case CREATE_IDENTITY_SUCCESS:
                                     break;
                                 case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                                    Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Create identity Error", Toast.LENGTH_LONG).show();
                                     break;
                                 case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                                    Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Invalid data", Toast.LENGTH_LONG).show();
                                     break;
                                 case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                                    Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), "Could not access module manager, it's null", Toast.LENGTH_LONG).show();
                                     break;
                             }
                         } else {
@@ -451,7 +451,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading picture", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
