@@ -3,10 +3,8 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.
 import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.constants.BankWalletBroadcasterConstants;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
@@ -14,8 +12,6 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exceptions.CantMakeWithdrawTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
@@ -31,7 +27,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by memo on 08/12/15.
@@ -41,35 +36,26 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     private final BankMoneyWalletManager bankMoneyWalletManager;
     private final DepositManager depositManager;
     private final WithdrawManager withdrawManager;
-    private final HoldManager holdManager;
-    private final UnholdManager unholdManager;
-    private PluginFileSystem pluginFileSystem;
     private final Broadcaster broadcaster;
-    private UUID pluginId;
 
-    private String publicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
     private BankTransactionParametersImpl tempLastParameter;
 
-    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager, PluginFileSystem pluginFileSystem, UUID pluginId,Broadcaster broadcaster) {
+    public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, Broadcaster broadcaster) {
         this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.depositManager = depositManager;
         this.withdrawManager = withdrawManager;
-        this.holdManager = holdManager;
-        this.unholdManager = unholdManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
         this.broadcaster = broadcaster;
     }
 
     @Override
     public List<BankAccountNumber> getAccounts()throws CantLoadBankMoneyWalletException{
-        return bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getAccounts();
+        return bankMoneyWalletManager.getAccounts();
     }
 
     @Override
     public void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency) {
         try {
-            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency));
+            bankMoneyWalletManager.addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency));
         }catch (Exception e){
 
         }
@@ -79,13 +65,10 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     public List<BankMoneyTransactionRecord> getTransactions(String account)throws CantLoadBankMoneyWalletException{
         List<BankMoneyTransactionRecord> transactionRecords = new ArrayList<>();
         try{
-            transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.CREDIT, 100, 0, account));
-            transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.DEBIT, 100, 0, account));
-            transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.HOLD, 100, 0, account));
-            transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.UNHOLD, 100, 0, account));
-            /*transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.HOLD, 100, 0, account));
-            transactionRecords.addAll(bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getTransactions(TransactionType.UNHOLD, 100, 0, account));
-            */
+            transactionRecords.addAll(bankMoneyWalletManager.getTransactions(TransactionType.CREDIT, 100, 0, account));
+            transactionRecords.addAll(bankMoneyWalletManager.getTransactions(TransactionType.DEBIT, 100, 0, account));
+            transactionRecords.addAll(bankMoneyWalletManager.getTransactions(TransactionType.HOLD, 100, 0, account));
+            transactionRecords.addAll(bankMoneyWalletManager.getTransactions(TransactionType.UNHOLD, 100, 0, account));
             //TODO: mostrar los hold y unhold???
             Collections.sort(transactionRecords, new Comparator<BankMoneyTransactionRecord>() {
                 @Override
@@ -120,7 +103,7 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     public float getBookBalance(String account) {
         float balance =0;
         try {
-            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBookBalance().getBalance(account);
+            balance = (float)bankMoneyWalletManager.getBookBalance().getBalance(account);
         }catch (Exception e){
             System.out.println("execption "+e.getMessage());
         }
@@ -131,7 +114,7 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     public float getAvailableBalance(String account) {
         float balance =0;
         try {
-            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getAvailableBalance().getBalance(account);
+            balance = (float)bankMoneyWalletManager.getAvailableBalance().getBalance(account);
         }catch (Exception e){
             System.out.println("exception "+e.getMessage());
         }
@@ -140,21 +123,12 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
 
     @Override
     public void createBankName(String bankName) {
-        try {
-            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).createBankName(bankName);
-        }catch (FermatException e){
-            System.out.println("exception "+e.getMessage());
-        }
+        bankMoneyWalletManager.createBankName(bankName);
     }
 
     @Override
     public String getBankName() {
-        try {
-            return  bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBankName();
-        }catch (FermatException e){
-            System.out.println("exception "+e.getMessage());
-        }
-        return null;
+        return  bankMoneyWalletManager.getBankName();
     }
 
 

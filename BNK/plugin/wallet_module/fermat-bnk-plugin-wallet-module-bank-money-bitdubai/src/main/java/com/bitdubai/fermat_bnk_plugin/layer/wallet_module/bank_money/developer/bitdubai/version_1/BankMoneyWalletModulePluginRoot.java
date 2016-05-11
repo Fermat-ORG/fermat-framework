@@ -86,8 +86,6 @@ public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWal
                     bankMoneyWalletManager,
                     depositManager,
                     withdrawManager,
-                    holdManager,
-                    unholdManager,
                     pluginFileSystem,
                     pluginId,
                     broadcaster);
