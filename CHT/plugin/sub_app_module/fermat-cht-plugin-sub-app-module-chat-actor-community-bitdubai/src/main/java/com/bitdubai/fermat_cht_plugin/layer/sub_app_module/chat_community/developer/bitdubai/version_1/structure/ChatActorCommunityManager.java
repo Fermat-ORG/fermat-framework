@@ -113,13 +113,16 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         }
 
         ChatActorCommunityInformation worldActor;
-        for(int i = 0; i < worldActorList.size(); i++)
-        {
-            worldActor = worldActorList.get(i);
-            for(ChatActorConnection connectedActor : actorConnections)
-            {
-                if(worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                    worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
+        if(actorConnections != null && worldActorList != null){
+            if(actorConnections.size() > 0 && worldActorList.size() > 0) {
+                for (int i = 0; i < worldActorList.size(); i++) {
+
+                    worldActor = worldActorList.get(i);
+                    for (ChatActorConnection connectedActor : actorConnections) {
+                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
+                            worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
+                    }
+                }
             }
         }
 
@@ -453,10 +456,10 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                 appSettings = new ChatActorCommunitySettings();
                 this.getSettingsManager().persistSettings(this.subAppPublicKey, appSettings);
             } catch (CantPersistSettingsException e1) {
-                chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                e1.printStackTrace();
+                //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                //e1.printStackTrace();
             }
-            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return null;
         }
 
