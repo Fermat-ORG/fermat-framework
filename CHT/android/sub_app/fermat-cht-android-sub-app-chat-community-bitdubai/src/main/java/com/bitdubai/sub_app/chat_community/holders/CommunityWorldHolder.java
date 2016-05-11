@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -19,6 +20,9 @@ public class CommunityWorldHolder extends FermatViewHolder {
     public TextView name;
     public ImageView connectionState;
     public TextView row_connection_state;
+    public RadioButton connectedButton;
+    public RadioButton blockedButton;
+    public RadioButton pendingButton;
 
     /**
      * Constructor
@@ -28,6 +32,9 @@ public class CommunityWorldHolder extends FermatViewHolder {
     public CommunityWorldHolder(View itemView) {
         super(itemView);
         //connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
+        connectedButton = (RadioButton) itemView.findViewById(R.id.connectedButton);
+        blockedButton = (RadioButton) itemView.findViewById(R.id.blockedButton);
+        pendingButton = (RadioButton) itemView.findViewById(R.id.pendingButton);
         row_connection_state = (TextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (ImageView) itemView.findViewById(R.id.profile_image);
         name = (TextView) itemView.findViewById(R.id.community_name);

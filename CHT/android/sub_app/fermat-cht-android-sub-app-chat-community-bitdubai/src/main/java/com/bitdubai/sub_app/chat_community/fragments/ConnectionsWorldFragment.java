@@ -487,15 +487,12 @@ public class ConnectionsWorldFragment
             if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 dataSetFiltered = new ArrayList<ChatActorCommunityInformation>();
                 for (ChatActorCommunityInformation chatUser : dataSet) {
-
                     if(chatUser.getAlias().toLowerCase().contains(charSequence.toString().toLowerCase()))
                         dataSetFiltered.add(chatUser);
                 }
             }
-
             else
                 dataSetFiltered = null;
-
         }
         return dataSetFiltered;
     }
