@@ -138,7 +138,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      * Constants
      * */
     private int EARN_AND_LOST_MAX_DECIMAL_FORMAT = 2;
-    private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 2;
+    private int EARN_AND_LOST_MIN_DECIMAL_FORMAT = 0;
 
     public static HomeFragment newInstance(){ return new HomeFragment(); }
 
@@ -401,7 +401,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 txt_earnOrLost.setText("USD "+
                         WalletUtils.formatAmountStringWithDecimalEntry(
-                                totalEarnedAndLostForToday * 1,
+                                totalEarnedAndLostForToday,
                                 EARN_AND_LOST_MAX_DECIMAL_FORMAT,
                                 EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" earned");
 
@@ -414,11 +414,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             }else if (totalEarnedAndLostForToday< 0){
 
-                txt_earnOrLost.setText("USD "+
-                        WalletUtils.formatAmountStringWithDecimalEntry(
-                                totalEarnedAndLostForToday,
-                                EARN_AND_LOST_MAX_DECIMAL_FORMAT,
-                                EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
+                txt_earnOrLost.setText("USD "+WalletUtils.formatAmountStringWithDecimalEntry(
+                            totalEarnedAndLostForToday*-1,
+                            EARN_AND_LOST_MAX_DECIMAL_FORMAT,
+                            EARN_AND_LOST_MIN_DECIMAL_FORMAT)+" lost");
+
+
 
                 earnOrLostImage.setBackgroundResource(R.drawable.lost_icon);
 

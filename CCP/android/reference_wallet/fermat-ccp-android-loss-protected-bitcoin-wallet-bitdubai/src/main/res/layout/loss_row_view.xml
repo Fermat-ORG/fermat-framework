@@ -19,9 +19,8 @@
 
         <ImageView
             android:id="@+id/imageView_contact"
-            android:layout_width="110dp"
-            android:layout_height="40dp"
-            android:layout_weight="0.6"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@drawable/circle_border"
             tools:src="@drawable/profile_image_male_lossp" />
 
