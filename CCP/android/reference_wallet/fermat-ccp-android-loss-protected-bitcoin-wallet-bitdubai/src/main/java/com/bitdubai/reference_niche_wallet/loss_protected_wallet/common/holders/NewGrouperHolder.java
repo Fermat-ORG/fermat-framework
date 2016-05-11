@@ -42,14 +42,8 @@ public class NewGrouperHolder extends ParentViewHolder {
     public ImageView mArrowExpandImageView;
     Resources res;
     private View itemView;
-    private ImageView contactIcon;
-    private TextView txt_contactName;
     private TextView txt_amount;
-    private TextView txt_notes;
     private TextView txt_time;
-    private TextView txt_total_number_transactions;
-    private TextView txt_total_balance;
-
     /**
      * Public constructor for the CustomViewHolder.
      *
@@ -61,13 +55,8 @@ public class NewGrouperHolder extends ParentViewHolder {
         this.res = res;
         this.itemView = itemView;
 
-        txt_contactName = (TextView) itemView.findViewById(R.id.txt_contactName2);
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount2);
-        txt_notes = (TextView) itemView.findViewById(R.id.txt_notes2);
         txt_time = (TextView) itemView.findViewById(R.id.txt_time2);
-
-        txt_total_balance = (TextView) itemView.findViewById(R.id.txt_total_balance2);
-        txt_total_number_transactions = (TextView) itemView.findViewById(R.id.txt_total_number_transactions2);
         mArrowExpandImageView = (ImageView) itemView.findViewById(R.id.cbw_arrow2);
     }
 
@@ -78,29 +67,11 @@ public class NewGrouperHolder extends ParentViewHolder {
     public void bind(int childCount,LossProtectedWalletTransaction lossProtectedWalletTransaction) {
 
 
-        String contactName = "Uninformed";
-
-        //involved actor is not a wallet contact
-        if(lossProtectedWalletTransaction.getInvolvedActor() != null)
-        {
-            contactName = lossProtectedWalletTransaction.getInvolvedActor().getName();
-        }else{
-            if (lossProtectedWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
-                contactName = "Intra Wallet Transaction";
-            }
-        }
-
-        txt_contactName.setText(contactName);
-        txt_amount.setText(formatBalanceString(lossProtectedWalletTransaction.getAmount() , ShowMoneyType.BITCOIN.getCode())+ " btc");
-
-        txt_notes.setText(lossProtectedWalletTransaction.getMemo());
+        txt_amount.setText(formatBalanceString(lossProtectedWalletTransaction.getAmount() , ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
         txt_time.setText(sdf.format(lossProtectedWalletTransaction.getTimestamp()) + " hs");
-        txt_total_number_transactions.setText(String.valueOf(childCount)+ " records");
 
-        //TODO me falta el total
-        //txt_total_balance.setText();
     }
 
 

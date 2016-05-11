@@ -102,7 +102,6 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
         lossWalletSession = (LossProtectedWalletSession)appSession;
 
         lst = new ArrayList<LossProtectedWalletTransaction>();
-        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0); //get init data
 
         try {
             cryptoWallet = lossWalletSession.getModuleManager().getCryptoWallet();
@@ -259,9 +258,7 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
 
 
                     for (LossProtectedWalletTransaction cryptoWalletTransaction : list) {
-                        List<LossProtectedWalletTransaction> lst = cryptoWallet.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
-
-                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
+                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(cryptoWalletTransaction, false, cryptoWalletTransaction);
                         data.add(grouperItem);
                     }
 

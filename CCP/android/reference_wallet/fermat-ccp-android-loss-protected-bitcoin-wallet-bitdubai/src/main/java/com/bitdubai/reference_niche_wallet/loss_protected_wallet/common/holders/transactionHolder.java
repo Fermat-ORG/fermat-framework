@@ -25,11 +25,10 @@ public class transactionHolder extends ChildViewHolder {
     private Resources res;
     private View itemView;
 
-    private TextView txt_amount;
+    private TextView txt_from;
     private TextView txt_notes;
-    private TextView txt_time;
 
-
+    String contactName = "Uninformed";
 
     /**
      * Public constructor for the custom child ViewHolder
@@ -43,22 +42,23 @@ public class transactionHolder extends ChildViewHolder {
         res = itemView.getResources();
         container_sub_item = (LinearLayout) itemView.findViewById(R.id.container_sub_item3);
 
-        txt_amount = (TextView) itemView.findViewById(R.id.txt_amount3);
+        txt_from = (TextView) itemView.findViewById(R.id.from);
         txt_notes = (TextView) itemView.findViewById(R.id.txt_notes3);
-        txt_time = (TextView) itemView.findViewById(R.id.txt_time3);
     }
 
     public void bind(LossProtectedWalletTransaction lossProtectedWalletTransaction) {
 
         if (lossProtectedWalletTransaction.getActorFromPublicKey() != null){
-            txt_amount.setText(formatBalanceString(lossProtectedWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode())+ " btc");
+            if(lossProtectedWalletTransaction.getInvolvedActor()!=null)
+            txt_from.setText(lossProtectedWalletTransaction.getInvolvedActor().getName());
+            else
+                txt_from.setText(contactName);
+
 
             if(lossProtectedWalletTransaction.getTransactionState().equals(TransactionState.REVERSED))
                 txt_notes.setText((lossProtectedWalletTransaction.getMemo()==null) ? "No information" : lossProtectedWalletTransaction.getMemo() + "(Reversed)");
             else
                 txt_notes.setText((lossProtectedWalletTransaction.getMemo()==null) ? "No information" : lossProtectedWalletTransaction.getMemo());
-            SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
-            txt_time.setText(sdf.format(lossProtectedWalletTransaction.getTimestamp())+ " hs");
         }else{
             container_sub_item.setVisibility(View.GONE);
         }
