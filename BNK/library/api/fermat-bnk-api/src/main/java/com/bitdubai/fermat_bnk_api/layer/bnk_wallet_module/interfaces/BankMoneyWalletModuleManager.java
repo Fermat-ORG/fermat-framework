@@ -21,7 +21,7 @@ import java.util.List;
  * Created by memo on 04/12/15.
  */
 public interface BankMoneyWalletModuleManager extends ModuleManager<BankMoneyWalletPreferenceSettings, ActiveActorIdentityInformation>,
-        ModuleSettingsImpl<BankMoneyWalletPreferenceSettings>, Serializable{
+        ModuleSettingsImpl<BankMoneyWalletPreferenceSettings>, Serializable {
 
     List<BankAccountNumber> getAccounts() throws CantLoadBankMoneyWalletException;
 

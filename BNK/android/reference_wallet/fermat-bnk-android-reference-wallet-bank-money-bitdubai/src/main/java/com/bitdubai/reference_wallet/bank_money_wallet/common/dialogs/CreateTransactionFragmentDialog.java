@@ -198,7 +198,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
+                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
                     }
 
                     @Override
@@ -208,8 +208,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public BigDecimal getAmount() {
-                        BigDecimal bAmount=new BigDecimal(amountText.getText().toString());
-                        return bAmount;
+                        return new BigDecimal(amountText.getText().toString());
                     }
 
                     @Override
@@ -245,7 +244,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
+                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
                     }
 
                     @Override
@@ -255,8 +254,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public BigDecimal getAmount() {
-                        BigDecimal bAmount=new BigDecimal(amountText.getText().toString());
-                        return bAmount;
+                        return new BigDecimal(amountText.getText().toString());
                     }
 
                     @Override
