@@ -421,15 +421,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private void createNewIdentityInBackDevice(String donde) {
         String brokerNameText = mBrokerName.getText().toString();
         String identityConnectionNameText = mChatConnectionState.getText().toString();
+        if (cryptoBrokerBitmap == null) {
+            //Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            cryptoBrokerBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cht_center_profile_icon_center);
+        }
         if(identityConnectionNameText.length() == 0){
             identityConnectionNameText = "Available";
         }
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         } else {
-            if (cryptoBrokerBitmap == null) {
-                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-            } else {
+
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 CreateChatIdentityExecutor executor = null;
                 try {
@@ -448,7 +450,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 }      } catch (CantGetChatIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
-                }
+
             }
         }
     }
