@@ -85,6 +85,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     ChatIdentitySession Session;
     Context context;
     Toolbar toolbar;
+    EditText statusView;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
     public static CreateChatIdentityFragment newInstance() {
@@ -142,26 +143,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
         mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
+        statusView = (EditText) layout.findViewById(R.id.statusView);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
-        mBrokerName.setVisibility(View.GONE);
-        textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
-        textViewChtTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBrokerName.setVisibility(View.VISIBLE);
-                textViewChtTitle.setVisibility(View.GONE);
-            }
-        });
-      mChatConnectionState.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              if (mBrokerName.getVisibility() == View.VISIBLE) {
-                  mBrokerName.setVisibility(View.GONE);
-                  textViewChtTitle.setVisibility(View.VISIBLE);
-              }
-          }
-      });
+
         Bitmap bitmap = null;
         if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
         {
@@ -169,6 +154,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
         try {
             if(ExistIdentity() == false) {
+                mBrokerName.setVisibility(View.VISIBLE);
+                mChatConnectionState.setVisibility(View.VISIBLE);
+                statusView.setVisibility(View.GONE);
+                textViewChtTitle.setVisibility(View.GONE);
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -216,7 +205,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 String state = moduleManager.getIdentityChatUser().getConnectionState();
                 mChatConnectionState.setText(state);
                 mBrokerName.setVisibility(View.GONE);
+                mChatConnectionState.setVisibility(View.GONE);
+                statusView.setVisibility(View.VISIBLE);
+                textViewChtTitle.setVisibility(View.VISIBLE);
                 textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
+                statusView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
                 textViewChtTitle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -224,12 +217,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         textViewChtTitle.setVisibility(View.GONE);
                     }
                 });
-                mChatConnectionState.setOnClickListener(new View.OnClickListener() {
+                statusView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mBrokerName.getVisibility() == View.VISIBLE) {
-                            mBrokerName.setVisibility(View.GONE);
-                            textViewChtTitle.setVisibility(View.VISIBLE);
+                        if (statusView.getVisibility() == View.VISIBLE) {
+                            statusView.setVisibility(View.GONE);
+                            mChatConnectionState.setVisibility(View.VISIBLE);
                         }
                     }
                 });
