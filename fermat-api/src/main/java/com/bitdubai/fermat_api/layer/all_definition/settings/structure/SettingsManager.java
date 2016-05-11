@@ -88,7 +88,7 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
 
             try {
 
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(git
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(
                         pluginId,
                         SETTINGS_DIRECTORY_NAME,
                         buildSettingsFileName(publicKey),
