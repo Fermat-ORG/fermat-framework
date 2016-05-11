@@ -737,9 +737,16 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
         FermatWorker fermatWorker = new FermatWorker(getActivity()) {
             @Override
-            protected Object doInBackground() throws Exception {
+            protected Object doInBackground()  {
 
-                ExchangeRate rate =  lossProtectedWallet.getCurrencyExchange(exchangeProviderId);
+                ExchangeRate rate = null;
+                try{
+                     rate =  lossProtectedWallet.getCurrencyExchange(exchangeProviderId);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 return rate;
             }
         };
@@ -759,6 +766,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                     updateBalances();
 
+                }
+                else {
+                    makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 

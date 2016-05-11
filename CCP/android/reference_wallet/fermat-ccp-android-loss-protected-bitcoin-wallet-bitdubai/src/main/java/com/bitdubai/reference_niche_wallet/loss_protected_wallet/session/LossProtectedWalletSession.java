@@ -62,7 +62,7 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     private LossProtectedPaymentRequest paymentRequest;
     private String communityConnection;
 
-    private double actualExchangeRate;
+    private double actualExchangeRate = 0;
 
     private UUID transactionDetailId;
     public LossProtectedWalletSession() {
