@@ -81,7 +81,7 @@ public abstract class LocalSocketSession {
         }
     }
 
-    public void addWaitingMessage(){
+    public void addWaitingMessage(String dataId){
         Log.i(TAG,"Message arrive, unlocking wait..");
         messageSize.incrementAndGet();
         waitMessageLocker.unblock();
@@ -140,6 +140,7 @@ public abstract class LocalSocketSession {
                                     Log.i(TAG, "Waiting for message..");
                                     waitMessageLocker.wait();
                                 }
+
                                 if(!waitMessageLocker.getIsBlock()){
                                     flag = true;
                                 }

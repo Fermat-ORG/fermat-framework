@@ -30,4 +30,8 @@ public class LocalClientSocketSession extends LocalSocketSession {
         }
     }
 
+    public void onExceptionOccur(Exception e) {
+        e.printStackTrace();
+    }
+
 }

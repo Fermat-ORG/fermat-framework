@@ -19,4 +19,9 @@ public class LocalServerSocketSession extends LocalSocketSession{
     public void onReceiveMessage(FermatModuleObjectWrapper object) {
 
     }
+
+
+    public void onExceptionOccur(Exception e) {
+
+    }
 }

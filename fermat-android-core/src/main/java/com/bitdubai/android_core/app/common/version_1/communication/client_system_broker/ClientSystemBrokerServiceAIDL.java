@@ -141,7 +141,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         if(isDataChuncked){
             if(Looper.myLooper() == Looper.getMainLooper()) throw new LargeWorkOnMainThreadException(proxy,method);
             //test reason
-            mReceiverSocketSession.addWaitingMessage();
+            mReceiverSocketSession.addWaitingMessage(dataId);
 
             o = bufferChannelAIDL.getBufferObject(dataId);
             //Log.i(TAG, o != null ? o.toString() : "");
@@ -352,7 +352,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     //todo: con esto solo estaba el metodo viejo:
 //                    onFullDateRecieve(id,bundle.getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
 
-                    mReceiverSocketSession.addWaitingMessage();
+
                     break;
                 case CommunicationMessages.MSG_SEND_CHUNKED_DATA:
                     bundle = msg.getData();
