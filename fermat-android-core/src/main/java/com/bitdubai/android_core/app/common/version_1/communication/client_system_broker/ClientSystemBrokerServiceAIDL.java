@@ -75,6 +75,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 } catch (ClassCastException e) {
                     //e.printStackTrace();
                     Log.e(TAG, "ERROR: Objeto "+args[i].getClass().getName()+" no implementa interface Serializable");
+                    return null;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
