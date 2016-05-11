@@ -285,7 +285,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             for (FermatModuleObjectWrapper parameter : parameters) {
                 Log.i(TAG, parameter.toString());
             }
-            Serializable aidlObject = null;
+            Object returnModuleObject = null;
             try {
                 PluginVersionReference pluginVersionReference = new PluginVersionReference(
                         Platforms.getByCode(platformCode),
@@ -293,30 +293,39 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                         Plugins.getByCode(pluginsCode),
                         Developers.BITDUBAI,
                         new Version());
-                aidlObject = moduleDataRequest(pluginVersionReference,method,parameters);
+                returnModuleObject = moduleDataRequest(pluginVersionReference,method,parameters);
             } catch (InvalidParameterException e) {
                 e.printStackTrace();
             }
+
+
 
             /**
              * Acá se va a hacer el chunk y el envio al cliente
              */
             //chunkAndSendData(dataId,clientKey,aidlObject);
             try {
-                if (isDataForChunk(aidlObject)) {
-                    try {
-                        if (!(aidlObject instanceof Serializable))
-                            throw new NotSerializableException("Object: " + aidlObject.getClass().getName() + " is not serializable");
-                        sendFullData(dataId, clientKey, aidlObject);
-                        return new FermatModuleObjectWrapper(aidlObject, true, dataId);
-                    } catch (NotSerializableException e) {
-                        return new FermatModuleObjectWrapper(dataId, aidlObject, true, e);
+
+                if (returnModuleObject instanceof Exception){
+                    return new FermatModuleObjectWrapper(dataId,null,true, (Exception) returnModuleObject);
+                }else {
+                    if (!(returnModuleObject instanceof Serializable))
+                        throw new NotSerializableException("Object: " + returnModuleObject.getClass().getName() + " is not serializable");
+                    Serializable aidlObject = (Serializable) returnModuleObject;
+                    if (isDataForChunk(aidlObject)) {
+                        try {
+                            sendFullData(dataId, clientKey, aidlObject);
+                            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+                        } catch (NotSerializableException e) {
+                            return new FermatModuleObjectWrapper(dataId, aidlObject, true, e);
+                        }
+                    } else {
+                        return new FermatModuleObjectWrapper(aidlObject, false, dataId);
                     }
-                } else {
-                    return new FermatModuleObjectWrapper(aidlObject, false, dataId);
                 }
             } catch (Exception e) {
-                throw new RuntimeException("Error in Method: "+method,e);
+                Exception e1 = new RuntimeException("Error in Method: "+method+" object returned: "+returnModuleObject,e);
+                return new FermatModuleObjectWrapper(dataId,null,true, e1);
             }
 
         }
@@ -341,7 +350,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                         Plugins.getByCode(pluginsCode),
                         Developers.BITDUBAI,
                         new Version());
-                aidlObject = moduleDataRequest(pluginVersionReference,method,parameters);
+                aidlObject = (Serializable) moduleDataRequest(pluginVersionReference,method,parameters);
             } catch (InvalidParameterException e) {
                 e.printStackTrace();
             }
@@ -486,7 +495,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     }
 
 
-    private Serializable moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final FermatModuleObjectWrapper[]  parameters){
+    private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final FermatModuleObjectWrapper[]  parameters){
 //        Log.i(TAG, "Invoque method called");
         Callable<Object> callable = new Callable<Object>() {
             @Override
@@ -574,7 +583,8 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                                         try {
                                             s = method1.invoke(moduleManager, params);
                                         }catch (Exception e){
-                                            e.printStackTrace();
+//                                            e.printStackTrace();
+                                            return e;
                                         }
 
                                         break;
@@ -625,9 +635,8 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //        }else{
 //            Log.i(TAG, "Data to send: null, check this");
 //        }
-        final Serializable finalS = (Serializable) s;
 
-        return finalS;
+        return s;
     }
 
 
