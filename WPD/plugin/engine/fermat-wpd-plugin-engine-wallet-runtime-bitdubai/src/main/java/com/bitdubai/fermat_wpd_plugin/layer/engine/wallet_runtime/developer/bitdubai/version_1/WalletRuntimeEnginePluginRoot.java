@@ -174,7 +174,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(message, FermatException.wrapException(ex), context, possibleReason);
         }
 
-        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
