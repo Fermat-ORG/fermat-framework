@@ -264,11 +264,12 @@ public class DesktopDatabaseBridge {
 
             c.commit();
 
-        }catch(SQLException ex){
+        } catch(SQLException ex){
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-            close();
-
             throw new RuntimeException(ex);
+        } finally {
+
+            close();
         }
 
     }

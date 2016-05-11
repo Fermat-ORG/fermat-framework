@@ -167,7 +167,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             }
 
         } catch (Exception exception) {
-            throw new CantUpdateRecordException();
+            throw new CantUpdateRecordException(exception);
         }
     }
 

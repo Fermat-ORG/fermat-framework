@@ -58,9 +58,10 @@ public class FermatLinuxAppMain {
             /*
              * Start the system
              */
+
             fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE  , Developers.BITDUBAI, new Version()));
-            //fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
-            //fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.ACTOR_NETWORK_SERVICE, Plugins.CRYPTO_CUSTOMER, Developers.BITDUBAI, new Version()));
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.ACTOR_NETWORK_SERVICE, Plugins.CRYPTO_CUSTOMER, Developers.BITDUBAI, new Version()));
 
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 

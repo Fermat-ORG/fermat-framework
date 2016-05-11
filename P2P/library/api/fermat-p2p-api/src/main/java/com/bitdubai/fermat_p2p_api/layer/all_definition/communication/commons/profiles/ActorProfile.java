@@ -1,9 +1,3 @@
-/*
- * @#ActorProfile.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
@@ -180,5 +174,18 @@ public class ActorProfile extends Profile {
      */
     public static ActorProfile fromJson(String jsonString) {
         return GsonProvider.getGson().fromJson(jsonString, ActorProfile.class);
+    }
+
+    @Override
+    public String toString() {
+        return "ActorProfile{" +
+                "actorType='" + actorType + '\'' +
+                ", identityPublicKey='" + getIdentityPublicKey() + '\'' +
+                ", alias='" + alias + '\'' +
+                ", extraData='" + extraData + '\'' +
+                ", name='" + name + '\'' +
+                ", photo=" + (photo != null ? "true" : "false") +
+                ", nsIdentityPublicKey='" + nsIdentityPublicKey + '\'' +
+                '}';
     }
 }

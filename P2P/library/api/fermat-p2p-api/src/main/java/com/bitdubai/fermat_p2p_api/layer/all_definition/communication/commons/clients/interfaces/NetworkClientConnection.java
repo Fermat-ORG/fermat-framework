@@ -4,8 +4,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileAlreadyRegisteredException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileNotRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -31,9 +29,8 @@ public interface NetworkClientConnection {
      * @param profile  of the component that we're trying to register.
      *
      * @throws CantRegisterProfileException      if something goes wrong.
-     * @throws ProfileAlreadyRegisteredException if the profile is already registered.
      */
-    void registerProfile(Profile profile) throws CantRegisterProfileException, ProfileAlreadyRegisteredException;
+    void registerProfile(Profile profile) throws CantRegisterProfileException;
 
     /**
      * Through the method <code>unregisterProfile</code> we can unregister a profile in the server.
@@ -41,9 +38,8 @@ public interface NetworkClientConnection {
      * @param profile that we're trying to unregister.
      *
      * @throws CantUnregisterProfileException if something goes wrong.
-     * @throws ProfileNotRegisteredException  if the profile is not registered.
      */
-    void unregisterProfile(Profile profile) throws CantUnregisterProfileException, ProfileNotRegisteredException ;
+    void unregisterProfile(Profile profile) throws CantUnregisterProfileException;
 
     /**
      * Through the method <code>callNetworkService</code> we can request a network call between

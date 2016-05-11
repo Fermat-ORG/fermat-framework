@@ -73,4 +73,19 @@ public abstract class Profile {
      */
     public abstract String toJson();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Profile profile = (Profile) o;
+
+        return !(identityPublicKey != null ? !identityPublicKey.equals(profile.identityPublicKey) : profile.identityPublicKey != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return identityPublicKey != null ? identityPublicKey.hashCode() : 0;
+    }
 }
