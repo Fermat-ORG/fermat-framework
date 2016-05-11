@@ -261,9 +261,7 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
 
 
                     for (LossProtectedWalletTransaction cryptoWalletTransaction : list) {
-                        List<LossProtectedWalletTransaction> lst = lossProtectedWallet.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.CREDIT, lossWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
-
-                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
+                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(cryptoWalletTransaction, false, cryptoWalletTransaction);
                         data.add(grouperItem);
                     }
 

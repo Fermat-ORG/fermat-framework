@@ -9,7 +9,9 @@
     <!-- ccp_transaction_list_item.xml -->
     <string name="txt_amount_btc_text">1.4 BTC</string>
     <string name="txt_conference_ticket_text">Conference ticket</string>
+    <string name="notes">user notes</string>
     <string name="txt_time_date_text">03 Feb 2014</string>
+    <string name="from">From Given Actor</string>
     <!-- connection_with_community_dialog.xml -->
     <string name="new_user_text">New User</string>
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
