@@ -83,7 +83,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/pendingButton"
-        android:buttonTint="@color/red"
+        android:buttonTint="@color/yellow"
         android:visibility="gone"
         android:checked="true"
         android:layout_alignBottom="@+id/connection_state_user"
