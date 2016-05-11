@@ -10,6 +10,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -17,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -72,6 +76,9 @@ import java.util.concurrent.Executors;
 /**
  * Created by Joaquin Carrasquero on 15/02/16,email: jc.juaco@gmail.com.
  */
+
+@PluginInfo(createdBy = "Joaquin Carrasquero", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+
 public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements
         CryptoPaymentRequestManager,
         DatabaseManagerForDevelopers {
@@ -316,7 +323,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     protocolState,
                     requestMessage.getNetworkType(),
                     requestMessage.getReferenceWallet(),
-                    0, PaymentConstants.OUTGOING_MESSAGE
+                    0, PaymentConstants.OUTGOING_MESSAGE,
+                    requestMessage.getWalletPublicKey()
             );
 
         } catch(CantCreateCryptoPaymentRequestException e) {
@@ -584,7 +592,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
      * - Type          : SENT.
      */
     @Override
-    public void sendCryptoPaymentRequest(UUID requestId, String identityPublicKey, Actors identityType, String actorPublicKey, Actors actorType, CryptoAddress cryptoAddress, String description, long amount, long startTimeStamp, BlockchainNetworkType networkType, ReferenceWallet referenceWallet) throws CantSendRequestException {
+    public void sendCryptoPaymentRequest(UUID requestId, String identityPublicKey, Actors identityType, String actorPublicKey, Actors actorType, CryptoAddress cryptoAddress, String description, long amount, long startTimeStamp, BlockchainNetworkType networkType, ReferenceWallet referenceWallet, String walletPublicKey) throws CantSendRequestException {
 
         System.out.println("********** Crypto Payment Request NS -> sending request. PROCESSING_SEND - REQUEST - SENT.");
 
@@ -609,7 +617,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                     protocolState,
                     networkType,
                     referenceWallet,
-                    0, PaymentConstants.OUTGOING_MESSAGE
+                    0, PaymentConstants.OUTGOING_MESSAGE,
+                    walletPublicKey
             );
 
 
@@ -1053,7 +1062,8 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
                 cpr.getNetworkType(),
                 cpr.getReferenceWallet(),
                 cpr.getIdentityPublicKey(),
-                cpr.getActorPublicKey()
+                cpr.getActorPublicKey(),
+                cpr.getWalletPublicKey()
 
         ).toJson();
     }

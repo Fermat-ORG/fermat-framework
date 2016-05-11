@@ -46,6 +46,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.RequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.TransactionNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -569,4 +573,26 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
 
      BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
 
+    /**
+     *The method <code>getInstalledWallets</code> return the list of installed wallets on platform.
+     * @return
+     * @throws CantListWalletsException
+     */
+    List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
+
+
+    /**
+     * The method <code>sendToWallet</code> send btc to loss protected wallet .
+     * @param cryptoAmount
+     * @param sendingWalletPublicKey
+     * @param receivingWalletPublicKey
+     * @param notes
+     * @param deliveredToActorType
+     * @param sendingWallet
+     * @param receivingWallet
+     * @param blockchainNetworkType
+     * @throws CantSendLossProtectedCryptoException
+     * @throws LossProtectedInsufficientFundsException
+     */
+    void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 }

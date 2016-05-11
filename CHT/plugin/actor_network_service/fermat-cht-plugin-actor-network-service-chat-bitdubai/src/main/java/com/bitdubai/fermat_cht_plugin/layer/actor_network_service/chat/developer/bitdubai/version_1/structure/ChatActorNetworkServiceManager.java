@@ -135,7 +135,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                         (chatExposingData.getAlias().toLowerCase() + "_" + this.platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CHAT,
-                        imageString);
+                        extraDataToJson(chatExposingData));
 
                 Thread thread = new Thread(new Runnable() {
                     @Override

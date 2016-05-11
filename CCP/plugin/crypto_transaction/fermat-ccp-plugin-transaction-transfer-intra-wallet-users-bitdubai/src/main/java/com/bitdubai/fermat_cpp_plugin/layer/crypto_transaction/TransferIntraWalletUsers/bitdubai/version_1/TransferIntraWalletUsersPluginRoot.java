@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -53,6 +54,8 @@ import java.util.List;
  * Created by Joaquin Carrasquero on 18/03/16.
  */
 
+@PluginInfo(createdBy = "Joaquin Carrasquero", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+
 public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
         implements TransferIntraWalletUsersManager,DatabaseManagerForDevelopers {
 
@@ -63,10 +66,6 @@ public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.LOSS_PROTECTED_WALLET)
     private BitcoinLossProtectedWalletManager bitcoinLossWalletManager;
-
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -88,10 +87,10 @@ public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
     public void start() throws CantStartPluginException {
 
         //TODO: inicializar la base de datos esta dando Error
-        transferIntraWalletUsersDao = new TransferIntraWalletUsersDao(errorManager,pluginDatabaseSystem);
+        transferIntraWalletUsersDao = new TransferIntraWalletUsersDao(getErrorManager(),pluginDatabaseSystem);
         try {
             transferIntraWalletUsersDao.initialize(pluginId);
-            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager, transferIntraWalletUsersDao,this.broadcaster);
+            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,getErrorManager(), transferIntraWalletUsersDao);
    } catch (CantInitializeOutgoingIntraActorDaoException e) {
             e.printStackTrace();
         }
@@ -140,13 +139,13 @@ public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
              * The database exists but cannot be open. I can not handle this situation.
              */
             FermatException e = new CantDeliverPendingTransactionsException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverPendingTransactionsException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception e) {
             FermatException e1 = new CantDeliverPendingTransactionsException("Unexpected Exception", e, "", "");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e1);
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e1);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
