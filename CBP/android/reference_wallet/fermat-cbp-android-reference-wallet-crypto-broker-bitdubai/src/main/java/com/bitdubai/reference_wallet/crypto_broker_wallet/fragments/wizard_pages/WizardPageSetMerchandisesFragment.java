@@ -113,7 +113,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
-            CryptoBrokerWalletPreferenceSettings walletSettings;
+            com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings walletSettings;
             try {
                 walletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
@@ -121,7 +121,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             }
 
             if (walletSettings == null) {
-                walletSettings = new CryptoBrokerWalletPreferenceSettings();
+                walletSettings = new com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings();
                 walletSettings.setIsPresentationHelpEnabled(true);
                 moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
             } else {
@@ -243,7 +243,7 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 presentationDialog.setOnDismissListener(this);
 
 
-                final CryptoBrokerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                final com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings preferenceSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 final boolean showDialog = preferenceSettings.isHomeTutorialDialogEnabled();
                 if (showDialog)
                     presentationDialog.show();
