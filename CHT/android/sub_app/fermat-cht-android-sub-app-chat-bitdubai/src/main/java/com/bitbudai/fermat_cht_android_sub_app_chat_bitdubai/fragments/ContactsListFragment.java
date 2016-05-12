@@ -196,17 +196,17 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     } else {
                         noData.setVisibility(View.VISIBLE);
                         noDatalabel.setVisibility(View.VISIBLE);
-                        layout.setBackgroundResource(R.drawable.fondo);
+                        layout.setBackgroundResource(R.drawable.cht_background);
                     }
                 }  else {
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
-                    layout.setBackgroundResource(R.drawable.fondo);
+                    layout.setBackgroundResource(R.drawable.cht_background);
                 }
             } else{
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
-                layout.setBackgroundResource(R.drawable.fondo);
+                layout.setBackgroundResource(R.drawable.cht_background);
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -222,7 +222,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         noData.setVisibility(View.VISIBLE);
         noDatalabel.setVisibility(View.VISIBLE);
-        layout.setBackgroundResource(R.drawable.fondo);
+        layout.setBackgroundResource(R.drawable.cht_background);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updateValues();
         adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
@@ -371,10 +371,10 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             return true;
         }
 
-        if (id == R.id.menu_error_report) {
-            changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_error_report) {
+//            changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
