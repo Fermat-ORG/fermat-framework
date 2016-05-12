@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.E
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.MatchingEngineMiddlewarePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.EarningExtractorManagerImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -28,18 +29,15 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 public final class MatchingEngineMiddlewareManager implements MatchingEngineManager {
 
     private final MatchingEngineMiddlewareDao dao;
-    private final ErrorManager errorManager;
-    private final PluginVersionReference pluginVersionReference;
+    private final MatchingEngineMiddlewarePluginRoot pluginRoot;
     private final EarningExtractorManager earningExtractorManager;
 
     public MatchingEngineMiddlewareManager(final MatchingEngineMiddlewareDao dao,
-                                           final ErrorManager errorManager,
-                                           final PluginVersionReference pluginVersionReference,
+                                           final MatchingEngineMiddlewarePluginRoot pluginRoot,
                                            CryptoBrokerWalletManager cryptoBrokerWalletManager) {
 
         this.dao = dao;
-        this.errorManager = errorManager;
-        this.pluginVersionReference = pluginVersionReference;
+        this.pluginRoot = pluginRoot;
         earningExtractorManager = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
     }
 
@@ -54,18 +52,15 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
             return new MatchingEngineMiddlewareEarningsSettings(
                     walletReference,
                     dao,
-                    errorManager,
-                    pluginVersionReference
+                    pluginRoot
             );
 
         } catch (CantRegisterEarningsSettingsException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
 
         } catch (final Exception e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterEarningsSettingsException(e, null, "Unhandled Exception.");
         }
 
@@ -76,19 +71,17 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
             throws CantLoadEarningSettingsException, EarningsSettingsNotRegisteredException {
         try {
             WalletReference walletReference = dao.loadWalletReference(walletPublicKey);
-            return new MatchingEngineMiddlewareEarningsSettings(walletReference, dao, errorManager, pluginVersionReference);
+            return new MatchingEngineMiddlewareEarningsSettings(walletReference, dao, pluginRoot);
 
         } catch (EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
             throw earningsSettingsNotRegisteredException;   // I DO NOTHING HERE, MAYBE IS NOT REGISTERED
 
         } catch (CantLoadEarningSettingsException cantLoadEarningSettingsException) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadEarningSettingsException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadEarningSettingsException);
             throw cantLoadEarningSettingsException;
 
         } catch (final Exception e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadEarningSettingsException(e, null, "Unhandled Exception.");
         }
 
