@@ -131,7 +131,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             }
 
             final Bundle networkDialog = new Bundle();
-            networkDialog.putInt("items", R.array.items);
+            String items[] = new String[]{"MainNet", "TestNet", "RegTest"};
+            networkDialog.putStringArray("items_array", items);
             networkDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
             networkDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
             networkDialog.putString("title", getResources().getString(R.string.title_label));
@@ -141,7 +142,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
             // Exchange Rate Provider
-           /* if (lossProtectedWallet.getExchangeProvider() != null)
+           if (lossProtectedWallet.getExchangeProvider() != null)
                 exchangeProviderId =  lossProtectedWallet.getExchangeProvider();
 
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWallet.getExchangeRateProviderManagers());
@@ -159,7 +160,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             providerDialog.putString("title", getResources().getString(R.string.exchange_title_label));
             providerDialog.putString("mode", "single_option");
             providerDialog.putString("previous_selected_item", previousSelectedItemExchange);
-            list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));*/
+            list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
 
 
             list.add(new PreferenceSettingsLinkText(11, "Received Regtest Bitcoins", "", 15, Color.GRAY));
