@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -38,7 +39,7 @@ import java.util.Map;
 /**
  * Created by memo on 04/12/15.
  */
-
+@PluginInfo(createdBy = "guillermo20", maintainerMail = "guillermo20@gmail.com", platform = Platforms.BANKING_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE)
 public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers{
 

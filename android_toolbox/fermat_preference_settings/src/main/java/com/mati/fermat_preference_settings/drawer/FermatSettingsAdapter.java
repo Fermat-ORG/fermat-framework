@@ -137,7 +137,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
                     @Override
                     public void onDialogNegativeClick(DialogFragment dialog) {
-                        System.out.println(getClass().getSimpleName() + "------------------------------ CANCEL button pressed");
+                        // no-op
                     }
                 });
 

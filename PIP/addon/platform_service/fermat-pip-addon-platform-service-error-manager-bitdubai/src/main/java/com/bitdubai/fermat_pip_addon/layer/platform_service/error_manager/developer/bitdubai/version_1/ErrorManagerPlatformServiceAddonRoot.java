@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.hardware.HardwareManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerPlatformServiceManager;
 
 /**
@@ -17,6 +18,8 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
 public final class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon {
 
     private FermatManager errorManager;
+   // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.HARDWARE)
+    protected HardwareManager hardwareManager;
 
     public ErrorManagerPlatformServiceAddonRoot() {
         super(new AddonVersionReference(new Version()));
@@ -27,7 +30,7 @@ public final class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon {
 
         try {
 
-            errorManager = new ErrorManagerPlatformServiceManager();
+            errorManager = new ErrorManagerPlatformServiceManager(hardwareManager);
 
             super.start();
 
