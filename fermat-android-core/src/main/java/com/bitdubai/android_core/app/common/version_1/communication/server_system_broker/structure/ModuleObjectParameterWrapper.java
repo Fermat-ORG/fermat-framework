@@ -21,9 +21,11 @@ public class ModuleObjectParameterWrapper implements Parcelable,Serializable{
     protected ModuleObjectParameterWrapper(Parcel in) {
         Serializable moduleObjectSerializable = in.readSerializable();
         this.object = moduleObjectSerializable;
+        this.parameterType = (Class) in.readSerializable();
     }
 
-    public static final Parcelable.Creator<ModuleObjectParameterWrapper> CREATOR = new Parcelable.Creator<ModuleObjectParameterWrapper>() {
+
+    public static final Creator<ModuleObjectParameterWrapper> CREATOR = new Creator<ModuleObjectParameterWrapper>() {
         @Override
         public ModuleObjectParameterWrapper createFromParcel(Parcel in) {
             return new ModuleObjectParameterWrapper(in);
@@ -52,6 +54,7 @@ public class ModuleObjectParameterWrapper implements Parcelable,Serializable{
     public void writeToParcel(Parcel dest, int flags) {
         try{
             dest.writeSerializable(object);
+            dest.writeSerializable(parameterType);
         }catch (Exception e){
             e.printStackTrace();
         }

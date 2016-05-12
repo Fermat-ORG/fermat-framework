@@ -36,6 +36,7 @@ public class FermatModuleObjectWrapper implements Parcelable,Serializable {
         Serializable moduleObjectSerializable = in.readSerializable();
 //        this.object = new FermatModuleObject(moduleObjectSerializable);
         this.object = moduleObjectSerializable;
+        this.e = (Exception) in.readSerializable();
     }
 
     public static final Creator<FermatModuleObjectWrapper> CREATOR = new Creator<FermatModuleObjectWrapper>() {
@@ -75,6 +76,7 @@ public class FermatModuleObjectWrapper implements Parcelable,Serializable {
     public void writeToParcel(Parcel dest, int flags) {
         try{
             dest.writeSerializable(object);
+            dest.writeSerializable(e);
         }catch (Exception e){
             e.printStackTrace();
         }
