@@ -61,4 +61,9 @@ public class YourOwnSender implements ReportSender {
         gMailSender.sendMail("error report",body,userTo,userTo);
     }
 
+    public void sendPrivateKey(String userTo,String body) throws Exception {
+        if(userTo==null || userTo.equals("")) throw new IllegalArgumentException();
+        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
+        gMailSender.sendMailPrivateKey("Private Key",body,userTo,userTo);
+    }
 }

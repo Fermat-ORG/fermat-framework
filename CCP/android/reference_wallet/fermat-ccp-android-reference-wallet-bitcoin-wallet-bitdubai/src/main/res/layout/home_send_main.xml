@@ -2,9 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/background_gradient"
-    >
+    android:background="@drawable/background_gradient">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh"
@@ -14,7 +12,6 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/open_contracts_recycler_view"
-
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
@@ -28,18 +25,17 @@
         android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:layout_gravity="top"
-        android:paddingTop="16dp"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone">
 
         <ImageView
             android:layout_width="90dp"
             android:layout_height="90dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="4dp"
             android:scaleType="fitXY"
-            android:src="@drawable/transaction_icon"/>
+            android:src="@drawable/transaction_icon"
+            android:contentDescription="@string/app_name" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"

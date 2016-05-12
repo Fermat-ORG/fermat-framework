@@ -238,7 +238,7 @@ public class ConnectionsWorldFragment
 
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
         return rootView;
@@ -290,8 +290,9 @@ public class ConnectionsWorldFragment
                     if (swipeRefresh != null)
                         swipeRefresh.setRefreshing(false);
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
+                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
+                        //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+                    //ex.printStackTrace();
                 }
             });
             worker.execute();
@@ -335,7 +336,9 @@ public class ConnectionsWorldFragment
             dataSet.addAll(result);
             offset = dataSet.size();
         } catch (Exception e) {
-            e.printStackTrace();
+            //Toast.makeText(getActivity(), "No Chat Identity Created",
+            //        Toast.LENGTH_LONG).show();
+            //e.printStackTrace();
         }
         return dataSet;
     }

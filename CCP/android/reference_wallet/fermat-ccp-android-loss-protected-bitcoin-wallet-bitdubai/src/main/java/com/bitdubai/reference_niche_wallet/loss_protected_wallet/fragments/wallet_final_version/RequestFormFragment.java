@@ -123,7 +123,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
             bitcoinConverter = new BitcoinConverter();
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
@@ -163,7 +163,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.request_form_base, container, false);
+            rootView = inflater.inflate(R.layout.loss_request_form_base, container, false);
             NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {
@@ -237,8 +237,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("Bits");
         list.add("BTC");
+        list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -254,20 +254,10 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                     if (amount.equals("")){
                         amount = "0";
                     }
-                    switch (position) {
-                        case 0:
-                            text = "[bits]";
-                            if (txtType.equals("[btc]")) {
-                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = bitcoinConverter.getBits(amount);
-                            } else {
-                                newAmount = amount;
-                            }
-
-                            break;
-                        case 1:
-                            text = "[btc]";
+                switch (position) {
+                    case 0:
+                        text = "[btc]";
+                        if (!amount.equals("") && amount != null){
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
                             } else if (txtType.equals("[satoshis]")) {
@@ -275,9 +265,30 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                             } else {
                                 newAmount = amount;
                             }
-                            break;
-                        case 2:
-                            text = "[satoshis]";
+                        }else{
+                            newAmount = amount;
+                        }
+
+
+                        break;
+                    case 1:
+                        text = "[bits]";
+                        if (!amount.equals("") && amount != null) {
+                            if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBits(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
+                            newAmount = amount;
+                        }
+
+                        break;
+                    case 2:
+                        text = "[satoshis]";
+                        if (!amount.equals("") && amount != null) {
                             if (txtType.equals("[bits]")) {
                                 newAmount = bitcoinConverter.getSathoshisFromBits(amount);
                             } else if (txtType.equals("[btc]")) {
@@ -285,8 +296,11 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                             } else {
                                 newAmount = amount;
                             }
-                            break;
-                    }
+                        }else{
+                            newAmount = amount;
+                        }
+                        break;
+                }
 
 
                 AlphaAnimation alphaAnimation = new AlphaAnimation((float) 0.4, 1);
@@ -367,7 +381,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                     if (cryptoWalletWalletContact != null) {
                         walletContact.name = cryptoWalletWalletContact.getActorName();
                         walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
+                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) == null) {
                             appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
                                     appSession.getIntraUserModuleManager().getPublicKey(),
                                     Actors.INTRA_USER,
@@ -380,16 +394,19 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                     blockchainNetworkType
                             );
-                        }
-                    } else {
-                        if (cryptoWalletWalletContact != null)
+
+                            Toast.makeText(getActivity(), "Contact don't have an Address from red " + blockchainNetworkType.getCode() + "\nplease wait 2 minutes.", Toast.LENGTH_LONG).show();
+
+                        } else {
+
                             walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                            walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                            walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                            walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+                        }
+
                     }
-                    if (cryptoWalletWalletContact != null) {
-                        walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                        walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                        walletContact.isConnection = cryptoWalletWalletContact.isConnection();
-                    }
+
                     setUpUIData();
 
                 } catch ( CantCreateLossProtectedWalletContactException e)
@@ -538,7 +555,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
-            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
             Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
     }
@@ -639,7 +656,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
                         if (isFragmentFromDetail) onBack(null);
                         else
-                            onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                            onBack(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
                         Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
                     }

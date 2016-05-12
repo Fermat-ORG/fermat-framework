@@ -50,7 +50,7 @@ import static android.widget.Toast.makeText;
 /**
  * Contact Detail Fragment.
  *
- * @author Francisco Vásquez
+ * @author Gian Barboza
  * @version 1.0
  */
 public class ContactDetailFragment extends AbstractFermatFragment implements View.OnClickListener {
@@ -120,7 +120,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             if(cryptoWalletWalletContact==null){
                 onBack(null);
             }
-            //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+
             cryptoWalletManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
@@ -140,7 +140,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             }
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+
 
         } catch (CantGetCryptoLossProtectedWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -156,7 +156,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try{
-            mFragmentView = inflater.inflate(R.layout.contact_detail_base, container, false);
+            mFragmentView = inflater.inflate(R.layout.loss_contact_detail, container, false);
 
             setUp();
             setUpContact();
@@ -275,9 +275,6 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         if (cryptoWalletWalletContact != null) {
             if(image_view_profile!=null){
                 try {
-                          //  Bitmap bitmapDrawable = BitmapFactory.decodeByteArray(cryptoWalletWalletContact.getProfilePicture(), 0, cryptoWalletWalletContact.getProfilePicture().length);// MemoryUtils.decodeSampledBitmapFromByteArray(cryptoWalletWalletContact.getProfilePicture(),image_view_profile.getMaxWidth(),image_view_profile.getMaxHeight());
-                          //  bitmapDrawable = Bitmap.createScaledBitmap(bitmapDrawable, image_view_profile.getWidth(), 200, true);
-                           // image_view_profile.setImageBitmap(bitmapDrawable);
                         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(image_view_profile,getResources(),false);
                         bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
                 }catch (Exception e){
@@ -291,8 +288,6 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 edit_text_name.setText(cryptoWalletWalletContact.getActorName());
             if (text_view_address != null) {
                 if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
-
-
 
                        try {
 
@@ -319,8 +314,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
 
                        }else{
                            String address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
-                           //TODO: si la address es nula hay que ver porqué es
-                           text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
+                          text_view_address.setText((address!=null)?address:"mnK7DuBQT3REr9bmfYcufTwjiAWfjwRwMf");
                            img_update.setVisibility(View.GONE);
                            receive_button.setVisibility(View.VISIBLE);
                            send_button.setVisibility(View.VISIBLE);
@@ -354,12 +348,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                            receive_button.setVisibility(View.GONE);
                            send_button.setVisibility(View.GONE);
 
-
                        }
-
-
-
-
             }else{
                     img_update.setVisibility(View.VISIBLE);
                     receive_button.setVisibility(View.GONE);
