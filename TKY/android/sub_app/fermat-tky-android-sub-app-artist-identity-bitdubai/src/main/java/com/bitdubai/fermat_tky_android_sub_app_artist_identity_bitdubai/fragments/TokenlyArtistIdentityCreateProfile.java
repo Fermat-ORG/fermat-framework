@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -102,8 +103,9 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
-    private View WarningCircle;
-    private TextView WarningLabel;
+    private ProgressDialog tokenlyRequestDialog;
+    //private View WarningCircle;
+    //private TextView WarningLabel;
     private String WarningColor = "#DF0101";
 
     private Handler handler;
@@ -213,12 +215,12 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         TextView text2 = (TextView) layout.findViewById(R.id.exposure_level_label);
         TextView text3 = (TextView) layout.findViewById(R.id.artist_accept_connections_type_label);
 
-        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+        //WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
 
-        WarningCircle.setVisibility(View.GONE);
+        //WarningCircle.setVisibility(View.GONE);
 
-        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
-        WarningLabel.setVisibility(View.GONE);
+        //WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        //WarningLabel.setVisibility(View.GONE);
 
         text.setTextColor(Color.parseColor("#000000"));
         text2.setTextColor(Color.parseColor("#000000"));
@@ -251,8 +253,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         ArtistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                WarningCircle.setVisibility(View.GONE);
-                WarningLabel.setVisibility(View.GONE);
+                //WarningCircle.setVisibility(View.GONE);
+                //WarningLabel.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
                 getActivity().openContextMenu(ArtistImage);
             }
@@ -262,33 +264,38 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
-
-
-                int resultKey = 0;
-                try {
-                    if(!isWaitingForResponse){
-                        resultKey = createNewIdentity();
-                        switch (resultKey) {
-                            case CREATE_IDENTITY_SUCCESS:
-
-                                break;
-                            case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                                Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                                break;
-                            case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                                Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
-                                break;
-                            case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                                Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
-                                break;
+                tokenlyRequestDialog = new ProgressDialog(getActivity());
+                tokenlyRequestDialog.setMessage("Please Wait");
+                tokenlyRequestDialog.setTitle("Connecting to Tokenly");
+                tokenlyRequestDialog.show();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            if(!isWaitingForResponse){
+                                int resultKey = createNewIdentity();
+                                switch (resultKey) {
+                                    case CREATE_IDENTITY_SUCCESS:
+                                        break;
+                                    case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
+                                        Toast.makeText(getActivity(), "Create identity Error", Toast.LENGTH_LONG).show();
+                                        break;
+                                    case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
+                                        Toast.makeText(getActivity(), "Invalid data", Toast.LENGTH_LONG).show();
+                                        break;
+                                    case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
+                                        Toast.makeText(getActivity(), "Could not access module manager, it's null", Toast.LENGTH_LONG).show();
+                                        break;
+                                }
+                            }else{
+                                tokenlyRequestDialog.dismiss();
+                                Toast.makeText(getActivity(), "Waiting for Tokenly API response, please wait.", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (InvalidParameterException e) {
+                            e.printStackTrace();
                         }
-                    }else
-                        Toast.makeText(getActivity(), "Waiting for Tokenly API response, please wait.", Toast.LENGTH_SHORT).show();
-                } catch (InvalidParameterException e) {
-                    e.printStackTrace();
-                }
-
-
+                    }
+                });
             }
         });
     }
@@ -349,7 +356,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading picture", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -486,6 +493,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             }
             return CREATE_IDENTITY_FAIL_MODULE_IS_NULL;
         }
+        tokenlyRequestDialog.dismiss();
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
     }
@@ -498,10 +506,10 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             return false;
         if (ArtistPassWord.isEmpty())
             return false;
-        if (ArtistImageBytes == null)
+        /*if (ArtistImageBytes == null)
             return false;
         if (ArtistImageBytes.length > 0)
-            return true;
+            return true;*/
 //        if(externalPlatform != null)
 //            return  true;
         return true;
@@ -513,19 +521,17 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
 
         if (ArtistExternalName.isEmpty()){
-            mArtistExternalUserName.setHint("Username");
             mArtistExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (ArtistPassWord.isEmpty()){
-            mArtistExternalPassword.setHint("Password");
             mArtistExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
         }
 
-        if (ArtistImageBytes == null){
+        /*if (ArtistImageBytes == null){
             WarningLabel.setVisibility(View.VISIBLE);
            // WarningCircle.setVisibility(View.VISIBLE);
-        }
+        }*/
 
 
     }
@@ -569,23 +575,26 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             isWaitingForResponse = false;
             if(!authenticationSuccessful){
                 //I'll launch a toast
+                tokenlyRequestDialog.dismiss();
                 Toast.makeText(
                         getActivity(),
                         "Authentication credentials are invalid.",
                         Toast.LENGTH_SHORT).show();
             }
             if(Validate.isObjectNull(artist)){
+                tokenlyRequestDialog.dismiss();
                 Toast.makeText(getActivity(), "The tokenly authentication failed.", Toast.LENGTH_SHORT).show();
             }else{
                 if(isUpdate){
+                    tokenlyRequestDialog.dismiss();
                     Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                 }else{
+                    tokenlyRequestDialog.dismiss();
                     Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                     getActivity().onBackPressed();
                 }
             }
-
         }
 
         @Override
@@ -654,7 +663,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             WrongTokenlyUserCredentialsException {
        return moduleManager.createArtistIdentity(
                 fanExternalName,
-                (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : ArtistImageByteArray,
+                (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : ArtistImageByteArray,
                 fanPassword,
                 externalPlatform,
                 exposureLevel,

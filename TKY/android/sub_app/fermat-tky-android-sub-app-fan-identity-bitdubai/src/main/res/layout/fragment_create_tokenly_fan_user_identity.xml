@@ -27,24 +27,8 @@
             tools:ignore="ContentDescription"
 
             />
-        <View
-            android:id="@+id/warning_cirlcle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/warnning_circle"/>
 
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/warning_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="missing picture"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@+id/user_image"
-        android:textStyle="bold"
-        android:textColor="#DF0101"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -32,6 +33,13 @@ import com.bitdubai.sub_app_artist_community.commons.popups.CancelDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.DisconnectDialog;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
@@ -113,7 +121,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         //Show user image if it has one, otherwise show default user image
         try {
             userName.setText(artistCommunityInformation.getAlias());
-            //ajustar external platform
+            try{
+                externalPlatform.setText(getSelectedIdentityExternalPlatform().getFriendlyName());
+            }catch (Exception e){
+
+            }
             Bitmap bitmap;
 
             if(artistCommunityInformation.getImage() != null && artistCommunityInformation.getImage().length > 0)
@@ -130,6 +142,14 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         return rootView;
     }
 
+    private ArtExternalPlatform getSelectedIdentityExternalPlatform(){
+        HashMap<ArtExternalPlatform, String> selectedIdentityExternalPlatformMap = artistCommunityInformation.getArtistExternalPlatformInformation().getExternalPlatformInformationMap();
+        ArtExternalPlatform selectedIdentityExternalPlatform;
+        Iterator<Map.Entry<ArtExternalPlatform, String>> entries = selectedIdentityExternalPlatformMap.entrySet().iterator();
+        Map.Entry<ArtExternalPlatform, String> entry = entries.next();
+        selectedIdentityExternalPlatform = entry.getKey();
+        return selectedIdentityExternalPlatform;
+    }
 
     @Override
     public void onClick(View v) {
