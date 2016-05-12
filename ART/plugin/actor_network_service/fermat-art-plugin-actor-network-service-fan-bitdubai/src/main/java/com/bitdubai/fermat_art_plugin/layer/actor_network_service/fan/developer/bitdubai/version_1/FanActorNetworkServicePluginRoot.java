@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -339,9 +340,32 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
     protected void onNetworkServiceRegistered() {
 
         fanActorNetworkServiceManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
+        runExposeIdentityThread();
         //testCreateAndList();
 
     }
+
+    @Override
+    protected void onClientSuccessfulReconnect() {
+        runExposeIdentityThread();
+    }
+
+    private void runExposeIdentityThread(){
+        final PluginVersionReference pluginReference = getPluginVersionReference();
+        Thread exposeIdentities = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    fanActorNetworkServiceManager.exposeIdentitiesInWait();
+                } catch (CantExposeIdentityException e) {
+                    errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                }
+            }
+        }, "REGISTER ARTIST IDENTITY CACHE");
+
+        exposeIdentities.start();
+    }
+
 
     private void testCreateAndList(){
         ECCKeyPair identity = new ECCKeyPair();

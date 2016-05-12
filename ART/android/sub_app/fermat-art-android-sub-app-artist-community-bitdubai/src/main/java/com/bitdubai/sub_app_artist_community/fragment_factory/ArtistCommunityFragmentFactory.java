@@ -19,9 +19,9 @@ public class ArtistCommunityFragmentFactory extends FermatFragmentFactory<Artist
     protected AbstractFermatFragment getFermatFragment(ArtistCommunityFragmentEnumType fragments) throws FragmentNotFoundException {
         AbstractFermatFragment currentFragment = null;
         switch (fragments) {
-            case ART_ARTIST_WALLET_STORE_ALL_FRAGMENT:
+            /*case ART_ARTIST_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsWorldFragment.newInstance();
-                break;
+                break;*/
             case ART_SUB_APP_ARTIST_COMMUNITY_CONNECTIONS:
                 currentFragment = ConnectionsFragment.newInstance();
                 break;

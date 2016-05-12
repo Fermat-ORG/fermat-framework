@@ -172,4 +172,12 @@ public interface ArtistManager extends FermatManager{
      */
     List<ArtistConnectionRequest> listCompletedConnections() throws
             CantListPendingConnectionRequestsException;
+
+
+    /**
+     * This method returns all the request persisted in database
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    List<ArtistConnectionRequest> listAllRequest() throws CantListPendingConnectionRequestsException;
 }

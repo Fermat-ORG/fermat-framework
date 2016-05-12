@@ -1,6 +1,7 @@
-package com.bitdubai.fermat_art_plugin.layer.sub_app_module.artist_community.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
@@ -18,6 +19,7 @@ public class ArtistCommunityInformationImpl implements ArtistCommunityInformatio
     private final byte[] image    ;
     private final ConnectionState connectionState;
     private final UUID connectionId;
+    private Actors actorType;
 
 
     public ArtistCommunityInformationImpl(final String publicKey,
@@ -90,5 +92,18 @@ public class ArtistCommunityInformationImpl implements ArtistCommunityInformatio
     @Override
     public UUID getConnectionId() {
         return this.connectionId;
+    }
+
+    /**
+     * This method return the actor type.
+     * @return
+     */
+    @Override
+    public Actors getActorType() {
+        return this.actorType;
+    }
+
+    public void setActorType(Actors actorType){
+        this.actorType = actorType;
     }
 }
