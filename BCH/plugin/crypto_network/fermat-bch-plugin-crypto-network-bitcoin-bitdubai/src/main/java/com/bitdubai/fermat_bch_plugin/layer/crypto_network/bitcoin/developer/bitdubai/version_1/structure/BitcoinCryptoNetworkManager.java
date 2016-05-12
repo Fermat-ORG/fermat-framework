@@ -163,6 +163,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 wallet = getWallet(blockchainNetworkType, keyList);
             } catch (UnreadableWalletException e) {
                 CantStartAgentException exception = new CantStartAgentException(e, "Unable to load wallet from file for network " + blockchainNetworkType.getCode(), "IO error");
+
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 e.printStackTrace();
                 throw exception;
