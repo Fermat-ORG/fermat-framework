@@ -277,6 +277,9 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * I will connect to the regTest server or search for peers if we are in a different network.
                  */
+                //connect to local if possible
+                peerGroup.setUseLocalhostPeerWhenPossible(true);
+
                 if (NETWORK_PARAMETERS == RegTestParams.get()){
                     FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
                     for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()){
@@ -418,25 +421,13 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
             final Transaction finalTransaction = transaction;
 
-            TransactionBroadcast transactionBroadcast = peerGroup.broadcastTransaction(transaction, BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS);
-
-            // I make sure I have the blockchain updated.
-            peerGroup.downloadBlockChain();
-
-            transactionBroadcast.setProgressCallback(new TransactionBroadcast.ProgressCallback() {
-                @Override
-                public void onBroadcastProgress(double progress) {
-                    System.out.println("***CryptoNetwork*** Broadcast progress for transaction " + txHash + ": " + progress * 100 + " %");
-                }
-            });
 
 
-             ListenableFuture<Transaction> future = transactionBroadcast.future();
-
+            ListenableFuture<Transaction> future = peerGroup.broadcastTransaction(transaction, BitcoinNetworkConfiguration.MIN_BROADCAST_CONNECTIONS).future();
+            wallet.receivePending(finalTransaction, null);
             /**
              * I add the future that will get the broadcast result into a call back to respond to it.
              */
-
             Futures.addCallback(future, new FutureCallback<Transaction>() {
                 @Override
                 public void onSuccess(Transaction result) {
@@ -480,16 +471,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     }
                 }
             });
-
-//            /**
-//             * starts the broadcasting.
-//             */
-//            try {
-//                future.get(BitcoinNetworkConfiguration.TRANSACTION_BROADCAST_TIMEOUT, TimeUnit.MINUTES);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, e, "***CryptoNetwork*** Error broadcasting Transaction: " + transaction.toString(), "Time out");
-//            }
         }
 
         /**
