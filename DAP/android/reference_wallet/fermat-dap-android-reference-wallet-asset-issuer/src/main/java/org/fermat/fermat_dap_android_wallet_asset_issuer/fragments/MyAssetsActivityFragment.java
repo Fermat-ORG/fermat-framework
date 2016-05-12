@@ -142,15 +142,15 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                     }
                 }
 
-                try {
+//                try {
                     if (moduleManager != null) {
                         moduleManager.persistSettings(assetIssuerSession.getAppPublicKey(), settings);
                         moduleManager.setAppPublicKey(assetIssuerSession.getAppPublicKey());
                         moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
                     }
-                } catch (CantPersistSettingsException e) {
-                    e.printStackTrace();
-                }
+//                } catch (CantPersistSettingsException e) {
+//                    e.printStackTrace();
+//                }
             } else {
                 if (moduleManager != null) {
                     moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
