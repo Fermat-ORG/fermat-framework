@@ -154,7 +154,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.create_contact_dialog);
+            setContentView(R.layout.loss_create_contact_dialog);
 
 
             save_contact_btn = (Button) findViewById(R.id.save_contact_btn);
@@ -302,7 +302,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {
-                    Toast.makeText(activity.getApplicationContext(), "Cannot find an address in the clipboard text.\n\n" + item.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity.getApplicationContext(), "Cannot find an address in the clipboard text.", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 // This enables the paste menu item, since the clipboard contains plain text.

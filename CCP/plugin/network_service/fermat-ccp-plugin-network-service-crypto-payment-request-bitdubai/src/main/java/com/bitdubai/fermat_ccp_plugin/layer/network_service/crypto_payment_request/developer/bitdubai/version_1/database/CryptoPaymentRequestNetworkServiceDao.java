@@ -108,7 +108,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                                                  final BlockchainNetworkType       networkType      ,
                                                  final ReferenceWallet              referenceWallet,
                                                  final int                          sentNumber,
-                                                 final String                       messageType) throws CantCreateCryptoPaymentRequestException {
+                                                 final String                       messageType,
+                                                 final String                       walletPublicKey) throws CantCreateCryptoPaymentRequestException {
 
         try {
 
@@ -134,7 +135,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                         networkType,
                         referenceWallet,
                         sentNumber,
-                        messageType
+                        messageType,
+                        walletPublicKey
                 );
 
                 cryptoPaymentRequestTable.insertRecord(buildDatabaseRecord(entityRecord, cryptoPaymentRequestRecord));
@@ -605,6 +607,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getReferenceWallet().getCode());
         record.setIntegerValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME, cryptoPaymentRequestRecord.getSentNumber());
         record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME, cryptoPaymentRequestRecord.getMessageType());
+        record.setStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME, cryptoPaymentRequestRecord.getWalletPublicKey());
 
         return record;
     }
@@ -628,6 +631,7 @@ public final class CryptoPaymentRequestNetworkServiceDao {
         long   startTimeStamp       = record.getLongValue  (CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_START_TIME_STAMP_COLUMN_NAME   );
         int   sentNumber            = record.getIntegerValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME);
         String   messageType        = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME);
+        String   walletpublickey   = record.getStringValue(CryptoPaymentRequestNetworkServiceDatabaseConstants.CRYPTO_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
 
 
         CryptoAddress        cryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.getByCode(cryptoCurrencyString));
@@ -656,7 +660,8 @@ public final class CryptoPaymentRequestNetworkServiceDao {
                 networkType,
                 ReferenceWallet.getByCode(referenceWallet),
                 sentNumber,
-                messageType
+                messageType,
+                walletpublickey
         );
     }
 

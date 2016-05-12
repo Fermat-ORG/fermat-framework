@@ -68,18 +68,6 @@ import java.util.concurrent.BlockingDeque;
 public interface LossProtectedWallet extends Serializable {
 
     /**
-     * Calculate Earnings or Losts.
-     *
-     * @param walletPublicKey public key of the wallet in which we are working.
-     *
-     * @return a double with Losts or Earnings
-     *
-     * @throws
-     */
-
-    double getEarningOrLostsWallet(String walletPublicKey);
-
-    /**
      * List all wallet contact related to an specific wallet.
      *
      * @param walletPublicKey public key of the wallet in which we are working.
@@ -331,7 +319,8 @@ public interface LossProtectedWallet extends Serializable {
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+              BlockchainNetworkType blockchainNetworkType
+              ) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
     void sendToWallet (long cryptoAmount,
@@ -490,6 +479,14 @@ public interface LossProtectedWallet extends Serializable {
     List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException, CantLoadWalletException;
 
     /**
+     * Throw the method <code>listAllWalletSpendingValue</code> you can list all  btc spending value.
+     * @param walletPublicKey
+     * @return
+     * @throws CantListLossProtectedSpendingException
+     */
+    List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey,BlockchainNetworkType blockchainNetworkType) throws CantListLossProtectedSpendingException, CantLoadWalletException;
+
+    /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
      *
      * @param walletPublicKey public key of the wallet in where you're working.
@@ -635,4 +632,24 @@ public interface LossProtectedWallet extends Serializable {
     UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException;
 
     void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException;
+
+    /**
+     *
+     * @param balanceType
+     * @param transactionType
+     * @param walletPublicKey
+     * @param intraUserLoggedInPublicKey
+     * @param blockchainNetworkType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListLossProtectedTransactionsException
+     */
+    List<LossProtectedWalletTransaction> listAllActorTransactionsByTransactionType(BalanceType balanceType,
+                                                                                   final TransactionType transactionType,
+                                                                                   String walletPublicKey,
+                                                                                   String intraUserLoggedInPublicKey,
+                                                                                   BlockchainNetworkType blockchainNetworkType,
+                                                                                   int max,
+                                                                                   int offset) throws CantListLossProtectedTransactionsException;
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException;
@@ -99,7 +100,8 @@ public interface BitcoinLossProtectedWallet {
     List<BitcoinLossProtectedWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                               TransactionType transactionType,
                                                                               int max,
-                                                                              int offset) throws CantListTransactionsException;
+                                                                              int offset,
+                                                                             BlockchainNetworkType blockchainNetworkType) throws CantListTransactionsException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.
@@ -153,9 +155,16 @@ public interface BitcoinLossProtectedWallet {
      * @throws CantListSpendingException
      */
      List<BitcoinLossProtectedWalletSpend> listTransactionsSpending(UUID transactionId) throws CantListSpendingException;
+    /**
+     *  Throw the method <code>listAllSpending()</code> return all spending btc information.
+     * @return
+     * @throws CantListSpendingException
+     */
+    List<BitcoinLossProtectedWalletSpend> listAllWalletSpending(BlockchainNetworkType blockchainNetworkType) throws CantListSpendingException;
 
 
-        /**
+
+    /**
          *
          * @param transactionRecord
          * @param credit

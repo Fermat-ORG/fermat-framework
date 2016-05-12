@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
@@ -63,6 +64,8 @@ import java.util.List;
  * * * * *
  */
 
+@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+
 public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,
        IncomingIntraUserManager {
@@ -70,8 +73,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
     private BitcoinWalletManager bitcoinWalletManager;
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_ROUTER, plugin = Plugins.INCOMING_CRYPTO)
@@ -110,7 +112,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             IncomingIntraUserTransactionDeveloperDatabaseFactory databaseFactory = new IncomingIntraUserTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             return databaseFactory.getDatabaseList(developerObjectFactory);
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             return new ArrayList<>();
         }
     }
@@ -121,7 +123,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             IncomingIntraUserTransactionDeveloperDatabaseFactory databaseFactory = new IncomingIntraUserTransactionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             return databaseFactory.getDatabaseTableList(developerObjectFactory);
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             return new ArrayList<>();
         }
     }
@@ -133,7 +135,7 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
             return new ArrayList<>();
         }
     }
@@ -157,10 +159,10 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
 
 
         } catch (CantInitializeIncomingIntraUserCryptoRegistryException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Registry could not be initialized", e, "", "");
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantStartPluginException("An unexpected exception happened", FermatException.wrapException(e), "", "");
         }
 
@@ -168,55 +170,55 @@ public class IncomingIntraUserTransactionPluginRoot extends AbstractPlugin
             this.eventRecorderService = new IncomingIntraUserEventRecorderService(this.eventManager, this.registry);
             eventRecorderService.start();
         } catch (CantStartIncomingIntraUserEventRecorderServiceException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Event Recorder Service could not be initialized", e, "", "");
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantStartPluginException("An unexpected exception happened", FermatException.wrapException(e), "", "");
         }
 
         try {
-            this.relayAgent = new IncomingIntraUserRelayAgent(this.errorManager, this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoTransmissionNetworkServiceManager,broadcaster,lossProtectedWalletManager);
+            this.relayAgent = new IncomingIntraUserRelayAgent(getErrorManager(), this.eventManager, this.bitcoinWalletManager, this.cryptoAddressBookManager, this.registry, this.cryptoTransmissionNetworkServiceManager,broadcaster,lossProtectedWalletManager);
             this.relayAgent.start();
         } catch (CantStartIncomingIntraUserRelayAgentException e) {
             this.eventRecorderService.stop();
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Relay Agent could not be initialized", e, "", "");
         } catch (Exception e) {
             this.eventRecorderService.stop();
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantStartPluginException("An unexpected exception happened", FermatException.wrapException(e), "", "");
         }
 
         try {
-            this.cryptoMonitorAgent = new IncomingIntraUserCryptoMonitorAgent(this.errorManager, this.incomingCryptoManager, this.registry);
+            this.cryptoMonitorAgent = new IncomingIntraUserCryptoMonitorAgent(getErrorManager(), this.incomingCryptoManager, this.registry);
             this.cryptoMonitorAgent.start();
         } catch (CantStartIntraUserCryptoMonitorAgentException e) {
             this.relayAgent.stop();
             this.eventRecorderService.stop();
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Crypto Monitor Agent could not be initialized", e, "", "");
         } catch (Exception e) {
             this.relayAgent.stop();
             this.eventRecorderService.stop();
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantStartPluginException("An unexpected exception happened", FermatException.wrapException(e), "", "");
         }
 
         try {
-            this.metadataMonitorAgent = new IncomingIntraUserMetadataMonitorAgent(this.errorManager, this.cryptoTransmissionNetworkServiceManager, this.registry);
+            this.metadataMonitorAgent = new IncomingIntraUserMetadataMonitorAgent(getErrorManager(), this.cryptoTransmissionNetworkServiceManager, this.registry);
             metadataMonitorAgent.start();
         } catch (CantStartIntraUserCryptoMonitorAgentException e) {
             this.relayAgent.stop();
             this.cryptoMonitorAgent.stop();
             this.eventRecorderService.stop();
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Metadata Monitor Agent could not be initialized", e, "", "");
         } catch (Exception e) {
             this.relayAgent.stop();
             this.cryptoMonitorAgent.stop();
             this.eventRecorderService.stop();
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantStartPluginException("An unexpected exception happened", FermatException.wrapException(e), "", "");
         }
 

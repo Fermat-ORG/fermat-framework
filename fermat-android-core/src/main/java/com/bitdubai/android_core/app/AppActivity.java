@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
@@ -493,4 +494,8 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         if(tab!=null) tab.setCustomView(view);
     }
 
+    @Override
+    public void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation) {
+
+    }
 }

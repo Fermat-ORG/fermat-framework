@@ -4,16 +4,13 @@ import com.bitdubai.fermat_api.FermatException;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
@@ -21,16 +18,15 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
+
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 
 import java.util.UUID;
@@ -53,7 +49,10 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
    private UUID exchangeProviderId;
 
-    private String WALLET_PUBLIC_KEY = "loss_protected_wallet";
+
+    CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+    CurrencyExchangeRateProviderManager rateProviderManager;
+
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -67,6 +66,12 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         this.broadcaster = broadcaster;
         this.exchangeProviderId = exchangeProviderId;
         this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
+
+        try {
+            rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(exchangeProviderId);
+        } catch (CantGetProviderException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -128,11 +133,12 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             double purchasePrice = 0;
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, String.valueOf(purchasePrice));
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, String.valueOf(purchasePrice),exchangeProviderFilterManagerproviderFilter, exchangeProviderId,rateProviderManager);
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "BalanceChange");
             //get exchange rate on background
-            setActualExchangeRate(cryptoTransaction.getTransactionId());
+            //and insert spendings
+            setActualExchangeRate(TransactionType.DEBIT,cryptoTransaction);
         } catch(CantRegisterDebitException exception){
             throw exception;
         } catch(Exception exception){
@@ -154,10 +160,10 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             //calculate value blocks to spend and inserted into the table
 
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "BalanceChange");
 
             //get exchange rate on background
-            setActualExchangeRate(cryptoTransaction.getTransactionId());
+            setActualExchangeRate(TransactionType.CREDIT,cryptoTransaction);
         } catch(CantRegisterCreditException exception){
             throw exception;
         } catch(Exception exception){
@@ -179,7 +185,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         }
     }
 
-    private void setActualExchangeRate(final UUID transactionId)
+    private void setActualExchangeRate(final TransactionType transactionType,final BitcoinLossProtectedWalletTransactionRecord transactionRecord)
     {
         final ExchangeRate[] rate = new ExchangeRate[1];
         try {
@@ -193,14 +199,17 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
                 @Override
                 public void run() {
                     try {
-                        CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
-                        CurrencyExchangeRateProviderManager rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
-                        //your exchange rate.
+                          //your exchange rate.
                         rate[0] = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
 
                         //update transaction record
                         bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
-                        bitcoinWalletBasicWalletDao.updateTransactionRate(transactionId, rate[0].getPurchasePrice());
+                        bitcoinWalletBasicWalletDao.updateTransactionRate(transactionRecord.getTransactionId(), rate[0].getPurchasePrice());
+
+                        //insert transaction spendings
+                        //calculate chunck values spent
+                        if(transactionType.getCode().equals(TransactionType.DEBIT.getCode()))
+                            bitcoinWalletBasicWalletDao.insertSpending(transactionRecord, String.valueOf(rate[0].getPurchasePrice()));
 
                     } catch (CantGetExchangeRateException e) {
                         e.printStackTrace();
