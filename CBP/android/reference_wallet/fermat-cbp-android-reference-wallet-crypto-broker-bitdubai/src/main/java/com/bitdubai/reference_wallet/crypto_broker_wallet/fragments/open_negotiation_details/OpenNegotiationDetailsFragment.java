@@ -24,10 +24,12 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_api.layer.world.interfaces.CurrencyHelper;
@@ -39,10 +41,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.network_service.negotiation_transmission.exceptions.CantSendNegotiationToCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.ClauseDateTimeDialog;
@@ -91,6 +97,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
     // DATA
     private NegotiationWrapper negotiationWrapper;
+    private float spread = 1;
+
 
     // Fermat Managers
     private ErrorManager errorManager;
@@ -161,6 +169,21 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             adapter.setClauseListener(this);
         }
         setSuggestedExchangeRateInAdapter(adapter);
+
+        //Get Spread from settings, send it to adapter
+        try {
+            CryptoBrokerWalletSettingSpread spreadSettings = moduleManager.getCryptoBrokerWalletSpreadSetting(appSession.getAppPublicKey());
+            spread = spreadSettings.getSpread();
+        } catch (FermatException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+            if (errorManager != null) {
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        ex);
+            }
+        }
+        adapter.setSpread(spread);
 
         recyclerView.setAdapter(adapter);
 
@@ -418,6 +441,18 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 negotiationWrapper.changeClauseValue(amountToReceiveClause, numberFormat.format(amountToReceiveValue));
 
                 adapter.changeDataSet(negotiationWrapper);
+
+
+                BigDecimal marketRateReferenceValue = getMarketRateValue(clauses);
+                BigDecimal suggestedMaxExchangeRate = new BigDecimal(marketRateReferenceValue.doubleValue() * (1 + (spread / 100)));
+
+
+                if(exchangeRate.compareTo(suggestedMaxExchangeRate) == 1)
+                    Toast.makeText(getActivity(), "Warning: Selected Rate is higher than suggested!", Toast.LENGTH_LONG).show();
+
+                if(exchangeRate.compareTo(marketRateReferenceValue) == -1)
+                    Toast.makeText(getActivity(), "Warning: Selected Rate is lower than suggested!", Toast.LENGTH_LONG).show();
+
             }
         });
         clauseTextDialog.show();
@@ -611,5 +646,44 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 adapter.changeDataSet(negotiationWrapper);
             }
         });
+    }
+
+
+
+    private BigDecimal getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
+
+        String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+
+        BigDecimal exchangeRate = new BigDecimal(0);
+
+        ExchangeRate currencyQuotation = getExchangeRate(currencyOver, currencyUnder);
+
+        if (currencyQuotation == null) {
+            currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
+            if (currencyQuotation != null) {
+                exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
+                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
+            }
+        } else {
+            exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
+        }
+
+        return exchangeRate;
+    }
+
+    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
+
+        if (appSession.getActualExchangeRates() != null)
+            for (IndexInfoSummary item : appSession.getActualExchangeRates()) {
+                final ExchangeRate exchangeRateData = item.getExchangeRateData();
+                final String toCurrency = exchangeRateData.getToCurrency().getCode();
+                final String fromCurrency = exchangeRateData.getFromCurrency().getCode();
+
+                if (fromCurrency.equals(currencyAlfa) && toCurrency.equals(currencyBeta))
+                    return exchangeRateData;
+            }
+
+        return null;
     }
 }

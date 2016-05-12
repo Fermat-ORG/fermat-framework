@@ -22,14 +22,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.PaymentType;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.CustomerAckMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
@@ -60,6 +64,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -399,11 +404,12 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                                     getCustomerBrokerContractSaleForContractId(contractHash);
 
                             ObjectChecker.checkArgument(customerBrokerContractSale); //If the contract is null, I cannot handle with this situation
-
-                            customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
-                            customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
-                            raiseAckConfirmationEvent(contractHash);
+                            if(!customerBrokerContractSale.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+                                customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
+                                raiseAckConfirmationEvent(contractHash);
+                            }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
@@ -422,10 +428,14 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
                             if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_MERCHANDISE_ACK.getCode())) {
-                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
-                                customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                                raiseAckConfirmationEvent(contractHash);
+                                CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+                                ObjectChecker.checkArgument(contractPurchase);
+                                if(!contractPurchase.getStatus().getCode().equals(ContractStatus.COMPLETED)){
+                                    businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
+                                    customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
+                                    customerAckOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                    raiseAckConfirmationEvent(contractHash);
+                                }
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -443,14 +453,24 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
                                 getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
-                        customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase, customerBrokerPurchaseNegotiation);
+                        Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
+                        String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
+
+                        if (MoneyType.CRYPTO.getCode().equals(clauseValue))
+                            customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase, customerBrokerPurchaseNegotiation);
+
                     }catch (Exception e){
                         System.out.println("an error has occurred (BROKER_ACK_PAYMENT_CONFIRMED) this must show on the broker side ");
                     }
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
-            } catch (CantUpdateRecordException exception) {
+            } catch (CantGetListCustomerBrokerContractPurchaseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the database");
+            }  catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
                         "Checking pending events",

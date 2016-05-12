@@ -499,21 +499,33 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                     CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(eventId);
                     ObjectChecker.checkArgument(customerBrokerContractSale, "The customerBrokerContractSale is null");
+                    String negotiationId = customerBrokerContractSale.getNegotiatiotId();
                     MoneyType paymentType = getMoneyTypeFromContract(customerBrokerContractSale);
                     FiatCurrency currencyType = getCurrencyTypeFromContract(customerBrokerContractSale);
 
-                    brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
-                            customerBrokerContractSale,
-                            paymentType,
-                            customerBrokerContractSale.getPublicKeyBroker(),
-                            ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
-                            currencyType);
+
+                    CustomerBrokerSaleNegotiation customerBrokerPurchaseNegotiation = customerBrokerSaleNegotiationManager.
+                            getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+                    Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+                    if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                        brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(
+                                customerBrokerContractSale,
+                                paymentType,
+                                customerBrokerContractSale.getPublicKeyBroker(),
+                                ContractTransactionStatus.PENDING_ACK_OFFLINE_PAYMENT,
+                                currencyType);
+                    }
+
 
                     System.out.println("ACK_OFFLINE_PAYMENT - NEW_CONTRACT_OPENED - New Business Transaction Status: PENDING_ACK_OFFLINE_PAYMENT");
 
                     brokerAckOfflinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
+            } catch (CantGetListClauseException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(e, "Checking pending events", "Cannot update the database");
             } catch (CantUpdateRecordException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Checking pending events", "Cannot update the database");
             } catch (CantConfirmTransactionException e) {

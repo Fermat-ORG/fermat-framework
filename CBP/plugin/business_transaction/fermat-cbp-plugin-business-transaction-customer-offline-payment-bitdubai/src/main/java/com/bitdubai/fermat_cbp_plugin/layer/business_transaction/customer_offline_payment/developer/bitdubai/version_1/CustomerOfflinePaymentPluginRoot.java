@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDatabaseConstants;
@@ -81,6 +82,9 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
     private CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_SALE)
+    private CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
      * Represents the plugin manager.
@@ -174,8 +178,8 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager);
-            monitorAgent.start();
+                    customerBrokerContractSaleManager,customerBrokerSaleNegotiationManager);
+            customerOnlinePaymentMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer offline payment starting");
