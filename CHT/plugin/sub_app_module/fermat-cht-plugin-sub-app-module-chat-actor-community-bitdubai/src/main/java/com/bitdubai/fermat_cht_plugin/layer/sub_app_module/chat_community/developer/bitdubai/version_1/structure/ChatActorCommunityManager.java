@@ -456,7 +456,14 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try {
             appSettings = this.getSettingsManager().loadAndGetSettings(this.subAppPublicKey);//SubAppsPublicKeys.CHT_COMMUNITY.getCode() //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            try {
+                appSettings = new ChatActorCommunitySettings();
+                this.getSettingsManager().persistSettings(this.subAppPublicKey, appSettings);
+            } catch (CantPersistSettingsException e1) {
+                //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                //e1.printStackTrace();
+            }
+            //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return null;
         }
 

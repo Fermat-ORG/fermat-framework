@@ -68,6 +68,7 @@ import static android.widget.Toast.makeText;
  * FERMAT-ORG
  * Developed by Lozadaa on 04/04/16.
  */
+
 public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_LOAD_IMAGE = 2;
@@ -86,6 +87,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     ChatIdentitySession Session;
     Context context;
     Toolbar toolbar;
+    TextView statusView;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
     public static CreateChatIdentityFragment newInstance() {
@@ -143,26 +145,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
         mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
+        statusView = (TextView) layout.findViewById(R.id.statusView);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
-        mBrokerName.setVisibility(View.GONE);
-        textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
-        textViewChtTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBrokerName.setVisibility(View.VISIBLE);
-                textViewChtTitle.setVisibility(View.GONE);
-            }
-        });
-      mChatConnectionState.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View v) {
-              if (mBrokerName.getVisibility() == View.VISIBLE) {
-                  mBrokerName.setVisibility(View.GONE);
-                  textViewChtTitle.setVisibility(View.VISIBLE);
-              }
-          }
-      });
+
         Bitmap bitmap = null;
         if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
         {
@@ -170,6 +156,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
         try {
             if(ExistIdentity() == false) {
+                mBrokerName.setVisibility(View.VISIBLE);
+                mChatConnectionState.setVisibility(View.VISIBLE);
+                statusView.setVisibility(View.GONE);
+                textViewChtTitle.setVisibility(View.GONE);
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -217,7 +207,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 String state = moduleManager.getIdentityChatUser().getConnectionState();
                 mChatConnectionState.setText(state);
                 mBrokerName.setVisibility(View.GONE);
+                mChatConnectionState.setVisibility(View.GONE);
+                statusView.setVisibility(View.VISIBLE);
+                statusView.setText(state);
+                textViewChtTitle.setVisibility(View.VISIBLE);
                 textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
+                statusView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
                 textViewChtTitle.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -225,12 +220,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         textViewChtTitle.setVisibility(View.GONE);
                     }
                 });
-                mChatConnectionState.setOnClickListener(new View.OnClickListener() {
+                statusView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mBrokerName.getVisibility() == View.VISIBLE) {
-                            mBrokerName.setVisibility(View.GONE);
-                            textViewChtTitle.setVisibility(View.VISIBLE);
+                        if (statusView.getVisibility() == View.VISIBLE) {
+                            statusView.setVisibility(View.GONE);
+                            mChatConnectionState.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -368,6 +363,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
     private void updateIdentityInBackDevice(String donde) throws CantGetChatIdentityException {
         String brokerNameText = mBrokerName.getText().toString();
+        String state= mChatConnectionState.getText().toString();
+
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         }
@@ -377,13 +374,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState());
-
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), state);
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
                             textViewChtTitle.setText(mBrokerName.getText());
+                            statusView.setText(mChatConnectionState.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
@@ -421,15 +418,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private void createNewIdentityInBackDevice(String donde) {
         String brokerNameText = mBrokerName.getText().toString();
         String identityConnectionNameText = mChatConnectionState.getText().toString();
+        if (cryptoBrokerBitmap == null) {
+            //Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            cryptoBrokerBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cht_center_profile_icon_center);
+        }
         if(identityConnectionNameText.length() == 0){
             identityConnectionNameText = "Available";
         }
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         } else {
-            if (cryptoBrokerBitmap == null) {
-                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-            } else {
+
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 CreateChatIdentityExecutor executor = null;
                 try {
@@ -448,7 +447,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 }      } catch (CantGetChatIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
-                }
+
             }
         }
     }
