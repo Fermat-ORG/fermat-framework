@@ -315,13 +315,14 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                 if (returnModuleObject instanceof Exception){
                     return new FermatModuleObjectWrapper(dataId,null,true, (Exception) returnModuleObject);
                 }else {
-                    if (!(returnModuleObject instanceof Serializable))
-                        if(returnModuleObject!=null){
-                            throw new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName()+" from method "+method + " is not implementing serializable");
-                        } else{
-                            throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
-
+                    if (!(returnModuleObject instanceof Serializable)) {
+                        if (returnModuleObject != null) {
+                            throw new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
+                        } else {
+                             //throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
+                            Log.e(TAG,"object returned null ");
                         }
+                    }
                     Serializable aidlObject = (Serializable) returnModuleObject;
                     if (isDataForChunk(aidlObject)) {
                         try {
@@ -610,7 +611,8 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     Log.e(TAG,"NoSuchMethodException:"+method+" on class"+clazz.getName());
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
-                    return e;
+                    return e.getTargetException();
+//                    return e;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (Exception e){
