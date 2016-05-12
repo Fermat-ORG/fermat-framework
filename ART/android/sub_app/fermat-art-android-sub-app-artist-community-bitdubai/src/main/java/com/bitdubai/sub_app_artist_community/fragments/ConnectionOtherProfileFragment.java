@@ -121,11 +121,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         //Show user image if it has one, otherwise show default user image
         try {
             userName.setText(artistCommunityInformation.getAlias());
-            try{
+            /*try{
                 externalPlatform.setText(getSelectedIdentityExternalPlatform().getFriendlyName());
             }catch (Exception e){
 
-            }
+            }*/
             Bitmap bitmap;
 
             if(artistCommunityInformation.getImage() != null && artistCommunityInformation.getImage().length > 0)
@@ -142,14 +142,14 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         return rootView;
     }
 
-    private ArtExternalPlatform getSelectedIdentityExternalPlatform(){
+    /*private ArtExternalPlatform getSelectedIdentityExternalPlatform(){
         HashMap<ArtExternalPlatform, String> selectedIdentityExternalPlatformMap = artistCommunityInformation.getArtistExternalPlatformInformation().getExternalPlatformInformationMap();
         ArtExternalPlatform selectedIdentityExternalPlatform;
         Iterator<Map.Entry<ArtExternalPlatform, String>> entries = selectedIdentityExternalPlatformMap.entrySet().iterator();
         Map.Entry<ArtExternalPlatform, String> entry = entries.next();
         selectedIdentityExternalPlatform = entry.getKey();
         return selectedIdentityExternalPlatform;
-    }
+    }*/
 
     @Override
     public void onClick(View v) {

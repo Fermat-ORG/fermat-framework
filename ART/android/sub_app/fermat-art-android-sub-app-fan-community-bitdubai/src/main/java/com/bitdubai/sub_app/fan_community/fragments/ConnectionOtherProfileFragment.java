@@ -121,11 +121,12 @@ public class ConnectionOtherProfileFragment extends
         //Show user image if it has one, otherwise show default user image
         try {
             userName.setText(fanCommunityInformation.getAlias());
-            try{
+            /*try{
                 externalPlatform.setText(getSelectedIdentityExternalPlatform().getFriendlyName());
             }catch (Exception e){
 
-            }            Bitmap bitmap;
+            } */
+            Bitmap bitmap;
 
             if(fanCommunityInformation.getImage() != null && fanCommunityInformation.getImage().length > 0)
                 bitmap = BitmapFactory.decodeByteArray(
@@ -148,14 +149,14 @@ public class ConnectionOtherProfileFragment extends
         }
         return rootView;
     }
-    private ArtExternalPlatform getSelectedIdentityExternalPlatform(){
+    /*private ArtExternalPlatform getSelectedIdentityExternalPlatform(){
         HashMap<ArtExternalPlatform, String> selectedIdentityExternalPlatformMap = fanCommunityInformation.getFanExternalPlatformInformation().getExternalPlatformInformationMap();
         ArtExternalPlatform selectedIdentityExternalPlatform;
         Iterator<Map.Entry<ArtExternalPlatform, String>> entries = selectedIdentityExternalPlatformMap.entrySet().iterator();
         Map.Entry<ArtExternalPlatform, String> entry = entries.next();
         selectedIdentityExternalPlatform = entry.getKey();
         return selectedIdentityExternalPlatform;
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
