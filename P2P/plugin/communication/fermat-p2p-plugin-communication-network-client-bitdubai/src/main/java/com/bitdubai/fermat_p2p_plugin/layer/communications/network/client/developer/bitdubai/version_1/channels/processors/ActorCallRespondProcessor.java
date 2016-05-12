@@ -4,7 +4,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorCallRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.call_channels.NetworkClientCommunicationCallChannelManagerAgent;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 
 import javax.websocket.Session;
 
@@ -25,7 +24,7 @@ public class ActorCallRespondProcessor extends PackageProcessor {
      *
      * @param communicationsNetworkClientChannel register
      */
-    public ActorCallRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public ActorCallRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
                 PackageType.ACTOR_CALL_RESPOND

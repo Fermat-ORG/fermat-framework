@@ -17,7 +17,7 @@ import java.sql.Timestamp;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NodeConnectionHistoryDao extends AbstractBaseDao<NodeConnectionHistory>{
+public class NodeConnectionHistoryDao extends AbstractBaseDao<NodeConnectionHistory> {
 
     public NodeConnectionHistoryDao(final Database dataBase) {
 

@@ -9,26 +9,25 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckOutProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckOutClientRespondProcessor</code>
+ * The Class <code>CheckOutClientRespondProcessor</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 28/04/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CheckOutClientRespondProcessor extends PackageProcessor{
+public class CheckOutClientRespondProcessor extends PackageProcessor {
 
     /**
      * Constructor whit parameter
      *
      * @param communicationsNetworkClientChannel register
      */
-    public CheckOutClientRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public CheckOutClientRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
                 PackageType.CHECK_OUT_CLIENT_RESPOND

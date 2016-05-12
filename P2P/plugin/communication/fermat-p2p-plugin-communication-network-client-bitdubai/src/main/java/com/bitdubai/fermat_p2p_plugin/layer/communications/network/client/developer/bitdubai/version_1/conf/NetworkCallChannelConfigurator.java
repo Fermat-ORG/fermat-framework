@@ -14,7 +14,7 @@ import javax.websocket.ClientEndpointConfig;
 import javax.websocket.HandshakeResponse;
 
 /**
- * The class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.conf.NetworkCallChannelConfigurator</code>
+ * The class <code>NetworkCallChannelConfigurator</code>
  * </p>
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.

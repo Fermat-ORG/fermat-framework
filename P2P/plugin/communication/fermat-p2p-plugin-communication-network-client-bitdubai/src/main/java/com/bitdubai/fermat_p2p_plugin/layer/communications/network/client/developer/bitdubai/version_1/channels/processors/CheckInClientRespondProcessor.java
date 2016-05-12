@@ -1,14 +1,12 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientRegisteredEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 
 import javax.websocket.Session;
 
@@ -29,7 +27,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
      *
      * @param communicationsNetworkClientChannel register
      */
-    public CheckInClientRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public CheckInClientRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
                 PackageType.CHECK_IN_CLIENT_RESPOND
@@ -41,8 +39,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
      * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
-    public void processingPackage(final Session session        ,
-                                  final Package packageReceived) {
+    public void processingPackage(Session session, Package packageReceived) {
 
         System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         CheckInProfileMsjRespond checkInProfileMsjRespond = CheckInProfileMsjRespond.parseContent(packageReceived.getContent());
@@ -59,21 +56,24 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
              */
             getChannel().setIsRegistered(Boolean.TRUE);
 
-            /*
-             * Create a raise a new event whit the platformComponentProfile registered
-             */
-            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_REGISTERED);
-            event.setSource(EventSource.NETWORK_CLIENT);
+            /* Test resgister NetworkServiceType.INTRA_USER */
 
-            ((NetworkClientRegisteredEvent) event).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+            NetworkServiceProfile ns = new NetworkServiceProfile();
+            ns.setClientIdentityPublicKey(getChannel().getNetworkClientCommunicationConnection().getClientProfile().getIdentityPublicKey());
+            ns.setNetworkServiceType(NetworkServiceType.INTRA_USER);
+            ns.setIdentityPublicKey("123456789321654987");
 
-            /*
-             * Raise the event
-             */
-            System.out.println("CheckInClientRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_REGISTERED");
-            getEventManager().raiseEvent(event);
+            try {
+                getChannel().getNetworkClientCommunicationConnection().registerProfile(ns);
+            } catch (CantRegisterProfileException e) {
+                e.printStackTrace();
+            }
 
-        } else {
+            /* Test resgister NetworkServiceType.INTRA_USER */
+
+            //raise event
+
+        }else{
             //there is some wrong
         }
 
