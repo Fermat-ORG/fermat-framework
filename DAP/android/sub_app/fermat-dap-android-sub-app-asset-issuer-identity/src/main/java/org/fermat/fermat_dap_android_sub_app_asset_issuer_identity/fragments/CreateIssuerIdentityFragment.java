@@ -117,6 +117,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<IssuerI
                     try {
                         if (appSession.getAppPublicKey() != null) {
                             issuerIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                        }else {
+                            issuerIdentitySettings = moduleManager.loadAndGetSettings("1");
                         }
                     } catch (Exception e) {
                         issuerIdentitySettings = null;
@@ -126,10 +128,11 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<IssuerI
                         if (issuerIdentitySettings == null) {
                             issuerIdentitySettings = new IssuerIdentitySettings();
                             issuerIdentitySettings.setIsPresentationHelpEnabled(true);
-                            if (moduleManager != null) {
+                            if (appSession.getAppPublicKey() != null) {
                                 moduleManager.persistSettings(appSession.getAppPublicKey(), issuerIdentitySettings);
-                            }
-                        }
+                            } else {
+                                moduleManager.persistSettings("1", issuerIdentitySettings);
+                            }                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -280,22 +283,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment<IssuerI
                                                         }
                                                     }
                         );
-
                     }
                 }).start();
-
             }
-//            } else {
-//                List<IdentityAssetIssuer> lst = moduleManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-//                if (!lst.isEmpty()) {
-//                    identitySelected = lst.get(0);
-//                }
-//                if (identitySelected != null) {
-//                    loadIdentity();
-//                    isUpdate = true;
-//                    createButton.setText("Save changes");
-//                }
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
