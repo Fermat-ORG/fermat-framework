@@ -306,7 +306,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                     for (int i=0; i<providers.size(); i++) {
                         CurrencyExchangeRateProviderManager provider = providers.get(i);
 
-                        if(provider.getProviderId().equals(item))
+                        if(provider.getProviderName().equals(item))
 
                                 exchangeProviderId = provider.getProviderId();
 
