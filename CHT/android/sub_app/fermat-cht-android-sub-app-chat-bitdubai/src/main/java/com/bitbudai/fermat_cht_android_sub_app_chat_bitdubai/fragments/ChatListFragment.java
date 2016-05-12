@@ -494,10 +494,10 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
 
-        if (id == R.id.menu_error_report) {
-            changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_error_report) {
+//            changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
