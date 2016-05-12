@@ -445,7 +445,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                searchView.setIconified(false);
            }
         }
-        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.cht_help_icon)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
