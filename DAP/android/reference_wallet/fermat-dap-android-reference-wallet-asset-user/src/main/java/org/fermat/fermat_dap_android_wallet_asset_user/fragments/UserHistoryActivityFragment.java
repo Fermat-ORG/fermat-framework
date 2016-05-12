@@ -62,11 +62,12 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
+    AssetUserSession assetUserSession;
 
     // Data
     private List<DigitalAsset> digitalAssets;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     //UI
     private View noAssetsView;
@@ -81,10 +82,9 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
         setHasOptionsMenu(true);
 
         try {
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -137,7 +137,7 @@ public class UserHistoryActivityFragment extends FermatWalletListFragment<Digita
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_HISTORY) {
-                setUpHelpAssetHistory(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetHistory(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

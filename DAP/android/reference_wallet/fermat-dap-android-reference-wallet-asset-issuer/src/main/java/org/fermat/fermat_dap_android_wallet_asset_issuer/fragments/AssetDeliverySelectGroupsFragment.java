@@ -52,13 +52,14 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
     private static final String TAG = "AssetDeliverySelectGroupsFragment";
 
     // Fermat Managers
+    AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
     // Data
     private List<Group> groups;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     //UI
     private View noUsersView;
@@ -73,10 +74,10 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
         setHasOptionsMenu(true);
 
         try {
-            moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+            assetIssuerSession = ((AssetIssuerSession) appSession);
             errorManager = appSession.getErrorManager();
 
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+            moduleManager = assetIssuerSession.getModuleManager();
 
             groups = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -130,7 +131,7 @@ public class AssetDeliverySelectGroupsFragment extends FermatWalletListFragment<
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_GROUP) {
-                setUpHelpAssetDeliverGroups(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetDeliverGroups(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

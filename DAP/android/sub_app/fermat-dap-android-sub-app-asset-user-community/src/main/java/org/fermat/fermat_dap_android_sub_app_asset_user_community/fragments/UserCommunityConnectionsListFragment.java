@@ -64,12 +64,12 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
     private boolean isRefreshing = false;
     private View rootView;
     private UserCommunityAppFriendsListAdapter adapter;
-    private AssetUserCommunitySubAppSession userAppSession;
+    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     private LinearLayout emptyView;
     private AssetUserCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private List<Actor> actors;
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     public static UserCommunityConnectionsListFragment newInstance() {
         return new UserCommunityConnectionsListFragment();
@@ -79,11 +79,12 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        userAppSession = ((AssetUserCommunitySubAppSession) appSession);
-        moduleManager = userAppSession.getModuleManager();
+
+        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
+
         actors = new ArrayList<>();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
     }
 
     @Override
@@ -169,7 +170,7 @@ public class UserCommunityConnectionsListFragment extends AbstractFermatFragment
 
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {

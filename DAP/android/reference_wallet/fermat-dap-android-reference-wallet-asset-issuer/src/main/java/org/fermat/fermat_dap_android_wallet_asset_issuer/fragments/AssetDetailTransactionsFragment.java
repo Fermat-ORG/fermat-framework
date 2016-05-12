@@ -95,7 +95,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
     private DigitalAsset digitalAsset;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     private View noTransactionsView;
     private List<Transaction> transactions;
@@ -117,7 +117,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         moduleManager = assetIssuerSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetIssuerSession.getModuleManager();
 
         transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
@@ -447,7 +447,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL) {
-                setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             } else if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER) {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());

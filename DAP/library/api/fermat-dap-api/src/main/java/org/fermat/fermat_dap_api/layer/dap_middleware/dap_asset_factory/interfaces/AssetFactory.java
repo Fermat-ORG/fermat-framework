@@ -5,13 +5,14 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
 /**
  * Created by franklin on 07/09/15.
  */
-public interface AssetFactory {
+public interface AssetFactory extends Serializable {
     String getFactoryId();
     void setFactoryId(String factoryId);
 

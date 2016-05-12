@@ -24,7 +24,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
@@ -48,9 +47,10 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
     List<BlockchainNetworkType> listElementSpinner;
 
     // Fermat Managers
-    private AssetFactoryModuleManager manager;
+    private AssetFactoryModuleManager moduleManager;
+    AssetFactorySession assetFactorySession;
     private ErrorManager errorManager;
-    SettingsManager<AssetFactorySettings> settingsManager;
+//    SettingsManager<AssetFactorySettings> settingsManager;
     AssetFactorySettings settings = null;
     public static SettingsFactoryNetworkFragment newInstance() {
         return new SettingsFactoryNetworkFragment();
@@ -61,10 +61,10 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        manager = ((AssetFactorySession) appSession).getModuleManager();
-//        try {
+        assetFactorySession = ((AssetFactorySession) appSession);
+        moduleManager = assetFactorySession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 //        } catch (CantGetCryptoWalletException e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -80,7 +80,7 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
             rootView = inflater.inflate(R.layout.dap_factory_settings_main_network, container, false);
 
             try {
-                settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
@@ -116,7 +116,7 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetFactory.IC_ACTION_SETTINGS_NETWORK) {
-                setUpFactorySettingsNetwork(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpFactorySettingsNetwork(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -178,8 +178,10 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
         try {
             settings.setBlockchainNetworkPosition(position);
 
-            settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
-            manager.changeNetworkType(dataSet);
+            if (moduleManager != null) {
+                moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                moduleManager.changeNetworkType(dataSet);
+            }
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }

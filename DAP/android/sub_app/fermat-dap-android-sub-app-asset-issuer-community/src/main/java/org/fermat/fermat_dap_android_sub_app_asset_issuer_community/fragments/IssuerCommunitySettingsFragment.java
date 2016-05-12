@@ -39,7 +39,8 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
     private Switch notificationSwitch;
 
     private AssetIssuerCommunitySubAppModuleManager moduleManager;
-    SettingsManager<AssetIssuerSettings> settingsManager;
+    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
     private ErrorManager errorManager;
     AssetIssuerSubAppSettings settings = null;
 
@@ -53,10 +54,10 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
+        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
     }
@@ -95,7 +96,7 @@ public class IssuerCommunitySettingsFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_SETTINGS_NOTIFICATION) {
-                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

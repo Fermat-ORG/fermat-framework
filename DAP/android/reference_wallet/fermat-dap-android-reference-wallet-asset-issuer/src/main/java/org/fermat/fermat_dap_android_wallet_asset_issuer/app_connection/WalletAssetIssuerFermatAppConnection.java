@@ -28,12 +28,11 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces
 public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIssuerSession> {
 
     IdentityAssetIssuer identityAssetIssuer;
-    AssetIssuerWalletSupAppModuleManager manager;
+    AssetIssuerWalletSupAppModuleManager moduleManager;
     AssetIssuerSession assetIssuerSession;
 
     public WalletAssetIssuerFermatAppConnection(Context activity) {
         super(activity);
-        this.identityAssetIssuer = identityAssetIssuer;
     }
 
     @Override
@@ -76,15 +75,23 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
     public NotificationPainter getNotificationPainter(String code) {
         NotificationPainter notification = null;
         try {
-            this.assetIssuerSession = (AssetIssuerSession) this.getSession();
-            if (assetIssuerSession != null)
-                manager = assetIssuerSession.getModuleManager();
-            String[] params = code.split("_");
-            String notificationType = params[0];
-            String senderActorPublicKey = params[1];
+            boolean enabledNotification = true;
 
-            switch (notificationType) {
-                case "ASSET-ISSUER-DEBIT":
+            this.assetIssuerSession = this.getFullyLoadedSession();
+            if (assetIssuerSession != null) {
+                if (assetIssuerSession.getModuleManager() != null) {
+                    moduleManager = assetIssuerSession.getModuleManager();
+                    enabledNotification = assetIssuerSession.getModuleManager().loadAndGetSettings(assetIssuerSession.getAppPublicKey()).getNotificationEnabled();
+                }
+            }
+
+            if (enabledNotification) {
+                String[] params = code.split("_");
+                String notificationType = params[0];
+                String senderActorPublicKey = params[1];
+
+                switch (notificationType) {
+                    case "ASSET-ISSUER-DEBIT":
 //                    if (manager != null) {
                         //find last notification by sender actor public key
 //                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
@@ -92,8 +99,8 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
 //                    } else {
                         notification = new WalletAssetIssuerNotificationPainter("Wallet Issuer - Debit", senderActorPublicKey, "", "");
 //                    }
-                    break;
-                case "ASSET-ISSUER-CREDIT":
+                        break;
+                    case "ASSET-ISSUER-CREDIT":
 //                    if (manager != null) {
                         //find last notification by sender actor public key
 //                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
@@ -101,7 +108,8 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
 //                    } else {
                         notification = new WalletAssetIssuerNotificationPainter("Wallet Issuer Credit", senderActorPublicKey, "", "");
 //                    }
-                    break;
+                        break;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

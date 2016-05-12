@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -51,7 +52,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static android.widget.Toast.makeText;
 
@@ -67,7 +70,9 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     // Fermat Managers
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
-    SettingsManager<RedeemPointSettings> settingsManager;
+    RedeemPointSettings settings = null;
+    RedeemPointSession redeemPointSession;
+//    SettingsManager<RedeemPointSettings> settingsManager;
     // Data
     private List<DigitalAsset> digitalAssets;
 
@@ -85,9 +90,9 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         setHasOptionsMenu(true);
 
         try {
-            moduleManager = ((RedeemPointSession) appSession).getModuleManager();
+            redeemPointSession = ((RedeemPointSession) appSession);
+            moduleManager = redeemPointSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -102,29 +107,43 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         super.initViews(layout);
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        RedeemPointSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
 
         if (settings == null) {
+            int position = 0;
             settings = new RedeemPointSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
+
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+            for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
+                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
-                moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                    moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
         } else {
-            moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+            if (moduleManager != null) {
+                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+            }
         }
 
         final RedeemPointSettings redeemPointSettingsTemp = settings;
@@ -225,7 +244,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             int id = item.getItemId();
 
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

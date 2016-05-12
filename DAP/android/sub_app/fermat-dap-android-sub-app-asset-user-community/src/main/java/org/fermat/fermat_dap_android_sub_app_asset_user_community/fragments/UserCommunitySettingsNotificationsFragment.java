@@ -37,15 +37,15 @@ import static android.widget.Toast.makeText;
 public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private AssetUserCommunitySubAppSession session;
+    private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private AssetUserCommunitySubAppModuleManager moduleManager;
-    SettingsManager<AssetUserSettings> settingsManager;
-    private ErrorManager errorManager;
-    Settings settings = null;
+    AssetUserSettings settings = null;
 
+//    SettingsManager<AssetUserSettings> settingsManager;
+    private ErrorManager errorManager;
 
     public static UserCommunitySettingsNotificationsFragment newInstance() {
         return new UserCommunitySettingsNotificationsFragment();
@@ -56,10 +56,10 @@ public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFr
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
+        assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
     }
@@ -75,7 +75,7 @@ public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFr
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_user_community_opps_system_error, Toast.LENGTH_SHORT).show();
-            session.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
@@ -98,7 +98,7 @@ public class UserCommunitySettingsNotificationsFragment extends AbstractFermatFr
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SETTINGS_NOTIFICATION) {
-                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

@@ -64,7 +64,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
+    AssetUserSession assetUserSession;
     // Data
     private List<RedeemPoint> redeemPoints;
     private RedeemPoint redeemPointSelect;
@@ -89,10 +89,10 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            settingsManager = appSession.getModuleManager().getSettingsManager();
             try {
 
                 assetToRedeem = (Asset) appSession.getData("asset_data");
