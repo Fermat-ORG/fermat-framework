@@ -29,10 +29,10 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.RedeemPointIdentitySubAppSession;
@@ -42,6 +42,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -56,7 +57,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
+public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<RedeemPointIdentitySubAppSession, ResourceProviderManager> {
 
     private static final String TAG = "RedeemPointIdentity";
 
@@ -91,8 +92,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     private RedeemPointIdentity identitySelected;
     private boolean isUpdate = false;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
-    RedeemPointSettings redeemPointSettings = null;
+//    SettingsManager<RedeemPointSettings> settingsManager;
+    RedeemPointIdentitySettings redeemPointIdentitySettings = null;
 
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
@@ -114,25 +115,26 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
             moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    settingsManager = appSession.getModuleManager().getSettingsManager();
+//                    settingsManager = appSession.getModuleManager().getSettingsManager();
 
                     try {
                         if (appSession.getAppPublicKey() != null) {
-                            redeemPointSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                            redeemPointIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }
                     } catch (Exception e) {
-                        redeemPointSettings = null;
+                        redeemPointIdentitySettings = null;
                     }
 
                     try {
-                        if (redeemPointSettings == null) {
-                            redeemPointSettings = new RedeemPointSettings();
-                            redeemPointSettings.setIsPresentationHelpEnabled(true);
-                            if (appSession.getAppPublicKey() != null) {
-                                settingsManager.persistSettings(appSession.getAppPublicKey(), redeemPointSettings);
+                        if (redeemPointIdentitySettings == null) {
+                            redeemPointIdentitySettings = new RedeemPointIdentitySettings();
+                            redeemPointIdentitySettings.setIsPresentationHelpEnabled(true);
+                            if (moduleManager != null) {
+                                moduleManager.persistSettings(appSession.getAppPublicKey(), redeemPointIdentitySettings);
                             }
                         }
                     } catch (Exception e) {
@@ -156,8 +158,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         Handler handlerTimer = new Handler();
         handlerTimer.postDelayed(new Runnable() {
             public void run() {
-                if (redeemPointSettings != null) {
-                    if (redeemPointSettings.isPresentationHelpEnabled()) {
+                if (redeemPointIdentitySettings != null) {
+                    if (redeemPointIdentitySettings.isPresentationHelpEnabled()) {
                         setUpPresentation(false);
                     }
                 }
@@ -536,7 +538,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         try {
 
             if (item.getItemId() == R.id.action_identity_redeem_help) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

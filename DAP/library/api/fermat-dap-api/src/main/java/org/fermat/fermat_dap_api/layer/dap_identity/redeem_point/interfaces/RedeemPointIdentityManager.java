@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -7,13 +8,15 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface RedeemPointIdentityManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface RedeemPointIdentityManager extends ModuleManager<RedeemPointIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointIdentitySettings>, Serializable {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -40,8 +43,7 @@ public interface RedeemPointIdentityManager extends ModuleManager<FermatSettings
      * @return the intra user created
      * @throws CantCreateNewRedeemPointException if something goes wrong.
      */
-    RedeemPointIdentity createNewRedeemPoint(String alias,
-                                             byte[] profileImage) throws CantCreateNewRedeemPointException;
+    RedeemPointIdentity createNewRedeemPoint(String alias,  byte[] profileImage) throws CantCreateNewRedeemPointException;
 
 
     RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,

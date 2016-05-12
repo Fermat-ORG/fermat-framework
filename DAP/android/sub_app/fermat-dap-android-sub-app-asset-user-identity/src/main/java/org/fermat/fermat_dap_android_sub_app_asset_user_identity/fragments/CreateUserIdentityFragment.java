@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_identity_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.SessionConstants;
@@ -56,7 +57,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateUserIdentityFragment extends AbstractFermatFragment {
+public class CreateUserIdentityFragment extends AbstractFermatFragment<UserIdentitySubAppSession, ResourceProviderManager> {
 
     private static final String TAG = "CreateAssetUserIdentity";
 
@@ -84,7 +85,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
     private IdentityAssetUser identitySelected;
     private boolean isUpdate = false;
 
-    SettingsManager<UserIdentitySettings> settingsManager;
+//    SettingsManager<UserIdentitySettings> settingsManager;
     UserIdentitySettings userIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -107,14 +108,15 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
             moduleManager = userIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
+
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    settingsManager = appSession.getModuleManager().getSettingsManager();
+//                    settingsManager = appSession.getModuleManager().getSettingsManager();
 
                     try {
                         if (appSession.getAppPublicKey() != null) {
-                            userIdentitySettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                            userIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }
                     } catch (Exception e) {
                         userIdentitySettings = null;
@@ -124,8 +126,8 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
                         if (userIdentitySettings == null) {
                             userIdentitySettings = new UserIdentitySettings();
                             userIdentitySettings.setIsPresentationHelpEnabled(true);
-                            if (appSession.getAppPublicKey() != null) {
-                                settingsManager.persistSettings(appSession.getAppPublicKey(), userIdentitySettings);
+                            if (moduleManager != null) {
+                                moduleManager.persistSettings(appSession.getAppPublicKey(), userIdentitySettings);
                             }
                         }
                     } catch (Exception e) {
@@ -495,7 +497,7 @@ public class CreateUserIdentityFragment extends AbstractFermatFragment {
         try {
 
             if (item.getItemId() == R.id.action_identity_user_help) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

@@ -1,9 +1,12 @@
 package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -21,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -36,6 +40,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.database.AssetIssuerIdentityDeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.structure.IdentityAssetIssuerManagerImpl;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -56,10 +61,9 @@ import java.util.Map;
         layer = Layers.IDENTITY,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY)
-public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
+public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
         DatabaseManagerForDevelopers,
-        LogManagerForDevelopers,
-        IdentityAssetIssuerManager {
+        LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -85,7 +89,7 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
     }
 
-    org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.structure.IdentityAssetIssuerManagerImpl identityAssetIssuerManager;
+    IdentityAssetIssuerManagerImpl identityAssetIssuerManager;
 
     /**
      * DealsWithActorAssetIssuer Interface implementation.
@@ -139,14 +143,14 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-            identityAssetIssuerManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.structure.IdentityAssetIssuerManagerImpl(
-                    this.errorManager,
-                    this.logManager,
-                    this.pluginDatabaseSystem,
-                    this.pluginFileSystem,
-                    this.pluginId,
-                    this.deviceUserManager,
-                    this.actorAssetIssuerManager);
+//            identityAssetIssuerManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.structure.IdentityAssetIssuerManagerImpl(
+//                    this.errorManager,
+//                    this.logManager,
+//                    this.pluginDatabaseSystem,
+//                    this.pluginFileSystem,
+//                    this.pluginId,
+//                    this.deviceUserManager,
+//                    this.actorAssetIssuerManager);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
@@ -159,30 +163,30 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
         }
     }
 
-    @Override
-    public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantListAssetIssuersException {
-        return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-    }
+//    @Override
+//    public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantListAssetIssuersException {
+//        return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
+//    }
+//
+//    @Override
+//    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantGetAssetIssuerIdentitiesException {
+//        return identityAssetIssuerManager.getIdentityAssetIssuer();
+//    }
+//
+//    @Override
+//    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException {
+//        return identityAssetIssuerManager.createNewIdentityAssetIssuer(alias, profileImage);
+//    }
+//
+//    @Override
+//    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
+//        identityAssetIssuerManager.updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage);
+//    }
 
-    @Override
-    public IdentityAssetIssuer getIdentityAssetIssuer() throws CantGetAssetIssuerIdentitiesException {
-        return identityAssetIssuerManager.getIdentityAssetIssuer();
-    }
-
-    @Override
-    public IdentityAssetIssuer createNewIdentityAssetIssuer(String alias, byte[] profileImage) throws CantCreateNewIdentityAssetIssuerException {
-        return identityAssetIssuerManager.createNewIdentityAssetIssuer(alias, profileImage);
-    }
-
-    @Override
-    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
-        identityAssetIssuerManager.updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage);
-    }
-
-    @Override
-    public boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException {
-        return identityAssetIssuerManager.hasIntraIssuerIdentity();
-    }
+//    @Override
+//    public boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException {
+//        return identityAssetIssuerManager.hasIntraIssuerIdentity();
+//    }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -213,42 +217,56 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
         identityAssetIssuerManager.registerIdentitiesANS();
     }
 
+//    @Override
+//    public SettingsManager getSettingsManager() {
+//        if (this.settingsManager != null)
+//            return this.settingsManager;
+//
+//        this.settingsManager = new SettingsManager<>(
+//                pluginFileSystem,
+//                pluginId
+//        );
+//
+//        return this.settingsManager;
+//    }
+
+//    @Override
+//    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+//        try {
+//            List<IdentityAssetIssuer> identities = identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
+//            return (identities == null || identities.isEmpty()) ? null : identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
+//    @Override
+//    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+//        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
+//    }
+
+//    @Override
+//    public void setAppPublicKey(String publicKey) {
+//
+//    }
+//
+//    @Override
+//    public int[] getMenuNotifications() {
+//        return new int[0];
+//    }
+
     @Override
-    public SettingsManager getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
+    @moduleManagerInterfacea(moduleManager = IdentityAssetIssuerManagerImpl.class)
+    public ModuleManager getModuleManager() throws CantGetModuleManagerException {
 
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        try {
-            List<IdentityAssetIssuer> identities = identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
-    }
-
-    @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
-    public int[] getMenuNotifications() {
-        return new int[0];
+        return new IdentityAssetIssuerManagerImpl(
+                this.errorManager,
+                this.logManager,
+                this.pluginDatabaseSystem,
+                this.pluginFileSystem,
+                this.pluginId,
+                this.deviceUserManager,
+                this.actorAssetIssuerManager);
     }
 }

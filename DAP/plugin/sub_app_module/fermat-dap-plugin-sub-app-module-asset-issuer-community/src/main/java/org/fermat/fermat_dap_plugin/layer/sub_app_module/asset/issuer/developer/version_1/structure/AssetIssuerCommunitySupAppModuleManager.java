@@ -432,7 +432,6 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
                     countActor = getWaitingYourConnectionActorAssetIssuer(getActiveAssetIssuerIdentity().getPublicKey(), 100, 0).size();
                 }
                 return countActor;
-
             }
 
         } catch (CantGetActorAssetWaitingException e) {

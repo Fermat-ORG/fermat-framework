@@ -2,6 +2,10 @@ package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.versi
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -16,6 +20,8 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.database.AssetRedeemPointIdentityDao;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
@@ -33,7 +39,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class IdentityAssetRedeemPointManagerImpl extends ModuleManagerImpl<RedeemPointIdentitySettings> implements RedeemPointIdentityManager {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */
@@ -67,25 +73,25 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
 
     private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
+//    @Override
+//    public void setErrorManager(ErrorManager errorManager) {
+//        this.errorManager = errorManager;
+//    }
+//
+//    @Override
+//    public void setLogManager(LogManager logManager) {
+//        this.logManager = logManager;
+//    }
+//
+//    @Override
+//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+//        this.pluginDatabaseSystem = pluginDatabaseSystem;
+//    }
+//
+//    @Override
+//    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+//        this.pluginFileSystem = pluginFileSystem;
+//    }
 
     /**
      * Constructor
@@ -95,7 +101,16 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityAssetRedeemPointManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
+    public IdentityAssetRedeemPointManagerImpl(ErrorManager errorManager,
+                                               LogManager logManager,
+                                               PluginDatabaseSystem pluginDatabaseSystem,
+                                               PluginFileSystem pluginFileSystem,
+                                               UUID pluginId,
+                                               DeviceUserManager deviceUserManager,
+                                               ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
+
+        super(pluginFileSystem, pluginId);
+
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -190,6 +205,37 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         }
     }
 
+    @Override
+    public List<RedeemPointIdentity> getRedeemPointsFromCurrentDeviceUser() throws CantListAssetRedeemPointException {
+        return null;
+    }
+
+    @Override
+    public RedeemPointIdentity getIdentityAssetRedeemPoint() throws CantGetRedeemPointIdentitiesException {
+        return this.getIdentityRedeemPoint();
+    }
+
+    @Override
+    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
+        return this.createNewIdentityAssetRedeemPoint(alias, profileImage);
+    }
+
+    @Override
+    public RedeemPointIdentity createNewRedeemPoint(String alias,
+                                                    byte[] profileImage,
+                                                    String contactInformation,
+                                                    String countryName,
+                                                    String provinceName,
+                                                    String cityName,
+                                                    String postalCode,
+                                                    String streetName,
+                                                    String houseNumber) throws CantCreateNewRedeemPointException {
+
+        return this.createNewIdentityAssetRedeemPoint(alias, profileImage, contactInformation,
+                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+    }
+
+    @Override
     public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
                                           String contactInformation, String countryName, String provinceName, String cityName,
                                           String postalCode, String streetName, String houseNumber) throws CantUpdateIdentityRedeemPointException {
@@ -252,5 +298,47 @@ public class IdentityAssetRedeemPointManagerImpl implements DealsWithErrors, Dea
         } catch (CantRegisterActorAssetRedeemPointException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+        try {
+            List<RedeemPointIdentity> identities = this.getIdentityAssetRedeemPointsFromCurrentDeviceUser();
+            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetRedeemPointsFromCurrentDeviceUser().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+
+    @Override
+    public void createIdentity(String name,
+                               byte[] profile_img,
+                               String contactInformation,
+                               String countryName,
+                               String provinceName,
+                               String cityName,
+                               String postalCode,
+                               String streetName,
+                               String houseNumber) throws Exception {
+
+        this.createNewIdentityAssetRedeemPoint(name, profile_img, contactInformation,
+                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }

@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSession;
@@ -56,7 +57,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
+public class CreateIssuerIdentityFragment extends AbstractFermatFragment<IssuerIdentitySubAppSession, ResourceProviderManager> {
 
     private static final String TAG = "AssetIssuerIdentity";
 
@@ -84,7 +85,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
     private IdentityAssetIssuer identitySelected;
     private boolean isUpdate = false;
 
-    SettingsManager<IssuerIdentitySettings> settingsManager;
+//    SettingsManager<IssuerIdentitySettings> settingsManager;
     IssuerIdentitySettings issuerIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -111,11 +112,11 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    settingsManager = appSession.getModuleManager().getSettingsManager();
+//                    moduleManager = appSession.getModuleManager().getSettingsManager();
 
                     try {
                         if (appSession.getAppPublicKey() != null) {
-                            issuerIdentitySettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                            issuerIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }
                     } catch (Exception e) {
                         issuerIdentitySettings = null;
@@ -125,8 +126,8 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                         if (issuerIdentitySettings == null) {
                             issuerIdentitySettings = new IssuerIdentitySettings();
                             issuerIdentitySettings.setIsPresentationHelpEnabled(true);
-                            if (appSession.getAppPublicKey() != null) {
-                                settingsManager.persistSettings(appSession.getAppPublicKey(), issuerIdentitySettings);
+                            if (moduleManager != null) {
+                                moduleManager.persistSettings(appSession.getAppPublicKey(), issuerIdentitySettings);
                             }
                         }
                     } catch (Exception e) {
@@ -497,7 +498,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
         try {
 
             if (item.getItemId() == R.id.action_identity_issuer_help) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

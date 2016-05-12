@@ -32,22 +32,24 @@ public class Data {
         List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
-        for (AssetIssuerWalletList balance : balances) {
-            digitalAsset = new DigitalAsset();
-            digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
-            digitalAsset.setName(balance.getDigitalAsset().getName());
-            digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
-            digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
-            digitalAsset.setAvailableBalance(balance.getAvailableBalance());
-            Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
-            digitalAsset.setExpDate(expirationDate);
+        if (balances != null) {
+            for (AssetIssuerWalletList balance : balances) {
+                digitalAsset = new DigitalAsset();
+                digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
+                digitalAsset.setName(balance.getDigitalAsset().getName());
+                digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
+                digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
+                digitalAsset.setAvailableBalance(balance.getAvailableBalance());
+                Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                digitalAsset.setExpDate(expirationDate);
 
-            List<Resource> resources = balance.getDigitalAsset().getResources();
-            if (resources != null && resources.size() > 0) {
-                digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
+                List<Resource> resources = balance.getDigitalAsset().getResources();
+                if (resources != null && resources.size() > 0) {
+                    digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
+                }
+
+                digitalAssets.add(digitalAsset);
             }
-
-            digitalAssets.add(digitalAsset);
         }
         return digitalAssets;
     }

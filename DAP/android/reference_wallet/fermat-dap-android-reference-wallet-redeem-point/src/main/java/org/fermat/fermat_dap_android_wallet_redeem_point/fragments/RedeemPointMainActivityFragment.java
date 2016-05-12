@@ -109,7 +109,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         //Initialize settings
 //        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(redeemPointSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -133,8 +133,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
             try {
                 if (moduleManager != null) {
-                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
-                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                    moduleManager.persistSettings(redeemPointSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(redeemPointSession.getAppPublicKey());
                     moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
                 }
             } catch (CantPersistSettingsException e) {
@@ -170,7 +170,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
     private void setUpPresentation(boolean checkButton) {
         try {
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), redeemPointSession)
                     .setBannerRes(R.drawable.banner_redeem_point_wallet)
                     .setIconRes(R.drawable.redeem_point)
                     .setImageLeft(R.drawable.redeem_point_identity)
@@ -187,11 +187,10 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Object o = appSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
+                    Object o = redeemPointSession.getData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
                     if (o != null) {
                         if ((Boolean) (o)) {
-                            //invalidate();
-                            appSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
+                            redeemPointSession.removeData(SessionConstantsRedeemPoint.PRESENTATION_IDENTITY_CREATED);
                         }
                     }
                     try {
@@ -233,7 +232,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 return false;
             }
         });
-        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 2, "Help")
+        menu.add(0, SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
@@ -244,7 +243,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             int id = item.getItemId();
 
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
-                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(redeemPointSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -399,8 +398,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
 
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
-        appSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY, appSession.getAppPublicKey());
+        redeemPointSession.setData("asset_data", data);
+        changeActivity(Activities.DAP_WALLET_REDEEM_POINT_DETAILS_ACTIVITY, redeemPointSession.getAppPublicKey());
     }
 
     @Override
@@ -420,7 +419,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
                     errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                            Wallets.DAP_REDEEM_POINT_WALLET,
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
                             ex);
             }
