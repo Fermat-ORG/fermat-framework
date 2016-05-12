@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/connectedButton"
         android:buttonTint="@color/green"
-        android:visibility="visible"
+        android:visibility="gone"
         android:checked="true"
         android:layout_alignBottom="@+id/connection_state_user"
         android:layout_alignEnd="@+id/community_name" />

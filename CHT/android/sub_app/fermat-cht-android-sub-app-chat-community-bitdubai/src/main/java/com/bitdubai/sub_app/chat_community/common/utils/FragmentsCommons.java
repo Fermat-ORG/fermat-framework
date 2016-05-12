@@ -1,6 +1,7 @@
 package com.bitdubai.sub_app.chat_community.common.utils;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,7 @@ public class FragmentsCommons {
          * Navigation view header
          */
         RelativeLayout relativeLayout = new RelativeLayout(activity);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        relativeLayout.setLayoutParams(layoutParams);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400);
         View view = inflater.inflate(R.layout.cht_comm_navigation_drawer_header_item, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         ImageView imageViewCircle = (ImageView) view.findViewById(R.id.image_view_circle);
