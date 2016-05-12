@@ -330,8 +330,8 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     }
                 }
             } catch (Exception e) {
-                Exception e1 = new RuntimeException("Error in Method: "+method+" object returned: "+returnModuleObject,e);
-                return new FermatModuleObjectWrapper(dataId,null,true, e1);
+//                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
+                return new FermatModuleObjectWrapper(dataId,null,true, e);
             }
 
         }
@@ -538,7 +538,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 ////                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
 //                    }
 //                }
-                //TODO: ver porque puse el moduleManager en el invoque, si daberia id ahí o d
                 try {
                     if(paramsTypes==null){
                         m = clazz.getDeclaredMethod(method, null);
@@ -554,15 +553,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                             m = clazz.getDeclaredMethod(method, paramsTypes);
                         }catch (NoSuchMethodException e){
                             //Log.e(TAG,"Metodo buscando: "+method);
-                            int pos = 0;
-                            for (Method method1 : clazz.getMethods()) {
-                                //Log.e(TAG,pos+": Metodo: "+method1.getName( ));
-                                if(method1.getName().equals(method)){
-                                    for (Class<?> aClass : method1.getParameterTypes()) {
-                                        //Log.e(TAG,pos+": Metodo parameters class type: "+aClass.getName());
-                                    }
-                                }
-                            }
                             for(Method methodInterface : clazz.getDeclaredMethods()){
                                 if(methodInterface.getName().equals(method)){
                                     m = methodInterface;
