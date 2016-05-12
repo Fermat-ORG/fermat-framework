@@ -108,6 +108,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private boolean updateCheck = false;
     private View WarningCircle;
     private TextView WarningLabel;
+    private TextView alias;
     private String WarningColor = "#DF0101";
     private String NormalColor  =  "#0080FF";
 
@@ -326,7 +327,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         WarningCircle.setVisibility(View.GONE);
 
         WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+
         WarningLabel.setVisibility(View.GONE);
+
+        alias = (TextView) layout.findViewById(R.id.aai_username_label);
+
+
         /*
 
 
@@ -346,7 +352,15 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 */
 
+        mArtistUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                alias.setTextColor(Color.parseColor("#919090"));
+
+
+            }
+        });
 
         mArtistExternalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -537,7 +551,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         }
 
         if(mArtistExternalPlatform.getSelectedItemPosition()==0){
-            mArtistExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
+            //mArtistExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
         }else{mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));}
 
 
@@ -549,7 +563,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 */
 
         if (ArtistExternalName.isEmpty()){
-            mArtistUserName.setHintTextColor(Color.parseColor(WarningColor));
+            //mArtistUserName.setHintTextColor(Color.parseColor(WarningColor));
+            alias.setTextColor(Color.parseColor(WarningColor));
             }
 
         if (ArtistExternalName.isEmpty()){
