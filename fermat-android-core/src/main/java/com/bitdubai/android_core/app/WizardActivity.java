@@ -15,6 +15,7 @@ import com.bitdubai.android_core.app.common.version_1.adapters.WizardPageAdapter
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.fragments.DepthPageTransformer;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -392,6 +393,11 @@ public class WizardActivity extends FermatActivity
 
     @Override
     public void setTabCustomImageView(int position,View view) {
+
+    }
+
+    @Override
+    public void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation) {
 
     }
 }

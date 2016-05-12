@@ -168,15 +168,19 @@ public class BroadcastManager implements BroadcasterInterface {
     }
 
     private void updateView(String code){
+
+
         if (fermatActivity.get() != null) {
             TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
             if (adapter != null) {
                 for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+
                     fragment.onUpdateView(code);
                     fragment.onUpdateViewUIThred(code);
                 }
             }
         }
+
     }
 
     //TODO: esto va a ser del codigo de la app, el paquete del intent

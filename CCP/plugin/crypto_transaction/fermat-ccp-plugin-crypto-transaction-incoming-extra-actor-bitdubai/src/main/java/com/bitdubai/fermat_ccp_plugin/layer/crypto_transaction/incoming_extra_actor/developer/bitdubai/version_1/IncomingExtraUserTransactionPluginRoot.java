@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -70,6 +71,7 @@ import java.util.List;
  * * * * * * * 
  * * * 
  */
+@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 
 public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
@@ -78,8 +80,6 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
     private BitcoinWalletManager bitcoinWalletManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
     private EventManager eventManager;
@@ -138,15 +138,15 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
              * The database exists but cannot be open. I can not handle this situation.
              */
             FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
             FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         catch (Exception e) {
             FermatException e1 = new CantDeliverDatabaseException("Unexpected Exception",e,"","");
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e1);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e1);
         }
         // If we are here the database could not be opened, so we return an empry list
         return new ArrayList<>();
@@ -165,7 +165,7 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
         this.registry = new IncomingExtraUserRegistry();
 
         try {
-            this.registry.setErrorManager(this.errorManager);
+            this.registry.setErrorManager(getErrorManager());
             this.registry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             this.registry.initialize(this.pluginId);
         }
@@ -174,11 +174,11 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
             /**
              * If I can not initialize the Registry then I can not start the service.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
             throw new CantStartPluginException(cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
@@ -196,17 +196,17 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
             throw new CantStartPluginException(cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         /**
          * I will start the Relay Agent.
          */
-        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager, this.errorManager, eventManager,this.registry, this.cryptoAddressBookManager, this.broadcaster,lossProtectedWalletManager);
+        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager,getErrorManager(), eventManager,this.registry, this.cryptoAddressBookManager, this.broadcaster,lossProtectedWalletManager);
         try {
             this.relay.start();
         }
@@ -220,20 +220,20 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
             throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         catch (Exception e){
             this.eventRecorder.stop();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         /**
          * I will start the Monitor Agent.
          */
-        this.monitor = new IncomingExtraUserMonitorAgent(this.errorManager, this.incomingCryptoManager, this.registry);
+        this.monitor = new IncomingExtraUserMonitorAgent(getErrorManager(), this.incomingCryptoManager, this.registry);
         try {
             this.monitor.start();
         }
@@ -248,14 +248,14 @@ public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin imple
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
             throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         catch (Exception e){
             this.eventRecorder.stop();
             this.relay.stop();
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 

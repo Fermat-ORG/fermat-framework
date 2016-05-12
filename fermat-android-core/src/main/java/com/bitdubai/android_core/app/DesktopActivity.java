@@ -18,6 +18,7 @@ import com.bitdubai.android_core.app.common.version_1.communication.client_syste
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.util.BottomMenuReveal;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.AppsStatus;
@@ -551,6 +552,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     @Override
     public void setTabCustomImageView(int position,View view) {
+
+    }
+
+    @Override
+    public void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation) {
 
     }
 }
