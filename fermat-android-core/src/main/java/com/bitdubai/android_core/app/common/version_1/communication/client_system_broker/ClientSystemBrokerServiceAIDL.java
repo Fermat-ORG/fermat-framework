@@ -25,6 +25,7 @@ import com.bitdubai.android_core.app.common.version_1.communication.server_syste
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.IServerBrokerService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
@@ -64,13 +65,14 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
     public Object sendMessage(PluginVersionReference pluginVersionReference,String responseStr, Object proxy, Method method, Object[] args) throws Exception {
         Log.i(TAG,"SendMessage start");
-        FermatModuleObjectWrapper[] parameters = null;
+        ModuleObjectParameterWrapper[] parameters = null;
+        Class<?>[] parametersTypes = method.getParameterTypes();
         if(args!=null) {
-            parameters = new FermatModuleObjectWrapper[args.length];
+            parameters = new ModuleObjectParameterWrapper[args.length];
 
             for (int i = 0; i < args.length; i++) {
                 try {
-                    FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) args[i]);
+                    ModuleObjectParameterWrapper fermatModuleObjectWrapper = new ModuleObjectParameterWrapper((Serializable) args[i],parametersTypes[i]);
                     parameters[i] = fermatModuleObjectWrapper;
                 } catch (ClassCastException e) {
                     //e.printStackTrace();
@@ -81,7 +83,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 }
             }
         }else{
-            parameters = new FermatModuleObjectWrapper[0];
+            parameters = new ModuleObjectParameterWrapper[0];
         }
 
 

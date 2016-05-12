@@ -55,11 +55,11 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
+    AssetUserSession assetUserSession;
     // Data
     private List<RedeemPoint> redeemPoints;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     //UI
     private View noRPView;
@@ -74,10 +74,9 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -131,7 +130,7 @@ public class AssetRedeemSelectRedeemPointsFragment extends FermatWalletListFragm
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT) {
-                setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeem(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

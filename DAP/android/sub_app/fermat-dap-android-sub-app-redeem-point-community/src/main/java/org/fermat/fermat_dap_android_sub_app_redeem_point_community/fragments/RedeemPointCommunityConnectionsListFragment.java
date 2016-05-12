@@ -64,9 +64,10 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
     private boolean isRefreshing = false;
     private View rootView;
     private RedeemPointCommunityAppFriendsListAdapter adapter;
-    private AssetRedeemPointCommunitySubAppSession userAppSession;
+    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
     private LinearLayout emptyView;
     private RedeemPointCommunitySubAppModuleManager moduleManager;
+    RedeemPointSettings settings = null;
     private ErrorManager errorManager;
     private List<Actor> actors;
     SettingsManager<RedeemPointSettings> settingsManager;
@@ -79,11 +80,11 @@ public class RedeemPointCommunityConnectionsListFragment extends AbstractFermatF
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        userAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
-        moduleManager = userAppSession.getModuleManager();
-        errorManager = appSession.getErrorManager();
         actors = new ArrayList<>();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+
+        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
     }
 
     @Override

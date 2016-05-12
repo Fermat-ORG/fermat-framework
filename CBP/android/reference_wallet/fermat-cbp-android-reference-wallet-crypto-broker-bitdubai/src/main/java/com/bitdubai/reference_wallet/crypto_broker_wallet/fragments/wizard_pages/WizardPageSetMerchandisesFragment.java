@@ -329,49 +329,52 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             List<BankAccountNumber> accounts = moduleManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());
 
             //If there is at least one bank wallet account created
-            if (!accounts.isEmpty()) {
+            if(accounts!=null) {
+                if (!accounts.isEmpty()) {
 
-                SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
-                accountsDialog.configure("Select an Account", accounts);
-                accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
+                    SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
+                    accountsDialog.configure("Select an Account", accounts);
+                    accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
 
-                    @Override
-                    public void onItemSelected(BankAccountNumber selectedAccount) {
-                        FiatCurrency currency = selectedAccount.getCurrencyType();
-                        String account = selectedAccount.getAccount();
-                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
-                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
-                        if (!containWallet(selectedWallet)) {
-                            stockWallets.add(selectedWallet);
-                            adapter.changeDataSet(stockWallets);
-                            showOrHideNoSelectedWalletsView();
+                        @Override
+                        public void onItemSelected(BankAccountNumber selectedAccount) {
+                            FiatCurrency currency = selectedAccount.getCurrencyType();
+                            String account = selectedAccount.getAccount();
+                            bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency);
+                            bankAccounts.put(selectedWallet.getWalletPublicKey(), account);
+                            if (!containWallet(selectedWallet)) {
+                                stockWallets.add(selectedWallet);
+                                adapter.changeDataSet(stockWallets);
+                                showOrHideNoSelectedWalletsView();
+                            }
                         }
-                    }
 
-                });
-                accountsDialog.show(getFragmentManager(), "accountsDialog");
+                    });
+                    accountsDialog.show(getFragmentManager(), "accountsDialog");
+                }
+
+                //If there are no accounts, prompt user to create a new bank account
+                else {
+                    final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, moduleManager, InputDialogCBP.BANK_DIALOG);
+                    inputDialogCBP.show();
+                    inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
+                            FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
+                            bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
+                            bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
+                            if (!containWallet(selectedWallet)) {
+                                stockWallets.add(selectedWallet);
+                                adapter.changeDataSet(stockWallets);
+                                showOrHideNoSelectedWalletsView();
+                            }
+                        }
+
+                    });
+                }
             }
 
-            //If there are no accounts, prompt user to create a new bank account
-            else {
-                final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, moduleManager, InputDialogCBP.BANK_DIALOG);
-                inputDialogCBP.show();
-                inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
-                        FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
-                        bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
-                        bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
-                        if (!containWallet(selectedWallet)) {
-                            stockWallets.add(selectedWallet);
-                            adapter.changeDataSet(stockWallets);
-                            showOrHideNoSelectedWalletsView();
-                        }
-                    }
-
-                });
-            }
 
         } catch (FermatException ex) {
             Toast.makeText(WizardPageSetMerchandisesFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();

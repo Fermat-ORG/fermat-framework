@@ -66,7 +66,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         FermatListItemListeners<Actor> {
 
     public static final String USER_SELECTED = "user";
-    private static AssetUserCommunitySubAppModuleManager manager;
+    private AssetUserCommunitySubAppModuleManager moduleManager;
+    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    AssetUserSettings settings = null;
     private int userNotificationsCount = 0;
 
     ErrorManager errorManager;
@@ -93,7 +95,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     /**
      * Flags
@@ -110,13 +112,14 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         setHasOptionsMenu(true);
 
         try {
-            manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
             actor = (Actor) appSession.getData(USER_SELECTED);
 
+            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            userNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
+            if (moduleManager != null)
+                userNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetUserCount();
             new FetchCountTask().execute();
 
         } catch (Exception ex) {
@@ -222,20 +225,22 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         onRefresh();
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetUserSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
         if (settings == null) {
             settings = new AssetUserSettings();
             settings.setIsContactsHelpEnabled(true);
-            settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -319,7 +324,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 //                                toConnect.add(actor);
 //                        }
 //                        //// TODO: 28/10/15 get Actor asset User
-//                        manager.connectToActorAssetUser(null, toConnect);
+//                        moduleManager.connectToActorAssetUser(null, toConnect);
 //                        return true;
 //                    }
 //                };
@@ -468,13 +473,13 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                         }
                                     }
                                     // TODO: 28/10/15 get Actor asset Redeem Point
-                                    manager.askActorAssetUserForConnection(toConnect);
+                                    moduleManager.askActorAssetUserForConnection(toConnect);
 
                                     Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);
 
-                                    //manager.connectToActorAssetUser(null, toConnect);
+                                    //moduleManager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -542,7 +547,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                             toConnect.add(actor);
                     }
                     //// TODO: 28/10/15 get Actor asset User
-                    manager.connectToActorAssetUser(null, toConnect);
+                    moduleManager.connectToActorAssetUser(null, toConnect);
                     return true;
                 }
             };
@@ -602,14 +607,14 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                     }
                                     /*TODO implementar disconnect*/
                                     for (ActorAssetUser actor : toDisconnect) {
-                                        manager.disconnectToActorAssetUser(actor);
+                                        moduleManager.disconnectToActorAssetUser(actor);
                                     }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);*/
 
-//                                    manager.connectToActorAssetUser(null, toConnect);
+//                                    moduleManager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -680,7 +685,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                                 for (ActorAssetUser actor : actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    manager.cancelActorAssetUser(actor.getActorPublicKey());
+                                    moduleManager.cancelActorAssetUser(actor.getActorPublicKey());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
@@ -734,7 +739,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -842,9 +847,9 @@ Sample AsyncTask to fetch the notifications count
     private synchronized List<Actor> getMoreData() throws Exception {
         List<Actor> dataSet = new ArrayList<>();
         List<AssetUserActorRecord> result = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetUserRegistered();
+        result = moduleManager.getAllActorAssetUserRegistered();
         if (result != null && result.size() > 0) {
             for (AssetUserActorRecord record : result) {
                 dataSet.add((new Actor(record)));

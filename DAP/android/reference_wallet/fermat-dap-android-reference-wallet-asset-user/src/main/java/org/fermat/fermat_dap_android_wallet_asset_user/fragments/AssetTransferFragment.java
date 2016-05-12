@@ -77,7 +77,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
 
     int selectedUserCount;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     public AssetTransferFragment() {
 
@@ -92,11 +92,9 @@ public class AssetTransferFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = (AssetUserSession) appSession;
+        assetUserSession = ((AssetUserSession) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-
-        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         activity = getActivity();
 
@@ -147,7 +145,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER) {
-                setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeem(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

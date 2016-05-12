@@ -38,7 +38,6 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
@@ -51,7 +50,6 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
@@ -240,7 +238,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         try {
 
-            SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
 
             //loadFragment(subAppRuntimeManager.getLastApp().getType(), idContainer, screen);
 

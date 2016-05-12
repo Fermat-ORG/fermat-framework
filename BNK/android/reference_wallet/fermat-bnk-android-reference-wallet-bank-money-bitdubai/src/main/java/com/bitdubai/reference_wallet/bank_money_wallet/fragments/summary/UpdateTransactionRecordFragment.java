@@ -136,7 +136,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
             //Make transaction without changes
             if(transactionUpdateCancelled)
             {
-                moduleManager.getBankingWallet().makeAsyncWithdraw(new BankTransactionParameters() {
+                moduleManager.makeAsyncWithdraw(new BankTransactionParameters() {
                     @Override
                     public UUID getTransactionId() {
                         return UUID.randomUUID();
@@ -181,7 +181,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
                 });
 
             } else if (transactionRecord.getTransactionType() == TransactionType.DEBIT) {
-                moduleManager.getBankingWallet().makeAsyncWithdraw(new BankTransactionParameters() {
+                moduleManager.makeAsyncWithdraw(new BankTransactionParameters() {
                     @Override
                     public UUID getTransactionId() {
                         return UUID.randomUUID();
@@ -226,7 +226,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
                 });
 
             } else if (transactionRecord.getTransactionType() == TransactionType.CREDIT) {
-                moduleManager.getBankingWallet().makeAsyncDeposit(new BankTransactionParameters() {
+                moduleManager.makeAsyncDeposit(new BankTransactionParameters() {
                     @Override
                     public UUID getTransactionId() {
                         return UUID.randomUUID();

@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -18,14 +19,16 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 13/10/15.
  */
-public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> {
+public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings>, Serializable {
 
 //    List<ActorAssetIssuer> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException;
 //    List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
@@ -38,7 +41,7 @@ public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<R
 
     void connectToActorAssetRedeemPoint(ActorAssetUser requester, List<ActorAssetRedeemPoint> actorAssetRedeemPoints) throws CantConnectToActorAssetException;
 
-    org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException;
+    RedeemPointIdentity getActiveAssetRedeemPointIdentity() throws CantGetIdentityRedeemPointException;
 
     ActorAssetRedeemPoint getActorRedeemPoint(String actorPublicKey) throws CantGetAssetRedeemPointActorsException, CantAssetRedeemPointActorNotFoundException;
 

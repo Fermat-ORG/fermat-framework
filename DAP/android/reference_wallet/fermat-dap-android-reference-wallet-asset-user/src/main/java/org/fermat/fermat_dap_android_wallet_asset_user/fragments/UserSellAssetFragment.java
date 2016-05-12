@@ -86,6 +86,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
 
     private AssetUserWalletSubAppModuleManager moduleManager;
+    AssetUserSession assetUserSession;
     //private UserSelectorAdapter adapter;
 
     private Asset assetToSell;
@@ -95,7 +96,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     private Resources res;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
     List<User> users;
     private User user;
     String digitalAssetPublicKey;
@@ -124,10 +125,9 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
         try {
 
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             activity = getActivity();
 

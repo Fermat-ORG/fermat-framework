@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -26,7 +25,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.int
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankMoneyWalletModuleManagerImpl;
 
 import java.util.HashMap;
@@ -71,10 +69,6 @@ public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWal
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    BankingWallet bankingWallet;
-
-    private SettingsManager<BankMoneyWalletPreferenceSettings> settingsManager;
-
 
     public BankMoneyWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -87,8 +81,6 @@ public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWal
                     bankMoneyWalletManager,
                     depositManager,
                     withdrawManager,
-                    holdManager,
-                    unholdManager,
                     pluginFileSystem,
                     pluginId,
                     broadcaster);

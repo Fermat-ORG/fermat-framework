@@ -61,12 +61,12 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
+    AssetIssuerSession assetIssuerSession;
     // Data
     private List<UserRedeemed> users;
     private DigitalAsset digitalAsset;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     //UI
     private View noUsersView;
@@ -86,10 +86,10 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
         setHasOptionsMenu(true);
 
         try {
-            moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+            assetIssuerSession = ((AssetIssuerSession) appSession);
             errorManager = appSession.getErrorManager();
 
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+            moduleManager = assetIssuerSession.getModuleManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -150,7 +150,7 @@ public class UserRedeemedListFragment extends FermatWalletListFragment<UserRedee
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_REDEEMED) {
-                setUpHelpAssetRedeemedList(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeemedList(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

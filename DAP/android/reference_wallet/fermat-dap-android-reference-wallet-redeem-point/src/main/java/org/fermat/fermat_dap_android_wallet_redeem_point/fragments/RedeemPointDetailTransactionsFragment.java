@@ -80,7 +80,7 @@ public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragm
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
 
     private View noTransactionsView;
     private List<Transaction> transactions;
@@ -98,10 +98,9 @@ public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragm
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        redeemPointSession = (RedeemPointSession) appSession;
+        redeemPointSession = ((RedeemPointSession) appSession);
         moduleManager = redeemPointSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -224,7 +223,7 @@ public class RedeemPointDetailTransactionsFragment extends FermatWalletListFragm
             int id = item.getItemId();
 
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_DETAIL) {
-                setUpHelpAssetRedeemDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeemDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

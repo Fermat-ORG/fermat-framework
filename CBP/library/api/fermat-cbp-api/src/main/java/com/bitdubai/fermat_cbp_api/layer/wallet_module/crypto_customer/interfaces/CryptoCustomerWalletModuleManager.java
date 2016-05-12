@@ -58,7 +58,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -311,18 +310,10 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @return a Map of name/provider reference pairs
      */
-    Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
+    Map<String, UUID> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
             throws CantGetProviderException, CantGetProviderInfoException;
 
     /**
-     * Returns a CER provider given its providerId
-     *
-     * @param providerId the provider's ID
-     *
-     * @return a CurrencyExchangeRateProviderManager reference
-     */
-    CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId)
-            throws CantGetProviderException;
 
     /**
      * Create a empty {@link CryptoCustomerWalletProviderSetting} object to fill and can be used

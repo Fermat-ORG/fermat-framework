@@ -17,22 +17,20 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.ProvidersAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SingleDeletableItemAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.CurrencyPairAndProvider;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common.SimpleListDialogFragment;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
@@ -176,7 +174,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         try {
 
             List<String> temp = new ArrayList<>();
-            String tempS = "";
+            String tempS;
 
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
             Map<String, CurrencyPair> map = moduleManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
@@ -186,18 +184,15 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 Currency currencyFrom = e.getValue().getFrom();
                 Currency currencyTo = e.getValue().getTo();
 
-                Collection<CurrencyExchangeRateProviderManager> providerManagers = moduleManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+                Collection<CurrencyPairAndProvider> providerManagers = moduleManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
                 if (providerManagers != null){
-                    for (CurrencyExchangeRateProviderManager providerManager : providerManagers) {
+                    for (CurrencyPairAndProvider providerManager : providerManagers) {
 
                         tempS = currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName();
 
                         if (!temp.contains(tempS)) {
-
                             temp.add(currencyFrom.getCode()+" "+currencyTo.getCode()+" "+providerManager.getProviderName());
-
-                            CurrencyPairAndProvider CPAP = new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager);
-                            providers.add(CPAP);
+                            providers.add(providerManager);
                         }
                     }
                 }
@@ -239,10 +234,9 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 CryptoBrokerWalletProviderSetting setting = moduleManager.newEmptyCryptoBrokerWalletProviderSetting();
                 setting.setBrokerPublicKey(appSession.getAppPublicKey());
 
-                CurrencyExchangeRateProviderManager provider = currencyPairAndProvider.getProvider();
-                setting.setDescription(provider.getProviderName());
-                setting.setId(provider.getProviderId());
-                setting.setPlugin(provider.getProviderId());
+                setting.setDescription(currencyPairAndProvider.getProviderName());
+                setting.setId(currencyPairAndProvider.getProviderId());
+                setting.setPlugin(currencyPairAndProvider.getProviderId());
                 setting.setCurrencyFrom(currencyPairAndProvider.getCurrencyFrom().getCode());
                 setting.setCurrencyTo(currencyPairAndProvider.getCurrencyTo().getCode());
 
@@ -296,26 +290,18 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         if (selectedProviders.isEmpty())
             return false;
 
-        try {
-            for (CurrencyPairAndProvider provider : selectedProviders) {
-                UUID providerId = provider.getProvider().getProviderId();
-                UUID selectedProviderId = selectedProvider.getProvider().getProviderId();
+        for (CurrencyPairAndProvider provider : selectedProviders) {
+            UUID providerId = provider.getProviderId();
+            UUID selectedProviderId = selectedProvider.getProviderId();
 
-                Currency providerFrom = provider.getCurrencyFrom();
-                Currency providerTo = provider.getCurrencyTo();
+            Currency providerFrom = provider.getCurrencyFrom();
+            Currency providerTo = provider.getCurrencyTo();
 
-                Currency SelectedFrom = selectedProvider.getCurrencyFrom();
-                Currency SelectedTo = selectedProvider.getCurrencyTo();
+            Currency SelectedFrom = selectedProvider.getCurrencyFrom();
+            Currency SelectedTo = selectedProvider.getCurrencyTo();
 
-                if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
-                    return true;
-            }
-
-        } catch (CantGetProviderInfoException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
+                return true;
         }
 
         return false;

@@ -38,8 +38,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
-import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -50,10 +48,10 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.Sim
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -326,11 +324,14 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         try {
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
 
-            Map<String, CurrencyExchangeRateProviderManager> providersMap = moduleManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+            Map<String, UUID> providersMap = moduleManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
             if (providersMap != null) {
-                Collection<CurrencyExchangeRateProviderManager> providerManagers = providersMap.values();
-                for (CurrencyExchangeRateProviderManager providerManager : providerManagers)
-                    providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
+                final Set<String> providerNames = providersMap.keySet();
+                for (String providerName : providerNames) {
+                    final UUID providerId = providersMap.get(providerName);
+                    providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerId, providerName));
+                }
+
             }
 
             if(providers.size() == 0){
@@ -384,13 +385,14 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             moduleManager.saveWalletSettingAssociated(associatedWallet, appSession.getAppPublicKey());
 
             for (CurrencyPairAndProvider provider : selectedProviders) {
-                CurrencyExchangeRateProviderManager providerManager = provider.getProvider();
+                String providerName = provider.getProviderName();
+                final UUID providerId = provider.getProviderId();
 
                 CryptoCustomerWalletProviderSetting setting = moduleManager.newEmptyCryptoCustomerWalletProviderSetting();
                 setting.setCustomerPublicKey(appSession.getAppPublicKey());
-                setting.setDescription(providerManager.getProviderName());
-                setting.setId(providerManager.getProviderId());
-                setting.setPlugin(providerManager.getProviderId());
+                setting.setDescription(providerName);
+                setting.setId(providerId);
+                setting.setPlugin(providerId);
                 setting.setCurrencyFrom(provider.getCurrencyFrom());
                 setting.setCurrencyTo(provider.getCurrencyTo());
 
@@ -443,27 +445,18 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         if (selectedProviders.isEmpty())
             return false;
 
-        try {
-            for (CurrencyPairAndProvider provider : selectedProviders) {
-                CurrencyExchangeRateProviderManager providerManager = provider.getProvider();
-                UUID providerId = providerManager.getProviderId();
-                CurrencyExchangeRateProviderManager selectedProviderManager = selectedProvider.getProvider();
-                UUID selectedProviderId = selectedProviderManager.getProviderId();
+        for (CurrencyPairAndProvider provider : selectedProviders) {
+            UUID providerId = provider.getProviderId();
+            UUID selectedProviderId = selectedProvider.getProviderId();
 
-                Currency providerFrom = provider.getCurrencyFrom();
-                Currency providerTo = provider.getCurrencyTo();
+            Currency providerFrom = provider.getCurrencyFrom();
+            Currency providerTo = provider.getCurrencyTo();
 
-                Currency SelectedFrom = selectedProvider.getCurrencyFrom();
-                Currency SelectedTo = selectedProvider.getCurrencyTo();
+            Currency SelectedFrom = selectedProvider.getCurrencyFrom();
+            Currency SelectedTo = selectedProvider.getCurrencyTo();
 
-                if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
-                    return true;
-            }
-        } catch (CantGetProviderInfoException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            if (providerId.equals(selectedProviderId) && providerFrom == SelectedFrom && providerTo == SelectedTo)
+                return true;
         }
 
         return false;

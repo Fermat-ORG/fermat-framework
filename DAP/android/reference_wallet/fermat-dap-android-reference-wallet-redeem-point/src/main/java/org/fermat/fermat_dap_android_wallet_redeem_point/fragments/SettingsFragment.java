@@ -42,13 +42,10 @@ import static android.widget.Toast.makeText;
  */
 public class SettingsFragment extends AbstractFermatFragment {
 
-
     /**
      * Plaform reference
      */
     private RedeemPointSession redeemPointSession;
-
-
 
     /**
      * UI
@@ -63,7 +60,7 @@ public class SettingsFragment extends AbstractFermatFragment {
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings settings = null;
 
 
@@ -75,10 +72,12 @@ public class SettingsFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        redeemPointSession = (RedeemPointSession) appSession;
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        settingsManager = appSession.getModuleManager().getSettingsManager();
 
+        redeemPointSession = ((RedeemPointSession) appSession);
+        moduleManager = redeemPointSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
     @Nullable
@@ -150,7 +149,7 @@ public class SettingsFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_SETTINGS) {
-                setUpSettingsNetwork(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettingsNetwork(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

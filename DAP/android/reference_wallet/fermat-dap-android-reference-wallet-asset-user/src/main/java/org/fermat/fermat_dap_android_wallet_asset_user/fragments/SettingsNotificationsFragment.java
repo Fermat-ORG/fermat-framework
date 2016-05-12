@@ -42,12 +42,12 @@ import static android.widget.Toast.makeText;
 public class SettingsNotificationsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private AssetUserSession assetUserSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private AssetUserWalletSubAppModuleManager moduleManager;
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
+    AssetUserSession assetUserSession;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
 
@@ -61,10 +61,10 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetUserSession) appSession).getModuleManager();
+        assetUserSession = ((AssetUserSession) appSession);
+        moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
     }
@@ -103,7 +103,7 @@ public class SettingsNotificationsFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS_NOTIFICATION) {
-                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

@@ -58,6 +58,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
     // Fermat Managers
     private AssetRedeemPointWalletSubAppModule moduleManager;
     private ErrorManager errorManager;
+    RedeemPointSession redeemPointSession;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -65,7 +66,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
     //UI
     private View noAssetsView;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
 
     public static RedeemPointHistoryActivityFragment newInstance() {
         return new RedeemPointHistoryActivityFragment();
@@ -77,10 +78,9 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
         setHasOptionsMenu(true);
 
         try {
-            moduleManager = ((RedeemPointSession) appSession).getModuleManager();
+            redeemPointSession = ((RedeemPointSession) appSession);
+            moduleManager = redeemPointSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -148,7 +148,7 @@ public class RedeemPointHistoryActivityFragment extends FermatWalletListFragment
             int id = item.getItemId();
 
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_HISTORY) {
-                setUpHelpAssetRedeemHistory(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeemHistory(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

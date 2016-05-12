@@ -52,7 +52,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
 
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
 
@@ -65,10 +65,9 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetUserSession) appSession).getModuleManager();
+        assetUserSession = ((AssetUserSession) appSession);
+        moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-
-        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
@@ -82,7 +81,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         try {
             rootView = inflater.inflate(R.layout.dap_wallet_asset_user_settings_main_network, container, false);
             try {
-                settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
@@ -120,8 +119,10 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
         try {
             settings.setBlockchainNetworkPosition(position);
 
-            settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
-            moduleManager.changeNetworkType(dataSet);
+            if(moduleManager != null ) {
+                moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                moduleManager.changeNetworkType(dataSet);
+            }
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }
@@ -155,7 +156,7 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS_NETWORK) {
-                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

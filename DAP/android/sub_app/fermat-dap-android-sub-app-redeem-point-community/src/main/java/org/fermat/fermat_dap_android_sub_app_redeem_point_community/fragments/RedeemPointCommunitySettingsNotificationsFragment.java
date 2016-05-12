@@ -35,14 +35,14 @@ import static android.widget.Toast.makeText;
 public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractFermatFragment {
 
     private View rootView;
-    private AssetRedeemPointCommunitySubAppSession  session;
+    private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
     private Spinner spinner;
     private Switch notificationSwitch;
 
     private RedeemPointCommunitySubAppModuleManager moduleManager;
-    SettingsManager<RedeemPointSettings> settingsManager;
+    RedeemPointSettings settings = null;
+//    SettingsManager<RedeemPointSettings> settingsManager;
     private ErrorManager errorManager;
-    Settings settings = null;
 
 
     public static RedeemPointCommunitySettingsNotificationsFragment newInstance() {
@@ -54,12 +54,11 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetRedeemPointCommunitySubAppSession) appSession).getModuleManager();
+        assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-
     }
 
     @Nullable
@@ -73,7 +72,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), R.string.dap_redeem_point_community_opps_system_error, Toast.LENGTH_SHORT).show();
-            session.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 
         return null;
@@ -96,7 +95,7 @@ public class RedeemPointCommunitySettingsNotificationsFragment extends AbstractF
             int id = item.getItemId();
 
             if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SETTINGS_NOTIFICATION) {
-                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

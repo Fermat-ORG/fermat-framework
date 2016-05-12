@@ -42,9 +42,10 @@ public class SettingsFactoryNotificationFragment extends AbstractFermatFragment 
     private Switch notificationSwitch;
 
     // Fermat Managers
-    private AssetFactoryModuleManager manager;
+    private AssetFactoryModuleManager moduleManager;
     private ErrorManager errorManager;
-    SettingsManager<AssetFactorySettings> settingsManager;
+    AssetFactorySession assetFactorySession;
+//    SettingsManager<AssetFactorySettings> settingsManager;
 
 
     public static SettingsFactoryNotificationFragment newInstance() {
@@ -56,10 +57,10 @@ public class SettingsFactoryNotificationFragment extends AbstractFermatFragment 
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        manager = ((AssetFactorySession) appSession).getModuleManager();
-//        try {
+        assetFactorySession = ((AssetFactorySession) appSession);
+        moduleManager = assetFactorySession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 //        } catch (CantGetCryptoWalletException e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -98,7 +99,7 @@ public class SettingsFactoryNotificationFragment extends AbstractFermatFragment 
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetFactory.IC_ACTION_SETTINGS_NOTIFICATIONS) {
-                setUpFactorySettingsNotifications(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpFactorySettingsNotifications(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
