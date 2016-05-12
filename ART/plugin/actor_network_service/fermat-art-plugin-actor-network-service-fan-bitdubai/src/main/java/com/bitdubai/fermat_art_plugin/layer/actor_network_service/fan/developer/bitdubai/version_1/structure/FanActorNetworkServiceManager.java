@@ -524,4 +524,14 @@ public final class FanActorNetworkServiceManager implements FanManager {
         ).toJson();
     }
 
+    /**
+     * This method returns all the request persisted in database
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    public List<FanConnectionRequest> listAllRequest()
+            throws CantListPendingConnectionRequestsException {
+        return fanActorNetworkServiceDao.listAllRequest();
+    }
+
 }

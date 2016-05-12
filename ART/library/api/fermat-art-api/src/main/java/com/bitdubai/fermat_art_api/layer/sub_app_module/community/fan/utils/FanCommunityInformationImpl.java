@@ -1,6 +1,7 @@
-package com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
@@ -17,6 +18,7 @@ public class FanCommunityInformationImpl implements FanCommunityInformation {
     private final byte[] image    ;
     private final ConnectionState connectionState;
     private final UUID connectionId;
+    private Actors actorType;
 
     public FanCommunityInformationImpl(final String publicKey,
                                                           final String alias,
@@ -84,5 +86,14 @@ public class FanCommunityInformationImpl implements FanCommunityInformation {
     @Override
     public UUID getConnectionId() {
         return connectionId;
+    }
+
+    @Override
+    public Actors getActorType() {
+        return actorType;
+    }
+
+    public void setActorType(Actors actorType){
+        this.actorType = actorType;
     }
 }

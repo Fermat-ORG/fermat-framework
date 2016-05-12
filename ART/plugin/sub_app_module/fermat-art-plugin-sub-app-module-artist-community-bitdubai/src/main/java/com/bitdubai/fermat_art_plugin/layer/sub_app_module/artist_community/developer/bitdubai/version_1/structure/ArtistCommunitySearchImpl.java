@@ -39,7 +39,7 @@ public class ArtistCommunitySearchImpl implements ArtistCommunitySearch {
             final List<ArtistCommunityInformation> artistCommunityInformationList = new ArrayList<>();
 
             for(ArtistExposingData aed : artistExposingDataList)
-                artistCommunityInformationList.add(new ArtistCommunityInformationImpl(aed));
+                artistCommunityInformationList.add(new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(aed));
 
             return artistCommunityInformationList;
 

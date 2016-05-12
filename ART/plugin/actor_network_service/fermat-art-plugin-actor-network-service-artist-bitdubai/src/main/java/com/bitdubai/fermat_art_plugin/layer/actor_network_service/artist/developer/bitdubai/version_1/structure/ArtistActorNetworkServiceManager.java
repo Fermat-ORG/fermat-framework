@@ -666,4 +666,15 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
         ).toJson();
     }
 
+    /**
+     * This method returns all the request persisted in database
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    public List<ArtistConnectionRequest> listAllRequest()
+            throws CantListPendingConnectionRequestsException {
+        return artistActorNetworkServiceDao.listAllRequest();
+    }
+
+
 }
