@@ -4,7 +4,6 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -18,7 +17,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class GetRequestIdTest {
 
-//    @Mock
     UUID requestId;
 
     @Test

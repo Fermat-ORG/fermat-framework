@@ -3,7 +3,6 @@ package test.com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.develope
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.database.TokenlyFanIdentityDeveloperDatabaseFactory;
-import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.exceptions.CantInitializeTokenlyFanIdentityDatabaseException;
 
 import org.junit.Test;
 import org.mockito.Mock;
@@ -11,7 +10,6 @@ import org.mockito.Mockito;
 
 import java.util.List;
 
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
 /**

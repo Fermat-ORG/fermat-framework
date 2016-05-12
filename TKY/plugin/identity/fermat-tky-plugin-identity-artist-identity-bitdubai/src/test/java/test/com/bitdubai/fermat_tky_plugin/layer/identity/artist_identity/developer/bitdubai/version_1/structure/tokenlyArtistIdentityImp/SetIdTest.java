@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import java.util.UUID;
 
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by gianco on 09/05/16.

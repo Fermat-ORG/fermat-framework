@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by gianco on 06/05/16.

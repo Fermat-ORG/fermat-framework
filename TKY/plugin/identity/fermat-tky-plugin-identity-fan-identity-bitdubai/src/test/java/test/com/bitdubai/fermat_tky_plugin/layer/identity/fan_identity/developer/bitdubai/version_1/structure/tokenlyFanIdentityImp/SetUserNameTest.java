@@ -5,8 +5,6 @@ import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitd
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.UUID;
-
 import static org.mockito.Mockito.doCallRealMethod;
 
 /**

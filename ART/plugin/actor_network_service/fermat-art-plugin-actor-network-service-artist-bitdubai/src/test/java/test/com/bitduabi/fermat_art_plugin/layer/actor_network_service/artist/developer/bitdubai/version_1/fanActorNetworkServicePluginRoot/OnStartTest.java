@@ -15,7 +15,6 @@ import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.P
 import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.STARTED;
 import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.STARTING;
 import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.STOPPED;
-import static org.powermock.api.mockito.PowerMockito.doCallRealMethod;
 
 /**
  * Created by gianco on 03/05/16.
