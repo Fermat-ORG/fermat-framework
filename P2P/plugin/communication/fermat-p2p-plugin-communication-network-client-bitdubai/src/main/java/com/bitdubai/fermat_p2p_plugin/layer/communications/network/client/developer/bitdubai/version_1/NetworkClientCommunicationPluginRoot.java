@@ -22,6 +22,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
@@ -59,7 +61,7 @@ import java.util.concurrent.Executors;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
+public class NetworkClientCommunicationPluginRoot extends AbstractPlugin implements NetworkClientManager {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -451,6 +453,12 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
         executorService = Executors.newSingleThreadExecutor();
         executorService.submit(thread);
 
+    }
+
+    @Override
+    public NetworkClientConnection getConnection() {
+
+        return networkClientCommunicationConnection;
     }
 
     /*
