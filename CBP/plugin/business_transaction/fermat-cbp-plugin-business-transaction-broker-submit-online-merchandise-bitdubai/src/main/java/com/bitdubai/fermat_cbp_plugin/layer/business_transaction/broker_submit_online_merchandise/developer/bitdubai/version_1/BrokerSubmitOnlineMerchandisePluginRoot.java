@@ -14,13 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -48,8 +46,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.math.BigDecimal;
@@ -59,6 +55,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN;
+
+//import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+
 /**
  * Created by Manuel Perez on 19/12/2015
  */
@@ -66,9 +67,6 @@ import java.util.regex.Pattern;
 public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -148,10 +146,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantOpenDatabaseException);
+            reportError(DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -160,7 +155,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory brokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory =
+            BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory factory =
                     new BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
 
             try {
@@ -168,21 +163,11 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
                 /*
                  * We create the new database
                  */
-                this.database = brokerSubmitOnlineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(
-                        pluginId,
-                        BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
+                this.database = factory.createDatabase(pluginId, BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        cantOpenDatabaseException);
+                reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
             }
         }
 
@@ -200,10 +185,7 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
                 }
             }
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
     }
 
@@ -230,43 +212,44 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             /**
              * Initialize Dao
              */
-            BrokerSubmitOnlineMerchandiseBusinessTransactionDao brokerSubmitOnlineMerchandiseBusinessTransactionDao=
-                    new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem,
+            BrokerSubmitOnlineMerchandiseBusinessTransactionDao brokerSubmitOnlineMerchandiseBusinessTransactionDao =
+                    new BrokerSubmitOnlineMerchandiseBusinessTransactionDao(
+                            pluginDatabaseSystem,
                             pluginId,
                             database,
-                            errorManager);
+                            this);
 
             /**
              * Init the plugin manager
              */
-        //TODO: the following two lines are only for testing, please, comment them when the testing is finished.
+            //TODO: the following two lines are only for testing, please, comment them when the testing is finished.
             //customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
             //customerBrokerSaleNegotiationManager=new SaleNegotiationManagerMock();
-            this.brokerSubmitOnlineMerchandiseTransactionManager=new BrokerSubmitOnlineMerchandiseTransactionManager(
+            this.brokerSubmitOnlineMerchandiseTransactionManager = new BrokerSubmitOnlineMerchandiseTransactionManager(
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao,
                     this.customerBrokerContractSaleManager,
                     this.customerBrokerSaleNegotiationManager,
                     this.cryptoBrokerWalletManager,
-                    errorManager
-                    );
+                    this
+            );
 
             /**
              * Init event recorder service.
              */
-            BrokerSubmitOnlineMerchandiseRecorderService brokerSubmitOnlineMerchandiseRecorderService=
+            BrokerSubmitOnlineMerchandiseRecorderService brokerSubmitOnlineMerchandiseRecorderService =
                     new BrokerSubmitOnlineMerchandiseRecorderService(
-                    brokerSubmitOnlineMerchandiseBusinessTransactionDao,
-                    eventManager,
-                            errorManager);
+                            brokerSubmitOnlineMerchandiseBusinessTransactionDao,
+                            eventManager,
+                            this);
             brokerSubmitOnlineMerchandiseRecorderService.start();
 
             /**
              * Init monitor Agent
              */
-            BrokerSubmitOnlineMerchandiseMonitorAgent brokerSubmitOnlineMerchandiseMonitorAgent=new BrokerSubmitOnlineMerchandiseMonitorAgent(
+            BrokerSubmitOnlineMerchandiseMonitorAgent brokerSubmitOnlineMerchandiseMonitorAgent = new BrokerSubmitOnlineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     transactionTransmissionManager,
@@ -281,53 +264,48 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
             //Todo: Test method, please comment it when the test is finish.
             //testSubmit();
         } catch (CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            reportError(
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            reportError(
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            reportError(
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            reportError(
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot initialize the plugin recorder service");
-        } catch (CantSetObjectException exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+        } catch (CantSetObjectException exception) {
+            reportError(
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
                     "Cannot set an object in Monitor Agent constructor");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+        } catch (Exception exception) {
+            this.reportError(
+                    DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(FermatException.wrapException(exception),
                     "Starting Broker Submit Offline Merchandise Plugin",
@@ -338,28 +316,28 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
     @Override
     public void pause() {
 
-        try{
+        try {
             this.serviceStatus = ServiceStatus.PAUSED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void resume() {
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STARTED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            reportError(DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
@@ -369,14 +347,14 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
     }
 
     public static LogLevel getLogLevelByClass(String className) {
-        try{
+        try {
             /**
              * sometimes the classname may be passed dynamically with an $moretext
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split((Pattern.quote("$")));
             return BrokerSubmitOnlineMerchandisePluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e){
+        } catch (Exception e) {
             /**
              * If I couldn't get the correct logging level, then I will set it to minimal.
              */
@@ -400,16 +378,16 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
         return brokerSubmitOnlineMerchandiseBusinessTransactionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
     }
 
-    private void testSubmit(){
-        try{
-            BigDecimal referencePrice=BigDecimal.valueOf(666);
+    private void testSubmit() {
+        try {
+            BigDecimal referencePrice = BigDecimal.valueOf(666);
             this.brokerSubmitOnlineMerchandiseTransactionManager.submitMerchandise(
                     referencePrice,
                     "TestCBPWalletPublicKey",
                     "TestCustomerWalletPublicKey",
                     "888052D7D718420BD197B647F3BB04128C9B71BC99DBB7BC60E78BDAC4DFC6E2");
-        } catch (Exception e){
-            System.out.println("Exception in Broker Submit Online Merchandise "+e);
+        } catch (Exception e) {
+            System.out.println("Exception in Broker Submit Online Merchandise " + e);
             e.printStackTrace();
         }
     }

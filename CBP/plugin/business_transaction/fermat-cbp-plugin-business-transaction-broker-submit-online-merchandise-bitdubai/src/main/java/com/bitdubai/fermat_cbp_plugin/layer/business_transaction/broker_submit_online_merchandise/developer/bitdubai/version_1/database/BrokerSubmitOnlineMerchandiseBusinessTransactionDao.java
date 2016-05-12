@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -26,9 +26,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.BrokerSubmitOnlineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -42,16 +41,16 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
     
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private BrokerSubmitOnlineMerchandisePluginRoot pluginRoot;
     private Database database;
 
     public BrokerSubmitOnlineMerchandiseBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database,
-            final ErrorManager errorManager) {
+            final BrokerSubmitOnlineMerchandisePluginRoot pluginRoot) {
 
-        this.errorManager         = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.database             = database            ;
@@ -77,7 +76,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                 );
 
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                pluginRoot.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         f);
                 throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
@@ -86,7 +85,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                         "",
                         "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+                pluginRoot.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         z);
                 throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
@@ -97,7 +96,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             }
 
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
@@ -106,7 +105,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     "",
                     "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeBrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseException(
@@ -158,7 +157,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             saveNewEvent(eventType, eventSource, eventRecordID.toString());
 
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -188,7 +187,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             databaseTable.insertRecord(eventRecord);
 
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -196,7 +195,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     "Saving new event.",
                     "Cannot insert a record in Submit Online Merchandise database");
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -221,7 +220,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -229,7 +228,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException( exception,
@@ -268,7 +267,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     .getStringValue(valueColumn);
             return value;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -318,13 +317,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             );
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
                     exception,"Error in persistContractInDatabase","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
@@ -350,13 +349,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             );
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
                     exception,"Error in persistContractInDatabase","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
@@ -394,12 +393,12 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             );
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,"Error in persistContractInDatabase","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
@@ -435,13 +434,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             );
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
                     exception,"Error in persistContractInDatabase","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
@@ -645,13 +644,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
             );
         }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantGetContractListException.DEFAULT_MESSAGE,
                     exception,"Error in persistContractInDatabase","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -676,13 +675,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
             );
         }catch (CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,"Getting value from getPendingCryptoTransactionList","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -783,21 +782,21 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             return businessTransactionRecord;
 
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -936,21 +935,21 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -1007,7 +1006,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             record=buildDatabaseTableRecord(record, businessTransactionRecord);
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1015,7 +1014,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1100,13 +1099,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,"Getting value from PendingToSubmitCryptoList","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1132,14 +1131,14 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingTosSubmitNotificationList","");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1159,14 +1158,14 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingTosSubmitNotificationList","");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1192,13 +1191,13 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,"Getting value from getPendingToSubmitCryptoStatusList","");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1224,12 +1223,12 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException("Error",exception,"Getting value from getOnCryptoNetworkCryptoStatusList","");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1255,12 +1254,12 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException("Error",exception,"Getting value from getOnBlockchainkCryptoStatusList","");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1295,14 +1294,14 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                                     SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1344,14 +1343,14 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             }
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
         }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1377,7 +1376,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                             SUBMIT_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
             return contractHashFromDatabase!=null;
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1415,7 +1414,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1423,7 +1422,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     "Updating parameter "+BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
