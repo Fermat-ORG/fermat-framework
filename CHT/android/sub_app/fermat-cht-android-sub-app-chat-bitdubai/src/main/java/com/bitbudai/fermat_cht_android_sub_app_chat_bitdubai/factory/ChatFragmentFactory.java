@@ -1,7 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.*;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentsEnumType;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatErrorReportFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ChatListFragment;

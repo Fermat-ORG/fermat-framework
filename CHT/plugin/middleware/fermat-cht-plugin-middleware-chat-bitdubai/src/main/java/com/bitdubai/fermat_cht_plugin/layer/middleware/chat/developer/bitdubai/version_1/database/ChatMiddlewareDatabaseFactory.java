@@ -11,8 +11,8 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
         import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
         import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
         import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-        import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-        import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+        import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+        import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
         import java.util.UUID;
 /**
@@ -88,7 +88,7 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50 , Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST, DatabaseDataType.STRING, 256 , Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, DatabaseDataType.STRING, 10 , Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, DatabaseDataType.STRING, 10 , Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
 
@@ -111,6 +111,7 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50 , Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_CONTACT_ID, DatabaseDataType.STRING, 36 , Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.MESSAGE_COUNT, DatabaseDataType.STRING, 36 , Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
 

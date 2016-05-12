@@ -20,7 +20,6 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.util;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
-import java.util.Arrays;
 
 /**
  * <p>Base58 is a way to encode Bitcoin addresses as numbers and letters. Note that this is not the same base58 as used by

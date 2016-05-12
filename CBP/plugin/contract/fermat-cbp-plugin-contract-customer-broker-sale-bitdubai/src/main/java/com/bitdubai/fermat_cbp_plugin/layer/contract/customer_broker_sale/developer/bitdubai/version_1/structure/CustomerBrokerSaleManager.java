@@ -1,17 +1,15 @@
 package com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantCreateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.ListsForStatusSale;
+import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.CustomerBrokerContractSalePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_sale.developer.bitdubai.version_1.database.CustomerBrokerContractSaleDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Collection;
 
@@ -22,17 +20,14 @@ import java.util.Collection;
 public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleManager {
 
     private CustomerBrokerContractSaleDao customerBrokerContractSaleDao;
-    private final ErrorManager errorManager;
-    private final PluginVersionReference pluginVersionReference;
+    private final CustomerBrokerContractSalePluginRoot pluginRoot;
 
     public CustomerBrokerSaleManager(
         final CustomerBrokerContractSaleDao customerBrokerContractSaleDao,
-        final ErrorManager errorManager,
-        final PluginVersionReference pluginVersionReference
+        final CustomerBrokerContractSalePluginRoot pluginRoot
     ){
         this.customerBrokerContractSaleDao = customerBrokerContractSaleDao;
-        this.errorManager = errorManager;
-        this.pluginVersionReference = pluginVersionReference;
+        this.pluginRoot = pluginRoot;
     }
 
     @Override
@@ -40,7 +35,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             return this.customerBrokerContractSaleDao.getAllCustomerBrokerContractSale();
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetListCustomerBrokerContractSaleException(e.getMessage(), e, "", "Failed to get records database");
         }
     }
@@ -50,7 +45,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             return this.customerBrokerContractSaleDao.getCustomerBrokerSaleContractForcontractID(contractId);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetListCustomerBrokerContractSaleException(e.getMessage(), e, "", "Failed to get records database");
         }
     }
@@ -60,7 +55,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             return this.customerBrokerContractSaleDao.getCustomerBrokerContractSaleForStatus(status);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetListCustomerBrokerContractSaleException(e.getMessage(), e, "", "Failed to get records database");
         }
     }
@@ -70,7 +65,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             return this.customerBrokerContractSaleDao.getCustomerBrokerContractHistory();
         } catch (CantGetListCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetListCustomerBrokerContractSaleException(e.getMessage(), e, "", "Failed to get records database");
         }
     }
@@ -80,7 +75,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             return this.customerBrokerContractSaleDao.createCustomerBrokerSaleContract(contract);
         } catch (CantCreateCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCustomerBrokerContractSaleException(e.getMessage(), e, "", "Cant Create Customer Broker Contract Sale");
         }
     }
@@ -90,7 +85,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             this.customerBrokerContractSaleDao.updateStatusCustomerBrokerSaleContract(contractId, status);
         } catch (CantUpdateCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerBrokerContractSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Contract Sale");
         }
     }
@@ -100,7 +95,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             this.customerBrokerContractSaleDao.updateContractNearExpirationDatetime(contractId, status);
         } catch (CantUpdateCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerBrokerContractSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Contract Sale");
         }
     }
@@ -110,7 +105,7 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         try{
             this.customerBrokerContractSaleDao.cancelContract(contractId, reason);
         } catch (CantUpdateCustomerBrokerContractSaleException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantUpdateCustomerBrokerContractSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Contract Sale");
         }
     }

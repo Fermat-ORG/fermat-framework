@@ -7,6 +7,9 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -21,6 +24,7 @@ public class MessageImpl implements Message {
     private TypeMessage type;
     private Timestamp messageDate;
     private UUID contactId;
+    private long count;
 
     public MessageImpl(){}
 
@@ -31,14 +35,23 @@ public class MessageImpl implements Message {
             TypeMessage typeMessage,
             UUID contactId
     ){
-        messageId=chatMetadata.getMessageId();
+//        messageId=chatMetadata.getMessageId();
+        messageId=UUID.randomUUID();
         this.chatId=chatId;
         message=chatMetadata.getMessage();
         status=messageStatus;
         type=typeMessage;
 //        messageDate=new Timestamp(System.currentTimeMillis());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        Date parsedDate = null;
+        try {
+            parsedDate = dateFormat.parse(chatMetadata.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
         messageDate=new Timestamp(
-                chatMetadata.getDate().getTime());
+                timestamp.getTime());
         this.contactId=contactId;
     }
 
@@ -110,6 +123,16 @@ public class MessageImpl implements Message {
     @Override
     public void setContactId(UUID contactId) {
         this.contactId=contactId;
+    }
+
+    @Override
+    public long getCount() {
+        return count;
+    }
+
+    @Override
+    public void setCount(long count) {
+        this.count = count;
     }
 
     /**

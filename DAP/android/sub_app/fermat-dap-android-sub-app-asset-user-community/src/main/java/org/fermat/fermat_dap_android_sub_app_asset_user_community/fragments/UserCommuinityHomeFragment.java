@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
@@ -47,8 +48,9 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -138,25 +140,24 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                 actors = dataSet;
                 boolean someSelected = false;
-                int selectedActors=0;
+                int selectedActors = 0;
                 int cheackeableActors = 0;
                 List<Actor> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
                 actorsToConnect = new ArrayList<>();
 
                 for (Actor actor : actors) {
-                    if (actor.getCryptoAddress() == null){
+                    if (actor.getCryptoAddress() == null) {
                         cheackeableActors++;
                     }
 
                     if (actor.selected) {
 
                         actorsSelected.add(actor);
-                        if (actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))
-                        {
+                        if (actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING)) {
                             actorsConnecting.add(actor);
                         }
-                        if (!(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                        if (!(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
                             actorsToConnect.add(actor);
                         }
                         someSelected = true;
@@ -164,26 +165,23 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                     }
                 }
 
-                if (actorsConnecting.size() > 0)
-                {
+                if (actorsConnecting.size() > 0) {
                     menuItemCancel.setVisible(true);
-                }
-                else {
+                } else {
                     menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
                     if (actorsConnecting.size() == selectedActors) {
                         menuItemConnect.setVisible(false);
-                    }else if(actorsConnecting.size() == 0){
+                    } else if (actorsConnecting.size() == 0) {
                         menuItemConnect.setVisible(true);
                     }
-                    if (selectedActors > actorsConnecting.size()){
+                    if (selectedActors > actorsConnecting.size()) {
                         menuItemConnect.setVisible(true);
                     }
                     menuItemUnselect.setVisible(true);
-                    if (selectedActors == cheackeableActors)
-                    {
+                    if (selectedActors == cheackeableActors) {
                         menuItemSelect.setVisible(false);
                     } else {
                         menuItemSelect.setVisible(true);
@@ -202,9 +200,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 //                      menuItemDisconnect.setVisible(false);
 //                  }
 
-                }
-                else
-                {
+                } else {
                     restartButtons();
 //                    menuItemUnselect.setVisible(false);
 //                    menuItemSelect.setVisible(true);
@@ -391,7 +387,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         //}else if(actor.getDapConnectionState() == DAPConnectionState.CONNECTING){
         menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT, 0, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
-                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING, 0, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
@@ -416,11 +412,10 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         int id = item.getItemId();
 
-        if(id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL){
+        if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL) {
 
-            for (Actor actorIssuer : actors)
-            {
-                if(actorIssuer.getCryptoAddress() == null) {
+            for (Actor actorIssuer : actors) {
+                if (actorIssuer.getCryptoAddress() == null) {
                     actorIssuer.selected = true;
                 }
             }
@@ -432,10 +427,9 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         }
 
-        if(id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL){
+        if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL) {
 
-            for (Actor actorIssuer : actors)
-            {
+            for (Actor actorIssuer : actors) {
                 actorIssuer.selected = false;
             }
             adapter.changeDataSet(actors);
@@ -449,13 +443,12 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 if (actor.selected)
                     actorsSelected.add(actor);
             }
-            if(actorsSelected.size() > 0) {
+            if (actorsSelected.size() > 0) {
 
 
                 ConnectDialog connectDialog;
 
-                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null)
-                {
+                connectDialog = new ConnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -470,7 +463,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                 protected Object doInBackground() throws Exception {
                                     List<ActorAssetUser> toConnect = new ArrayList<>();
                                     for (Actor actor : actors) {
-                                        if (actor.selected && !(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                                        if (actor.selected && !(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
                                             toConnect.add(actor);
                                         }
                                     }
@@ -490,7 +483,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                 @Override
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
-                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.connection_request_send, Toast.LENGTH_SHORT).show();
                                     restartButtons();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
@@ -525,7 +518,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 connectDialog.setSecondDescription("a connection request");
                 connectDialog.show();
                 return true;
-            }else {
+            } else {
                 Toast.makeText(getActivity(), "No User selected to connect.", Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -585,11 +578,11 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 if (actor.selected)
                     actorsSelected.add(actor);
             }
-            if(actorsSelected.size() > 0) {
+            if (actorsSelected.size() > 0) {
 
                 DisconnectDialog disconnectDialog;
 
-                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
+                disconnectDialog = new DisconnectDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -608,7 +601,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                             toDisconnect.add(actor);
                                     }
                                     /*TODO implementar disconnect*/
-                                    for(ActorAssetUser actor: toDisconnect) {
+                                    for (ActorAssetUser actor : toDisconnect) {
                                         manager.disconnectToActorAssetUser(actor);
                                     }
 
@@ -660,7 +653,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                 //connectDialog.setSecondDescription("a connection request");
                 disconnectDialog.show();
                 return true;
-            }else {
+            } else {
                 Toast.makeText(getActivity(), "No User selected to disconnect.", Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -669,74 +662,74 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         }
 
         if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING) {
-                CancelDialog cancelDialog;
+            CancelDialog cancelDialog;
 
-                cancelDialog = new CancelDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null){
-                    @Override
-                    public void onClick(View v) {
-                        int i = v.getId();
-                        if (i == R.id.positive_button) {
+            cancelDialog = new CancelDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, null) {
+                @Override
+                public void onClick(View v) {
+                    int i = v.getId();
+                    if (i == R.id.positive_button) {
 
-                            final ProgressDialog dialog = new ProgressDialog(getActivity());
-                            dialog.setMessage("Canceling, please wait...");
-                            dialog.setCancelable(false);
-                            dialog.show();
-                            FermatWorker worker = new FermatWorker() {
-                                @Override
-                                protected Object doInBackground() throws Exception {
+                        final ProgressDialog dialog = new ProgressDialog(getActivity());
+                        dialog.setMessage("Canceling, please wait...");
+                        dialog.setCancelable(false);
+                        dialog.show();
+                        FermatWorker worker = new FermatWorker() {
+                            @Override
+                            protected Object doInBackground() throws Exception {
 
-                                    for(ActorAssetUser actor: actorsConnecting) {
-                                        //TODO revisar si esto es asi
-                                        manager.cancelActorAssetUser(actor.getActorPublicKey());
-                                    }
+                                for (ActorAssetUser actor : actorsConnecting) {
+                                    //TODO revisar si esto es asi
+                                    manager.cancelActorAssetUser(actor.getActorPublicKey());
+                                }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);*/
-                                    return true;
-                                }
-                            };
-                            worker.setContext(getActivity());
-                            worker.setCallBack(new FermatWorkerCallBack() {
-                                @Override
-                                public void onPostExecute(Object... result) {
-                                    dialog.dismiss();
-                                    Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
-                                    restartButtons();
-                                    if (swipeRefreshLayout != null)
-                                        swipeRefreshLayout.post(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                onRefresh();
-                                            }
-                                        });
-                                }
+                                return true;
+                            }
+                        };
+                        worker.setContext(getActivity());
+                        worker.setCallBack(new FermatWorkerCallBack() {
+                            @Override
+                            public void onPostExecute(Object... result) {
+                                dialog.dismiss();
+                                Toast.makeText(getContext(), "Cancelation performed successfully", Toast.LENGTH_SHORT).show();
+                                restartButtons();
+                                if (swipeRefreshLayout != null)
+                                    swipeRefreshLayout.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            onRefresh();
+                                        }
+                                    });
+                            }
 
-                                @Override
-                                public void onErrorOccurred(Exception ex) {
-                                    dialog.dismiss();
+                            @Override
+                            public void onErrorOccurred(Exception ex) {
+                                dialog.dismiss();
                                     /*TODO aun no se que error deberia ir aqui*/
 //                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getActivity(), "Can't cancel connection to selected users", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getActivity(), "Can't cancel connection to selected users", Toast.LENGTH_LONG).show();
 //                                ex.printStackTrace();
-                                }
-                            });
-                            worker.execute();
+                            }
+                        });
+                        worker.execute();
 
 
-                            dismiss();
-                        } else if (i == R.id.negative_button) {
-                            dismiss();
-                        }
+                        dismiss();
+                    } else if (i == R.id.negative_button) {
+                        dismiss();
                     }
-                };
-                cancelDialog.setTitle("Cancel request");
-                cancelDialog.setDescription("Do you want to cancel connection with ");
-                cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
-                        " Users" : actorsConnecting.get(0).getName());
-                //connectDialog.setSecondDescription("a connection request");
-                cancelDialog.show();
-                return true;
+                }
+            };
+            cancelDialog.setTitle("Cancel request");
+            cancelDialog.setDescription("Do you want to cancel connection with ");
+            cancelDialog.setUsername((actorsConnecting.size() > 1) ? "" + actorsConnecting.size() +
+                    " Users" : actorsConnecting.get(0).getName());
+            //connectDialog.setSecondDescription("a connection request");
+            cancelDialog.show();
+            return true;
         }
 
         try {
@@ -886,6 +879,7 @@ Sample AsyncTask to fetch the notifications count
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
     }
+
     /*private boolean ableToDisconnect(List<Actor> actors){
         List <Actor> allActors = actors;
         for (Actor actor : allActors){
@@ -954,8 +948,7 @@ Sample AsyncTask to fetch the notifications count
         }
         return true;
     }*/
-    private void restartButtons()
-    {
+    private void restartButtons() {
         menuItemCancel.setVisible(false);
         menuItemSelect.setVisible(true);
         menuItemUnselect.setVisible(false);

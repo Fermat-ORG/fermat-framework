@@ -13,9 +13,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingBusinessTransactionContractHash;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionContract;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class OpenContractRecorderService implements CBPService {
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     OpenContractBusinessTransactionDao openContractBusinessTransactionDao;
-    private ErrorManager errorManager;
+    private OpenContractPluginRoot pluginRoot;
 
     /**
      * TransactionService Interface member variables.
@@ -40,20 +40,20 @@ public class OpenContractRecorderService implements CBPService {
 
     public OpenContractRecorderService(
             OpenContractBusinessTransactionDao openContractBusinessTransactionDao,
-                                       EventManager eventManager,ErrorManager errorManager) throws CantStartServiceException {
+                                       EventManager eventManager,OpenContractPluginRoot pluginRoot) throws CantStartServiceException {
         try {
-            this.errorManager = errorManager;
+            this.pluginRoot = pluginRoot;
             setDatabaseDao(openContractBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(exception,
                     "Cannot set the open contract database handler",
                     "The database handler is null");
         }catch (Exception e ){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(e),
@@ -83,12 +83,12 @@ public class OpenContractRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming new Contract Status Update Event Handler CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -106,12 +106,12 @@ public class OpenContractRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Event Handler Response CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -129,12 +129,12 @@ public class OpenContractRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Response CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -175,7 +175,7 @@ public class OpenContractRecorderService implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(
@@ -183,7 +183,7 @@ public class OpenContractRecorderService implements CBPService {
                     "Starting the OpenContractRecorderService",
                     "The OpenContractRecorderService is probably null");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
@@ -199,8 +199,7 @@ public class OpenContractRecorderService implements CBPService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
     }

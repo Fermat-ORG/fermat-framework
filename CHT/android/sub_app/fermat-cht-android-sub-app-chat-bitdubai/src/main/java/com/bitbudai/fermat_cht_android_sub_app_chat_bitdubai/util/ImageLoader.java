@@ -13,8 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.*;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageCache;
 import com.bitdubai.android_api.BuildConfig;
 
 import java.io.FileDescriptor;

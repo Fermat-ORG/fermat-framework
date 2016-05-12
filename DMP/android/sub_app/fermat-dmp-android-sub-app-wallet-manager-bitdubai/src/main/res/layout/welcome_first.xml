@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tool="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -61,6 +62,18 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Alpha Version"
+            android:textColor="#58595B"
+            app:typeface="CAVIAR_DREAMS"
+            android:paddingTop="3dp"
+            android:textSize="16sp"
+            />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:id="@+id/txt_version"
+            tool:text="0.68"
             android:textColor="#58595B"
             app:typeface="CAVIAR_DREAMS"
             android:paddingTop="3dp"

@@ -47,6 +47,9 @@ public class CLoudClientConfigurator extends ClientEndpointConfig.Configurator {
          */
         headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, Arrays.asList(jsonObject.toString()));
         //headers.put("Origin", Arrays.asList("myOrigin"));
+
+       // System.out.println("CLoudClientConfigurator - tempIdentity.getPublicKey() = "+tempIdentity.getPublicKey());
+
     }
 
     @Override

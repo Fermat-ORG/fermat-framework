@@ -10,9 +10,10 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoney
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantRegisterHoldException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWallet;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
+import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.CashMoneyTransactionHoldPluginRoot;
 import com.bitdubai.fermat_csh_plugin.layer.cash_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantUpdateHoldTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 
@@ -25,14 +26,14 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final CashMoneyTransactionHoldPluginRoot pluginRoot;
     private final CashMoneyTransactionHoldManager holdTransactionManager;
     private final CashMoneyWalletManager cashMoneyWalletManager;
     private CashMoneyWallet cashMoneyWallet = null;
     private String lastPublicKey = "";
 
-    public CashMoneyTransactionHoldProcessorAgent(final ErrorManager errorManager, final CashMoneyTransactionHoldManager holdManager, CashMoneyWalletManager cashMoneyWalletManager) {
-        this.errorManager = errorManager;
+    public CashMoneyTransactionHoldProcessorAgent(final CashMoneyTransactionHoldPluginRoot pluginRoot, final CashMoneyTransactionHoldManager holdManager, CashMoneyWalletManager cashMoneyWalletManager) {
+        this.pluginRoot = pluginRoot;
         this.holdTransactionManager = holdManager;
         this.cashMoneyWalletManager = cashMoneyWalletManager;
 
@@ -92,7 +93,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
         try {
             transactionList = holdTransactionManager.getAcknowledgedTransactionList();
         } catch (CantGetHoldTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return;
         }
 
@@ -113,7 +114,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
             try {
                 holdTransactionManager.setTransactionStatusToPending(transaction.getTransactionId());
             } catch (CantUpdateHoldTransactionException ex) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
             }
 
             //Abrir el cash wallet con el public key del transaction
@@ -122,7 +123,7 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
                     //cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet(transaction.getPublicKeyWallet());
                     cashMoneyWallet = cashMoneyWalletManager.loadCashMoneyWallet("cash_wallet");
                 } catch (CantLoadCashMoneyWalletException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                     continue;
                 }
             }
@@ -135,10 +136,10 @@ public class CashMoneyTransactionHoldProcessorAgent extends FermatAgent {
                 try {
                     holdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());
                 } catch (CantUpdateHoldTransactionException ex) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
                 }
             } catch (CantUpdateHoldTransactionException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_HOLD, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             }
 
             //TODO: Lanzar un evento al plugin que envio la transaccion para avisarle que se actualizo el status de su transaccion.

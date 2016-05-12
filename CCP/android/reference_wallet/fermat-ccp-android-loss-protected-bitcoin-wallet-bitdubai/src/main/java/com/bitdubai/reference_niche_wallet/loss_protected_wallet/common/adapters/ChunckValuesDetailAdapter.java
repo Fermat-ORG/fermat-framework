@@ -6,8 +6,10 @@ import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesDetailItemViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -17,7 +19,9 @@ import java.util.List;
 import java.util.Locale;
 
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatAmountString;
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatExchangeRateString;
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMoneyType;
 
 /**
  * Created by root on 12/04/16.
@@ -51,9 +55,9 @@ public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtecte
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         holder.getDate().setText(sdf.format(data.getTimestamp()));
 
-        holder.getAmountBalance().setText(formatAmountString(data.getAmount())+" BTC");
+        holder.getAmountBalance().setText(formatBalanceString(data.getAmount(),ShowMoneyType.BITCOIN.getCode())+" BTC");
 
-        holder.getExchangeRate().setText("1 BTC = "+formatExchangeRateString(data.getExchangeRate())+" US$");
+        holder.getExchangeRate().setText("1 BTC = U$D "+data.getExchangeRate());
 
 
 

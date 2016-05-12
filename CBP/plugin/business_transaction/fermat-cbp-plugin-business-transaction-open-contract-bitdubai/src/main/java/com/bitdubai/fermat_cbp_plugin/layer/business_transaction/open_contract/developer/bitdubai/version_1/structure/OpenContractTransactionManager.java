@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.OpenContractManager;
@@ -16,14 +15,14 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 26/11/15.
  */
-public class OpenContractTransactionManager implements OpenContractManager{
+public class OpenContractTransactionManager implements OpenContractManager {
 
     /**
      * Represents the purchase contract
@@ -60,78 +59,70 @@ public class OpenContractTransactionManager implements OpenContractManager{
     private TransactionTransmissionManager transactionTransmissionManager;
 
     /**
-     * Represents the errorManager
+     * Represents the pluginRoot
      */
-    private ErrorManager errorManager;
+    private OpenContractPluginRoot pluginRoot;
 
     public OpenContractTransactionManager(
             CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             TransactionTransmissionManager transactionTransmissionManager,
             OpenContractBusinessTransactionDao openContractBusinessTransactionDao,
-            ErrorManager errorManager){
+            OpenContractPluginRoot pluginRoot) {
 
-        this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
-        this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
-        this.transactionTransmissionManager=transactionTransmissionManager;
-        this.openContractBusinessTransactionDao=openContractBusinessTransactionDao;
-        this.errorManager=errorManager;
+        this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
+        this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
+        this.transactionTransmissionManager = transactionTransmissionManager;
+        this.openContractBusinessTransactionDao = openContractBusinessTransactionDao;
+        this.pluginRoot = pluginRoot;
     }
 
 
     @Override
     public ContractTransactionStatus getOpenContractStatus(String negotiationId) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
             ObjectChecker.checkArgument(negotiationId, "The negotiationId argument is null");
             return this.openContractBusinessTransactionDao.getContractTransactionStatusByNegotiationId(negotiationId);
+
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new UnexpectedResultReturnedFromDatabaseException(
-                    "Cannot check a null contractHash/Id");
-        } catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    "Unexpected Result",
-                    "Check the cause");
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException("Cannot check a null contractHash/Id");
+
+        } catch (Exception exception) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected Result", "Check the cause");
         }
     }
 
     @Override
-    public void openSaleContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                                 float referencePrice) throws CantOpenContractException{
-        OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
+    public void openSaleContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, float referencePrice) throws CantOpenContractException {
+        OpenContractBrokerContractManager openContractCustomerContractManager = new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
                 transactionTransmissionManager,
                 openContractBusinessTransactionDao,
-                errorManager);
+                pluginRoot);
         try {
-            Object[] arguments={customerBrokerSaleNegotiation, referencePrice};
+            Object[] arguments = {customerBrokerSaleNegotiation, referencePrice};
             ObjectChecker.checkArguments(arguments);
             openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, referencePrice);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
-            throw new CantOpenContractException(e,"Creating a new contract","Unexpected result from database");
+            throw new CantOpenContractException(e, "Creating a new contract", "Unexpected result from database");
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new CantOpenContractException(e,
                     "Creating Open Contract Business Transaction",
                     "Invalid input to this manager");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantOpenContractException(exception,
@@ -143,33 +134,33 @@ public class OpenContractTransactionManager implements OpenContractManager{
 
     @Override
     public void openPurchaseContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                     float referencePrice) throws CantOpenContractException{
-        OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
+                                     float referencePrice) throws CantOpenContractException {
+        OpenContractCustomerContractManager openContractCustomerContractManager = new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
                 transactionTransmissionManager,
                 openContractBusinessTransactionDao,
-                errorManager);
+                pluginRoot);
         try {
-            Object[] arguments={customerBrokerPurchaseNegotiation, referencePrice};
+            Object[] arguments = {customerBrokerPurchaseNegotiation, referencePrice};
             ObjectChecker.checkArguments(arguments);
             openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, referencePrice);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
-            throw new CantOpenContractException(e,"Creating a new contract","Unexpected result from database");
+            throw new CantOpenContractException(e, "Creating a new contract", "Unexpected result from database");
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new CantOpenContractException(e,
                     "Creating Open Contract Business Transaction",
                     "Invalid input to this manager");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantOpenContractException(exception,
@@ -183,8 +174,11 @@ public class OpenContractTransactionManager implements OpenContractManager{
     /**
      * This method returns the transaction completion date.
      * If returns 0 the transaction is processing.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws CantGetCompletionDateException
      */
     @Override

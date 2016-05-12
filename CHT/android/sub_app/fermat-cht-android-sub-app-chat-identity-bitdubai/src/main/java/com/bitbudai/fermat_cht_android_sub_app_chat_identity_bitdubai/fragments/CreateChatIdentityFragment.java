@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,20 +44,17 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -79,6 +75,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private static final int CONTEXT_MENU_GALLERY = 2;
     ChatIdentityModuleManager moduleManager;
     private EditText mBrokerName;
+    private EditText mChatConnectionState;
     private ImageView mBrokerImage;
     ErrorManager errorManager;
     private boolean actualizable;
@@ -99,9 +96,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-             Session = (ChatIdentitySession) appSession;
+            Session = (ChatIdentitySession) appSession;
             moduleManager =  Session.getModuleManager();
-             errorManager = Session.getErrorManager();
+            errorManager = Session.getErrorManager();
 
             chatIdentitySettings = null;
             try {
@@ -124,8 +121,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
         }
         toolbar = getToolbar();
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -145,9 +140,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private void initViews(View layout) {
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
+        mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
+
         Bitmap bitmap = null;
         if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
         {
@@ -205,10 +202,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             }else{
                 bitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
                  bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
-
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
                 textViewChtTitle.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
+                String state = moduleManager.getIdentityChatUser().getConnectionState();
+                mChatConnectionState.setText(state);
                 mBrokerName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
                 mBrokerName.performClick();
                 botonG.setVisibility(View.GONE);
@@ -274,10 +272,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
 
-
-
-
-    @Override
+        @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
@@ -295,7 +290,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIconRes(R.drawable.chat_identity_subapp)
                 .setBannerRes(R.drawable.banner_identity_chat)
-                .setIsCheckEnabled(true)
+                .setIsCheckEnabled(false)
                 .setTextFooter(R.string.cht_chat_footer).build();
         pd.show();
         } catch (Exception e) {
@@ -313,9 +308,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 break;
 
                case MENU_ADD_ACTION:
-                   //TODO: AÑADIR!!!
-
-
                    break;
             }
 
@@ -347,7 +339,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -366,7 +358,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage());
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -374,7 +366,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (donde.equalsIgnoreCase("onClick")) {
                             textViewChtTitle.setText(mBrokerName.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                            getActivity().onBackPressed();
+                            //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
                 }
@@ -386,7 +379,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage());
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, imgInBytes, moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -394,7 +387,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (donde.equalsIgnoreCase("onClick")) {
                             textViewChtTitle.setText(mBrokerName.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                            getActivity().onBackPressed();
+                           // changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
                 }
@@ -407,6 +401,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     private void createNewIdentityInBackDevice(String donde) {
         String brokerNameText = mBrokerName.getText().toString();
+        String identityConnectionNameText = mChatConnectionState.getText().toString();
+        if(identityConnectionNameText.length() == 0){
+            identityConnectionNameText = "Available";
+        }
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         } else {
@@ -416,15 +414,16 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 CreateChatIdentityExecutor executor = null;
                 try {
-                    executor = new CreateChatIdentityExecutor(Session,brokerNameText, imgInBytes);
+                    executor = new CreateChatIdentityExecutor(Session,brokerNameText, imgInBytes, identityConnectionNameText);
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            textViewChtTitle.setText(mBrokerName.getText());
+                            textViewChtTitle.setText(mBrokerName.getText().toString());
                             Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                            getActivity().onBackPressed();
+                            //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
                 }      } catch (CantGetChatIdentityException e) {
@@ -436,8 +435,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
     public boolean ExistIdentity() throws CHTException {
-            //TODO:Richard que pasa si esto es null porque no hay idenitdad creada te va a tirar null pointer exception?
-            //TODO: Fix by Richard
         try {
             if (!moduleManager.getIdentityChatUser().getAlias().isEmpty()) {
                 Log.i("CHT EXIST IDENTITY", "TRUE");

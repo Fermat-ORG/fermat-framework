@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
@@ -33,8 +34,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.BankEarningExtractor;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.CashEarningExtractor;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.CryptoEarningExtractor;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
@@ -58,10 +58,8 @@ import java.util.List;
  * @author lnacosta
  * @version 1.0
  */
+@PluginInfo(createdBy = "lnacosta", maintainerMail = "laion.cj91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.MATCHING_ENGINE)
 public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -112,26 +110,22 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
 
             dao.initialize();
 
-            fermatManager = new MatchingEngineMiddlewareManager(dao, errorManager, getPluginVersionReference(), cryptoBrokerWalletManager);
+            fermatManager = new MatchingEngineMiddlewareManager(dao, this, cryptoBrokerWalletManager);
             fermatManager.addEarningsExtractor(new BankEarningExtractor(bankMoneyDestockManager));
             fermatManager.addEarningsExtractor(new CashEarningExtractor(cashMoneyDestockManager));
             fermatManager.addEarningsExtractor(new CryptoEarningExtractor(cryptoMoneyDestockManager));
 
-            monitorAgent = new MatchingEngineMiddlewareTransactionMonitorAgent(cryptoBrokerWalletManager, errorManager, dao, getPluginVersionReference());
+            monitorAgent = new MatchingEngineMiddlewareTransactionMonitorAgent(cryptoBrokerWalletManager, this, dao);
             monitorAgent.start();
 
-            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(errorManager, dao, getPluginVersionReference());
+            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(this, dao);
             transactionGeneratorAgent.start();
 
             super.start();
 
         } catch (final CantInitializeDatabaseException cantInitializeActorConnectionDatabaseException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference(),
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantInitializeActorConnectionDatabaseException
-            );
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeActorConnectionDatabaseException);
 
             throw new CantStartPluginException(
                     cantInitializeActorConnectionDatabaseException,
@@ -150,11 +144,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
             transactionGeneratorAgent.pause();
 
         } catch (CantStopAgentException cantStopAgentException) {
-            errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference(),
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantStopAgentException
-            );
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStopAgentException);
         }
 
         super.pause();
@@ -169,11 +159,7 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
             transactionGeneratorAgent.resume();
 
         } catch (CantStartAgentException cantStartAgentException) {
-            errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference(),
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantStartAgentException
-            );
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
         }
 
         super.resume();

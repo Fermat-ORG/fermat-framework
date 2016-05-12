@@ -102,7 +102,7 @@
                     android:paddingRight="14dip"
                     android:paddingBottom="7dip"
                     android:layout_gravity="end"
-                    android:state_selected = "false"
+                    android:state_selected = "true"
                     android:text=""
                     android:layout_weight="1"
                     android:background="@null"/>
