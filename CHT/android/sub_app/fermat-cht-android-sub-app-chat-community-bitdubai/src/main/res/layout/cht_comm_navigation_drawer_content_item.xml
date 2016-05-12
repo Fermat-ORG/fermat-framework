@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+        android:paddingRight="24dp"
+        android:background="@drawable/cht_comm_list_backg">
 
         <ImageView
             android:id="@+id/imageView_icon"
@@ -32,9 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="#ffffff"
-            android:paddingBottom="15dp"
+            android:paddingBottom="10dp"
             android:paddingLeft="20dp"
-            android:paddingTop="15dp"
+            android:paddingTop="10dp"
             android:text="Home"
             android:textColor="#47BF73"
             android:textSize="20sp"
@@ -55,12 +56,5 @@
         android:layout_height="2dp"
         android:background="#90ffffff" />
 
-    <TextView
-        android:layout_below="@+id/badge"
-        android:id="@+id/divider"
-        android:layout_width="wrap_content"
-        android:layout_alignParentBottom="false"
-        android:layout_height="wrap_content"
-        android:background="#DBDBDB" />
 
 </LinearLayout>
