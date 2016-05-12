@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces;
+package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;

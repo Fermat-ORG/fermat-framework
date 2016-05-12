@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.E
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -21,7 +22,7 @@ import java.util.UUID;
  * @author lnacosta
  * @version 1.0
  */
-public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair {
+public final class MatchingEngineMiddlewareEarningsPair implements EarningsPair, Serializable {
 
     private final UUID             id             ;
     private final Currency         earningCurrency;
