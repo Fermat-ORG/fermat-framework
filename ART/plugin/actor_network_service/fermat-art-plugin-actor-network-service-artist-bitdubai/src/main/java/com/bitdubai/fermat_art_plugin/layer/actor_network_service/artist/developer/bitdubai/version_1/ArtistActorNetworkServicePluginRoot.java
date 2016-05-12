@@ -4,10 +4,8 @@ package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develo
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -19,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -39,6 +38,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.event_handler.ArtistCustomeP2PCompletedConnectionRegistrationEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
@@ -47,11 +47,16 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Gabriel Araujo 1/04/2016.
@@ -67,6 +72,13 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     
     ArtistActorNetworkServiceManager artistActorNetworkServiceManager;
     /**
+     * Hold the listeners references
+     */
+    private List<FermatEventListener> listenersAdded;
+
+    private ExecutorService executor;
+
+    /**
      * Constructor of the Network Service.
      */
     public ArtistActorNetworkServicePluginRoot() {
@@ -79,6 +91,9 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                 "Artist",
                 null
         );
+
+        listenersAdded = new ArrayList<>();
+        executor = Executors.newSingleThreadExecutor();
     }
 
     /**
@@ -101,6 +116,11 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                     getPluginVersionReference()
             );
 
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+            fermatEventListener.setEventHandler(new ArtistCustomeP2PCompletedConnectionRegistrationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
         } catch(final CantInitializeDatabaseException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -118,7 +138,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
         artistActorNetworkServiceManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().pause();
-
+        executor.shutdownNow();
         super.pause();
     }
 
@@ -127,7 +147,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
         // resume connections manager.
         getCommunicationNetworkServiceConnectionManager().resume();
-
+        executor = Executors.newSingleThreadExecutor();
         super.resume();
     }
 
@@ -136,7 +156,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
         artistActorNetworkServiceManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().stop();
-
+        executor.shutdownNow();
         super.stop();
     }
 
@@ -433,36 +453,28 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
     }
 
-    private void runExposeIdentityThread(){
+    public final void runExposeIdentityThread(){
+
         final PluginVersionReference pluginReference = getPluginVersionReference();
-        Thread exposeIdentities = new Thread(new Runnable() {
+
+        executor.submit(new Runnable() {
             @Override
             public void run() {
                 try {
+                    Thread.sleep(3000);
                     artistActorNetworkServiceManager.exposeIdentitiesInWait();
-                } catch (CantExposeIdentityException e) {
+                } catch (CantExposeIdentityException | InterruptedException e) {
                     errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
-        }, "REGISTER ARTIST IDENTITY CACHE");
+        });
 
-        exposeIdentities.start();
     }
     @Override
     protected void onClientSuccessfulReconnect() {
-        final PluginVersionReference pluginReference = getPluginVersionReference();
-        Thread exposeIdentities = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    artistActorNetworkServiceManager.exposeIdentitiesInWait();
-                } catch (CantExposeIdentityException e) {
-                    errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-            }
-        }, "REGISTER ARTIST IDENTITY CACHE");
-
-        exposeIdentities.start();
+        runExposeIdentityThread();
     }
 
     private void testCreateAndList(){
