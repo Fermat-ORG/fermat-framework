@@ -52,7 +52,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Joaquin Carrasquero on 05/04/16.
  */
-public class ReceiveTransactionFragment3 extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSession,ResourceProviderManager> implements FermatListItemListeners<LossProtectedWalletTransaction>, View.OnClickListener,onRefreshList {
+public class ReceiveTransactionFragment extends FermatWalletExpandableListFragment<GrouperItem,LossProtectedWalletSession,ResourceProviderManager> implements FermatListItemListeners<LossProtectedWalletTransaction>, View.OnClickListener,onRefreshList {
 
     /**
      * Session
@@ -93,8 +93,8 @@ public class ReceiveTransactionFragment3 extends FermatWalletExpandableListFragm
      *
      * @return InstalledFragment instance object
      */
-    public static ReceiveTransactionFragment3 newInstance() {
-        return new ReceiveTransactionFragment3();
+    public static ReceiveTransactionFragment newInstance() {
+        return new ReceiveTransactionFragment();
     }
 
     @Override
@@ -261,9 +261,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletExpandableListFragm
 
 
                     for (LossProtectedWalletTransaction cryptoWalletTransaction : list) {
-                        List<LossProtectedWalletTransaction> lst = lossProtectedWallet.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.CREDIT, lossWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
-
-                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
+                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(cryptoWalletTransaction, false, cryptoWalletTransaction);
                         data.add(grouperItem);
                     }
 

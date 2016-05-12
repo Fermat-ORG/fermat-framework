@@ -321,7 +321,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 if(openNegotiationList.size() > 0)
                 {
-                    recyclerView.setVisibility(View.INVISIBLE);
+                    recyclerView.setVisibility(View.GONE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
                 }
             }else {

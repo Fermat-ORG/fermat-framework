@@ -266,7 +266,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                             System.out.print("Debit new transaction.");
                         } else {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction,false);
+                            roolback(transaction,true);
                             // TODO: Lanzar un evento de fondos insuficientes
                             System.out.print("fondos insuficientes");
                             System.out.print("ROLLBACK 1");
@@ -338,7 +338,7 @@ public class OutgoingIntraActorTransactionProcessorAgent extends FermatAgent {
                         // TODO: Raise informative event
                         try {
                             dao.cancelTransaction(transaction);
-                            roolback(transaction, false);
+                            roolback(transaction, true);
                             System.out.print("ROLLBACK 2");
                             Exception inconsistentFundsException = new OutgoingIntraActorInconsistentFundsException("Basic wallet balance and crypto vault funds are inconsistent", e, "", "");
                             reportUnexpectedException(inconsistentFundsException);

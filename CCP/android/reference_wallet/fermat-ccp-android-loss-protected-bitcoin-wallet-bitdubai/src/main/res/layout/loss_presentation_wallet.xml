@@ -55,7 +55,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
                     android:paddingBottom="2dp"
-                    android:src="@drawable/bitcoin_wallet_2" />
+                    android:src="@drawable/lpw_icon" />
             </LinearLayout>
 
             <View
@@ -68,7 +68,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="175dp"
+                android:layout_height="145dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 

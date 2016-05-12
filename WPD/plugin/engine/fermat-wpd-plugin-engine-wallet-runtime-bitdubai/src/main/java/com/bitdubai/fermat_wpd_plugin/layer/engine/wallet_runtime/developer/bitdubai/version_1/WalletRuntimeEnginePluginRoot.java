@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -44,8 +46,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
@@ -72,6 +72,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 23.07.15.
  */
+@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 
 public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         WalletRuntimeManager,
@@ -92,8 +93,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -106,7 +106,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-
+        try {
 
         FermatEventListener fermatEventListener;
         FermatEventHandler fermatEventHandler;
@@ -152,7 +152,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
          * * *
          *
          */
-        try {
+
 
             loadLastWalletNavigationStructure();
             factoryReset();
@@ -165,8 +165,15 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
         }
+        catch (Exception ex) {
+            String message = CantStartPluginException.DEFAULT_MESSAGE;
 
-        this.serviceStatus = ServiceStatus.STARTED;
+            String context = "WalletNavigationStructure Runtime Start";
+
+            String possibleReason = "unknown error";
+            throw new CantStartPluginException(message, FermatException.wrapException(ex), context, possibleReason);
+        }
+
 
     }
 
@@ -293,6 +300,17 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     @Override
     public Set<String> getListOfAppsPublicKey() {
+        try{
+            WalletNavigationStructure walletNavigationStructure = startWalletNavigationStructure();
+            lstWalletNavigationStructureOpen.put (WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),walletNavigationStructure);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        try {
+            factoryReset();
+        } catch (CantFactoryReset cantFactoryReset) {
+            cantFactoryReset.printStackTrace();
+        }
         return lstWalletNavigationStructureOpen.keySet();
     }
 

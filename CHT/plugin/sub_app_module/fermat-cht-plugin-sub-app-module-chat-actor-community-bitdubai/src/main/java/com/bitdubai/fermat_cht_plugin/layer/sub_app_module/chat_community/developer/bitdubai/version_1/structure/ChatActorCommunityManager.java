@@ -12,15 +12,13 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -36,7 +34,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWai
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
-
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatTypeNotSupportedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
@@ -54,8 +51,6 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -446,18 +441,15 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.getSettingsManager().loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){
-            //errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            appSettings = new ChatActorCommunitySettings();
-            try {
-                this.getSettingsManager().persistSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode(), appSettings);
-            } catch (CantPersistSettingsException e1) {
-                //e1.printStackTrace();
-            }
-            return null;
+            appSettings = this.getSettingsManager().loadAndGetSettings(this.subAppPublicKey);//SubAppsPublicKeys.CHT_COMMUNITY.getCode() //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+        } catch (Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            appSettings = null;
         }
 
+        if(appSettings==null){
+            appSettings = new ChatActorCommunitySettings();
+        }
         List<ChatIdentity> IdentitiesInDevice = new ArrayList<>();
         try{
             IdentitiesInDevice = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
@@ -474,8 +466,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
-        if(appSettings != null)
-        {
+        if(appSettings != null) {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
             Actors lastSelectedActorType = appSettings.getLastSelectedActorType();
 
@@ -490,13 +481,13 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                             selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage());
                     }
                 }
-                if(selectedIdentity == null)
-                    //throw new ActorIdentityNotSelectedException("", null, "", "");
+//                if(selectedIdentity == null)
+//                    throw new ActorIdentityNotSelectedException("", null, "", "");
 
                 return selectedIdentity;
             }
-            else{}
-                //throw new ActorIdentityNotSelectedException("", null, "", "");
+//            else
+//                throw new ActorIdentityNotSelectedException("", null, "", "");
         }
 
         return null;

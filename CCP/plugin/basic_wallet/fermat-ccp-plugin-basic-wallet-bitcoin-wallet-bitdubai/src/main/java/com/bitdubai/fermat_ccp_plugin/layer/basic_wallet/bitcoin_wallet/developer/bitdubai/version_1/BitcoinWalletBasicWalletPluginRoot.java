@@ -148,7 +148,7 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     @Override
     public BitcoinWalletWallet loadWallet(String walletId) throws CantLoadWalletsException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(getErrorMAnager(), pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(getErrorManager(), pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
@@ -166,7 +166,7 @@ public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implement
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(getErrorMAnager(), pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(getErrorManager(), pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 

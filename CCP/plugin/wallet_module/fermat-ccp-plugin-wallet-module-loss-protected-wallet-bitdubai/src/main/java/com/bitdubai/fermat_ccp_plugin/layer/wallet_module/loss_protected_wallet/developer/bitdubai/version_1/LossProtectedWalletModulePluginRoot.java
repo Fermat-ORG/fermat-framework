@@ -80,9 +80,6 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API     , layer = Layers.SYSTEM          , addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM        , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
-    private ErrorManager errorManager;
-
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.ACTOR           , plugin = Plugins.EXTRA_WALLET_USER)
     private ExtraUserManager extraUserManager;
 
@@ -148,7 +145,7 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
                     cryptoAddressesNSManager      ,
                     cryptoPaymentManager          ,
                     cryptoVaultManager            ,
-                    errorManager                  ,
+                    getErrorManager()                  ,
                     extraUserManager              ,
                     intraWalletUserActorManager   ,
                     intraWalletUserIdentityManager,

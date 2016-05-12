@@ -210,7 +210,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
                         cryptoAddressesNSManager,
                         cryptoPaymentManager,
                         cryptoVaultManager,
-                        getErrorMAnager(),
+                        getErrorManager(),
                         extraUserManager,
                         intraWalletUserActorManager,
                         intraWalletUserIdentityManager,
