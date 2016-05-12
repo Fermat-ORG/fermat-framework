@@ -46,8 +46,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.structure.CustomerOnlinePaymentTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -245,8 +243,10 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
-                    outgoingIntraActorManager,intraWalletUserIdentityManager);
-            customerOnlinePaymentMonitorAgent.start();
+                    outgoingIntraActorManager,
+                    intraWalletUserIdentityManager);
+
+            monitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
             //System.out.println("Customer online payment starting");

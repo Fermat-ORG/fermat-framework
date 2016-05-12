@@ -47,8 +47,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_o
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.structure.BrokerSubmitOnlineMerchandiseTransactionManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.math.BigDecimal;
@@ -262,7 +260,9 @@ public class BrokerSubmitOnlineMerchandisePluginRoot extends AbstractPlugin impl
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
                     outgoingIntraActorManager,
-                    cryptoMoneyDeStockManager,intraWalletUserIdentityManager);
+                    cryptoMoneyDeStockManager,
+                    intraWalletUserIdentityManager);
+
             brokerSubmitOnlineMerchandiseMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;

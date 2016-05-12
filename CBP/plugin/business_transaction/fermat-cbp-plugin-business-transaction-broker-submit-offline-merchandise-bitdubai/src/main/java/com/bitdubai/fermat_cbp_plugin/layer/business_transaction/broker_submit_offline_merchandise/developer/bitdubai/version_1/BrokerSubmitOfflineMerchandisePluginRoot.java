@@ -267,7 +267,9 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
                     customerBrokerSaleNegotiationManager,
                     cashMoneyDestockManager,
                     bankMoneyDestockManager,
-                    cryptoBrokerWalletManager,customerBrokerPurchaseNegotiationManager);
+                    cryptoBrokerWalletManager,
+                    customerBrokerPurchaseNegotiationManager);
+
             brokerSubmitOfflineMerchandiseMonitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;

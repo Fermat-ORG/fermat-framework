@@ -178,12 +178,13 @@ public class CustomerOfflinePaymentPluginRoot extends AbstractPlugin implements
                     pluginId,
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
-                    customerBrokerContractSaleManager,customerBrokerSaleNegotiationManager);
-            customerOnlinePaymentMonitorAgent.start();
+                    customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager);
+
+            monitorAgent.start();
 
             this.serviceStatus = ServiceStatus.STARTED;
-            //System.out.println("Customer offline payment starting");
-            //testPayment();
+
         } catch (CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException exception) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(
