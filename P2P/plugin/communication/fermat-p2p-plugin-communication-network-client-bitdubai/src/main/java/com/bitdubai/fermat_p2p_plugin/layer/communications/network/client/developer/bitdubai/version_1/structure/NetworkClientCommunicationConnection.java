@@ -599,6 +599,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     public void raiseClientConnectionLostNotificationEvent() {
 
+        this.communicationsNetworkClientChannel.setIsRegistered(Boolean.FALSE);
+
         System.out.println("CommunicationsNetworkClientConnection - raiseClientConnectionLostNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_LOST);
         platformEvent.setSource(EventSource.NETWORK_CLIENT);
