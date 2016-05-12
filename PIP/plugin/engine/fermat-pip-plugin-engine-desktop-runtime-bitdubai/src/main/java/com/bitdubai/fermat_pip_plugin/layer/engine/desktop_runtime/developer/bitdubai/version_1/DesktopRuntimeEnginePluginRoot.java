@@ -95,10 +95,10 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * functionality based on wallets downloaded by users this wont be an option.
              * * *
              */
-            if(!loadConfig()) {
+//            if(!loadConfig()) {
                 factoryReset();
                 saveFactory();
-            }
+//            }
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantFactoryResetException ex) {

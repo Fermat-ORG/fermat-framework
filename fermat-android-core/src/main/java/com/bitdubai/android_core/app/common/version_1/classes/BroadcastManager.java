@@ -170,6 +170,7 @@ public class BroadcastManager implements BroadcasterInterface {
     @Override
     public UUID getId() {
         return id;
+
     }
 
 //    private void updateView(FermatBundle bundle) {

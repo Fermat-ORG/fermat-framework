@@ -48,5 +48,7 @@ public class BitcoinLossProtectedWalletDatabaseConstants {
     public static final String LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME = "timestamp";
     public static final String LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME = "btcspent";
     public static final String LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME = "dollarexchangerate";
+    public static final String LOSS_PROTECTED_WALLET_SPENT_TABLE_RUNNING_NETWORK_TYPE = "runningNetworkType";
+
 
 }

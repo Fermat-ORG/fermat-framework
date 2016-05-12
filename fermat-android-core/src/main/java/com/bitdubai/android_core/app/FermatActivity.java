@@ -221,6 +221,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
 
+
     /**
      * Called when the activity is first created
      *

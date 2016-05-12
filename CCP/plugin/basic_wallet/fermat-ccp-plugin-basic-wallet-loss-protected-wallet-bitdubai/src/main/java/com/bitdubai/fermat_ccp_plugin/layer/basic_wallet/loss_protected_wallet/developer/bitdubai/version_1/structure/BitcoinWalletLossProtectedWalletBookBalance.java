@@ -140,7 +140,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK, String.valueOf(purchasePrice));
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "BalanceChange");
             //get exchange rate on background
             setActualExchangeRate(cryptoTransaction.getTransactionId());
         } catch(CantRegisterDebitException exception){
@@ -158,7 +158,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK, String.valueOf(purchasePrice));
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "BalanceChange");
             //get exchange rate on background
             setActualExchangeRate(cryptoTransaction.getTransactionId());
         } catch(CantRegisterCreditException exception){

@@ -4,8 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 
 import org.junit.Test;
 
-import java.sql.Date;
-
 /**
  * Created by rodrigo on 9/7/15.
  */

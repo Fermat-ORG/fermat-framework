@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.util;
 
-import java.lang.Math;
-
 /**
  * Created by eze on 03/05/15.
  */

@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -61,6 +62,12 @@ import java.util.regex.Pattern;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 18/10/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "manuel",
+        layer = Layers.DIGITAL_ASSET_TRANSACTION,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION)
 public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
         RedeemPointRedemptionManager,
         LogManagerForDevelopers,

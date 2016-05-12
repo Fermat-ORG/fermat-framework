@@ -14,6 +14,8 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.Navigatio
 
 /**
  * Created by mati on 2015.11.23
+ *
+ * Modify by Clelia López
  */
 public class AnimationManager
         implements ElementsWithAnimation {

@@ -9,10 +9,10 @@ import android.view.animation.TranslateAnimation;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 
 /**
- * Created by mati on 2015.11.23..
+ * Created by mati on 2015.11.23
  */
-public class AnimationManager
-        implements ElementsWithAnimation {
+
+public class AnimationManager implements ElementsWithAnimation {
 
     View rootView;
     View emptyListViewsContainer;
@@ -33,6 +33,16 @@ public class AnimationManager
     @Override
     public void startExpandAnimation(int verticalOffSet) {
         moveViewToOriginalPosition(emptyListViewsContainer);
+    }
+
+    @Override
+    public void startCollapseAnimation(Context context, int verticalOffset) {
+        // no-op
+    }
+
+    @Override
+    public void startExpandAnimation(Context context, int verticalOffset) {
+        // no-op
     }
 
     private void moveViewToOriginalPosition(View view) {
@@ -63,15 +73,6 @@ public class AnimationManager
         }
     }
 
-    @Override
-    public void startCollapseAnimation(Context context, int verticalOffset) {
-
-    }
-
-    @Override
-    public void startExpandAnimation(Context context, int verticalOffset) {
-
-    }
 
     public void setEmptyOriginalPos(int[] emptyOriginalPos) {
         this.emptyOriginalPos = emptyOriginalPos;

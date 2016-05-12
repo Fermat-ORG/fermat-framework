@@ -19,9 +19,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Created by mati on 2016.05.09..
@@ -34,8 +37,7 @@ public class SubAppAppsGenerator {
     public SubAppAppsGenerator() {
         listSubApp = new HashMap<>();
     }
-
-    /**
+    /*
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the
      * factory structure.
      */
