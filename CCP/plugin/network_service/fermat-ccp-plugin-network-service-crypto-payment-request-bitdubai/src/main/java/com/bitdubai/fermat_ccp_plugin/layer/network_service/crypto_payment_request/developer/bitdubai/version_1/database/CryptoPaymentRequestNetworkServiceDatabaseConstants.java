@@ -34,7 +34,7 @@ public class CryptoPaymentRequestNetworkServiceDatabaseConstants {
     public static final String CRYPTO_PAYMENT_REQUEST_WALLET_REFERENCE_TYPE_COLUMN_NAME = "reference_wallet";
     public static final String CRYPTO_PAYMENT_REQUEST_SENT_COUNT_COLUMN_NAME            = "sent_count";
     public static final String CRYPTO_PAYMENT_REQUEST_MESSAGE_TYPE_COLUMN_NAME          = "message_type";
-
+    public static final String CRYPTO_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME          = "walletpubickey";
     public static final String CRYPTO_PAYMENT_REQUEST_FIRST_KEY_COLUMN                = "request_id"            ;
 
 }

@@ -121,6 +121,24 @@ public class WalletUtils {
 
         return stringAmount;
     }
+
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatAmountStringWithDecimalEntry(double amount,int maxDecimal, int minDecimal) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(maxDecimal);
+        df.setMinimumFractionDigits(minDecimal);
+
+        stringAmount =df.format(amount);//+ " BTC";
+
+        return stringAmount;
+    }
     /**
      *  Formationg Amount no decimal
      * @param amount

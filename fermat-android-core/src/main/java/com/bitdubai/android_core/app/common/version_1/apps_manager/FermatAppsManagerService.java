@@ -79,9 +79,20 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     public void init(){
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
-        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
-        //if(appsInstalledInDevice.isEmpty()){
-            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+//        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
+//        //if(appsInstalledInDevice.isEmpty()){
+//            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+        try {
+            for (FermatAppType fermatAppType : FermatAppType.values()) {
+                RuntimeManager runtimeManager = selectRuntimeManager(fermatAppType);
+                if (runtimeManager != null)
+                    for (String key : runtimeManager.getListOfAppsPublicKey()) {
+                        appsInstalledInDevice.put(key, fermatAppType);
+                    }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
         //}
     }
 
@@ -225,6 +236,9 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }else{
             Log.e(TAG,"App instaled in device null: "+appPublicKey);
             Log.e(TAG,"If the public key of the app is fine, try removing data and restart app. filesystem problem..");
+            if(appPublicKey.equals("main_desktop")){
+                return selectRuntimeManager(FermatAppType.DESKTOP).getLastApp();
+            }
             return null;
         }
     }
