@@ -330,8 +330,8 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     }
                 }
             } catch (Exception e) {
-                Exception e1 = new RuntimeException("Error in Method: "+method+" object returned: "+returnModuleObject,e);
-                return new FermatModuleObjectWrapper(dataId,null,true, e1);
+//                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
+                return new FermatModuleObjectWrapper(dataId,null,true, e);
             }
 
         }
