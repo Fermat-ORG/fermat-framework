@@ -63,7 +63,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         FermatListItemListeners<ActorIssuer> {
 
     public static final String ISSUER_SELECTED = "issuer";
-    private static AssetIssuerCommunitySubAppModuleManager manager;
+    private AssetIssuerCommunitySubAppModuleManager moduleManager;
+    AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
+    AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
 
     ErrorManager errorManager;
@@ -87,7 +89,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private List<ActorAssetIssuer> actorsToConnect;
     private ActorIssuer actor;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     /**
      * Flags
@@ -104,13 +106,14 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         setHasOptionsMenu(true);
 
         try {
-            manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
             actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
+            assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+            moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            issuerNotificationsCount = manager.getWaitingYourConnectionActorAssetIssuerCount();
+            if (moduleManager != null)
+                issuerNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetIssuerCount();
             new FetchCountTask().execute();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -205,10 +208,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         onRefresh();
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetIssuerSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -216,9 +218,14 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
             settings = new AssetIssuerSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                }
+
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -302,7 +309,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 //                                toConnect.add(actorIssuer.getRecord());
 //                        }
 //                        //// TODO: 20/11/15 get Actor asset issuer
-//                        manager.connectToActorAssetIssuer(null, toConnect);
+//                        moduleManager.connectToActorAssetIssuer(null, toConnect);
 //                        return true;
 //                    }
 //                };
@@ -449,13 +456,13 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                                         }
                                     }
                                     //// TODO: 20/11/15 get Actor asset issuer
-                                    manager.askActorAssetIssuerForConnection(toConnect);
+                                    moduleManager.askActorAssetIssuerForConnection(toConnect);
 
                                     Intent broadcast = new Intent(SessionConstantsAssetIssuerCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetIssuerCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);
 
-//                                    manager.connectToActorAssetIssuer(null, toConnect);
+//                                    moduleManager.connectToActorAssetIssuer(null, toConnect);
                                     return true;
                                 }
                             };
@@ -524,7 +531,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
                                 for(ActorIssuer actor: actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    manager.cancelActorAssetIssuer(actor.getRecord());
+                                    moduleManager.cancelActorAssetIssuer(actor.getRecord());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
@@ -578,7 +585,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         try {
 
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -684,9 +691,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     private synchronized List<ActorIssuer> getMoreData() throws Exception {
         List<ActorIssuer> dataSet = new ArrayList<>();
         List<AssetIssuerActorRecord> result = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetIssuerRegistered();
+        result = moduleManager.getAllActorAssetIssuerRegistered();
         if (result != null && result.size() > 0) {
             for (AssetIssuerActorRecord record : result) {
                 dataSet.add((new ActorIssuer(record)));

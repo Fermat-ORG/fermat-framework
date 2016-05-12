@@ -64,7 +64,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         FermatListItemListeners<Actor> {
 
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
-    private static RedeemPointCommunitySubAppModuleManager manager;
+    private RedeemPointCommunitySubAppModuleManager moduleManager;
+    AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    RedeemPointSettings settings = null;
     private int redeemNotificationsCount = 0;
 
     private List<Actor> actorsConnecting;
@@ -89,7 +91,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemDisconnect;
     private MenuItem menuItemCancel;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
 
     /**
      * Flags
@@ -106,13 +108,14 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         setHasOptionsMenu(true);
 
         try {
-            manager = ((AssetRedeemPointCommunitySubAppSession) appSession).getModuleManager();
             actor = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
 
+            assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+            moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            redeemNotificationsCount = manager.getWaitingYourConnectionActorAssetRedeemCount();
+            if (moduleManager != null)
+                redeemNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetRedeemCount();
             new FetchCountTask().execute();
 
         } catch (Exception ex) {
@@ -225,10 +228,10 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         onRefresh();
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        RedeemPointSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
+//        RedeemPointSettings settings = null;
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -236,9 +239,13 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
             settings = new RedeemPointSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -322,7 +329,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 //                                toConnect.add(actor);
 //                        }
 //                        //// TODO: 28/10/15 get Actor asset Redeem Point
-//                        manager.connectToActorAssetRedeemPoint(null, toConnect);
+//                        moduleManager.connectToActorAssetRedeemPoint(null, toConnect);
 //                        return true;
 //                    }
 //                };
@@ -474,13 +481,13 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                         }
                                     }
                                     //// TODO: 28/10/15 get Actor asset Redeem Point
-                                  manager.askActorAssetRedeemForConnection(toConnect);
+                                  moduleManager.askActorAssetRedeemForConnection(toConnect);
 
                                   Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
                                   broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                   sendLocalBroadcast(broadcast);
 
-//                                    manager.connectToActorAssetRedeemPoint(null, toConnect);
+//                                    moduleManager.connectToActorAssetRedeemPoint(null, toConnect);
                                     return true;
                                 }
                             };
@@ -560,14 +567,14 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                     }
                                     /*TODO implementar disconnect*/
                                     for(ActorAssetRedeemPoint actor: toDisconnect) {
-                                        manager.disconnectToActorAssetRedeemPoint(actor);
+                                        moduleManager.disconnectToActorAssetRedeemPoint(actor);
                                     }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);*/
 
-//                                    manager.connectToActorAssetUser(null, toConnect);
+//                                    moduleManager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -639,7 +646,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
                                 for(Actor actor: actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    manager.cancelActorAssetRedeem(actor.getActorPublicKey());
+                                    moduleManager.cancelActorAssetRedeem(actor.getActorPublicKey());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
@@ -694,7 +701,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         try {
             if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
 //            if (item.getItemId() == R.id.action_community_redeem_help) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -801,9 +808,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private synchronized List<Actor> getMoreData() throws Exception {
         List<Actor> dataSet = new ArrayList<>();
         List<RedeemPointActorRecord> result = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetRedeemPointCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetRedeemPointRegistered();
+        result = moduleManager.getAllActorAssetRedeemPointRegistered();
         if (result != null && result.size() > 0) {
             for (RedeemPointActorRecord record : result) {
                 dataSet.add((new Actor(record)));

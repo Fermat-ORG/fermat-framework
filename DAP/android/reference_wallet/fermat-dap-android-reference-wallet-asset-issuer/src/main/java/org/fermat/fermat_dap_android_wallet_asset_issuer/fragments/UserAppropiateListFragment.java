@@ -61,12 +61,12 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
+    AssetIssuerSession assetIssuerSession;
     // Data
     private List<UserAppropiate> users;
     private DigitalAsset digitalAsset;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     //UI
     private View noUsersView;
@@ -85,9 +85,9 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
         setHasOptionsMenu(true);
 
         try {
-            moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+            assetIssuerSession = ((AssetIssuerSession) appSession);
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+            moduleManager = assetIssuerSession.getModuleManager();
 
             users = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
@@ -148,7 +148,7 @@ public class UserAppropiateListFragment extends FermatWalletListFragment<UserApp
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_APPROPIATE) {
-                setUpHelpAssetAppropiate(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetAppropiate(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

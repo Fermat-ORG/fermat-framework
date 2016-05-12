@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -54,7 +55,9 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import static android.widget.Toast.makeText;
@@ -74,8 +77,10 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
     //FERMAT
     private AssetUserWalletSubAppModuleManager moduleManager;
+    AssetUserSession assetUserSession;
+    AssetUserSettings settings = null;
     private ErrorManager errorManager;
-    private SettingsManager<AssetUserSettings> settingsManager;
+//    private SettingsManager<AssetUserSettings> settingsManager;
 
     private long bitcoinWalletBalanceSatoshis;
 
@@ -91,9 +96,10 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         try {
             appSession.setData("redeem_points", null);
 
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+
             dataManager = new DataManager(moduleManager);
 
         } catch (Exception ex) {
@@ -151,29 +157,43 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
     }
 
     private void initSettings() {
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetUserSettings settings = null;
+
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
 
         if (settings == null) {
+            int position = 0;
             settings = new AssetUserSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
+
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+            for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
+                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
-                moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                    moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
         } else {
-            moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+            if (moduleManager != null) {
+                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+            }
         }
 
         final AssetUserSettings assetUserSettingsTemp = settings;
@@ -263,7 +283,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

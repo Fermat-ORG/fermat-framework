@@ -80,7 +80,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
     int selectedGroupsCount;
     int selectedUsersInGroupsCount;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public AssetDeliveryFragment() {
 
@@ -99,7 +99,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
         moduleManager = assetIssuerSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         moduleManager.clearDeliverList();
         activity = getActivity();
 
@@ -150,7 +150,7 @@ public class AssetDeliveryFragment extends AbstractFermatFragment {
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DELIVERY) {
-                setUpHelpAssetStatistics(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetStatistics(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

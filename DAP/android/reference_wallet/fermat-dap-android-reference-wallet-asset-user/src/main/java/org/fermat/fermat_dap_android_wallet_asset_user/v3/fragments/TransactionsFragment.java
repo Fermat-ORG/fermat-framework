@@ -60,7 +60,7 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     private View noTransactionsView;
     private List<Transaction> transactions;
@@ -75,10 +75,9 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = (AssetUserSession) appSession;
+        assetUserSession = ((AssetUserSession) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
 
         Asset assetData = (Asset) appSession.getData("asset_data");
         try {
@@ -177,7 +176,7 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
-                setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {

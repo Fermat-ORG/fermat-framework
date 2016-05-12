@@ -63,8 +63,10 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     private View rootView;
     private RedeemPointCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
-    private static RedeemPointCommunitySubAppModuleManager manager;
+    private RedeemPointCommunitySubAppModuleManager moduleManager;
     private AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    RedeemPointSettings settings = null;
+
     private ErrorManager errorManager;
     private int offset = 0;
     private Actor actorInformation;
@@ -72,7 +74,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
 
     /**
      * Create a new instance of this fragment
@@ -87,11 +89,10 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
-
-        manager = ((AssetRedeemPointCommunitySubAppSession) appSession).getModuleManager();
-
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
 
         actorInformation = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
 
@@ -141,11 +142,11 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
         List<ActorAssetRedeemPoint> result;
 
         try {
-            if (manager == null)
+            if (moduleManager == null)
                 throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-            if (manager.getActiveAssetRedeemPointIdentity() != null) {
-                result = manager.getWaitingYourConnectionActorAssetRedeem(manager.getActiveAssetRedeemPointIdentity().getPublicKey(), MAX, offset);
+            if (moduleManager.getActiveAssetRedeemPointIdentity() != null) {
+                result = moduleManager.getWaitingYourConnectionActorAssetRedeem(moduleManager.getActiveAssetRedeemPointIdentity().getPublicKey(), MAX, offset);
                 if (result != null && result.size() > 0) {
                     for (ActorAssetRedeemPoint record : result) {
                         dataSet.add((new Actor((RedeemPointActorRecord) record)));
@@ -263,7 +264,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
 
         try {
             if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_NOTIFICATIONS) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -290,7 +291,7 @@ public class RedeemPointCommunityNotificationsFragment extends AbstractFermatFra
                     assetRedeemPointCommunitySubAppSession,
                     null,
                     data,
-                    manager.getActiveAssetRedeemPointIdentity());
+                    moduleManager.getActiveAssetRedeemPointIdentity());
 
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override

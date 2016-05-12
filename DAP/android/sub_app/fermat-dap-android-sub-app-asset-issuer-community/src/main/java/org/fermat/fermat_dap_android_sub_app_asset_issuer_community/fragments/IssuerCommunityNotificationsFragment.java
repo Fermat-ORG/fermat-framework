@@ -63,7 +63,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     private View rootView;
     private IssuerCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
-    private static AssetIssuerCommunitySubAppModuleManager manager;
+    private AssetIssuerCommunitySubAppModuleManager moduleManager;
     private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
 
     private ErrorManager errorManager;
@@ -73,7 +73,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
     //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     /**
      * Create a new instance of this fragment
@@ -89,14 +89,11 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
-
-        manager = ((AssetIssuerCommunitySubAppSession) appSession).getModuleManager();
-
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
 
         actorInformation = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
-        errorManager = appSession.getErrorManager();
         listActorInformation = new ArrayList<>();
     }
 
@@ -142,11 +139,11 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
         List<ActorAssetIssuer> result = null;
 
         try {
-            if (manager == null)
+            if (moduleManager == null)
                 throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
 
-            if (manager.getActiveAssetIssuerIdentity() != null) {
-                result = manager.getWaitingYourConnectionActorAssetIssuer(manager.getActiveAssetIssuerIdentity().getPublicKey(), MAX, offset);
+            if (moduleManager.getActiveAssetIssuerIdentity() != null) {
+                result = moduleManager.getWaitingYourConnectionActorAssetIssuer(moduleManager.getActiveAssetIssuerIdentity().getPublicKey(), MAX, offset);
                 if (result != null && result.size() > 0) {
                     for (ActorAssetIssuer record : result) {
 //                dataSet.add((new ActorIssuer(record)));
@@ -260,7 +257,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
 
         try {
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_NOTIFICATIONS) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -286,7 +283,7 @@ public class IssuerCommunityNotificationsFragment extends AbstractFermatFragment
                     assetIssuerCommunitySubAppSession,
                     null,
                     data,
-                    manager.getActiveAssetIssuerIdentity());
+                    moduleManager.getActiveAssetIssuerIdentity());
 
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override

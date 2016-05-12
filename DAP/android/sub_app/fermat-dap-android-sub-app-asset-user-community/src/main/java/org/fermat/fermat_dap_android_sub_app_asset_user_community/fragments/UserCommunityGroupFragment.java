@@ -54,7 +54,10 @@ import static android.widget.Toast.makeText;
 public class UserCommunityGroupFragment extends AbstractFermatFragment implements
         SwipeRefreshLayout.OnRefreshListener {
 
-    private static AssetUserCommunitySubAppModuleManager manager;
+    private AssetUserCommunitySubAppModuleManager moduleManager;
+    AssetUserSettings settings = null;
+    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+
     private static final int MAX = 20;
 
     private List<Group> groups;
@@ -72,7 +75,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     private CreateGroupFragmentDialog dialog;
 
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
     /**
      * Flags
      */
@@ -87,9 +90,11 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         try {
-            manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
+
+            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -143,10 +148,10 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         create.setVisibility(View.VISIBLE);
 
         //initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetUserSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
+//        AssetUserSettings settings = null;
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -154,9 +159,13 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
             settings = new AssetUserSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -254,7 +263,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -267,7 +276,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 
     private void lauchCreateGroupDialog(){
         dialog = new CreateGroupFragmentDialog(
-                getActivity(),manager,null);
+                getActivity(), moduleManager,null);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -329,13 +338,13 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     private synchronized List<Group> getMoreData() throws Exception {
         List<Group> dataSet = new ArrayList<>();
         List<ActorAssetUserGroup> result = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = manager.getGroups();
+        result = moduleManager.getGroups();
         if (result != null && result.size() > 0) {
             for (ActorAssetUserGroup record : result) {
                 Group group = new Group(record);
-                group.setMembers(manager.getListActorAssetUserByGroups(group.getGroupId()).size());
+                group.setMembers(moduleManager.getListActorAssetUserByGroups(group.getGroupId()).size());
                 dataSet.add(group);
             }
         }

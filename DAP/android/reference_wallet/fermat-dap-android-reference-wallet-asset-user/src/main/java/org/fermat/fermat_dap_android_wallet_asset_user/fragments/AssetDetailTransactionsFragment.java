@@ -89,7 +89,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     private View noTransactionsView;
     private List<Transaction> transactions;
@@ -107,11 +107,12 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        assetUserSession = (AssetUserSession) appSession;
+        assetUserSession = ((AssetUserSession) appSession);
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
+
         moduleManager.clearDeliverList();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+
         appSession.setData("users_to_transfer", null);
 
         transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -266,7 +267,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
-                setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
                 changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());

@@ -64,7 +64,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-
+    AssetUserSession assetUserSession;
     // Data
     private List<User> users;
     private User userSelected;
@@ -73,7 +73,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
 
     private DigitalAsset digitalAsset;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     //UI
     private View noUsersView;
@@ -90,10 +90,9 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             try {
 
@@ -166,7 +165,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT) {
-                setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetRedeem(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER) {
                 if (userSelected != null) {

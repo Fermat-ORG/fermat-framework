@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -38,6 +39,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWall
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,7 +47,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation> {
+public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings>, Serializable {
     /**
      * (non-Javadoc)
      *
@@ -147,5 +149,4 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
     List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
     ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetAssetNegotiationsException;
-
 }

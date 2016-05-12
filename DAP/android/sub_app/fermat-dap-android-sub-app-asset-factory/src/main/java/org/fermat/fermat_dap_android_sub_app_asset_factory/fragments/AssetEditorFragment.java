@@ -48,7 +48,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
@@ -61,7 +60,6 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.enums.AssetBehavior;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
-import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -94,7 +92,8 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private static final int CONTEXT_MENU_GALLERY = 2;
     private static final String NO_AVAILABLE = "No Available";
     private final String TAG = "AssetEditor";
-    private AssetFactoryModuleManager manager;
+    private AssetFactoryModuleManager moduleManager;
+    AssetFactorySession assetFactorySession;
     private ErrorManager errorManager;
     private AssetFactory asset;
 
@@ -124,7 +123,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private long satoshisWalletBalance = 0;
     private boolean contextMenuInUse = false;
 
-    SettingsManager<AssetFactorySettings> settingsManager;
+//    SettingsManager<AssetFactorySettings> settingsManager;
 
     public static AssetEditorFragment newInstance(AssetFactory asset) {
         AssetEditorFragment fragment = new AssetEditorFragment();
@@ -141,11 +140,10 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         setHasOptionsMenu(true);
 
         try {
-            manager = ((AssetFactorySession) appSession).getModuleManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
-
+            assetFactorySession = ((AssetFactorySession) appSession);
+            moduleManager = assetFactorySession.getModuleManager();
             errorManager = appSession.getErrorManager();
+
             if (!isEdit) {
                 final ProgressDialog dialog = new ProgressDialog(getActivity());
                 dialog.setTitle("Draft Asset");
@@ -155,10 +153,10 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                 FermatWorker worker = new FermatWorker() {
                     @Override
                     protected Object doInBackground() throws Exception {
-                        asset = manager.newAssetFactoryEmpty();
-                        List<InstalledWallet> installedWallets = manager.getInstallWallets();
+                        asset = moduleManager.newAssetFactoryEmpty();
+                        List<InstalledWallet> installedWallets = moduleManager.getInstallWallets();
                         if (installedWallets != null && installedWallets.size() > 0) {
-                            asset.setWalletPublicKey(Utils.getBitcoinWalletPublicKey(manager));
+                            asset.setWalletPublicKey(Utils.getBitcoinWalletPublicKey(moduleManager));
                         }
                         return true;
                     }
@@ -308,7 +306,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         }
 
         try {
-            long satoshis = manager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(manager));
+            long satoshis = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
             satoshisWalletBalance = satoshis;
             double bitcoinWalletBalance = BitcoinConverter.convert(satoshis, SATOSHI, BITCOIN);
             bitcoinBalanceText.setText(String.format("%.6f BTC", bitcoinWalletBalance));
@@ -386,7 +384,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 //                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
 //                        }
 //
-//                    IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
+//                    IdentityAssetIssuer identityAssetIssuer = moduleManager.getLoggedIdentityAssetIssuer();
 //                    if (identityAssetIssuer == null) {
 //                       getActivity().onBackPressed();
 //                    } else {
@@ -413,7 +411,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetFactory.IC_ACTION_EDITOR_ASSET) {
-                setUpHelpEditor(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpEditor(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -594,7 +592,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         FermatWorker worker = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                manager.saveAssetFactory(asset);
+                moduleManager.saveAssetFactory(asset);
                 return true;
             }
         };

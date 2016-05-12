@@ -62,7 +62,7 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
 
     private AssetUserWalletSubAppModuleManager moduleManager;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
     private ErrorManager errorManager;
     AssetUserSettings settings = null;
 
@@ -76,10 +76,10 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetUserSession) appSession).getModuleManager();
+        assetUserSession = ((AssetUserSession) appSession);
+        moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        assetUserSession = (AssetUserSession) appSession;
+
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 
     }
@@ -172,7 +172,7 @@ public class SettingsFragment extends AbstractFermatFragment implements View.OnC
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS) {
-                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

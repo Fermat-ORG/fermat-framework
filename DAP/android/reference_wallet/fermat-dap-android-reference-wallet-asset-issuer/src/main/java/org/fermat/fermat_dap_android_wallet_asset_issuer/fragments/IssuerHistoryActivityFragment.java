@@ -59,6 +59,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
     private static final String TAG = "IssuerHistoryActivityFragment";
 
     // Fermat Managers
+    AssetIssuerSession assetIssuerSession;
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
 
@@ -68,7 +69,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
     //UI
     private View noAssetsView;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerHistoryActivityFragment newInstance() {
         return new IssuerHistoryActivityFragment();
@@ -79,10 +80,10 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+        assetIssuerSession = ((AssetIssuerSession) appSession);
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetIssuerSession.getModuleManager();
 
         digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -192,7 +193,7 @@ public class IssuerHistoryActivityFragment extends FermatWalletListFragment<Digi
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_HISTORY) {
-                setUpHelpAssetHistory(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetHistory(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
