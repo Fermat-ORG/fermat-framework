@@ -27,6 +27,8 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionClosedEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionLostEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNetworkServiceRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
@@ -336,15 +338,37 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         eventManager.addListener(networkServiceProfileRegisteredListener);
         listenersAdded.add(networkServiceProfileRegisteredListener);
 
+        /*
+         * 3. Listen and handle Network Client Connection Closed Event
+         */
+        FermatEventListener connectionClosedListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
+        connectionClosedListener.setEventHandler(new NetworkClientConnectionClosedEventHandler(this));
+        eventManager.addListener(connectionClosedListener);
+        listenersAdded.add(connectionClosedListener);
+
+        /*
+         * 4. Listen and handle Network Client Connection Lost Event
+         */
+        FermatEventListener connectionLostListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_LOST);
+        connectionLostListener.setEventHandler(new NetworkClientConnectionLostEventHandler(this));
+        eventManager.addListener(connectionLostListener);
+        listenersAdded.add(connectionLostListener);
+
     }
 
     public final void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
 
-        if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()){
+        if(networkServiceRegistrationProcessAgent != null && networkServiceRegistrationProcessAgent.getActive()) {
             networkServiceRegistrationProcessAgent.stop();
             networkServiceRegistrationProcessAgent = null;
         }
-        this.getConnection().registerProfile(this.getProfile());
+
+        if (this.getConnection().isConnected() && this.getConnection().isRegistered())
+            this.getConnection().registerProfile(this.getProfile());
+        else {
+            this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
+            this.networkServiceRegistrationProcessAgent.start();
+        }
 
     }
 
@@ -360,6 +384,81 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     }
 
     protected void onNetworkServiceStart() throws CantStartPluginException {
+
+    }
+
+    /**
+     * Handle the event NetworkClientConnectionLostEvent
+     * @param communicationChannel
+     */
+    public final void handleNetworkClientConnectionLostEvent(final CommunicationChannels communicationChannel) {
+
+        try {
+
+            if(!networkClientManager.getConnection().isRegistered()) {
+
+                /*
+                if (communicationNetworkServiceConnectionManager != null) {
+                    communicationNetworkServiceConnectionManager.stop();
+                }
+                */
+
+                this.registered = Boolean.FALSE;
+/*
+                reprocessMessages();
+*/
+                onNetworkClientConnectionLost();
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * This method is automatically called when the client connection was lost
+     */
+    protected void onNetworkClientConnectionLost() {
+
+    }
+
+    /**
+     * Handle the event NetworkClientConnectionClosedEvent
+     * @param communicationChannel
+     */
+    public final void handleNetworkClientConnectionClosedEvent(final CommunicationChannels communicationChannel) {
+
+        try {
+
+            if(!networkClientManager.getConnection().isRegistered()) {
+
+/*
+                if (communicationNetworkServiceConnectionManager != null) {
+                    communicationNetworkServiceConnectionManager.closeAllConnection();
+                    communicationNetworkServiceConnectionManager.stop();
+                }
+*/
+                this.registered = Boolean.FALSE;
+/*
+                communicationSupervisorPendingMessagesAgent.removeAllConnectionWaitingForResponse();
+
+                */
+                onNetworkClientConnectionClosed();
+
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * This method is automatically called when the client connection was closed
+     */
+    protected void onNetworkClientConnectionClosed() {
 
     }
 

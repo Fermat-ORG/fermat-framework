@@ -57,7 +57,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
             /*
              * set registered
              */
-            getChannel().setIsRegister(Boolean.TRUE);
+            getChannel().setIsRegistered(Boolean.TRUE);
 
             /*
              * Create a raise a new event whit the platformComponentProfile registered

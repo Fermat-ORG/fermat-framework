@@ -50,7 +50,7 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
             //raise event
 
-            /*
+  /*
              * Create a raise a new event whit the platformComponentProfile registered
              */
             FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED);

@@ -1,11 +1,17 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ActorCallRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ActorCallRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ActorTraceDiscoveryQueryRespondProcessor;
@@ -17,10 +23,11 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckOutClientRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckOutNetworkServiceRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NearNodeListRespondProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NetworkServiceCallRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NetworkServiceCallRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.NetworkServiceCallRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ServerHandshakeRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
@@ -51,7 +58,7 @@ import javax.websocket.Session;
  */
 
 @ClientEndpoint(
-        configurator = com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.conf.ClientChannelConfigurator.class,
+        configurator = ClientChannelConfigurator.class,
         encoders = {PackageEncoder.class},
         decoders = {PackageDecoder.class}
 )
@@ -67,7 +74,7 @@ public class CommunicationsNetworkClientChannel {
     /**
      * Represent if the client is register with the server
      */
-    private boolean isRegister;
+    private boolean isRegistered;
 
     private ECCKeyPair   clientIdentity;
     private ErrorManager errorManager  ;
@@ -82,7 +89,7 @@ public class CommunicationsNetworkClientChannel {
         this.networkClientCommunicationConnection = networkClientCommunicationConnection;
 
         this.packageProcessors         = new HashMap<>();
-        this.isRegister                = Boolean.FALSE;
+        this.isRegistered = Boolean.FALSE;
 
         initPackageProcessorsRegistration();
     }
@@ -114,7 +121,6 @@ public class CommunicationsNetworkClientChannel {
 
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" CommunicationsNetworkClientChannel - Starting method onOpen");
-
 
         /*
          * set ServerIdentity
@@ -149,22 +155,75 @@ public class CommunicationsNetworkClientChannel {
 
         System.out.println("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
 
+        System.out.println(" --------------------------------------------------------------------- ");
+        System.out.println(" CommunicationsNetworkClientChannel - Starting method onClose");
+
+        try {
+            switch (closeReason.getCloseCode().getCode()) {
+
+                case 1002:
+                case 1006:
+                    raiseClientConnectionLostNotificationEvent();
+                    break;
+
+                default:
+
+                    if (closeReason.getReasonPhrase().contains("Connection failed")){
+                        raiseClientConnectionLostNotificationEvent();
+                    } else {
+                        raiseClientConnectionClosedNotificationEvent();
+                        setIsRegistered(Boolean.FALSE);
+                        networkClientCommunicationConnection.setIsConnected(Boolean.FALSE);
+                    }
+
+                    break;
+            }
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Notify when the network client channel connection is closed.
+     */
+    public void raiseClientConnectionClosedNotificationEvent() {
+
+        System.out.println("CommunicationsNetworkClientChannel - raiseClientConnectionClosedNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED);
+        platformEvent.setSource(EventSource.NETWORK_CLIENT);
+        ((NetworkClientConnectionClosedEvent) platformEvent).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("CommunicationsNetworkClientChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_CLOSED");
+    }
+
+    /**
+     * Notify when the network client channel connection is lost.
+     */
+    public void raiseClientConnectionLostNotificationEvent() {
+
+        System.out.println("CommunicationsNetworkClientChannel - raiseClientConnectionLostNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_LOST);
+        platformEvent.setSource(EventSource.NETWORK_CLIENT);
+        ((NetworkClientConnectionLostEvent) platformEvent).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("CommunicationsNetworkClientChannel - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
     /**
      * Get the isActive value
      * @return boolean
      */
-    public boolean isRegister() {
-        return isRegister;
+    public boolean isRegistered() {
+        return isRegistered;
     }
 
     /**
      * Set the isActive
-     * @param isRegister
+     * @param isRegistered
      */
-    public void setIsRegister(boolean isRegister) {
-        this.isRegister = isRegister;
+    public void setIsRegistered(boolean isRegistered) {
+        this.isRegistered = isRegistered;
     }
 
     /**

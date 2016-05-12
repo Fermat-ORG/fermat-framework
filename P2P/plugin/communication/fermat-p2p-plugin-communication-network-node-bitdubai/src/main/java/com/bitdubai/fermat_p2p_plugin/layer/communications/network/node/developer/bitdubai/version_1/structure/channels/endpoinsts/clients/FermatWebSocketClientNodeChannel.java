@@ -19,6 +19,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 
 import org.apache.commons.lang.ClassUtils;
+import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -102,8 +104,63 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
             URI endpointURI = new URI("ws://"+ip+":"+port+"/fermat/ws/node-channel");
             LOG.info("Trying to connect to "+endpointURI.toString());
 
-            WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
-            clientConnection = webSocketContainer.connectToServer(this, endpointURI);
+           ClientManager webSocketContainer = ClientManager.createClient();
+
+
+            /*
+             * Create a ReconnectHandler
+             * it intents only three times
+             */
+           ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
+               int i = 0;
+
+               @Override
+               public boolean onDisconnect(CloseReason closeReason) {
+                   i++;
+
+                   if(i < 4)
+                       return Boolean.TRUE;
+                   else
+                       return Boolean.FALSE;
+
+               }
+
+               @Override
+               public boolean onConnectFailure(Exception exception) {
+                   i++;
+
+                   if(i < 4) {
+
+                       try {
+
+                           //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
+                           // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                           Thread.sleep(5000);
+
+                       } catch (InterruptedException e) {
+                           e.printStackTrace();
+                       }
+
+                       System.out.println("###############################################################################");
+                       System.out.println("# Connect Failure -> Reconnecting... #");
+                       System.out.println("###############################################################################");
+
+                       return Boolean.TRUE;
+                   }else{
+                       return Boolean.FALSE;
+                   }
+
+               }
+
+           };
+
+
+           /*
+            * Register the ReconnectHandler
+            */
+           webSocketContainer.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+
+           clientConnection = webSocketContainer.connectToServer(this, endpointURI);
 
         } catch (Exception e) {
            e.printStackTrace();

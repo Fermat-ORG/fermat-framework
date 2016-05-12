@@ -14,7 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkClientProfileRegisteredEvent extends AbstractEvent {
+public class NetworkClientProfileRegisteredEvent extends AbstractEvent<P2pEventType> {
 
     /**
      * Represent the registered profile.
