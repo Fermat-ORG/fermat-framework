@@ -316,7 +316,12 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     return new FermatModuleObjectWrapper(dataId,null,true, (Exception) returnModuleObject);
                 }else {
                     if (!(returnModuleObject instanceof Serializable))
-                        throw new NotSerializableException("Object: " + returnModuleObject.getClass().getName() + " is not implementing serializable");
+                        if(returnModuleObject!=null){
+                            throw new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName()+" from method "+method + " is not implementing serializable");
+                        } else{
+                            throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
+
+                        }
                     Serializable aidlObject = (Serializable) returnModuleObject;
                     if (isDataForChunk(aidlObject)) {
                         try {
