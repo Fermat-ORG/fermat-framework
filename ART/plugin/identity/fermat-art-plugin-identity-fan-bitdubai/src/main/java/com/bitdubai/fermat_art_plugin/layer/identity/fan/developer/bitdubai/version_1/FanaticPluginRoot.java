@@ -19,16 +19,26 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.database.FanaticIdentityDeveloperDatabaseFactory;
-import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestUpdatesEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.FanaticConnectionRequestAcceptedEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.FanaticConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanIdentityEventActions;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.IdentityFanaticManagerImpl;
@@ -36,12 +46,19 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -126,14 +143,24 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             FermatEventListener updatesListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
             updatesListener.setEventHandler(
-                    new ArtistConnectionRequestUpdatesEventHandler(
+                    new FanaticConnectionRequestUpdatesEventHandler(
                             this.fanIdentityEventActions,
                             this));
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
+            //Another listener
+            FermatEventListener acceptListener = eventManager.getNewListener(
+                    EventType.ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT);
+            acceptListener.setEventHandler(
+                    new FanaticConnectionRequestAcceptedEventHandler(
+                            this.fanIdentityEventActions,
+                            this));
+            eventManager.addListener(acceptListener);
+            listenersAdded.add(acceptListener);
 
+            exposeIdentities();
             System.out.println("############\n ART IDENTITY Fanatic STARTED\n");
-           // testCreateArtist();
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -148,10 +175,36 @@ public class FanaticPluginRoot extends AbstractPlugin implements
         this.fanIdentityEventActions = new FanIdentityEventActions(
                 artistActorNetWorkServiceManager,
                 identityFanaticManager,
-                tokenlyFanIdentityManager);
+                tokenlyFanIdentityManager,
+                fanManager);
     }
 
-    /*private void testCreateArtist(){
+    private void exposeIdentities(){
+        ArrayList<FanExposingData> artistExposingData = new ArrayList<>();
+        try {
+            for (Fanatic fan :
+                    identityFanaticManager.listIdentitiesFromCurrentDeviceUser()) {
+                List extraDataList = new ArrayList();
+                extraDataList.add(fan.getProfileImage());
+                HashMap<ArtExternalPlatform,String> externalPlatformInformationMap = new HashMap<>();
+                externalPlatformInformationMap.put(fan.getExternalPlatform(),fan.getExternalUsername());
+                extraDataList.add(externalPlatformInformationMap);
+                String extraDataString = XMLParser.parseObject(extraDataList);
+                artistExposingData.add(new FanExposingData(
+                        fan.getPublicKey(),
+                        fan.getAlias(),
+                        extraDataString
+                ));
+            }
+            fanManager.exposeIdentities(artistExposingData);
+        } catch (CantListFanIdentitiesException e) {
+            e.printStackTrace();
+        } catch (CantExposeIdentitiesException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void testCreateArtist(){
         String alias = "perezilla";
         byte[] image = new byte[0];
         String password = "milestone";
@@ -162,14 +215,14 @@ public class FanaticPluginRoot extends AbstractPlugin implements
         try {
             tokenlyFanIdentityManager.createFanIdentity(alias, image, password, externalPlatformTokenly);
 
-        HashMap<ExternalPlatform, HashMap<UUID,String>> externalIdentites = null;
+        HashMap<ArtExternalPlatform, HashMap<UUID,String>> externalIdentites = null;
 
-            externalIdentites = listExternalIdentitiesFromCurrentDeviceUser();
+            externalIdentites = identityFanaticManager.listExternalIdentitiesFromCurrentDeviceUser();
 
-        Iterator<Map.Entry<ExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
+        Iterator<Map.Entry<ArtExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
             UUID externalIdentityID = null;
             while (entries.hasNext()) {
-                Map.Entry<ExternalPlatform, HashMap<UUID, String>> entry = entries.next();
+                Map.Entry<ArtExternalPlatform, HashMap<UUID, String>> entry = entries.next();
                 HashMap<UUID, String> artists = entry.getValue();
                 Iterator<Map.Entry<UUID, String>> entiesSet = artists.entrySet().iterator();
                 while(entiesSet.hasNext()){
@@ -182,8 +235,9 @@ public class FanaticPluginRoot extends AbstractPlugin implements
 
             Fanatic Fanatic = null;
             if(externalIdentityID != null){
-                Fanatic = createFanaticIdentity(alias, image, externalIdentityID);
-                ArtIdentity artIdentity = getLinkedIdentity(Fanatic.getPublicKey());
+                Fanatic = identityFanaticManager.createFanaticIdentity(alias, image, externalIdentityID, ArtExternalPlatform.TOKENLY,"");
+                fanManager.exposeIdentity(new FanExposingData(Fanatic.getPublicKey(),Fanatic.getAlias(),""));
+                ArtIdentity artIdentity = identityFanaticManager.getLinkedIdentity(Fanatic.getPublicKey());
                 System.out.println("artIdentity = " + artIdentity.toString());
             }else{
                 System.out.println("###############\nNo funciona.");
@@ -196,9 +250,13 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         } catch (CantCreateFanIdentityException e) {
             e.printStackTrace();
+        } catch (WrongTokenlyUserCredentialsException e) {
+            e.printStackTrace();
+        } catch (CantExposeIdentityException e) {
+            e.printStackTrace();
         }
 
-    }*/
+    }
 
 
     @Override

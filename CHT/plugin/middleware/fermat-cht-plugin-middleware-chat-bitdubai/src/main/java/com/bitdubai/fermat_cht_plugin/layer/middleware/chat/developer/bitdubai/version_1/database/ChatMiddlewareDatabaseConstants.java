@@ -31,6 +31,8 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CHATS_CONTACT_ASSOCIATED_LIST = "contact_associated_list";
     public static final String CHATS_TYPE_CHAT = "type_chat";
     public static final String CHATS_SCHEDULED_DELIVERY = "scheduled_delivery";
+    public static final String CHATS_IS_WRITING = "is_Writing";
+    public static final String CHATS_IS_ONLINE = "is_Online";
 
     public static final String CHATS_FIRST_KEY_COLUMN = "id_chat";
 

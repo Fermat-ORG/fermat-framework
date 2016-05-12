@@ -81,7 +81,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<ArtistSubApp
             adapter = new AppFriendsListAdapter(getActivity(), artistCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.aac_swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             onRefresh();

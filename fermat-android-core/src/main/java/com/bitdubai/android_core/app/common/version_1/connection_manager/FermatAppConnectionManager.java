@@ -7,6 +7,31 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.Chat
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.app_connection.ChatIdentityFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.app_connection.ArtArtistIdentityAppConnection;
+import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.app_connection.TkyArtistIdentityAppConnection;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.fan_wallet.app_connection.FanWalletFermatAppConnection;
+import com.bitdubai.sub_app.art_fan_identity.app_connection.ArtFanUserFermatAppConnection;
+import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
+import com.bitdubai.sub_app.crypto_broker_community.app_connection.CryptoBrokerCommunityFermatAppConnection;
+import com.bitdubai.sub_app.crypto_broker_identity.app_connection.CryptoBrokerIdentityFermatAppConnection;
+import com.bitdubai.sub_app.crypto_customer_community.app_connection.CryptoCustomerCommunityFermatAppConnection;
+import com.bitdubai.sub_app.crypto_customer_identity.app_connection.CryptoCustomerIdentityFermatAppConnection;
+import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnection;
+import com.bitdubai.sub_app.fan_community.app_connection.FanCommunityFermatAppConnection;
+import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
+import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
+import com.bitdubai.sub_app.music_player.app_connection.MusicPlayerFermatAppConnection;
+import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
+import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
+import com.bitdubai.sub_app_artist_community.app_connection.ArtistCommunityFermatAppConnection;
+import com.bitdubai.sup_app.tokenly_fan_user_identity.app_connection.TokenlyFanUserFermatAppConnection;
+
 import org.fermat.fermat_dap_android_sub_app_asset_factory.app_connection.AssetFactoryFermatAppConnection;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.app_connection.CommunityAssetIssuerFermatAppConnection;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.app_connection.AssetIssuerFermatAppConnection;
@@ -18,32 +43,9 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.app_connection.WalletAs
 import org.fermat.fermat_dap_android_wallet_asset_user.app_connection.WalletAssetUserFermatAppConnection;
 import org.fermat.fermat_dap_android_wallet_redeem_point.app_connection.WalletRedeemPointFermatAppConnection;
 
-import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.app_connection.ArtArtistIdentityAppConnection;
-import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.app_connection.TkyArtistIdentityAppConnection;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection.BitcoinWalletFermatAppConnection;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection.LossProtectedWalletFermatAppConnection;
-import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
-import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
-import com.bitdubai.reference_wallet.fan_wallet.app_connection.FanWalletFermatAppConnection;
-import com.bitdubai.sub_app.chat_community.app_connection.ChatCommunityFermatAppConnection;
-import com.bitdubai.sub_app.crypto_broker_community.app_connection.CryptoBrokerCommunityFermatAppConnection;
-import com.bitdubai.sub_app.crypto_broker_identity.app_connection.CryptoBrokerIdentityFermatAppConnection;
-import com.bitdubai.sub_app.crypto_customer_community.app_connection.CryptoCustomerCommunityFermatAppConnection;
-import com.bitdubai.sub_app.crypto_customer_identity.app_connection.CryptoCustomerIdentityFermatAppConnection;
-import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnection;
-import com.bitdubai.sub_app.fan_community.app_connection.FanCommunityFermatAppConnection;
-import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
-import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
-import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
-import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
-import com.bitdubai.sub_app_artist_community.app_connection.ArtistCommunityFermatAppConnection;
-import com.bitdubai.sup_app.tokenly_fan_user_identity.app_connection.TokenlyFanUserFermatAppConnection;
+//import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.com.bitdubai.sub_app.art_fan_identity.app_connection.ArtArtistIdentityAppConnection;
 
-//import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.app_connection.ArtArtistIdentityAppConnection;
-
-//import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+//import com.bitdubai.reference_wallet.bank_money_wallet.com.bitdubai.sub_app.art_fan_identity.app_connection.BankMoneyWalletFermatAppConnection;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -180,10 +182,18 @@ public class FermatAppConnectionManager {
             case "public_key_art_fan_community":
                 fermatAppConnection = new FanCommunityFermatAppConnection(activity);
                 break;
+            case "public_key_art_fan_identity":
+                fermatAppConnection = new ArtFanUserFermatAppConnection(activity);
+                break;
 
             case "public_key_art_artist_identity":
                 fermatAppConnection = new ArtArtistIdentityAppConnection(activity);
                 break;
+
+            case "public_key_art_music_player":
+                fermatAppConnection = new MusicPlayerFermatAppConnection(activity);
+                break;
+
 
 
         }

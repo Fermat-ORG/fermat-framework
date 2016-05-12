@@ -26,6 +26,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -57,6 +59,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -193,10 +196,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onConfirmCLicked(final ClauseInformation clause) {
         if (clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && bankAccountList.size() == 0) {
-            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add Your Bank Account in the Settings Wallet.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add a Bank Account in the Wallet Settings.", Toast.LENGTH_LONG).show();
         } else {
             if (clause.getType().equals(ClauseType.CUSTOMER_PLACE_TO_DELIVER) && locationList.size() == 0) {
-                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add Your Locations in the Settings Wallet.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add a Location in the Wallet Settings.", Toast.LENGTH_LONG).show();
             } else {
 
                 if (clausesTemp.get(clause.getType()) != null) {
@@ -277,11 +280,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 try {
                     moduleManager.updateNegotiation(negotiationInfo);
 
-                    Toast.makeText(getActivity(), "Send Negotiation. ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
                     changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
 
                 } catch (CouldNotUpdateNegotiationException e) {
-                    Toast.makeText(getActivity(), "Error sending the negotiation.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -805,6 +808,45 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         ArrayList<MoneyType> paymentMethods = new ArrayList<>();
 
+        negotiationInfo.getCustomer().getPublicKey();
+        negotiationInfo.getBroker().getPublicKey();
+
+        try {
+            Collection<Platforms> platforms = moduleManager.getPlatformsSupported(negotiationInfo.getCustomer().getPublicKey(), negotiationInfo.getBroker().getPublicKey(), currency);
+
+            for(Platforms p : platforms){
+                ArrayList<MoneyType> temp = getMoneyType(p);
+                for(MoneyType m : temp){
+                    paymentMethods.add(m);
+                }
+            }
+
+        } catch (CantGetListActorExtraDataException e) {
+            // TODO: revisar el manejo de excepciones
+        }
+
+        /*
+
+        //ADD FIAT CURRENCY IF IS FIAT
+        if (FiatCurrency.codeExists(currency)) {
+            paymentMethods.add(MoneyType.BANK);
+            paymentMethods.add(MoneyType.CASH_DELIVERY);
+            paymentMethods.add(MoneyType.CASH_ON_HAND);
+        }
+
+        //ADD CRYPTO CURRENCY IF IS CRYPTO
+        if (CryptoCurrency.codeExists(currency)) {
+            paymentMethods.add(MoneyType.CRYPTO);
+        }
+        */
+
+        return paymentMethods;
+    }
+
+    private ArrayList<MoneyType> getPaymentMethod2(String currency) {
+
+        ArrayList<MoneyType> paymentMethods = new ArrayList<>();
+
         //ADD FIAT CURRENCY IF IS FIAT
         if (FiatCurrency.codeExists(currency)) {
             paymentMethods.add(MoneyType.BANK);
@@ -818,6 +860,31 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
 
         return paymentMethods;
+    }
+
+    private ArrayList<MoneyType> getMoneyType(Platforms p){
+
+        ArrayList<MoneyType> moneys = new ArrayList<>();
+
+        switch (p){
+
+            case BANKING_PLATFORM:
+                moneys.add(MoneyType.BANK);
+            break;
+
+            case CASH_PLATFORM:
+                moneys.add(MoneyType.CASH_DELIVERY);
+                moneys.add(MoneyType.CASH_ON_HAND);
+            break;
+
+            case CRYPTO_CURRENCY_PLATFORM:
+                moneys.add(MoneyType.CRYPTO);
+            break;
+
+        }
+
+        return moneys;
+
     }
 
     /**
@@ -875,7 +942,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
-                    String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
+                    String bankAccount = "INSERT BANK ACCOUNT IN WALLET SETTINGS.";
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
 //                    bankAccount = bankAccountList.get(0).getAccount();
@@ -887,7 +954,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
-                    String infoDelivery = "INSERT LOCATION IN SETTINGS WALLET.";
+                    String infoDelivery = "INSERT LOCATION IN WALLET SETTINGS.";
                     if (locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);

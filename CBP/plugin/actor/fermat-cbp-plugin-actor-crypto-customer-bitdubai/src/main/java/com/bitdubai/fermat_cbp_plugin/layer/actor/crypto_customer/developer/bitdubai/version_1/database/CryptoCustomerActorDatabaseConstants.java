@@ -46,19 +46,8 @@ public class CryptoCustomerActorDatabaseConstants {
     static final String QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME = "merchandise";
     static final String QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME = "payment_currency";
     static final String QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME = "price";
+    static final String QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME = "supported_platforms";
 
     static final String QUOTE_EXTRA_DATA_FIRST_KEY_COLUMN = "quote_id";
-
-    /**
-     * Platforms Extra Data database table definition.
-     */
-    static final String PLATFORMS_EXTRA_DATA_TABLE_NAME = "platforms_extra_data";
-
-    static final String PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME = "platform_id";
-    static final String PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME = "customer_public_key";
-    static final String PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME = "currency";
-    static final String PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME = "platform";
-
-    static final String PLATFORMS_EXTRA_DATA_FIRST_KEY_COLUMN = "platform_id";
 
 }

@@ -28,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.fan_community.R;
+import com.bitdubai.sub_app.fan_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app.fan_community.commons.popups.DisconnectDialog;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
 
@@ -101,12 +102,15 @@ public class ConnectionOtherProfileFragment extends
                 case CONNECTED:
                     disconnect.setVisibility(View.VISIBLE);
                     break;
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    cancel.setVisibility(View.VISIBLE);
+                    break;
                 default:
-                    //show no button
+                    connect.setVisibility(View.VISIBLE);
             }
         }
         else {
-            //show no button
+            connect.setVisibility(View.VISIBLE);
         }
 
         //Show user image if it has one, otherwise show default user image
@@ -123,7 +127,7 @@ public class ConnectionOtherProfileFragment extends
             else
                 bitmap = BitmapFactory.decodeResource(
                         getResources(),
-                        R.drawable.profile_image);
+                        R.drawable.afc_profile_image);
 
             bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
             userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
@@ -141,7 +145,21 @@ public class ConnectionOtherProfileFragment extends
     public void onClick(View v) {
         int i = v.getId();
 
-        if(i == R.id.afc_btn_disconnect) {
+        if(i == R.id.afc_btn_connect) {
+            try {
+                ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
+                        fanCommunityInformation, moduleManager.getSelectedActorIdentity());
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setUsername(fanCommunityInformation.getAlias());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setOnDismissListener(this);
+                connectDialog.show();
+            } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            }
+        } else if(i == R.id.afc_btn_disconnect) {
             try {
                 DisconnectDialog disconnectDialog = new DisconnectDialog(
                         getActivity(), appSession, null,
@@ -160,16 +178,25 @@ public class ConnectionOtherProfileFragment extends
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        //Get connection result flag, and hide/show connect/disconnect buttons
+        //Get connectionresult flag, and hide/show connect/disconnect buttons
         try {
-            int connectionResult = (int) appSession.getData("connectionresult");
+            int connectionresult = (int) appSession.getData("connectionresult");
             appSession.removeData("connectionresult");
 
-            if(connectionResult == 0) {
+            if(connectionresult == 1) {
                 disconnect.setVisibility(View.GONE);
-            } else if(connectionResult == 3) {
+                connect.setVisibility(View.VISIBLE);
+                cancel.setVisibility(View.GONE);
+            } else if(connectionresult == 2) {
+                disconnect.setVisibility(View.GONE);
+                connect.setVisibility(View.GONE);
+                cancel.setVisibility(View.VISIBLE);
+            } else if(connectionresult == 3) {
                 disconnect.setVisibility(View.VISIBLE);
+                connect.setVisibility(View.GONE);
+                cancel.setVisibility(View.GONE);
             }
         }catch (Exception e) {}
+
     }
 }

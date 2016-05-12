@@ -23,17 +23,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imagen;
-        TextView artistname;
-        TextView songname;
+        ImageView image;
+        TextView artistName;
+        TextView songName;
         TextView status;
         ProgressBar progressBar;
         UUID song_id;
         public ViewHolder(View v){
             super(v);
-            imagen=(ImageView)v.findViewById(R.id.imagen);
-            songname=(TextView)v.findViewById(R.id.songname);
-            artistname=(TextView)v.findViewById(R.id.artistname);
+            image =(ImageView)v.findViewById(R.id.imagen);
+            songName =(TextView)v.findViewById(R.id.songname);
+            artistName =(TextView)v.findViewById(R.id.artistname);
             status=(TextView)v.findViewById(R.id.status);
             progressBar=(ProgressBar)v.findViewById(R.id.progressBar2);
             progressBar.setMax(100);
@@ -48,7 +48,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         this.items.addAll(items);
     }
 
-
     @Override
     public int getItemCount() {
         return items.size();
@@ -62,12 +61,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     }
 
-
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
-        holder.imagen.setImageResource(items.get(i).getImagen());
-        holder.songname.setText(items.get(i).getSong_name());
-        holder.artistname.setText(items.get(i).getArtist_name());
+        holder.image.setImageResource(items.get(i).getImagen());
+        holder.songName.setText(items.get(i).getSong_name());
+        holder.artistName.setText(items.get(i).getArtist_name());
         holder.status.setText(items.get(i).getStatus());
         holder.song_id=items.get(i).getSong_id();
         holder.progressBar.setProgress(items.get(i).getProgress());
@@ -79,11 +77,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     }
 
-    public void setFilter(List<SongItems> newitems) {
-        items.clear();
-        items.addAll(newitems);
-        notifyDataSetChanged();
-    }
+    //cases false new item
+    //cases true update present item
+    public void setFilter(SongItems newitems,boolean cases,int position) {
+        if(cases) {
+            items.set(position,newitems);
+            notifyItemChanged(position);
+        }else{
+            items.add(newitems);
+            notifyItemChanged(position);
+            /*items.clear();
+            items.addAll(newitems);
+            notifyDataSetChanged();*/
+        }
 
+    }
 
 }

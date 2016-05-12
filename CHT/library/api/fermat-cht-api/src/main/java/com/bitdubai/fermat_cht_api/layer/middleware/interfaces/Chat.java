@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
  * Created by franklin on 08/01/16.
  * Updated by Manuel Perez on 08/02/2016
  */
-public interface Chat {
+public interface Chat extends Serializable {
     UUID getChatId();
     void setChatId(UUID chatId);
     UUID getObjectId();
@@ -40,6 +41,8 @@ public interface Chat {
     void setContactAssociated(Contact contact);
     public boolean isWriting();
     public void setIsWriting(boolean isWriting);
+    public boolean isOnline();
+    public void setIsOnline(boolean isWriting);
     /**
      * This method will return a String with xml format with the contact list
      * @return

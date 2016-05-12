@@ -26,6 +26,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitd
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantHandleNewConnectionEventException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantNewsEventException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantSetActorExtraDataException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.structure.helpers.AdapterPlatformsSupported;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -148,7 +149,7 @@ public final class ActorCustomerExtraDataEventActions {
                 ActorIdentity identity = new ActorExtraDataIdentity("", extraDate.getCryptoBrokerPublicKey(), null);
 
                 for (CryptoBrokerQuote quo : extraDate.listInformation()) {
-                    QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), quo.getMerchandise(), quo.getPaymentCurrency(), quo.getPrice());
+                    QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), quo.getMerchandise(), quo.getPaymentCurrency(), quo.getPrice(), AdapterPlatformsSupported.getPlatformsSupported(quo.getSupportedPlatforms()));
                     quotes.add(quote);
                 }
 

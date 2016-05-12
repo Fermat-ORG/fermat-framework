@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -107,7 +108,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
-
+    List<IntraUserInformation> userCacheList = new ArrayList<>();
     /**
      * Create a new instance of this fragment
      *
@@ -212,9 +213,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-            List list = getSuggestionCache();
-            if(list!=null) {
-                dataSet.addAll(list);
+            userCacheList = getSuggestionCache();
+            if(userCacheList!=null) {
+                dataSet.addAll(userCacheList);
             }
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
@@ -479,7 +480,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
-        getActivity().invalidateOptionsMenu();
+        if(getActivity()!=null) {
+            getActivity().invalidateOptionsMenu();
+        }else{
+            Log.e(TAG,"updateNotificationsBadge activity null, please check this, class"+getClass().getName()+" line: "+new Throwable().getStackTrace()[0].getLineNumber());
+        }
     }
 
 
@@ -522,6 +527,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
+
 
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
             dataSet.addAll(userList);
@@ -618,7 +624,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                        Boolean isBackPressed = null;
+                        try {
+                            isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS,Boolean.TRUE);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                         if (isBackPressed != null) {
                             if (isBackPressed) {
                                 getActivity().onBackPressed();

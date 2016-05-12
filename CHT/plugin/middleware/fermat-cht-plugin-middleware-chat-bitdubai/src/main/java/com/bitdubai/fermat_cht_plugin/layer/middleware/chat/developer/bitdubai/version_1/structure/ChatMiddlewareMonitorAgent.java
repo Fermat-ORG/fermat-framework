@@ -4,9 +4,9 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -23,10 +23,7 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
@@ -40,7 +37,6 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
@@ -57,9 +53,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -270,7 +263,7 @@ public class ChatMiddlewareMonitorAgent implements
 
                 if (discoverIteration == 0) {
                     sendChatBroadcasting();
-                    resetWritingStatus();
+//                    resetWritingStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -485,7 +478,7 @@ public class ChatMiddlewareMonitorAgent implements
                 chat.setIsWriting(false);
                 chatMiddlewareDatabaseDao.saveChat(chat);
             }
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
         }catch(DatabaseOperationException e){
             e.printStackTrace();
         } catch (CantGetChatException e) {
@@ -508,6 +501,44 @@ public class ChatMiddlewareMonitorAgent implements
 
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             chat.setIsWriting(true);
+            chatMiddlewareDatabaseDao.saveChat(chat);
+
+//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+        } catch (CantSaveChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (DatabaseOperationException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantGetChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        }
+    }
+
+    public void checkIncomingOnlineStatus(UUID chatId) throws
+            CantGetPendingTransactionException,
+            UnexpectedResultReturnedFromDatabaseException {
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    chatMiddlewarePluginRoot,
+                    pluginFileSystem);
+
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            chat.setIsOnline(true);
             chatMiddlewareDatabaseDao.saveChat(chat);
 
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
@@ -644,10 +675,8 @@ public class ChatMiddlewareMonitorAgent implements
             throw new CantGetMessageException("The chat metadata from network service is null");
         }
         try {
-//                UUID chatId = chatMetadata.getChatId();
             Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
-//                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-//            String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
+
             ChatLinkedActorIdentity chatLinkedActorIdentity = new ChatLinkedActorIdentity(
                 chatFromDatabase.getLocalActorPublicKey(),
                 Actors.CHAT
@@ -666,16 +695,6 @@ public class ChatMiddlewareMonitorAgent implements
                 return null;
             }
 
-//            Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
-//            if (contact == null) {
-//                //contact = createUnregisteredContact(chatMetadata);
-//                if (contact == null) return null;
-//            }
-
-            //I'll associated the contact, message and chat with the following method
-//            addContactToChat(chatFromDatabase, contact);
-
-//            UUID contactId = contact.getContactId();
             Message message = new MessageImpl(
                     chatFromDatabase.getChatId(),
                     chatMetadata,
@@ -688,10 +707,6 @@ public class ChatMiddlewareMonitorAgent implements
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Unexpected exception in database");
-//        } catch (CantGetContactException e) {
-//            throw new CantGetMessageException(e,
-//                    "Getting message from ChatMetadata",
-//                    "Cannot get the contact");
         } catch (CantGetChatException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
@@ -761,71 +776,6 @@ public class ChatMiddlewareMonitorAgent implements
     }
 
     /**
-     * This method sends the message through the Chat Network Service
-     *
-     * @param createdMessage
-     * @throws CantSendChatMessageException
-     */
-    private void sendMessage(Message createdMessage) throws CantSendChatMessageException {
-        try {
-            System.out.println("*** 12345 case 5:send msg in Agent layer" + new Timestamp(System.currentTimeMillis()));
-            UUID chatId = createdMessage.getChatId();
-            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            if (chat == null) {
-                return;
-            }
-            String localActorPublicKey = chat.getLocalActorPublicKey();
-            String remoteActorPublicKey = chat.getRemoteActorPublicKey();
-            ChatMetadata chatMetadata = constructChatMetadata(
-                    chat,
-                    createdMessage
-            );
-            System.out.println("ChatMetadata to send:\n" + chatMetadata);
-            try {
-                chatNetworkServiceManager.sendChatMetadata(
-                        localActorPublicKey,
-                        remoteActorPublicKey,
-                        chatMetadata
-                );
-                createdMessage.setStatus(MessageStatus.SEND);
-            } catch (IllegalArgumentException e) {
-                /**
-                 * In this case, any argument in chat or message was null or not properly set.
-                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
-                 */
-                createdMessage.setStatus(MessageStatus.CANNOT_SEND);
-            }
-            chatMiddlewareDatabaseDao.saveMessage(createdMessage);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-        } catch (DatabaseOperationException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Unexpected error in database"
-            );
-        } catch (CantGetChatException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Cannot get the chat"
-            );
-        } catch (CantSendChatMessageMetadataException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Cannot send the ChatMetadata"
-            );
-        } catch (CantSaveMessageException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Cannot save the message"
-            );
-        }
-
-    }
-
-    /**
      * This method return a ChatMetadata from a Chat and Message objects.
      *
      * @param chat
@@ -855,41 +805,6 @@ public class ChatMiddlewareMonitorAgent implements
                     chat.getGroupMembersAssociated()
             );
         return chatMetadata;
-    }
-
-
-    /**
-     * This method delete all contacts connections.
-     *
-     * @return void
-     */
-    private void deleteActorConnections() throws CantDeleteContactException {
-        try {
-            List<ContactConnection> contactConnections = chatMiddlewareDatabaseDao.getContactConnections(null);
-
-            for (ContactConnection contactConnection : contactConnections) {
-                chatMiddlewareDatabaseDao.deleteContactConnection(contactConnection);
-            }
-
-        } catch (CantGetContactException e) {
-            throw new CantDeleteContactException(
-                    e,
-                    "delete contact connections",
-                    "Cannot get the contact connection"
-            );
-        } catch (DatabaseOperationException e) {
-            throw new CantDeleteContactException(
-                    e,
-                    "delete contact connections",
-                    "Cannot Database operation"
-            );
-        } catch (CantDeleteContactConnectionException e) {
-            throw new CantDeleteContactException(
-                    e,
-                    "delete contact connections",
-                    "Cannot delete contact connections"
-            );
-        }
     }
 }
 

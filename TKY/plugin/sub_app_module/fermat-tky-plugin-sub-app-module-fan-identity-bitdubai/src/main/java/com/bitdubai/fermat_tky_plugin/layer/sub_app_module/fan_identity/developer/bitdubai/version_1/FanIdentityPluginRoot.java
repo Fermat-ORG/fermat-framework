@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.fan_identity.developer.bitdubai.version_1.structure.FanIdentityManager;
@@ -32,6 +34,12 @@ public class FanIdentityPluginRoot extends AbstractModule<TokenlyFanPreferenceSe
     @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.IDENTITY,plugin = Plugins.TOKENLY_FAN)
     private TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API,plugin = Plugins.TOKENLY_API)
+    private TokenlyApiManager tokenlyApiManager;
+
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon  = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
     FanIdentityManager fanIdentityManager;
     /**
      * Default constructor
@@ -41,7 +49,12 @@ public class FanIdentityPluginRoot extends AbstractModule<TokenlyFanPreferenceSe
     }
 
     private void initPluginManager(){
-        this.fanIdentityManager = new FanIdentityManager(errorManager,tokenlyFanIdentityManager);
+        this.fanIdentityManager = new FanIdentityManager(
+                errorManager,
+                tokenlyFanIdentityManager,
+                tokenlyApiManager,
+                pluginFileSystem,
+                pluginId);
     }
 
     @Override

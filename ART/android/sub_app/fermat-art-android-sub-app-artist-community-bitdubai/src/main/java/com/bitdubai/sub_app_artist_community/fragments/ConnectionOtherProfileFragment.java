@@ -28,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.artist_community.R;
+import com.bitdubai.sub_app_artist_community.commons.popups.CancelDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.DisconnectDialog;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
@@ -118,7 +119,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
             if(artistCommunityInformation.getImage() != null && artistCommunityInformation.getImage().length > 0)
                 bitmap = BitmapFactory.decodeByteArray(artistCommunityInformation.getImage(), 0, artistCommunityInformation.getImage().length);
             else
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.aac_profile_image);
 
             bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
             userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
@@ -163,20 +164,18 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
             }
         } else if(i == R.id.aac_btn_cancel) {
 
-            //TODO: verificar el getModuleManager().cancelCryptoBroker(artistCommunityInformation.getConnectionId());
-            //TODO: antes de habilitar esto.
-//            try {
-//                CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
-//                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
-//                cancelDialog.setTitle("Cancel");
-//                cancelDialog.setDescription("Want to cancel connection with");
-//                cancelDialog.setUsername(artistCommunityInformation.getAlias());
-//                cancelDialog.setOnDismissListener(this);
-//                cancelDialog.show();
-//            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
-//                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
-//            }
+            try {
+                CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
+                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
+                cancelDialog.setTitle("Cancel");
+                cancelDialog.setDescription("Want to cancel connection with");
+                cancelDialog.setUsername(artistCommunityInformation.getAlias());
+                cancelDialog.setOnDismissListener(this);
+                cancelDialog.show();
+            } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
+                errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

@@ -48,6 +48,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
     private ClauseViewHolder.Listener clauseListener;
     private List<IndexInfoSummary> marketRateList;
     private Quote quote;
+    private float spread;
     private boolean quoteLoaded;
 
     private boolean haveNote;
@@ -95,6 +96,10 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
         notifyItemChanged(haveNote ? 1 : 0);
     }
 
+    public void setSpread(float spread) {
+        this.spread = spread;
+    }
+
     @Override
     protected FermatViewHolder createHolder(View itemView, int type) {
         switch (type) {
@@ -108,6 +113,7 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapterImproved<ClauseI
                 final ExchangeRateViewHolder exchangeRateViewHolder = new ExchangeRateViewHolder(itemView, TYPE_SINGLE_CHOICE);
                 exchangeRateViewHolder.setMarketRateList(marketRateList);
                 exchangeRateViewHolder.setSuggestedRate(quote, quoteLoaded);
+                exchangeRateViewHolder.setSpread(spread);
                 return exchangeRateViewHolder;
             case TYPE_AMOUNT_TO_SELL:
                 return new AmountViewHolder(itemView, TYPE_AMOUNT_TO_SELL);

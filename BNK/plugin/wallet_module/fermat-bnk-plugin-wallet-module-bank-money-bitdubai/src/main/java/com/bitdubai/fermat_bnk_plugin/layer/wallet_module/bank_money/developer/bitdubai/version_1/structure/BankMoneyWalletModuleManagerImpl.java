@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -15,26 +15,24 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPrefer
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 19.04.16.
  */
-public class BankMoneyWalletModuleManagerImpl implements BankMoneyWalletModuleManager {
+public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMoneyWalletPreferenceSettings>
+        implements BankMoneyWalletModuleManager, Serializable {
 
     private BankMoneyWalletManager  bankMoneyWalletManager;
     private DepositManager          depositManager;
     private WithdrawManager         withdrawManager;
     private HoldManager             holdManager;
     private UnholdManager           unholdManager;
-    private PluginFileSystem        pluginFileSystem;
-    private UUID                    pluginId;
     private Broadcaster             broadcaster;
 
     private BankingWallet bankingWallet;
-    private SettingsManager<BankMoneyWalletPreferenceSettings> settingsManager;
-    
+
     public BankMoneyWalletModuleManagerImpl(
             BankMoneyWalletManager  bankMoneyWalletManager,
             DepositManager          depositManager,
@@ -45,13 +43,13 @@ public class BankMoneyWalletModuleManagerImpl implements BankMoneyWalletModuleMa
             UUID                    pluginId,
             Broadcaster             broadcaster
     ){
+        super(pluginFileSystem, pluginId);
+
         this.bankMoneyWalletManager = bankMoneyWalletManager;
         this.depositManager         = depositManager;
         this.withdrawManager        = withdrawManager;
         this.holdManager            = holdManager;
         this.unholdManager          = unholdManager;
-        this.pluginFileSystem       = pluginFileSystem;
-        this.pluginId               = pluginId;
         this.broadcaster            = broadcaster;
     }
 
@@ -61,20 +59,6 @@ public class BankMoneyWalletModuleManagerImpl implements BankMoneyWalletModuleMa
             bankingWallet = new BankingWalletModuleImpl(bankMoneyWalletManager,depositManager,withdrawManager,holdManager,unholdManager,pluginFileSystem,pluginId,broadcaster);
         return bankingWallet;
     }
-
-    @Override
-    public SettingsManager<BankMoneyWalletPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
-
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {

@@ -3,9 +3,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,8 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -72,47 +68,7 @@ import java.util.UUID;
  */
 
 public class ChatListFragment extends AbstractFermatFragment{
-
-    // Bundle key for saving previously selected search result item
-    //private static final String STATE_PREVIOUSLY_SELECTED_KEY =    "SELECTED_ITEM";
-//    private ChatListAdapter adapter; // The main query adapter
-//    private ImageLoader mImageLoader; // Handles loading the chat image in a background thread
-//    private String mSearchTerm; // Stores the current search query term
-//
-//    private OnChatInteractionListener mOnChatSelectedListener;
-//
-//    // Stores the previously selected search item so that on a configuration change the same item
-//    // can be reselected again
-//    private int mPreviouslySelectedSearchItem = 0;
-//    //public ArrayList<ContactList> contactList;
-//   // private ListView contactsContainer;
-//    //private ContactsAdapter adapter;
-//
-//    // Whether or not the search query has changed since the last time the loader was refreshed
-//    private boolean mSearchQueryChanged;
-//
-//    // Whether or not this fragment is showing in a two-pane layout
-      private boolean mIsTwoPaneLayout;
-//
-//    // Whether or not this is a search result view of this fragment, only used on pre-honeycomb
-//    // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
-//    private boolean mIsSearchResultView = false;
-
-    /*boolean dualPane;
-    private static int currentCheckPosition = 0;
-    private ProgressBar progressBar;
-    private static ChatsList chats;
-    private LinearLayout layout;
-    private ProgressDialog mProgressDialog;
-    private boolean fragmentStopped = false;
-
-    private FermatTextView noChatsMessage;
-
-    private long clickedId;*/
-
-
     private ChatManager chatManager;
-    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
@@ -135,16 +91,14 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList<Bitmap> imgId=new ArrayList<>();
     View layout;
     PresentationDialog presentationDialog;
-    private Toolbar toolbar;
-    private Bitmap contactIcon;
-    private BitmapDrawable contactIconCircular;
     ImageView noData;
     TextView noDatalabel;
     private static final int MAX = 20;
     private int offset = 0;
 
     public static ChatListFragment newInstance() {
-        return new ChatListFragment();}
+        return new ChatListFragment();
+    }
 
     public void chatlistview (){
         UUID chatidtemp;
@@ -163,52 +117,61 @@ public class ChatListFragment extends AbstractFermatFragment{
                 for (Chat chat : chats) {
                     chatidtemp = chat.getChatId();
                     if (chatidtemp != null) {
-                        Message mess = chatManager.getMessageByChatId(chatidtemp);
-                        if (mess != null) {
-                            noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
-                            contactId.add(chat.getRemoteActorPublicKey());
-                            //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
-                            //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                            //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
-                            if(chatIdentity!= null) {
-                                for (ChatActorCommunityInformation cont : chatManager
-                                        .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
-                                    String pk1 = cont.getPublicKey();
-                                    String pk2 = chat.getRemoteActorPublicKey();
-                                    if (pk2.equals(pk1)) {
-                                        contactName.add(cont.getAlias());
-                                        message.add(mess.getMessage());
+                        noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
+                        contactId.add(chat.getRemoteActorPublicKey());
+                        if(chatIdentity!= null) {
+                            for (ChatActorCommunityInformation cont : chatManager
+                                    .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
+                                String pk1 = cont.getPublicKey();
+                                String pk2 = chat.getRemoteActorPublicKey();
+                                if (pk2.equals(pk1)) {
+                                    contactName.add(cont.getAlias());
+                                    Message mess = chatManager.getMessageByChatId(chatidtemp);
+                                    if (mess != null) {
+                                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                                            message.add("Writing..");
+                                        }else{
+                                            message.add(mess.getMessage());
+                                        }
                                         status.add(mess.getStatus().toString());
                                         typeMessage.add(mess.getType().toString());
-                                        long timemess = chat.getLastMessageDate().getTime();
-                                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                        long milliseconds = timemess + nanos;
-                                        Date dated = new java.util.Date(milliseconds);
-                                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                                        formatter.setTimeZone(TimeZone.getDefault());
-                                        String datef = formatter.format(new java.util.Date(milliseconds));
-                                        if (Validate.isDateToday(dated)) {
-                                            formatter = new SimpleDateFormat("HH:mm");
-                                            formatter.setTimeZone(TimeZone.getDefault());
-                                            datef = formatter.format(new java.util.Date(milliseconds));
-                                        } else {
-                                            Date old = new Date(datef);
-                                            Date today = new Date();
-                                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                            if (dias == 1) {
-                                                datef = "YESTERDAY";
-                                            }
+                                    }else{
+                                        if(chatManager.checkWritingStatus(chatidtemp)) {
+                                            message.add("Writing..");
+                                        }else {
+                                            message.add("");
                                         }
-                                        dateMessage.add(datef);
-                                        chatId.add(chatidtemp);
-                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                        imgId.add(bmd.getBitmap());
-                                        break;
+                                        status.add("");
+                                        typeMessage.add("");
                                     }
+                                    long timemess = chat.getLastMessageDate().getTime();
+                                    long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                    long milliseconds = timemess + nanos;
+                                    Date dated = new java.util.Date(milliseconds);
+                                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                    formatter.setTimeZone(TimeZone.getDefault());
+                                    String datef = formatter.format(new java.util.Date(milliseconds));
+                                    if (Validate.isDateToday(dated)) {
+                                        formatter = new SimpleDateFormat("HH:mm");
+                                        formatter.setTimeZone(TimeZone.getDefault());
+                                        datef = formatter.format(new java.util.Date(milliseconds));
+                                    } else {
+                                        Date old = new Date(datef);
+                                        Date today = new Date();
+                                        long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                        if (dias == 1) {
+                                            datef = "YESTERDAY";
+                                        }
+                                    }
+                                    dateMessage.add(datef);
+                                    chatId.add(chatidtemp);
+                                    ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                    imgId.add(bmd.getBitmap());
+                                    break;
                                 }
-                            }else setUpHelpChat(false);
-                        }
+                            }
+                        }else setUpHelpChat(false);
                     }
                 }
             }
@@ -239,7 +202,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;
         try {
-            chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -248,7 +211,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatSettings = new ChatPreferenceSettings();
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
-                chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -282,18 +245,25 @@ public class ChatListFragment extends AbstractFermatFragment{
     void updatevalues(){
         try{
             if(!chatManager.getChats().isEmpty()) {
-                chatlistview();
-                ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-                layout.setBackground(bgcolor);
+                layout.setBackgroundResource(R.drawable.cht_background_white);
                 noData.setVisibility(View.GONE);
                 noDatalabel.setVisibility(View.GONE);
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
+                chatlistview();
             }else{
-                layout.setBackgroundResource(R.drawable.fondo);
+                layout.setBackgroundResource(R.drawable.cht_background_color);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
                 getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
-                //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
+                contactName.clear();
+                message.clear();
+                chatId.clear();
+                dateMessage.clear();
+                contactId.clear();
+                status.clear();
+                typeMessage.clear();
+                noReadMsgs.clear();
+                imgId.clear();//text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -358,21 +328,23 @@ public class ChatListFragment extends AbstractFermatFragment{
                 typeMessage, noReadMsgs, imgId, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
-//        registerForContextMenu(list);
+        registerForContextMenu(list);
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     appSession.setData("whocallme", "chatlist");
                     //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+                    //int newPosition= Utils.safeLongToInt(adapter.getItem(position));
                     Contact contact=new ContactImpl();
-                    contact.setRemoteActorPublicKey(contactId.get(position));
-                    contact.setAlias(contactName.get(position));
+                    contact.setRemoteActorPublicKey(adapter.getContactIdItem(position));
+                    contact.setAlias(adapter.getItem(position));
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    imgId.get(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    adapter.getImgIdItem(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
-                    appSession.setData(ChatSession.CONTACT_DATA, contact);//appSession.setData(ChatSession.CONTACT_DATA, chatManager.getChatActorbyConnectionId(contactId.get(position)));
+                    appSession.setData(ChatSession.CONTACT_DATA, contact);
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch(Exception e)
                 {
@@ -380,13 +352,40 @@ public class ChatListFragment extends AbstractFermatFragment{
                 }
             }
         });
+/*
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            //TODO: fix this
+                            if (!chatManager.getContacts().isEmpty()) {
+                                // specialfilldatabase();
+                                updatevalues();
+                                adapter.refreshEvents(infochat, imgid);
+                            } else {
+                                Toast.makeText(getActivity(), "No Chats now", Toast.LENGTH_SHORT).show();
+                                text.setVisibility(View.VISIBLE);
+                                text.setText(" ");
+                                text.setBackgroundResource(R.drawable.cht_empty_chat_background);
+                            }
+                        } catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2500);
+            }
+        });*/
         return layout;
     }
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
-        if(code.equals("13")){
+        if(code.equals("13") && searchView.getQuery().toString().equals("")){
             updatevalues();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
         }
@@ -397,30 +396,32 @@ public class ChatListFragment extends AbstractFermatFragment{
         menu.clear();
         inflater.inflate(R.menu.chat_list_menu, menu);
         // Locate the search item
-//        MenuItem searchItem = menu.findItem(R.id.menu_search);
-//        searchView = (SearchView) searchItem.getActionView();
-//        searchView.setQueryHint(getResources().getString(R.string.search_hint));
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//           @Override
-//           public boolean onQueryTextSubmit(String s) {
-//               return false;
-//           }
-//
-//           @Override
-//           public boolean onQueryTextChange(String s) {
-//               if (s.equals(searchView.getQuery().toString())) {
-//                   adapter.getFilter().filter(s);
-//               }
-//               return false;
-//           }
-//        });
-//        if (chatSession.getData("filterString") != null) {
-//           String filterString = (String) chatSession.getData("filterString");
-//           if (filterString.length() > 0) {
-//               searchView.setQuery(filterString, true);
-//               searchView.setIconified(false);
-//           }
-//        }
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+           @Override
+           public boolean onQueryTextSubmit(String s) {
+               return false;
+           }
+
+           @Override
+           public boolean onQueryTextChange(String s) {
+               if (s.equals(searchView.getQuery().toString())) {
+                   updatevalues();
+                   adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                   adapter.getFilter().filter(s);
+               }
+               return false;
+           }
+        });
+        if (chatSession.getData("filterString") != null) {
+           String filterString = (String) chatSession.getData("filterString");
+           if (filterString.length() > 0) {
+               searchView.setQuery(filterString, true);
+               searchView.setIconified(false);
+           }
+        }
         menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
@@ -431,9 +432,9 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(id == ChtConstants.CHT_ICON_HELP){
             setUpHelpChat(false);
         }
-//        if (id == R.id.menu_search) {
-//            return true;
-//        }
+        if (id == R.id.menu_search) {
+            return true;
+        }
 //        if (id == R.id.menu_open_chat) {
 //            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
 //            return true;
@@ -446,43 +447,29 @@ public class ChatListFragment extends AbstractFermatFragment{
 //            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
 //            return true;
 //        }
-//        if (id == R.id.menu_delete_all_chats) {
-//            if(contactName != null) {
-//                if (contactName.size() > 0) {
-//                    try {
-//                        final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(), appSession, null, null, null);
-//                        alert.setTextTitle("Delete All Chats");
-//                        alert.setTextBody("Do you want to delete all chats? All chats will be erased");
-//                        alert.setType("delete-chat");
-//                        alert.show();
-//                        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                            @Override
-//                            public void onDismiss(DialogInterface dialog) {
-//                                try {
-//                                    // Delete chats and refresh view
-//                                    chatManager.deleteChats();
-//                                    updatevalues();
-//                                    adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-//                                } catch (CantDeleteChatException e) {
-//                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                                } catch (Exception e) {
-//                                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                                }
-//                            }
-//                        });
-//                    } catch (Exception e) {
-//                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                    }
-//                }else {
-//                    if (Build.VERSION.SDK_INT < 23) {
-//                        Toast.makeText(getActivity(),"No chats",Toast.LENGTH_SHORT);
-//                    }else{
-//                        Toast.makeText(getActivity(),"No chats",Toast.LENGTH_SHORT);
-//                    }
-//                }
-//            }
-//            return true;
-//        }
+        if (id == R.id.menu_delete_all_chats) {
+            try {
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                alert.setTextTitle("Delete All Chats");
+                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+                alert.setType("delete-chats");
+                alert.show();
+                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            updatevalues();
+                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                        }catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                    }
+                });
+            }catch (Exception e){
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+            return true;
+        }
 
         if (id == R.id.menu_error_report) {
             changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
@@ -494,7 +481,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        v.setBackgroundColor(Color.WHITE);
+        //v.setBackgroundColor(Color.WHITE);
         if (v.getId()==R.id.list) {
             if (Build.VERSION.SDK_INT < 23) {
                 MenuInflater inflater = new MenuInflater(getActivity());
@@ -531,17 +518,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            // Get the info of chat selected from session
-                            Chat chat = chatSession.getSelectedChat();
-                            // Delete chat and refresh view
-                            chatManager.deleteMessagesByChatId(chat.getChatId());
-                            chatManager.deleteChat(chat);
                             updatevalues();
                             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteChatException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        } catch (CantDeleteMessageException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -559,20 +537,14 @@ public class ChatListFragment extends AbstractFermatFragment{
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
                 alert.setTextTitle("Clean Chat");
                 alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
-                alert.setType("delete-chat");
+                alert.setType("clean-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            // Get the info of chat selected from session
-                            Chat chat = chatSession.getSelectedChat();
-                            // Delete chat and refresh view
-                            chatManager.deleteMessagesByChatId(chat.getChatId());
                             updatevalues();
                             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteMessageException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -588,18 +560,14 @@ public class ChatListFragment extends AbstractFermatFragment{
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
                 alert.setTextTitle("Delete All Chats");
                 alert.setTextBody("Do you want to delete all chats? All chats will be erased");
-                alert.setType("delete-chat");
+                alert.setType("delete-chats");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-                            // Delete chats and refresh view
-                            chatManager.deleteChats();
                             updatevalues();
                             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteChatException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
@@ -610,14 +578,14 @@ public class ChatListFragment extends AbstractFermatFragment{
             }
             return true;
         }
-        if (id == R.id.menu_delete_contact) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
-        if (id == R.id.menu_block_contact) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_delete_contact) {
+//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
+//        if (id == R.id.menu_block_contact) {
+//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
         return super.onContextItemSelected(item);
     }
 }

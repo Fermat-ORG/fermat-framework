@@ -61,9 +61,11 @@ public class FanaticIdentityDatabaseFactory implements DealsWithErrors, DealsWit
             table.addColumn(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, false);
+            table.addColumn(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,DatabaseDataType.STRING, 10, false);
+            table.addColumn(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,DatabaseDataType.STRING, 100, false);
 
 
-            table.addIndex(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_FIRST_KEY_COLUMN);
+                    table.addIndex(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_FIRST_KEY_COLUMN);
 
             databaseFactory.createTable(table);
 

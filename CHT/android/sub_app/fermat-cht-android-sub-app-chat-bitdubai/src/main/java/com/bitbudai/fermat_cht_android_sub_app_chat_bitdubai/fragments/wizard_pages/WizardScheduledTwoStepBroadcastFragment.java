@@ -50,6 +50,9 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     private ChatPreferenceSettings chatSettings;
     ArrayList<String> datelist = new ArrayList<String>();
     ArrayList<String> timelist = new ArrayList<String>();
+    private ChatSession chatSession;
+    private ChatManager chatManager;
+
     public static WizardTwoStepBroadcastFragment newInstance() {
         return new WizardTwoStepBroadcastFragment();
     }
@@ -58,6 +61,8 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        chatSession=((ChatSession) appSession);
+        chatManager= chatSession.getModuleManager();
         ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
         //TODO:Revisar esto
 //        try {
@@ -69,7 +74,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;
         try {
-            chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -78,7 +83,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
             chatSettings = new ChatPreferenceSettings();
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

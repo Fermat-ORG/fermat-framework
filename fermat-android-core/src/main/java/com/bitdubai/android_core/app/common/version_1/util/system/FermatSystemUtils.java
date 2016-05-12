@@ -31,8 +31,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
-import com.bitdubai.fermat_api.layer.dmp_module.AppManagerSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.DesktopManager;
+import com.bitdubai.fermat_api.layer.dmp_module.DesktopManagerSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
@@ -414,45 +414,45 @@ public class FermatSystemUtils {
 
     private static AndroidCoreModule androidCoreModule;
     public static AndroidCoreModule getAndroidCoreModule() throws CantCreateProxyException {
-//        try{
-//            if(androidCoreModule==null) {
-//                androidCoreModule = (AndroidCoreModule) ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(
-//                        new PluginVersionReference(
-//                                Platforms.PLUG_INS_PLATFORM,
-//                                Layers.SUB_APP_MODULE,
-//                                Plugins.ANDROID_CORE,
-//                                Developers.BITDUBAI,
-//                                new Version()
-//                        )
-//                );
-//            }
-//            return androidCoreModule;
-//        }catch (Exception e){
-//            throw e;
-//        }
-
-        try {
-            return (AndroidCoreModule) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.PLUG_INS_PLATFORM,
-                            Layers.SUB_APP_MODULE,
-                            Plugins.ANDROID_CORE,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (CantGetModuleManagerException e) {
-
-            System.err.println(e.getMessage());
-            System.err.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.err.println(e.toString());
-
-            return null;
+        try{
+            if(androidCoreModule==null) {
+                androidCoreModule = (AndroidCoreModule) ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(
+                        new PluginVersionReference(
+                                Platforms.PLUG_INS_PLATFORM,
+                                Layers.SUB_APP_MODULE,
+                                Plugins.ANDROID_CORE,
+                                Developers.BITDUBAI,
+                                new Version()
+                        )
+                );
+            }
+            return androidCoreModule;
+        }catch (Exception e){
+            throw e;
         }
+//
+//        try {
+//            return (AndroidCoreModule) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
+//                    new PluginVersionReference(
+//                            Platforms.PLUG_INS_PLATFORM,
+//                            Layers.SUB_APP_MODULE,
+//                            Plugins.ANDROID_CORE,
+//                            Developers.BITDUBAI,
+//                            new Version()
+//                    )
+//            );
+//        } catch (CantGetModuleManagerException e) {
+//
+//            System.err.println(e.getMessage());
+//            System.err.println(e.toString());
+//
+//            return null;
+//        } catch (Exception e) {
+//
+//            System.err.println(e.toString());
+//
+//            return null;
+//        }
     }
 
 
@@ -461,7 +461,7 @@ public class FermatSystemUtils {
         return new DesktopManager() {
 
             @Override
-            public SettingsManager<AppManagerSettings> getSettingsManager() {
+            public SettingsManager<DesktopManagerSettings> getSettingsManager() {
                 return null;
             }
 

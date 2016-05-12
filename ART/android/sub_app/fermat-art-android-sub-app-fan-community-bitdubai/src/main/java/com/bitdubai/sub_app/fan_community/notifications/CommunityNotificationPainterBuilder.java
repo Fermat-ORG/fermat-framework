@@ -17,7 +17,7 @@ public class CommunityNotificationPainterBuilder {
                 case CONNECTION_REQUEST_RECEIVED:
                     notification = new CommunityNotificationPainter(
                             "Fan Community",
-                            "A customer wants to connect with you.",
+                            "A Fermat Fan wants to connect with you.",
                             "",
                             "", R.drawable.afc_ic_nav_connections);
                     break;

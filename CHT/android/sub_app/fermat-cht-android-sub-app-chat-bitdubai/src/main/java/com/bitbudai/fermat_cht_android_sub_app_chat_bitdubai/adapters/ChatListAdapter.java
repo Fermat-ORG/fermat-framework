@@ -6,21 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-
 
 import java.util.ArrayList;
 import java.util.UUID;
+
+//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 
 /**
  * Chat List Adapter
@@ -30,13 +33,13 @@ import java.util.UUID;
  *
  */
 
-public class ChatListAdapter extends ArrayAdapter{//implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class ChatListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
     ArrayList<String> contactName=new ArrayList<>();
     ArrayList<String> message=new ArrayList<>();
     ArrayList<String> dateMessage=new ArrayList<>();
     ArrayList<UUID> chatId=new ArrayList<>();
-    ArrayList<UUID> contactId=new ArrayList<>();
+    ArrayList<String> contactId=new ArrayList<>();
     ArrayList<String> status=new ArrayList<>();
     ArrayList<String> typeMessage=new ArrayList<>();
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
@@ -44,7 +47,6 @@ public class ChatListAdapter extends ArrayAdapter{//implements Filterable {//pub
     private ErrorManager errorManager;
 
     ArrayList<String> filteredData;
-    ArrayList<String> originalData;
     private String filterString;
 
     public ChatListAdapter(Context context, ArrayList<String> contactName,
@@ -67,7 +69,6 @@ public class ChatListAdapter extends ArrayAdapter{//implements Filterable {//pub
         this.noReadMsgs = noReadMsgs;
         this.imgId=imgId;
         this.filteredData = contactName;
-        this.originalData = contactName;
         this.errorManager=errorManager;
     }
 
@@ -83,8 +84,12 @@ public class ChatListAdapter extends ArrayAdapter{//implements Filterable {//pub
             //contactname.setTypeface(tf, Typeface.NORMAL);
 
             TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
+            /*if(message.get(position).equals("Writing..")) {
+                lastmessage.setTextColor(Color.parseColor("#FF33A900"));
+            }else{*/
+             //   lastmessage.setTextColor(Color.parseColor("#757575"));
+            //}
             lastmessage.setText(message.get(position));
-
 
             TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
             dateofmessage.setText(dateMessage.get(position));
@@ -138,41 +143,94 @@ public class ChatListAdapter extends ArrayAdapter{//implements Filterable {//pub
         notifyDataSetChanged();
     }
 
-//    @Override
-//    public int getCount() {
-//        if (contactName != null) {
-//            if(filteredData.size()<contactName.size()) {
-//                return filteredData.size();
-//            }else{
-//                return contactName.size();}
-//        } else {
-//            return 0;
-//        }
-//    }
-//
-//    @Override
-//    public String getItem(int position) {
-//        return filteredData.get(position);
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    public void setData(ArrayList<String> data) {
-//        this.filteredData = data;
-//    }
-//
-//    public Filter getFilter() {
-//        return new ChatListFilter(contactName, this);
-//    }
-//
-//    public void setFilterString(String filterString) {
-//        this.filterString = filterString;
-//    }
-//
-//    public String getFilterString() {
-//        return filterString;
-//    }
+    @Override
+    public int getCount() {
+        if (contactName != null) {
+            if (filteredData != null) {
+                if(filteredData.size()<contactName.size()) {
+                    return filteredData.size();
+                }else{
+                    return contactName.size();
+                }
+            }else{
+                return contactName.size();
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public String getItem(int position) {
+        return contactName.get(position);
+    }
+
+    public String getMessageItem(int position) {
+        return message.get(position);
+    }
+
+    public String getDateMessageItem(int position) {
+        return dateMessage.get(position);
+    }
+
+    public UUID getChatIdItem(int position) {
+        return chatId.get(position);
+    }
+
+    public String getContactIdItem(int position) {
+        return contactId.get(position);
+    }
+
+    public String getStatusItem(int position) {
+        return status.get(position);
+    }
+    public String getTypeMessageItem(int position) {
+        return typeMessage.get(position);
+    }
+
+    public int getNoReadMsgsItem(int position) {
+        return noReadMsgs.get(position);
+    }
+
+    public Bitmap getImgIdItem(int position) {
+        return imgId.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setData(ArrayList contactName,
+                        ArrayList message,
+                        ArrayList dateMessage,
+                        ArrayList chatId,
+                        ArrayList contactId,
+                        ArrayList status,
+                        ArrayList typeMessage,
+                        ArrayList noReadMsgs,
+                        ArrayList imgId) {
+        this.filteredData = contactName;
+        this.contactName = contactName;
+        this.message = message;
+        this.dateMessage = dateMessage;
+        this.chatId = chatId;
+        this.contactId = contactId;
+        this.status = status;
+        this.typeMessage = typeMessage;
+        this.noReadMsgs = noReadMsgs;
+        this.imgId=imgId;
+    }
+
+    public Filter getFilter() {
+        return new ChatListFilter(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
 }

@@ -89,6 +89,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyW
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collection;
@@ -101,8 +102,8 @@ import java.util.UUID;
  * Created by Nelson Ramirez
  * on 22/09/15.
  */
-public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> {
-    //TODO: Documentar
+public interface CryptoBrokerWalletModuleManager
+        extends CBPWalletsModuleManager<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation>, Serializable {
 
     /**
      * associate an Identity to this wallet
@@ -340,7 +341,8 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      * @throws CantGetCryptoBrokerWalletSettingException
      */
     boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall)
-            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
+            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, EarningsSettingsNotRegisteredException,
+            CantListEarningsPairsException, CantLoadEarningSettingsException;
 
     /**
      * @param location
@@ -743,6 +745,13 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
     void submitMerchandise(String contractHash)
             throws CantSubmitMerchandiseException;
 
+    /**
+     * This method send a merchandise according the contract elements.
+     *
+     * @param contractHash
+     */
+    boolean stockInTheWallet(String contractHash)
+            throws CantSubmitMerchandiseException;
     /**
      * This method execute a Broker Ack payment Business Transaction
      *

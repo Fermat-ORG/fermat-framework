@@ -41,6 +41,7 @@ android {
     dexOptions {
         incremental true
     }
+    //sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/test', 'src/main/pruebas'] } }
 }
 dependencies {
     // Fermat
@@ -58,8 +59,6 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
 }
-
-
 
 // Configuracion de JaCoCo
 def jacocoHtmlReport = ""

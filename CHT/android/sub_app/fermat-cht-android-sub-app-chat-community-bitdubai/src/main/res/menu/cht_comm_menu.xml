@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- <item
+    <!--item
         android:id="@+id/action_search"
         android:title="Search"
-        android:icon="@drawable/ic_action_search"
+        android:icon="@drawable/cht_ic_action_search"
         app:showAsAction="ifRoom|collapseActionView"
-        tools:ignore="HardcodedText" />
-    android:icon="@drawable/ic_action_search" app:actionViewClass="android.support.v7.widget.SearchView" -->
+        tools:ignore="HardcodedText" /-->
+    <!-- android:icon="@drawable/ic_action_search" app:actionViewClass="android.support.v7.widget.SearchView" -->
     <item
         android:id="@+id/action_help"
         android:title="Help"

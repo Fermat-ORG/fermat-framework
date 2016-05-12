@@ -18,6 +18,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPrefer
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 
@@ -52,7 +53,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         //Obtain walletSettings or create new wallet settings if first time opening wallet
         walletSettings = null;
         try {
-            walletSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            walletSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e){ walletSettings = null;
             errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
@@ -61,7 +62,7 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
             walletSettings = new BankMoneyWalletPreferenceSettings();
             walletSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),walletSettings);
+                moduleManager.persistSettings(appSession.getAppPublicKey(),walletSettings);
             }catch (Exception e){
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
             }
@@ -84,12 +85,15 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
             @Override
             public void run() {
                 //If wallet already exists, go directly to wallet
-                if (moduleManager.getBankingWallet().getBankName() != null) {
-                    changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
-                } else {  //otherwise, fade in setup page
-                    Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
-                    setupContainer.setVisibility(View.VISIBLE);
-                    setupContainer.startAnimation(fadeInAnimation);
+                BankingWallet b = moduleManager.getBankingWallet();
+                if(b!=null) {
+                    if (b.getBankName() != null) {
+                        changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+                    } else {  //otherwise, fade in setup page
+                        Animation fadeInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in);
+                        setupContainer.setVisibility(View.VISIBLE);
+                        setupContainer.startAnimation(fadeInAnimation);
+                    }
                 }
             }
         }, 800);

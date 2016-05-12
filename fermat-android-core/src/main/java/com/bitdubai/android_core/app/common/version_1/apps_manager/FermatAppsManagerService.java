@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentAppComparator;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -62,6 +64,8 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }
     }
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -79,9 +83,13 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     public void init(){
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
-//        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
-//        //if(appsInstalledInDevice.isEmpty()){
-//            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+        //appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
+        //if(appsInstalledInDevice.isEmpty()){
+//        appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+//        if(!appsInstalledInDevice.containsKey("main_desktop")){
+//            Log.e(TAG,"Not contains desktop");
+//        }
+        //}
         try {
             for (FermatAppType fermatAppType : FermatAppType.values()) {
                 RuntimeManager runtimeManager = selectRuntimeManager(fermatAppType);
@@ -93,7 +101,6 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }catch (Exception e){
             e.printStackTrace();
         }
-        //}
     }
 
     public FermatStructure lastAppStructure() {
@@ -136,9 +143,10 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
                 orderStackWithThisPkLast(appPublicKey);
                 return fermatSessionManager.getAppsSession(appPublicKey);
             } else {
+                FermatAppType fermatAppType = appsInstalledInDevice.get(appPublicKey);
+                if(fermatAppType==null) Log.e(TAG,"App with publicKey: "+appPublicKey+ " is not loaded in memory");
                 return openApp(
-                        selectAppManager(
-                                appsInstalledInDevice.get(appPublicKey)).getApp(appPublicKey),
+                        selectAppManager(fermatAppType).getApp(appPublicKey),
                         FermatAppConnectionManager.getFermatAppConnection(
                                 appPublicKey,ApplicationSession.getInstance().getApplicationContext()
                         )
@@ -180,14 +188,14 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         if(fermatSessionManager.isSessionOpen(fermatApp.getAppPublicKey())){
             fermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
         }else {
-//            ModuleManager moduleManager = null;
-//            try {
-//                moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
-//            } catch (CantCreateProxyException e) {
-//                e.printStackTrace();
-//            }
-//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
-            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
+            ModuleManager moduleManager = null;
+            try {
+                moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
+            } catch (CantCreateProxyException e) {
+                e.printStackTrace();
+            }
+            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
+//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
         }
         fermatAppConnection.setFullyLoadedSession(fermatSession);
         return fermatSession;
@@ -230,17 +238,19 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     @Override
     public FermatStructure getAppStructure(String appPublicKey) {
-        FermatAppType fermatAppType =appsInstalledInDevice.get(appPublicKey);
-        if(fermatAppType!=null) {
-            return selectRuntimeManager(fermatAppType).getAppByPublicKey(appPublicKey);
-        }else{
+        try {
+            if (appPublicKey.equals("main_desktop")) {
+                return selectRuntimeManager(FermatAppType.DESKTOP).getAppByPublicKey(appPublicKey);
+            } else {
+                return selectRuntimeManager(FermatAppType.WALLET).getAppByPublicKey(appPublicKey);
+            }
+        }catch (Exception e){
             Log.e(TAG,"App instaled in device null: "+appPublicKey);
             Log.e(TAG,"If the public key of the app is fine, try removing data and restart app. filesystem problem..");
-            if(appPublicKey.equals("main_desktop")){
-                return selectRuntimeManager(FermatAppType.DESKTOP).getLastApp();
-            }
+            e.printStackTrace();
             return null;
         }
+
     }
 
     @Override
@@ -298,11 +308,11 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         //Este swith debe ser cambiado por una petición al core pasandole el FermatAppType
         switch (fermatAppType) {
             case WALLET:
+            case SUB_APP:
                 runtimeManager = FermatSystemUtils.getWalletRuntimeManager();
                 break;
-            case SUB_APP:
-                runtimeManager = FermatSystemUtils.getSubAppRuntimeMiddleware();
-                break;
+//                runtimeManager = FermatSystemUtils.getSubAppRuntimeMiddleware();
+//                break;
             case DESKTOP:
                 runtimeManager = FermatSystemUtils.getDesktopRuntimeManager();
 

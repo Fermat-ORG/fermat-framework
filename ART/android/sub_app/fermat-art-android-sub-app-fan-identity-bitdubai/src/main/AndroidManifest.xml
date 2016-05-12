@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bitdubai.sub_app.fan_identity" >
+    package="com.bitdubai.sub_app.art_fan_identity" >
 
     <application
         android:allowBackup="true"
-        android:label="fan identity" >
+        android:label="@string/app_name" >
     </application>
 
 </manifest>
