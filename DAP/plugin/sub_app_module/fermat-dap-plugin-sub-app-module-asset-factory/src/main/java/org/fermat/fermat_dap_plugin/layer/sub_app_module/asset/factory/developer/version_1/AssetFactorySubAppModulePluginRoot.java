@@ -74,9 +74,6 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.ASSET_ISSUER)
     IdentityAssetIssuerManager identityAssetIssuerManager;
 
@@ -102,12 +99,12 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
         assetFactorySupAppModuleManager = new AssetFactorySupAppModuleManager(
                 assetFactoryManager,
                 identityAssetIssuerManager,
-                errorManager);
+                this);
 
             this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantStartPluginException(exception);
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e);
         }
     }
 
@@ -116,9 +113,9 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
         try {
             List<IdentityAssetIssuer> identities = assetFactorySupAppModuleManager.getActiveIdentities();
             return (identities == null || identities.isEmpty()) ? null : assetFactorySupAppModuleManager.getActiveIdentities().get(0);
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            exception.printStackTrace();
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -202,10 +199,11 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
                 }
                 settings = settingsManager.loadAndGetSettings(SubAppsPublicKeys.DAP_FACTORY.getCode());
                 selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
-            } catch (CantGetSettingsException exception) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                exception.printStackTrace();
+            } catch (CantGetSettingsException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                e.printStackTrace();
             } catch (SettingsNotFoundException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 //TODO: Only enter while the Active Actor Wallet is not open.
                 selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 //                e.printStackTrace();
@@ -219,10 +217,10 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
         try {
             assetFactory = getAssetFactoryAll();
 
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             System.out.println("******* Test Asset Factory Module, Error. Franklin ******");
-            exception.printStackTrace();
+            e.printStackTrace();
         }
         return assetFactory;
     }
@@ -245,9 +243,9 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
         try {
             List<IdentityAssetIssuer> identities = assetFactoryManager.getActiveIdentities();
             return (identities == null || identities.isEmpty()) ? null : assetFactoryManager.getActiveIdentities().get(0);
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            exception.printStackTrace();
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            e.printStackTrace();
             return null;
         }
     }
@@ -287,9 +285,9 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractPlugin imp
 
         try {
             settingsManager.persistSettings(publicKeyApp, settings);
-        } catch (CantPersistSettingsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            exception.printStackTrace();
+        } catch (CantPersistSettingsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            e.printStackTrace();
         }
     }
 
