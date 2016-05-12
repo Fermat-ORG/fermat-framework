@@ -167,7 +167,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             }
 
         } catch (Exception exception) {
-            throw new CantUpdateRecordException();
+            throw new CantUpdateRecordException(exception);
         }
     }
 
@@ -478,8 +478,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
         );
 
         this.tableFilter.add(filter);
-        DatabaseTableFilterGroup filterGroup = new DesktopDatabaseTableFilterGroup(this.tableFilter, null, null);
-        this.tableFilterGroup = filterGroup;
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                this.tableFilter,
+                null            ,
+                null
+        );
 
     }
 
@@ -579,13 +582,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public void setFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
 
-        DatabaseTableFilterGroup filterGroup = new DesktopDatabaseTableFilterGroup(filters, subGroups, operator);
-
-       /* filterGroup.setFilters(filters);
-        filterGroup.setSubGroups(subGroups);
-        filterGroup.setOperator(operator);*/
-
-        this.tableFilterGroup = filterGroup;
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                filters  ,
+                subGroups,
+                operator
+        );
     }
 
     /**
@@ -597,39 +598,23 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         // I check the definition for the filter object, filter type, filter columns names
         // and build the WHERE statement
-        String filter = "";
-        StringBuffer strFilter = new StringBuffer();
+        StringBuilder strFilter = new StringBuilder();
 
         if (this.tableFilterGroup != null) {
             for (int i = 0; i < tableFilterGroup.getFilters().size(); ++i) {
 
-                strFilter.append(tableFilterGroup.getFilters().get(i).getColumn());
+                strFilter.append(makeInternalCondition(tableFilterGroup.getFilters().get(i)));
 
-                switch (tableFilterGroup.getFilters().get(i).getType()) {
-                    case EQUAL:
-                        strFilter.append(" ='" + tableFilterGroup.getFilters().get(i).getValue() + "'");
-                        break;
-                    case GREATER_THAN:
-                        strFilter.append(" > " + tableFilterGroup.getFilters().get(i).getValue());
-                        break;
-                    case LESS_THAN:
-                        strFilter.append(" < " + tableFilterGroup.getFilters().get(i).getValue());
-                        break;
-                    case LIKE:
-                        strFilter.append(" Like '%" + tableFilterGroup.getFilters().get(i).getValue() + "%'");
-                        break;
-                    default:
-                        strFilter.append(" ");
-                        break;
+                if (i < (tableFilterGroup.getFilters().size() - 1)) {
+                    strFilter.append(" ")
+                            .append(tableFilterGroup.getOperator())
+                            .append(" ");
                 }
-
-                if (i < (tableFilterGroup.getFilters().size() - 1))
-                    strFilter.append(" " + tableFilterGroup.getOperator() + " ");
 
             }
         }
 
-        filter = strFilter.toString();
+        String filter = strFilter.toString();
         if (strFilter.length() > 0) filter = " WHERE " + filter;
 
         return filter;
@@ -744,14 +729,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
                         .append("'");
                 break;
             default:
-                strFilter.append(" ");
+                throw new RuntimeException("Database Filter Type not implemented yet. "+filter.getType());
         }
         return strFilter.toString();
     }
 
     private String makeInternalConditionGroup(List<DatabaseTableFilter> filters, DatabaseFilterOperator operator) {
 
-        StringBuffer strFilter = new StringBuffer();
+        StringBuilder strFilter = new StringBuilder();
 
         for (DatabaseTableFilter filter : filters) {
             switch (operator) {
@@ -777,8 +762,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
-        StringBuffer strFilter = new StringBuffer();
-        String filter = "";
+        StringBuilder strFilter = new StringBuilder();
 
         if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
             strFilter.append("(");
@@ -806,7 +790,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             strFilter.append(")");
         }
 
-        filter = strFilter.toString();
+        String filter = strFilter.toString();
         if (strFilter.length() > 0) filter = " WHERE " + filter;
 
         return filter;

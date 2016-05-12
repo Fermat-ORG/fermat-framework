@@ -98,9 +98,11 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
 
             // load the data base to memory
             DatabaseTable table = getDatabaseTable();
-            table.addStringFilter(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKey, DatabaseFilterType.NOT_EQUALS);
+
             table.addFilterOrder(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
-            table.addFilterOrder(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+            table.addFilterOrder(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME          , DatabaseFilterOrder.ASCENDING);
+
+            table.addStringFilter(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKey, DatabaseFilterType.NOT_EQUALS);
             table.setFilterTop("10");
             table.loadToMemory();
 
@@ -109,13 +111,8 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
             final List<NodesCatalog> list = new ArrayList<>();
 
             // Convert into entity objects and add to the list.
-            for (DatabaseTableRecord record : records) {
-
-                if (!record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME).equals(identityPublicKey)){
-                    list.add(getEntityFromDatabaseTableRecord(record));
-                }
-
-            }
+            for (DatabaseTableRecord record : records)
+                list.add(getEntityFromDatabaseTableRecord(record));
 
             return list;
 

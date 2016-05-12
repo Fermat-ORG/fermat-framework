@@ -101,7 +101,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     /**
      * Hold the listeners references
      */
-    private List<FermatEventListener> listenersAdded;
+    protected List<FermatEventListener> listenersAdded;
 
     /**
      * AGENTS DEFINITION ----->
@@ -158,13 +158,15 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             /*
              * Initialize listeners
              */
-            initializeListeners();
+            initializeNetworkServiceListeners();
 
             /*
              * Initialize the agents and start
              */
             this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
             this.networkServiceRegistrationProcessAgent.start();
+
+            onNetworkServiceStart();
 
         } catch (Exception exception) {
 
@@ -293,7 +295,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         try {
 
-            location = locationManager.getLocation();
+            location = locationManager.getLastKnownLocation();
 
         } catch (CantGetDeviceLocationException exception) {
 
@@ -316,7 +318,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     /**
      * Initializes all event listener and configure
      */
-    private void initializeListeners() {
+    private void initializeNetworkServiceListeners() {
 
         /*
          * 1. Listen and handle Network Client Registered Event
@@ -353,7 +355,11 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         onNetworkServiceRegistered();
     }
 
-    public void onNetworkServiceRegistered() {
+    protected void onNetworkServiceRegistered() {
+
+    }
+
+    protected void onNetworkServiceStart() throws CantStartPluginException {
 
     }
 
@@ -364,6 +370,11 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     public final boolean isRegistered() {
         return registered;
+    }
+
+    public final String getPublicKey() {
+
+        return this.identity.getPublicKey();
     }
 
     public final NetworkServiceProfile getProfile() {

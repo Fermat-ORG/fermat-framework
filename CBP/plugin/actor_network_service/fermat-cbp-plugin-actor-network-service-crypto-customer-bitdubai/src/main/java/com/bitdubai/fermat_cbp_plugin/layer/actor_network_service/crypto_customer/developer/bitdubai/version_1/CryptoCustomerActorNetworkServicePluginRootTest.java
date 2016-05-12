@@ -7,12 +7,13 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorNetworkServiceManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoCustomerActorNetworkServicePluginRootTest extends AbstractNetworkService implements DatabaseManagerForDevelopers {
+public class CryptoCustomerActorNetworkServicePluginRootTest extends AbstractActorNetworkService implements DatabaseManagerForDevelopers {
 
     /**
      * Constructor of the Network Service.
@@ -41,6 +42,28 @@ public class CryptoCustomerActorNetworkServicePluginRootTest extends AbstractNet
     }
 
     private CryptoCustomerActorNetworkServiceManager fermatManager;
+
+    @Override
+    protected void onActorNetworkServiceStart() {
+
+        try {
+
+            for (int i = 0 ; i < 3; i++) {
+                this.registerActor(
+                        "publicKey"+i,
+                        "name"+i,
+                        "alias"+i,
+                        "extraData"+i,
+                        null,
+                        Actors.CBP_CRYPTO_CUSTOMER,
+                        new byte[0]
+                );
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public FermatManager getManager() {

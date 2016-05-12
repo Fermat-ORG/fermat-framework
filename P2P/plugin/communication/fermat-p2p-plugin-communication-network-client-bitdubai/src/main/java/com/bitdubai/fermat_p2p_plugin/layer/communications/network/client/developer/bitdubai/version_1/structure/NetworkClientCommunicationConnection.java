@@ -10,8 +10,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileAlreadyRegisteredException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileNotRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -281,7 +279,7 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         }
     }
 
-    public void getNearbyNodes(final Location location) throws CantRegisterProfileException, ProfileAlreadyRegisteredException {
+    public void getNearbyNodes(final Location location) throws CantRegisterProfileException {
 
         NearNodeListMsgRequest nearNodeListMsgRequest = new NearNodeListMsgRequest(location);
         nearNodeListMsgRequest.setMessageContentType(MessageContentType.JSON);
@@ -309,7 +307,7 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
     }
 
     @Override
-    public void registerProfile(final Profile profile) throws CantRegisterProfileException, ProfileAlreadyRegisteredException {
+    public void registerProfile(final Profile profile) throws CantRegisterProfileException {
 
         CheckInProfileMsgRequest profileCheckInMsgRequest = new CheckInProfileMsgRequest(profile);
         profileCheckInMsgRequest.setMessageContentType(MessageContentType.JSON);
@@ -361,7 +359,7 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
     }
 
     @Override
-    public void unregisterProfile(final Profile profile) throws CantUnregisterProfileException, ProfileNotRegisteredException {
+    public void unregisterProfile(final Profile profile) throws CantUnregisterProfileException {
 
         CheckOutProfileMsgRequest checkOutProfileMsgRequest = new CheckOutProfileMsgRequest(profile);
         checkOutProfileMsgRequest.setMessageContentType(MessageContentType.JSON);
