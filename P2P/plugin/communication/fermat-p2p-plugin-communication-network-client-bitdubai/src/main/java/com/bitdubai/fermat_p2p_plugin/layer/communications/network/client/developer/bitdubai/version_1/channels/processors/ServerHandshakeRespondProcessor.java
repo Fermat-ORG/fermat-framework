@@ -14,7 +14,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ServerHandshakeRespondProcessor</code>
+ * The Class <code>ServerHandshakeRespondProcessor</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 27/04/16.
  *

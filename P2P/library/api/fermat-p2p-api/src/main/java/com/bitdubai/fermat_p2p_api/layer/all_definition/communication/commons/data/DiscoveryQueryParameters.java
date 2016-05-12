@@ -44,6 +44,11 @@ public class DiscoveryQueryParameters {
     private NetworkServiceType networkServiceType;
 
     /**
+     * Represent the networkServiceTypeIntermediate
+     */
+    private NetworkServiceType networkServiceTypeIntermediate;
+
+    /**
      * Represent the extraData
      */
     private String extraData;
@@ -76,6 +81,7 @@ public class DiscoveryQueryParameters {
      * @param name
      * @param networkServiceType
      * @param offset
+     * @param networkServiceTypeIntermediate
      */
     public DiscoveryQueryParameters(final String             actorType         ,
                                     final String             alias             ,
@@ -86,7 +92,8 @@ public class DiscoveryQueryParameters {
                                     final Integer            max               ,
                                     final String             name              ,
                                     final NetworkServiceType networkServiceType,
-                                    final Integer            offset            ) {
+                                    final Integer            offset            ,
+                                    final NetworkServiceType networkServiceTypeIntermediate) {
 
         this.actorType          = actorType         ;
         this.alias              = alias             ;
@@ -98,6 +105,7 @@ public class DiscoveryQueryParameters {
         this.name               = name              ;
         this.networkServiceType = networkServiceType;
         this.offset             = offset            ;
+        this.networkServiceTypeIntermediate = networkServiceTypeIntermediate;
     }
 
     /**
@@ -188,6 +196,14 @@ public class DiscoveryQueryParameters {
      */
     public Integer getOffset() {
         return offset;
+    }
+
+    /**
+     * Gets the value of networkServiceTypeIntermediate
+     * @return networkServiceTypeIntermediate
+     */
+    public NetworkServiceType getNetworkServiceTypeIntermediate() {
+        return networkServiceTypeIntermediate;
     }
 
     @Override

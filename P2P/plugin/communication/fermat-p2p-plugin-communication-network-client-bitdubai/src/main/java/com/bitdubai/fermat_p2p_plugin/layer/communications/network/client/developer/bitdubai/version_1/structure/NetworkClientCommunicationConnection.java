@@ -636,4 +636,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return clientProfile;
     }
 
+    public URI getUri() {
+        return uri;
+    }
+
 }

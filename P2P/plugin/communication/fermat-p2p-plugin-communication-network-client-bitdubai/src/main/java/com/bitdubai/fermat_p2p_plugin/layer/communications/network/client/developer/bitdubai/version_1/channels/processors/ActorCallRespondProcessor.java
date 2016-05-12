@@ -39,7 +39,7 @@ public class ActorCallRespondProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
+        System.out.println("Processing new package received, packageType: " + packageReceived.getPackageType());
         ActorCallRespond actorCallRespond = ActorCallRespond.parseContent(packageReceived.getContent());
 
         if(actorCallRespond.getStatus() == ActorCallRespond.STATUS.SUCCESS){

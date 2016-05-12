@@ -119,16 +119,16 @@ public class NetworkClientP2PDeveloperDatabaseFactory implements DealsWithPlugin
          */
         List<String> nodeConnectionhistoryColumns = new ArrayList<String>();
 
-        nodeConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        nodeConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IP_COLUMN_NAME);
-        nodeConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_DEFAULT_PORT_COLUMN_NAME);
-        nodeConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LATITUDE_COLUMN_NAME);
-        nodeConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LONGITUDE_COLUMN_NAME);
-        nodeConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
+        nodeConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        nodeConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_IP_COLUMN_NAME);
+        nodeConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_DEFAULT_PORT_COLUMN_NAME);
+        nodeConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LATITUDE_COLUMN_NAME);
+        nodeConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LONGITUDE_COLUMN_NAME);
+        nodeConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Node Connection history addition.
          */
-        DeveloperDatabaseTable nodeConnectionhistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_TABLE_NAME, nodeConnectionhistoryColumns);
+        DeveloperDatabaseTable nodeConnectionhistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkClientP2PDatabaseConstants.NODE_CONNECTION_HISTORY_TABLE_NAME, nodeConnectionhistoryColumns);
         tables.add(nodeConnectionhistoryTable);
 
         /**
@@ -136,19 +136,19 @@ public class NetworkClientP2PDeveloperDatabaseFactory implements DealsWithPlugin
          */
         List<String> clientConnectionhistoryColumns = new ArrayList<String>();
 
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_NAME_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_ALIAS_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_COMPONENT_TYPE_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LATITUDE_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_EXTRA_DATA_COLUMN_NAME);
-        clientConnectionhistoryColumns.add(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_NAME_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_ALIAS_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_COMPONENT_TYPE_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_NETWORK_SERVICE_TYPE_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LATITUDE_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_EXTRA_DATA_COLUMN_NAME);
+        clientConnectionhistoryColumns.add(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME);
         /**
          * Table Client Connection history addition.
          */
-        DeveloperDatabaseTable clientConnectionhistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_TABLE_NAME, clientConnectionhistoryColumns);
+        DeveloperDatabaseTable clientConnectionhistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_TABLE_NAME, clientConnectionhistoryColumns);
         tables.add(clientConnectionhistoryTable);
 
 
