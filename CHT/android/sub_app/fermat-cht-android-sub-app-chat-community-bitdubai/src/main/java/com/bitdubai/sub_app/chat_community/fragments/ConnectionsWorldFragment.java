@@ -309,11 +309,11 @@ public class ConnectionsWorldFragment
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            emptyView.setBackgroundResource(R.drawable.fondo);
+            emptyView.setBackgroundResource(R.drawable.cht_comm_background_empty_screen);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            rootView.setBackgroundResource(R.drawable.fondo);
+            rootView.setBackgroundResource(R.drawable.cht_comm_background_empty_screen);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show /*&& emptyView.getVisibility() == View.VISIBLE*/) {
@@ -345,8 +345,20 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onItemClickListener(ChatActorCommunityInformation data, int position) {
-        appSession.setData(CHAT_USER_SELECTED, data);
-        changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        try {
+            if (moduleManager.getSelectedActorIdentity() != null) {
+                appSession.setData(CHAT_USER_SELECTED, data);
+                changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+            } else {
+                showDialogHelp();
+            }
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e)
+        {
+            e.printStackTrace();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -561,7 +573,7 @@ public class ConnectionsWorldFragment
                         chatUserSubAppSession,
                         null,
                         moduleManager,
-                                PresentationChatCommunityDialog.TYPE_PRESENTATION);
+                                PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
                 presentationChatCommunityDialog.show();
                 presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override

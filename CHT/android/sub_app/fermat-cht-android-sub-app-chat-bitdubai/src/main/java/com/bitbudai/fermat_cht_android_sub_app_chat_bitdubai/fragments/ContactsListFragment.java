@@ -347,7 +347,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 adapter.refreshEvents(contactname, contacticon, contactid);
             }
         }
-        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.cht_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
