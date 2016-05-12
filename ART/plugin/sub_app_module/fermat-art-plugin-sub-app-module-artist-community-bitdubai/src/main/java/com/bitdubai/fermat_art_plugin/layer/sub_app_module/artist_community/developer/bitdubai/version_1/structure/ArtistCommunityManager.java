@@ -26,8 +26,13 @@ import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.Arti
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanLinkedActorIdentity;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
@@ -54,6 +59,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListIdentitiesToSelectException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils.FanCommunityInformationImpl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,6 +74,8 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
     private final ArtistIdentityManager                         artistIdentityManager                 ;
     private final ArtistActorConnectionManager                  artistActorConnectionManager          ;
     private final ArtistManager                                 artistActorNetworkServiceManager      ;
+    private final FanActorConnectionManager                     fanActorConnectionManager             ;
+    private final FanManager                                    fanActorNetworkServiceManager         ;
     private final FanaticIdentityManager                        fanaticIdentityManager                ;
     private final ErrorManager errorManager                          ;
     private final PluginFileSystem                              pluginFileSystem                      ;
@@ -80,14 +88,17 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
     private boolean isDialog = true;
 
 
-    public ArtistCommunityManager(final ArtistIdentityManager           artistIdentityManager                 ,
-                                  final ArtistActorConnectionManager    artistActorConnectionManager          ,
-                                  final ArtistManager                   artistActorNetworkServiceManager      ,
-                                  final FanaticIdentityManager          fanaticIdentityManager                ,
-                                  final ErrorManager                    errorManager                          ,
-                                  final PluginFileSystem                pluginFileSystem                      ,
-                                  final UUID                            pluginId                              ,
-                                  final PluginVersionReference          pluginVersionReference                ) {
+    public ArtistCommunityManager(
+            final ArtistIdentityManager artistIdentityManager,
+            final ArtistActorConnectionManager artistActorConnectionManager,
+            final ArtistManager artistActorNetworkServiceManager,
+            final FanaticIdentityManager fanaticIdentityManager,
+            final ErrorManager errorManager,
+            final PluginFileSystem pluginFileSystem,
+            final UUID pluginId,
+            final PluginVersionReference pluginVersionReference,
+            final FanManager fanActorNetworkServiceManager,
+            final FanActorConnectionManager fanActorConnectionManager) {
 
         this.artistIdentityManager                  = artistIdentityManager                 ;
         this.artistActorConnectionManager           = artistActorConnectionManager          ;
@@ -97,6 +108,8 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         this.pluginFileSystem                       = pluginFileSystem                      ;
         this.pluginId                               = pluginId                              ;
         this.pluginVersionReference                 = pluginVersionReference                ;
+        this.fanActorNetworkServiceManager          = fanActorNetworkServiceManager         ;
+        this.fanActorConnectionManager              = fanActorConnectionManager             ;
     }
 
     @Override
@@ -356,7 +369,9 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             final ArtistActorConnectionSearch search =
                     artistActorConnectionManager.getSearch(linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
-            final List<ArtistActorConnection> artistActorConnectionList = search.getResult();
+            final List<ArtistActorConnection> artistActorConnectionList = search.getResult(
+                    max,
+                    offset);
             for (ArtistActorConnection aac : artistActorConnectionList){
                 publicKey=aac.getPublicKey();
                 if(!actorConnectedPublicKeyList.contains(publicKey)) {
@@ -378,6 +393,42 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             }
 
             //Fan connected list.
+            final FanLinkedActorIdentity fanLinkedActorIdentity = new FanLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+            FanCommunityInformationImpl fanCommunityInformation;
+            final List<FanConnectionRequest> fanConnectionRequestList =
+                    fanActorNetworkServiceManager.listAllRequest();
+            final FanActorConnectionSearch fanActorConnectionSearchSearch =
+                    fanActorConnectionManager.getSearch(fanLinkedActorIdentity);
+
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            final List<FanActorConnection> actorConnections = fanActorConnectionSearchSearch.getResult(max, offset);
+
+            //final List<FanCommunityInformation> fanaticCommunityInformationList = new ArrayList<>();
+
+            for (FanActorConnection fac : actorConnections){
+                //fanaticCommunityInformationList.add(new FanCommunityInformationImpl(fac));
+                publicKey=fac.getPublicKey();
+                if(!actorConnectedPublicKeyList.contains(publicKey)){
+                    actorConnectedPublicKeyList.add(publicKey);
+                    platformComponentType = getActorTypeFromRequest(
+                            fanConnectionRequestList,
+                            publicKey);
+                    fanCommunityInformation = new FanCommunityInformationImpl(fac);
+                    switch (platformComponentType){
+                        case ART_FAN:
+                            fanCommunityInformation.setActorType(Actors.ART_FAN);
+                            break;
+                        case ART_ARTIST:
+                            fanCommunityInformation.setActorType(Actors.ART_ARTIST);
+                            break;
+                    }
+                    allActorConnectedList.add(fanCommunityInformation);
+                }
+            }
             return allActorConnectedList;
 
         } catch (final CantListActorConnectionsException e) {

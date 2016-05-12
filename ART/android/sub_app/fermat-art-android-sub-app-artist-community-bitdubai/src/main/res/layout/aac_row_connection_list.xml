@@ -27,6 +27,14 @@
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/aac_recycler_icon"
+                android:src="@drawable/aac_people"
+                android:contentDescription="@string/app_name"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:scaleType="centerCrop"
+                tools:listitem="@layout/aac_row_connection_list"/>
 
         </RelativeLayout>
 

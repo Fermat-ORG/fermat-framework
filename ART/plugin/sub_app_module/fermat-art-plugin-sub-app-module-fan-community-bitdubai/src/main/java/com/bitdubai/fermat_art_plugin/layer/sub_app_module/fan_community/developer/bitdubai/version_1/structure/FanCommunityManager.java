@@ -324,7 +324,9 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
                     artistActorConnectionManager.getSearch(artistLinkedActorIdentity);
             artistActorConnectionSearch.addConnectionState(ConnectionState.CONNECTED);
             final List<ArtistActorConnection> artistActorConnectionList =
-                    artistActorConnectionSearch.getResult();
+                    artistActorConnectionSearch.getResult(
+                            max,
+                            offset);
             for (ArtistActorConnection aac : artistActorConnectionList){
                 publicKey=aac.getPublicKey();
                 if(!actorConnectedPublicKeyList.contains(publicKey)) {
