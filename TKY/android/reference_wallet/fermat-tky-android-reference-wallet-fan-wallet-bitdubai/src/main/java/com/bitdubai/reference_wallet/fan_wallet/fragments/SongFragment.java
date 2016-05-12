@@ -229,7 +229,7 @@ public class SongFragment extends AbstractFermatFragment {
             adapter = new SongAdapter(items);
             recyclerView.setAdapter(adapter);
             recyclerView.getItemAnimator().setChangeDuration(0);
-            recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
+       //     recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
 
             if(firstTime){
                 initValues();
