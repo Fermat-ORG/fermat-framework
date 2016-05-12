@@ -96,6 +96,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private boolean updateCheck = false;
     private View WarningCircle;
     private TextView WarningLabel;
+    private TextView alias;
     private String WarningColor = "#DF0101";
     private String NormalColor  =  "#0080FF";
 
@@ -306,6 +307,15 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
         WarningLabel.setVisibility(View.GONE);
 
+        alias = (TextView) layout.findViewById(R.id.afi_alias_label);
+
+        mFanExternalUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alias.setTextColor(Color.parseColor("#919090"));
+            }
+        });
+
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -469,11 +479,14 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private void ShowWarnings(String fanExternalName, byte[] fanImageBytes) {
 
         if (fanExternalName.isEmpty()){
-            mFanExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
+           // mFanExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
+
         }
 
         if (fanImageBytes == null){
             WarningLabel.setVisibility(View.VISIBLE);
+            alias.setTextColor(Color.parseColor(WarningColor));
+
 
             //WarningCircle.setVisibility(View.VISIBLE);
         }
@@ -482,7 +495,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
 
         if(mFanExternalPlatform.getSelectedItemPosition()==0){
-            mFanExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
+            //mFanExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
         }else{mFanExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
         }
 /*
