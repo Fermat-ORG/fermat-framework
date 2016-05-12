@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -34,7 +36,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Vpn
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 16/09/2015.
  * Update by Roberto Requena (rart3001@gmail.com) on 17/09/2015.
  *
- * @author  Rart3001
+ * @author  lnacosta, Rart3001
  * @version 1.0
  * @since   Java JDK 1.7
  */
@@ -158,6 +160,12 @@ public enum P2pEventType implements FermatEventEnum {
 
     NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED("NCAPR"){
         public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }
+    },
+    NETWORK_CLIENT_CONNECTION_LOST("NCCL"){
+        public NetworkClientConnectionLostEvent getNewEvent() { return new NetworkClientConnectionLostEvent(this); }
+    },
+    NETWORK_CLIENT_CONNECTION_CLOSED("NCCC"){
+        public NetworkClientConnectionClosedEvent getNewEvent() { return new NetworkClientConnectionClosedEvent(this); }
     },
     NETWORK_CLIENT_NETWORK_SERVICE_PROFILE_REGISTERED("NCNSPR"){
         public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }

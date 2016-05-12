@@ -2,10 +2,13 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
@@ -25,6 +28,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
@@ -55,7 +59,7 @@ import javax.websocket.Session;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkClientCommunicationConnection  implements NetworkClientConnection {
+public class NetworkClientCommunicationConnection implements NetworkClientConnection {
 
     private URI                    uri                   ;
     private ErrorManager           errorManager          ;
@@ -226,19 +230,12 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
             session = container.connectToServer(communicationsNetworkClientChannel, uri);
 
             //validate if is connected
-//            if (session != null && session.isOpen()) {
-//                this.isConnected = Boolean.TRUE;
-//                serverIdentity = (String) session.getUserProperties().get("");
-//                setCheckInClientRequestProcessor();
-//            }
+            if (session != null && session.isOpen())
+                this.isConnected = Boolean.TRUE;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public void setNotTryToReconnect(){
-        tryToReconnect = Boolean.FALSE;
     }
 
     public Session getSession() {
@@ -252,7 +249,7 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
     @Override
     public boolean isRegistered() {
 
-        return communicationsNetworkClientChannel.isRegister();
+        return communicationsNetworkClientChannel.isRegistered();
     }
 
     /*
@@ -441,23 +438,13 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
                 }
             }
 
-            if (isConnected()){
-                /*
-                 * Send the package to the server
-                 */
-
-                sendPackage(
-                        new NetworkServiceCallRequest(
-                                fromNetworkService,
-                                toNetworkService
-                        ),
-                        PackageType.NETWORK_SERVICE_CALL_REQUEST
-                );
-
-            } else {
-                // TODO .raiseClientConnectionLooseNotificationEvent();
-                throw new Exception("Client Connection is Close");
-            }
+            sendPackage(
+                    new NetworkServiceCallRequest(
+                            fromNetworkService,
+                            toNetworkService
+                    ),
+                    PackageType.NETWORK_SERVICE_CALL_REQUEST
+            );
 
         } catch (Exception e){
             System.out.println("NetworkClientCommunicationConnection: " + e);
@@ -489,24 +476,14 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
 
         try {
 
-            if (isConnected()){
-
-                /*
-                 * Send the package to the server
-                 */
-                sendPackage(
-                        new ActorCallRequest(
-                                fromActor,
-                                fromNetworkService,
-                                toActor
-                        ),
-                        PackageType.ACTOR_CALL_REQUEST
-                );
-
-            }else{
-                //Todo raiseClientConnectionLooseNotificationEvent();
-                throw new Exception("Client Connection is Close");
-            }
+            sendPackage(
+                    new ActorCallRequest(
+                            fromActor,
+                            fromNetworkService,
+                            toActor
+                    ),
+                    PackageType.ACTOR_CALL_REQUEST
+            );
 
         }catch (Exception e){
             System.out.println("NetworkClientCommunicationConnection: " + e.getStackTrace());
@@ -575,33 +552,59 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
     private void sendPackage(final PackageContent packageContent,
                              final PackageType    packageType   ) throws CantSendPackageException {
 
-        try {
-            session.getBasicRemote().sendObject(
-                    Package.createInstance(
-                            packageContent.toJson(),
-                            NetworkServiceType.UNDEFINED,
-                            packageType,
-                            clientIdentity.getPrivateKey(),
-                            serverIdentity
-                    )
-            );
-        } catch (IOException | EncodeException exception){
+        if (isConnected()){
 
+            try {
+                session.getBasicRemote().sendObject(
+                        Package.createInstance(
+                                packageContent.toJson(),
+                                NetworkServiceType.UNDEFINED,
+                                packageType,
+                                clientIdentity.getPrivateKey(),
+                                serverIdentity
+                        )
+                );
+            } catch (IOException | EncodeException exception){
+
+
+                throw new CantSendPackageException(
+                        exception,
+                        "packageContent:"+packageContent,
+                        "Error trying to send the message through the session."
+                );
+
+            } catch (Exception exception) {
+
+                throw new CantSendPackageException(
+                        exception,
+                        "packageContent:"+packageContent,
+                        "Unhandled error trying to send the message through the session."
+                );
+            }
+
+        } else {
+
+            raiseClientConnectionLostNotificationEvent();
 
             throw new CantSendPackageException(
-                    exception,
-                    "packageContent:"+packageContent,
-                    "Error trying to send the message through the session."
-            );
-
-        } catch (Exception exception) {
-
-            throw new CantSendPackageException(
-                    exception,
-                    "packageContent:"+packageContent,
-                    "Unhandled error trying to send the message through the session."
+                    "packageContent: "+packageContent+" - packageType: "+packageType,
+                    "Client Connection is Closed."
             );
         }
+
+    }
+
+    /**
+     * Notify when the network client connection is lost.
+     */
+    public void raiseClientConnectionLostNotificationEvent() {
+
+        System.out.println("CommunicationsNetworkClientConnection - raiseClientConnectionLostNotificationEvent");
+        FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_LOST);
+        platformEvent.setSource(EventSource.NETWORK_CLIENT);
+        ((NetworkClientConnectionLostEvent) platformEvent).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+        eventManager.raiseEvent(platformEvent);
+        System.out.println("CommunicationsNetworkClientConnection - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
     @Override
@@ -619,6 +622,10 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
 
     public void setServerIdentity(String serverIdentity) {
         this.serverIdentity = serverIdentity;
+    }
+
+    public void setIsConnected(boolean isConnected) {
+        this.isConnected = isConnected;
     }
 
     public String getServerIdentity() {
