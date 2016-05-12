@@ -288,9 +288,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //            Log.i(TAG,version);
 //            Log.i(TAG,method);
 //            Log.i(TAG,"Parameters");
-            for (ModuleObjectParameterWrapper parameter : parameters) {
-                Log.i(TAG, parameter.toString());
-            }
+//            for (ModuleObjectParameterWrapper parameter : parameters) {
+//                Log.i(TAG, parameter.toString());
+//            }
             Object returnModuleObject = null;
             try {
                 PluginVersionReference pluginVersionReference = new PluginVersionReference(
@@ -345,9 +345,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //            Log.i(TAG,version);
 //            Log.i(TAG,method);
 //            Log.i(TAG,"Parameters");
-            for (ModuleObjectParameterWrapper parameter : parameters) {
-                Log.i(TAG, parameter.toString());
-            }
+//            for (ModuleObjectParameterWrapper parameter : parameters) {
+//                Log.i(TAG, parameter.toString());
+//            }
             Serializable aidlObject = null;
             try {
                 PluginVersionReference pluginVersionReference = new PluginVersionReference(
