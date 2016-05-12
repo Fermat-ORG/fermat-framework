@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -25,13 +25,13 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.CustomerOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
@@ -40,19 +40,19 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private CustomerOnlinePaymentPluginRoot pluginRoot;
     private Database database;
 
     public CustomerOnlinePaymentBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database,
-            final ErrorManager errorManager) {
+            final CustomerOnlinePaymentPluginRoot pluginRoot) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.database = database;
-        this.errorManager=errorManager;
+        this.pluginRoot = pluginRoot;
     }
 
     public void initialize() throws CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException {
@@ -75,8 +75,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                 );
 
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                pluginRoot.reportError(
+                        
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         f);
                 throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
@@ -85,8 +85,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                         "",
                         "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_ONLINE_PAYMENT,
+                pluginRoot.reportError(
+                        
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         z);
                 throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
@@ -97,8 +97,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             }
 
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
@@ -107,8 +107,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "",
                     "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException(
@@ -161,8 +161,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -170,8 +170,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -203,16 +203,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             }
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
@@ -239,16 +239,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -268,16 +268,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return stringList;
         } catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingToSubmitCryptoList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -296,16 +296,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return customerOnlinePaymentRecordList;
         } catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from getPendingToSubmitCryptoStatusList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -324,16 +324,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return customerOnlinePaymentRecordList;
         } catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingToSubmitNotificationList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -352,16 +352,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return customerOnlinePaymentRecordList;
         } catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantGetContractListException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingToSubmitConfirmList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -380,15 +380,15 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return customerOnlinePaymentRecordList;
         } catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantGetContractListException.DEFAULT_MESSAGE,
                     exception, "Getting value from getOnCryptoNetworkCryptoStatusList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -409,15 +409,15 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
             return customerOnlinePaymentRecordList;
         } catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantGetContractListException.DEFAULT_MESSAGE,
                     exception, "Getting value from getOnBlockchainCryptoStatusList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -433,7 +433,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param key         String with the search key.
      * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
+     *
      * @return List<BusinessTransactionRecord>
+     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -460,6 +462,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method returns a BusinessTransactionRecord
      *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
@@ -474,15 +477,15 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             );
             return customerOnlinePaymentRecordList;
         } catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,
                     "Getting value from getPendingCryptoTransactionList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -497,6 +500,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param key
      * @param keyColumn
      * @param valueColumn
+     *
      * @return
      */
     private List<String> getStringList(
@@ -539,8 +543,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return contractHashFromDatabase != null;
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -555,7 +559,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param key
      * @param keyColumn
      * @param valueColumn
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key,
@@ -591,6 +597,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method check the database record result.
      *
      * @param records
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws
@@ -615,6 +622,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method persists a basic record in database
      *
      * @param customerBrokerContractPurchase
+     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
@@ -622,7 +630,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             String brokerCryptoAddress,
             String walletPublicKey,
             long cryptoAmount,
-            BlockchainNetworkType blockchainNetworkType,String intraActorReceiverPublickey)
+            BlockchainNetworkType blockchainNetworkType, String intraActorReceiverPublickey)
             throws CantInsertRecordException {
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -633,19 +641,19 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     brokerCryptoAddress,
                     walletPublicKey,
                     cryptoAmount,
-                    blockchainNetworkType,intraActorReceiverPublickey
+                    blockchainNetworkType, intraActorReceiverPublickey
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
                     exception, "Error in persistContractInDatabase", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
@@ -656,8 +664,11 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a BusinessTransactionRecord by a contract hash.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public BusinessTransactionRecord getCustomerOnlinePaymentRecord(
@@ -718,32 +729,32 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                             ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
             BlockchainNetworkType blockchainNetworkType;
-            if(blockchainNetworkTypeString==null||blockchainNetworkTypeString.isEmpty()){
-                blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
-            } else{
-                blockchainNetworkType=BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
+            if (blockchainNetworkTypeString == null || blockchainNetworkTypeString.isEmpty()) {
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            } else {
+                blockchainNetworkType = BlockchainNetworkType.getByCode(blockchainNetworkTypeString);
             }
             businessTransactionRecord.setBlockchainNetworkType(blockchainNetworkType);
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -769,8 +780,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             record = buildDatabaseTableRecord(record, businessTransactionRecord);
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -778,8 +789,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -792,6 +803,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      *
      * @param customerBrokerContractSale
+     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
@@ -806,15 +818,15 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
                     "Error in persistContractInDatabase", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
@@ -829,6 +841,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param record
      * @param customerBrokerContractSale
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
@@ -860,6 +873,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param record
      * @param businessTransactionRecord
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
@@ -910,6 +924,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param record
      * @param customerBrokerContractPurchase
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
@@ -918,8 +933,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             String cryptoaddress,
             String walletPublicKey,
             long cryptoAmount,
-            BlockchainNetworkType blockchainNetworkType,String intraActorReceiverPublickey) {
-
+            BlockchainNetworkType blockchainNetworkType, String intraActorReceiverPublickey) {
 
 
         UUID transactionId = UUID.randomUUID();
@@ -943,7 +957,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
                 cryptoaddress);
-        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME,intraActorReceiverPublickey);
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME, intraActorReceiverPublickey);
 
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
@@ -951,8 +965,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setLongValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
                 cryptoAmount);
-        if(blockchainNetworkType==null){
-            blockchainNetworkType=BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        if (blockchainNetworkType == null) {
+            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME,
@@ -966,6 +980,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param contractHash
      * @param cryptoTransactionUUID
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -992,8 +1007,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CryptoStatus.PENDING_SUBMIT.getCode());
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1001,8 +1016,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Persisting crypto transaction in database",
                     "There was an unexpected result in database");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1021,16 +1036,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         } catch (CantUpdateRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,
-                    exception,"Cant Update Record",
+                    exception, "Cant Update Record",
                     "Check the cause");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
@@ -1043,6 +1058,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      * @param contractHash
      * @param statusColumnName
      * @param newStatus
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -1089,16 +1105,16 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         } catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter " + CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
@@ -1110,6 +1126,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
      *
      * @param eventType
      * @param eventSource
+     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -1127,8 +1144,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
 
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -1136,8 +1153,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     "Saving new event.",
                     "Cannot insert a record in Online Payment database");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -1149,15 +1166,18 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns the completion date from database.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(
             String contractHash)
             throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                             ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
@@ -1165,11 +1185,11 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return 0;
             }
             checkDatabaseRecords(records);
-            long completionDate=records
+            long completionDate = records
                     .get(0)
                     .getLongValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                             ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
@@ -1183,8 +1203,11 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method sets the completion date in the database.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(
@@ -1192,8 +1215,8 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             long completionDate)
             throws UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                             ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
@@ -1201,11 +1224,11 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
-                return ;
+            if (records.isEmpty()) {
+                return;
             }
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setLongValue(
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
                             ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME,
