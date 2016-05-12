@@ -164,13 +164,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             String message = CantStartPluginException.DEFAULT_MESSAGE;
 
-            String context = "WalletNavigationStructure Runtime Start";
+            String context = "AppNavigationStructure Runtime Start";
 
             String possibleReason = "unknown error";
             throw new CantStartPluginException(message, FermatException.wrapException(ex), context, possibleReason);
