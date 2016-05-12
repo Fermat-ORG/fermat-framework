@@ -44,6 +44,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -63,21 +64,21 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     private final ChatActorConnectionManager chatActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private ChatSupAppModulePluginRoot chatSupAppModulePluginRoot;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
                                    ChatActorConnectionManager chatActorConnectionManager ,
                                    UUID pluginId,
-                                   ErrorManager errorManager)
+                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot)
     {
         this.middlewareChatManager          = middlewareChatManager         ;
         this.chatIdentityManager            = chatIdentityManager           ;
         this.pluginFileSystem               = pluginFileSystem              ;
         this.chatActorConnectionManager     = chatActorConnectionManager    ;
         this.pluginId                       = pluginId                      ;
-        this.errorManager                   = errorManager                  ;
+        this.chatSupAppModulePluginRoot     = chatSupAppModulePluginRoot    ;
     }
 
     @Override
@@ -218,7 +219,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
 
         } catch (CantListActorConnectionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+           chatSupAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return chatActorCommunityInformationList;
     }

@@ -44,7 +44,7 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     private MessageStatus messageStatus;
 
-    private Timestamp date;
+    private String date;
 
     private UUID messageId;
 
@@ -54,7 +54,7 @@ public class ChatMetadataRecord implements ChatMetadata{
 
     private ChatProtocolState chatProtocolState;
 
-    private Timestamp sentDate;
+    private String sentDate;
 
     private boolean flagReadead;
 
@@ -87,11 +87,11 @@ public class ChatMetadataRecord implements ChatMetadata{
      */
     private String processed;
 
-    public Timestamp getSentDate() {
+    public String getSentDate() {
         return sentDate;
     }
 
-    public void setSentDate(Timestamp sentDate) {
+    public void setSentDate(String sentDate) {
         this.sentDate = sentDate;
     }
 
@@ -452,7 +452,7 @@ public class ChatMetadataRecord implements ChatMetadata{
      * @return
      */
     @Override
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -460,7 +460,7 @@ public class ChatMetadataRecord implements ChatMetadata{
      *
      * @param date
      */
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

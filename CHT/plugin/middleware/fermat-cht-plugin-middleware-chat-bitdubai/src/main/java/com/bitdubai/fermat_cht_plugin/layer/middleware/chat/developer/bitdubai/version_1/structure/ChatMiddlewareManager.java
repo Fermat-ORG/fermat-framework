@@ -51,6 +51,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -888,6 +889,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             Message message) {
         ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(timestamp);
         chatMetadata = new ChatMetadataRecord(
                 chat.getChatId(),
                 chat.getObjectId(),
@@ -898,7 +900,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 chat.getChatName(),
                 ChatMessageStatus.READ_CHAT,
                 MessageStatus.SEND,
-                timestamp,
+                timeStamp,
                 message.getMessageId(),
                 message.getMessage(),
                 DistributionStatus.OUTGOING_MSG,
