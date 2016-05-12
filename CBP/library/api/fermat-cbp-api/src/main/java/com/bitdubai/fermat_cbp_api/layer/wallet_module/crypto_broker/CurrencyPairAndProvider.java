@@ -1,20 +1,18 @@
-package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models;
+package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker;
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 
-/**
- * Created by nelson on 05/02/16.
- */
-public class CurrencyPairAndProvider {
+public class CurrencyPairAndProvider implements Serializable{
 
 
     private Currency currencyFrom;
     private Currency currencyTo;
-    private UUID providerId;
     private String providerName;
+    private UUID providerId;
 
     public CurrencyPairAndProvider(Currency currencyFrom, Currency currencyTo, UUID providerId, String providerName) {
 
@@ -32,10 +30,6 @@ public class CurrencyPairAndProvider {
         return currencyTo;
     }
 
-    public UUID getProviderId() {
-        return providerId;
-    }
-
     public String getProviderName() {
         return providerName;
     }
@@ -43,5 +37,9 @@ public class CurrencyPairAndProvider {
     @Override
     public String toString() {
         return currencyFrom.getCode() + "/" + currencyTo.getCode() + " - " + providerName;
+    }
+
+    public UUID getProviderId() {
+        return providerId;
     }
 }

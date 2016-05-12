@@ -75,13 +75,15 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNew
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CBPWalletsModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
@@ -103,7 +105,8 @@ import java.util.UUID;
  * on 22/09/15.
  */
 public interface CryptoBrokerWalletModuleManager
-        extends CBPWalletsModuleManager<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation>, Serializable {
+        extends CBPWalletsModuleManager<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation>,
+        Serializable {
 
     /**
      * associate an Identity to this wallet
@@ -630,8 +633,8 @@ public interface CryptoBrokerWalletModuleManager
      *
      * @return a Collection of provider reference pairs
      */
-    Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
-            throws CantGetProviderException;
+    Collection<CurrencyPairAndProvider> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
+            throws CantGetProviderException, CantGetProviderInfoException;
 
     /**
      * This method save the instance CryptoBrokerWalletProviderSetting

@@ -21,6 +21,7 @@ import com.bitdubai.android_core.app.common.version_1.communication.server_syste
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.task.GetTask;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -58,8 +59,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -192,9 +195,12 @@ public class CommunicationServerService extends Service implements FermatWorkerC
            if(data instanceof SettingsManager){
                Log.e(TAG,"ERROR: NO USAR getSettingsManager DEL MODULE");
            }else{
-               Log.e(TAG,"ERROR: Class is not Serializable, class name: "+data.getClass().getName());
+               Log.e(TAG,"ERROR: Class is not implementing Serializable, class name: "+data.getClass().getName());
+               if(data instanceof ArrayList || data instanceof List){
+                   Log.e(TAG, String.valueOf(data.getClass().getComponentType()));
+               }
            }
-            throw new Exception("ERROR: Class is not Serializable, class name: "+data.getClass().getName());
+            throw new Exception("ERROR: Class is not implementing Serializable, class name: "+data.getClass().getName());
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -274,7 +280,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         }
 
         @Override
-        public FermatModuleObjectWrapper invoqueModuleMethod(String clientKey,String dataId,String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
+        public FermatModuleObjectWrapper invoqueModuleMethod(String clientKey,String dataId,String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {
 //            Log.i(TAG,"invoqueModuleMethod");
 //            Log.i(TAG,platformCode);
 //            Log.i(TAG,layerCode);
@@ -282,9 +288,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //            Log.i(TAG,version);
 //            Log.i(TAG,method);
 //            Log.i(TAG,"Parameters");
-            for (FermatModuleObjectWrapper parameter : parameters) {
-                Log.i(TAG, parameter.toString());
-            }
+//            for (ModuleObjectParameterWrapper parameter : parameters) {
+//                Log.i(TAG, parameter.toString());
+//            }
             Object returnModuleObject = null;
             try {
                 PluginVersionReference pluginVersionReference = new PluginVersionReference(
@@ -310,7 +316,12 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     return new FermatModuleObjectWrapper(dataId,null,true, (Exception) returnModuleObject);
                 }else {
                     if (!(returnModuleObject instanceof Serializable))
-                        throw new NotSerializableException("Object: " + returnModuleObject.getClass().getName() + " is not serializable");
+                        if(returnModuleObject!=null){
+                            throw new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName()+" from method "+method + " is not implementing serializable");
+                        } else{
+                            throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
+
+                        }
                     Serializable aidlObject = (Serializable) returnModuleObject;
                     if (isDataForChunk(aidlObject)) {
                         try {
@@ -324,14 +335,14 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     }
                 }
             } catch (Exception e) {
-                Exception e1 = new RuntimeException("Error in Method: "+method+" object returned: "+returnModuleObject,e);
-                return new FermatModuleObjectWrapper(dataId,null,true, e1);
+//                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
+                return new FermatModuleObjectWrapper(dataId,null,true, e);
             }
 
         }
 
         @Override
-        public FermatModuleObjectWrapper invoqueModuleLargeDataMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
+        public FermatModuleObjectWrapper invoqueModuleLargeDataMethod(String clientKey, String dataId, String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, ModuleObjectParameterWrapper[] parameters) throws RemoteException {
 //            Log.i(TAG,"invoqueModuleMethod");
 //            Log.i(TAG,platformCode);
 //            Log.i(TAG,layerCode);
@@ -339,9 +350,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //            Log.i(TAG,version);
 //            Log.i(TAG,method);
 //            Log.i(TAG,"Parameters");
-            for (FermatModuleObjectWrapper parameter : parameters) {
-                Log.i(TAG, parameter.toString());
-            }
+//            for (ModuleObjectParameterWrapper parameter : parameters) {
+//                Log.i(TAG, parameter.toString());
+//            }
             Serializable aidlObject = null;
             try {
                 PluginVersionReference pluginVersionReference = new PluginVersionReference(
@@ -495,7 +506,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     }
 
 
-    private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final FermatModuleObjectWrapper[]  parameters){
+    private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final ModuleObjectParameterWrapper[]  parameters){
 //        Log.i(TAG, "Invoque method called");
         Callable<Object> callable = new Callable<Object>() {
             @Override
@@ -514,24 +525,26 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                 }
                 Method m = null;
                 Object s = null;
-                Class[] classes = null;
                 Object[] params = null;
+                Class<?>[] paramsTypes = null;
                 if(parameters!=null){
                     params = new Object[parameters.length];
+                    paramsTypes = new Class[parameters.length];
                     for (int i = 0; i < parameters.length; i++) {
                         params[i] = parameters[i].getObject();
+                        paramsTypes[i] = parameters[i].getParameterType();
                     }
                 }
-                if(parameters!=null) {
-                    classes = new Class[params.length];
-                    for (int pos = 0; pos < params.length; pos++) {
-                        classes[pos] = params[pos].getClass();
-//                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
-                    }
-                }
-                //TODO: ver porque puse el moduleManager en el invoque, si daberia id ahí o d
+//                if(parameters!=null) {
+//                    classes = new Class[params.length];
+//                    for (int pos = 0; pos < params.length; pos++) {
+////                        if(params[pos]!=null) classes[pos] = params[pos].getClass();
+////                        else Log.e(TAG,"Null parameter on method: "+method);
+////                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
+//                    }
+//                }
                 try {
-                    if(classes==null){
+                    if(paramsTypes==null){
                         m = clazz.getDeclaredMethod(method, null);
 //                        Log.i(TAG,"Method: "+ m.getName());
 //                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
@@ -542,18 +555,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //                            for(Class c : classes){
 //                                Log.i(TAG,"Class to use for parameter: "+ c.getName());
 //                            }
-                            m = clazz.getDeclaredMethod(method, classes);
+                            m = clazz.getDeclaredMethod(method, paramsTypes);
                         }catch (NoSuchMethodException e){
                             //Log.e(TAG,"Metodo buscando: "+method);
-                            int pos = 0;
-                            for (Method method1 : clazz.getMethods()) {
-                                //Log.e(TAG,pos+": Metodo: "+method1.getName( ));
-                                if(method1.getName().equals(method)){
-                                    for (Class<?> aClass : method1.getParameterTypes()) {
-                                        //Log.e(TAG,pos+": Metodo parameters class type: "+aClass.getName());
-                                    }
-                                }
-                            }
                             for(Method methodInterface : clazz.getDeclaredMethods()){
                                 if(methodInterface.getName().equals(method)){
                                     m = methodInterface;
@@ -606,11 +610,11 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     Log.e(TAG,"NoSuchMethodException:"+method+" on class"+clazz.getName());
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
-                    e.printStackTrace();
+                    return e;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 } catch (Exception e){
-                    e.printStackTrace();
+                    return e;
                 }
                 return s;
             }

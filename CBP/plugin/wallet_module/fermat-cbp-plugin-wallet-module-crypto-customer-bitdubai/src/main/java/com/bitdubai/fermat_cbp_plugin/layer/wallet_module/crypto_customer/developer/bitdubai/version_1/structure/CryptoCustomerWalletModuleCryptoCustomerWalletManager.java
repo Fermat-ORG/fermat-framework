@@ -958,8 +958,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     @Override
-    public Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(final Currency currencyFrom, final Currency currencyTo) throws CantGetProviderException, CantGetProviderInfoException {
-        Map<String, CurrencyExchangeRateProviderManager> managerMap = new HashMap<>();
+    public Map<String, UUID> getProviderReferencesFromCurrencyPair(final Currency currencyFrom, final Currency currencyTo) throws CantGetProviderException, CantGetProviderInfoException {
+        Map<String, UUID> managerMap = new HashMap<>();
         CurrencyPair currencyPair = new CurrencyPair() {
             @Override
             public Currency getFrom() {
@@ -973,15 +973,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         };
         final Collection<CurrencyExchangeRateProviderManager> referencesFromCurrencyPair = currencyExchangeProviderFilterManager.getProviderReferencesFromCurrencyPair(currencyPair);
         for (CurrencyExchangeRateProviderManager currencyExchangeRateProviderManager : referencesFromCurrencyPair) {
-            managerMap.put(currencyExchangeRateProviderManager.getProviderName(), currencyExchangeRateProviderManager);
+            managerMap.put(currencyExchangeRateProviderManager.getProviderName(), currencyExchangeRateProviderManager.getProviderId());
         }
 
         return managerMap;
-    }
-
-    @Override
-    public CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId) throws CantGetProviderException {
-        return currencyExchangeProviderFilterManager.getProviderReference(providerId);
     }
 
 

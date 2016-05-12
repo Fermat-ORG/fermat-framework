@@ -4,6 +4,7 @@ package com.bitdubai.android_core.app.common.version_1.communication.server_syst
 // Declare any non-default types here with import statements
 import com.bitdubai.android_core.app.common.version_1.communication.structure.AIDLObject;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 
 interface IServerBrokerService {
 
@@ -17,7 +18,7 @@ interface IServerBrokerService {
             in String developerCode,
             in String version,
             in String method,
-            in FermatModuleObjectWrapper[] parameters
+            in ModuleObjectParameterWrapper[] parameters
             );
 
     FermatModuleObjectWrapper invoqueModuleLargeDataMethod(
@@ -29,7 +30,7 @@ interface IServerBrokerService {
           in String developerCode,
           in String version,
           in String method,
-          in FermatModuleObjectWrapper[] parameters
+          in ModuleObjectParameterWrapper[] parameters
           );
 
     String register();

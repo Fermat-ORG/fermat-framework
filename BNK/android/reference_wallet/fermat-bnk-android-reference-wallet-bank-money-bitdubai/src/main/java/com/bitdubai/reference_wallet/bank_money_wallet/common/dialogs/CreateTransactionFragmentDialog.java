@@ -24,6 +24,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
@@ -180,6 +181,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                 return;
             }
 
+            final BankMoneyWalletModuleManager moduleManager = bankMoneyWalletSession.getModuleManager();
             if (transactionType == TransactionType.DEBIT) {
                 System.out.println("DIALOG = "+TransactionType.DEBIT.getCode());
                 BankTransactionParameters t = new BankTransactionParameters() {
@@ -196,7 +198,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
+                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
                     }
 
                     @Override
@@ -206,8 +208,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public BigDecimal getAmount() {
-                        BigDecimal bAmount=new BigDecimal(amountText.getText().toString());
-                        return bAmount;
+                        return new BigDecimal(amountText.getText().toString());
                     }
 
                     @Override
@@ -225,7 +226,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncWithdraw(t);
+                moduleManager.makeAsyncWithdraw(t);
             }
             if (transactionType == TransactionType.CREDIT) {
                 System.out.println("DIALOG = "+TransactionType.CREDIT.getCode());
@@ -243,7 +244,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
+                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
                     }
 
                     @Override
@@ -253,8 +254,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public BigDecimal getAmount() {
-                        BigDecimal bAmount=new BigDecimal(amountText.getText().toString());
-                        return bAmount;
+                        return new BigDecimal(amountText.getText().toString());
                     }
 
                     @Override
@@ -272,7 +272,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
                         return  memoText.getText().toString();
                     }
                 };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncDeposit(t);
+                moduleManager.makeAsyncDeposit(t);
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
