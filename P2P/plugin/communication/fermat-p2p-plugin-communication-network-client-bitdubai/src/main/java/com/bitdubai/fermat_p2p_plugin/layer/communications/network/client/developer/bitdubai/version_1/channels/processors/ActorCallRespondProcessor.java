@@ -4,6 +4,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorCallRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.call_channels.NetworkClientCommunicationCallChannelManagerAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 
 import javax.websocket.Session;
 
@@ -24,7 +25,7 @@ public class ActorCallRespondProcessor extends PackageProcessor {
      *
      * @param communicationsNetworkClientChannel register
      */
-    public ActorCallRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public ActorCallRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
                 PackageType.ACTOR_CALL_RESPOND
@@ -38,7 +39,7 @@ public class ActorCallRespondProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
+        System.out.println("Processing new package received, packageType: " + packageReceived.getPackageType());
         ActorCallRespond actorCallRespond = ActorCallRespond.parseContent(packageReceived.getContent());
 
         if(actorCallRespond.getStatus() == ActorCallRespond.STATUS.SUCCESS){
