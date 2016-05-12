@@ -203,6 +203,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  */
                 if (areNewKeysAdded(wallet, keyList)) {
                     wallet.importKeys(keyList);
+                    for (ECKey key : keyList){
+                        wallet.addWatchedAddress(key.toAddress(context.getParams()));
+                    }
                     try {
                         wallet.saveToFile(walletFile);
                     } catch (IOException e) {
@@ -314,8 +317,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         Wallet wallet = null;
         File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        // will get the context for this wallet.
-        Context context = new Context(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+        final NetworkParameters NETWORK_PARAMETER = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
@@ -330,8 +332,16 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             return wallet;
             }
          else {
+            // will get the context for this wallet.
+            Context context = new Context(NETWORK_PARAMETER);
+
             wallet = new Wallet(context);
             wallet.importKeys(keyList);
+
+            for (ECKey key : keyList){
+                wallet.addWatchedAddress(key.toAddress(NETWORK_PARAMETER));
+            }
+
 
             /**
              * Will set the autosave information and save it.
