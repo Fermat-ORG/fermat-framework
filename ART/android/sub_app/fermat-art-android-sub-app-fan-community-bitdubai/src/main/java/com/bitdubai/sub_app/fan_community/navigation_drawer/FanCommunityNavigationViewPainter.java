@@ -46,6 +46,19 @@ public class FanCommunityNavigationViewPainter implements NavigationViewPainter 
     public View addNavigationViewHeader(ActiveActorIdentityInformation actorIdentityInformation) {
         View headerView = null;
         try {
+            //If the actor is not set yet, I'll try to find it.
+            if(actorIdentityInformation==null&&moduleManager!=null){
+                try{
+                    //I'll set the app public cas just in case.
+                    String subAppPublicKey = subAppSession.getAppPublicKey();
+                    if(subAppPublicKey!=null&&!subAppPublicKey.isEmpty()){
+                        moduleManager.setAppPublicKey(subAppPublicKey);
+                    }
+                    actorIdentityInformation = moduleManager.getSelectedActorIdentity();
+                } catch (Exception e) {
+                    //Cannot find the selected identity in any form... I'll let the identity in null
+                }
+            }
             headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentityInformation);
             headerView.setOnClickListener(new View.OnClickListener() {

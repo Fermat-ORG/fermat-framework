@@ -128,7 +128,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             for(ArtistActorConnection connectedArtist : actorConnections)
             {
                 if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey()))
-                    worldArtistList.set(i, new ArtistCommunityInformationImpl(worldArtist.getPublicKey(), worldArtist.getAlias(), worldArtist.getImage(), connectedArtist.getConnectionState(), connectedArtist.getConnectionId()));
+                    worldArtistList.set(i, new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(worldArtist.getPublicKey(), worldArtist.getAlias(), worldArtist.getImage(), connectedArtist.getConnectionState(), connectedArtist.getConnectionId()));
             }
         }
         return worldArtistList;
@@ -346,7 +346,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             final List<ArtistCommunityInformation> artistCommunityInformationList = new ArrayList<>();
 
             for (ArtistActorConnection aac : actorConnections)
-                artistCommunityInformationList.add(new ArtistCommunityInformationImpl(aac));
+                artistCommunityInformationList.add(new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(aac));
 
             return artistCommunityInformationList;
 
@@ -378,7 +378,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             final List<ArtistCommunityInformation> artistCommunityInformationList = new ArrayList<>();
 
             for (ArtistActorConnection aac : actorConnections)
-                artistCommunityInformationList.add(new ArtistCommunityInformationImpl(aac));
+                artistCommunityInformationList.add(new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(aac));
 
             return artistCommunityInformationList;
 
@@ -410,7 +410,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             final List<ArtistCommunityInformation> artistCommunityInformationList = new ArrayList<>();
 
             for (ArtistActorConnection aac : actorConnections)
-                artistCommunityInformationList.add(new ArtistCommunityInformationImpl(aac));
+                artistCommunityInformationList.add(new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(aac));
 
             return artistCommunityInformationList;
 
