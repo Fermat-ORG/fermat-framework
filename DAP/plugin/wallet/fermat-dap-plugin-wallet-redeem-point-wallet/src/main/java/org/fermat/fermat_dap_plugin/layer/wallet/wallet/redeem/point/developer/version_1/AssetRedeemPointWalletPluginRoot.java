@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -39,7 +38,6 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAs
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -222,7 +220,6 @@ public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
             walletIssuerFile.loadFromMedia();
             return walletIssuerFile;
         } catch (FileNotFoundException | CantCreateFileException e) {
-            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return createWalletIssuerFile();
         } catch (CantLoadFileException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
