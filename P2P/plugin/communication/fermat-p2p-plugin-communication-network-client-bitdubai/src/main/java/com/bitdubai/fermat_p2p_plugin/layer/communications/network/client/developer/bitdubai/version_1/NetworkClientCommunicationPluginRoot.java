@@ -32,6 +32,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantInitializeNetworkClientP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationSupervisorConnectionAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -50,6 +51,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot</code>
@@ -113,6 +116,12 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     private List<NodeProfile> nodesProfileList;
 
+
+    /**
+     * Represent the executor
+     */
+    private ScheduledExecutorService scheduledExecutorService;
+
     /*
      * Represent the clientsConnectionsManager
      */
@@ -129,6 +138,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      */
     public NetworkClientCommunicationPluginRoot() {
         super(new PluginVersionReference(new Version()));
+        this.scheduledExecutorService = Executors.newScheduledThreadPool(2);
     }
 
     @Override
@@ -204,6 +214,25 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                     networkClientCommunicationConnection.initializeAndConnect();
                 }
             };
+
+            final NetworkClientCommunicationSupervisorConnectionAgent connectionAgent = new NetworkClientCommunicationSupervisorConnectionAgent(this);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+
+
+                        /*
+                         * Scheduled the reconnection agent
+                         */
+                        scheduledExecutorService.scheduleAtFixedRate(connectionAgent, 10, 20, TimeUnit.SECONDS);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
 
             executorService = Executors.newSingleThreadExecutor();
             executorService.submit(thread);
@@ -461,9 +490,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
         return networkClientCommunicationConnection;
     }
 
+    public NetworkClientCommunicationConnection getNetworkClientCommunicationConnection() {
+        return networkClientCommunicationConnection;
+    }
+
     /*
-     * get the NodesProfile List in the webService of the NetworkNode Harcoded
-     */
+         * get the NodesProfile List in the webService of the NetworkNode Harcoded
+         */
     private List<NodeProfile> getNodesProfileList(){
 
         HttpURLConnection conn = null;
