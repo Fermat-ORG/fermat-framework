@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.ContentResolver;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +37,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.Commo
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogSelectCamOrPic;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_HELP_ACTION;
@@ -175,27 +177,19 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 mBrokerImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final Dialog dialog = new Dialog(getActivity());
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        dialog.setContentView(R.layout.dialog_select_cam_or_gallery);
-                        dialog.findViewById(R.id.img_cam).setOnClickListener(new View.OnClickListener() {
+                        final DialogSelectCamOrPic Dcamgallery = new DialogSelectCamOrPic(getActivity(),appSession,null);
+                        Dcamgallery.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
-                            public void onClick(View v) {
-                                dispatchTakePictureIntent();
-                                dialog.dismiss();
+                            public void onDismiss(DialogInterface dialog) {
+                                if(Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_CAM){
+                                    dispatchTakePictureIntent();
+                                }else if(Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY){
+                                    loadImageFromGallery();
+                                }else{
+                                    //Nothing
+                                }
                             }
                         });
-                        dialog.findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadImageFromGallery();
-                                dialog.dismiss();
-                            }
-                        });
-                        dialog.show();
-                        botonG.setVisibility(View.VISIBLE);
-                        CommonLogger.debug("Chat identity", "Entrando en chatImg.setOnClickListener");
 
                     }
                 });
@@ -205,11 +199,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 bitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
                  bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
-                textViewChtTitle.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 String state = moduleManager.getIdentityChatUser().getConnectionState();
                 mChatConnectionState.setText(state);
-                statusView.setText(state);
                 botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -428,7 +420,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            textViewChtTitle.setText(mBrokerName.getText().toString());
                             Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());

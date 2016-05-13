@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:background="#47BF73"
+        android:background="#00000000"
         android:drawableStart="@drawable/chort_buttom_accept"
         android:textColor="@android:color/white"
         android:textSize="16sp"
