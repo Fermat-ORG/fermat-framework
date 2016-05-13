@@ -31,7 +31,6 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
     int BUTTON_TOUCH = 0;
     public int TOUCH_GALLERY = 1;
     public int TOUCH_CAM = 2;
-
     public DialogSelectCamOrPic(Context activity, FermatSession fermatSession, ResourceProviderManager resources) {
         super(activity, fermatSession, resources);
     }

@@ -178,6 +178,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     @Override
                     public void onClick(View view) {
                         final DialogSelectCamOrPic Dcamgallery = new DialogSelectCamOrPic(getActivity(),appSession,null);
+                        Dcamgallery.show();
                         Dcamgallery.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
@@ -219,27 +220,20 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 mBrokerImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        final Dialog dialog = new Dialog(getActivity());
-                        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        dialog.setContentView(R.layout.dialog_select_cam_or_gallery);
-                        dialog.findViewById(R.id.img_cam).setOnClickListener(new View.OnClickListener() {
+                        final DialogSelectCamOrPic Dcamgallery = new DialogSelectCamOrPic(getActivity(),appSession,null);
+                        Dcamgallery.show();
+                        Dcamgallery.setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
-                            public void onClick(View v) {
-                                dispatchTakePictureIntent();
-                                dialog.dismiss();
+                            public void onDismiss(DialogInterface dialog) {
+                                if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_CAM) {
+                                    dispatchTakePictureIntent();
+                                } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
+                                    loadImageFromGallery();
+                                } else {
+                                    //Nothing
+                                }
                             }
                         });
-                        dialog.findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                loadImageFromGallery();
-                                dialog.dismiss();
-                            }
-                        });
-                        dialog.show();
-                        botonG.setVisibility(View.VISIBLE);
-                        CommonLogger.debug("Chat identity", "Entrando en chatImg.setOnClickListener");
 
                     }
                 });
