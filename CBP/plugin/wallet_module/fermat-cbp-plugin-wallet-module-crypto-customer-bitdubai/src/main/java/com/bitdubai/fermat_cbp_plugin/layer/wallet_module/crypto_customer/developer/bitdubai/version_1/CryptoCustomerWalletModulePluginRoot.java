@@ -52,9 +52,6 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
-
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     WalletManagerManager walletManagerManager;
 
@@ -146,8 +143,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
                     brokerSubmitOnlineMerchandiseManager,
                     brokerSubmitOfflineMerchandiseManager,
                     bitcoinWalletManager,
-                    errorManager,
-                    getPluginVersionReference(),
+                    this,
                     pluginFileSystem,
                     pluginId
             );

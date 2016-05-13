@@ -32,9 +32,6 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<I
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
     private CryptoBrokerIdentityManager identityManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
@@ -51,8 +48,7 @@ public class CryptoBrokerIdentitySubAppModulePluginRoot extends AbstractModule<I
                     identityManager,
                     pluginFileSystem,
                     pluginId,
-                    errorManager,
-                    this.getPluginVersionReference());
+                    this);
 
             this.serviceStatus = ServiceStatus.STARTED;
 
