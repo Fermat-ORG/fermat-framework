@@ -24,7 +24,11 @@
             <item name="android:background">@color/colortoolbar</item>
         </style>
 
-
+        <style name="BackGroundImageView">
+            <item name="android:scaleType">centerCrop</item>
+            <item name="android:paddingTop">200dp</item>
+            <item name="android:src">@drawable/amyback</item>
+        </style>
 
 
 
