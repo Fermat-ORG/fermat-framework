@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -37,6 +38,8 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     Button okButton, cancelButton;
     List<String> fiatCurrencies = new ArrayList<>();
     List<String> fiatCurrenciesFriendly = new ArrayList<>();
+    List<BankAccountNumber> bankAccounts = new ArrayList<>();
+
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -57,6 +60,8 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         setHasOptionsMenu(true);
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            bankAccounts = moduleManager.getBankingWallet().getAccounts();
+
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
@@ -72,13 +77,10 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     }
 
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.bw_add_account, container, false);
-        /*okButton = (Button) layout.findViewById(R.id.bnk_add_account_ok_btn);
-        okButton.setOnClickListener(this);
-        cancelButton = (Button) layout.findViewById(R.id.bnk_add_account_cancel_btn);
-        cancelButton.setOnClickListener(this);*/
         accountNumberText = (EditText) layout.findViewById(R.id.account_number);
         accountAliasText = (EditText) layout.findViewById(R.id.account_alias);
         currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
@@ -100,22 +102,26 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     }
 
     @Override
-    public void onClick(View v) {
-        /*if (v.getId() == R.id.bnk_add_account_ok_btn) {
-            //todo: llamar del module el metodo que crea cuentas.
-            createAccount();
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
-        }
-        if (v.getId() == R.id.bnk_add_account_cancel_btn) {
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
-        }*/
-    }
+    public void onClick(View v) {}
 
-    private void createAccount(){
-        String account = accountNumberText.getText().toString();
-        String alias = accountAliasText.getText().toString();
-        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVINGS,alias,account,selectedCurrency);
-        Toast.makeText(getActivity().getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
+    private boolean createAccount(){
+
+        String newAccountNumber = accountNumberText.getText().toString();
+        String newAlias = accountAliasText.getText().toString();
+
+        //Check that newAccountNumber is different than every account number saved into database
+        for(BankAccountNumber savedAccount : bankAccounts){
+            if(savedAccount.getAccount().equals(newAccountNumber))
+            {
+                Toast.makeText(getActivity().getApplicationContext(), "Account number already exists!", Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+
+        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVINGS, newAlias, newAccountNumber, selectedCurrency, "1");
+        Toast.makeText(getActivity().getApplicationContext(), "Account created", Toast.LENGTH_SHORT).show();
+
+        return true;
     }
 
     @Override
@@ -147,8 +153,8 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==ReferenceWalletConstants.SAVE_ACTION){
             System.out.println("item selected");
-            createAccount();
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+            if(createAccount())
+                changeActivity(Activities.BNK_BANK_MONEY_WALLET_HOME, appSession.getAppPublicKey());
             return true;
         }
 
