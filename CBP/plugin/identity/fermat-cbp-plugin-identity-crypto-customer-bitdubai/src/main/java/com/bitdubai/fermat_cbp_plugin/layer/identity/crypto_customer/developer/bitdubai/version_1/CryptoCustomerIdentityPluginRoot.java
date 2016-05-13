@@ -49,7 +49,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.b
 import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityImpl;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_cbp_plugin.layer.identity.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerIdentityManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -62,7 +61,7 @@ import java.util.List;
  * Modified by Yordin Alayn 10.09.15
  */
 @PluginInfo(createdBy = "yalayn", maintainerMail = "y.alayn@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_CUSTOMER_IDENTITY)
-public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
+public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements CryptoCustomerIdentityManager, DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -97,7 +96,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
     public static final String CRYPTO_CUSTOMER_IDENTITY_PRIVATE_KEYS_FILE_NAME = "cryptoCustomerIdentityPrivateKey";
 
      /*CryptoCustomerIdentityManager Interface implementation.*/
-     /*public List<CryptoCustomerIdentity> listAllCryptoCustomerFromCurrentDeviceUser() throws CantListCryptoCustomerIdentityException {
+     public List<CryptoCustomerIdentity> listAllCryptoCustomerFromCurrentDeviceUser() throws CantListCryptoCustomerIdentityException {
         try {
             List<CryptoCustomerIdentity> cryptoCustomerIdentityList1;
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
@@ -237,7 +236,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHideIdentityException(e, "", "Unhandled Exception.");
         }
-    }*/
+    }
 
     private void exposeIdentities() throws CantExposeActorIdentitiesException {
 
@@ -245,7 +244,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
             final List<CryptoCustomerExposingData> cryptoBrokerExposingDataList = new ArrayList<>();
 
-            for (final CryptoCustomerIdentity identity : cryptoCustomerIdentityManagerImpl.listAllCryptoCustomerFromCurrentDeviceUser()) {
+            for (final CryptoCustomerIdentity identity : listAllCryptoCustomerFromCurrentDeviceUser()) {
 
                 if (identity.isPublished()) {
                     cryptoBrokerExposingDataList.add(
@@ -271,7 +270,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
         }
     }
 
-    /*private void exposeIdentity(final CryptoCustomerIdentity identity) throws CantExposeActorIdentityException {
+    private void exposeIdentity(final CryptoCustomerIdentity identity) throws CantExposeActorIdentityException {
 
         try {
 
@@ -282,7 +281,7 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeActorIdentityException(e, "", "Problem exposing identity.");
         }
-    }*/
+    }
 
     /*DatabaseManagerForDevelopers Interface implementation.*/
     @Override
@@ -325,13 +324,13 @@ public class CryptoCustomerIdentityPluginRoot extends AbstractPlugin implements 
 
         try {
 
-            cryptoCustomerIdentityManagerImpl = new CryptoCustomerIdentityManagerImpl(
+            /*cryptoCustomerIdentityManagerImpl = new CryptoCustomerIdentityManagerImpl(
                     cryptoCustomerIdentityDatabaseDao,
                     deviceUserManager,
                     broadcaster,
                     cryptoCustomerANSManager,
                     this
-            );
+            );*/
 
             exposeIdentities();
 
