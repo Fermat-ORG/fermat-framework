@@ -1190,18 +1190,12 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+ CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
     }
