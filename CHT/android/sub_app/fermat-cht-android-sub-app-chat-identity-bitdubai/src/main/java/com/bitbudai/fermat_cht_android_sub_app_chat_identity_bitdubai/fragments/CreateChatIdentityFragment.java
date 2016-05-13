@@ -162,10 +162,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
         try {
             if(ExistIdentity() == false) {
-                mBrokerName.setVisibility(View.VISIBLE);
-                mChatConnectionState.setVisibility(View.VISIBLE);
-                statusView.setVisibility(View.GONE);
-                textViewChtTitle.setVisibility(View.GONE);
+
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -212,29 +209,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 String state = moduleManager.getIdentityChatUser().getConnectionState();
                 mChatConnectionState.setText(state);
-                mBrokerName.setVisibility(View.GONE);
-                mChatConnectionState.setVisibility(View.GONE);
-                statusView.setVisibility(View.VISIBLE);
                 statusView.setText(state);
-                textViewChtTitle.setVisibility(View.VISIBLE);
-                textViewChtTitle.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
-                statusView.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
-                textViewChtTitle.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mBrokerName.setVisibility(View.VISIBLE);
-                        textViewChtTitle.setVisibility(View.GONE);
-                    }
-                });
-                statusView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (statusView.getVisibility() == View.VISIBLE) {
-                            statusView.setVisibility(View.GONE);
-                            mChatConnectionState.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
                 botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -435,7 +410,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         String identityConnectionNameText = mChatConnectionState.getText().toString();
         if (cryptoBrokerBitmap == null) {
             //Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
-            cryptoBrokerBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.cht_center_profile_icon_center);
+            cryptoBrokerBitmap = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.icon_profile);
         }
         if(identityConnectionNameText.length() == 0){
             identityConnectionNameText = "Available";
