@@ -342,16 +342,20 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     handleExceptionAndRestart();
                 }
             }
-            if (!nextActivity.equals(lastActivity)) {
-                resetThisActivity();
-                Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
-                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
-                //recreate();
-                //startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                //finish();
-                //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
+            if (nextActivity != null) {
+                if (!nextActivity.equals(lastActivity)) {
+                    resetThisActivity();
+                    Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
+                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
+                    //recreate();
+                    //startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    //finish();
+                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
+                }
+            }else{
+                Log.e(TAG, "nextActivity null, activity code: "+ activityName+ "fermat structure: "+fermatStructure.getPublicKey());
             }
         } catch (Exception e) {
             if(activityName.equals("develop_mode"))

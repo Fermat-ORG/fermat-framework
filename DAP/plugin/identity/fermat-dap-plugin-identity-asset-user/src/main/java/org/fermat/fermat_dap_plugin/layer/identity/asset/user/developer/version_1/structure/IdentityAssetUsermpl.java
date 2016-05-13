@@ -14,12 +14,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.AssetUserIdentityPluginRoot;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by franklin on 02/11/15.
  */
-public class  IdentityAssetUsermpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, IdentityAssetUser {
+public class  IdentityAssetUsermpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, IdentityAssetUser, Serializable {
     private String alias;
     private String publicKey;
     private byte[] profileImage;

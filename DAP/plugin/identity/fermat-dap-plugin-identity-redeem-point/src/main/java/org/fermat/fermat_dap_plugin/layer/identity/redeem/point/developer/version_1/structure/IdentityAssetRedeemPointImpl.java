@@ -13,12 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, RedeemPointIdentity {
+public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, RedeemPointIdentity, Serializable {
     private String alias;
     private String publicKey;
     private byte[] profileImage;

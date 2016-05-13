@@ -14,13 +14,14 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActor
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by franklin on 05/10/15.
  */
-public interface AssetUserWallet {
+public interface AssetUserWallet extends Serializable {
 
     //TODO:Documentar y manejo de excepciones
 
