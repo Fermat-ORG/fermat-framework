@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -107,7 +110,9 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     //private View WarningCircle;
     //private TextView WarningLabel;
     private String WarningColor = "#DF0101";
-
+    private View buttonCam;
+    private TextView UserNameLabel;
+    private TextView PassWordLabel;
     private Handler handler;
 
 
@@ -207,7 +212,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
         MexposureLevel = (Spinner) layout.findViewById(R.id.exposureLevel);
         MartistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.artistAcceptConnectionsType);
-        relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+        //relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mArtistExternalUserName.requestFocus();
 
@@ -216,11 +221,20 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         TextView text3 = (TextView) layout.findViewById(R.id.artist_accept_connections_type_label);
 
         //WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+        UserNameLabel = (TextView) layout.findViewById(R.id.external_username_label);
+
+        PassWordLabel = (TextView) layout.findViewById(R.id.tokenly_acces_password_label);
+
+
+
 
         //WarningCircle.setVisibility(View.GONE);
 
         //WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
         //WarningLabel.setVisibility(View.GONE);
+
+        buttonCam = (View) layout.findViewById(R.id.boton_cam);
+        //configureToolbar();
 
         text.setTextColor(Color.parseColor("#000000"));
         text2.setTextColor(Color.parseColor("#000000"));
@@ -257,8 +271,13 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 //WarningLabel.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
                 getActivity().openContextMenu(ArtistImage);
+
+
+                // buttonCam.setBackground(R.drawable.boton_editar);
             }
         });
+
+
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -300,6 +319,19 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         });
     }
 
+
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -320,6 +352,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    buttonCam.setBackgroundResource(R.drawable.boton_editar);
                     createButton.setText("Save changes");
                 }
             }
@@ -347,6 +380,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
                     Uri selectedImage = data.getData();
                     try {
                         if (isAttached) {
+                            buttonCam.setBackgroundResource(R.drawable.boton_editar);
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
