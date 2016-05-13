@@ -34,6 +34,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +46,7 @@ import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 
 /**
@@ -75,6 +78,11 @@ public class CommunicationsNetworkClientChannel {
      * Represent if the client is register with the server
      */
     private boolean isRegistered;
+
+    /**
+     * Represent the clientConnection
+     */
+    private Session clientConnection;
 
     private ECCKeyPair   clientIdentity;
     private ErrorManager errorManager  ;
@@ -122,6 +130,8 @@ public class CommunicationsNetworkClientChannel {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" CommunicationsNetworkClientChannel - Starting method onOpen");
 
+        this.clientConnection = session;
+
         /*
          * set ServerIdentity
          */
@@ -158,6 +168,8 @@ public class CommunicationsNetworkClientChannel {
         System.out.println(" --------------------------------------------------------------------- ");
         System.out.println(" CommunicationsNetworkClientChannel - Starting method onClose");
 
+        isRegistered = Boolean.FALSE;
+
         try {
             switch (closeReason.getCloseCode().getCode()) {
 
@@ -182,6 +194,18 @@ public class CommunicationsNetworkClientChannel {
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void sendPing() throws IOException {
+        String pingString = "PING";
+        ByteBuffer pingData = ByteBuffer.allocate(pingString.getBytes().length);
+        pingData.put(pingString.getBytes()).flip();
+        getClientConnection().getBasicRemote().sendPing(pingData);
+    }
+
+    @OnMessage
+    public void onPongMessage(PongMessage message) {
+        //System.out.println("CommunicationsNetworkClientChannel - Pong message receive from server = " + message.getApplicationData().asCharBuffer().toString());
     }
 
     /**
@@ -256,6 +280,15 @@ public class CommunicationsNetworkClientChannel {
 
     public NetworkClientCommunicationConnection getNetworkClientCommunicationConnection() {
         return networkClientCommunicationConnection;
+    }
+
+    /**
+     * Get the clientConnection value
+     *
+     * @return clientConnection current value
+     */
+    public Session getClientConnection() {
+        return clientConnection;
     }
 
     /**

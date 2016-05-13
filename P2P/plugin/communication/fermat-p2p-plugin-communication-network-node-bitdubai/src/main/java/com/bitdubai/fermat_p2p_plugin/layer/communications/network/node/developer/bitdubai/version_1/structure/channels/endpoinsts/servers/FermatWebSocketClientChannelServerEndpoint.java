@@ -44,6 +44,7 @@ import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
+import javax.websocket.PongMessage;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
@@ -183,6 +184,11 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
             LOG.warn(p.getMessage());
         }
 
+    }
+
+    @OnMessage
+    public void onPongMessage(PongMessage message) {
+        LOG.debug("Pong message receive from server = " + message);
     }
 
     /**
