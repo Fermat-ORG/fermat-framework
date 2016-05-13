@@ -154,11 +154,17 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
                                     long milliseconds = timemess + nanos;
                                     Date dated = new java.util.Date(milliseconds);
-                                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
                                     formatter.setTimeZone(TimeZone.getDefault());
                                     String datef = formatter.format(new java.util.Date(milliseconds));
                                     if (Validate.isDateToday(dated)) {
-                                        formatter = new SimpleDateFormat("HH:mm");
+                                        if (Validate.isDateToday(dated)) {
+                                            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                formatter = new SimpleDateFormat("HH:mm");
+                                            } else {
+                                                formatter = new SimpleDateFormat("hh:mm aa");
+                                            }
+                                        }
                                         formatter.setTimeZone(TimeZone.getDefault());
                                         datef = formatter.format(new java.util.Date(milliseconds));
                                     } else {
