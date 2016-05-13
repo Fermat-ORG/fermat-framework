@@ -50,6 +50,7 @@ import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.excepti
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -159,54 +160,62 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
     private void initSettings() {
 
         try {
-            settings = moduleManager.loadAndGetSettings(assetUserSession.getAppPublicKey());
-        } catch (Exception e) {
-            settings = null;
-        }
-
-        if (settings == null) {
-            int position = 0;
-            settings = new AssetUserSettings();
-            settings.setIsContactsHelpEnabled(true);
-            settings.setIsPresentationHelpEnabled(true);
-            settings.setNotificationEnabled(true);
-
-            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
-            for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
-                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
-                    settings.setBlockchainNetworkPosition(position);
-                    break;
-                } else {
-                    position++;
-                }
-            }
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
 
             try {
+                settings = moduleManager.loadAndGetSettings(assetUserSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
+
+            if (settings == null) {
+                int position = 0;
+                settings = new AssetUserSettings();
+                settings.setIsContactsHelpEnabled(true);
+                settings.setIsPresentationHelpEnabled(true);
+                settings.setNotificationEnabled(true);
+
+                settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+                for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
+                    if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                        settings.setBlockchainNetworkPosition(position);
+                        break;
+                    } else {
+                        position++;
+                    }
+                }
+
+//            try {
                 if (moduleManager != null) {
                     moduleManager.persistSettings(assetUserSession.getAppPublicKey(), settings);
                     moduleManager.setAppPublicKey(assetUserSession.getAppPublicKey());
                     moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
                 }
-            } catch (CantPersistSettingsException e) {
-                e.printStackTrace();
-            }
-        } else {
-            if (moduleManager != null) {
-                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
-            }
-        }
-
-        final AssetUserSettings assetUserSettingsTemp = settings;
-
-
-        Handler handlerTimer = new Handler();
-        handlerTimer.postDelayed(new Runnable() {
-            public void run() {
-                if (assetUserSettingsTemp.isPresentationHelpEnabled()) {
-                    setUpPresentation(false);
+//            } catch (CantPersistSettingsException e) {
+//                e.printStackTrace();
+//            }
+            } else {
+                if (moduleManager != null) {
+                    moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
                 }
             }
-        }, 500);
+
+            final AssetUserSettings assetUserSettingsTemp = settings;
+
+
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
+                public void run() {
+                    if (assetUserSettingsTemp.isPresentationHelpEnabled()) {
+                        setUpPresentation(false);
+                    }
+                }
+            }, 500);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -603,7 +612,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
 
     public void onItemClickListener(Asset data, int position) {
-            //appSession.setData("asset_data", data);
+        //appSession.setData("asset_data", data);
     }
 
     @Override

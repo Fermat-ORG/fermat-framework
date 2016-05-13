@@ -143,11 +143,11 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 }
 
 //                try {
-                    if (moduleManager != null) {
-                        moduleManager.persistSettings(assetIssuerSession.getAppPublicKey(), settings);
-                        moduleManager.setAppPublicKey(assetIssuerSession.getAppPublicKey());
-                        moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
-                    }
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(assetIssuerSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(assetIssuerSession.getAppPublicKey());
+                    moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+                }
 //                } catch (CantPersistSettingsException e) {
 //                    e.printStackTrace();
 //                }
@@ -177,7 +177,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         } catch (Exception e) {
-            settings = null;
+            e.printStackTrace();
         }
         onRefresh();
     }
