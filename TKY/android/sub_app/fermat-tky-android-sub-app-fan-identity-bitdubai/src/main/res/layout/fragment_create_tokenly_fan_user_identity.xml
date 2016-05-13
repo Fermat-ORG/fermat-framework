@@ -30,7 +30,7 @@
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/circle_photo"/>
+            android:background="@drawable/circle_photo_fan"/>
 
 
         <ImageView
@@ -59,9 +59,7 @@
             android:layout_height="30dp"
             android:layout_marginBottom="70dp"
             android:layout_marginLeft="87dp"
-
             android:layout_gravity="center_horizontal|center_vertical"
-
             android:background="@drawable/boton_cam"/>
 
 
@@ -74,11 +72,12 @@
             android:textColor="#DF0101"
             android:layout_marginBottom="15dp"
             android:layout_gravity="center_horizontal|bottom"
+            android:visibility="gone"
             />
     </FrameLayout>
 
 
-    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"

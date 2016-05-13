@@ -356,16 +356,6 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
 
 
-
-
-
-
-
-
-
-
-
-
     /**
      * Crea una nueva identidad para un Fan de tokenly
      *

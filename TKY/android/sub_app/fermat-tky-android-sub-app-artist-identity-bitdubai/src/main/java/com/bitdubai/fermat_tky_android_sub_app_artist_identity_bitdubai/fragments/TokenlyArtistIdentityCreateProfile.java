@@ -226,7 +226,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         PassWordLabel = (TextView) layout.findViewById(R.id.tokenly_acces_password_label);
 
 
-        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+
 
         //WarningCircle.setVisibility(View.GONE);
 

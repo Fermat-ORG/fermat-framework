@@ -31,7 +31,7 @@
             android:layout_width="220dp"
             android:layout_height="220dp"
             android:layout_gravity="center_horizontal"
-            android:background="@drawable/circle_photo"/>
+            android:background="@drawable/circle_photo_artist"/>
 
 
         <ImageView
@@ -75,6 +75,7 @@
             android:textColor="#DF0101"
             android:layout_marginBottom="15dp"
             android:layout_gravity="center_horizontal|bottom"
+            android:visibility="gone"
             />
     </FrameLayout>
 
@@ -115,7 +116,7 @@
 
 
                 android:layout_marginTop="4dp"
-                android:hint="Username"
+
                 android:lines="1"
                 android:padding="8dp"
                 android:singleLine="true"
