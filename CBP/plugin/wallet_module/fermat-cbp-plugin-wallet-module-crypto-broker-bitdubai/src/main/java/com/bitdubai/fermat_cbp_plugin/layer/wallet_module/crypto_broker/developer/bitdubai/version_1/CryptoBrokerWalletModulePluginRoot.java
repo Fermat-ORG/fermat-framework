@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -83,9 +84,6 @@ import java.util.regex.Pattern;
 public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> implements LogManagerForDevelopers {
 
     private CryptoBrokerWalletModuleManager moduleManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     LogManager logManager;
@@ -408,7 +406,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
             }
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
