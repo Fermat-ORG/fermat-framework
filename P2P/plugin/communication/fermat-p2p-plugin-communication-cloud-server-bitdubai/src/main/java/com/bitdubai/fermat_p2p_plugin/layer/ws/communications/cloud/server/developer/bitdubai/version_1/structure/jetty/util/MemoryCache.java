@@ -489,7 +489,7 @@ public class MemoryCache {
 
                 if(client.getSession().isOpen()) {
 
-                    LOG.info("SEND MESSAGEEEEEEEEEEEEEEEEEEEE");
+                    //LOG.info("SEND MESSAGEEEEEEEEEEEEEEEEEEEE");
 
                     FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(client.getClientIdentity(), //Destination
                                                                                                                                 client.getServerIdentity().getPublicKey(), //Sender

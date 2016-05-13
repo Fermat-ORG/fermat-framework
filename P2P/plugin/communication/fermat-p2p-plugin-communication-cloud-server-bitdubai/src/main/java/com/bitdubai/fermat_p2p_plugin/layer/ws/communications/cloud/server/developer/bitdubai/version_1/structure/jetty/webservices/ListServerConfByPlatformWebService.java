@@ -144,7 +144,7 @@ public class ListServerConfByPlatformWebService {
                 if(MemoryCache.getInstance().getListServerConfByPlatform().containsKey(networkServiceType)) {
 
                     MemoryCache.getInstance().getListServerConfByPlatform().remove(networkServiceType);
-                    System.out.println("DELETE NetworkServiceType " + networkServiceType);
+                    //System.out.println("DELETE NetworkServiceType " + networkServiceType);
 
                     respond.addProperty("success", Boolean.TRUE);
                     respond.addProperty("data", "Successfully was delete the Platform Cloud Server!");
