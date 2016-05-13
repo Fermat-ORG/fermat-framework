@@ -167,7 +167,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 connectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         } else if(i == R.id.aac_btn_disconnect) {
             try {
@@ -180,7 +180,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         } else if(i == R.id.aac_btn_cancel) {
 
@@ -194,7 +194,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 cancelDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -87,11 +87,11 @@ public class AcceptDialog extends
                     System.out.println("************* I'm going to accept: "+fanCommunityInformation.getConnectionId());
                     getSession().getModuleManager().acceptFan(
                             fanCommunityInformation.getConnectionId());
-                    Toast.makeText(getContext(),
+                    Toast.makeText(getActivity(),
                             " Accepted connection request from " + fanCommunityInformation.getAlias(),
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getContext(), "There has been an error accepting request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "There has been an error accepting request", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantAcceptRequestException e) {
@@ -103,7 +103,7 @@ public class AcceptDialog extends
                 if (fanCommunityInformation != null && identity != null) {
                     getSession().getModuleManager().denyConnection(fanCommunityInformation.getConnectionId());
                 } else {
-                    Toast.makeText(getContext(),
+                    Toast.makeText(getActivity(),
                             "There has been an error denying request",
                             Toast.LENGTH_SHORT).show();
                 }

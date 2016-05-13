@@ -105,19 +105,19 @@ public class CancelDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
                 if (artistCommunityInformation != null && identity != null) {
 
                     getSession().getModuleManager().cancelArtist(artistCommunityInformation.getConnectionId());
-                    Toast.makeText(getContext(), "Cancelled successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Cancelled successfully", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
                     getSession().setData("connectionresult", 1);
 
                 } else {
-                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (ArtistCancellingFailedException e) {
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             } catch (ConnectionRequestNotFoundException e) {
-                Toast.makeText(getContext(), "The conenction request was not found, please try again later.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "The conenction request was not found, please try again later.", Toast.LENGTH_SHORT).show();
             }
 
             dismiss();

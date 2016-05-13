@@ -465,14 +465,16 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private int createNewIdentity() throws InvalidParameterException {
         UUID externalIdentityID = null;
         ArtExternalPlatform artExternalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
-        if(!mArtistExternalPlatform.getSelectedItem().equals(mArtistExternalPlatform.getItemAtPosition(0))){
-            artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(mArtistExternalPlatform.getSelectedItem().toString());
+        if(mArtistExternalPlatform.getSelectedItem() != mArtistExternalPlatform.getItemAtPosition(0)){
+            artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
+                    mArtistExternalPlatform.getSelectedItem().toString());
+        }
+        if(!mArtistExternalName.getSelectedItem().equals(mArtistExternalName.getItemAtPosition(0))){
             if(artExternalPlatform !=null){
                 List<UUID> identityByPlatformList = new ArrayList<>();
-                try {
+                try{
                     identityByPlatformList = getArtistIdentityIdByPlatform(artExternalPlatform);
-                } catch (Exception e) {
-
+                }catch(Exception e){
                 }
                 if (!identityByPlatformList.isEmpty()) {
                     externalIdentityID = identityByPlatformList.get(mArtistExternalName.getSelectedItemPosition() - 1);
@@ -735,6 +737,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 pictureView.setImageDrawable(
                         ImagesUtils.getRoundedBitmap(
                                 getResources(), imageBitmap));
+            contextMenuInUse = false;
         }
     }
 

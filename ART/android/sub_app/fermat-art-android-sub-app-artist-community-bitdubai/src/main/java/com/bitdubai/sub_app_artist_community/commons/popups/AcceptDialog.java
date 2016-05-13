@@ -88,15 +88,15 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
                 try {
                     getSession().getModuleManager().acceptArtist(artistCommunityInformation.getConnectionId());
                 } catch (CantAcceptRequestException e) {
-                    Toast.makeText(getContext(), artistCommunityInformation.getAlias() + " Can not accept the request.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), artistCommunityInformation.getAlias() + " Can not accept the request.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 } catch (ConnectionRequestNotFoundException e) {
-                    Toast.makeText(getContext(), artistCommunityInformation.getAlias() + "Request ID not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), artistCommunityInformation.getAlias() + "Request ID not found.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                Toast.makeText(getContext(), artistCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), artistCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
             }
             dismiss();
             /*} catch (CantAcceptRequestException e) {
@@ -106,10 +106,10 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
         } else if (i == R.id.aac_negative_button) {
             //try {
             if (artistCommunityInformation != null && identity != null) {
-                Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
                 // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
             } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
             }
             dismiss();
             /*} catch (IntraUserConnectionDenialFailedException e) {
