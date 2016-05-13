@@ -163,6 +163,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 wallet = getWallet(blockchainNetworkType, keyList);
             } catch (UnreadableWalletException e) {
                 CantStartAgentException exception = new CantStartAgentException(e, "Unable to load wallet from file for network " + blockchainNetworkType.getCode(), "IO error");
+
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 e.printStackTrace();
                 throw exception;
@@ -203,6 +204,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  */
                 if (areNewKeysAdded(wallet, keyList)) {
                     wallet.importKeys(keyList);
+                    for (ECKey key : keyList){
+                        wallet.addWatchedAddress(key.toAddress(context.getParams()));
+                    }
                     try {
                         wallet.saveToFile(walletFile);
                     } catch (IOException e) {
@@ -236,7 +240,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, dao, eventManager);;
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);;
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -246,7 +250,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, dao, eventManager);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
@@ -314,8 +318,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         Wallet wallet = null;
         File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        // will get the context for this wallet.
-        Context context = new Context(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+        final NetworkParameters NETWORK_PARAMETER = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
@@ -324,15 +327,22 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             if (monitor != null)
                 wallet = monitor.getWallet();
             else
-
                 wallet = Wallet.loadFromFile(walletFile);
 
 
             return wallet;
             }
          else {
+            // will get the context for this wallet.
+            Context context = new Context(NETWORK_PARAMETER);
+
             wallet = new Wallet(context);
             wallet.importKeys(keyList);
+
+            for (ECKey key : keyList){
+                wallet.addWatchedAddress(key.toAddress(NETWORK_PARAMETER));
+            }
+
 
             /**
              * Will set the autosave information and save it.
