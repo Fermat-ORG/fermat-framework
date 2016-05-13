@@ -529,10 +529,12 @@ public class ChatMiddlewareMonitorAgent implements
                 boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
                 actionOnline.setValue(isOnline);
                 System.out.println("12345 is online " + isOnline);
-                if(!isOnline){
+                if(isOnline) actionOnline.setActionState(ActionState.NONE);
+                if(!isOnline && actionOnline.getActionState() != null && !actionOnline.getActionState().equals(ActionState.ACTIVE)){
                     DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
                     Date today = Calendar.getInstance().getTime();
                     actionOnline.setLastConnection(df.format(today));
+                    actionOnline.setActionState(ActionState.ACTIVE);
                 }
                 chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
             }
