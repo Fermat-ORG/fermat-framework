@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary;
+package com.bitdubai.reference_wallet.bank_money_wallet.fragments.details;
 
 import android.content.DialogInterface;
 import android.os.Build;
@@ -183,7 +183,30 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, ReferenceWalletConstants.EDIT_ACCOUNT_ACTION, 0, "Edit Account").setIcon(R.drawable.bw_help_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "help").setIcon(R.drawable.bw_help_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int selectedItemId = item.getItemId();
+        if (selectedItemId == ReferenceWalletConstants.EDIT_ACCOUNT_ACTION) {
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT, appSession.getAppPublicKey());
+            return true;
+        }
+        else if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
+            presentationDialog.show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -263,13 +286,12 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         appSession.setData("bank_account_number_data",bankAccountNumber);
         System.out.println("(bank) cancel transaction");
         cancelTransaction(data);
-        changeActivity(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD, appSession.getAppPublicKey());
+        changeActivity(Activities.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(BankMoneyTransactionRecord data, int position) {
+    public void onLongItemClickListener(BankMoneyTransactionRecord data, int position) {}
 
-    }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
@@ -297,32 +319,6 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "help").setIcon(R.drawable.bw_help_icon_action_bar)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
-            presentationDialog.show();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /*@Override
-    public void onUpdateView(String code) {
-        switch (code) {
-            case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
-                onRefresh();
-                break;
-            default:
-                super.onUpdateView(code);
-        }
-    }*/
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
