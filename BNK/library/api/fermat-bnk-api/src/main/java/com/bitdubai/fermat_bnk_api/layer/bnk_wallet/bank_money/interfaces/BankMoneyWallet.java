@@ -31,6 +31,8 @@ public interface BankMoneyWallet {
 
     void addNewAccount(BankAccountNumber bankAccountNumber) throws CantAddNewAccountException;
 
+    void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException;
+
     void createBankName(String bankName);
 
     String getBankName();

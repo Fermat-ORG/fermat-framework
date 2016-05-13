@@ -67,13 +67,23 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     }
 
     @Override
-    public void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency) {
+    public void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency, String imageId) {
         try {
-            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency));
+            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).addNewAccount(new BankAccountNumberImpl(bankAccountType, alias, account, fiatCurrency, imageId));
         }catch (Exception e){
 
         }
     }
+
+    @Override
+    public void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) {
+        try {
+            bankMoneyWalletManager.loadBankMoneyWallet(publicKey).editAccount(originalAccountNumber, newAlias, newAccountNumber, newImageId);
+        }catch (Exception e){
+
+        }
+    }
+
 
     @Override
     public List<BankMoneyTransactionRecord> getTransactions(String account)throws CantLoadBankMoneyWalletException{
