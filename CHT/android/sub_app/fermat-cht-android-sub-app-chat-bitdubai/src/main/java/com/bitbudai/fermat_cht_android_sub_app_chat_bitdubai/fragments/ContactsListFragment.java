@@ -196,17 +196,17 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                     } else {
                         noData.setVisibility(View.VISIBLE);
                         noDatalabel.setVisibility(View.VISIBLE);
-                        layout.setBackgroundResource(R.drawable.cht_background);
+                        layout.setBackgroundResource(R.drawable.cht_background_1);
                     }
                 }  else {
                     noData.setVisibility(View.VISIBLE);
                     noDatalabel.setVisibility(View.VISIBLE);
-                    layout.setBackgroundResource(R.drawable.cht_background);
+                    layout.setBackgroundResource(R.drawable.cht_background_1);
                 }
             } else{
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
-                layout.setBackgroundResource(R.drawable.cht_background);
+                layout.setBackgroundResource(R.drawable.cht_background_1);
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -222,7 +222,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         noData.setVisibility(View.VISIBLE);
         noDatalabel.setVisibility(View.VISIBLE);
-        layout.setBackgroundResource(R.drawable.cht_background);
+        layout.setBackgroundResource(R.drawable.cht_background_1);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         updateValues();
         adapter=new ContactListAdapter(getActivity(), contactname, contacticon, contactid, chatManager,
