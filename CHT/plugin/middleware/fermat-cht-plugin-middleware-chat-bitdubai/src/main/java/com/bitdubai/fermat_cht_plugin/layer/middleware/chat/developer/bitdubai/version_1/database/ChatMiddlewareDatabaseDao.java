@@ -1899,8 +1899,12 @@ public class ChatMiddlewareDatabaseDao {
             filter.setValue(actionOnline.getId().toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME);
 
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, record);
+            else {
                 table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, record);
+            }
 
             //I execute the transaction and persist the database side of the chat.
             database.executeTransaction(transaction);
