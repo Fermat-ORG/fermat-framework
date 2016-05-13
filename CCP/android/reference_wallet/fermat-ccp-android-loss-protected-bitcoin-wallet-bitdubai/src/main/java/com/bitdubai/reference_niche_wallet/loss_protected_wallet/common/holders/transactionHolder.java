@@ -51,9 +51,6 @@ public class transactionHolder extends ChildViewHolder {
         if (lossProtectedWalletTransaction.getActorFromPublicKey() != null){
             if(lossProtectedWalletTransaction.getInvolvedActor()!=null)
             txt_from.setText(lossProtectedWalletTransaction.getInvolvedActor().getName());
-            else
-                txt_from.setText(contactName);
-
 
             if(lossProtectedWalletTransaction.getTransactionState().equals(TransactionState.REVERSED))
                 txt_notes.setText((lossProtectedWalletTransaction.getMemo()==null) ? "No information" : lossProtectedWalletTransaction.getMemo() + "(Reversed)");
