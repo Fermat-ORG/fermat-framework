@@ -143,11 +143,12 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
+        int selectedItemId = item.getItemId();
+        if (selectedItemId == ReferenceWalletConstants.ADD_ACCOUNT_ACTION) {
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_ADD_ACCOUNT, appSession.getAppPublicKey());
             return true;
         }
-        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
+        else if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
             presentationDialog.show();
             return true;
         }
