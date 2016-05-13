@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.bank_money_wallet.fragments.add_account;
+package com.bitdubai.reference_wallet.bank_money_wallet.fragments.account_management;
 
 import android.os.Build;
 import android.os.Bundle;
