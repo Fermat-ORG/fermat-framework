@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -38,11 +39,17 @@ import static android.widget.Toast.makeText;
  */
 public class EditAccountFragment extends AbstractFermatFragment {
 
+    List<BankAccountNumber> bankAccounts = new ArrayList<>();
+
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
     EditText accountNumberText;
     EditText accountAliasText;
+
+    private String oldAccountNumber;
+    private String oldAlias;
+    private String oldImageId;
 
     public static EditAccountFragment newInstance() {
         return new EditAccountFragment();
@@ -52,8 +59,16 @@ public class EditAccountFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
+            bankAccounts = moduleManager.getBankingWallet().getAccounts();
+
+            //Save session info
+            oldAccountNumber = (String) appSession.getData("oldAccountNumber");
+            oldAlias = (String) appSession.getData("oldAlias");
+            oldImageId = (String) appSession.getData("oldImageId");
+
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
             if (errorManager != null)
@@ -70,6 +85,9 @@ public class EditAccountFragment extends AbstractFermatFragment {
         accountNumberText = (EditText) layout.findViewById(R.id.account_number);
         accountAliasText = (EditText) layout.findViewById(R.id.account_alias);
 
+        accountNumberText.setText(oldAccountNumber);
+        accountAliasText.setText(oldAlias);
+
         configureToolbar();
         return layout;
     }
@@ -82,13 +100,27 @@ public class EditAccountFragment extends AbstractFermatFragment {
         getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
-    private void editAccount(){
-        String account = accountNumberText.getText().toString();
-        String alias = accountAliasText.getText().toString();
+    private boolean editAccount(){
 
-        //moduleManager.getBankingWallet().addNewAccount();
-        //moduleManager.getBankingWallet().editAccount(accountId, BankAccountType.SAVINGS, alias, account);
+        String newAccountNumber = accountNumberText.getText().toString();
+        String newAlias = accountAliasText.getText().toString();
+        String newImageId = "1";
+
+        //If something was indeed changed
+        if(!oldAccountNumber.equals(newAccountNumber) || !oldAlias.equals(newAlias)) {
+
+            //Check that newAccountNumber is different than every account number saved into database
+            for (BankAccountNumber savedAccount : bankAccounts) {
+                if (savedAccount.getAccount().equals(newAccountNumber)) {
+                    Toast.makeText(getActivity().getApplicationContext(), "Account number already exists!", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+            moduleManager.getBankingWallet().editAccount(oldAccountNumber, newAlias, newAccountNumber, newImageId);
+        }
+
         Toast.makeText(getActivity().getApplicationContext(), "Account Edited", Toast.LENGTH_SHORT).show();
+        return true;
     }
 
 
@@ -106,8 +138,8 @@ public class EditAccountFragment extends AbstractFermatFragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId()==ReferenceWalletConstants.SAVE_ACTION){
-            editAccount();
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
+            if(editAccount())
+                changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
             return true;
         }
 

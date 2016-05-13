@@ -985,7 +985,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             accountNumber = bankAccountInfo.substring(bankAccountInfo.indexOf("Number: ")+8);
 
-            BankAccountData ban = new BankAccountData(ba.getCurrencyType(), bankAccountType, bank, accountNumber, "");
+            BankAccountData ban = new BankAccountData(ba.getCurrencyType(), bankAccountType, bank, accountNumber, "", "");
 
             bankAccounts.add(ban);
 
