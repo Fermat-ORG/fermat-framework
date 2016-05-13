@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionClosedEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionLostEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNetworkServiceRegisteredEventHandler;
@@ -456,6 +458,28 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     }
 
     /**
+     * This method is automatically called when the network service receive
+     * a new message
+     *
+     * @param messageReceived
+     */
+    public synchronized void onNewMessageReceived(NetworkServiceMessage messageReceived) {
+
+    }
+
+    public synchronized void onSentMessage(NetworkServiceMessage messageSent) {
+
+    }
+
+    /**
+     * Get the database instance
+     * @return Database
+     */
+    public Database getDataBase() {
+        return null;
+    }
+
+    /**
      * This method is automatically called when the client connection was closed
      */
     protected void onNetworkClientConnectionClosed() {
@@ -475,6 +499,12 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         return this.identity.getPublicKey();
     }
+
+    public ECCKeyPair getIdentity() {
+
+        return identity;
+    }
+
 
     public final NetworkServiceProfile getProfile() {
 

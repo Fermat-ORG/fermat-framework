@@ -3,10 +3,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsVPNConnection;
@@ -58,7 +58,7 @@ public class NetworkClientCommunicationCallChannel extends Endpoint implements N
     /**
      * Represent the pending incoming messages cache
      */
-    private List<FermatMessage> pendingIncomingMessages;
+    private List<NetworkServiceMessage> pendingIncomingMessages;
 
     /**
      * Represent the wsCommunicationVPNClientManagerAgent
@@ -154,7 +154,7 @@ public class NetworkClientCommunicationCallChannel extends Endpoint implements N
             /*
              * Get the message object
              */
-            FermatMessage fermatMessage = new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
+            NetworkServiceMessage fermatMessage = new NetworkServiceMessage().fromJson(messageContentJsonStringRepresentation);
 
             System.out.println("NetworkCallChannel - fermatMessage = " + fermatMessage);
 
@@ -281,7 +281,7 @@ public class NetworkClientCommunicationCallChannel extends Endpoint implements N
      * @see CommunicationsVPNConnection#sendMessage(FermatMessage)
      */
     @Override
-    public synchronized void sendMessage(FermatMessage fermatMessage) {
+    public synchronized void sendMessage(NetworkServiceMessage fermatMessage) {
 
         System.out.println("NetworkCallChannel - sendMessage");
 
@@ -360,7 +360,7 @@ public class NetworkClientCommunicationCallChannel extends Endpoint implements N
      *
      * @see CommunicationsVPNConnection#readNextMessage()
      */
-    public FermatMessage getNextUnreadMessage() {
+    public NetworkServiceMessage getNextUnreadMessage() {
 
         /*
          * Validate no empty
@@ -386,7 +386,7 @@ public class NetworkClientCommunicationCallChannel extends Endpoint implements N
      * @see CommunicationsVPNConnection#removeMessageRead(FermatMessage)
      */
     @Override
-    public void markMessageAsRead(FermatMessage fermatMessage) {
+    public void markMessageAsRead(NetworkServiceMessage fermatMessage) {
 
         /*
          * Remove the message

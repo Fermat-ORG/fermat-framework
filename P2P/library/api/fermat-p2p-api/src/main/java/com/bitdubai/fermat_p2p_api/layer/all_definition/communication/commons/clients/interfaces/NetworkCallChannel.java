@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel</code>
@@ -27,7 +27,7 @@ public interface NetworkCallChannel {
      *
      * @throws CantSendMessageException if something goes wrong.
      */
-    void sendMessage(FermatMessage fermatMessage) throws CantSendMessageException;
+    void sendMessage(NetworkServiceMessage fermatMessage) throws CantSendMessageException;
 
     /**
      * Through the method <code>isActive</code> we can get a boolean value indicating
@@ -51,7 +51,7 @@ public interface NetworkCallChannel {
      *
      * @return an instance of an unread FermatMessage.
      */
-    FermatMessage getNextUnreadMessage();
+    NetworkServiceMessage getNextUnreadMessage();
 
     /**
      * Through the method <code>markMessageAsRead</code> you can delete from the list of
@@ -59,7 +59,7 @@ public interface NetworkCallChannel {
      *
      * @param fermatMessage an instance of the fermat message that we already read.
      */
-    void markMessageAsRead(FermatMessage fermatMessage);
+    void markMessageAsRead(NetworkServiceMessage fermatMessage);
 
     /**
      * Through the method <code>closeChannel</code> we can close the network channel.
