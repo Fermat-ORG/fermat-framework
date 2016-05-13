@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
@@ -130,7 +131,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
         amount.setText(transaction.getAmount().toPlainString());
         memo.setText(transaction.getMemo());
-        //date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
+        date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
         transactionType.setText(getTransactionTypeText(transaction.getTransactionType()));
         layout.findViewById(R.id.csh_transaction_detail_back_btn).setOnClickListener(this);
         layout.findViewById(R.id.csh_transaction_detail_delete_btn).setOnClickListener(this);

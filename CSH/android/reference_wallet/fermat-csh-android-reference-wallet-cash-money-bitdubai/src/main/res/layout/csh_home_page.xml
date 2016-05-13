@@ -199,7 +199,7 @@
         fab:fab_addButtonColorNormal="@color/csh_fab_color_normal"
         fab:fab_addButtonColorPressed="@color/csh_fab_color_pressed"
         fab:fab_addButtonPlusIconColor="@color/csh_fab_plus_icon_color"
-        fab:fab_labelStyle="@style/menu_labels_style"
+        fab:fab_labelStyle="@style/csh_fab_menu_labels_style"
         android:layout_gravity="bottom|right"
         android:layout_margin="@dimen/csh_fab_bottom_right_margin"
         android:gravity="bottom|right"
