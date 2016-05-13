@@ -216,7 +216,7 @@ public class IncomingCryptoRelayAgent implements DealsWithRegistry , Transaction
             if(responsibleTransactionList.isEmpty())
                 return;
 
-            System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + " TRANSACTION(s) DETECTED");
+            //System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + " TRANSACTION(s) DETECTED");
 
             // Por cada una de ellas haría los siguientes pasos en el orden enunciado:
             // Deduciría a partir de la información de las mismas su Specialist y lo marcaría.
