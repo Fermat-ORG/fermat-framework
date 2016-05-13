@@ -17,7 +17,6 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -388,7 +387,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     private void handleWidhtrawalFabVisibilityAccordingToBalance()
     {
         if(this.walletBalances.getAvailableBalance().compareTo(new BigDecimal(0)) == 0 && this.walletBalances.getBookBalance().compareTo(new BigDecimal(0)) == 0)
-            fabWithdraw.setVisibility(View.INVISIBLE);
+            fabWithdraw.setVisibility(View.GONE);
         else
             fabWithdraw.setVisibility(View.VISIBLE);
 

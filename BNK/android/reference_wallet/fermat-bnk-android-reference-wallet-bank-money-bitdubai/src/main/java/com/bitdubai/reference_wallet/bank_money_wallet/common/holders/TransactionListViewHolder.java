@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.common.holders;
 
+import android.content.res.Resources;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,7 @@ import java.util.Date;
  */
 public class TransactionListViewHolder extends FermatViewHolder {
 
+    private Resources res;
     private View itemView;
     /*private FermatTextView transaction;
     private FermatTextView transactionAmount;
@@ -49,6 +51,7 @@ public class TransactionListViewHolder extends FermatViewHolder {
     public TransactionListViewHolder(View itemView) {
         super(itemView);
         this.itemView = itemView;
+        res = itemView.getResources();
         /*transactionAmount = (FermatTextView) itemView.findViewById(R.id.transaction_amount);
         currency = (FermatTextView) itemView.findViewById(R.id.transaction_currency);
         transactionType = (FermatTextView) itemView.findViewById(R.id.transaction_type);
@@ -75,6 +78,10 @@ public class TransactionListViewHolder extends FermatViewHolder {
 
         if(itemInfo.getStatus()== BankTransactionStatus.PENDING){
             progressBar.setVisibility(View.VISIBLE);
+            progressBar.getIndeterminateDrawable().setColorFilter(
+                    getTransactionTypeColorProgressBar(itemInfo.getTransactionType()),
+                    android.graphics.PorterDuff.Mode.SRC_IN);
+
         }else{
             progressBar.setVisibility(View.GONE);
         }
@@ -146,5 +153,13 @@ public class TransactionListViewHolder extends FermatViewHolder {
         withdrawalAmount.setVisibility(View.VISIBLE);
         withdrawalMemo.setVisibility(View.VISIBLE);
         withdrawalDate.setVisibility(View.VISIBLE);
+    }
+
+    private int getTransactionTypeColorProgressBar(TransactionType transactionType) {
+        if (transactionType == TransactionType.DEBIT)
+            return res.getColor(R.color.bnk_transaction_withdrawal_color);
+        else if (transactionType == TransactionType.CREDIT)
+            return res.getColor(R.color.bnk_transaction_deposit_color);
+        else return -1;
     }
 }
