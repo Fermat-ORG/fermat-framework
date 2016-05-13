@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.artist_community.R;
@@ -47,12 +48,12 @@ public class CommunityNotificationPainterBuilder {
                                 R.drawable.aac_ic_nav_connections);
                         break;
                     case ACTOR_CONNECTED:
-                        List<ArtistCommunityInformation> artistConnectedList= moduleManager.listAllConnectedArtists(
+                        List<ArtCommunityInformation> artistConnectedList= moduleManager.listAllConnectedArtists(
                                         moduleManager.getSelectedActorIdentity(),
                                         20,
                                         0);
                         lastListIndex = artistConnectedList.size()-1;
-                        ArtistCommunityInformation artistConnectedInformation = artistConnectedList.get(
+                        ArtCommunityInformation artistConnectedInformation = artistConnectedList.get(
                                 lastListIndex);
                         notification = new CommunityNotificationPainter(
                                 "Artist Community",

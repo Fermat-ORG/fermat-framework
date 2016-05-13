@@ -114,6 +114,8 @@
                 android:layout_marginRight="15dp"
 
 
+                android:layout_marginTop="4dp"
+                android:hint="Username"
                 android:lines="1"
                 android:padding="8dp"
                 android:singleLine="true"

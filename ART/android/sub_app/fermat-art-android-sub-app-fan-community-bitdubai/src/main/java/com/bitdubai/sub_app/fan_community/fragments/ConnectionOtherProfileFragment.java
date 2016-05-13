@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -31,6 +32,10 @@ import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app.fan_community.commons.popups.DisconnectDialog;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
@@ -116,7 +121,11 @@ public class ConnectionOtherProfileFragment extends
         //Show user image if it has one, otherwise show default user image
         try {
             userName.setText(fanCommunityInformation.getAlias());
-            externalPlatform.setText("Not set, for now.");
+            /*try{
+                externalPlatform.setText(getSelectedIdentityExternalPlatform().getFriendlyName());
+            }catch (Exception e){
+
+            } */
             Bitmap bitmap;
 
             if(fanCommunityInformation.getImage() != null && fanCommunityInformation.getImage().length > 0)
@@ -140,6 +149,14 @@ public class ConnectionOtherProfileFragment extends
         }
         return rootView;
     }
+    /*private ArtExternalPlatform getSelectedIdentityExternalPlatform(){
+        HashMap<ArtExternalPlatform, String> selectedIdentityExternalPlatformMap = fanCommunityInformation.getFanExternalPlatformInformation().getExternalPlatformInformationMap();
+        ArtExternalPlatform selectedIdentityExternalPlatform;
+        Iterator<Map.Entry<ArtExternalPlatform, String>> entries = selectedIdentityExternalPlatformMap.entrySet().iterator();
+        Map.Entry<ArtExternalPlatform, String> entry = entries.next();
+        selectedIdentityExternalPlatform = entry.getKey();
+        return selectedIdentityExternalPlatform;
+    }*/
 
     @Override
     public void onClick(View v) {

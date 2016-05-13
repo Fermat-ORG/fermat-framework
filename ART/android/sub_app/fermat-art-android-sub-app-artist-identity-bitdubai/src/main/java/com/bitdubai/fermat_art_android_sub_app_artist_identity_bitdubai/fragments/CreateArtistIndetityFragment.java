@@ -235,9 +235,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         );
         mArtistExternalName.setAdapter(adapter2);
         ArtExternalPlatform[] externalPlatforms = ArtExternalPlatform.values();
-        for (int i = 0; i < externalPlatforms.length; i++) {
-            if (externalPlatforms[i].getCode().equals(
-                    identitySelected.getExternalPlatform().getCode())) {
+        for (int i=0; i<externalPlatforms.length;i++){
+            if(externalPlatforms[i].getCode().equals(
+                    identitySelected.getExternalPlatform().getCode())){
                 mArtistExternalPlatform.setSelection(i + 1);
                 try {
                     List<UUID> externalIdentityIDList = getArtistIdentityIdByPlatform(externalPlatforms[i]);
@@ -268,20 +268,22 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 } catch (Exception e) {
 
                 }
+                break;
+
             }
         }
-        for (int i = 0; i < externalPlatforms.length; i++) {
-            if (externalPlatforms[i] == identitySelected.getExternalPlatform()) {
-                mArtistExternalPlatform.setSelection(i);
+        /*for (int i=0; i<externalPlatforms.length;i++){
+            if(externalPlatforms[i] == identitySelected.getExternalPlatform()){
+                mArtistExternalPlatform.setSelection(i+1);
                 break;
             }
-        }
-        if (Validate.isValidString(identitySelected.getExternalUsername())) {
+        }*/
+        /*if(Validate.isValidString(identitySelected.getExternalUsername())){
             arraySpinner = new ArrayList<>();
             arraySpinner.add(identitySelected.getExternalUsername());
             adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
             mArtistExternalName.setAdapter(adapter);
-        }
+        }*/
         arraySpinner = ExposureLevel.getArrayItems();
         adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mArtistExposureLevel.setAdapter(adapter);
@@ -462,9 +464,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
     private int createNewIdentity() throws InvalidParameterException {
         UUID externalIdentityID = null;
-        if (!mArtistExternalName.getSelectedItem().equals(mArtistExternalName.getItemAtPosition(0))) {
-            ArtExternalPlatform artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(mArtistExternalPlatform.getSelectedItem().toString());
-            if (artExternalPlatform != null) {
+        ArtExternalPlatform artExternalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
+        if(!mArtistExternalPlatform.getSelectedItem().equals(mArtistExternalPlatform.getItemAtPosition(0))){
+            artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(mArtistExternalPlatform.getSelectedItem().toString());
+            if(artExternalPlatform !=null){
                 List<UUID> identityByPlatformList = new ArrayList<>();
                 try {
                     identityByPlatformList = getArtistIdentityIdByPlatform(artExternalPlatform);
@@ -477,15 +480,15 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             }
         }
         String artistName = mArtistUserName.getText().toString();
-        ArtExternalPlatform externalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
         String externalUsername = "";
+        /*if(mArtistExternalPlatform.isSelected()){
         if (mArtistExternalPlatform.isSelected()) {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mArtistExternalPlatform.getSelectedItem().toString());
         }
         if (mArtistExternalName.getCount() > 1) {
             externalUsername = mArtistExternalName.getSelectedItem().toString();
-        }
+        }*/
 
         ExposureLevel exposureLevel = ExposureLevel.getExposureLevelByLabel(mArtistExposureLevel.getSelectedItem().toString());
         ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.getArtistAcceptConnectionsTypeByLabel(mArtistAcceptConnectionsType.getSelectedItem().toString());
@@ -505,9 +508,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                 exposureLevel,
                                 artistAcceptConnectionsType,
                                 externalIdentityID,
-                                externalPlatform);
-                    } else {
-                        if (updateProfileImage)
+                                artExternalPlatform);
+                    }else{
+                        if(updateProfileImage)
                             moduleManager.updateArtistIdentity(
                                     artistName,
                                     identitySelected.getPublicKey(),
@@ -515,7 +518,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                     exposureLevel,
                                     artistAcceptConnectionsType,
                                     externalIdentityID,
-                                    externalPlatform,
+                                    artExternalPlatform,
                                     externalUsername);
                         else
                             moduleManager.updateArtistIdentity(
@@ -525,7 +528,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                     exposureLevel,
                                     artistAcceptConnectionsType,
                                     externalIdentityID,
-                                    externalPlatform,
+                                    artExternalPlatform,
                                     externalUsername);
                     }
                 } catch (Exception e) {
