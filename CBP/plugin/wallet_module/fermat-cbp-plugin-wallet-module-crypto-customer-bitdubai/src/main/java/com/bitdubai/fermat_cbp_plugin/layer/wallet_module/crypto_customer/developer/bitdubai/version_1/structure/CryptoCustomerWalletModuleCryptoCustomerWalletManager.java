@@ -115,6 +115,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.CryptoCustomerWalletModulePluginRoot;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
@@ -167,8 +168,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
     private final BitcoinWalletManager bitcoinWalletManager;
-    private final PluginVersionReference pluginVersionReference;
-    private final ErrorManager errorManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
 
@@ -176,6 +175,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private String merchandise = null;
     private String typeOfPayment = null;
     private String paymentCurrency = null;
+
+    private final CryptoCustomerWalletModulePluginRoot pluginRoot;
 
 
     /*
@@ -200,8 +201,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                                  BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
                                                                  BitcoinWalletManager bitcoinWalletManager,
-                                                                 final ErrorManager errorManager,
-                                                                 final PluginVersionReference pluginVersionReference,
+                                                                 final CryptoCustomerWalletModulePluginRoot pluginRoot,
                                                                  PluginFileSystem pluginFileSystem,
                                                                  UUID pluginId) {
         this.walletManagerManager = walletManagerManager;
@@ -223,8 +223,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
-        this.errorManager = errorManager;
-        this.pluginVersionReference = pluginVersionReference;
+        this.pluginRoot = pluginRoot;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
@@ -631,19 +630,19 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             throw identityAssociatedNotFoundException;
         } catch (RelationshipNotFoundException relationshipNotFoundException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, relationshipNotFoundException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, relationshipNotFoundException);
             throw new IdentityAssociatedNotFoundException(relationshipNotFoundException, "walletPublicKey: " + walletPublicKey, "There's no relationship for this wallet.");
         } catch (CantGetCryptoCustomerIdentityException cantGetCryptoCustomerIdentityException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCryptoCustomerIdentityException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCryptoCustomerIdentityException);
             throw new CantGetAssociatedIdentityException(cantGetCryptoCustomerIdentityException, "walletPublicKey: " + walletPublicKey, "There was a problem trying to get a crypto customer identity.");
         } catch (CantGetCustomerIdentityWalletRelationshipException cantGetCustomerIdentityWalletRelationshipException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCustomerIdentityWalletRelationshipException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetCustomerIdentityWalletRelationshipException);
             throw new CantGetAssociatedIdentityException(cantGetCustomerIdentityWalletRelationshipException, "walletPublicKey: " + walletPublicKey, "There was a problem listing the relationship between the wallet and the crypto customers.");
         } catch (Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantGetAssociatedIdentityException(exception, "walletPublicKey: " + walletPublicKey, "Unhandled Error.");
         }
     }
