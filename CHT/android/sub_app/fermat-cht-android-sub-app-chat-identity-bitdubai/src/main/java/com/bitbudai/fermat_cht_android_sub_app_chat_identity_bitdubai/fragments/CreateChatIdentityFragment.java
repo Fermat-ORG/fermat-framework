@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -154,7 +155,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         statusView = (TextView) layout.findViewById(R.id.statusView);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
-        btnRotate = (Button) layout.findViewById(R.id.btnRotate);
         placeholdImg = (ImageView) layout.findViewById(R.id.placeholdImg);
         Bitmap bitmap = null;
 
@@ -186,6 +186,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     dispatchTakePictureIntent();
                                 }else if(Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY){
                                     loadImageFromGallery();
+                                } else if(Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_ROTATE) {
+                                    try {
+                                        if(cryptoBrokerBitmap != null)
+                                        rotateImage();
+                                        else
+                                            Toast.makeText(getActivity(), "Please select a image", Toast.LENGTH_SHORT).show();
+                                    } catch (Exception e) {
+                                          errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+                                    }
                                 }else{
                                     //Nothing
                                 }
@@ -229,8 +238,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     dispatchTakePictureIntent();
                                 } else if (Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_GALLERY) {
                                     loadImageFromGallery();
-                                } else {
-                                    //Nothing
+                                } else if(Dcamgallery.getButtonTouch() == Dcamgallery.TOUCH_ROTATE) {
+                                    try {
+                                        rotateImage();
+                                    } catch (CHTException e) {
+                                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+
+                                    }
+                                }else{
+                                    //Nothing...
                                 }
                             }
                         });
@@ -238,13 +254,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     }
                 });
             }
-            btnRotate.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(mBrokerImage != null || cryptoBrokerBitmap != null) rotateImage();
-                    else Toast.makeText(getActivity(), "Please select a image to rotate", Toast.LENGTH_SHORT).show();
-                }
-            });
         } catch (CHTException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
@@ -456,27 +465,35 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
-    private void rotateImage(){
+    private void rotateImage() throws CHTException {
         Bitmap thissbitmap = null;
+
+
+       if(ExistIdentity() == true || cryptoBrokerBitmap != null) {
         if(cryptoBrokerBitmap != null){
             thissbitmap = cryptoBrokerBitmap;
-        }else{
+        }else {
             try {
                 thissbitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
             } catch (CantGetChatIdentityException e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
         }
-        if(thissbitmap != null) {
-            if(ROTATE_VALUE < 360) {
-                ROTATE_VALUE = ROTATE_VALUE+90;
-
+            if (thissbitmap != null) {
+                if (ROTATE_VALUE <= 270) {
+                    ROTATE_VALUE = ROTATE_VALUE + 90;
+                    cryptoBrokerBitmap = RotateBitmap(thissbitmap, ROTATE_VALUE);
+                    Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
+                } else {
+                    ROTATE_VALUE = 0;
+                    cryptoBrokerBitmap = RotateBitmap(thissbitmap, ROTATE_VALUE);
+                    Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
+                }
             }else{
-                ROTATE_VALUE = 0;
-
+                Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
             }
         }else{
-            Toast.makeText(getActivity(), "Select a least one image to rotate", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -485,5 +502,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
         return Uri.parse(path);
+    }
+
+    public static Bitmap RotateBitmap(Bitmap source, float angle){
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }
