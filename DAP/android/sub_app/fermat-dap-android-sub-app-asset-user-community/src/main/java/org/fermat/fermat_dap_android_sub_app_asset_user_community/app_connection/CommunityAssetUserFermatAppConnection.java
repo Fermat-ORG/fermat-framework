@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.factory.CommunityUserFragmentFactory;
@@ -75,22 +76,12 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetU
     @Override
     public NotificationPainter getNotificationPainter(String code) {
         try {
-            SettingsManager<AssetUserSettings> settingsManager;
-            boolean enabledNotification = true;
-            this.assetUserCommunitySubAppSession = (AssetUserCommunitySubAppSession) this.getSession();
+            this.assetUserCommunitySubAppSession = this.getFullyLoadedSession();
 
             if (assetUserCommunitySubAppSession != null)
-                if (assetUserCommunitySubAppSession.getModuleManager() != null) {
                     manager = assetUserCommunitySubAppSession.getModuleManager();
 
-                    settingsManager = assetUserCommunitySubAppSession.getModuleManager().getSettingsManager();
-                    enabledNotification = settingsManager.loadAndGetSettings(assetUserCommunitySubAppSession.getAppPublicKey()).getNotificationEnabled();
-                }
-
-            if (enabledNotification)
-                return UserCommunityBuildNotificationPainter.getNotification(manager, code, assetUserCommunitySubAppSession.getAppPublicKey());
-            else
-                return null;
+                return UserCommunityBuildNotificationPainter.getNotification(manager, code, Activities.DAP_ASSET_USER_COMMUNITY_NOTIFICATION_FRAGMENT.getCode());
 
         } catch(Exception e) {
             e.printStackTrace();

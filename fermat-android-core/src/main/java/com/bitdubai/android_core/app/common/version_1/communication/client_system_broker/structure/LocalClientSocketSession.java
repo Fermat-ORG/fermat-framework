@@ -24,7 +24,11 @@ public class LocalClientSocketSession extends LocalSocketSession {
     @Override
     public void onReceiveMessage(FermatModuleObjectWrapper object) {
         try {
-            bufferChannelAIDL.addFullData(object.getObjectRequestId(), (Serializable) object.getObject());
+            if(object.getE()!=null){
+                bufferChannelAIDL.addFullDataAndNotificateArrive(object.getObjectRequestId(),object.getE());
+            }else {
+                bufferChannelAIDL.addFullDataAndNotificateArrive(object.getObjectRequestId(), (Serializable) object.getObject());
+            }
         }catch (Exception e){
             e.printStackTrace();
         }

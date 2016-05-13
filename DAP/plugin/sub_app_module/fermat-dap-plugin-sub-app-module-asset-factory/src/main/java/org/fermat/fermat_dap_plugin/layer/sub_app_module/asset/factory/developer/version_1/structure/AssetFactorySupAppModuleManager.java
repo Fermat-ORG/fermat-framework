@@ -55,7 +55,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 20/09/15.
  */
-public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFactorySettings> implements AssetFactoryModuleManager, Serializable {
+public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFactorySettings> implements AssetFactoryModuleManager {
 
     private final AssetFactoryManager                   assetFactoryManager;
     private final IdentityAssetIssuerManager            identityAssetIssuerManager;

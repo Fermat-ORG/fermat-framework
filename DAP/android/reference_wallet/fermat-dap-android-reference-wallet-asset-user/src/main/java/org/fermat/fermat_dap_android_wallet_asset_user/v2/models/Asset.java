@@ -11,6 +11,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.A
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -20,7 +21,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
  */
-public class Asset {
+public class Asset implements Serializable {
 
     private AssetUserWalletList assetUserWalletList;
     private AssetUserWalletTransaction assetUserWalletTransaction;

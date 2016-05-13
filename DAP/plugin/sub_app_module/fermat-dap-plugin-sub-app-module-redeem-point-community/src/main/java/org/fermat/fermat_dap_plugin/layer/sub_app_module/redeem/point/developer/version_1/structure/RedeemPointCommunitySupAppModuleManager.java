@@ -61,7 +61,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements RedeemPointCommunitySubAppModuleManager, Serializable {
+public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements RedeemPointCommunitySubAppModuleManager {
 
     private final UUID                          pluginId;
     private PluginFileSystem                    pluginFileSystem;

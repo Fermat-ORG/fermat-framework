@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -27,7 +28,7 @@ import java.util.List;
 /**
  * Created by Nerio on 13/10/15.
  */
-public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings>, Serializable {
+public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings> {
 
     List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException;
 
@@ -35,15 +36,15 @@ public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<A
 
     DAPConnectionState getActorIssuerRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetIssuerActorsException;
 
-    ActorAssetIssuer getActorIssuer(String actorPublicKey) throws org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException, CantAssetIssuerActorNotFoundException;
+    ActorAssetIssuer getActorIssuer(String actorPublicKey) throws CantGetAssetIssuerActorsException, CantAssetIssuerActorNotFoundException;
 
-    void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetRedeemPointException;
+    void connectToActorAssetIssuer(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetRedeemPointException;
 
 //    List<ActorAssetUser> getAllActorAssetUserRegistered() throws CantGetAssetUserActorsException;
 //
 //    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointRegistered() throws CantGetAssetRedeemPointActorsException;
 
-    IdentityAssetIssuer getActiveAssetIssuerIdentity() throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
+    IdentityAssetIssuer getActiveAssetIssuerIdentity() throws CantGetIdentityAssetIssuerException;
 
     void askActorAssetIssuerForConnection(List<ActorAssetIssuer> actorAssetIssuers) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 

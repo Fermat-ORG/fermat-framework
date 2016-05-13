@@ -69,7 +69,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
     public NotificationPainter getNotificationPainter(String code) {
         NotificationPainter notification = null;
         try {
-            this.assetIssuerCommunitySubAppSession = (AssetIssuerCommunitySubAppSession) this.getSession();
+            this.assetIssuerCommunitySubAppSession = this.getFullyLoadedSession();
             if (assetIssuerCommunitySubAppSession != null)
                 manager = assetIssuerCommunitySubAppSession.getModuleManager();
             String[] params = code.split("_");

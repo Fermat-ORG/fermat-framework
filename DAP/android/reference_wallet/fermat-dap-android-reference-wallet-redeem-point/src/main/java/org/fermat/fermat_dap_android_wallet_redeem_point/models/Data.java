@@ -26,20 +26,22 @@ public class Data {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
         DigitalAsset digitalAsset;
 
-        for (AssetRedeemPointWalletList asset : assets) {
-            digitalAsset = new DigitalAsset();
-            digitalAsset.setAssetPublicKey(asset.getDigitalAsset().getPublicKey());
-            digitalAsset.setName(asset.getDigitalAsset().getName());
-            digitalAsset.setAvailableBalanceQuantity(asset.getQuantityAvailableBalance());
-            digitalAsset.setBookBalanceQuantity(asset.getQuantityBookBalance());
-            digitalAsset.setAvailableBalance(asset.getAvailableBalance());
-            digitalAsset.setExpDate((Timestamp) asset.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+        if(assets != null) {
+            for (AssetRedeemPointWalletList asset : assets) {
+                digitalAsset = new DigitalAsset();
+                digitalAsset.setAssetPublicKey(asset.getDigitalAsset().getPublicKey());
+                digitalAsset.setName(asset.getDigitalAsset().getName());
+                digitalAsset.setAvailableBalanceQuantity(asset.getQuantityAvailableBalance());
+                digitalAsset.setBookBalanceQuantity(asset.getQuantityBookBalance());
+                digitalAsset.setAvailableBalance(asset.getAvailableBalance());
+                digitalAsset.setExpDate((Timestamp) asset.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
 
-            digitalAssets.add(digitalAsset);
+                digitalAssets.add(digitalAsset);
 
-            List<Resource> resources = asset.getDigitalAsset().getResources();
-            if (resources != null && !resources.isEmpty()) {
-                digitalAsset.setImage(resources.get(0).getResourceBinayData());
+                List<Resource> resources = asset.getDigitalAsset().getResources();
+                if (resources != null && !resources.isEmpty()) {
+                    digitalAsset.setImage(resources.get(0).getResourceBinayData());
+                }
             }
         }
         return digitalAssets;

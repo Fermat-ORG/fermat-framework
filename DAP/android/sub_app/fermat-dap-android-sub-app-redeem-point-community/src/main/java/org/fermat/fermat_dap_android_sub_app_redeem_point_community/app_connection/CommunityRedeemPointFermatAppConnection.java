@@ -72,7 +72,7 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
     public NotificationPainter getNotificationPainter(String code) {
         NotificationPainter notification = null;
         try {
-            this.assetRedeemPointCommunitySubAppSession = (AssetRedeemPointCommunitySubAppSession) this.getSession();
+            this.assetRedeemPointCommunitySubAppSession = this.getFullyLoadedSession();
             if (assetRedeemPointCommunitySubAppSession != null)
                 manager = assetRedeemPointCommunitySubAppSession.getModuleManager();
             String[] params = code.split("_");
