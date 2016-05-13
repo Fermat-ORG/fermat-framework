@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -88,6 +89,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     Context context;
     Toolbar toolbar;
     TextView statusView;
+    ImageView placeholdImg;
+    Button btnRotate;
+    int ROTATE_VALUE = 0;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
     public static CreateChatIdentityFragment newInstance() {
@@ -148,8 +152,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         statusView = (TextView) layout.findViewById(R.id.statusView);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
-
+        btnRotate = (Button) layout.findViewById(R.id.btnRotate);
+        placeholdImg = (ImageView) layout.findViewById(R.id.placeholdImg);
         Bitmap bitmap = null;
+
         if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
         {
             setUpDialog();
@@ -271,6 +277,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     }
                 });
             }
+            btnRotate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mBrokerImage != null || cryptoBrokerBitmap != null) rotateImage();
+                    else Toast.makeText(getActivity(), "Please select a image to rotate", Toast.LENGTH_SHORT).show();
+                }
+            });
         } catch (CHTException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
@@ -314,6 +327,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 break;
 
                case MENU_ADD_ACTION:
+
                    break;
             }
 
@@ -348,6 +362,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         Toast.makeText(getActivity().getApplicationContext(), "Error loading the imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
+
             }
         }
 //        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
@@ -478,5 +493,36 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         Intent loadImageIntent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
+    }
+
+    private void rotateImage(){
+        Bitmap thissbitmap = null;
+        if(cryptoBrokerBitmap != null){
+            thissbitmap = cryptoBrokerBitmap;
+        }else{
+            try {
+                thissbitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
+            } catch (CantGetChatIdentityException e) {
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            }
+        }
+        if(thissbitmap != null) {
+            if(ROTATE_VALUE < 360) {
+                ROTATE_VALUE = ROTATE_VALUE+90;
+
+            }else{
+                ROTATE_VALUE = 0;
+
+            }
+        }else{
+            Toast.makeText(getActivity(), "Select a least one image to rotate", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 }

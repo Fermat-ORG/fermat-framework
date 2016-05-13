@@ -908,7 +908,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Chat Identity");
+            runtimeTitleBar.setLabel("Chat Profile");
             runtimeTitleBar.setColor("#47BF73");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
