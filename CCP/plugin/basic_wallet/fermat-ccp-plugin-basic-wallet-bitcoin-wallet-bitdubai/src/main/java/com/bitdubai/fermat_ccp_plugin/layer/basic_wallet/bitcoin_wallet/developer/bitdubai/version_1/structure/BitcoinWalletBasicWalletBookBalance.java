@@ -78,7 +78,7 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK);
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "Btc_arrive");
         } catch(CantRegisterDebitException exception){
             throw exception;
         } catch(Exception exception){
@@ -92,7 +92,7 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK);
             //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, "Btc_arrive");
         } catch(CantRegisterCreditException exception){
             throw exception;
         } catch(Exception exception){

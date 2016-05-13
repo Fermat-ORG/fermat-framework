@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,25 +24,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.art_fan_identity.R;
 
 import java.io.ByteArrayOutputStream;
@@ -95,6 +94,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     private Handler handler;
     private boolean updateCheck = false;
+    private View WarningCircle;
+    private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
+    private String NormalColor  =  "#0080FF";
 
     public static CreateArtFanUserIdentityFragment newInstance(){
         return new CreateArtFanUserIdentityFragment();
@@ -289,10 +292,20 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WarningLabel.setVisibility(View.GONE);
+                //WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "get in on fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
             }
         });
+
+        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+
+        WarningCircle.setVisibility(View.GONE);
+
+        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        WarningLabel.setVisibility(View.GONE);
+
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -427,6 +440,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             String fanExternalName,
             byte[] fanImageBytes,
             UUID externalIdentityID) {
+
+        ShowWarnings(fanExternalName,fanImageBytes);
+
+
+
         if (fanExternalName.isEmpty())
             return false;
         /*if (externalPlatformID==null)
@@ -446,6 +464,47 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         /*if(externalPlatform != null)
             return  true;*/
         return true;
+    }
+
+    private void ShowWarnings(String fanExternalName, byte[] fanImageBytes) {
+
+        if (fanExternalName.isEmpty()){
+            mFanExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
+        }
+
+        if (fanImageBytes == null){
+            WarningLabel.setVisibility(View.VISIBLE);
+
+            //WarningCircle.setVisibility(View.VISIBLE);
+        }
+
+
+
+
+        if(mFanExternalPlatform.getSelectedItemPosition()==0){
+            mFanExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
+        }else{mFanExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
+        }
+/*
+        if(mFanExternalUser.getSelectedItemPosition()==0){
+            mFanExternalUser.setBackgroundColor(Color.parseColor("#DF0101"));
+        }else{
+            mFanExternalUser.setBackgroundColor(Color.parseColor("#0080FF"));
+        }
+*/
+        mFanExternalUser.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                mFanExternalUser.setBackgroundColor(Color.parseColor(NormalColor));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
     }
 
     @Override
@@ -584,18 +643,19 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         mFanExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                try{
-                    if(!updateCheck){
-                            List<String> arraySpinner = new ArrayList<>();
-                            arraySpinner.add("Select an Identity...");
-                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                    getActivity(),
-                                    android.R.layout.simple_spinner_item,
-                                    arraySpinner
-                            );
-                        if(!mFanExternalPlatform.getSelectedItem().equals(mFanExternalPlatform.getItemAtPosition(0))){
+                try {
+                    mFanExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
+                    if (!updateCheck) {
+                        List<String> arraySpinner = new ArrayList<>();
+                        arraySpinner.add("Select an Identity...");
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                                getActivity(),
+                                android.R.layout.simple_spinner_item,
+                                arraySpinner
+                        );
+                        if (!mFanExternalPlatform.getSelectedItem().equals(mFanExternalPlatform.getItemAtPosition(0))) {
                             ArtExternalPlatform externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString());
-                            if(externalPlatform != null){
+                            if (externalPlatform != null) {
                                 List<String> identityByPlatformList = getFanIdentityByPlatform(externalPlatform);
                                 if (!identityByPlatformList.isEmpty()) {
                                     arraySpinner.addAll(identityByPlatformList);
@@ -612,7 +672,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         mFanExternalUser.setSelection(0);
                     }
                     updateCheck = false;
-                }catch (Exception e){
+                } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(
                             SubApps.ART_FAN_IDENTITY,
                             UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
@@ -620,6 +680,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
 
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }

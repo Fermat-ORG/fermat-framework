@@ -62,7 +62,8 @@ public class ArtistCommunityFermatAppConnection extends AppConnections<ArtistSub
     @Override
     public NotificationPainter getNotificationPainter(String code) {
         return CommunityNotificationPainterBuilder.getNotification(
-                code
+                code,
+                getFullyLoadedSession()
         );
     }
 

@@ -3,6 +3,7 @@ package com.bitdubai.sub_app_artist_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -33,8 +34,8 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app_artist_community.commons.popups.ListIdentitiesDialog;
@@ -141,11 +142,24 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 launchListIdentitiesDialog = true;
             }
 
-            //Get notification requests count
-            //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
-            //mNotificationsCount = 4;
-            //new FetchCountTask().execute();
-
+            if(moduleManager!=null){
+                //Get notification requests count
+                ArtistCommunitySelectableIdentity artistCommunitySelectableIdentity=
+                        moduleManager.getSelectedActorIdentity();
+                if(artistCommunitySelectableIdentity!=null){
+                    List<ArtistCommunityInformation> artistCommunityInformation =
+                            moduleManager.listArtistsPendingLocalAction(
+                                    artistCommunitySelectableIdentity,
+                                    MAX,
+                                    offset);
+                    if(artistCommunityInformation!=null){
+                        mNotificationsCount = artistCommunityInformation
+                                .size();
+                        //mNotificationsCount = 4;
+                        new FetchCountTask().execute();
+                    }
+                }
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
@@ -321,6 +335,29 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
 
     @Override
     public void onLongItemClickListener(ArtistCommunityInformation data, int position) {}
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
 
 }
 

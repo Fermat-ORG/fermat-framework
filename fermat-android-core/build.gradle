@@ -29,10 +29,10 @@ android {
 
     defaultConfig {
         applicationId "org.fermat"
-        minSdkVersion 20
+        minSdkVersion 21
         targetSdkVersion 23
-        versionCode 37
-        versionName "0.70"
+        versionCode 39
+        versionName "0.71"
         multiDexEnabled true
     }
 

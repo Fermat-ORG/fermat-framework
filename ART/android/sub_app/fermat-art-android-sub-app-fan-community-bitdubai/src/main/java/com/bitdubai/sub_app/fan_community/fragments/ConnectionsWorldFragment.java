@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.fan_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,10 +32,11 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.fan_community.commons.popups.ListIdentitiesDialog;
@@ -205,6 +207,23 @@ public class ConnectionsWorldFragment extends
                 onRefresh();
             }
 
+            if(moduleManager!=null){
+                FanCommunitySelectableIdentity fanCommunitySelectableIdentity=
+                        moduleManager.getSelectedActorIdentity();
+                //Get notification requests count
+                if(fanCommunitySelectableIdentity!=null){
+                    List<LinkedFanIdentity> fanCommunityInformation =
+                            moduleManager.listFansPendingLocalAction(fanCommunitySelectableIdentity,
+                                    MAX,
+                                    offset);
+                    if(fanCommunityInformation!=null){
+                        mNotificationsCount = fanCommunityInformation.size();
+                        //mNotificationsCount = 4;
+                        new FetchCountTask().execute();
+                    }
+                }
+            }
+
         } catch (Exception ex) {
             errorManager.reportUnexpectedUIException(
                     UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH,
@@ -318,6 +337,29 @@ public class ConnectionsWorldFragment extends
 
     @Override
     public void onLongItemClickListener(FanCommunityInformation data, int position) {}
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
 
 }
 

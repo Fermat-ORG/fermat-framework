@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,9 +38,9 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.R;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.popup.PresentationTokenlyArtistUserIdentityDialog;
 import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
@@ -101,6 +102,9 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     private boolean authenticationSuccessful = false;
     private boolean isWaitingForResponse = false;
+    private View WarningCircle;
+    private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
 
     private Handler handler;
 
@@ -166,7 +170,10 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
           View rootLayout = inflater.inflate(R.layout.fragment_tky_artist_create_identity, container, false);
           initViews(rootLayout);
           setUpIdentity();
-          // SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+
+
+
+// SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
 //        if (!pref.getBoolean("isChecked", false)) {
 //            PresentationTokenlyFanUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(), null, null);
 //            presentationIntraUserCommunityDialog.show();
@@ -176,6 +183,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 //            PresentationTokenlyFanUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(),tokenlyFanUserIdentitySubAppSession, null,moduleManager);
 //            presentationTokenlyFanUserIdentityDialog.show();
 //        }
+
 
           return rootLayout;
     }
@@ -204,6 +212,13 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         TextView text = (TextView) layout.findViewById(R.id.external_platform_label);
         TextView text2 = (TextView) layout.findViewById(R.id.exposure_level_label);
         TextView text3 = (TextView) layout.findViewById(R.id.artist_accept_connections_type_label);
+
+        WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+
+        WarningCircle.setVisibility(View.GONE);
+
+        WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        WarningLabel.setVisibility(View.GONE);
 
         text.setTextColor(Color.parseColor("#000000"));
         text2.setTextColor(Color.parseColor("#000000"));
@@ -236,6 +251,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
         ArtistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                WarningCircle.setVisibility(View.GONE);
+                WarningLabel.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
                 getActivity().openContextMenu(ArtistImage);
             }
@@ -474,6 +491,9 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     }
 
     private boolean validateIdentityData(String ArtistExternalName, String ArtistPassWord, byte[] ArtistImageBytes, ExternalPlatform externalPlatform) {
+        ShowWarnings(ArtistExternalName,ArtistPassWord,ArtistImageBytes);
+
+
         if (ArtistExternalName.isEmpty())
             return false;
         if (ArtistPassWord.isEmpty())
@@ -486,6 +506,31 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 //            return  true;
         return true;
     }
+
+
+    private void ShowWarnings(String ArtistExternalName,String ArtistPassWord, byte[] ArtistImageBytes) {
+
+
+
+        if (ArtistExternalName.isEmpty()){
+            mArtistExternalUserName.setHint("Username");
+            mArtistExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
+        }
+
+        if (ArtistPassWord.isEmpty()){
+            mArtistExternalPassword.setHint("Password");
+            mArtistExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
+        }
+
+        if (ArtistImageBytes == null){
+            WarningLabel.setVisibility(View.VISIBLE);
+           // WarningCircle.setVisibility(View.VISIBLE);
+        }
+
+
+    }
+
+
 
     private class ManageIdentity extends AsyncTask {
         String fanExternalName;

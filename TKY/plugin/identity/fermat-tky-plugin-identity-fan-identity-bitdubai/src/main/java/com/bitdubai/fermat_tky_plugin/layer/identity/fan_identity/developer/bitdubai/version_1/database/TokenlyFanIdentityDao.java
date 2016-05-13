@@ -382,7 +382,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
                         getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId), );*/
-                list.add(new TokenlyFanIdentityImp(record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
+                Fan fan = new TokenlyFanIdentityImp(record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
@@ -392,7 +392,9 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME),
                         pluginFileSystem,
-                        pluginId));
+                        pluginId);
+                fan.addArtistConnectedList(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ARTIST_CONNECTED_LIST_COLUMN_NAME));
+                list.add(fan);
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListFanIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_TABLE_NAME + " table in memory.");

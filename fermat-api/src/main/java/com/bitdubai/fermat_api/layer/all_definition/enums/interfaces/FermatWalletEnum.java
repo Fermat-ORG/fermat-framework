@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.enums.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 
 /**
  * The interface <code>com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatWalletEnum</code>

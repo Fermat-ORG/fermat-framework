@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
@@ -35,8 +36,8 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.Collection;
 import java.util.List;
@@ -82,6 +83,16 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
 
     private ConcurrentHashMap<String, ArtistExposingData> artistsToExpose;
 
+    public final void exposeIdentitiesInWait() throws CantExposeIdentityException {
+        if(!Validate.isObjectNull(artistsToExpose) && artistsToExpose.size() > 0){
+            for (ArtistExposingData artistExposingData :
+                    artistsToExpose.values()) {
+                exposeIdentity(artistExposingData);
+            }
+        }
+    }
+
+
     @Override
     public final void exposeIdentity(final ArtistExposingData artist) throws CantExposeIdentityException {
 
@@ -105,9 +116,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
-
-                if (artistsToExpose != null && artistsToExpose.containsKey(artist.getPublicKey()))
-                    artistsToExpose.remove(artist.getPublicKey());
+                addArtistsToExpose(artist);
             }
 
         } catch (final CantRegisterComponentException e) {

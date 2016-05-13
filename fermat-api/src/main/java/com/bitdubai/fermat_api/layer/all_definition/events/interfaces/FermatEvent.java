@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.events.interfaces;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 

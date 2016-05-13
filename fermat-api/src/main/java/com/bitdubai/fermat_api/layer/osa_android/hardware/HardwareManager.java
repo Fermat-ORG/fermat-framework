@@ -5,6 +5,10 @@ package com.bitdubai.fermat_api.layer.osa_android.hardware;
  */
 public interface HardwareManager {
 
+    String getModel();
+
+    String getOSVersion();
+
     enum OS {
         WINDOWS,LINUX,ANDROID,IOS
     }
