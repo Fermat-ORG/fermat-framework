@@ -9,6 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         android:background="@drawable/header_bg_gradient_color">
 
         <LinearLayout
@@ -16,9 +20,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:paddingLeft="16dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
             android:id="@+id/linear_type_container"
             >
 
@@ -29,11 +30,12 @@
                 android:textSize="16sp"
                 android:id="@+id/txt_type_balance"
                 android:textColor="#FFF"/>
+
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/touch_to_change_text"
-                android:textSize="10sp"
+                android:textSize="8sp"
                 android:id="@+id/txt_touch_to_change"
                 android:textColor="#ccc"
                 android:textStyle="italic"
@@ -49,7 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:id="@+id/txt_balance_amount"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:text="14.5201"
                     android:textColor="#fff" />
 
@@ -58,7 +60,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="2dp"
                     android:id="@+id/txt_balance_amount_type"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:text="BTC"
                     android:textColor="#fff" />
             </LinearLayout>
@@ -72,14 +74,12 @@
             android:layout_weight="1"
             android:gravity="end"
             android:orientation="vertical"
-            android:paddingRight="16dp"
-            android:paddingTop="10dp"
             android:id="@+id/linear_rate_container">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1 BTC - 400 USD"
+                android:text="1 BTC - 0 USD"
                 android:id="@+id/txt_exchange_rate"
                 android:textColor="#fff"
                 android:textSize="16sp"
@@ -108,7 +108,6 @@
                 android:textSize="16sp"
                 android:textColor="#fff"
                 android:text="Earnings and losts for today:"/>
-
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -155,35 +154,39 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily=""
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textColor="#fff"
                     android:id="@+id/txt_amount_lost_or_earn"
-                    android:text="$5 earning"/>
+                    android:text="U$D 0.00 earning"/>
             </LinearLayout>
-
-
-
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:padding="28dp"
         android:background="@drawable/home_background">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingLeft="38dp"
-                android:background="@drawable/graphic">
+                android:paddingLeft="22dp"
+                android:background="@drawable/graphic"
+                android:orientation="vertical">
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="No Data"
+                    android:textColor="#fff"
+                    android:visibility="gone"
+                    android:id="@+id/noDataInChart"/>
             </LinearLayout>
     </LinearLayout>
 

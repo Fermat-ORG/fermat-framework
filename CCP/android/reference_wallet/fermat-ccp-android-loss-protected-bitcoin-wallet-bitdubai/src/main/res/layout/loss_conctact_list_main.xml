@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/fragment_container2"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/header_bg_gradient_color"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:src="@drawable/ic_contact_search" />
+
+        <EditText
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:layout_toLeftOf="@+id/clear_search_image_button"
+            android:layout_toStartOf="@+id/clear_search_image_button"
+            android:background="@null"
+            android:hint="@string/search_hint"
+            android:paddingLeft="20dp"
+            android:singleLine="true"
+            android:textColor="#ffffff"
+            android:textColorHint="#fff"
+            android:textSize="16sp" />
+
+        <ImageButton
+
+            android:id="@+id/clear_search_image_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/search_view"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/search_view"
+            android:contentDescription="@string/clear_text_button"
+            android:src="@drawable/ic_action_cancel_grey"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/contacts_container"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="@color/color_white">
+
+        <include layout="@layout/loading_empty_view" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
+                android:id="@+id/list_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawSelectorOnTop="true"
+                android:scrollingCache="false" />
+
+            <LinearLayout
+                android:id="@+id/empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="125dp"
+                    android:layout_height="125dp"
+                    android:src="@drawable/nocontacts_icon" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:text="@string/click_me_to_search_text"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="#666666"
+                    app:typeface="ROBOTO_REGULAR" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+
+
+</LinearLayout>

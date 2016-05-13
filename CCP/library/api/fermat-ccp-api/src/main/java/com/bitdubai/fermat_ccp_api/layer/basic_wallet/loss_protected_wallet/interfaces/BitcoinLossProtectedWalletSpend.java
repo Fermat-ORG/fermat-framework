@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+
 import java.io.Serializable;
 import java.util.UUID;
 
@@ -19,6 +21,8 @@ public interface BitcoinLossProtectedWalletSpend  extends Serializable{
     long getAmount();
 
     double getExchangeRate();
+
+    BlockchainNetworkType getBlockchainNetworkType();
 
 }
 
