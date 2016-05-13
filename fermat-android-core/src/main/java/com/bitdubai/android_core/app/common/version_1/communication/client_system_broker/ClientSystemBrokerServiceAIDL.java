@@ -153,33 +153,6 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             //Log.i(TAG, o1 != null ? o1.toString() : "");
             return o1;
         }
-//        try {
-//            FermatModuleObjectWrapper fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
-//                    pluginVersionReference.getPlatform().getCode(),
-//                    pluginVersionReference.getLayers().getCode(),
-//                    pluginVersionReference.getPlugins().getCode(),
-//                    pluginVersionReference.getDeveloper().getCode(),
-//                    pluginVersionReference.getVersion().toString(),
-//                    method.getName(),
-//                    parameters);
-//
-//            if(fermatModuleObjectWrapper!=null) {
-//                Log.i(TAG, "Object retuned: " + fermatModuleObjectWrapper.toString());
-//            }else{
-//                Log.i(TAG, "Object retuned: null");
-//            }
-//
-//            //Acá si esta en true el flag armo el objeto desde el buffer y lo devuelvo por el return
-//
-//            return (fermatModuleObjectWrapper!=null)?fermatModuleObjectWrapper.getObject():null;
-//
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-
-        //return null;
     }
 
     @Override
@@ -358,10 +331,10 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     break;
                 case CommunicationMessages.MSG_SEND_CHUNKED_DATA:
                     bundle = msg.getData();
-                    onChuckedDateRecieve(
-                            id,
-                            bundle.getByteArray(CommunicationDataKeys.DATA_CHUNKED_DATA),
-                            bundle.getBoolean(CommunicationDataKeys.DATA_IS_CHUNKED_DATA_FINISH));
+//                    onChuckedDateRecieve(
+//                            id,
+//                            bundle.getByteArray(CommunicationDataKeys.DATA_CHUNKED_DATA),
+//                            bundle.getBoolean(CommunicationDataKeys.DATA_IS_CHUNKED_DATA_FINISH));
                     break;
                 default:
                     super.handleMessage(msg);
@@ -372,7 +345,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private void onChuckedDateRecieve(String id, byte[] chunkedData,boolean isFinishData) {
         try {
             //bufferChannel.notificateObject(id,data);
-            bufferChannelAIDL.addChunkedData(id,chunkedData,isFinishData);
+         //   bufferChannelAIDL.addChunkedData(id,chunkedData,isFinishData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -381,7 +354,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private void onFullDateRecieve(String id, Serializable data) {
         try {
             //bufferChannel.notificateObject(id,data);
-            bufferChannelAIDL.addFullData(id,data);
+            bufferChannelAIDL.addFullDataAndNotificateArrive(id, data);
         } catch (Exception e) {
             e.printStackTrace();
         }

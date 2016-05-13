@@ -325,9 +325,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     Serializable aidlObject = (Serializable) returnModuleObject;
                     if (isDataForChunk(aidlObject)) {
                         try {
-                            sendFullData(dataId, clientKey, aidlObject);
+                            sendLargeData(dataId, clientKey, aidlObject);
                             return new FermatModuleObjectWrapper(aidlObject, true, dataId);
-                        } catch (NotSerializableException e) {
+                        } catch (Exception e) {
                             return new FermatModuleObjectWrapper(dataId, aidlObject, true, e);
                         }
                     } else {
@@ -353,7 +353,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //            for (ModuleObjectParameterWrapper parameter : parameters) {
 //                Log.i(TAG, parameter.toString());
 //            }
-            Serializable aidlObject = null;
+            Object returnModuleObject = null;
             try {
                 PluginVersionReference pluginVersionReference = new PluginVersionReference(
                         Platforms.getByCode(platformCode),
@@ -361,16 +361,56 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                         Plugins.getByCode(pluginsCode),
                         Developers.BITDUBAI,
                         new Version());
-                aidlObject = (Serializable) moduleDataRequest(pluginVersionReference, method, parameters);
+                returnModuleObject = moduleDataRequest(pluginVersionReference, method, parameters);
             } catch (InvalidParameterException e) {
                 e.printStackTrace();
             }
-
             /**
              * Acá se va a hacer el chunk y el envio al cliente
              */
-            chunkAndSendData(dataId, clientKey, aidlObject);
-            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+//            chunkAndSendData(dataId, clientKey, aidlObject);
+//            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+
+
+
+            try {
+
+                if (returnModuleObject instanceof Exception) {
+                    return new FermatModuleObjectWrapper(dataId, null, true, (Exception) returnModuleObject);
+                } else {
+                    if (!(returnModuleObject instanceof Serializable)) {
+                        if (returnModuleObject != null) {
+                            NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
+                            // return the exception
+                            sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                        } else {
+                            //throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
+                            Log.e(TAG, "object returned null ");
+                        }
+                    }else {
+                        Serializable aidlObject = (Serializable) returnModuleObject;
+                        try {
+                            sendLargeData(dataId, clientKey, aidlObject);
+                            return new FermatModuleObjectWrapper(aidlObject, true, dataId);
+                        } catch (Exception e) {
+                            sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                        }
+                    }
+
+                }
+            } catch (Exception e) {
+//                Exception e1 = new Exception("Error in Method: "+method+" object returned: "+returnModuleObject,e);
+                try {
+                    sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
+                } catch (Exception e1) {
+                    Log.e(TAG,"Error, please contact furszy and show him the stacktrace below");
+                    e1.printStackTrace();
+                }
+//                new FermatModuleObjectWrapper(dataId, null, true, e);
+            }
+
+            return new FermatModuleObjectWrapper(null, true, dataId);
+
         }
 
         @Override
