@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
         createdBy = "franklin",
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE)
+        plugin = Plugins.ASSET_USER)
 public class AssetUserWalletModulePluginRoot extends AbstractModule<AssetUserSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
@@ -121,16 +121,16 @@ public class AssetUserWalletModulePluginRoot extends AbstractModule<AssetUserSet
         super(new PluginVersionReference(new Version()));
     }
 
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-            System.out.println("******* Asset User Wallet Module Init ******");
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantStartPluginException(exception);
-        }
-    }
+//    @Override
+//    public void start() throws CantStartPluginException {
+//        try {
+//            System.out.println("******* Asset User Wallet Module Init ******");
+//            this.serviceStatus = ServiceStatus.STARTED;
+//        } catch (Exception exception) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//            throw new CantStartPluginException(exception);
+//        }
+//    }
 
     @Override
     public List<String> getClassesFullPath() {

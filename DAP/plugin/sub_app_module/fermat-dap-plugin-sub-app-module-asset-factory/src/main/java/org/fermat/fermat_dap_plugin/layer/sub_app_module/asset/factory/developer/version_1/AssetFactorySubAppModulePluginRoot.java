@@ -77,7 +77,7 @@ import java.util.regex.Pattern;
         createdBy = "franklin",
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_ASSET_FACTORY_MODULE)
+        plugin = Plugins.ASSET_FACTORY)
 public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<AssetFactorySettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
@@ -173,20 +173,15 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
         }
     }
 
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-//        assetFactorySupAppModuleManager = new AssetFactorySupAppModuleManager(
-//                assetFactoryManager,
-//                identityAssetIssuerManager,
-//                errorManager);
-
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantStartPluginException(exception);
-        }
-    }
+//    @Override
+//    public void start() throws CantStartPluginException {
+//        try {
+//            this.serviceStatus = ServiceStatus.STARTED;
+//        } catch (Exception exception) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//            throw new CantStartPluginException(exception);
+//        }
+//    }
 
 //    @Override
 //    public IdentityAssetIssuer getLoggedIdentityAssetIssuer() {

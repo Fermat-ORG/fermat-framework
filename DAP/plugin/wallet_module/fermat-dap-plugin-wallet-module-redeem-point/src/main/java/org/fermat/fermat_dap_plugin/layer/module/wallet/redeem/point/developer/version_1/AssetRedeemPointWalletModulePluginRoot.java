@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
         createdBy = "franklin",
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE)
+        plugin = Plugins.REDEEM_POINT)
 public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<RedeemPointSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
@@ -97,16 +97,16 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
      *
      * @see Service#start()
      */
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-            System.out.println("******* Asset Redeem Point Wallet Module Init ******");
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantStartPluginException(exception);
-        }
-    }
+//    @Override
+//    public void start() throws CantStartPluginException {
+//        try {
+//            System.out.println("******* Asset Redeem Point Wallet Module Init ******");
+//            this.serviceStatus = ServiceStatus.STARTED;
+//        } catch (Exception exception) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//            throw new CantStartPluginException(exception);
+//        }
+//    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -165,7 +165,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
     @moduleManagerInterfacea(moduleManager = AssetRedeemPointWalletModuleManager.class)
     public ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetUser Wallet Module instantiation started...", null, null);
+            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation started...", null, null);
 
             if (assetRedeemPointWalletModuleManager == null) {
                 assetRedeemPointWalletModuleManager = new AssetRedeemPointWalletModuleManager(
@@ -179,7 +179,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
                         this);
             }
 
-            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetUser Wallet Module instantiation finished successfully.", null, null);
+            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation finished successfully.", null, null);
 
             return assetRedeemPointWalletModuleManager;
 

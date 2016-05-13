@@ -59,7 +59,7 @@ import java.util.UUID;
         createdBy = "franklin",
         layer = Layers.WALLET,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_USER_WALLET)
+        plugin = Plugins.ASSET_USER)
 public class AssetUserWalletPluginRoot extends AbstractPlugin implements
         AssetUserWalletManager,
         DatabaseManagerForDevelopers {

@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
@@ -50,6 +51,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by Nerio on 07/09/15.
@@ -60,7 +62,7 @@ import java.util.Map;
         createdBy = "nindriago",
         layer = Layers.IDENTITY,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY)
+        plugin = Plugins.ASSET_ISSUER)
 public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
@@ -139,26 +141,37 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
         }
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     *
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split(Pattern.quote("$"));
+            return AssetIssuerIdentityPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-//            identityAssetIssuerManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.structure.IdentityAssetIssuerManagerImpl(
-//                    this.errorManager,
-//                    this.logManager,
-//                    this.pluginDatabaseSystem,
-//                    this.pluginFileSystem,
-//                    this.pluginId,
-//                    this.deviceUserManager,
-//                    this.actorAssetIssuerManager);
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
-        }
 
-        try {
-            registerIdentitiesANS();
-        } catch (Exception e) {
+            if (getModuleManager() != null) {
+                registerIdentitiesANS();
+            }
+        } catch (CantGetModuleManagerException | CantRegisterActorAssetIssuerException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
@@ -259,14 +272,26 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
     @Override
     @moduleManagerInterfacea(moduleManager = IdentityAssetIssuerManagerImpl.class)
     public ModuleManager getModuleManager() throws CantGetModuleManagerException {
+        try {
+            logManager.log(AssetIssuerIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity instantiation started...", null, null);
 
-        return new IdentityAssetIssuerManagerImpl(
-                this.errorManager,
-                this.logManager,
-                this.pluginDatabaseSystem,
-                this.pluginFileSystem,
-                this.pluginId,
-                this.deviceUserManager,
-                this.actorAssetIssuerManager);
+            if (identityAssetIssuerManager == null) {
+                identityAssetIssuerManager = new IdentityAssetIssuerManagerImpl(
+                        this.errorManager,
+                        this.logManager,
+                        this.pluginDatabaseSystem,
+                        this.pluginFileSystem,
+                        this.pluginId,
+                        this.deviceUserManager,
+                        this.actorAssetIssuerManager);
+            }
+            registerIdentitiesANS();
+
+            logManager.log(AssetIssuerIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity instantiation finished successfully.", null, null);
+
+        } catch (final Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+        return identityAssetIssuerManager;
     }
 }

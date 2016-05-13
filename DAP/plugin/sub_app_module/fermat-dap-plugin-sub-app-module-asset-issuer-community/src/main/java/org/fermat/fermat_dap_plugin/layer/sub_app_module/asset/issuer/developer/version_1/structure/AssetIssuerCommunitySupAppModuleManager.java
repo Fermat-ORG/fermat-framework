@@ -5,8 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -58,6 +61,12 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "nindriago",
+        layer = Layers.SUB_APP_MODULE,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.ASSET_ISSUER)
 public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager {
 
     private final PluginFileSystem                              pluginFileSystem;

@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by Nerio on 07/09/15.
@@ -58,7 +59,7 @@ import java.util.Map;
         createdBy = "nindriago",
         layer = Layers.IDENTITY,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY)
+        plugin = Plugins.ASSET_USER)
 public class AssetUserIdentityPluginRoot extends AbstractModule implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
@@ -133,27 +134,39 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
         }
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     *
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split(Pattern.quote("$"));
+            return AssetUserIdentityPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-//            identityAssetUserManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUserManagerImpl(
-//                    this.errorManager,
-//                    this.logManager,
-//                    this.pluginDatabaseSystem,
-//                    this.pluginFileSystem,
-//                    this.pluginId,
-//                    this.deviceUserManager,
-//                    this.actorAssetUserManager);
+
+            if (getModuleManager() != null) {
+                registerIdentitiesANS();
+            }
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
-        }
-
-        try {
-            registerIdentitiesANS();
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -253,8 +266,11 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
     @Override
     @moduleManagerInterfacea(moduleManager = IdentityAssetUserManagerImpl.class)
     public ModuleManager getModuleManager() throws CantGetModuleManagerException {
+        try {
+            logManager.log(AssetUserIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity instantiation started...", null, null);
 
-        return new IdentityAssetUserManagerImpl(
+            if (identityAssetUserManager == null) {
+                identityAssetUserManager = new IdentityAssetUserManagerImpl(
                 this.errorManager,
                 this.logManager,
                 this.pluginDatabaseSystem,
@@ -262,5 +278,14 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
                 this.pluginId,
                 this.deviceUserManager,
                 this.actorAssetUserManager);
+            }
+            registerIdentitiesANS();
+
+            logManager.log(AssetUserIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity instantiation finished successfully.", null, null);
+
+        } catch (final Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+        return identityAssetUserManager;
     }
 }

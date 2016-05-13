@@ -1,6 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -8,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -55,6 +58,12 @@ import java.util.UUID;
 /**
  * Created by franklin on 20/09/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "franklin",
+        layer = Layers.SUB_APP_MODULE,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.BITDUBAI_ASSET_FACTORY_MODULE)
 public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFactorySettings> implements AssetFactoryModuleManager {
 
     private final AssetFactoryManager                   assetFactoryManager;

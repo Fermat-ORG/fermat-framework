@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by Nerio on 07/09/15.
@@ -59,7 +60,7 @@ import java.util.Map;
         createdBy = "nindriago",
         layer = Layers.IDENTITY,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY)
+        plugin = Plugins.REDEEM_POINT)
 public class ReedemPointIdentityPluginRoot extends AbstractModule implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
@@ -88,7 +89,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
         super(new PluginVersionReference(new Version()));
     }
 
-    org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointManagerImpl identityAssetRedeemPointManager;
+    IdentityAssetRedeemPointManagerImpl identityAssetRedeemPointManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -134,27 +135,39 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
         }
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     *
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className) {
+        try {
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split(Pattern.quote("$"));
+            return ReedemPointIdentityPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e) {
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-//            identityAssetRedeemPointManager = new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointManagerImpl(
-//                    this.errorManager,
-//                    this.logManager,
-//                    this.pluginDatabaseSystem,
-//                    this.pluginFileSystem,
-//                    this.pluginId,
-//                    this.deviceUserManager,
-//                    this.actorAssetRedeemPointManager);
+
+            if (getModuleManager() != null) {
+                registerIdentitiesANS();
+            }
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
-        }
-
-        try {
-            registerIdentitiesANS();
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -275,8 +288,11 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
     @Override
     @moduleManagerInterfacea(moduleManager = IdentityAssetRedeemPointManagerImpl.class)
     public ModuleManager getModuleManager() throws CantGetModuleManagerException {
+        try {
+            logManager.log(ReedemPointIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity instantiation started...", null, null);
 
-        return new IdentityAssetRedeemPointManagerImpl(
+            if (identityAssetRedeemPointManager == null) {
+                identityAssetRedeemPointManager = new IdentityAssetRedeemPointManagerImpl(
                 this.errorManager,
                 this.logManager,
                 this.pluginDatabaseSystem,
@@ -284,5 +300,14 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
                 this.pluginId,
                 this.deviceUserManager,
                 this.actorAssetRedeemPointManager);
+            }
+            registerIdentitiesANS();
+
+            logManager.log(ReedemPointIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity instantiation finished successfully.", null, null);
+
+        } catch (final Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+        return identityAssetRedeemPointManager;
     }
 }

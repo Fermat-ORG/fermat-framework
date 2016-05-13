@@ -59,7 +59,7 @@ import java.util.UUID;
         createdBy = "franklin",
         layer = Layers.WALLET,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET)
+        plugin = Plugins.REDEEM_POINT)
 public class AssetRedeemPointWalletPluginRoot extends AbstractPlugin implements
         AssetRedeemPointWalletManager,
         DatabaseManagerForDevelopers {

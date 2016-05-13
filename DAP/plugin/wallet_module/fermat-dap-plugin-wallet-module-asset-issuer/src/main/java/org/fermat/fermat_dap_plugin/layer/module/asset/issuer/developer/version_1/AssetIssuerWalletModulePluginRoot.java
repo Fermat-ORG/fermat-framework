@@ -58,7 +58,7 @@ import java.util.regex.Pattern;
         createdBy = "franklin",
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE)
+        plugin = Plugins.ASSET_ISSUER)
 public class AssetIssuerWalletModulePluginRoot extends AbstractModule<AssetIssuerSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
@@ -166,17 +166,17 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractModule<AssetIssue
      *
      * @see Service#start()
      */
-    @Override
-    public void start() throws CantStartPluginException {
-        try {
-            System.out.println("******* Asset Issuer Wallet Module Init ******");
-
-            this.serviceStatus = ServiceStatus.STARTED;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantStartPluginException(exception);
-        }
-    }
+//    @Override
+//    public void start() throws CantStartPluginException {
+//        try {
+//            System.out.println("******* Asset Issuer Wallet Module Init ******");
+//
+//            this.serviceStatus = ServiceStatus.STARTED;
+//        } catch (Exception exception) {
+//            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//            throw new CantStartPluginException(exception);
+//        }
+//    }
 
     @Override
     @moduleManagerInterfacea(moduleManager = AssetIssuerWalletModuleManager.class)
