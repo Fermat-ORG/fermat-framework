@@ -510,6 +510,8 @@ public class ChatAdapterView extends LinearLayout {
                     return;
                 }
 
+                messageText = messageText.trim();
+
                 try {
                     ChatImpl chat = new ChatImpl();
                     final MessageImpl message = new MessageImpl();
