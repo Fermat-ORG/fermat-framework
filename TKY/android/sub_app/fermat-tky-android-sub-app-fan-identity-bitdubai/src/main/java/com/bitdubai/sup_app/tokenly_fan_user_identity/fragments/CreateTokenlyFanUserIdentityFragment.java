@@ -8,9 +8,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -96,7 +98,11 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private View WarningCircle;
     private TextView WarningLabel;
     private String WarningColor = "#DF0101";
+    private String NormalColor  =  "#23056A";
+    private View buttonCam;
 
+    private TextView UserNameLabel;
+    private TextView PassWordLabel;
 
     private Handler handler;
 
@@ -188,6 +194,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    buttonCam.setBackgroundResource(R.drawable.boton_editar);
                     createButton.setText("Save changes");
                 }
             }
@@ -243,9 +250,9 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         createButton = (Button) layout.findViewById(R.id.create_tokenly_fan_identity);
         mFanExternalUserName = (EditText) layout.findViewById(R.id.external_username);
         mFanExternalPassword = (EditText) layout.findViewById(R.id.tokenly_access_password);
-        fanImage = (ImageView) layout.findViewById(R.id.tokenly_fan_image);
+        fanImage = (ImageView) layout.findViewById(R.id.tokenly_Fan_image);
         mFanExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
-        relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+        //relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mFanExternalUserName.requestFocus();
         List<String> arraySpinner = ExternalPlatform.getArrayItems();
@@ -260,6 +267,13 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
         WarningLabel.setVisibility(View.GONE);
 
+        buttonCam = (View) layout.findViewById(R.id.boton_cam);
+
+        UserNameLabel = (TextView) layout.findViewById(R.id.external_username_label);
+
+        PassWordLabel = (TextView) layout.findViewById(R.id.tokenly_acces_password_label);
+
+
 
         registerForContextMenu(fanImage);
         fanImage.setOnClickListener(new View.OnClickListener() {
@@ -269,8 +283,15 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
+                buttonCam.setBackgroundResource(R.drawable.boton_editar);
             }
         });
+
+
+
+
+
+
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -298,7 +319,39 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             }
         });
+        configureToolbar();
     }
+
+
+
+
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Crea una nueva identidad para un Fan de tokenly
@@ -428,6 +481,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     Uri selectedImage = data.getData();
                     try {
                         if (isAttached) {
+                            buttonCam.setBackgroundResource(R.drawable.boton_editar);
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
