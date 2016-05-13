@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="200dp"
-    android:background="@drawable/no_found_art">
+<FrameLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/time_foregrd"
+    android:layout_width="fill_parent"
+    android:layout_height="150dp"
 
-</LinearLayout>
+    android:paddingTop="20dp">
+<ImageView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:src="@drawable/amyback"
+    android:scaleType="centerCrop"
+    android:paddingTop="290dp"
+   />
+
+
+</FrameLayout>
