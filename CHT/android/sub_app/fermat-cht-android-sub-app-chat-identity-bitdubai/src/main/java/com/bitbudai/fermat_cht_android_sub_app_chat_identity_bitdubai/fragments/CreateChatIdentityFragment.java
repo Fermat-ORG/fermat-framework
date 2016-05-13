@@ -313,6 +313,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoBrokerBitmap = (Bitmap) extras.get("data");
+                    Picasso.with(getActivity()).load(getImageUri(getActivity(),cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();
