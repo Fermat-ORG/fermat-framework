@@ -1953,19 +1953,22 @@ public class ChatMiddlewareDatabaseDao {
             UUID actionId;
             String lastConnection;
             boolean value;
+            boolean lastOn;
             if(actionOnline==null){
                 actionId=UUID.randomUUID();
                 value = false;
                 lastConnection = null;
+                lastOn = false;
             }
             else {
                 actionId=actionOnline.getId();
                 value = actionOnline.getValue();
                 lastConnection = actionOnline.getLastConnection();
+                lastOn = actionOnline.getLastOn();
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value,lastConnection,actionOnline.getLastOn());
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value,lastConnection,lastOn);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
