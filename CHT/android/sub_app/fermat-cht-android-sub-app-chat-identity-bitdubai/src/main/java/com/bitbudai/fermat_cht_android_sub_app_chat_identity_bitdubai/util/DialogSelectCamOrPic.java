@@ -39,7 +39,11 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        galleryBtn = (ImageView) findViewById(R.id.img_gallery);
+        camBtn = (ImageView) findViewById(R.id.img_cam);
+        galleryBtn.setOnClickListener(this);
+        camBtn.setOnClickListener(this);
+        getWindow().setTitle("");
     }
 
     private void setButtonTouch(int touch) {
