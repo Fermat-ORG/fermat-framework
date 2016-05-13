@@ -109,6 +109,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private ClientProfile clientProfile;
 
+   /*
+    * is used to validate if is connection to extern node
+    * when receive checkinclient then send register all profile
+    */
+    private boolean isConnectingToExternNode;
+
     /*
      * Constructor
      */
@@ -119,7 +125,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final ECCKeyPair             clientIdentity        ,
                                                 final PluginVersionReference pluginVersionReference,
                                                 NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
-                                                Integer nodesListPosition){
+                                                Integer nodesListPosition,
+                                                boolean isConnectingToExternNode){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -133,6 +140,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
+        this.isConnectingToExternNode = isConnectingToExternNode;
 
         this.container              = ClientManager.createClient();
     }
@@ -255,8 +263,16 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     /*
-     * CheckIn Client Request to Network Node
+     * is used to validate if is connection to extern
+     * node when receive checkinclient then send register all profile
      */
+    public boolean isConnectingToExternNode() {
+        return isConnectingToExternNode;
+    }
+
+    /*
+         * CheckIn Client Request to Network Node
+         */
     public void setCheckInClientRequestProcessor(){
 
         clientProfile = new ClientProfile();
