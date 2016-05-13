@@ -7,7 +7,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.when;
 
 /**
  * Created by gianco on 09/05/16.

@@ -8,11 +8,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.powermock.api.mockito.PowerMockito;
-
-import java.util.Collection;
-import java.util.Iterator;
+;
 import java.util.List;
-import java.util.ListIterator;
 
 import static org.mockito.Mockito.when;
 

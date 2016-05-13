@@ -16,7 +16,6 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doCallRealMethod;
 
 /**
  * Created by gianco on 04/05/16.
