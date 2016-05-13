@@ -46,16 +46,16 @@ import java.util.regex.Pattern;
  * <p/>
  * Created by Nerio on 13/10/15.
  */
+@NeededIndirectPluginReferences(indirectReferences = {
+        @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_EXTRA_USER),
+        @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_INTRA_USER)
+})
 @PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
         maintainerMail = "nerioindriago@gmail.com",
         createdBy = "nindriago",
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_ISSUER)
-@NeededIndirectPluginReferences(indirectReferences = {
-        @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_EXTRA_USER),
-        @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_INTRA_USER)
-})
 public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractModule<AssetIssuerSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
