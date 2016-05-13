@@ -23,7 +23,7 @@ import java.util.List;
  * The interface <code>IdentityAssetIssuerManager</code>
  * provides the methods to create and obtain intra users associated to a Device User.
  */
-public interface IdentityAssetIssuerManager extends ModuleManager<IssuerIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<IssuerIdentitySettings>, Serializable {
+public interface IdentityAssetIssuerManager extends ModuleManager<IssuerIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<IssuerIdentitySettings> {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in

@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -46,6 +47,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
@@ -66,13 +68,15 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         AdapterView.OnItemClickListener,
         FermatListItemListeners<Actor> {
 
+    protected final String TAG = "UserCommunityFragment";
+
     public static final String USER_SELECTED = "user";
-    private AssetUserCommunitySubAppModuleManager moduleManager;
+    private static AssetUserCommunitySubAppModuleManager moduleManager;
     AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     AssetUserSettings settings = null;
     private int userNotificationsCount = 0;
 
-    ErrorManager errorManager;
+    static ErrorManager errorManager;
 
     // recycler
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -110,21 +114,34 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
         try {
+            setHasOptionsMenu(true);
+
             actor = (Actor) appSession.getData(USER_SELECTED);
 
             assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
             moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            if (moduleManager != null)
-                userNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetUserCount();
-            new FetchCountTask().execute();
+            try {
+                settings = assetUserCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetUserCommunitySubAppSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
 
+            if (assetUserCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (settings == null) {
+                    settings = new AssetUserSettings();
+                    settings.setIsPresentationHelpEnabled(true);
+                    assetUserCommunitySubAppSession.getModuleManager().persistSettings(assetUserCommunitySubAppSession.getAppPublicKey(), settings);
+                }
+            }
+
+            userNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetUserCount();
+            new FetchCountTask().execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
 
@@ -752,7 +769,11 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     private void updateNotificationsBadge(int count) {
         userNotificationsCount = count;
-        getActivity().invalidateOptionsMenu();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        } else {
+            Log.e(TAG, "updateNotificationsBadge activity null, please check this, class" + getClass().getName() + " line: " + new Throwable().getStackTrace()[0].getLineNumber());
+        }
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -774,9 +795,6 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     }
 
-    /*
-Sample AsyncTask to fetch the notifications count
-*/
     class FetchCountTask extends AsyncTask<Void, Void, Integer> {
 
         @Override
@@ -849,11 +867,18 @@ Sample AsyncTask to fetch the notifications count
         List<AssetUserActorRecord> result = null;
         if (moduleManager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = moduleManager.getAllActorAssetUserRegistered();
-        if (result != null && result.size() > 0) {
-            for (AssetUserActorRecord record : result) {
-                dataSet.add((new Actor(record)));
+
+        try {
+            result = moduleManager.getAllActorAssetUserRegistered();
+            if (result != null && result.size() > 0) {
+                for (AssetUserActorRecord record : result) {
+                    dataSet.add((new Actor(record)));
+                }
             }
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return dataSet;
     }
@@ -885,82 +910,11 @@ Sample AsyncTask to fetch the notifications count
 
     }
 
-    /*private boolean ableToDisconnect(List<Actor> actors){
-        List <Actor> allActors = actors;
-        for (Actor actor : allActors){
-            switch (actor.getDapConnectionState()){
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CANCELLED_REMOTELY: {
-                    return false;
-                }
-                case CONNECTED_ONLINE:
-                case CONNECTED_OFFLINE:
-                case CONNECTED:{
-                    if (actor.getCryptoAddress() != null)
-                    continue;
-                }
-                case CONNECTING:
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR_UNKNOWN:
-                case PENDING_LOCALLY:
-                case PENDING_REMOTELY:
-                case REGISTERED_LOCALLY:
-                case REGISTERED_REMOTELY:
-                case REGISTERED_ONLINE:
-                case REGISTERED_OFFLINE: {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    private boolean ableToConnect(List<Actor> actors){
-        List <Actor> allActors = actors;
-        for (Actor actor : allActors){
-            switch (actor.getDapConnectionState()){
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CONNECTING:
-                case CANCELLED_REMOTELY: {
-                    continue;
-                }
-                case CONNECTED_ONLINE:
-                case CONNECTED_OFFLINE:
-                case CONNECTED:{
-                    if (actor.getCryptoAddress() != null)
-                    return false;
-                }
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR_UNKNOWN:
-                case PENDING_LOCALLY:
-                case PENDING_REMOTELY:
-                case REGISTERED_LOCALLY:
-                case REGISTERED_REMOTELY:
-                case REGISTERED_ONLINE:
-                case REGISTERED_OFFLINE: {
-                    continue;
-                }
-            }
-        }
-        return true;
-    }*/
     private void restartButtons() {
         menuItemCancel.setVisible(false);
         menuItemSelect.setVisible(true);
         menuItemUnselect.setVisible(false);
         menuItemConnect.setVisible(false);
         menuItemDisconnect.setVisible(false);
-
     }
-
-
 }

@@ -10,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -45,6 +46,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
@@ -65,13 +67,15 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         AdapterView.OnItemClickListener,
         FermatListItemListeners<ActorIssuer> {
 
+    protected final String TAG = "IssuerCommunityFragment";
+
     public static final String ISSUER_SELECTED = "issuer";
-    private AssetIssuerCommunitySubAppModuleManager moduleManager;
+    private static AssetIssuerCommunitySubAppModuleManager moduleManager;
     AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
     AssetIssuerSettings settings = null;
     private int issuerNotificationsCount = 0;
 
-    ErrorManager errorManager;
+    private static ErrorManager errorManager;
 
     // recycler
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -106,19 +110,34 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
         try {
+            setHasOptionsMenu(true);
+
             actor = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
 
             assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
             moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            try {
+                settings = assetIssuerCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetIssuerCommunitySubAppSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
+
+            if (assetIssuerCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (settings == null) {
+                    settings = new AssetIssuerSettings();
+                    settings.setIsPresentationHelpEnabled(true);
+                    assetIssuerCommunitySubAppSession.getModuleManager().persistSettings(assetIssuerCommunitySubAppSession.getAppPublicKey(), settings);
+                }
+            }
+
             issuerNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetIssuerCount();
             new FetchCountTask().execute();
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
 
@@ -127,7 +146,6 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
         rootView = inflater.inflate(R.layout.home_dap_issuer_community_fragment, container, false);
 //        initViews(rootView);
-
         recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -588,7 +606,11 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     private void updateNotificationsBadge(int count) {
         issuerNotificationsCount = count;
-        getActivity().invalidateOptionsMenu();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        } else {
+            Log.e(TAG, "updateNotificationsBadge activity null, please check this, class" + getClass().getName() + " line: " + new Throwable().getStackTrace()[0].getLineNumber());
+        }
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -683,11 +705,18 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
         List<AssetIssuerActorRecord> result = null;
         if (moduleManager == null)
             throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
-        result = moduleManager.getAllActorAssetIssuerRegistered();
-        if (result != null && result.size() > 0) {
-            for (AssetIssuerActorRecord record : result) {
-                dataSet.add((new ActorIssuer(record)));
+
+        try {
+            result = moduleManager.getAllActorAssetIssuerRegistered();
+            if (result != null && result.size() > 0) {
+                for (AssetIssuerActorRecord record : result) {
+                    dataSet.add((new ActorIssuer(record)));
+                }
             }
+        } catch (CantGetAssetIssuerActorsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return dataSet;
     }

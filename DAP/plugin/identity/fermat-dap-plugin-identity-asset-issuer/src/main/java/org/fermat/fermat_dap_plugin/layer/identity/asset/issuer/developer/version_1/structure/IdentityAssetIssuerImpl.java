@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetIssuerImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, IdentityAssetIssuer {
+public class IdentityAssetIssuerImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, IdentityAssetIssuer, Serializable {
     private String alias;
     private String publicKey;
     private byte[] profileImage;

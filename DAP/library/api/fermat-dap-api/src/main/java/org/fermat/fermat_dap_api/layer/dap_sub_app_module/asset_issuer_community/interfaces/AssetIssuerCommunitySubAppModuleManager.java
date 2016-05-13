@@ -28,7 +28,7 @@ import java.util.List;
 /**
  * Created by Nerio on 13/10/15.
  */
-public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings>, Serializable {
+public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings> {
 
     List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException;
 

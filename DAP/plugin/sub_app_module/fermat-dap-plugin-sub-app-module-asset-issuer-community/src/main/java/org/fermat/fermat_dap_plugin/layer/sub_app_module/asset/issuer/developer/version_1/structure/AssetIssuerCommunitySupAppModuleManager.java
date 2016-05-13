@@ -58,7 +58,7 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
-public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager, Serializable {
+public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager {
 
     private final PluginFileSystem                              pluginFileSystem;
     private final LogManager                                    logManager;
