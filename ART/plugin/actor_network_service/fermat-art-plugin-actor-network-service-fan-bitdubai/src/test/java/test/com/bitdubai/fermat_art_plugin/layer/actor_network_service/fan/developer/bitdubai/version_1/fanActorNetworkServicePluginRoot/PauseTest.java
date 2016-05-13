@@ -15,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.PAUSED;
 
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by gianco on 20/04/16.
