@@ -159,11 +159,20 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     String datef = formatter.format(new java.util.Date(milliseconds));
                                     if (Validate.isDateToday(dated)) {
                                         if (Validate.isDateToday(dated)) {
-                                            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                                formatter = new SimpleDateFormat("HH:mm");
-                                            } else {
-                                                formatter = new SimpleDateFormat("hh:mm aa");
+                                            if (Build.VERSION.SDK_INT < 23) {
+                                                if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
+                                                    formatter = new SimpleDateFormat("HH:mm");
+                                                } else {
+                                                    formatter = new SimpleDateFormat("hh:mm aa");
+                                                }
+                                            }else{
+                                                if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                    formatter = new SimpleDateFormat("HH:mm");
+                                                } else {
+                                                    formatter = new SimpleDateFormat("hh:mm aa");
+                                                }
                                             }
+
                                         }
                                         formatter.setTimeZone(TimeZone.getDefault());
                                         datef = formatter.format(new java.util.Date(milliseconds));
