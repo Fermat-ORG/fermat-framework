@@ -258,7 +258,9 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
 
 
                     for (LossProtectedWalletTransaction cryptoWalletTransaction : list) {
-                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(cryptoWalletTransaction, false, cryptoWalletTransaction);
+                        List<LossProtectedWalletTransaction> list = new ArrayList<>();
+                        list.add(cryptoWalletTransaction);
+                        GrouperItem<LossProtectedWalletTransaction,LossProtectedWalletTransaction> grouperItem = new GrouperItem<>(list,false,cryptoWalletTransaction);
                         data.add(grouperItem);
                     }
 
