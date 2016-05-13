@@ -153,7 +153,7 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
                     errorManager);
         } catch (Exception e){
             CantStartPluginException exception = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
-            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw exception;
         }
 

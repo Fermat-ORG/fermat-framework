@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageS
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
+import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.ChatNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.database.interfaces.DAO;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_cht_plugin.layer.network_service.chat.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
@@ -64,7 +65,7 @@ public class ChatMetadataRecordDAO implements DAO {
 
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
-    private ErrorManager errorManager;
+    private ChatNetworkServicePluginRoot chatNetworkServicePluginRoot;
 
     /**
      * Constructor
@@ -72,15 +73,15 @@ public class ChatMetadataRecordDAO implements DAO {
      * @param pluginDatabaseSystem
      * @param pluginId
      */
-    public ChatMetadataRecordDAO(Database database, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) {
+    public ChatMetadataRecordDAO(Database database, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ChatNetworkServicePluginRoot chatNetworkServicePluginRoot) {
         super();
         this.database = database;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.errorManager = errorManager;
+        this.chatNetworkServicePluginRoot = chatNetworkServicePluginRoot;
     }
     private void reportUnexpectedError(final Exception e) {
-        errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        chatNetworkServicePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
     }
 
 
@@ -846,13 +847,13 @@ public class ChatMetadataRecordDAO implements DAO {
             chatMetadataRecord.setChatName(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATNAME_COLUMN_NAME));
             chatMetadataRecord.setChatMessageStatus(ChatMessageStatus.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATSTATUS_COLUMN_NAME)));
             chatMetadataRecord.setMessageStatus(MessageStatus.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME)));
-            chatMetadataRecord.setDate(Timestamp.valueOf(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME)));
+            chatMetadataRecord.setDate(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME));
             chatMetadataRecord.setMessageId(UUID.fromString(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME)));
             chatMetadataRecord.setMessage(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME));
             chatMetadataRecord.setDistributionStatus(DistributionStatus.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DISTRIBUTIONSTATUS_COLUMN_NAME)));
             chatMetadataRecord.setProcessed(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROCCES_STATUS_COLUMN_NAME));
             chatMetadataRecord.changeState(ChatProtocolState.getByCode(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME)));
-            chatMetadataRecord.setSentDate(Timestamp.valueOf(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME)));
+            chatMetadataRecord.setSentDate(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME));
             chatMetadataRecord.setSentCount(record.getIntegerValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME));
             chatMetadataRecord.setFlagReadead(Boolean.valueOf(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_READ_MARK_COLUMN_NAME)));
             chatMetadataRecord.setMsgXML(record.getStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_XML_MSG_REPRESENTATION));
@@ -912,13 +913,13 @@ public class ChatMetadataRecordDAO implements DAO {
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATNAME_COLUMN_NAME,                    chatMetadataRecord.getChatName());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_CHATSTATUS_COLUMN_NAME,                  chatMetadataRecord.getChatMessageStatus().getCode());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_STATUS_COLUMN_NAME,              chatMetadataRecord.getMessageStatus().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME,                        chatMetadataRecord.getDate().toString());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DATE_COLUMN_NAME,                        chatMetadataRecord.getDate());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDMENSAJE_COLUMN_NAME,                   chatMetadataRecord.getMessageId().toString());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_MESSAGE_COLUMN_NAME,                     chatMetadataRecord.getMessage());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_DISTRIBUTIONSTATUS_COLUMN_NAME,          chatMetadataRecord.getDistributionStatus().getCode());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROCCES_STATUS_COLUMN_NAME,              chatMetadataRecord.getProcessed());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROTOCOL_STATE_COLUMN_NAME,              chatMetadataRecord.getChatProtocolState().getCode());
-        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME,                    chatMetadataRecord.getSentDate().toString());
+        entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENTDATE_COLUMN_NAME,                    chatMetadataRecord.getSentDate());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_READ_MARK_COLUMN_NAME, String.valueOf(chatMetadataRecord.isFlagReadead()));
         entityRecord.setIntegerValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_SENT_COUNT_COLUMN_NAME,                 chatMetadataRecord.getSentCount());
         entityRecord.setStringValue(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_XML_MSG_REPRESENTATION,                  chatMetadataRecord.getMsgXML());

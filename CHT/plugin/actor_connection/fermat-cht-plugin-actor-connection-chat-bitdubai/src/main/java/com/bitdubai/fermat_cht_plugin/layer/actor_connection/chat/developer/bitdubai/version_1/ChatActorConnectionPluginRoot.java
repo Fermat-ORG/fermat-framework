@@ -93,7 +93,7 @@ public class ChatActorConnectionPluginRoot extends AbstractPlugin implements Dat
             final ActorConnectionEventActions eventActions = new ActorConnectionEventActions(
                     chatManagerNetworkService,
                     dao,
-                    errorManager,
+                    this,
                     eventManager,
                     broadcaster,
                     this.getPluginVersionReference()
@@ -112,7 +112,7 @@ public class ChatActorConnectionPluginRoot extends AbstractPlugin implements Dat
             fermatManager = new ActorConnectionManager(
                     chatManagerNetworkService,
                     dao,
-                    errorManager,
+                    this,
                     this.getPluginVersionReference()
             );
 
@@ -122,9 +122,7 @@ public class ChatActorConnectionPluginRoot extends AbstractPlugin implements Dat
 
         } catch (final CantInitializeActorConnectionDatabaseException cantInitializeActorConnectionDatabaseException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    getPluginVersionReference(),
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantInitializeActorConnectionDatabaseException
             );
 
