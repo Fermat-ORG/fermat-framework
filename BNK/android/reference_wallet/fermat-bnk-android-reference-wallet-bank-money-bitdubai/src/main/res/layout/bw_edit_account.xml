@@ -46,10 +46,11 @@
 
             <EditText
                 android:id="@+id/account_number"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
+                android:maxLength="30"
                 android:gravity="center_horizontal"
                 android:hint="Enter account number"
                 android:textColor="#fff"
@@ -57,10 +58,11 @@
 
             <EditText
                 android:id="@+id/account_alias"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
+                android:maxLength="15"
                 android:gravity="center_horizontal"
                 android:hint="Enter alias"
                 android:textColor="#fff"
