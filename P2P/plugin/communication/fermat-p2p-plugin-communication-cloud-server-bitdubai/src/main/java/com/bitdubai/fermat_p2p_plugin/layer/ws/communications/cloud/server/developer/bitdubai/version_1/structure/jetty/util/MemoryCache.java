@@ -104,6 +104,11 @@ public class MemoryCache {
      */
     private Map<FermatPacketType, List<FermatJettyPacketProcessor>> packetProcessorsRegister;
 
+    /*
+     * Holds the server of platforms active
+     */
+    private Map<NetworkServiceType,String> listServerConfByPlatform;
+
     /**
      * Constructor
      */
@@ -118,12 +123,14 @@ public class MemoryCache {
         this.registeredOtherPlatformComponentProfileCache = new ConcurrentHashMap<>();
         this.timersByClientIdentity                       = new ConcurrentHashMap<>();
         this.standByProfileByClientIdentity               = new ConcurrentHashMap<>();
+        this.listServerConfByPlatform                     = new ConcurrentHashMap<>();
 
         registerFermatPacketProcessor(new ComponentRegistrationRequestJettyPacketProcessor());
         registerFermatPacketProcessor(new ComponentConnectionRequestJettyPacketProcessor());
         registerFermatPacketProcessor(new DiscoveryComponentConnectionRequestJettyPacketProcessor());
         registerFermatPacketProcessor(new RequestListComponentRegisterJettyPacketProcessor());
         registerFermatPacketProcessor(new ActorUpdateRequestJettyPacketProcessor());
+
     }
 
     /**
@@ -194,6 +201,10 @@ public class MemoryCache {
     public   boolean exist(String key){
 
         return instance.properties.containsKey(key);
+    }
+
+    public Map<NetworkServiceType, String> getListServerConfByPlatform() {
+        return listServerConfByPlatform;
     }
 
     /**
@@ -478,7 +489,7 @@ public class MemoryCache {
 
                 if(client.getSession().isOpen()) {
 
-                    LOG.info("SEND MESSAGEEEEEEEEEEEEEEEEEEEE");
+                    //LOG.info("SEND MESSAGEEEEEEEEEEEEEEEEEEEE");
 
                     FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(client.getClientIdentity(), //Destination
                                                                                                                                 client.getServerIdentity().getPublicKey(), //Sender
@@ -507,4 +518,33 @@ public class MemoryCache {
         }
 
     }
+
+    private void putInAlllist(){
+
+        /* ARTIST */
+        listServerConfByPlatform.put(NetworkServiceType.ARTIST_ACTOR, "192.168.1.4");
+        /* ARTIST */
+
+        /* CBP */
+        listServerConfByPlatform.put(NetworkServiceType.CRYPTO_BROKER, "192.168.1.15");
+        /* CBP */
+
+        /* CCP */
+        listServerConfByPlatform.put(NetworkServiceType.INTRA_USER, "192.168.1.6");
+        /* CCP */
+
+        /* CHT */
+        listServerConfByPlatform.put(NetworkServiceType.CHAT, "192.168.1.7");
+        /* CHT */
+
+        /* DAP */
+        listServerConfByPlatform.put(NetworkServiceType.ASSET_USER_ACTOR, "192.168.1.8");
+        /* DAP */
+
+        /* MONITOR */
+        listServerConfByPlatform.put(NetworkServiceType.FERMAT_MONITOR, "192.168.1.9");
+        /* MONITOR */
+    }
+
+
 }
