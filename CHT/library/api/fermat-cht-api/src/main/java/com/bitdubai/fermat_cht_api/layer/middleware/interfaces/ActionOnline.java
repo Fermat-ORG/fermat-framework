@@ -22,7 +22,7 @@ public interface ActionOnline {
     void setValue(boolean value);
 
     boolean getLastOn();
-    void setLastOn(boolean value);
+    void setLastOn(boolean lastOn);
 
     String getLastConnection();
     void setLastConnection(String lastConnection);
