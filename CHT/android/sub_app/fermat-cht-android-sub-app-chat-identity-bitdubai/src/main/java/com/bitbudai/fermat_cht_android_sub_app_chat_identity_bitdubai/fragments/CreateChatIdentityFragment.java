@@ -467,14 +467,18 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     private void rotateImage() throws CHTException {
         Bitmap thissbitmap = null;
+
+
+       if(ExistIdentity() == true || cryptoBrokerBitmap != null) {
         if(cryptoBrokerBitmap != null){
             thissbitmap = cryptoBrokerBitmap;
-        }if(ExistIdentity() == true) {
+        }else {
             try {
                 thissbitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
             } catch (CantGetChatIdentityException e) {
                 errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             }
+        }
             if (thissbitmap != null) {
                 if (ROTATE_VALUE <= 270) {
                     ROTATE_VALUE = ROTATE_VALUE + 90;
@@ -485,6 +489,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     cryptoBrokerBitmap = RotateBitmap(thissbitmap, ROTATE_VALUE);
                     Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                 }
+            }else{
+                Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
             }
         }else{
             Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
