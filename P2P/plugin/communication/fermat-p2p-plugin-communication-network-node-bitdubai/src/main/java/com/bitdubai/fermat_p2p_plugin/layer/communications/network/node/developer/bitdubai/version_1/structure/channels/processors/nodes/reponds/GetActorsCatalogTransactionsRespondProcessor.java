@@ -95,7 +95,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                         processTransaction(actorsCatalogTransaction);
                     }
 
-                    long totalRowInDb = getDaoFactory().getActorsCatalogDao().getAllCount();
+                    long totalRowInDb = getDaoFactory().getActorsCatalogTransactionDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("Row in catalog seed node = "+messageContent.getCount());
