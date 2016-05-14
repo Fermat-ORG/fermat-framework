@@ -6,6 +6,8 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.C
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
@@ -97,6 +99,11 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
     @Override
     public EarningExtractorManager getEarningsExtractorManager() {
         return earningExtractorManager;
+    }
+
+    @Override
+    public EarningsSearch getSearch(EarningsPair earningsPair) {
+        return new MatchingEngineMiddlewareEarningsSearch(dao, earningsPair);
     }
 
     public void addEarningsExtractor(EarningExtractor extractor){

@@ -250,7 +250,6 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                     earningWalletReference,
                     state,
 
-                    this,
                     walletReference
             );
 
@@ -485,7 +484,6 @@ public class MatchingEngineMiddlewareDao implements Serializable {
                 earningsWalletReference,
                 state,
 
-                this,
                 walletReference
         );
     }
