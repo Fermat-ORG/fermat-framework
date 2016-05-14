@@ -110,6 +110,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private ClientProfile clientProfile;
 
+   /*
+    * is used to validate if is connection to extern node
+    * when receive checkinclient then send register all profile
+    */
+    private boolean isConnectingToExternNode;
+
     /*
      * Constructor
      */
@@ -120,7 +126,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final ECCKeyPair             clientIdentity        ,
                                                 final PluginVersionReference pluginVersionReference,
                                                 NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
-                                                Integer nodesListPosition){
+                                                Integer nodesListPosition,
+                                                boolean isConnectingToExternNode){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -134,6 +141,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
+        this.isConnectingToExternNode = isConnectingToExternNode;
 
         this.container              = ClientManager.createClient();
     }
@@ -256,8 +264,16 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     /*
-     * CheckIn Client Request to Network Node
+     * is used to validate if is connection to extern
+     * node when receive checkinclient then send register all profile
      */
+    public boolean isConnectingToExternNode() {
+        return isConnectingToExternNode;
+    }
+
+    /*
+         * CheckIn Client Request to Network Node
+         */
     public void setCheckInClientRequestProcessor(){
 
         clientProfile = new ClientProfile();
@@ -314,11 +330,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         PackageType packageType;
 
-        if (profile instanceof ActorProfile)
+        if (profile instanceof ActorProfile) {
             packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
-        else if (profile instanceof ClientProfile)
+            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+        }else if (profile instanceof ClientProfile) {
             packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
-        else if (profile instanceof NetworkServiceProfile) {
+        }else if (profile instanceof NetworkServiceProfile) {
             packageType = PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST;
             ((NetworkServiceProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
         } else {

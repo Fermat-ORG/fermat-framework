@@ -23,7 +23,7 @@ public class DesktopDatabaseBridge {
     /**
      * Database member variables.
      */
-    private Connection c = null;
+    private Connection connection = null;
     private Statement stmt = null;
     private boolean transaccionSatisfactoria=false;
     private String databasePath;
@@ -44,12 +44,12 @@ public class DesktopDatabaseBridge {
         try {
             //SQLite Driver
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-            c.setAutoCommit(false);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            connection.setAutoCommit(false);
 
         }catch(Exception e){
             e.printStackTrace();
-            if (c != null)
+            if (connection != null)
                 close();
             throw new RuntimeException(e);
         }
@@ -75,8 +75,8 @@ public class DesktopDatabaseBridge {
                 stmt.close();
             }
 
-            if (c != null){
-                c.close();
+            if (connection != null){
+                connection.close();
             }
 
         } catch (SQLException ex) {
@@ -95,14 +95,14 @@ public class DesktopDatabaseBridge {
      */
 
     public ResultSet rawQuery(String sql,String[] selectionArgs) {
-        if (c == null)
+        if (connection == null)
             connect();
 
         ResultSet rs=null;
         try {
-            stmt = c.createStatement();
+            stmt = connection.createStatement();
             rs = stmt.executeQuery(sql);
-            c.commit();
+            connection.commit();
 
         }catch(SQLException ex){
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
@@ -168,12 +168,12 @@ public class DesktopDatabaseBridge {
     public void endTransaction() {
         if (transaccionSatisfactoria){
             try {
-                c.commit();
+                connection.commit();
             } catch (SQLException ex) {
                 Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RuntimeException(ex);
             }
-            if (c != null)
+            if (connection != null)
                close();
         }
 
@@ -228,7 +228,7 @@ public class DesktopDatabaseBridge {
      * @param whereArg
      * @exception SQLException if the database is close or the driver is not more available
      */
-    public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) {
+    public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) throws SQLException {
 
         // create our java preparedstatement using a sql update query
         String setVariables = "";
@@ -251,27 +251,30 @@ public class DesktopDatabaseBridge {
             i++;
         }
 
-        if (c == null){
+        System.out.println("Connection for update = " + connection + " is closed = "+connection.isClosed());
+
+        if (connection == null || connection.isClosed()){
             connect();
         }
 
         try {
 
-            System.out.println("UPDATE QUERY = " + "UPDATE " + tableName + " SET " + setVariables + whereClause);
+            String SQL = "UPDATE " + tableName + " SET " + setVariables + whereClause;
+            System.out.println("UPDATE QUERY = " + SQL);
 
-            stmt = c.createStatement();
-            stmt.executeUpdate("UPDATE " + tableName + " SET " + setVariables + whereClause);
+            stmt = connection.createStatement();
+            stmt.executeUpdate(SQL);
 
-            c.commit();
+            connection.commit();
 
         } catch(SQLException ex){
+
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
-        } finally {
 
-            close();
+        }finally {
+            connection.close();
         }
-
     }
 
 }

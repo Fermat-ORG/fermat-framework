@@ -43,6 +43,11 @@ public class ActorProfile extends Profile {
     private String nsIdentityPublicKey;
 
     /**
+     * Represent the clientIdentityPublicKey
+     */
+    private String clientIdentityPublicKey;
+
+    /**
      * Constructor
      */
     public ActorProfile(){
@@ -158,6 +163,24 @@ public class ActorProfile extends Profile {
     }
 
     /**
+     * Get the ClientIdentityPublicKey
+     *
+     * @return String
+     */
+    public String getClientIdentityPublicKey() {
+        return clientIdentityPublicKey;
+    }
+
+    /**
+     * Sets the clientIdentityPublicKey
+     *
+     * @param clientIdentityPublicKey to set
+     */
+    public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
+        this.clientIdentityPublicKey = clientIdentityPublicKey;
+    }
+
+    /**
      * Return this object in json string
      *
      * @return json string
@@ -185,7 +208,8 @@ public class ActorProfile extends Profile {
                 ", extraData='" + extraData + '\'' +
                 ", name='" + name + '\'' +
                 ", photo=" + (photo != null ? "true" : "false") +
-                ", nsIdentityPublicKey='" + nsIdentityPublicKey + '\'' +
+                ", nsIdentityPublicKey ='" + nsIdentityPublicKey + '\'' +
+                ", clientIdentityPublicKey ='" + clientIdentityPublicKey + '\'' +
                 '}';
     }
 }

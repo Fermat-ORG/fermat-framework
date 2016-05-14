@@ -90,7 +90,8 @@ public class ClientsConnectionsManager {
                     identity,
                     new PluginVersionReference(new Version()),
                     null,
-                    -1
+                    -1,
+                    Boolean.TRUE
                     );
 
             listActorConnectIntoNode.put(identityPublicKey, hostPath);

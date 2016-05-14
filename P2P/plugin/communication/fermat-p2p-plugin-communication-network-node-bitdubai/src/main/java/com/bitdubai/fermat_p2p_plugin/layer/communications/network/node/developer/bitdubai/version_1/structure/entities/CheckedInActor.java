@@ -36,6 +36,8 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 
 	private String nsIdentityPublicKey;
 
+	private String clientIdentityPublicKey;
+
 	public CheckedInActor() {
 		super();
         this.uuid = UUID.randomUUID();
@@ -112,6 +114,14 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 
 	public void setNsIdentityPublicKey(String nsIdentityPublicKey) {
 		this.nsIdentityPublicKey = nsIdentityPublicKey;
+	}
+
+	public String getClientIdentityPublicKey() {
+		return clientIdentityPublicKey;
+	}
+
+	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
+		this.clientIdentityPublicKey = clientIdentityPublicKey;
 	}
 
 	public byte[] getPhoto() {
