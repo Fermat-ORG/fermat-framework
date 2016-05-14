@@ -132,7 +132,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
 
         if(objectArrived!=null){
-            if(objectArrived.getE()!=null) throw objectArrived.getE();
+            if(objectArrived.getE()!=null) return objectArrived.getE();
             isDataChuncked = objectArrived.isLargeData();
         }else{
             Log.e(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module, please check your module and contact furszy if the error persist,");
@@ -141,7 +141,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         Object o = null;
         Log.i(TAG,"SendMessage almost end");
         if(isDataChuncked){
-            if(Looper.myLooper() == Looper.getMainLooper()) throw new LargeWorkOnMainThreadException(proxy,method);
+            if(Looper.myLooper() == Looper.getMainLooper()) return new LargeWorkOnMainThreadException(proxy,method);
             //test reason
             mReceiverSocketSession.addWaitingMessage(dataId);
 

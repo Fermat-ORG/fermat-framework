@@ -835,6 +835,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         }
     }
 
+
     @Override
     public NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException {
         return new NegotiationBankAccount() {
