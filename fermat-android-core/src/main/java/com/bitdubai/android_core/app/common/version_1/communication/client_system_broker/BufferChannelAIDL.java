@@ -71,6 +71,7 @@ public class BufferChannelAIDL {
         Log.i(TAG,"getBufferObject");
 
         if(buffer.containsKey(id)){
+            Log.i(TAG,"getBufferObject returned ok");
             return buffer.get(id);
         }
         return null;
