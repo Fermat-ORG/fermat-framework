@@ -48,7 +48,7 @@ public class Package {
      *
      * @throws InvalidParameterException if the parameters are bad.
      */
-    private Package(final String             content                 ,
+    protected Package(final String             content                 ,
                     final NetworkServiceType networkServiceTypeSource,
                     final PackageType        packageType             ,
                     final String             signature               ) {

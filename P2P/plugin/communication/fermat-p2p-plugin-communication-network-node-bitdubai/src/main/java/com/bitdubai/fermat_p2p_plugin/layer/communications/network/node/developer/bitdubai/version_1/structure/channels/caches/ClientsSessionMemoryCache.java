@@ -154,4 +154,12 @@ public class ClientsSessionMemoryCache {
 
         return instance.clientSessionsBySession.containsKey(session);
     }
+
+    /**
+     * Get Client Sessions By Pk
+     * @return Map<String, Session>
+     */
+    public static Map<String, Session> getClientSessionsByPk() {
+        return instance.clientSessionsByPk;
+    }
 }

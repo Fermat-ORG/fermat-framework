@@ -7,6 +7,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.NodeSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
@@ -19,6 +21,11 @@ import com.google.gson.JsonObject;
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.websocket.Session;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -162,6 +169,85 @@ public class OnlineComponents implements RestFulServices {
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("success", Boolean.FALSE);
             jsonObject.addProperty("isOnline", Boolean.FALSE);
+            jsonObject.addProperty("details", e.getMessage());
+
+            return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+        }
+
+    }
+
+
+    @GET
+    @Path("/sessions/nodes")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getActiveNodeSessionData(){
+
+        LOG.info("Executing getActiveNodeSessionData");
+
+        try {
+
+            Map<String, Session> sessionMap = NodeSessionMemoryCache.getNodeSessions();
+            List<JsonObject> sessions = new ArrayList<>();
+
+            for (String key : sessionMap.keySet()) {
+                Session session = sessionMap.get(key);
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("publicKey", key);
+                jsonObject.addProperty("sessionId", session.getId());
+                sessions.add(jsonObject);
+            }
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", Boolean.TRUE);
+            jsonObject.addProperty("sessions",gson.toJson(sessions));
+
+            return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", Boolean.FALSE);
+            jsonObject.addProperty("details", e.getMessage());
+
+            return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+        }
+
+    }
+
+    @GET
+    @Path("/sessions/clients")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getActiveClientSessionData(){
+
+        LOG.info("Executing getActiveClientSessionData");
+
+        try {
+
+            Map<String, Session> sessionMap = ClientsSessionMemoryCache.getClientSessionsByPk();
+            List<JsonObject> sessions = new ArrayList<>();
+
+            for (String key : sessionMap.keySet()) {
+                Session session = sessionMap.get(key);
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("publicKey", key);
+                jsonObject.addProperty("sessionId", session.getId());
+                sessions.add(jsonObject);
+            }
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", Boolean.TRUE);
+            jsonObject.addProperty("sessions",gson.toJson(sessions));
+
+            return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", Boolean.FALSE);
             jsonObject.addProperty("details", e.getMessage());
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
