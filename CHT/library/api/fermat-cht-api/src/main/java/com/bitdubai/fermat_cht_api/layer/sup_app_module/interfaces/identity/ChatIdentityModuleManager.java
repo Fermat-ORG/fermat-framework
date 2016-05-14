@@ -57,11 +57,4 @@ public interface ChatIdentityModuleManager extends ModuleManager, ModuleSettings
      */
     void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException;
 
-    /**
-     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
-     * settings class parametrized.
-     *
-     * @return a new instance of the settings manager for the specified fermat settings object.
-     */
-
 }
