@@ -60,18 +60,29 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
             getChannel().setIsRegistered(Boolean.TRUE);
 
             /*
+             * if is connection to other node extern then
+             * send profile of the Network Service
+             */
+            if(getChannel().getNetworkClientCommunicationConnection().isConnectingToExternNode()) {
+
+
+
+            }else{
+
+            /*
              * Create a raise a new event whit the platformComponentProfile registered
              */
-            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_REGISTERED);
-            event.setSource(EventSource.NETWORK_CLIENT);
+                FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_REGISTERED);
+                event.setSource(EventSource.NETWORK_CLIENT);
 
-            ((NetworkClientRegisteredEvent) event).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+                ((NetworkClientRegisteredEvent) event).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
 
             /*
              * Raise the event
              */
-            System.out.println("CheckInClientRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_REGISTERED");
-            getEventManager().raiseEvent(event);
+                System.out.println("CheckInClientRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_REGISTERED");
+                getEventManager().raiseEvent(event);
+            }
 
         } else {
             //there is some wrong

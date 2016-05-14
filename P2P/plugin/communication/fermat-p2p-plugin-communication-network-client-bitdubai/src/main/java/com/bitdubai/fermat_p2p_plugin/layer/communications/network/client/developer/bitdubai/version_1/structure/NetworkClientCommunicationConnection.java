@@ -109,6 +109,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private ClientProfile clientProfile;
 
+   /*
+    * is used to validate if is connection to extern node
+    * when receive checkinclient then send register all profile
+    */
+    private boolean isConnectingToExternNode;
+
     /*
      * Constructor
      */
@@ -119,7 +125,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final ECCKeyPair             clientIdentity        ,
                                                 final PluginVersionReference pluginVersionReference,
                                                 NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
-                                                Integer nodesListPosition){
+                                                Integer nodesListPosition,
+                                                boolean isConnectingToExternNode){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -133,6 +140,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
+        this.isConnectingToExternNode = isConnectingToExternNode;
 
         this.container              = ClientManager.createClient();
     }
@@ -227,23 +235,25 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
+            // es malo usar la session de una vez ya que es asincrono la conexion
+            // y da exception
             session = container.connectToServer(communicationsNetworkClientChannel, uri);
-
-            //validate if is connected
-            if (session != null && session.isOpen())
-                this.isConnected = Boolean.TRUE;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public Session getSession() {
-        return session;
-    }
-
     public boolean isConnected() {
-        return isConnected;
+
+        try {
+            if (communicationsNetworkClientChannel.getClientConnection() != null)
+                return communicationsNetworkClientChannel.getClientConnection().isOpen();
+        }catch (Exception e){
+            return Boolean.FALSE;
+        }
+
+        return Boolean.FALSE;
     }
 
     @Override
@@ -253,8 +263,16 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     /*
-     * CheckIn Client Request to Network Node
+     * is used to validate if is connection to extern
+     * node when receive checkinclient then send register all profile
      */
+    public boolean isConnectingToExternNode() {
+        return isConnectingToExternNode;
+    }
+
+    /*
+         * CheckIn Client Request to Network Node
+         */
     public void setCheckInClientRequestProcessor(){
 
         clientProfile = new ClientProfile();
@@ -311,11 +329,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         PackageType packageType;
 
-        if (profile instanceof ActorProfile)
+        if (profile instanceof ActorProfile) {
             packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
-        else if (profile instanceof ClientProfile)
+            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+        }else if (profile instanceof ClientProfile) {
             packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
-        else if (profile instanceof NetworkServiceProfile) {
+        }else if (profile instanceof NetworkServiceProfile) {
             packageType = PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST;
             ((NetworkServiceProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
         } else {
@@ -555,7 +574,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         if (isConnected()){
 
             try {
-                session.getBasicRemote().sendObject(
+                communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
                                 NetworkServiceType.UNDEFINED,
@@ -599,8 +618,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     public void raiseClientConnectionLostNotificationEvent() {
 
-        this.communicationsNetworkClientChannel.setIsRegistered(Boolean.FALSE);
-
         System.out.println("CommunicationsNetworkClientConnection - raiseClientConnectionLostNotificationEvent");
         FermatEvent platformEvent = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_LOST);
         platformEvent.setSource(EventSource.NETWORK_CLIENT);
@@ -642,4 +659,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return uri;
     }
 
+    public CommunicationsNetworkClientChannel getCommunicationsNetworkClientChannel() {
+        return communicationsNetworkClientChannel;
+    }
 }
