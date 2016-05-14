@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcce
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
@@ -667,5 +668,23 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         }
         //For now, I'll return an ART_FAN
         return PlatformComponentType.ART_ARTIST;
+    }
+
+    /**
+     * This method checks if an actor connection exists.
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    public List<ArtistActorConnection> getRequestActorConnections(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        return artistActorConnectionManager.getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
     }
 }
