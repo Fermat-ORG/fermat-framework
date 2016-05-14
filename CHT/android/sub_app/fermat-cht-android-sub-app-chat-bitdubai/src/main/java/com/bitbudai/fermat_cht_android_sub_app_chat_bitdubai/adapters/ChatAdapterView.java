@@ -362,20 +362,33 @@ public class ChatAdapterView extends LinearLayout {
 
     public String setFormatLastTime(String date){
         String fecha = date;
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        try {
-            Date dater = formatter.parse(date);
-            //String formattedTime = formatter.format(dater);
-            String formattedTime = date.substring(11,16);
-        if(Validate.isDateToday(dater)){
-            fecha = "today at "+formattedTime;
-        }else{
-            Date today = new Date();
-            long dias = (today.getTime() - dater.getTime()) / (1000 * 60 * 60 * 24);
-            if(dias == 1){
-               fecha = "yesterday at "+formattedTime;
-            }
+        SimpleDateFormat formatter;
+        String formattedTime;
+        if(android.text.format.DateFormat.is24HourFormat(getContext())) {
+            formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        } else {
+            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
         }
+        try {
+            formatter.setTimeZone(TimeZone.getDefault());
+
+             formattedTime = formatter.format(new java.util.Date(date));
+            //String formattedTime = formatter.format(dater);
+            if(date.length() > 16) {
+                 formattedTime = formattedTime.substring(11, 19);
+            }else {
+                 formattedTime = formattedTime.substring(11, 16);
+            }
+
+            if(Validate.isDateToday(new java.util.Date(date))){
+                    fecha = "today at "+formattedTime;
+                }else{
+                    Date today = new Date();
+                    long dias = (today.getTime() - new java.util.Date(date).getTime()) / (1000 * 60 * 60 * 24);
+                    if(dias == 1){
+                        fecha = "yesterday at "+formattedTime;
+                    }
+                }
         }catch(Exception e){
             Log.e("ErrorOnSetFormatLastTim", e.getMessage(),e);
         }
