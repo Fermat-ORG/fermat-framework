@@ -19,22 +19,27 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import static android.widget.Toast.makeText;
-import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser.*;
+import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE;
+import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM;
+import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER;
+import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL;
+import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/1/16.

@@ -5,8 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -17,14 +20,9 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
@@ -42,13 +40,6 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAsse
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantConnectToActorAssetRedeemPointException;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
@@ -58,21 +49,16 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.version_1.AssetUserCommunitySubAppModulePluginRoot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -81,21 +67,27 @@ import java.util.UUID;
 /**
  * Created by Nerio on 13/10/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "nindriago",
+        layer = Layers.SUB_APP_MODULE,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.ASSET_USER)
 public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<AssetUserSettings> implements AssetUserCommunitySubAppModuleManager {
 
-    private final PluginFileSystem                              pluginFileSystem;
-    private final LogManager                                    logManager;
-    private final ErrorManager                                  errorManager;
-    private final EventManager                                  eventManager;
-    private final Broadcaster                                   broadcaster;
-    private final UUID                                          pluginId;
-    private final IdentityAssetUserManager                      identityAssetUserManager;
-    private final ActorAssetIssuerManager                       actorAssetIssuerManager;
-    private final ActorAssetUserManager                         actorAssetUserManager;
-    private final AssetIssuerWalletSupAppModuleManager          assetIssuerWalletSupAppModuleManager;
-    private final AssetUserWalletSubAppModuleManager            assetUserWalletSubAppModuleManager;
-    private final AssetUserActorNetworkServiceManager           assetUserActorNetworkServiceManager;
-    private final AssetUserCommunitySubAppModulePluginRoot      assetUserCommunitySubAppModulePluginRoot;
+    private final PluginFileSystem pluginFileSystem;
+    private final LogManager logManager;
+    private final ErrorManager errorManager;
+    private final EventManager eventManager;
+    private final Broadcaster broadcaster;
+    private final UUID pluginId;
+    private final IdentityAssetUserManager identityAssetUserManager;
+    private final ActorAssetIssuerManager actorAssetIssuerManager;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager;
+    private final AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
+    private final AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
+    private final AssetUserCommunitySubAppModulePluginRoot assetUserCommunitySubAppModulePluginRoot;
 
     private SettingsManager<AssetUserSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
@@ -117,19 +109,19 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
 
         super(pluginFileSystem, pluginId);
 
-        this.pluginFileSystem                           = pluginFileSystem;
-        this.logManager                                 = logManager;
-        this.errorManager                               = errorManager;
-        this.eventManager                               = eventManager;
-        this.broadcaster                                = broadcaster;
-        this.pluginId                                   = pluginId;
-        this.identityAssetUserManager                   = identityAssetUserManager;
-        this.actorAssetIssuerManager                    = actorAssetIssuerManager;
-        this.actorAssetUserManager                      = actorAssetUserManager;
-        this.assetIssuerWalletSupAppModuleManager       = assetIssuerWalletSupAppModuleManager;
-        this.assetUserWalletSubAppModuleManager         = assetUserWalletSubAppModuleManager;
-        this.assetUserActorNetworkServiceManager        = assetUserActorNetworkServiceManager;
-        this.assetUserCommunitySubAppModulePluginRoot   = assetUserCommunitySubAppModulePluginRoot;
+        this.pluginFileSystem = pluginFileSystem;
+        this.logManager = logManager;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.broadcaster = broadcaster;
+        this.pluginId = pluginId;
+        this.identityAssetUserManager = identityAssetUserManager;
+        this.actorAssetIssuerManager = actorAssetIssuerManager;
+        this.actorAssetUserManager = actorAssetUserManager;
+        this.assetIssuerWalletSupAppModuleManager = assetIssuerWalletSupAppModuleManager;
+        this.assetUserWalletSubAppModuleManager = assetUserWalletSubAppModuleManager;
+        this.assetUserActorNetworkServiceManager = assetUserActorNetworkServiceManager;
+        this.assetUserCommunitySubAppModulePluginRoot = assetUserCommunitySubAppModulePluginRoot;
     }
 
     @Override
@@ -536,7 +528,7 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
 
             //TODO Mejorar Implementacion para tener informacion mas completa
             for (DAPActor record : dapActor) {
-                actorAssetUsers.add((new AssetUserActorRecord (
+                actorAssetUsers.add((new AssetUserActorRecord(
                         record.getActorPublicKey(),
                         record.getName(),
                         null,
@@ -545,14 +537,14 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
                         (double) 0,
                         (double) 0,
                         null,
-                        (long)  0,
-                        (long)  0,
+                        (long) 0,
+                        (long) 0,
                         null,
                         record.getType(),
                         record.getProfileImage())));
             }
 
-            return  actorAssetUsers;
+            return actorAssetUsers;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING YOUR ACCEPTANCE", e, "", "");
@@ -571,11 +563,11 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
             dapActor = this.actorAssetIssuerManager.getWaitingTheirConnectionActorAssetIssuer(actorAssetUserLoggedInPublicKey, max, offset);
 
             if (dapActor.size() <= 0)
-                dapActor =  this.actorAssetUserManager.getWaitingTheirConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
+                dapActor = this.actorAssetUserManager.getWaitingTheirConnectionActorAssetUser(actorAssetUserLoggedInPublicKey, max, offset);
 
             //TODO Mejorar Implementacion para tener informacion mas completa
             for (DAPActor record : dapActor) {
-                actorAssetUsers.add((new AssetUserActorRecord (
+                actorAssetUsers.add((new AssetUserActorRecord(
                         record.getActorPublicKey(),
                         record.getName(),
                         null,
@@ -584,14 +576,14 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
                         (double) 0,
                         (double) 0,
                         null,
-                        (long)  0,
-                        (long)  0,
+                        (long) 0,
+                        (long) 0,
                         null,
                         record.getType(),
                         record.getProfileImage())));
             }
 
-            return  actorAssetUsers;
+            return actorAssetUsers;
         } catch (CantGetActorAssetWaitingException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_COMMUNITY_SUB_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T GET ACTOR ASSET USER WAITING THEIR ACCEPTANCE", e, "", "Error on ACTOR ASSET USER MANAGER");
