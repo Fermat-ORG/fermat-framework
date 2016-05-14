@@ -12,11 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+
 /**
  * Created by nelson on 10/01/16.
  */
 //TODO Revisar Franklin
-public class EmptyCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation, Serializable{
+public class EmptyCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation, Serializable {
     private Long lastNegotiationUpdateDate;
     private ActorIdentity customer;
     private ActorIdentity broker;
