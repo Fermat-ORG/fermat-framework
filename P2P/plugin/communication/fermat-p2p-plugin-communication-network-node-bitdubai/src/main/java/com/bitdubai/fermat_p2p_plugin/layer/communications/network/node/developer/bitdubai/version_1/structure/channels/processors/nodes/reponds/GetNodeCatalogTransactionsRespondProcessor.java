@@ -84,7 +84,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                      */
                     List<NodesCatalogTransaction>  transactionList = messageContent.getNodesCatalogTransactions();
 
-                    long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
+                    long totalRowInDb = getDaoFactory().getNodesCatalogTransactionDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("transactionList size = "+transactionList.size());
@@ -97,7 +97,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                         processTransaction(nodesCatalogTransaction);
                     }
 
-                    totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
+                    totalRowInDb = getDaoFactory().getNodesCatalogTransactionDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("Row in catalog seed node = "+messageContent.getCount());
