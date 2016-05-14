@@ -329,11 +329,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         PackageType packageType;
 
-        if (profile instanceof ActorProfile)
+        if (profile instanceof ActorProfile) {
             packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
-        else if (profile instanceof ClientProfile)
+            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+        }else if (profile instanceof ClientProfile) {
             packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
-        else if (profile instanceof NetworkServiceProfile) {
+        }else if (profile instanceof NetworkServiceProfile) {
             packageType = PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST;
             ((NetworkServiceProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
         } else {
