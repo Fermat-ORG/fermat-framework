@@ -357,7 +357,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             Object returnModuleObject = null;
             PluginVersionReference pluginVersionReference =  null;
             try {
-                pluginVersionReference = new PluginVersionReference(
+                pluginVersionReference= new PluginVersionReference(
                         Platforms.getByCode(platformCode),
                         Layers.getByCode(layerCode),
                         Plugins.getByCode(pluginsCode),
@@ -385,9 +385,6 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                             NotSerializableException e = new NotSerializableException("Object returned: " + returnModuleObject.getClass().getName() + " from method " + method + " is not implementing serializable");
                             // return the exception
                             sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
-                        } else {
-                            //throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
-                            Log.e(TAG, "object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3());
                         }
                     }else {
                         Serializable aidlObject = (Serializable) returnModuleObject;
@@ -564,7 +561,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                     clazz = fermatManager.getClass();
                 }
                 Method m = null;
-                Object s = null;
+                Object returnedObject = null;
                 Object[] params = null;
                 Class<?>[] paramsTypes = null;
                 if (parameters != null) {
@@ -589,7 +586,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //                        Log.i(TAG,"Method: "+ m.getName());
 //                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
 //                        Log.i(TAG,"Method return type: "+ m.getReturnType());
-                        s = m.invoke(moduleManager, null);
+                        returnedObject = m.invoke(moduleManager, null);
                     } else {
                         try {
 //                            for(Class c : classes){
@@ -605,32 +602,17 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
                             }
                         }
-//                        Log.i(TAG,"Method: "+ m.getName());
-//                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
-//                        Log.i(TAG,"Method return type: "+ m.getReturnType());
                         if (moduleManager != null) {
                             if (m != null) {
-                                s = m.invoke(moduleManager, params);
+                                returnedObject = m.invoke(moduleManager, params);
                             } else {
-//                                Log.e(TAG, "Method: " + method + " is not found in interface: " + moduleManager.getClass().getName());
-//                                Log.e(TAG, "Superclass name: " + moduleManager.getClass().getSuperclass().getName());
                                 for (Method method1 : moduleManager.getClass().getSuperclass().getDeclaredMethods()) {
-//                                    Log.e(TAG, "Method : " + method1.getName());
-//                                    for (Type type : method1.getGenericParameterTypes()) {
-//                                        Log.e(TAG, "method Parameters name: " + type);Log.e(TAG, "method Parameters name: " + type);
-//                                    }
                                     if (method1.getName().equals(method)) {
-//                                        Log.i(TAG,"METODO ENCONTRADO POR DEFAUTL!!");
-//                                        for (Type type : method1.getParameterTypes()) {
-//                                            Log.i(TAG,"Oarameters:"+type);
-//                                        }
                                         try {
-                                            s = method1.invoke(moduleManager, params);
+                                            returnedObject = method1.invoke(moduleManager, params);
                                         } catch (Exception e) {
-//                                            e.printStackTrace();
-                                            return e;
+                                            returnedObject = e;
                                         }
-
                                         break;
                                     }
                                 }
@@ -640,11 +622,12 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                             Log.e(TAG, "NOT FOUND ModuleManger for this pluginVersionRefence:" + pluginVersionReference.toString());
                         }
                     }
-//                    if(s!=null){
-//                        Log.i(TAG,"Method return: "+ s.toString());
-//                    }else{
-//                        Log.i(TAG,"Method return: null, check this");
-//                    }
+
+                    if (m != null) {
+                        if(!m.getReturnType().equals(Void.TYPE) && returnedObject==null){
+                            Log.e(TAG, "Error: object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3()+" please check the module");
+                        }
+                    }
 
                 } catch (NoSuchMethodException e) {
                     Log.e(TAG, "NoSuchMethodException:" + method + " on class" + clazz.getName());
@@ -657,7 +640,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                 } catch (Exception e) {
                     return e;
                 }
-                return s;
+                return returnedObject;
             }
         };
 
@@ -666,6 +649,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         Object s = null;
         try {
             s = future.get();
+
 //            Log.i(TAG,"Invoque method return: "+ s);
         } catch (InterruptedException e) {
             e.printStackTrace();
