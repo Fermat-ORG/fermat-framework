@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
@@ -85,7 +86,7 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
 
     private List<GrouperItem> openNegotiationList;
 
-    List<LossProtectedWalletTransaction> list = new ArrayList<>();
+    List<LossProtectedWalletTransaction> lstTransactionsAvailable = new ArrayList<>();
 
 
     /**
@@ -242,7 +243,7 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
 
     @Override
     public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-       list  = new ArrayList<LossProtectedWalletTransaction>();
+        lstTransactionsAvailable  = new ArrayList<LossProtectedWalletTransaction>();
         ArrayList<GrouperItem> data = new ArrayList<>();
         try {
 
@@ -255,14 +256,15 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
                 LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossWalletSession.getIntraUserModuleManager();
                 if(intraUserLoginIdentity!=null) {
                     String intraUserPk = intraUserLoginIdentity.getPublicKey();
-                    lst = lossProtectedWallet.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
-                    //offset+=MAX_TRANSACTIONS;
-                    list = lst;
+                    lstTransactionsAvailable= lossProtectedWallet.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
-
-                    for (LossProtectedWalletTransaction cryptoWalletTransaction : list) {
-                        GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(cryptoWalletTransaction, false, cryptoWalletTransaction);
+                    for (LossProtectedWalletTransaction cryptoWalletTransaction : lstTransactionsAvailable) {
+                        List<LossProtectedWalletTransaction> listChild = new ArrayList<>();
+                        listChild.add(cryptoWalletTransaction);
+                      GrouperItem<LossProtectedWalletTransaction,LossProtectedWalletTransaction> grouperItem = new GrouperItem<>(listChild,false,cryptoWalletTransaction);
                         data.add(grouperItem);
+                        listChild.clear();
+
                     }
 
                     if(!data.isEmpty()){

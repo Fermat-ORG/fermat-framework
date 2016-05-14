@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -71,6 +72,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 23.07.15.
  */
+@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 
 public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         WalletRuntimeManager,
@@ -91,6 +93,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -103,7 +106,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-
+        try {
 
         FermatEventListener fermatEventListener;
         FermatEventHandler fermatEventHandler;
@@ -149,7 +152,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
          * * *
          *
          */
-        try {
+
 
             loadLastWalletNavigationStructure();
             factoryReset();
@@ -162,8 +165,15 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
         }
+        catch (Exception ex) {
+            String message = CantStartPluginException.DEFAULT_MESSAGE;
 
-        this.serviceStatus = ServiceStatus.STARTED;
+            String context = "WalletNavigationStructure Runtime Start";
+
+            String possibleReason = "unknown error";
+            throw new CantStartPluginException(message, FermatException.wrapException(ex), context, possibleReason);
+        }
+
 
     }
 
