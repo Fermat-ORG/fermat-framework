@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -50,6 +51,7 @@ public class BankTransactionParametersRecord implements BankTransactionParameter
      * Represents the memorandum in this transaction.
      */
     String memo;
+    private TransactionType transactionType;
 
     /**
      * Constructor with parameters
@@ -147,6 +149,13 @@ public class BankTransactionParametersRecord implements BankTransactionParameter
         return memo;
     }
 
+    @Override
+    public TransactionType getTransactionType() {
+        return transactionType;
+    }
+
+
+
     public void setMemo(String memo) {
         this.memo = memo;
     }
@@ -163,5 +172,9 @@ public class BankTransactionParametersRecord implements BankTransactionParameter
                 ", currency=" + currency +
                 ", memo='" + memo + '\'' +
                 '}';
+    }
+
+    public void setTransactionType(TransactionType transactionType) {
+        this.transactionType = transactionType;
     }
 }

@@ -44,4 +44,6 @@ public interface MatchingEngineManager extends FermatManager {
      * @return The Earnings Extractor manager
      */
     EarningExtractorManager getEarningsExtractorManager();
+
+    EarningsSearch getSearch(EarningsPair earningsPair);
 }
