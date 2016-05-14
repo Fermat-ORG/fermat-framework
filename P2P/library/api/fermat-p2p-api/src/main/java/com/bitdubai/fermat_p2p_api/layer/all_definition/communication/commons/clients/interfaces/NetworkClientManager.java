@@ -22,4 +22,11 @@ public interface NetworkClientManager {
      */
     NetworkClientConnection getConnection();
 
+    /**
+     * Get a NetworkClientConnection from uriToNode
+     * @param uriToNode
+     * @return NetworkClientConnection instance
+     */
+    NetworkClientConnection getConnection(String uriToNode);
+
 }

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
@@ -60,18 +61,46 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
             getChannel().setIsRegistered(Boolean.TRUE);
 
             /*
+             * if is connection to other node extern then
+             * send profile of the Network Service
+             */
+            if(getChannel().getNetworkClientCommunicationConnection().isConnectingToExternNode()) {
+
+                String uriToNode = getChannel().getNetworkClientCommunicationConnection().getUri().getHost() + ":" +
+                        getChannel().getNetworkClientCommunicationConnection().getUri().getPort();
+
+                 /*
+                 * Create a raise a new event whit the NETWORK_CLIENT_CONNECTION_SUCCESS
+                 */
+                FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS);
+                event.setSource(EventSource.NETWORK_CLIENT);
+
+                ((NetworkClientConnectionSuccessEvent) event).setUriToNode(uriToNode);
+
+                /*
+                 * Raise the event
+                 */
+                System.out.println("CheckInClientRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS");
+                getEventManager().raiseEvent(event);
+
+
+
+            }else{
+
+            /*
              * Create a raise a new event whit the platformComponentProfile registered
              */
-            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_REGISTERED);
-            event.setSource(EventSource.NETWORK_CLIENT);
+                FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_REGISTERED);
+                event.setSource(EventSource.NETWORK_CLIENT);
 
-            ((NetworkClientRegisteredEvent) event).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
+                ((NetworkClientRegisteredEvent) event).setCommunicationChannel(CommunicationChannels.P2P_SERVERS);
 
             /*
              * Raise the event
              */
-            System.out.println("CheckInClientRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_REGISTERED");
-            getEventManager().raiseEvent(event);
+                System.out.println("CheckInClientRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_REGISTERED");
+                getEventManager().raiseEvent(event);
+            }
 
         } else {
             //there is some wrong

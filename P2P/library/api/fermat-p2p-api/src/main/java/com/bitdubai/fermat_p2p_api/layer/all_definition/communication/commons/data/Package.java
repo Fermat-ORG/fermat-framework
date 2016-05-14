@@ -34,6 +34,11 @@ public class Package {
     private NetworkServiceType networkServiceTypeSource;
 
     /**
+     * Represent the clientDestination
+     */
+    private String clientDestination;
+
+    /**
      * Represent the signature value
      */
     private String signature;
@@ -48,7 +53,7 @@ public class Package {
      *
      * @throws InvalidParameterException if the parameters are bad.
      */
-    private Package(final String             content                 ,
+    protected Package(final String             content                 ,
                     final NetworkServiceType networkServiceTypeSource,
                     final PackageType        packageType             ,
                     final String             signature               ) {
@@ -105,6 +110,22 @@ public class Package {
      */
     public NetworkServiceType getNetworkServiceTypeSource() {
         return networkServiceTypeSource;
+    }
+
+    /**
+     * Set the ClientDestination
+     * @param clientDestination
+     */
+    protected void setClientDestination(String clientDestination) {
+        this.clientDestination = clientDestination;
+    }
+
+    /**
+     * Get the ClientDestination
+     * @return String
+     */
+    public String getClientDestination() {
+        return clientDestination;
     }
 
     /**

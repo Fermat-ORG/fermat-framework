@@ -4,6 +4,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MessageTransmitRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.Message;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.PackageMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -66,6 +67,8 @@ public class MessageTransmitProcessor extends PackageProcessor {
 
         try {
 
+            PackageMessage packageMessage = (PackageMessage) packageReceived;
+
             /*
              * Get the content
              */
@@ -79,7 +82,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
             /*
              * Get the destination
              */
-            String destinationIdentityPublicKey = messageContent.getReceiver();
+            String destinationIdentityPublicKey = packageMessage.getClientDestination();
 
             /*
              * Get the connection to the destination

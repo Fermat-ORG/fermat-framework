@@ -228,7 +228,7 @@ public class DesktopDatabaseBridge {
      * @param whereArg
      * @exception SQLException if the database is close or the driver is not more available
      */
-    public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) {
+    public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) throws SQLException {
 
         // create our java preparedstatement using a sql update query
         String setVariables = "";
@@ -266,12 +266,9 @@ public class DesktopDatabaseBridge {
 
         } catch(SQLException ex){
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
+            c.close();
             throw new RuntimeException(ex);
-        } finally {
-
-            close();
         }
-
     }
 
 }

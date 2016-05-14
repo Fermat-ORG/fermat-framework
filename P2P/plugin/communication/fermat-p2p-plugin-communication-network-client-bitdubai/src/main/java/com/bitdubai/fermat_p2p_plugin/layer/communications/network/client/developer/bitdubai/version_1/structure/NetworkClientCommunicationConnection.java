@@ -12,6 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NetworkServiceCallRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.PackageMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -110,6 +112,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private ClientProfile clientProfile;
 
+   /*
+    * is used to validate if is connection to extern node
+    * when receive checkinclient then send register all profile
+    */
+    private boolean isConnectingToExternNode;
+
     /*
      * Constructor
      */
@@ -120,7 +128,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final ECCKeyPair             clientIdentity        ,
                                                 final PluginVersionReference pluginVersionReference,
                                                 NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
-                                                Integer nodesListPosition){
+                                                Integer nodesListPosition,
+                                                boolean isConnectingToExternNode){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -134,6 +143,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
+        this.isConnectingToExternNode = isConnectingToExternNode;
 
         this.container              = ClientManager.createClient();
     }
@@ -256,8 +266,16 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     /*
-     * CheckIn Client Request to Network Node
+     * is used to validate if is connection to extern
+     * node when receive checkinclient then send register all profile
      */
+    public boolean isConnectingToExternNode() {
+        return isConnectingToExternNode;
+    }
+
+    /*
+         * CheckIn Client Request to Network Node
+         */
     public void setCheckInClientRequestProcessor(){
 
         clientProfile = new ClientProfile();
@@ -314,11 +332,12 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         PackageType packageType;
 
-        if (profile instanceof ActorProfile)
+        if (profile instanceof ActorProfile) {
             packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
-        else if (profile instanceof ClientProfile)
+            ((ActorProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
+        }else if (profile instanceof ClientProfile) {
             packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
-        else if (profile instanceof NetworkServiceProfile) {
+        }else if (profile instanceof NetworkServiceProfile) {
             packageType = PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST;
             ((NetworkServiceProfile) profile).setClientIdentityPublicKey(clientIdentity.getPublicKey());
         } else {
@@ -555,6 +574,31 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }
     }
 
+    @Override
+    public void sendPackageMessage(PackageContent packageContent, String destinationIdentityPublicKey) {
+
+        if (isConnected()){
+
+            try {
+                communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
+                        PackageMessage.createInstance(
+                                packageContent.toJson(), // TODO aqui me bloquee
+                                NetworkServiceType.UNDEFINED, //TODO aqui debe ir el networkservicetype
+                                PackageType.MESSAGE_TRANSMIT,
+                                clientIdentity.getPrivateKey(),
+                                destinationIdentityPublicKey // TODO le agregue esto porque va a un client en especifico
+
+                        )
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     private void sendPackage(final PackageContent packageContent,
                              final PackageType    packageType   ) throws CantSendPackageException {
 
@@ -599,6 +643,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }
 
     }
+
+
 
     /**
      * Notify when the network client connection is lost.
