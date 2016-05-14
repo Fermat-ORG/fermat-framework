@@ -835,6 +835,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         }
     }
 
+
     @Override
     public CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException {
         return new EmptyCustomerBrokerNegotiationInformationImpl();
