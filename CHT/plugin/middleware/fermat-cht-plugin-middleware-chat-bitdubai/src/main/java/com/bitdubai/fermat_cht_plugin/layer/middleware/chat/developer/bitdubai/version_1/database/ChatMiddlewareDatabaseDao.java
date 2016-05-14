@@ -1435,6 +1435,21 @@ public class ChatMiddlewareDatabaseDao {
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, onlineState.getCode());
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
         if(lastConnection!=null)
+            record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection);
+
+        return record;
+    }
+
+    private DatabaseTableRecord getOnlineActionRecord(UUID uuid, String publicKey, ActionState onlineState, Boolean value, String lastConnection, Boolean lastOn) throws DatabaseOperationException{
+        DatabaseTable databaseTable = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+        DatabaseTableRecord record = databaseTable.getEmptyRecord();
+
+        record.setUUIDValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_ID_COLUMN_NAME, uuid);
+        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME, publicKey);
+        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE, onlineState.getCode());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE, value.toString());
+        record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_LAST_ON, lastOn.toString());
+        if(lastConnection!=null)
         record.setStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION, lastConnection);
 
         return record;
@@ -1603,6 +1618,7 @@ public class ChatMiddlewareDatabaseDao {
         actionOnline.setPublicKey(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME));
         actionOnline.setActionState(ActionState.getByCode(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_STATE)));
         actionOnline.setValue(Boolean.valueOf(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_VALUE)));
+        actionOnline.setLastOn(Boolean.valueOf(actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_ONLINE_LAST_ON)));
         String lastConnection = actionOnlineTransactionRecord.getStringValue(ChatMiddlewareDatabaseConstants.ACTIONS_LAST_CONNECTION);
         if(lastConnection!=null) actionOnline.setLastConnection(lastConnection);
 
@@ -1893,7 +1909,7 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionOnline.getId(), actionOnline.getPublicKey(), actionOnline.getActionState(),actionOnline.getValue(),actionOnline.getLastConnection());
+            DatabaseTableRecord record = getOnlineActionRecord(actionOnline.getId(), actionOnline.getPublicKey(), actionOnline.getActionState(),actionOnline.getValue(),actionOnline.getLastConnection(),actionOnline.getLastOn());
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionOnline.getId().toString());
@@ -1949,7 +1965,7 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value,lastConnection);
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState,value,lastConnection,actionOnline.getLastOn());
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
@@ -2001,7 +2017,7 @@ public class ChatMiddlewareDatabaseDao {
             }
 
             DatabaseTable table = getDatabaseOnlineActionsTable();
-            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value,actionOnline.getLastConnection());
+            DatabaseTableRecord record = getOnlineActionRecord(actionId, publicKey, actionState, value,actionOnline.getLastConnection(),actionOnline.getLastOn());
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(actionId.toString());
