@@ -1,10 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateAdapter;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.google.gson.Gson;
@@ -26,383 +23,258 @@ import java.util.UUID;
  */
 public class NetworkServiceMessage implements Serializable {
 
-    /**
-     * Represent the serialVersionUID
-     */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Represent the id of the message
-     */
-    private UUID id;
+    private           UUID                     id                     ;
+    private           String                   content                ;
+    private transient NetworkServiceType       networkServiceType     ;
+    private           String                   senderPublicKey        ;
+    private transient String                   senderClientPublicKey  ;
+    private transient String                   senderActorType        ;
+    private           String                   receiverPublicKey      ;
+    private           String                   receiverClientPublicKey;
+    private           String                   receiverActorType      ;
 
-    /**
-     * Represent the sender of the message
-     */
-    private String sender;
+    private           Timestamp                shippingTimestamp      ;
+    private           Timestamp                deliveryTimestamp      ;
 
-    /**
-     * Represent the senderType
-     */
-    private transient PlatformComponentType senderType;
+    private           boolean                  isBetweenActors        ;
+    private transient FermatMessagesStatus     fermatMessagesStatus   ;
+    private           FermatMessageContentType contentType            ;
 
-    /**
-     * Represent the receiverType
-     */
-    private transient PlatformComponentType receiverType;
+    private           String                   signature              ;
 
-    /**
-     * Represent the senderNsType
-     */
-    private transient NetworkServiceType senderNsType;
+    private transient int                      failCount              = 0;
 
-    /**
-     * Represent the receiverNsType
-     */
-    private transient NetworkServiceType receiverNsType;
 
-    /**
-     * Represent the receiver of the message
-     */
-    private String receiver;
 
-    /**
-     * Represent the content
-     */
-    private String content;
-
-    /**
-     * Represent the shipping timestamp of the message
-     */
-    private Timestamp shippingTimestamp;
-
-    /**
-     * Represent the delivery timestamp of the message
-     */
-    private Timestamp deliveryTimestamp;
-
-    /**
-     * Represent the failCount
-     */
-    private transient int failCount = 0;
-
-    /**
-     * Represent the status
-     */
-    private transient FermatMessagesStatus fermatMessagesStatus;
-
-    /**
-     * Represent the signature
-     */
-    private String signature;
-
-    /**
-     * Represent the fermatMessageContentType
-     */
-    private FermatMessageContentType fermatMessageContentType;
-
-    /**
-     * Constructor
-     */
     public NetworkServiceMessage() {
         super();
         this.id = UUID.randomUUID();
-        this.failCount = new Integer(0);
+        this.failCount = 0;
     }
 
-    /**
-     * Constructor with parameters
-     *
-     * @param content
-     * @param deliveryTimestamp
-     * @param fermatMessageContentType
-     * @param fermatMessagesStatus
-     * @param receiver
-     * @param sender
-     * @param shippingTimestamp
-     * @param signature
-     */
-    public NetworkServiceMessage(String content, Timestamp deliveryTimestamp, FermatMessageContentType fermatMessageContentType, FermatMessagesStatus fermatMessagesStatus, String receiver, String sender, Timestamp shippingTimestamp, String signature) {
+    public NetworkServiceMessage(final String                   content             ,
+                                 final Timestamp                deliveryTimestamp   ,
+                                 final FermatMessageContentType contentType         ,
+                                 final FermatMessagesStatus     fermatMessagesStatus,
+                                 final String                   receiverPublicKey   ,
+                                 final String                   senderPublicKey     ,
+                                 final Timestamp                shippingTimestamp   ,
+                                 final String                   signature           ) {
 
-        this.id = UUID.randomUUID();
-        this.content = content;
-        this.deliveryTimestamp = deliveryTimestamp;
-        this.fermatMessageContentType = fermatMessageContentType;
+        this.id                   = UUID.randomUUID()   ;
+        this.content              = content             ;
+        this.deliveryTimestamp    = deliveryTimestamp   ;
+        this.contentType          = contentType         ;
         this.fermatMessagesStatus = fermatMessagesStatus;
-        this.receiver = receiver;
-        this.sender = sender;
-        this.shippingTimestamp = shippingTimestamp;
-        this.signature = signature;
-        this.failCount = new Integer(0);
+        this.receiverPublicKey    = receiverPublicKey   ;
+        this.senderPublicKey      = senderPublicKey     ;
+        this.shippingTimestamp    = shippingTimestamp   ;
+        this.signature            = signature           ;
+        this.failCount            = 0                   ;
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getContent()
-     */
-    
-    public String getContent(){
-        return content;
+    public NetworkServiceMessage(final String                   content                ,
+                                 final NetworkServiceType       networkServiceType     ,
+                                 final String                   senderPublicKey        ,
+                                 final String                   senderClientPublicKey  ,
+                                 final String                   senderActorType        ,
+                                 final String                   receiverPublicKey      ,
+                                 final String                   receiverClientPublicKey,
+                                 final String                   receiverActorType      ,
+                                 final Timestamp                shippingTimestamp      ,
+                                 final Timestamp                deliveryTimestamp      ,
+                                 final FermatMessagesStatus     fermatMessagesStatus   ,
+                                 final FermatMessageContentType contentType            ,
+                                 final String                   signature              ) {
+
+        this.content                 = content                ;
+        this.networkServiceType      = networkServiceType     ;
+        this.senderPublicKey         = senderPublicKey        ;
+        this.senderClientPublicKey   = senderClientPublicKey  ;
+        this.senderActorType         = senderActorType        ;
+        this.receiverPublicKey       = receiverPublicKey      ;
+        this.receiverClientPublicKey = receiverClientPublicKey;
+        this.receiverActorType       = receiverActorType      ;
+        this.shippingTimestamp       = shippingTimestamp      ;
+        this.deliveryTimestamp       = deliveryTimestamp      ;
+        this.fermatMessagesStatus    = fermatMessagesStatus   ;
+        this.contentType             = contentType            ;
+        this.signature               = signature              ;
     }
 
-    /**
-     * Set the content
-     *
-     * @param content
-     */
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getDeliveryTimestamp()
-     */
-    
-    public Timestamp getDeliveryTimestamp() {
-        return deliveryTimestamp;
-    }
-
-    /**
-     * Set the DeliveryTimestamp
-     *
-     * @param deliveryTimestamp
-     */
-    public void setDeliveryTimestamp(Timestamp deliveryTimestamp) {
-        this.deliveryTimestamp = deliveryTimestamp;
-    }
-
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getFermatMessageContentType()
-     */
-    
-    public FermatMessageContentType getFermatMessageContentType() {
-        return fermatMessageContentType;
-    }
-
-    /**
-     * Set the FermatMessageContentType
-     * @param fermatMessageContentType
-     */
-    public void setFermatMessageContentType(FermatMessageContentType fermatMessageContentType) {
-        this.fermatMessageContentType = fermatMessageContentType;
-    }
-
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getFermatMessagesStatus()
-     */
-    public FermatMessagesStatus getFermatMessagesStatus() {
-        return fermatMessagesStatus;
-    }
-
-    /**
-     * Set the FermatMessagesStatus
-     * @param fermatMessagesStatus
-     */
-    public void setFermatMessagesStatus(FermatMessagesStatus fermatMessagesStatus) {
-        this.fermatMessagesStatus = fermatMessagesStatus;
-    }
-
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getId()
-     */
-    
     public UUID getId() {
         return id;
     }
 
-    /**
-     * Set the Id
-     * @param id
-     */
     public void setId(UUID id) {
         this.id = id;
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getReceiver()
-     */
-    
-    public String getReceiver() {
-        return receiver;
+    public String getContent() {
+        return content;
     }
 
-    /**
-     * Set the Receiver
-     * @param receiver
-     */
-    public void setReceiver(String receiver) {
-        this.receiver = receiver;
+    public void setContent(String content) {
+        this.content = content;
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getSender()
-     */
-    
-    public String getSender() {
-        return sender;
+    public NetworkServiceType getNetworkServiceType() {
+        return networkServiceType;
     }
 
-    /**
-     * Set the Sender
-     * @param sender
-     */
-    public void setSender(String sender) {
-        this.sender = sender;
+    public void setNetworkServiceType(NetworkServiceType networkServiceType) {
+        this.networkServiceType = networkServiceType;
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getShippingTimestamp()
-     */
+    public String getSenderPublicKey() {
+        return senderPublicKey;
+    }
+
+    public void setSenderPublicKey(String senderPublicKey) {
+        this.senderPublicKey = senderPublicKey;
+    }
+
+    public String getSenderClientPublicKey() {
+        return senderClientPublicKey;
+    }
+
+    public void setSenderClientPublicKey(String senderClientPublicKey) {
+        this.senderClientPublicKey = senderClientPublicKey;
+    }
+
+    public String getSenderActorType() {
+        return senderActorType;
+    }
+
+    public void setSenderActorType(String senderActorType) {
+        this.senderActorType = senderActorType;
+    }
+
+    public String getReceiverPublicKey() {
+        return receiverPublicKey;
+    }
+
+    public void setReceiverPublicKey(String receiverPublicKey) {
+        this.receiverPublicKey = receiverPublicKey;
+    }
+
+    public String getReceiverClientPublicKey() {
+        return receiverClientPublicKey;
+    }
+
+    public void setReceiverClientPublicKey(String receiverClientPublicKey) {
+        this.receiverClientPublicKey = receiverClientPublicKey;
+    }
+
+    public String getReceiverActorType() {
+        return receiverActorType;
+    }
+
+    public void setReceiverActorType(String receiverActorType) {
+        this.receiverActorType = receiverActorType;
+    }
+
     public Timestamp getShippingTimestamp() {
         return shippingTimestamp;
     }
 
-    /**
-     * Set the ShippingTimestamp
-     * @param shippingTimestamp
-     */
     public void setShippingTimestamp(Timestamp shippingTimestamp) {
         this.shippingTimestamp = shippingTimestamp;
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getFailCount()
-     */
-    public int getFailCount() {
-        return failCount;
+    public Timestamp getDeliveryTimestamp() {
+        return deliveryTimestamp;
     }
 
-    /**
-     * Set the failCount
-     * @param failCount
-     */
-    public void setFailCount(Integer failCount) {
-        this.failCount = failCount;
+    public void setDeliveryTimestamp(Timestamp deliveryTimestamp) {
+        this.deliveryTimestamp = deliveryTimestamp;
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#getSignature()
-     */
-    
+    public FermatMessagesStatus getFermatMessagesStatus() {
+        return fermatMessagesStatus;
+    }
+
+    public void setFermatMessagesStatus(FermatMessagesStatus fermatMessagesStatus) {
+        this.fermatMessagesStatus = fermatMessagesStatus;
+    }
+
+    public FermatMessageContentType getContentType() {
+        return contentType;
+    }
+
+    public void setContentType(FermatMessageContentType contentType) {
+        this.contentType = contentType;
+    }
+
     public String getSignature() {
         return signature;
     }
 
-    /**
-     * Set the signature
-     * @param signature
-     */
     public void setSignature(String signature) {
         this.signature = signature;
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#toJson()
-     */
-    
+    public int getFailCount() {
+        return failCount;
+    }
+
+    public void setFailCount(int failCount) {
+        this.failCount = failCount;
+    }
+
+    public boolean isBetweenActors() {
+        return isBetweenActors;
+    }
+
+    public void setIsBetweenActors(boolean isBetweenActors) {
+        this.isBetweenActors = isBetweenActors;
+    }
+
     public String toJson() {
 
         Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
         return gson.toJson(this);
     }
 
-    /**
-     * (no-javadoc)
-     * @see FermatMessage#fromJson(String)
-     */
-    
     public NetworkServiceMessage fromJson(String json) {
 
         Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
         return gson.fromJson(json, NetworkServiceMessage.class);
     }
 
-    /**
-     * (no-javadoc)
-     * @see Object#equals(Object)
-     */
-    
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof FermatMessageCommunication)) return false;
-        FermatMessageCommunication that = (FermatMessageCommunication) o;
+        if (!(o instanceof NetworkServiceMessage)) return false;
+        NetworkServiceMessage that = (NetworkServiceMessage) o;
         return Objects.equals(getId(), that.getId());
     }
 
-    /**
-     * (no-javadoc)
-     * @see Object#hashCode()
-     */
-    
+    @Override
     public int hashCode() {
-        return Objects.hash(getId(), getSender(), getReceiver(), getContent(), getShippingTimestamp(), getDeliveryTimestamp(), getFermatMessagesStatus(), getSignature(), getFermatMessageContentType());
+        return id.hashCode();
     }
 
-    
-    public PlatformComponentType getSenderType() {
-        return senderType;
-    }
-
-    public void setSenderType(PlatformComponentType senderType) {
-        this.senderType = senderType;
-    }
-
-    
-    public PlatformComponentType getReceiverType() {
-        return receiverType;
-    }
-
-    public void setReceiverType(PlatformComponentType receiverType) {
-        this.receiverType = receiverType;
-    }
-
-    public NetworkServiceType getSenderNsType() {
-        return senderNsType;
-    }
-
-    public void setSenderNsType(NetworkServiceType senderNsType) {
-        this.senderNsType = senderNsType;
-    }
-
-    public NetworkServiceType getReceiverNsType() {
-        return receiverNsType;
-    }
-
-    public void setReceiverNsType(NetworkServiceType receiverNsType) {
-        this.receiverNsType = receiverNsType;
-    }
-
-    /**
-     * (no-javadoc)
-     * @see Object#toString()
-     */
-    
+    @Override
     public String toString() {
-        return "FermatMessageCommunication{" +
-                "content=" + content +
-                ", id=" + id +
-                ", sender='" + sender + '\'' +
-                ", receiver='" + receiver + '\'' +
+        return "NetworkServiceMessage{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", networkServiceType=" + networkServiceType +
+                ", senderPublicKey='" + senderPublicKey + '\'' +
+                ", senderClientPublicKey='" + senderClientPublicKey + '\'' +
+                ", senderActorType='" + senderActorType + '\'' +
+                ", receiverPublicKey='" + receiverPublicKey + '\'' +
+                ", receiverClientPublicKey='" + receiverClientPublicKey + '\'' +
+                ", receiverActorType='" + receiverActorType + '\'' +
                 ", shippingTimestamp=" + shippingTimestamp +
                 ", deliveryTimestamp=" + deliveryTimestamp +
+                ", isBetweenActors=" + isBetweenActors +
                 ", fermatMessagesStatus=" + fermatMessagesStatus +
+                ", contentType=" + contentType +
                 ", signature='" + signature + '\'' +
-                ", failCount='" + failCount + '\'' +
-                ", fermatMessageContentType=" + fermatMessageContentType +
-                ", senderType=" + senderType +
-                ", receiverType=" + receiverType +
-                ", senderNsType=" + senderNsType +
-                ", receiverNsType=" + receiverNsType +
+                ", failCount=" + failCount +
                 '}';
     }
 }
