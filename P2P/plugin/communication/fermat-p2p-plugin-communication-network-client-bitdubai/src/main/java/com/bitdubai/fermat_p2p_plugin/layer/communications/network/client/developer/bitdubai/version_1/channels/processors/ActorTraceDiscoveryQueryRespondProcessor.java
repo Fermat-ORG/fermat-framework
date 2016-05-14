@@ -1,8 +1,14 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
@@ -64,7 +70,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
             //raise event
 
             if(actorsProfileListMsgRespond.getProfileList() != null && actorsProfileListMsgRespond.getProfileList().size() > 0)
-                goingThroughResultDiscoveryTraceActorList(actorsProfileListMsgRespond.getProfileList());
+                goingThroughResultDiscoveryTraceActorList(actorsProfileListMsgRespond.getProfileList(), actorsProfileListMsgRespond.getNetworkServiceTypeIntermediate());
 
         }else{
             //there is some wrong
@@ -76,7 +82,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
      * we go through ResultDiscoveryTraceActor list when get the Actor
      * then raise event notification
      */
-    private synchronized void goingThroughResultDiscoveryTraceActorList(List<ResultDiscoveryTraceActor> resultList){
+    private synchronized void goingThroughResultDiscoveryTraceActorList(List<ResultDiscoveryTraceActor> resultList, NetworkServiceType networkServiceTypeIntermediate){
 
         Boolean isOnline = Boolean.FALSE;
 
@@ -134,12 +140,80 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                                     clientsConnectionsManager.getListConnectionActiveToNode().get(uriToNode)
                             );
 
+                                                         /*
+                             * Create a raise a new event whit the platformComponentProfile registered
+                             */
+                            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_FOUND);
+                            event.setSource(EventSource.NETWORK_CLIENT);
+
+                            /*
+                             * this is to filter the networkservice intermediate
+                             */
+                            ((ActorFoundEvent) event).setNetworkServiceTypeIntermediate(networkServiceTypeIntermediate);
+
+                            /*
+                             * this is to know who is the nodeprofile to send message
+                             */
+                            ((ActorFoundEvent) event).setActorProfile(result.getActorProfile());
+
+                            /*
+                             * this is to filter when the client is checkin in other node
+                             */
+                            ((ActorFoundEvent) event).setUriToNode(uriToNode);
+
+                             /*
+                             * Raise the event
+                             */
+                            System.out.println("ActorTraceDiscoveryQueryRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_FOUND");
+                            getEventManager().raiseEvent(event);
+
+                            /*
+                             * Create a raise a new event whit the NETWORK_CLIENT_CONNECTION_SUCCESS
+                             */
+                            FermatEvent eventConnectionSuccess = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS);
+                            event.setSource(EventSource.NETWORK_CLIENT);
+
+                            ((NetworkClientConnectionSuccessEvent) eventConnectionSuccess).setUriToNode(uriToNode);
+
+                            /*
+                             * Raise the event
+                             */
+                            System.out.println("ActorTraceDiscoveryQueryRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS");
+                            getEventManager().raiseEvent(eventConnectionSuccess);
+
                         }else{
 
                             // request connection to the Node extern in the clientsConnectionsManager
                             clientsConnectionsManager.requestConnectionToNodeExtern(
                                     result.getActorProfile().getIdentityPublicKey(),
                                     uriToNode);
+
+                             /*
+                             * Create a raise a new event whit the platformComponentProfile registered
+                             */
+                            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_FOUND);
+                            event.setSource(EventSource.NETWORK_CLIENT);
+
+                            /*
+                             * this is to filter the networkservice intermediate
+                             */
+                            ((ActorFoundEvent) event).setNetworkServiceTypeIntermediate(networkServiceTypeIntermediate);
+
+                            /*
+                             * this is to know who is the nodeprofile to send message
+                             */
+                            ((ActorFoundEvent) event).setActorProfile(result.getActorProfile());
+
+                            /*
+                             * this is to filter when the client is checkin in other node
+                             */
+                            ((ActorFoundEvent) event).setUriToNode(uriToNode);
+
+                             /*
+                             * Raise the event
+                             */
+                            System.out.println("ActorTraceDiscoveryQueryRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_FOUND");
+                            getEventManager().raiseEvent(event);
 
                         }
 

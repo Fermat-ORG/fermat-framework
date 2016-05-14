@@ -12,6 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NetworkServiceCallRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.PackageMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -568,6 +570,31 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }
     }
 
+    @Override
+    public void sendPackageMessage(PackageContent packageContent, String destinationIdentityPublicKey) {
+
+        if (isConnected()){
+
+            try {
+                communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
+                        PackageMessage.createInstance(
+                                packageContent.toJson(), // TODO aqui me bloquee
+                                NetworkServiceType.UNDEFINED, //TODO aqui debe ir el networkservicetype
+                                PackageType.MESSAGE_TRANSMIT,
+                                clientIdentity.getPrivateKey(),
+                                destinationIdentityPublicKey // TODO le agregue esto porque va a un client en especifico
+
+                        )
+                );
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (EncodeException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
     private void sendPackage(final PackageContent packageContent,
                              final PackageType    packageType   ) throws CantSendPackageException {
 
@@ -612,6 +639,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }
 
     }
+
+
 
     /**
      * Notify when the network client connection is lost.
