@@ -61,11 +61,10 @@ public interface NetworkClientConnection {
      * @param toActor             profile of the actor which we're trying to reach.
      * @param fromNetworkService  profile of the network service that is trying to communicate.
      *
-     * @throws CantCreateNetworkCallException
      */
     void callActor(ActorProfile          fromActor         ,
                    ActorProfile          toActor           ,
-                   NetworkServiceProfile fromNetworkService) throws CantCreateNetworkCallException;
+                   NetworkServiceProfile fromNetworkService);
 
     /**
      * Through the method <code>registeredProfileDiscoveryQuery</code> we can make a discovery query
@@ -110,5 +109,7 @@ public interface NetworkClientConnection {
      * @return boolean
      */
     boolean isRegistered();
+
+    NetworkCallChannel getCallChannel(Profile from, Profile to);
 
 }

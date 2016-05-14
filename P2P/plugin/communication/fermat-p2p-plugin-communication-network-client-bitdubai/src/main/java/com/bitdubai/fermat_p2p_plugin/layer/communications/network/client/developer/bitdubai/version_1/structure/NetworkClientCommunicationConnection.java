@@ -13,6 +13,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -428,7 +429,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     @Override
     public void callNetworkService(final NetworkServiceProfile fromNetworkService,
-                                   final NetworkServiceProfile toNetworkService  ) throws CantCreateNetworkCallException {
+                                   final NetworkServiceProfile toNetworkService  ) {
 
         System.out.println("NetworkClientCommunicationConnection - requestNetworkCall");
 
@@ -468,15 +469,14 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         } catch (Exception e){
             System.out.println("NetworkClientCommunicationConnection: " + e);
             CantCreateNetworkCallException cantCreateNetworkCallException = new CantCreateNetworkCallException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
-            throw cantCreateNetworkCallException;
-
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateNetworkCallException);
         }
     }
 
     @Override
     public void callActor(final ActorProfile          fromActor         ,
                           final ActorProfile          toActor           ,
-                          final NetworkServiceProfile fromNetworkService) throws CantCreateNetworkCallException {
+                          final NetworkServiceProfile fromNetworkService) {
 
         System.out.println("NetworkClientCommunicationConnection - requestNetworkCall");
 
@@ -504,12 +504,16 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     PackageType.ACTOR_CALL_REQUEST
             );
 
-        }catch (Exception e){
-            System.out.println("NetworkClientCommunicationConnection: " + e.getStackTrace());
+        } catch (Exception e){
             CantCreateNetworkCallException cantCreateNetworkCallException = new CantCreateNetworkCallException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
-            throw cantCreateNetworkCallException;
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateNetworkCallException);
         }
 
+    }
+
+    @Override
+    public NetworkCallChannel getCallChannel(Profile from, Profile to) {
+        return null;
     }
 
     @Override
