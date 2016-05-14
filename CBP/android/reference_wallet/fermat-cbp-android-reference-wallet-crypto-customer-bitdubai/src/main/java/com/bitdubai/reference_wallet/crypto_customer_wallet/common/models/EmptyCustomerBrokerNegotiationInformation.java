@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -15,7 +16,7 @@ import java.util.UUID;
  * Created by nelson on 10/01/16.
  */
 //TODO Revisar Franklin
-public class EmptyCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation {
+public class EmptyCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation, Serializable{
     private Long lastNegotiationUpdateDate;
     private ActorIdentity customer;
     private ActorIdentity broker;
