@@ -2,7 +2,6 @@ package org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
@@ -11,7 +10,6 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantLi
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**

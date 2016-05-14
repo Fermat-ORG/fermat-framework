@@ -4,9 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
-
 import com.thoughtworks.xstream.XStream;
+
+import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

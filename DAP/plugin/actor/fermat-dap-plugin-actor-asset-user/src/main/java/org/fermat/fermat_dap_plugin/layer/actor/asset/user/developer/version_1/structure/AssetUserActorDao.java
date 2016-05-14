@@ -29,6 +29,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+
+import org.apache.commons.lang.StringUtils;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
@@ -40,11 +42,11 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAs
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
+import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAddPendingActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.database.AssetUserActorDatabaseConstants;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.database.AssetUserActorDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.AssetUserNotFoundException;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAddPendingActorAssetException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantCreateAssetUserCryptoAddressNetworkException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantCreateAssetUserGroupException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantDeleteAssetUserGroupException;
@@ -60,8 +62,6 @@ import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.e
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantUpdateAssetUserCryptoAddressNetworkException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantUpdateAssetUserException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantUpdateAssetUserGroupException;
-
-import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

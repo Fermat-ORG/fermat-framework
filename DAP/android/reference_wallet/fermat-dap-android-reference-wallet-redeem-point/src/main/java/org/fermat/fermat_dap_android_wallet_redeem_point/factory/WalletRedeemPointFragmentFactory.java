@@ -4,6 +4,8 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
+
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.RedeemPointDetailActivityFragment;
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.RedeemPointDetailTransactionsFragment;
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.RedeemPointHistoryActivityFragment;
@@ -13,7 +15,6 @@ import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.SettingsFragm
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.SettingsMainNetworkFragment;
 import org.fermat.fermat_dap_android_wallet_redeem_point.fragments.SettingsNotificationsFragment;
 import org.fermat.fermat_dap_android_wallet_redeem_point.sessions.RedeemPointSession;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 /**
  * WalletRedeemPointFragmentFactory

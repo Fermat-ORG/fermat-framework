@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantSingMessageException;
 
 import java.io.Serializable;

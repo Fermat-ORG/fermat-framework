@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_wallet_redeem_point.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;

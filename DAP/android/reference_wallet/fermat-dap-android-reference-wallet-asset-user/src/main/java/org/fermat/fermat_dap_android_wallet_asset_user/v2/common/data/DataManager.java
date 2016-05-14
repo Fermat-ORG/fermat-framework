@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;

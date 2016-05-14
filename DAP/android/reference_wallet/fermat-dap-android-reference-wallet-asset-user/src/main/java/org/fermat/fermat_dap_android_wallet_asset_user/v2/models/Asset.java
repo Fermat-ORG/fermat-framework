@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_android_wallet_asset_user.v2.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.util.Utils;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;

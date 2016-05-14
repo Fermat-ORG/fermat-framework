@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.common.holders.IssuerIdentityViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.UtilsFuncs;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
