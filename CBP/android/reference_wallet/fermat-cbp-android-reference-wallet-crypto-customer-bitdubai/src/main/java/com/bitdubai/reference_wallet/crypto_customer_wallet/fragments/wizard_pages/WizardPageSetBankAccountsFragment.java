@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -185,10 +184,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
         try {
             for (BankAccountNumber bankAccount : bankAccountList) {
                 BankAccountData bankAccountData = (BankAccountData) bankAccount;
-                NegotiationBankAccount negotiationBankAccount = moduleManager.newEmptyNegotiationBankAccount(
-                        bankAccountData.toString(), bankAccount.getCurrencyType());
-
-                moduleManager.createNewBankAccount(negotiationBankAccount);
+                moduleManager.createNewBankAccount(bankAccountData.toString(), bankAccount.getCurrencyType());
             }
 
 

@@ -180,7 +180,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
 
             for (InstalledWallet wallet : installedWallets) {
                 Platforms platform = wallet.getPlatform();
-                List<CryptoBrokerWalletAssociatedSetting> walletAssociated = moduleManager.getCryptoBrokerWalletAssociatedSettings(wallet.getWalletPublicKey());
                 switch (platform) {
                     case BANKING_PLATFORM:
                         List<BankAccountNumber> accounts = moduleManager.getAccounts(wallet.getWalletPublicKey());
