@@ -290,8 +290,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //                Log.i(TAG, parameter.toString());
 //            }
             Object returnModuleObject = null;
+            PluginVersionReference pluginVersionReference = null;
             try {
-                PluginVersionReference pluginVersionReference = new PluginVersionReference(
+                pluginVersionReference = new PluginVersionReference(
                         Platforms.getByCode(platformCode),
                         Layers.getByCode(layerCode),
                         Plugins.getByCode(pluginsCode),
@@ -319,7 +320,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
                         } else {
                             //throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
-                            Log.e(TAG, "object returned null ");
+                            Log.e(TAG, "object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3());
                         }
                     }
                     Serializable aidlObject = (Serializable) returnModuleObject;
@@ -354,8 +355,9 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 //                Log.i(TAG, parameter.toString());
 //            }
             Object returnModuleObject = null;
+            PluginVersionReference pluginVersionReference =  null;
             try {
-                PluginVersionReference pluginVersionReference = new PluginVersionReference(
+                pluginVersionReference = new PluginVersionReference(
                         Platforms.getByCode(platformCode),
                         Layers.getByCode(layerCode),
                         Plugins.getByCode(pluginsCode),
@@ -385,7 +387,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                             sendLargeData(dataId, clientKey, new FermatModuleObjectWrapper(dataId, null, true, e));
                         } else {
                             //throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
-                            Log.e(TAG, "object returned null ");
+                            Log.e(TAG, "object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3());
                         }
                     }else {
                         Serializable aidlObject = (Serializable) returnModuleObject;
