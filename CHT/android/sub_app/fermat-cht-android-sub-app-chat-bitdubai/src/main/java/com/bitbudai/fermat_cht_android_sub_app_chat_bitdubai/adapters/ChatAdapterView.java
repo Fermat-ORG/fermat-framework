@@ -363,13 +363,10 @@ public class ChatAdapterView extends LinearLayout {
     public String setFormatLastTime(String date){
         String fecha = date;
         SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
-        SimpleDateFormat formatterhour = new SimpleDateFormat("HH:mm");
         try {
             Date dater = formatter.parse(date);
-            String datte = formatter.format(dater);
-            Date dhour = formatterhour.parse(datte.substring(10,15));
-            String formattedTime = formatterhour.format(dhour);
-
+            //String formattedTime = formatter.format(dater);
+            String formattedTime = date.substring(11,16);
         if(Validate.isDateToday(dater)){
             fecha = "today at "+formattedTime;
         }else{

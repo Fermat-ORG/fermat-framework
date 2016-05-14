@@ -224,7 +224,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
                             "MENSAJE LLEGO EXITOSAMENTE:" + chatMetadataRecord.getLocalActorPublicKey()
                             + "\n-------------------------------------------------");
 
-                    String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(new Timestamp(System.currentTimeMillis()));
+                    String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis()));
 
                     chatMetadataRecord.changeState(ChatProtocolState.PROCESSING_RECEIVE);
                     chatMetadataRecord.setTransactionId(getChatMetadataRecordDAO().getNewUUID(UUID.randomUUID().toString()));
@@ -1039,7 +1039,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             }
             System.out.println("ChatNetworkServicePluginRoot - Starting method sendChatMetadata");
 
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(new Timestamp(System.currentTimeMillis()));
+            String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(new Timestamp(System.currentTimeMillis()));
 
             long currentTime = System.currentTimeMillis();
             ChatProtocolState protocolState = ChatProtocolState.PROCESSING_SEND;
@@ -1262,7 +1262,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             List<ChatMetadataRecord> pendingChatMetadataTransactions = getChatMetadataRecordDAO().findAll(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_PROCCES_STATUS_COLUMN_NAME, ChatMetadataRecord.NO_PROCESSED);
             if (!pendingChatMetadataTransactions.isEmpty()) {
                 for (ChatMetadataRecord chatMetadataRecord : pendingChatMetadataTransactions) {
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
                     Date parsedDate = null;
                     try {
                         parsedDate = dateFormat.parse(chatMetadataRecord.getSentDate());
