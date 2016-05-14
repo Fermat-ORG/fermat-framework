@@ -172,7 +172,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                                                     formatter = new SimpleDateFormat("hh:mm aa");
                                                 }
                                             }
-
                                         }
                                         formatter.setTimeZone(TimeZone.getDefault());
                                         datef = formatter.format(new java.util.Date(milliseconds));
