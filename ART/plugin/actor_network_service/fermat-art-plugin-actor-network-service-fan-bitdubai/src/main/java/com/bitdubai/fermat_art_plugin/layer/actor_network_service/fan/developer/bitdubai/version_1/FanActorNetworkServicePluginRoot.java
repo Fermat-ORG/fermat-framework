@@ -376,19 +376,21 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
 
         final PluginVersionReference pluginReference = getPluginVersionReference();
 
-        executor.submit(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                    fanActorNetworkServiceManager.exposeIdentitiesInWait();
-                } catch (CantExposeIdentityException | InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if(fanActorNetworkServiceManager.areIdentityToExpose()){
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(3000);
+                        fanActorNetworkServiceManager.exposeIdentitiesInWait();
+                    } catch (CantExposeIdentityException | InterruptedException e) {
+                        errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
 
