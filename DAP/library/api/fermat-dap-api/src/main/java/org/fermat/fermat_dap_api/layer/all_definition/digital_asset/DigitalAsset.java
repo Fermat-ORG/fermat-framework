@@ -3,9 +3,9 @@ package org.fermat.fermat_dap_api.layer.all_definition.digital_asset;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
-
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
+import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 
 import java.io.Serializable;
 import java.util.Collections;

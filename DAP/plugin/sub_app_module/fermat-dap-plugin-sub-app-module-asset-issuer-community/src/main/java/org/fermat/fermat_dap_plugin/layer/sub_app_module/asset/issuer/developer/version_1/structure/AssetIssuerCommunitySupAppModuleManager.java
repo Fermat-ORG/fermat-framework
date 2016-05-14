@@ -52,7 +52,6 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.inte
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.version_1.AssetIssuerCommunitySubAppModulePluginRoot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
