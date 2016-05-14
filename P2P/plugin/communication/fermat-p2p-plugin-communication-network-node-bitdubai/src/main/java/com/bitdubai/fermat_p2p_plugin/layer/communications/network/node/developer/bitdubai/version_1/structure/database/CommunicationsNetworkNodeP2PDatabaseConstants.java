@@ -106,6 +106,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME = "extra_data";
     public static final String CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME = "checked_in_timestamp";
     public static final String CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "ns_identity_public_key";
+    public static final String CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
 
     public static final String CHECKED_IN_ACTOR_FIRST_KEY_COLUMN = "uuid";
 
