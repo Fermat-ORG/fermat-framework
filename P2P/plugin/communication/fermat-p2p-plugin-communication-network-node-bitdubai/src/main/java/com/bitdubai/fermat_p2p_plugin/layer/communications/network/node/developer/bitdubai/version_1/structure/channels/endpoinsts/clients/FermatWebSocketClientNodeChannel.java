@@ -180,7 +180,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
         /*
          * Register all messages processor for this
          * channel
-         */
+        */
         registerMessageProcessor(new ReceivedNodeCatalogTransactionsRespondProcessor(this));
         registerMessageProcessor(new ReceivedActorCatalogTransactionsRespondProcessor(this));
         registerMessageProcessor(new AddNodeToCatalogRespondProcessor(this));

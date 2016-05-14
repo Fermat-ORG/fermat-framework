@@ -142,8 +142,8 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
     @OnMessage
     public void newPackageReceived(Package packageReceived, Session session) throws IOException {
 
-        LOG.info("New package received");
-        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
+        LOG.info("New package received ("+packageReceived.getPackageType().name()+")");
+        LOG.info("Session: " + session.getId());
 
         try {
 
