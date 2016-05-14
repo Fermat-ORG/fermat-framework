@@ -921,7 +921,7 @@ public class ChatMiddlewareMonitorAgent implements
      */
     private Chat getChatFromChatMetadata(ChatMetadata chatMetadata) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         Date parsedDate = null;
         try {
             parsedDate = dateFormat.parse(chatMetadata.getDate());
@@ -991,7 +991,7 @@ public class ChatMiddlewareMonitorAgent implements
             Message message) {
         ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(timestamp);
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
             chatMetadata = new ChatMetadataRecord(
                     chat.getChatId(),
                     chat.getObjectId(),

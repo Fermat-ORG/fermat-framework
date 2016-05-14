@@ -1053,7 +1053,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             Message message) {
         ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(timestamp);
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
         chatMetadata = new ChatMetadataRecord(
                 chat.getChatId(),
                 chat.getObjectId(),
