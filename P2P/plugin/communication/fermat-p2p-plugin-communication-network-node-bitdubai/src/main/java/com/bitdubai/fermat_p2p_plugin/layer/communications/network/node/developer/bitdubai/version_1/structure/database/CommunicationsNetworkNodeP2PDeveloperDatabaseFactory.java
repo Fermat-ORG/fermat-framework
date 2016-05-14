@@ -207,6 +207,8 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME);
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME);
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+
         /**
          * Table checked in actor addition.
          */
