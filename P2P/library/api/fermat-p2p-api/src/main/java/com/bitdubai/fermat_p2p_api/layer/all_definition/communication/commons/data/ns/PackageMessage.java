@@ -21,16 +21,6 @@ import java.security.InvalidParameterException;
 public class PackageMessage extends Package{
 
     /**
-     * Represent the clientSender
-     */
-    private String clientSender;
-
-    /**
-     * Represent the clientDestination
-     */
-    private String clientDestination;
-
-    /**
      * Private constructor with parameters.
      *
      * @param content                   content of the package.
@@ -44,20 +34,15 @@ public class PackageMessage extends Package{
                            final NetworkServiceType networkServiceTypeSource,
                            final PackageType packageType,
                            final String signature,
-                           final String clientSender,
                            final String clientDestination
     ) {
 
         super(content, networkServiceTypeSource, packageType, signature);
 
-        if (clientSender == null)
-            throw new InvalidParameterException("clientSender can't be null.");
-
         if (clientDestination == null)
             throw new InvalidParameterException("clientDestination can't be null.");
 
-        this.clientSender      = clientSender;
-        this.clientDestination = clientDestination;
+        setClientDestination(clientDestination);
     }
 
     /**
@@ -77,7 +62,6 @@ public class PackageMessage extends Package{
                                                 final PackageType        packageType                 ,
                                                 final String             senderPrivateKey            ,
                                                 final String             destinationIdentityPublicKey,
-                                                final String clientSender,
                                                 final String clientDestination) {
 
         String messageHash = AsymmetricCryptography.encryptMessagePublicKey(
@@ -95,24 +79,7 @@ public class PackageMessage extends Package{
                 networkServiceTypeSource,
                 packageType             ,
                 signature,
-                clientSender,
                 clientDestination
         );
-    }
-
-    /**
-     * Get the ClientSender
-     * @return String
-     */
-    public String getClientSender() {
-        return clientSender;
-    }
-
-    /**
-     * Get the ClientDestination
-     * @return String
-     */
-    public String getClientDestination() {
-        return clientDestination;
     }
 }
