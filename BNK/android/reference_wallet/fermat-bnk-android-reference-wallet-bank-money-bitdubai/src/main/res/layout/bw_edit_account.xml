@@ -68,6 +68,21 @@
                 android:textColor="#fff"
                 android:textSize="@dimen/text_size" />
 
+            android:textStyle="bold" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginTop="30dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:gravity="center_horizontal"
+                android:text="Aqui falta la opcion de editar la imagen :)"
+                android:textColor="#ff0000"
+                android:textSize="@dimen/text_size"
+                />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

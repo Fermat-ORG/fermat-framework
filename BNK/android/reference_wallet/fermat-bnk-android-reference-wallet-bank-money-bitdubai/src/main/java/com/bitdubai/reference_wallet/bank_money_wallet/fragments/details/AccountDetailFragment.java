@@ -189,7 +189,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.EDIT_ACCOUNT_ACTION, 0, "Edit Account").setIcon(R.drawable.bw_help_icon_action_bar)
+        menu.add(0, ReferenceWalletConstants.EDIT_ACCOUNT_ACTION, 0, "Edit Account").setIcon(R.drawable.bw_ic_action_edit)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "help").setIcon(R.drawable.bw_help_icon_action_bar)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

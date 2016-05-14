@@ -44,7 +44,7 @@
 
             <EditText
                 android:id="@+id/account_number"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
@@ -56,7 +56,7 @@
 
             <EditText
                 android:id="@+id/account_alias"
-                android:layout_width="250dp"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
@@ -79,6 +79,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawSelectorOnTop="true" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginTop="30dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:gravity="center_horizontal"
+                    android:text="Aqui falta la opcion de seleccionar una imagen :)"
+                    android:textColor="#ff0000"
+                    android:textSize="@dimen/text_size"
+                    />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
