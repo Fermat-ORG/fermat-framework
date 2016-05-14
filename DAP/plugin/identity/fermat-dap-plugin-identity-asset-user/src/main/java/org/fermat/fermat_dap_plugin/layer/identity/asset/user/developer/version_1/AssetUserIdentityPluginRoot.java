@@ -73,8 +73,6 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
 
-    private SettingsManager<AssetUserSettings> settingsManager;
-
     public AssetUserIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -256,7 +254,7 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
 //    }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = IdentityAssetUserManagerImpl.class)
+//    @moduleManagerInterfacea(moduleManager = IdentityAssetUserManagerImpl.class)
     public ModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
             logManager.log(AssetUserIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity instantiation started...", null, null);

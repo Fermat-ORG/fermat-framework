@@ -154,7 +154,7 @@ public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractModule<A
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = AssetIssuerCommunitySupAppModuleManager.class)
+//    @moduleManagerInterfacea(moduleManager = AssetIssuerCommunitySupAppModuleManager.class)
     public ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
             logManager.log(AssetIssuerCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Sup AppModule instantiation started...", null, null);

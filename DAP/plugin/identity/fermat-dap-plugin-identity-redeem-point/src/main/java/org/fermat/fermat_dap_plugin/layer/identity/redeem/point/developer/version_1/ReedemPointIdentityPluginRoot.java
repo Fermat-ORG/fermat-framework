@@ -74,8 +74,6 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
     private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
-    private SettingsManager<RedeemPointSettings> settingsManager;
-
     public ReedemPointIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -278,7 +276,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
 //    }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = IdentityAssetRedeemPointManagerImpl.class)
+//    @moduleManagerInterfacea(moduleManager = IdentityAssetRedeemPointManagerImpl.class)
     public ModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
             logManager.log(ReedemPointIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity instantiation started...", null, null);

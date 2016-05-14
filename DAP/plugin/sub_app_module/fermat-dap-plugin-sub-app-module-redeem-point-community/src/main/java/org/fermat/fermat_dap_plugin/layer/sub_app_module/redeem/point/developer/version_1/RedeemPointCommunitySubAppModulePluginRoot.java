@@ -155,7 +155,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractModule<R
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = RedeemPointCommunitySupAppModuleManager.class)
+//    @moduleManagerInterfacea(moduleManager = RedeemPointCommunitySupAppModuleManager.class)
     public ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
             logManager.log(RedeemPointCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Sup AppModule instantiation started...", null, null);

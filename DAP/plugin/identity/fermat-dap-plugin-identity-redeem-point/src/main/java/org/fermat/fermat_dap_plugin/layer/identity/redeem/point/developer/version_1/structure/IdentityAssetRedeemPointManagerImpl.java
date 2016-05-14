@@ -27,6 +27,7 @@ import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.versio
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetRedeemPointManagerImpl extends ModuleManagerImpl<RedeemPointIdentitySettings> implements RedeemPointIdentityManager {
+public class IdentityAssetRedeemPointManagerImpl extends ModuleManagerImpl<RedeemPointIdentitySettings> implements RedeemPointIdentityManager, Serializable {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */

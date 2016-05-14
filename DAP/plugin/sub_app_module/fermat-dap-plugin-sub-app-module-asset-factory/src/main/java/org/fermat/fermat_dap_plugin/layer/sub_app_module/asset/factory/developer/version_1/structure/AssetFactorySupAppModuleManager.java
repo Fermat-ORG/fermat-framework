@@ -48,6 +48,7 @@ import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySett
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.factory.developer.version_1.AssetFactorySubAppModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -62,7 +63,7 @@ import java.util.UUID;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.BITDUBAI_ASSET_FACTORY_MODULE)
-public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFactorySettings> implements AssetFactoryModuleManager {
+public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFactorySettings> implements AssetFactoryModuleManager, Serializable {
 
     private final AssetFactoryManager                   assetFactoryManager;
     private final IdentityAssetIssuerManager            identityAssetIssuerManager;

@@ -52,6 +52,7 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.inte
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.version_1.AssetIssuerCommunitySubAppModulePluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -66,7 +67,7 @@ import java.util.UUID;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_ISSUER)
-public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager {
+public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager, Serializable {
 
     private final PluginFileSystem                              pluginFileSystem;
     private final LogManager                                    logManager;

@@ -27,6 +27,7 @@ import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_
 import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentitySettings> implements IdentityAssetUserManager {
+public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentitySettings> implements IdentityAssetUserManager, Serializable {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */

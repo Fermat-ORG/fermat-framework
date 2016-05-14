@@ -26,6 +26,7 @@ import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.database.AssetIssuerIdentityDao;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -33,7 +34,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIdentitySettings> implements IdentityAssetIssuerManager {
+public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIdentitySettings> implements IdentityAssetIssuerManager, Serializable {
     //TODO: Documentar
     UUID pluginId;
 

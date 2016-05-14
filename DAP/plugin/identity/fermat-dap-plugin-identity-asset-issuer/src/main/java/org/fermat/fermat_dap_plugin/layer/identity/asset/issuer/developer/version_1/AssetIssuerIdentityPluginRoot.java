@@ -75,18 +75,11 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
     private ActorAssetIssuerManager actorAssetIssuerManager;
 
-    private SettingsManager<AssetIssuerSettings> settingsManager;
-
     public AssetIssuerIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
     IdentityAssetIssuerManagerImpl identityAssetIssuerManager;
-
-    /**
-     * DealsWithActorAssetIssuer Interface implementation.
-     */
-
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -261,7 +254,7 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
 //    }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = IdentityAssetIssuerManagerImpl.class)
+//    @moduleManagerInterfacea(moduleManager = IdentityAssetIssuerManagerImpl.class)
     public ModuleManager getModuleManager() throws CantGetModuleManagerException {
         try {
             logManager.log(AssetIssuerIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity instantiation started...", null, null);
