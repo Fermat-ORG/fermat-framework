@@ -836,8 +836,13 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     @Override
-    public NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException {
-        return new NegotiationBankAccount() {
+    public CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException {
+        return new EmptyCustomerBrokerNegotiationInformationImpl();
+    }
+
+    @Override
+    public void createNewBankAccount(final String bankAccount, final FiatCurrency currency) throws CantCreateBankAccountPurchaseException {
+        customerBrokerPurchaseNegotiationManager.createNewBankAccount(new NegotiationBankAccount() {
             @Override
             public UUID getBankAccountId() {
                 return UUID.randomUUID();
@@ -850,19 +855,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
             @Override
             public FiatCurrency getCurrencyType() {
-                return currencyType;
+                return currency;
             }
-        };
-    }
-
-    @Override
-    public CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException {
-        return new EmptyCustomerBrokerNegotiationInformationImpl();
-    }
-
-    @Override
-    public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException {
-        customerBrokerPurchaseNegotiationManager.createNewBankAccount(bankAccount);
+        });
     }
 
     @Override

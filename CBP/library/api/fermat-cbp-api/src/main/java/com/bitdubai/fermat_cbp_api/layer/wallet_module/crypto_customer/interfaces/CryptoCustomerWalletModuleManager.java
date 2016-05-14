@@ -208,17 +208,6 @@ public interface CryptoCustomerWalletModuleManager
     void clearLocations() throws CantDeleteLocationPurchaseException;
 
     /**
-     * @param bankAccount  the bank account
-     * @param currencyType the currency of the account
-     *
-     * @return the {@link NegotiationBankAccount} with the bank account and its currency
-     *
-     * @throws CantCreateBankAccountPurchaseException
-     */
-    NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType)
-            throws CantCreateBankAccountPurchaseException;
-
-    /**
      * @return a empty {@link CustomerBrokerNegotiationInformation} to fill
      *
      * @throws CantNewEmptyCustomerBrokerNegotiationInformationException
@@ -233,7 +222,7 @@ public interface CryptoCustomerWalletModuleManager
      *
      * @throws CantCreateBankAccountPurchaseException
      */
-    void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException;
+    void createNewBankAccount(String bankAccount, FiatCurrency currency) throws CantCreateBankAccountPurchaseException;
 
     /**
      * Update a bank account in the database
