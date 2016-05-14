@@ -48,7 +48,7 @@ public class MessageImpl implements Message {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         messageDate=new Timestamp(
                 timestamp.getTime());
         this.contactId=contactId;
