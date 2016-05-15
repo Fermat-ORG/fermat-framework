@@ -84,7 +84,6 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                     getCommunicationsClientConnection(),
                     chatActorNetworkServiceDao,
                     this,
-                    errorManager,
                     getPluginVersionReference()
             );
 
@@ -92,7 +91,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch (final CantInitializeDatabaseException e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, "", "Problem initializing chat ans dao.");
         }
     }
@@ -166,7 +165,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -217,13 +216,13 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 
@@ -276,11 +275,11 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
             // i inform to error manager the error.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Chat ANS Dao.");
         } catch(Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }
@@ -325,11 +324,11 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         } catch(CantRequestConnectionException e) {
             // i inform to error manager the error.
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Error in Chat ANS Dao.");
         } catch(Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }

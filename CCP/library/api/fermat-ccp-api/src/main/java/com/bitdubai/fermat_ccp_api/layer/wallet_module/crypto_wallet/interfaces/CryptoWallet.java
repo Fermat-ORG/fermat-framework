@@ -9,6 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
@@ -43,6 +45,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.RequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.TransactionNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -556,4 +562,36 @@ public interface CryptoWallet  extends Serializable,ModuleManager,ModuleSettings
      * @throws CantListReceivePaymentRequestException
      */
     List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListReceivePaymentRequestException;
+
+    /**
+     * The method <code>getBlockchainDownloadProgress</code> get status of Blockchain Download Progress.
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantGetBlockchainDownloadProgress
+     */
+
+     BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress;
+
+    /**
+     *The method <code>getInstalledWallets</code> return the list of installed wallets on platform.
+     * @return
+     * @throws CantListWalletsException
+     */
+    List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
+
+
+    /**
+     * The method <code>sendToWallet</code> send btc to loss protected wallet .
+     * @param cryptoAmount
+     * @param sendingWalletPublicKey
+     * @param receivingWalletPublicKey
+     * @param notes
+     * @param deliveredToActorType
+     * @param sendingWallet
+     * @param receivingWallet
+     * @param blockchainNetworkType
+     * @throws CantSendLossProtectedCryptoException
+     * @throws LossProtectedInsufficientFundsException
+     */
+    void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 }

@@ -23,8 +23,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:id="@+id/txt_date"
-                    tools:text="December 15, 2016"
-                    android:textSize="16sp"
+                    tools:text="Dec 15, 2016"
+                    android:textSize="10sp"
                     android:textColor="#666666"
                     android:fontFamily="roboto"/>
                 <TextView
@@ -33,7 +33,7 @@
                     android:layout_weight="1"
                     android:id="@+id/txt_amount_balance"
                     tools:text="1.40 BTC"
-                    android:textSize="16sp"
+                    android:textSize="10sp"
                     android:textColor="#666666"
                     android:fontFamily="roboto"/>
                 <TextView
@@ -41,8 +41,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:id="@+id/txt_exchange_rate"
-                    tools:text="1BTC = $422.00"
-                    android:textSize="16sp"
+                    tools:text="1BTC = 422.000 U$D"
+                    android:textSize="10sp"
                     android:textColor="#666666"
                     android:fontFamily="roboto"/>
             </TableRow>

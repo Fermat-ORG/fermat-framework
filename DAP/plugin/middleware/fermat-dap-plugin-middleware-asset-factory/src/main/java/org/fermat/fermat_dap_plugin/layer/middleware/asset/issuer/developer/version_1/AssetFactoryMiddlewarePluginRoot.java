@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -31,8 +33,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantCreateAssetFactoryException;
@@ -47,11 +52,6 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDeveloperFactory;
 import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ import java.util.List;
  * Created by rodrigo on 9/7/15.
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM,
-        maintainerMail = "nerioindriago@gmail.com",
+        maintainerMail = "marsvicam@gmail.com",
         createdBy = "acostarodrigo",
         layer = Layers.MIDDLEWARE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
@@ -73,9 +73,6 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletManagerManager;
@@ -106,8 +103,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
             assetFactoryMiddlewareMonitorAgent = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent(
                     assetFactoryMiddlewareManager,
                     assetIssuingManager,
-                    errorManager
-            );
+                    this);
         }
         assetFactoryMiddlewareMonitorAgent.start();
     }
@@ -142,20 +138,22 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(assetIssuingManager, pluginDatabaseSystem, pluginFileSystem, pluginId, walletManagerManager, identityAssetIssuerManager);
         try {
             pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException ex) {
             try {
                 AssetFactoryMiddlewareDatabaseFactory assetFactoryMiddlewareDatabaseFactory = new AssetFactoryMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
                 assetFactoryMiddlewareDatabaseFactory.createDatabase(this.pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+            } catch (CantCreateDatabaseException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException();
-            } catch (Exception exception) {
-                throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(exception), null, null);
+            } catch (Exception e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(e), null, null);
             }
         }
         try {
             startMonitorAgent();
         } catch (CantGetLoggedInDeviceUserException | CantSetObjectException | CantStartAgentException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cannot start AssetFactoryMiddleware plugin.", FermatException.wrapException(e), null, "Cannot start the agent.");
         }
         this.serviceStatus = ServiceStatus.STARTED;
@@ -227,8 +225,9 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     public boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy {
         try {
             return assetFactoryMiddlewareManager.isReadyToPublish(assetPublicKey);
-        } catch (Exception exception) {
-            throw new CantPublishAssetFactoy(exception, "Cant Publish Asset Factory", "Asset Factory incomplete");
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantPublishAssetFactoy(e, "Cant Publish Asset Factory", "Asset Factory incomplete");
         }
     }
 
@@ -237,6 +236,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         try {
             return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         return null;

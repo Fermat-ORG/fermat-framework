@@ -147,7 +147,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 holder = new ViewHolder();
                 switch (type) {
                     case TYPE_ITEM:
-                        convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+                        convertView = mLayoutInflater.inflate(R.layout.loss_row_view, null);
                         holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
                         walletContact = (LossProtectedWalletContact) mListItems.get(position);
                         //guardo el contacto

@@ -7,13 +7,22 @@ import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesHistoryItemViewHolder;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 
@@ -27,6 +36,11 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
     LossProtectedWallet cryptoWallet;
     LossProtectedWalletSession lossProtectedWalletSession;
     Typeface tf;
+    /**
+     * DATA
+     * **/
+    private List<BitcoinLossProtectedWalletSpend> listBitcoinLossProtectedWalletSpend;
+    private LossProtectedWalletTransaction transaction;
     protected ChunckValuesHistoryAdapter(Context context) {
         super(context);
     }
@@ -74,20 +88,84 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
     @Override
     protected void bindHolder(final ChunckValuesHistoryItemViewHolder holder, final LossProtectedWalletTransaction data, int position) {
 
-
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTypeface(tf) ;
-
-        if (data.getExchangeRate() <= lossProtectedWalletSession.getActualExchangeRate()){
-            holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
-        }else {
-            holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
+        LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
+        try {
+            intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
+        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+            e.printStackTrace();
+        } catch (CantGetCryptoLossProtectedWalletException e) {
+            e.printStackTrace();
+        }
+        String intraUserPk = null;
+        if (intraUserLoginIdentity != null) {
+            intraUserPk = intraUserLoginIdentity.getPublicKey();
         }
 
+        //Get transaction data
+        try {
+            transaction = cryptoWallet.getTransaction(
+                    data.getTransactionId(),
+                    lossProtectedWalletSession.getAppPublicKey(),
+                    intraUserPk);
+        } catch (CantListLossProtectedTransactionsException e) {
+            e.printStackTrace();
+        }
+
+        final int percentage = getSpendingPercentage(transaction);
+
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()) + "  Spend " + percentage+"%");
+        holder.getTxt_amount().setTypeface(tf) ;
+
+        if (lossProtectedWalletSession.getActualExchangeRate() >= data.getExchangeRate())
+            holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
+        else
+            holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
 
         holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " + data.getExchangeRate());
 
+    }
 
+    private double getTotalSpent(UUID transactionId){
+
+        double spendingAmount = 0;
+        try {
+
+            listBitcoinLossProtectedWalletSpend = cryptoWallet.listSpendingBlocksValue(
+                    lossProtectedWalletSession.getAppPublicKey(),
+                    transactionId);
+
+            for (BitcoinLossProtectedWalletSpend spendingData : listBitcoinLossProtectedWalletSpend) {
+                if (spendingData.getAmount() != 0){
+                    spendingAmount += Double.parseDouble(WalletUtils.formatBalanceString(spendingData.getAmount(), ShowMoneyType.BITCOIN.getCode()));
+                }
+            }
+            return spendingAmount;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    private int getSpendingPercentage(LossProtectedWalletTransaction transaction){
+
+
+        double spendingAmount = 0,totalAmount = 0;
+        int totalSpendingPercentage = 0;
+        try {
+            //call spending list
+            spendingAmount = getTotalSpent(transaction.getTransactionId());
+
+            totalAmount = Double.parseDouble(WalletUtils.formatBalanceString(transaction.getAmount(), ShowMoneyType.BITCOIN.getCode()));
+
+            totalSpendingPercentage = (int) ((spendingAmount * 100)/totalAmount);
+
+            return totalSpendingPercentage;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 

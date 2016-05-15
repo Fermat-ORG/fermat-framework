@@ -2,12 +2,8 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.hardware.HardwareManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerPlatformServiceManager;
@@ -22,7 +18,7 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
 public final class ErrorManagerPlatformServiceAddonRoot extends AbstractAddon {
 
     private FermatManager errorManager;
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.HARDWARE)
+   // @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.HARDWARE)
     protected HardwareManager hardwareManager;
 
     public ErrorManagerPlatformServiceAddonRoot() {

@@ -40,8 +40,11 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
     private final HardwareManager hardwareManager;
     GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
 
+    private boolean isErrorReport;
+
     public ErrorManagerPlatformServiceManager(HardwareManager hardwareManager) {
         this.hardwareManager = hardwareManager;
+        this.isErrorReport = false;
     }
 
     /**
@@ -69,7 +72,7 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
                                                       final String[] mailTo) {
 
         String msgException = processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
-        sendReport(mailTo, msgException);
+        if(isErrorReport) sendReport(mailTo, msgException);
 
     }
 
@@ -128,6 +131,11 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
         processException(exceptionSource.toString(), "Unknow", exception);
     }
 
+    @Override
+    public void enabledErrorReport(boolean isErrorReportEnabled) {
+        this.isErrorReport = isErrorReportEnabled;
+    }
+
     private String processException(final String source, final String severity, final Exception exception){
         return printErrorReport(source, severity, FermatException.wrapException(exception));
     }
@@ -140,10 +148,6 @@ public final class ErrorManagerPlatformServiceManager implements ErrorManager {
 
     }
 
-
-    private void sendErrorReport(Platforms platforms){
-
-    }
 
     private void sendReport(String[] mailTo,String body){
         try {
