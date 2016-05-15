@@ -93,6 +93,9 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     }
 
 
+    public final boolean areIdentitiesToExpose(){
+        return (!Validate.isObjectNull(artistsToExpose) && artistsToExpose.size() > 0);
+    }
     @Override
     public final void exposeIdentity(final ArtistExposingData artist) throws CantExposeIdentityException {
 
