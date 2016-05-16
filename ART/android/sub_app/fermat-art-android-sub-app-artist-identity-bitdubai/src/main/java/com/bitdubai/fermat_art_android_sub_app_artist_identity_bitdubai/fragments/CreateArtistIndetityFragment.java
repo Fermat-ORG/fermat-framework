@@ -477,7 +477,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 }catch(Exception e){
                 }
                 if (!identityByPlatformList.isEmpty()) {
-                    externalIdentityID = identityByPlatformList.get(mArtistExternalName.getSelectedItemPosition() - 1);
+                    externalIdentityID = identityByPlatformList.get(mArtistExternalName.getSelectedItemPosition()-1);
                 }
             }
         }
@@ -487,10 +487,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         if (mArtistExternalPlatform.isSelected()) {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mArtistExternalPlatform.getSelectedItem().toString());
-        }
-        if (mArtistExternalName.getCount() > 1) {
-            externalUsername = mArtistExternalName.getSelectedItem().toString();
         }*/
+        if (mArtistExternalName.getCount() > 1) {
+            if(mArtistExternalName.getSelectedItemPosition() > 0){
+                externalUsername = mArtistExternalName.getSelectedItem().toString();
+            }
+        }
 
         ExposureLevel exposureLevel = ExposureLevel.getExposureLevelByLabel(mArtistExposureLevel.getSelectedItem().toString());
         ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.getArtistAcceptConnectionsTypeByLabel(mArtistAcceptConnectionsType.getSelectedItem().toString());
