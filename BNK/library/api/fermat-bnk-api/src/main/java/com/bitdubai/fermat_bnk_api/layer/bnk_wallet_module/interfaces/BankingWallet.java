@@ -22,7 +22,7 @@ import java.util.List;
 public interface BankingWallet {
     List<BankAccountNumber> getAccounts()throws CantLoadBankMoneyWalletException;
     void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency, String imageId);
-    void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId);
+    void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException;
     List<BankMoneyTransactionRecord> getTransactions(String account)throws CantLoadBankMoneyWalletException;
     List<BankMoneyTransactionRecord> getPendingTransactions();
     void makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException;
