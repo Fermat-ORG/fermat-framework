@@ -345,14 +345,15 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         });
     }
 
-    /**
-     * Creates a new Fan identity in Art platform .
-     *
-     * @return key */
+
     private int createNewIdentity() {
         UUID externalIdentityID = null;
+        ArtExternalPlatform artExternalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
+        if(mFanExternalPlatform.getSelectedItem() != mFanExternalPlatform.getItemAtPosition(0)){
+            artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
+                    mFanExternalPlatform.getSelectedItem().toString());
+        }
         if(!mFanExternalUser.getSelectedItem().equals(mFanExternalUser.getItemAtPosition(0))){
-            ArtExternalPlatform artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(mFanExternalPlatform.getSelectedItem().toString());
             if(artExternalPlatform !=null){
                 List<UUID> identityByPlatformList = new ArrayList<>();
                 try{
@@ -365,15 +366,11 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             }
         }
         String fanExternalName = mFanExternalUserName.getText().toString();
-        ArtExternalPlatform externalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
         String externalUsername="";
-        if(mFanExternalPlatform.getSelectedItem() != mFanExternalPlatform.getItemAtPosition(0)){
-            externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
-                    mFanExternalPlatform.getSelectedItem().toString());
-        }
-        if(mFanExternalUser.getCount()>1){
+
+        /*if(mFanExternalUser.getCount()>1){
             externalUsername=mFanExternalUser.getSelectedItem().toString();
-        }
+        }*/
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,
                 fanImageByteArray,
@@ -386,7 +383,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                                 fanExternalName,
                                 (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
                                 externalIdentityID,
-                                externalPlatform,
+                                artExternalPlatform,
                                 externalUsername);
                     } else
                         if (updateProfileImage) {
@@ -395,7 +392,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                                     identitySelected.getPublicKey(),
                                     fanImageByteArray,
                                     externalIdentityID,
-                                    externalPlatform,
+                                    artExternalPlatform,
                                     externalUsername);
 
                         }
@@ -404,7 +401,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                                     identitySelected.getPublicKey(),
                                     identitySelected.getProfileImage(),
                                     externalIdentityID,
-                                    externalPlatform,
+                                    artExternalPlatform,
                                     externalUsername);
 
                 } catch (Exception e){
@@ -553,6 +550,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 pictureView.setImageDrawable(
                         ImagesUtils.getRoundedBitmap(
                                 getResources(), imageBitmap));
+            contextMenuInUse = false;
         }
     }
     @Override

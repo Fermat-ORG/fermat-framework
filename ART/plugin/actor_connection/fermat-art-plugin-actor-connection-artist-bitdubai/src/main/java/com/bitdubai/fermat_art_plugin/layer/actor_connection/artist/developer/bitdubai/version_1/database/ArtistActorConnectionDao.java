@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -106,10 +107,15 @@ public class ArtistActorConnectionDao extends ActorConnectionDao<ArtistLinkedAct
         }
     }
 
-    public ArtistActorConnection registerConnection(ArtistActorConnection artistActorConnection) throws CantRegisterActorConnectionException  , ActorConnectionAlreadyExistsException {
+    public ArtistActorConnection registerConnection(
+            ArtistActorConnection artistActorConnection) throws
+            CantRegisterActorConnectionException  , ActorConnectionAlreadyExistsException {
         try {
 
-            boolean connectionExists = actorConnectionExists(artistActorConnection.getLinkedIdentity(), artistActorConnection.getPublicKey(),artistActorConnection.getConnectionId());
+            boolean connectionExists = actorConnectionExists(
+                    artistActorConnection.getLinkedIdentity(),
+                    artistActorConnection.getPublicKey(),
+                    artistActorConnection.getConnectionId());
 
             if (connectionExists)
                 throw new ActorConnectionAlreadyExistsException(
@@ -130,10 +136,16 @@ public class ArtistActorConnectionDao extends ActorConnectionDao<ArtistLinkedAct
 
         } catch (final CantInsertRecordException e) {
 
-            throw new CantRegisterActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+            throw new CantRegisterActorConnectionException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.");
         } catch (final InvalidParameterException e) {
 
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to build an instance of the actor connection.");
+            throw new CantRegisterActorConnectionException(
+                    e,
+                    "",
+                    "There was an error trying to build an instance of the actor connection.");
         } catch (CantGetActorConnectionException e) {
             e.printStackTrace();
         }
@@ -142,13 +154,22 @@ public class ArtistActorConnectionDao extends ActorConnectionDao<ArtistLinkedAct
 
     public boolean actorConnectionExists(ArtistLinkedActorIdentity artistLinkedActorIdentity, String publickey, UUID id) throws CantGetActorConnectionException {
         if (artistLinkedActorIdentity == null)
-            throw new CantGetActorConnectionException(null, "", "The artistLinkedActorIdentity is required, can not be null");
+            throw new CantGetActorConnectionException(
+                    null,
+                    "",
+                    "The artistLinkedActorIdentity is required, can not be null");
 
         if (publickey == null)
-            throw new CantGetActorConnectionException(null, "", "The publicKey is required, can not be null");
+            throw new CantGetActorConnectionException(
+                    null,
+                    "",
+                    "The publicKey is required, can not be null");
 
         if(id == null)
-            throw new CantGetActorConnectionException(null, "", "The connection id is required, can not be null");
+            throw new CantGetActorConnectionException(
+                    null,
+                    "",
+                    "The connection id is required, can not be null");
         try {
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
@@ -186,4 +207,73 @@ public class ArtistActorConnectionDao extends ActorConnectionDao<ArtistLinkedAct
         }
         return false;
     }
+
+    /**
+     * This method checks if an actor connection exists.
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    public List<ArtistActorConnection> getRequestActorConnections(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException {
+        if (linkedIdentityPublicKey == null)
+            throw new CantGetActorConnectionException(
+                null,
+                "",
+                "The linkedIdentity public key is required, can not be null");
+
+                if(linkedIdentityActorType == null)
+                    throw new CantGetActorConnectionException(
+                            null,
+                            "",
+                            "The linkedIdentityActorType is required, can not be null");
+
+                if (actorPublicKey == null)
+                    throw new CantGetActorConnectionException(
+                        null,
+                        "",
+                        "The publicKey is required, can not be null");
+
+                try {
+
+                    final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
+
+                    actorConnectionsTable.addStringFilter(
+                            ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                            linkedIdentityPublicKey,
+                            DatabaseFilterType.EQUAL);
+                    actorConnectionsTable.addFermatEnumFilter(
+
+                            ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_LINKED_IDENTITY_ACTOR_TYPE_COLUMN_NAME,
+                            linkedIdentityActorType,
+                            DatabaseFilterType.EQUAL);
+                    actorConnectionsTable.addStringFilter(
+                            ActorConnectionDatabaseConstants.ACTOR_CONNECTIONS_PUBLIC_KEY_COLUMN_NAME,
+                            actorPublicKey,
+                            DatabaseFilterType.EQUAL);
+
+                    actorConnectionsTable.loadToMemory();
+
+                    final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
+                    List<ArtistActorConnection> actorRecords = new ArrayList<>();
+                    for(DatabaseTableRecord record : records){
+                        actorRecords.add(buildActorConnectionNewRecord(record));
+                    }
+                    return actorRecords;
+                } catch (final CantLoadTableToMemoryException e) {
+                    throw new CantGetActorConnectionException(
+                            e,
+                            "linkedIdentity: "+linkedIdentityPublicKey + " - publicKey: "+actorPublicKey,
+                            "Exception not handled by the plugin, there is a problem in database and I cannot load the table.");
+                } catch (InvalidParameterException e) {
+                    throw new CantGetActorConnectionException(
+                            e,
+                            "linkedIdentity: "+linkedIdentityPublicKey + " - publicKey: "+actorPublicKey,
+                            "Exception not handled by the plugin, there is a problem getting a value from an enum.");
+                }
+        }
 }
