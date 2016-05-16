@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -31,11 +29,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
@@ -77,6 +76,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     List<Fan> fanList=new ArrayList<>();
     Bot artistBot;
     final Handler myHandler = new Handler();
+    SearchView searchView;
 
 
     public static FollowingFragment newInstance(){
@@ -89,12 +89,13 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         try {
             fanwalletSession = ((FanWalletSession) appSession);
             fanWalletModuleManager =  fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FOLLOWING");
-
 
             try {
                 fanWalletSettings =  fanWalletModuleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
@@ -124,15 +125,58 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tky_fan_wallet_menu, menu);
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+      //  changeColorSearchView(searchView);
+
+   /*     for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item2 = menu.getItem(i);
+
+            Drawable drawable = item2.getIcon();
+            if (drawable != null) {
+                // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
+                drawable.mutate();
+
+                drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+
+            }
+
+        }
+
+
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item2 = menu.getItem(i);
+
+            Drawable drawable = item2.getIcon();
+            if (drawable != null) {
+                // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
+                drawable.mutate();
+
+                drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+
+            }
+
+        }
+
+        try {
+            Field searchField = SearchView.class.getDeclaredField("mCloseButton");
+            searchField.setAccessible(true);
+            ImageView closebutton = (ImageView) searchField.get(searchView);
+            closebutton.setImageDrawable(getResources().getDrawable(R.drawable.clearbutton));
+        } catch (Exception e) {
+            Log.e("OncreatedMenu", "Error finding close button", e);
+        }*/
+
+
+
+
         searchView.setOnQueryTextListener(this);
 
         MenuItemCompat.setOnActionExpandListener(item,
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-
                         return true; // Return true to collapse action view
                     }
 
@@ -142,6 +186,11 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                         return true; // Return true to expand action view
                     }
                 });
+
+
+
+
+
     }
 
     void loaditems(){
@@ -171,8 +220,11 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         loaditems();
         adapter = new FollowingAdapter(items);
         recyclerView.setAdapter(adapter);
-        recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
+    //    recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
         swipe_effect();
+
+
+    //    getToolbar().setNavigationIcon(getColoredArrow());
 
         recyclerView.addOnItemTouchListener(
                 new ManageRecyclerviewClick(view.getContext(), new ManageRecyclerviewClick.OnItemClickListener() {
@@ -190,9 +242,36 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
 
 
-
         return view;
     }
+
+
+/*    private Drawable getColoredArrow() {
+        Drawable arrowDrawable = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        Drawable wrapped = DrawableCompat.wrap(arrowDrawable);
+
+        if (arrowDrawable != null && wrapped != null) {
+            // This should avoid tinting all the arrows
+            arrowDrawable.mutate();
+            DrawableCompat.setTintList(wrapped, ColorStateList.valueOf(this.getResources().getColor(R.color.color_black)));
+        }
+
+
+    return wrapped;
+}*/
+
+   /* void changeColorSearchView(SearchView searchview){
+
+        LinearLayout ll=(LinearLayout)searchview.getChildAt(0);
+        LinearLayout ll2=(LinearLayout)ll.getChildAt(2);
+        LinearLayout ll3=(LinearLayout)ll2.getChildAt(1);
+        SearchView.SearchAutoComplete autoComplete=((SearchView.SearchAutoComplete)ll3.getChildAt(0));
+        autoComplete.setTextColor(Color.BLACK);
+        autoComplete.setBackgroundResource(R.drawable.textbackground);
+
+
+
+    }*/
 
     List<FollowingItems> reload(){
         List<FollowingItems> data=new ArrayList<>();
@@ -213,6 +292,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -263,7 +343,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                Bitmap icon;
+               /* Bitmap icon;
                 if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 
                     View itemView = viewHolder.itemView;
@@ -290,7 +370,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
                     }
                 }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);*/
             }
 
         };
@@ -383,6 +463,12 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                             UISource.VIEW,
                             UnexpectedUIExceptionSeverity.NOT_IMPORTANT,
                             e);
+                } catch (CantConnectWithTokenlyException e) {
+                    Toast.makeText(
+                            getActivity(),
+                            "Connection Problem",
+                            Toast.LENGTH_LONG)
+                            .show();
                 }
 
             } catch (CantListFanIdentitiesException e) {

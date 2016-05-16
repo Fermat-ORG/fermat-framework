@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -62,6 +63,12 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "victor",
+        layer = Layers.FUNDS_TRANSACTION,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.ASSET_BUYER)
 public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         AssetBuyerManager {

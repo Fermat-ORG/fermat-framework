@@ -8,23 +8,45 @@
 
     <RelativeLayout
         android:id="@+id/afi_user_image"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="32dp"
-        android:background="@drawable/afi_circular_other_profile"
+
         android:gravity="center">
 
         <ImageView
             android:id="@+id/afi_fan_image"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
-            tools:ignore="ContentDescription" />
+            android:background="@drawable/afi_circular_other_profile"
+            tools:ignore="ContentDescription"
+
+            />
+        <View
+            android:id="@+id/warning_cirlcle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/warnning_circle"/>
+
+
+
 
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/warning_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="missing picture"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/afi_user_image"
+        android:textStyle="bold"
+        android:textColor="#DF0101"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

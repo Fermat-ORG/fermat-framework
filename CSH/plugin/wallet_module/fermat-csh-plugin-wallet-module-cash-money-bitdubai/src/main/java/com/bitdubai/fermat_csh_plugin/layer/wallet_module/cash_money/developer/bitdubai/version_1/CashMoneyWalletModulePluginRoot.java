@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -57,11 +58,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Created by Alejandro Bicelis on 12/8/2015.
- */
 
-//public class CashMoneyWalletModulePluginRoot extends AbstractPlugin implements LogManagerForDevelopers, CashMoneyWalletModuleManager {
+@PluginInfo(createdBy = "abicelis", maintainerMail = "abicelis@gmail.com", platform = Platforms.CASH_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.BITDUBAI_CSH_MONEY_WALLET_MODULE)
 public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers,
         CashMoneyWalletModuleManager {

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
@@ -125,22 +126,30 @@ public class FanWalletModuleManagerImpl
     }
 
     @Override
-    public Bot getBotByBotId(String botId) throws CantGetBotException {
+    public Bot getBotByBotId(String botId) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         return tokenlyApiManager.getBotByBotId(botId);
     }
 
     @Override
-    public Bot getBotBySwapbotUsername(String username) throws CantGetBotException {
+    public Bot getBotBySwapbotUsername(String username) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         return tokenlyApiManager.getBotBySwapbotUsername(username);
     }
 
     @Override
-    public Album[] getAlbums() throws CantGetAlbumException {
+    public Album[] getAlbums() throws
+            CantGetAlbumException,
+            CantConnectWithTokenlyException {
         return tokenlyApiManager.getAlbums();
     }
 
     @Override
-    public DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException {
+    public DownloadSong getDownloadSongBySongId(String id) throws
+            CantGetSongException,
+            CantConnectWithTokenlyException {
         return tokenlyApiManager.getDownloadSongBySongId(id);
     }
 

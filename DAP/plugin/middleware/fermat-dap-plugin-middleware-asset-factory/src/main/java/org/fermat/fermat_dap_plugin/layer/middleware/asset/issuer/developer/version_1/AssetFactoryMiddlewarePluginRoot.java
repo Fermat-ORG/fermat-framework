@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -57,6 +58,12 @@ import java.util.List;
 /**
  * Created by rodrigo on 9/7/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "acostarodrigo",
+        layer = Layers.MIDDLEWARE,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.ASSET_FACTORY)
 public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         AssetFactoryManager,
         DatabaseManagerForDevelopers {

@@ -106,21 +106,21 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
                 if (artistCommunityInformation != null && identity != null) {
 
                     getSession().getModuleManager().disconnectArtist(artistCommunityInformation.getConnectionId());
-                    Toast.makeText(getContext(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Disconnected successfully", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
                     getSession().setData("connectionresult", 1);
 
                 } else {
-                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             }   catch (ArtistDisconnectingFailedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
             } catch (ConnectionRequestNotFoundException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error. Could not disconnect.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error. Could not disconnect.", Toast.LENGTH_SHORT).show();
             }
 
             dismiss();

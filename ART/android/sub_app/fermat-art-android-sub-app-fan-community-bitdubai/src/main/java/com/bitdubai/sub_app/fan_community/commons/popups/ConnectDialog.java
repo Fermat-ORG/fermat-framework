@@ -116,21 +116,21 @@ public class ConnectDialog extends FermatDialog<FanCommunitySubAppSession, SubAp
                     //System.out.println("*********** i'm the selected broker information: " + information);
 
                     getSession().getModuleManager().requestConnectionToFan(identity, information);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Connection request sent", Toast.LENGTH_SHORT).show();
 
                     //set flag so that the preceding fragment reads it on dismiss()
                     getSession().setData("connectionresult", 2);
 
                 } else {
-                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Can not request connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Can not request connection", Toast.LENGTH_SHORT).show();
             } catch (ActorConnectionAlreadyRequestedException | ActorTypeNotSupportedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "The connection has already been requested", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "The connection has already been requested", Toast.LENGTH_SHORT).show();
             }
 
             dismiss();

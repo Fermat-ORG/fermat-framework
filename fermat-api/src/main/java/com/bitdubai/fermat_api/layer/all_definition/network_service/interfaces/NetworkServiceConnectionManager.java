@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.network_service.interfaces;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 
 /**

@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -59,6 +60,7 @@ import java.util.regex.Pattern;
  * Created by loui on 18/03/15.
  * Modified by Arturo Vallone 25/04/2015
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.HIGH, maintainerMail = "acosta_rodrigo@hotmail.com", createdBy = "El eze", layer = Layers.CRYPTO_ROUTER, platform = Platforms.BLOCKCHAINS, plugin = Plugins.BITCOIN_NETWORK)
 public class IncomingCryptoTransactionPluginRoot extends AbstractPlugin implements
         IncomingCryptoManager,
         DatabaseManagerForDevelopers,
