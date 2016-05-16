@@ -44,6 +44,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.exceptions.CantDeliverDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional.AssetIssuerWalletImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -164,13 +167,13 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         Collection<UUID> ids = this.issuerWallets;
         for (UUID id : ids)
             databasesNames.add(id.toString());
-        org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory(this.pluginId.toString(), databasesNames);
+        DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(this.pluginId.toString(), databasesNames);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return DeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
@@ -183,13 +186,13 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.exceptions.CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
+            FermatException e = new CantDeliverDatabaseException("I can't open database", cantOpenDatabaseException, "WalletId: " + developerDatabase.getName(), "");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.exceptions.CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
+            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "WalletId: " + developerDatabase.getName(), "");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception exception) {
-            FermatException e = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.exceptions.CantDeliverDatabaseException(org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.exceptions.CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + developerDatabase.getName(), "");
+            FermatException e = new CantDeliverDatabaseException(CantDeliverDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "WalletId: " + developerDatabase.getName(), "");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
@@ -200,7 +203,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
 
         try {
-            org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional.AssetIssuerWalletImpl assetIssuerWallet = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional.AssetIssuerWalletImpl(
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(
                     errorManager,
                     pluginDatabaseSystem,
                     pluginFileSystem,
@@ -225,7 +228,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createWalletAssetIssuer(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional.AssetIssuerWalletImpl assetIssuerWallet = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional.AssetIssuerWalletImpl(
+            AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(
                     errorManager,
                     pluginDatabaseSystem,
                     pluginFileSystem,

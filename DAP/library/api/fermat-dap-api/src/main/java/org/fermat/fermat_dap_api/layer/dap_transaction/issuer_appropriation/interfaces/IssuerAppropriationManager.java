@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 18/01/16.
  */
-public interface IssuerAppropriationManager {//extends FermatManager {
+public interface IssuerAppropriationManager extends FermatManager {
 
 
     /**

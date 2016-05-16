@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
@@ -12,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/10/15.
  */
-public interface AssetIssuerActorNetworkServiceManager {//extends FermatManager {
+public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *

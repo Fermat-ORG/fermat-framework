@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
@@ -15,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/10/15.
  */
-public interface AssetRedeemPointActorNetworkServiceManager extends DAPNetworkService { //FermatManager {
+public interface AssetRedeemPointActorNetworkServiceManager extends DAPNetworkService, FermatManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *

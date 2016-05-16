@@ -229,7 +229,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
 //    }
 
     @Override
-//    @moduleManagerInterfacea(moduleManager = AssetFactorySupAppModuleManager.class)
+    @moduleManagerInterfacea(moduleManager = AssetFactorySupAppModuleManager.class)
     public ModuleManager<AssetFactorySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
             logManager.log(AssetFactorySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Module instantiation started...", null, null);

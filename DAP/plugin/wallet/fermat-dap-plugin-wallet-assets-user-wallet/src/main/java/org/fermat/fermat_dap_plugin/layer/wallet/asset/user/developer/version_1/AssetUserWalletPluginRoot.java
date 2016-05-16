@@ -45,6 +45,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWa
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.DeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.exceptions.CantDeliveryDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -117,7 +118,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletImpl userWallet = new org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletImpl(
+            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
                     errorManager,
                     pluginDatabaseSystem,
                     pluginFileSystem,
@@ -139,7 +140,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletImpl userWallet = new org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletImpl(
+            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
                     errorManager,
                     pluginDatabaseSystem,
                     pluginFileSystem,
