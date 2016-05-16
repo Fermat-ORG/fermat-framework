@@ -51,13 +51,13 @@ public class ClientsConnectionsManager {
 
     private LocationManager locationManager;
 
-    public ClientsConnectionsManager(){
+    public ClientsConnectionsManager(ECCKeyPair identity, ErrorManager errorManager, EventManager eventManager, LocationManager locationManager){
         this.listActorConnectIntoNode = new HashMap<>();
         this.listConnectionActiveToNode = new HashMap<>();
-        this.identity = (ECCKeyPair) ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
-        this.errorManager = (ErrorManager) ClientContext.get(ClientContextItem.ERROR_MANAGER);
-        this.eventManager = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER);
-        this.locationManager = (LocationManager) ClientContext.get(ClientContextItem.LOCATION_MANAGER);
+        this.identity = identity;
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+        this.locationManager = locationManager;
     }
 
     public Map<String, String> getListActorConnectIntoNode() {

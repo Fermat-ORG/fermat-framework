@@ -39,6 +39,8 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private String nodeIdentityPublicKey;
 
+	private String clientIdentityPublicKey;
+
 	private byte[] photo;
 
 	private String transactionType;
@@ -134,6 +136,14 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	public void setNodeIdentityPublicKey(String nodeIdentityPublicKey) {
 		this.nodeIdentityPublicKey = nodeIdentityPublicKey;
+	}
+
+	public String getClientIdentityPublicKey() {
+		return clientIdentityPublicKey;
+	}
+
+	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
+		this.clientIdentityPublicKey = clientIdentityPublicKey;
 	}
 
 	public byte[] getPhoto() {

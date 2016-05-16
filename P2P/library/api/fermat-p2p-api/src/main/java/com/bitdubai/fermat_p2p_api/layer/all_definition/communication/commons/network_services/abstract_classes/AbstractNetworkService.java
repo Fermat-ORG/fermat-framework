@@ -515,21 +515,17 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             NetworkClientConnection networkClientConnectionTemp = networkClientManager.getConnection(uriToNode);
 
-            String receiver = listActorProfileConnectedInNode.get(uriToNode).getClientIdentityPublicKey();
+            String receiver = listActorProfileConnectedInNode.get(uriToNode).getIdentityPublicKey();
+            String clientDestination = listActorProfileConnectedInNode.get(uriToNode).getClientIdentityPublicKey();
 
             Message message = new Message();
-            message.setSender("1489"); // pk of Sender of actor profile
+            message.setSender("1489"); // TODO: ver como setear este publicKey of Sender of actor profile
             message.setReceiver(receiver);
             message.setMessageType(null);
             message.setMessageStatus(MessageStatus.PENDING_TO_SEND);
-            message.setSignature("1489");
             message.setContent("HELLOOOOOOOOOOOO FROM LAPTOP ACER");
 
-            //TODO aqui se envia el mensaje
-            // falto crear dos processor en el client
-            // el Transmit y el TransmitRespond
-            // ponte de acuerdo con robert leon
-            //networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver);
+            networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver, clientDestination);
         }
 
     }

@@ -153,8 +153,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         try{
 
-            clientsConnectionsManager = new ClientsConnectionsManager();
-
             /*
              * Initialize the identity of the node
              */
@@ -166,6 +164,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             initializeDb();
 
             /*
+             * Initialize the clientsConnectionsManager to the Connections
+             */
+            clientsConnectionsManager = new ClientsConnectionsManager(identity, errorManager, eventManager, locationManager);
+
+            /*
              * Add references to the node context
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
@@ -173,6 +176,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
             ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, clientsConnectionsManager);
+
+
 
             //nodesProfileList = getNodesProfileList();
 

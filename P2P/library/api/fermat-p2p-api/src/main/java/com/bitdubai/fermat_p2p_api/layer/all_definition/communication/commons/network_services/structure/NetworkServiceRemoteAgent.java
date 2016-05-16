@@ -153,7 +153,7 @@ public final class NetworkServiceRemoteAgent extends Observable {
                     /*
                      * Decrypt the message content
                      */
-                    message.setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey()));
+                    //message.setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey()));
 
                     /*
                      * Change to the new status
@@ -237,8 +237,8 @@ public final class NetworkServiceRemoteAgent extends Observable {
                             /*
                              * Sing the message
                              */
-                            String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
-                            message.setSignature(signature);
+                            //String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
+                            //message.setSignature(signature);
 
 
 
@@ -256,7 +256,7 @@ public final class NetworkServiceRemoteAgent extends Observable {
                                 /*
                                  * Notify a new message send
                                  */
-                                networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
+                                //networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
 
                             } else {

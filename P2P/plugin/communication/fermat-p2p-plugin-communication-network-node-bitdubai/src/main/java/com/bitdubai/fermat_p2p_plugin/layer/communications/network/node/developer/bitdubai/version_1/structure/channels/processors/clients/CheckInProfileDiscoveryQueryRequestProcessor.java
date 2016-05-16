@@ -235,6 +235,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                 actorProfile.setPhoto(checkedInActor.getPhoto());
                 actorProfile.setExtraData(checkedInActor.getExtraData());
                 actorProfile.setNsIdentityPublicKey(checkedInActor.getNsIdentityPublicKey());
+                actorProfile.setClientIdentityPublicKey(checkedInActor.getClientIdentityPublicKey());
 
                 //TODO: SET THE LOCATION
                 //actorProfile.setLocation();

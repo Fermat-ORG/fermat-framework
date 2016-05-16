@@ -40,8 +40,8 @@ public final class NetworkServiceConnectionManager {
         this.networkServiceRoot              = networkServiceRoot;
         this.errorManager                    = errorManager      ;
 
-        this.incomingMessagesDao = new IncomingMessagesDao(networkServiceRoot.getDataBase());
-        this.outgoingMessagesDao = new OutgoingMessagesDao(networkServiceRoot.getDataBase());
+        //this.incomingMessagesDao = new IncomingMessagesDao(networkServiceRoot.getDataBase());
+        //this.outgoingMessagesDao = new OutgoingMessagesDao(networkServiceRoot.getDataBase());
 
         this.networkServiceLocalsCache       = new HashMap<>();
         this.networkServiceRemoteAgentsCache = new HashMap<>();
