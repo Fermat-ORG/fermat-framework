@@ -44,31 +44,6 @@ public interface NetworkClientConnection {
     void unregisterProfile(Profile profile) throws CantUnregisterProfileException;
 
     /**
-     * Through the method <code>callNetworkService</code> we can request a network call between
-     * two network services.
-     *
-     * @param fromNetworkService profile of the network service that is trying to communicate.
-     * @param toNetworkService   profile of the network service which we're trying to reach.
-     *
-     * @throws CantCreateNetworkCallException if something goes wrong.
-     */
-    void callNetworkService(NetworkServiceProfile fromNetworkService,
-                            NetworkServiceProfile toNetworkService  ) throws CantCreateNetworkCallException;
-
-    /**
-     * Through the method <code>callNetworkService</code> we can request a network call between
-     * two actors.
-     *
-     * @param fromActor           profile of the actor that is trying to communicate.
-     * @param toActor             profile of the actor which we're trying to reach.
-     * @param fromNetworkService  profile of the network service that is trying to communicate.
-     *
-     */
-    void callActor(ActorProfile          fromActor         ,
-                   ActorProfile          toActor           ,
-                   NetworkServiceProfile fromNetworkService);
-
-    /**
      * Through the method <code>registeredProfileDiscoveryQuery</code> we can make a discovery query
      * looking for registered profiles.
      *
@@ -118,7 +93,5 @@ public interface NetworkClientConnection {
      * @return boolean
      */
     boolean isRegistered();
-
-    NetworkCallChannel getCallChannel(Profile from, Profile to);
 
 }

@@ -40,8 +40,8 @@ public final class NetworkServiceConnectionManager {
         this.networkServiceRoot              = networkServiceRoot;
         this.errorManager                    = errorManager      ;
 
-        //this.incomingMessagesDao = new IncomingMessagesDao(networkServiceRoot.getDataBase());
-        //this.outgoingMessagesDao = new OutgoingMessagesDao(networkServiceRoot.getDataBase());
+        this.incomingMessagesDao = new IncomingMessagesDao(networkServiceRoot.getDataBase());
+        this.outgoingMessagesDao = new OutgoingMessagesDao(networkServiceRoot.getDataBase());
 
         this.networkServiceLocalsCache       = new HashMap<>();
         this.networkServiceRemoteAgentsCache = new HashMap<>();
@@ -54,8 +54,6 @@ public final class NetworkServiceConnectionManager {
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-            networkServiceRoot.getConnection().callNetworkService(networkServiceRoot.getProfile(), remoteNetworkService);
-
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     networkServiceRoot.getPluginVersionReference(),
@@ -73,7 +71,6 @@ public final class NetworkServiceConnectionManager {
             /*
              * ask to the communicationLayerManager to connect to other actor
              */
-            networkServiceRoot.getConnection().callActor(applicantParticipant, applicantNetworkService, networkServiceRoot.getProfile());
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
@@ -117,7 +114,7 @@ public final class NetworkServiceConnectionManager {
             /*
              * Get the active connection
              */
-            NetworkCallChannel networkCallChannel = networkServiceRoot.getConnection().getCallChannel(networkServiceRoot.getProfile(), remoteComponentProfile);
+            NetworkCallChannel networkCallChannel = null; //networkServiceRoot.getConnection().getCallChannel(networkServiceRoot.getProfile(), remoteComponentProfile);
 
             //Validate the connection
             if (networkCallChannel != null &&
