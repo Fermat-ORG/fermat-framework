@@ -626,7 +626,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
                     if (m != null) {
                         if(!m.getReturnType().equals(Void.TYPE) && returnedObject==null){
-                            Log.e(TAG, "Error: object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3()+" please check the module");
+                            Log.i(TAG, "Object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3()+" please check the module if this is not what you expected");
                         }
                     }
 
