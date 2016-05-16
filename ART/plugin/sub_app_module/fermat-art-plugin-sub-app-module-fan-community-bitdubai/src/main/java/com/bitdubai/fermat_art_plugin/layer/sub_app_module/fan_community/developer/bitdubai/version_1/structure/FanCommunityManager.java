@@ -99,15 +99,6 @@ public class FanCommunityManager
             final PluginVersionReference pluginVersionReference,
             final ArtistActorConnectionManager artistActorConnectionManager,
             final ArtistManager artistActorNetworkServiceManager) {
-
-    public FanCommunityManager(final ArtistIdentityManager artistIdentityManager,
-                                          final FanActorConnectionManager fanActorConnectionManager,
-                                          final FanManager fanActorNetworkServiceManager,
-                                          final FanaticIdentityManager fanaticIdentityManager,
-                                          final ErrorManager errorManager,
-                                          final PluginFileSystem pluginFileSystem,
-                                          final UUID pluginId,
-                                          final PluginVersionReference pluginVersionReference) {
         super(pluginFileSystem, pluginId);
         this.artistIdentityManager                    = artistIdentityManager                    ;
         this.fanActorConnectionManager                = fanActorConnectionManager                ;
@@ -503,7 +494,6 @@ public class FanCommunityManager
                 actorPublicKey);
     }
 
-    @Override
     /*@Override
     public SettingsManager<FanCommunitySettings> getSettingsManager() {
 

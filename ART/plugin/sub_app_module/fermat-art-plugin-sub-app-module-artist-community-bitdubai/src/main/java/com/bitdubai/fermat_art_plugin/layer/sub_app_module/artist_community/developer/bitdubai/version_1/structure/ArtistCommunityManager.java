@@ -67,8 +67,6 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListIdentitiesToSelectException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils.FanCommunityInformationImpl;
 
 import java.io.Serializable;
@@ -90,9 +88,6 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
     private final FanActorConnectionManager                     fanActorConnectionManager             ;
     private final FanManager                                    fanActorNetworkServiceManager         ;
     private final FanaticIdentityManager                        fanaticIdentityManager                ;
-    private final ErrorManager errorManager                          ;
-    private final PluginFileSystem                              pluginFileSystem                      ;
-    private final UUID                                          pluginId                              ;
     private final ErrorManager                                  errorManager                          ;
     private final PluginVersionReference                        pluginVersionReference                ;
 
@@ -102,15 +97,6 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
     private boolean isDialog = true;
 
 
-    public ArtistCommunityManager(final ArtistIdentityManager           artistIdentityManager                 ,
-                                  final ArtistActorConnectionManager    artistActorConnectionManager          ,
-                                  final ArtistManager                   artistActorNetworkServiceManager      ,
-                                  final FanaticIdentityManager          fanaticIdentityManager                ,
-                                  final ErrorManager                    errorManager                          ,
-                                  final PluginFileSystem                pluginFileSystem                      ,
-                                  final UUID                            pluginId                              ,
-                                  final PluginVersionReference          pluginVersionReference                ) {
-        super(pluginFileSystem, pluginId);
     public ArtistCommunityManager(
             final ArtistIdentityManager artistIdentityManager,
             final ArtistActorConnectionManager artistActorConnectionManager,
@@ -123,6 +109,7 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             final FanManager fanActorNetworkServiceManager,
             final FanActorConnectionManager fanActorConnectionManager) {
 
+        super(pluginFileSystem, pluginId);
         this.artistIdentityManager                  = artistIdentityManager                 ;
         this.artistActorConnectionManager           = artistActorConnectionManager          ;
         this.artistActorNetworkServiceManager       = artistActorNetworkServiceManager      ;
