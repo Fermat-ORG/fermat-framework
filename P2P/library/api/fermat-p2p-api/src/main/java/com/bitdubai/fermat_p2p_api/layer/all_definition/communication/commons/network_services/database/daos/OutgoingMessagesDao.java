@@ -2,17 +2,27 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.DATABASE_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ACTOR_TYPE_COLUMN_NAME;
@@ -66,6 +76,8 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
 
             networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.getByCode(record.getStringValue(OUTGOING_MESSAGES_STATUS_COLUMN_NAME)));
 
+            networkServiceMessage.setFailCount(record.getIntegerValue(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME));
+
             Boolean isBetweenActors = Boolean.parseBoolean(record.getStringValue(OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME));
 
             networkServiceMessage.setIsBetweenActors(isBetweenActors);
@@ -98,6 +110,7 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
         entityRecord.setStringValue(OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, entity.getReceiverPublicKey());
         entityRecord.setStringValue(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME, entity.getContent());
         entityRecord.setStringValue(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME, entity.getContentType().getCode());
+        entityRecord.setIntegerValue(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, entity.getFailCount());
 
         if (entity.getShippingTimestamp() != null) {
             entityRecord.setLongValue(OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, entity.getShippingTimestamp().getTime());
@@ -126,6 +139,110 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
         }
 
         return entityRecord;
+    }
+
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the column name are the att of the <code>NetworkServiceDatabaseConstants</code>
+     *
+     * @return All FermatMessage.
+     * @throws CantReadRecordDataBaseException
+     */
+    public List<NetworkServiceMessage> findByFailCount(Integer countFailMin, Integer countFailMax) throws CantReadRecordDataBaseException {
+
+        List<NetworkServiceMessage> list;
+
+        try {
+
+            /*
+             * 1 - load the data base to memory with filters
+             */
+            DatabaseTable templateTable = getDatabaseTable();
+
+            /*
+             * 2 - prepare the filters
+             */
+            List<DatabaseTableFilter> filtersTable = new ArrayList<>();
+
+            if (countFailMin != null) {
+
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.GREATER_OR_EQUAL_THAN);
+                newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                newFilter.setValue(countFailMin.toString());
+                filtersTable.add(newFilter);
+            }
+
+            if (countFailMax != null) {
+
+                DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.LESS_OR_EQUAL_THAN);
+                newFilter.setColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
+                newFilter.setValue(countFailMax.toString());
+                filtersTable.add(newFilter);
+            }
+
+            DatabaseTableFilter newFilter = templateTable.getEmptyTableFilter();
+            newFilter.setType(DatabaseFilterType.EQUAL);
+            newFilter.setColumn(OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
+            newFilter.setValue(FermatMessagesStatus.PENDING_TO_SEND.getCode());
+            filtersTable.add(newFilter);
+
+            templateTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.AND);
+            templateTable.loadToMemory();
+
+            /*
+             * 3 - read all records
+             */
+            List<DatabaseTableRecord> records = templateTable.getRecords();
+
+            /*
+             * 4 - Create a list of FermatMessage objects
+             */
+            list = new ArrayList<>();
+            list.clear();
+
+            /*
+             * 5 - Convert into FermatMessage objects
+             */
+            for (DatabaseTableRecord record : records) {
+
+                /*
+                 * 5.1 - Create and configure a  FermatMessage
+                 */
+                NetworkServiceMessage fermatMessage = getEntityFromDatabaseTableRecord(record);
+
+                /*
+                 * 5.2 - Add to the list
+                 */
+                list.add(fermatMessage);
+
+            }
+
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + DATABASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        } catch (InvalidParameterException invalidParameterException) {
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + DATABASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "Data is inconsistent.";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, invalidParameterException, context, possibleCause);
+            throw cantReadRecordDataBaseException;
+        }
+
+        /*
+         * return the list
+         */
+        return list;
     }
 
 }

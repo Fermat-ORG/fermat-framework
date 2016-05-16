@@ -44,6 +44,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.structure.NetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
@@ -134,6 +135,12 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     protected Map<String, ActorProfile> listActorProfileConnectedInNode;
 
+
+    /**
+     * Represent the networkServiceConnectionManager
+     */
+    private NetworkServiceConnectionManager networkServiceConnectionManager;
+
     /**
      * AGENTS DEFINITION ----->
      */
@@ -199,6 +206,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              * Initialize listeners
              */
             initializeNetworkServiceListeners();
+
+            this.networkServiceConnectionManager = new NetworkServiceConnectionManager(this, errorManager);
 
             /*
              * Initialize the agents and start
@@ -621,6 +630,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     protected void onNetworkClientConnectionClosed() {
 
+    }
+
+    public NetworkServiceConnectionManager getNetworkServiceConnectionManager() {
+        return networkServiceConnectionManager;
     }
 
     /**

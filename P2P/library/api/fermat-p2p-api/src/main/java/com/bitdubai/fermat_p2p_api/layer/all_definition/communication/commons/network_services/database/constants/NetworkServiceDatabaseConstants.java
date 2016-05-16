@@ -46,5 +46,6 @@ public final class NetworkServiceDatabaseConstants {
     public static final String OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME               = "content_type"              ;
     public static final String OUTGOING_MESSAGES_STATUS_COLUMN_NAME                     = "status"                    ;
     public static final String OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME          = "is_between_actors"         ;
+    public static final String OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME                 = "fail_count"                ;
 
 }
