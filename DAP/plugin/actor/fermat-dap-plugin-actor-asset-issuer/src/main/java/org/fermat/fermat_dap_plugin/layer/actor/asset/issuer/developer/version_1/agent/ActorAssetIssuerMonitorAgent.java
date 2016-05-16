@@ -29,13 +29,13 @@ import java.util.UUID;
 /**
  * Created by Nerio on 02/11/15.
  */
-public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     private Thread agentThread;
     private MonitorAgent monitorAgent;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
+
     PluginDatabaseSystem pluginDatabaseSystem;
     AssetIssuerActorDao assetIssuerActorDao;
     UUID pluginId;
@@ -45,7 +45,6 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 
     public ActorAssetIssuerMonitorAgent(EventManager eventManager,
                                         PluginDatabaseSystem pluginDatabaseSystem,
-                                        ErrorManager errorManager,
                                         UUID pluginId,
                                         AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
                                         AssetIssuerActorDao assetIssuerActorDao,
@@ -53,7 +52,6 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 
         this.pluginId = pluginId;
         this.eventManager = eventManager;
-        this.errorManager = errorManager;
         this.assetIssuerActorNetworkServiceManager = assetIssuerActorNetworkServiceManager;
         this.assetIssuerActorDao = assetIssuerActorDao;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -62,7 +60,7 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 
     @Override
     public void start() throws CantStartAgentException {
-        monitorAgent = new MonitorAgent(this.errorManager, this.pluginDatabaseSystem);
+        monitorAgent = new MonitorAgent(this.assetActorIssuerPluginRoot, this.pluginDatabaseSystem);
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
@@ -70,11 +68,6 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
     @Override
     public void stop() {
         this.agentThread.interrupt();
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -99,13 +92,13 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 
     private class MonitorAgent implements Runnable {
 
-        ErrorManager errorManager;
+        AssetIssuerActorPluginRoot assetActorIssuerPluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 60000;/*  / 1000 = TIME in SECONDS = 60 seconds */
         boolean threadWorking;
 
-        public MonitorAgent(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
-            this.errorManager = errorManager;
+        public MonitorAgent(AssetIssuerActorPluginRoot assetActorIssuerPluginRoot, PluginDatabaseSystem pluginDatabaseSystem) {
+            this.assetActorIssuerPluginRoot = assetActorIssuerPluginRoot;
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
 
@@ -128,7 +121,7 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
 
                     doTheMainTask();
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 }
             }
         }
@@ -158,13 +151,13 @@ public class ActorAssetIssuerMonitorAgent implements Agent, DealsWithLogger, Dea
                     }
                 }
             } catch (CantRequestListActorAssetIssuerRegisteredException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCreateActorAssetIssuerException("CAN'T REQUEST LIST ACTOR ASSET ISSUER NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetIssuerActorNetworkServiceManager);
             } catch (CantAddPendingAssetIssuerException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCreateActorAssetIssuerException("CAN'T ADD LIST ACTOR ASSET ISSUER IN BD ACTORS ", e, "", "");
             } catch (CantGetAssetIssuerActorsException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetActorIssuerPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCreateActorAssetIssuerException("CAN'T GET ASSET ACTOR ASSET ISSUER", e, "", "");
             }
         }

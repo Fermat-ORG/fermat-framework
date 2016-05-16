@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -94,7 +94,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+
      @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+
     private EventManager eventManager;
 
     public AppRuntimeEnginePluginRoot() {
@@ -158,14 +160,17 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
             factoryReset();
 
         } catch (CantFactoryReset ex) {
+            ex.printStackTrace();
             String message = CantStartPluginException.DEFAULT_MESSAGE;
             FermatException cause = ex;
             String context = "AppNavigationStructure Runtime Start";
 
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
+
         }
         catch (Exception ex) {
+
             ex.printStackTrace();
             String message = CantStartPluginException.DEFAULT_MESSAGE;
 

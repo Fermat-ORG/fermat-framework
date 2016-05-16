@@ -332,7 +332,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         if (adapter == null) {
             adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransaction,cryptoWallet,lossProtectedWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
-
         }
         return adapter;
     }

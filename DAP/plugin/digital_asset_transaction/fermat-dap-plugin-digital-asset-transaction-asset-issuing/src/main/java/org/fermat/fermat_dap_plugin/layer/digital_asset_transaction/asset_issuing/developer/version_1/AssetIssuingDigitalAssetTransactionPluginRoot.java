@@ -58,7 +58,7 @@ import java.util.List;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
-        maintainerMail = "nerioindriago@gmail.com",
+        maintainerMail = "marsvicam@gmail.com",
         createdBy = "manuel",
         layer = Layers.DIGITAL_ASSET_TRANSACTION,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,

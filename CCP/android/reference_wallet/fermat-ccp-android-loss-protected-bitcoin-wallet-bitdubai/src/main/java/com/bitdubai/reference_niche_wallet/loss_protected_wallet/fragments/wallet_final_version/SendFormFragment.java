@@ -31,12 +31,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -61,6 +60,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
@@ -498,83 +499,83 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                     } else {
 
-                            walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
 
-                            if (cryptoWalletWalletContact != null) {
-                                walletContact.name = cryptoWalletWalletContact.getActorName();
-                                walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
+                        if (cryptoWalletWalletContact != null) {
+                            walletContact.name = cryptoWalletWalletContact.getActorName();
+                            walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
 
-                                    appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
-                                            appSession.getIntraUserModuleManager().getPublicKey(),
-                                            Actors.INTRA_USER,
-                                            cryptoWalletWalletContact.getActorPublicKey(),
-                                            cryptoWalletWalletContact.getActorType(),
-                                            Platforms.CRYPTO_CURRENCY_PLATFORM,
-                                            VaultType.CRYPTO_CURRENCY_VAULT,
-                                            CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
-                                            appSession.getAppPublicKey(),
-                                            ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                            blockchainNetworkType
-                                    );
+                            appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
+                                    appSession.getIntraUserModuleManager().getPublicKey(),
+                                    Actors.INTRA_USER,
+                                    cryptoWalletWalletContact.getActorPublicKey(),
+                                    cryptoWalletWalletContact.getActorType(),
+                                    Platforms.CRYPTO_CURRENCY_PLATFORM,
+                                    VaultType.CRYPTO_CURRENCY_VAULT,
+                                    CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
+                                    appSession.getAppPublicKey(),
+                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
+                                    blockchainNetworkType
+                            );
 
-                                walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                                walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                                walletContact.isConnection = cryptoWalletWalletContact.isConnection();
-                            }
+                            walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                            walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                            walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+                        }
 
-                    setUpUIData();
+                        setUpUIData();
+
+                    }
+                }
+
+                catch(
+                        CantCreateLossProtectedWalletContactException e
+                        )
+
+                {
+                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
 
                 }
+
+                catch(
+                        ContactNameAlreadyExistsException e
+                        )
+
+                {
+                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
+
+
+                }
+
+                catch(
+                        CantListCryptoWalletIntraUserIdentityException e
+                        )
+
+                {
+                    e.printStackTrace();
+
+                }
+
+                catch(
+                        CantRequestLossProtectedAddressException e
+                        )
+
+                {
+                    e.printStackTrace();
+                }
+
+                catch(
+                        CantGetCryptoLossProtectedWalletException e
+                        )
+
+                {
+                    e.printStackTrace();
+                }
+
             }
-
-            catch(
-            CantCreateLossProtectedWalletContactException e
-            )
-
-            {
-                appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
-
-            }
-
-            catch(
-            ContactNameAlreadyExistsException e
-            )
-
-            {
-                appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
-
-
-            }
-
-            catch(
-            CantListCryptoWalletIntraUserIdentityException e
-            )
-
-            {
-                e.printStackTrace();
-
-            }
-
-            catch(
-            CantRequestLossProtectedAddressException e
-            )
-
-            {
-                e.printStackTrace();
-            }
-
-            catch(
-            CantGetCryptoLossProtectedWalletException e
-            )
-
-            {
-                e.printStackTrace();
-            }
-
-        }
-    });
+        });
 
 
         contactName.addTextChangedListener(new TextWatcher() {
@@ -617,7 +618,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         } else if (id == R.id.btn_expand_send_form) {
             Object[] objects = new Object[1];
             objects[0] = walletContact;
-            changeApp(appSession.getCommunityConnection(), objects);
+            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,
+                    appSession.getCommunityConnection(), objects);
         }
 
 
@@ -670,7 +672,6 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                     long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
 
-
                                     if(amountDecimal.compareTo(new BigDecimal(availableBalance)) == 1) //Balance value is greater than send amount
                                     {
                                         if (!lossProtectedEnabled) {
@@ -712,14 +713,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                             onBack(null);
 
                                         } catch (LossProtectedInsufficientFundsException e) {
-
                                             e.printStackTrace();
                                             Toast.makeText(getActivity(), "Action not allowed, Insufficient Funds. ", Toast.LENGTH_LONG).show();
-
-                                        e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. ", Toast.LENGTH_LONG).show();
-
-
                                         }
                                     }
 

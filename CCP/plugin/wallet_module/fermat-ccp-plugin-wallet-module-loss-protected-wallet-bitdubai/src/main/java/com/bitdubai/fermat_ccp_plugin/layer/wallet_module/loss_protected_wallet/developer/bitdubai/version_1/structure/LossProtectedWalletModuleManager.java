@@ -920,7 +920,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
             bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
 
-            if (bitcoinLossProtectedWalletSpendList.size() == 0) {
+         /*   if (bitcoinLossProtectedWalletSpendList.size() == 0) {
 
                BitcoinLossProtectedWalletSpend lst1 = new BitcoinLossProtectedWalletSpend() {
                     @Override
@@ -988,7 +988,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
                 bitcoinLossProtectedWalletSpendList.add(lst1);
                 bitcoinLossProtectedWalletSpendList.add(lst2);
-            }
+            }*/
 
                 return bitcoinLossProtectedWalletSpendList;
 
@@ -1059,7 +1059,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                 }
 
 
-                if(cryptoWalletTransactionList.size() == 0)
+             /*   if(cryptoWalletTransactionList.size() == 0)
                 {
                     Actor actor = new Actor() {
                         @Override
@@ -1289,7 +1289,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                     cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction, null, actor));
                     cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction1, null, actor1));
 
-                }
+                }*/
 
 
             }
@@ -1349,7 +1349,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
 
 
 
-                if(cryptoWalletTransactionList.size() == 0)
+             /*   if(cryptoWalletTransactionList.size() == 0)
                 {
                     Actor actor = new Actor() {
                         @Override
@@ -1579,7 +1579,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                     cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction, null, actor));
                     cryptoWalletTransactionList.add(new LossProtectedWalletModuleTransaction(transaction1, null, actor1));
 
-                }
+                }*/
 
 
 
@@ -1606,7 +1606,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
             if(bwt != null)
              cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
             else{
-                BitcoinLossProtectedWalletTransaction transaction = new BitcoinLossProtectedWalletTransaction() {
+               /* BitcoinLossProtectedWalletTransaction transaction = new BitcoinLossProtectedWalletTransaction() {
                     @Override
                     public UUID getTransactionId() {return UUID.randomUUID();}
 
@@ -1696,6 +1696,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                     }
                 };
                 cryptoWalletTransaction = enrichTransaction(transaction, walletPublicKey, intraUserLoggedInPublicKey);
+                */
             }
 
             return  cryptoWalletTransaction;

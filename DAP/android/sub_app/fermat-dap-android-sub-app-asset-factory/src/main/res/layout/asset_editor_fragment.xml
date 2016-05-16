@@ -184,6 +184,17 @@
                         android:layout_alignBottom="@+id/bitcoins"
                         android:layout_toRightOf="@+id/bitcoins" />
 
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:id="@+id/bitcoinsNote"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/bitcoins"
+                        android:layout_toRightOf="@+id/bitcoinsSpinner"
+                        android:text="@string/dap_asset_factory_editor_bitcoins_note"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="14sp"
+                        />
+
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -201,12 +212,12 @@
                         android:textColor="@color/text_color_hint"
                         android:textSize="14sp" />
 
-                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                       <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:id="@+id/bitcoinBalanceLabelText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="35dp"
+                        android:layout_marginTop="45dp"
                         android:text="bitcoin Wallet Balance:"
                         android:textColor="@color/text_color_hint"
                         android:textSize="14sp" />
@@ -216,7 +227,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:layout_marginTop="35dp"
+                        android:layout_marginTop="45dp"
                         android:layout_toRightOf="@id/bitcoinBalanceLabelText"
                         android:text="0.111111 BTC"
                         android:textColor="@color/fab_material_orange_500"

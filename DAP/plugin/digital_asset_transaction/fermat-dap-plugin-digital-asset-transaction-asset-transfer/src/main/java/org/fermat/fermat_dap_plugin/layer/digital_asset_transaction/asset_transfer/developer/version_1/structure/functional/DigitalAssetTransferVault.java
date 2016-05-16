@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -14,6 +15,9 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.Abstrac
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.AssetTransferDigitalAssetTransactionPluginRoot;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -21,28 +25,22 @@ import java.util.UUID;
  * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 public class DigitalAssetTransferVault extends AbstractDigitalAssetVault {
-    ErrorManager errorManager;
+
+    AssetTransferDigitalAssetTransactionPluginRoot assetTransferDigitalAssetTransactionPluginRoot;
 
     public DigitalAssetTransferVault(UUID pluginId,
                                      PluginFileSystem pluginFileSystem,
-                                     ErrorManager errorManager,
+                                     AssetTransferDigitalAssetTransactionPluginRoot assetTransferDigitalAssetTransactionPluginRoot,
                                      AssetUserWalletManager assetUserWalletManager,
                                      ActorAssetUserManager actorAssetUserManager,
                                      BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
-        setErrorManager(errorManager);
+        this.assetTransferDigitalAssetTransactionPluginRoot = assetTransferDigitalAssetTransactionPluginRoot;
         LOCAL_STORAGE_PATH = "digital-asset-transmission/";
         setAssetUserWalletManager(assetUserWalletManager);
         setActorAssetUserManager(actorAssetUserManager);
         setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
-    }
-
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
-        if (errorManager == null) {
-            throw new CantSetObjectException("ErrorManager is null");
-        }
-        this.errorManager = errorManager;
     }
 
     public AssetUserWallet getUserWallet(BlockchainNetworkType networkType) throws CantLoadWalletException {
@@ -61,6 +59,7 @@ public class DigitalAssetTransferVault extends AbstractDigitalAssetVault {
         try {
             return getUserWallet(networkType).getDigitalAssetMetadata(internalId);
         } catch (CantLoadWalletException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetDigitalAssetFromLocalStorageException();
         }
     }
