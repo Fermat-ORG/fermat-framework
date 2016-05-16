@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
@@ -95,6 +96,9 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
+
+@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+
 public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManagerSettings,ActiveActorIdentityInformation> implements
         LogManagerForDevelopers,
         WalletManagerModule,
@@ -234,7 +238,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
 
         } catch (Exception cantLoadWalletsException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
+           reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadWalletsException);
             throw new CantStartPluginException();
         }
 
@@ -434,7 +438,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
              * If I can not save this file, then this plugin shouldn't be running at all.
              */
             System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+           reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
 
             throw new CantPersistWalletException();
         } catch (FileNotFoundException e) {
@@ -445,7 +449,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+               reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
 
                 throw new CantPersistWalletException();
             }
@@ -480,7 +484,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
             /**
              * If I can not save the id of the new wallet created, then this method fails.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
+           reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
             throw new CantPersistWalletException();
         }
 
@@ -721,7 +725,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                  * If I can not save this file, then this plugin shouldn't be running at all.
                  */
                 System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
 
                 throw new CantLoadWalletsException();
             }
@@ -787,7 +791,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                  * If I can not save this file, then this plugin shouldn't be running at all.
                  */
                 System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+               reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
                 throw new CantLoadWalletsException();
             }
             try {
@@ -798,7 +802,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                  * If I can not save this file, then this plugin shouldn't be running at all.
                  */
                 System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
+               reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
                 throw new CantLoadWalletsException();
             }
         }

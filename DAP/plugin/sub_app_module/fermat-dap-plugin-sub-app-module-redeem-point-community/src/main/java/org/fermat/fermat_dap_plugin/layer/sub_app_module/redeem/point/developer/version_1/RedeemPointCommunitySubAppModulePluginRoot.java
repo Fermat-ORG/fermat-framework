@@ -28,6 +28,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+
+
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces.AssetRedeemPointActorNetworkServiceManager;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
@@ -51,7 +53,7 @@ import java.util.regex.Pattern;
         @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_INTRA_USER)
 })
 @PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
-        maintainerMail = "nerioindriago@gmail.com",
+        maintainerMail = "marsvicam@gmail.com",
         createdBy = "nindriago",
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,

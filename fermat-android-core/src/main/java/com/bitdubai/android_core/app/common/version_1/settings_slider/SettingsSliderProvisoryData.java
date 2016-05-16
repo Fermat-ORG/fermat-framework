@@ -69,6 +69,8 @@ public class SettingsSliderProvisoryData {
 
             SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP, R.drawable.help_buttom_hdpi, "Welcome Help", "");
 
+            SettingsItem settingErrorReport = new SettingsItem(SettingsType.REPORT, R.drawable.icon_suport, "Report ", "");
+
 
             list.add(settingsItemFermatNetwork);
             list.add(settingsItemBitcoinNetwork);
@@ -76,6 +78,7 @@ public class SettingsSliderProvisoryData {
             list.add(settingsItemSettings);
             list.add(settingsItemRecents);
             list.add(settingsHelp);
+            list.add(settingErrorReport);
 
         }catch (Exception e){
             e.printStackTrace();

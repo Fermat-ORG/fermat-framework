@@ -6,18 +6,17 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
 import java.util.List;
 
 
-public class GrouperItem<ITEM1,ITEM> implements ParentListItem {
+public class GrouperItem<CHILD_TYPE,ITEM> implements ParentListItem {
 
-
+    private List<CHILD_TYPE> childItemList;
     private int childCount;
     private boolean initiallyExpanded;
 
-    private ITEM1 cryptoWalletTransaction1;
     private ITEM cryptoWalletTransaction;
 
-    public GrouperItem( ITEM1 cryptoWalletTransaction1, boolean initiallyExpanded,ITEM cryptoWalletTransaction) {
+    public GrouperItem( List<CHILD_TYPE> childItemList, boolean initiallyExpanded,ITEM cryptoWalletTransaction) {
         this.initiallyExpanded = initiallyExpanded;
-        this.cryptoWalletTransaction1 = cryptoWalletTransaction1;
+        this.childItemList = childItemList;
         this.cryptoWalletTransaction = cryptoWalletTransaction;
     }
 
@@ -26,12 +25,15 @@ public class GrouperItem<ITEM1,ITEM> implements ParentListItem {
     }
 
     public int getChildCount() {
+        if (childItemList != null)
+            // Le resto uno porque el ultimo es el total
+            childCount = this.childItemList.size();
         return childCount;
     }
 
     @Override
-    public ITEM1 getItem() {
-        return cryptoWalletTransaction1;
+    public CHILD_TYPE getItem() {
+        return null;
     }
 
     /**
@@ -40,17 +42,19 @@ public class GrouperItem<ITEM1,ITEM> implements ParentListItem {
      * @return list of all children associated with this specific parent list item
      */
     @Override
-    public List<ITEM1> getChildItemList() {
-        return null;
+    public List<CHILD_TYPE> getChildItemList() {
+        return childItemList;
     }
 
     /**
      * Setter method for the list of children associated with this parent list item
      *
-     * @param childItem the item associated with this parent item
+     * @param childItemList the list of all children associated with this parent list item
      */
-    public void setChildItem(ITEM1 childItem) {
-            childCount = 1;
+    public void setChildItemList(List<CHILD_TYPE> childItemList) {
+        this.childItemList = childItemList;
+        if (childItemList != null)
+            childCount = this.childItemList.size();
     }
 
     @Override

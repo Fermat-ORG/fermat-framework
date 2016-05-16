@@ -24,32 +24,14 @@
             android:orientation="vertical"
             >
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/txt_amount"
-                    tools:text="1.4 BTC"
-                    android:textSize="16sp"
-                    android:fontFamily="roboto"
-                    />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="20dp"
-                    android:id="@+id/txt_spend_percentage"
-                    tools:text="Spend 25%"
-                    android:textSize="16sp"
-                    android:fontFamily="roboto"
-                    />
-
-            </LinearLayout>
-
-
+                android:id="@+id/txt_amount"
+                tools:text="1.4 BTC"
+                android:textSize="16sp"
+                android:fontFamily="roboto"
+                />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"

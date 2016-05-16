@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.versi
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -26,6 +27,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.ReedemPointIdentityPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.database.AssetRedeemPointIdentityDao;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
@@ -64,6 +66,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
      */
     PluginFileSystem pluginFileSystem;
 
+    ReedemPointIdentityPluginRoot reedemPointIdentityPluginRoot;
 
     /**
      * DealsWithDeviceUsers Interface member variables.
@@ -75,26 +78,24 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
     /**
      * Constructor
      *
-     * @param errorManager
      * @param logManager
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityAssetRedeemPointManagerImpl(ErrorManager errorManager,
-                                               LogManager logManager,
+    public IdentityAssetRedeemPointManagerImpl(LogManager logManager,
                                                PluginDatabaseSystem pluginDatabaseSystem,
                                                PluginFileSystem pluginFileSystem,
                                                UUID pluginId,
                                                DeviceUserManager deviceUserManager,
-                                               ActorAssetRedeemPointManager actorAssetRedeemPointManager) {
-
-        this.errorManager = errorManager;
+                                               ActorAssetRedeemPointManager actorAssetRedeemPointManager,
+                                               ReedemPointIdentityPluginRoot reedemPointIdentityPluginRoot) {
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.deviceUserManager = deviceUserManager;
         this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
+        this.reedemPointIdentityPluginRoot = reedemPointIdentityPluginRoot;
     }
 
     private AssetRedeemPointIdentityDao getAssetRedeemPointIdentityDao() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
@@ -192,14 +193,16 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             assetRedeemPointList = getAssetRedeemPointIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser);
 
-
             return assetRedeemPointList;
 
         } catch (CantGetLoggedInDeviceUserException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT IDENTITIES", e, "Error get logged user device", "");
         } catch (CantListAssetRedeemPointIdentitiesException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT  IDENTITIES", e, "", "");
         } catch (Exception e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
@@ -210,6 +213,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
         try {
             redeemPointIdentity = getAssetRedeemPointIdentityDao().getIdentityRedeemPoint();
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         return redeemPointIdentity;
@@ -232,8 +236,10 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
 
             return identityAssetRedeemPoint;
         } catch (CantGetLoggedInDeviceUserException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", FermatException.wrapException(e), "", "");
         }
     }
@@ -260,8 +266,10 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
 
             return identityAssetRedeemPoint;
         } catch (CantGetLoggedInDeviceUserException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateNewRedeemPointException("CAN'T CREATE NEW REDEEM POINT IDENTITY", FermatException.wrapException(e), "", "");
         }
     }
@@ -275,8 +283,10 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
 
             registerIdentities();
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantListAssetRedeemPointIdentitiesException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -290,10 +300,13 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
             else
                 return false;
         } catch (CantGetLoggedInDeviceUserException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointException("CAN'T GET IF NEW REDEEM POINT IDENTITIES  EXISTS", e, "Error get logged user device", "");
         } catch (CantListAssetRedeemPointIdentitiesException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointException("CAN'T GET IF NEW REDEEM POINT IDENTITIES EXISTS", e, "", "");
         } catch (Exception e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW REDEEM POINT IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
@@ -321,12 +334,16 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
         } catch (CantListAssetRedeemPointIdentitiesException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant List Asset Redeem Point Identities", "");
         } catch (CantCreateActorRedeemPointException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Create Actor Redeem Point User", "");
         } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantListAssetRedeemPointIdentitiesException("CAN'T GET IF ASSET REDEEM POINT IDENTITIES  EXISTS", e, "Cant Initialize Asset Redeem Point Identity", "");
         }
     }
@@ -335,6 +352,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
         try {
             actorAssetRedeemPointManager.registerActorInActorNetworkService();
         } catch (CantRegisterActorAssetRedeemPointException e) {
+            reedemPointIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }

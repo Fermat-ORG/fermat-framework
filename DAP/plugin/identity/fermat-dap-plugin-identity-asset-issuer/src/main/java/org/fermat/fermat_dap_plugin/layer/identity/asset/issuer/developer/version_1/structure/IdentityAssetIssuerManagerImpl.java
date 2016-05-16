@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.versi
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -22,6 +23,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.database.AssetIssuerIdentityDao;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.AssetIssuerIdentityPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException;
 
@@ -34,6 +36,7 @@ import java.util.UUID;
  * Created by franklin on 02/11/15.
  */
 public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManager, Serializable {
+
     //TODO: Documentar
     UUID pluginId;
 
@@ -57,6 +60,7 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
      */
     PluginFileSystem pluginFileSystem;
 
+    AssetIssuerIdentityPluginRoot assetIssuerIdentityPluginRoot;
 
     /**
      * DealsWithDeviceUsers Interface member variables.
@@ -68,49 +72,29 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
      */
     private ActorAssetIssuerManager actorAssetIssuerManager;
 
-//    @Override
-//    public void setErrorManager(ErrorManager errorManager) {
-//        this.errorManager = errorManager;
-//    }
-//
-//    @Override
-//    public void setLogManager(LogManager logManager) {
-//        this.logManager = logManager;
-//    }
-//
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-//        this.pluginFileSystem = pluginFileSystem;
-//    }
 
     /**
      * Constructor
      *
-     * @param errorManager
      * @param logManager
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityAssetIssuerManagerImpl(ErrorManager errorManager,
-                                          LogManager logManager,
+
+    public IdentityAssetIssuerManagerImpl(LogManager logManager,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           PluginFileSystem pluginFileSystem,
                                           UUID pluginId,
                                           DeviceUserManager deviceUserManager,
-                                          ActorAssetIssuerManager actorAssetIssuerManager) {
-
-        this.errorManager = errorManager;
+                                          ActorAssetIssuerManager actorAssetIssuerManager,
+                                          AssetIssuerIdentityPluginRoot assetIssuerIdentityPluginRoot) {
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.deviceUserManager = deviceUserManager;
         this.actorAssetIssuerManager = actorAssetIssuerManager;
+        this.assetIssuerIdentityPluginRoot = assetIssuerIdentityPluginRoot;
     }
 
     private AssetIssuerIdentityDao getAssetIssuerIdentityDao() throws CantInitializeAssetIssuerIdentityDatabaseException {
@@ -129,10 +113,13 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
             return assetIssuerList;
 
         } catch (CantGetLoggedInDeviceUserException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER IDENTITIES", e, "Error get logged user device", "");
         } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER  IDENTITIES", e, "", "");
         } catch (Exception e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
@@ -153,8 +140,10 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
 
             return identityAssetIssuer;
         } catch (CantGetLoggedInDeviceUserException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateNewIdentityAssetIssuerException("CAN'T CREATE NEW ASSET ISSUER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateNewIdentityAssetIssuerException("CAN'T CREATE NEW ASSET ISSUER IDENTITY", FermatException.wrapException(e), "", "");
         }
     }
@@ -165,8 +154,10 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
 
             registerIdentities();
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -176,6 +167,7 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
         try {
             identityAssetIssuer = getAssetIssuerIdentityDao().getIdentityAssetIssuer();
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         return identityAssetIssuer;
@@ -187,10 +179,13 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             return getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(loggedUser).size() > 0;
         } catch (CantGetLoggedInDeviceUserException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetIssuersException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        } catch (CantListAssetIssuerIdentitiesException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetIssuersException("CAN'T GET IF ASSET ISSUER IDENTITIES EXISTS", e, "", "");
         } catch (Exception e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER ISSUER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
@@ -204,13 +199,17 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
-        } catch (CantListAssetIssuerIdentitiesException e) {
-            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant List Asset Issuer Identities", "");
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant List Asset Issuer Identities", "");
         } catch (CantCreateActorAssetIssuerException e) {
-            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Create ActorAsset Issuer", "");
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Create ActorAsset Issuer", "");
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
-            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Initialize Asset Issuer Identity Database", "");
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Initialize Asset Issuer Identity Database", "");
         }
     }
 
@@ -218,6 +217,7 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
         try {
             actorAssetIssuerManager.registerActorInActorNetworkService();
         } catch (CantRegisterActorAssetIssuerException e) {
+            assetIssuerIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetIssuerException("CAN'T REGISTER IDENTITY TO ACTOR NETWORK SERVICE", FermatException.wrapException(e), "", "");
         }
     }

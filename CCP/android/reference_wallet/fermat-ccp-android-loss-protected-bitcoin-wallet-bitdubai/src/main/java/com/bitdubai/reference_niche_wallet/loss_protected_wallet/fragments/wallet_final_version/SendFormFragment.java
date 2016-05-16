@@ -625,43 +625,45 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     //TODO: Check if the setting for protecting the user from spending btc is working
     private void sendCrypto() {
         try {
-            if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWallet);
-                if (validAddress != null) {
-                    EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
-                    String amount = txtAmount.getText().toString();
+            //first check if have exchange rate info
+            if(appSession.getActualExchangeRate() != 0){
+                if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
+                    CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWallet);
+                    if (validAddress != null) {
+                        EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
+                        String amount = txtAmount.getText().toString();
 
-                    BigDecimal money;
+                        BigDecimal money;
 
-                    if (amount.equals(""))
-                        money = new BigDecimal("0");
-                    else
-                        money = new BigDecimal(amount);
+                        if (amount.equals(""))
+                            money = new BigDecimal("0");
+                        else
+                            money = new BigDecimal(amount);
 
-                    if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
-                        try {
-                            String notes = null;
-                            if (txt_notes.getText().toString().length() != 0) {
-                                notes = txt_notes.getText().toString();
-                            }
+                        if(!amount.equals("") && !money.equals(new BigDecimal("0"))) {
+                            try {
+                                String notes = null;
+                                if (txt_notes.getText().toString().length() != 0) {
+                                    notes = txt_notes.getText().toString();
+                                }
 
-                            String txtType = txt_type.getText().toString();
-                            String newAmount = "";
-                            String msg = "";
+                                String txtType = txt_type.getText().toString();
+                                String newAmount = "";
+                                String msg = "";
 
-                            if (txtType.equals("[btc]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                                msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
-                            } else if (txtType.equals("[satoshis]")) {
-                                newAmount = amount;
-                                msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
-                            } else if (txtType.equals("[bits]")) {
-                                newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                                msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
-                            }
+                                if (txtType.equals("[btc]")) {
+                                    newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                                    msg       = bitcoinConverter.getBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BTC.";
+                                } else if (txtType.equals("[satoshis]")) {
+                                    newAmount = amount;
+                                    msg       = String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)+" SATOSHIS.";
+                                } else if (txtType.equals("[bits]")) {
+                                    newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                                    msg       = bitcoinConverter.getBits(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND))+" BITS.";
+                                }
 
-                            BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
-                            BigDecimal amountDecimal = new BigDecimal(newAmount);
+                                BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
+                                BigDecimal amountDecimal = new BigDecimal(newAmount);
 
                                 if (amountDecimal.compareTo(minSatoshis) == 1) {
                                     //TODO:  esta verificacion de proteccion solo se valida si sabes que va a perder dinero
@@ -691,7 +693,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                             Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. ", Toast.LENGTH_LONG).show();
                                         }
                                     }
-                                   else{
+                                    else{
                                         try {
 
                                             lossProtectedWallet.send(
@@ -721,18 +723,25 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                 }
 
 
-                        } catch (Exception e) {
-                            appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                            Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                                Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Contact don't have an valid Address", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Contact don't have an valid Address", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
+
+            }
+            else
+            {
+                Toast.makeText(getActivity(), "Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. ", Toast.LENGTH_LONG).show();
+
             }
 
 

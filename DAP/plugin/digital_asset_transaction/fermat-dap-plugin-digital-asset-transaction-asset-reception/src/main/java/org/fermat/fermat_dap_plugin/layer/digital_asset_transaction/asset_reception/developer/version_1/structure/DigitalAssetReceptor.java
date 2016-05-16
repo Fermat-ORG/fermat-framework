@@ -1,6 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+>>>>>>> b5b2290bab669f243b317060535a9709114cc9de
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -19,6 +21,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExe
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantPersistDigitalAssetException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetSwap;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.exceptions.CantReceiveDigitalAssetException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.database.AssetReceptionDao;
 
@@ -30,7 +33,7 @@ import java.util.UUID;
  */
 public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
-    ErrorManager errorManager;
+    AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot;
     final String LOCAL_STORAGE_PATH = "digital-asset-reception/";
     String digitalAssetFileStoragePath;
     AssetReceptionDao assetReceptionDao;
@@ -38,16 +41,17 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
 
     DigitalAssetReceptionVault digitalAssetReceptionVault;
 
-    public DigitalAssetReceptor(ErrorManager errorManager,
+    public DigitalAssetReceptor(AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot,
                                 UUID pluginId,
                                 PluginFileSystem pluginFileSystem,
                                 BitcoinNetworkManager bitcoinNetworkManager,
                                 DigitalAssetReceptionVault digitalAssetReceptionVault,
                                 AssetReceptionDao assetReceptionDao) throws CantExecuteDatabaseOperationException {
+
         super(pluginId, pluginFileSystem);
         this.bitcoinNetworkManager = bitcoinNetworkManager;
         this.setBitcoinCryptoNetworkManager(this.bitcoinNetworkManager);
-        this.errorManager = errorManager;
+        this.assetReceptionDigitalAssetTransactionPluginRoot = assetReceptionDigitalAssetTransactionPluginRoot;
         this.digitalAssetReceptionVault = digitalAssetReceptionVault;
         this.assetReceptionDao = assetReceptionDao;
     }
@@ -56,10 +60,12 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
         try {
             persistDigitalAsset(digitalAssetMetadata, senderId, actorType);
             verifyAsset(digitalAssetMetadata);
-        } catch (CantPersistDigitalAssetException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot persist Digital Asset Metadata");
-        } catch (CantCreateDigitalAssetFileException exception) {
-            throw new CantReceiveDigitalAssetException(exception, "Receiving Digital Asset Metadata", "Cannot create Digital Asset Metadata file in local storage");
+        } catch (CantPersistDigitalAssetException e) {
+            assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Cannot persist Digital Asset Metadata");
+        } catch (CantCreateDigitalAssetFileException e) {
+            assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Cannot create Digital Asset Metadata file in local storage");
         }
     }
 
@@ -89,6 +95,7 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
             this.assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.PENDING_SUBMIT);
             persistInLocalStorage(digitalAssetMetadata);
         } catch (Exception e) {
+            assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantReceiveDigitalAssetException(e, "Receiving Digital Asset Metadata", "Unexpected exception while verifying the asset");
         }
     }
@@ -123,16 +130,19 @@ public class DigitalAssetReceptor extends AbstractDigitalAssetSwap {
                         "Op_return:" + op_ReturnFromAssetVault + "\n" +
                         "digitalAssetMetadata:" + digitalAssetMetadata);
             }
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new CantReceiveDigitalAssetException(exception,
+        } catch (CantGetCryptoTransactionException e) {
+            assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantReceiveDigitalAssetException(e,
                     "Receiving the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
-        } catch (CantExecuteQueryException exception) {
-            throw new CantReceiveDigitalAssetException(exception,
+        } catch (CantExecuteQueryException e) {
+            assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantReceiveDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot execute a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantReceiveDigitalAssetException(exception,
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantReceiveDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Unexpected result in database");
         }
