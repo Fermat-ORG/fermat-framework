@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
@@ -94,7 +95,7 @@ public interface NetworkClientConnection {
      *
      * @param packageContent
      */
-    void sendPackageMessage(PackageContent packageContent, String destinationIdentityPublicKey);
+    void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey);
 
     /**
      * Through the method <code>getCommunicationChannelType</code> we can get the communication channel type
