@@ -29,4 +29,11 @@ public interface NetworkClientManager {
      */
     NetworkClientConnection getConnection(String uriToNode);
 
+    /**
+     * Get requestConnectionToNodeExtern
+     * @param identityPublicKey
+     * @param uriToNode
+     */
+    void requestConnectionToNodeExtern(String identityPublicKey, String uriToNode);
+
 }
