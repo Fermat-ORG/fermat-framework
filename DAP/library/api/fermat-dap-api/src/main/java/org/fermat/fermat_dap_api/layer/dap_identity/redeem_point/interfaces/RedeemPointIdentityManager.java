@@ -11,12 +11,13 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface RedeemPointIdentityManager extends FermatManager {
+public interface RedeemPointIdentityManager extends FermatManager, Serializable {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in

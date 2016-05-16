@@ -41,38 +41,13 @@ import java.util.UUID;
  * Created by franklin on 02/11/15.
  */
 public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityManager {
-    /**
-     * IdentityAssetIssuerManagerImpl member variables
-     */
+
     UUID pluginId;
-
-    /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealsWithLogger interface mmeber variables
-     */
     LogManager logManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem interface member variables
-     */
     PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface member variables
-     */
     PluginFileSystem pluginFileSystem;
-
     ReedemPointIdentityPluginRoot reedemPointIdentityPluginRoot;
-
-    /**
-     * DealsWithDeviceUsers Interface member variables.
-     */
     private DeviceUserManager deviceUserManager;
-
     private ActorAssetRedeemPointManager actorAssetRedeemPointManager;
 
     /**

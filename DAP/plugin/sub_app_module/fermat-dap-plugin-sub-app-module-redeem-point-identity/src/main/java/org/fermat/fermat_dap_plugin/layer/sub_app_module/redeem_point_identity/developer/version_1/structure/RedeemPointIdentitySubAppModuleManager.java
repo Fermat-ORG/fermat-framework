@@ -105,8 +105,8 @@ public class RedeemPointIdentitySubAppModuleManager extends ModuleManagerImpl<Re
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
-            List<RedeemPointIdentity> identities = this.getRedeemPointsFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : this.getRedeemPointsFromCurrentDeviceUser().get(0);
+            List<RedeemPointIdentity> identities = redeemPointIdentityManager.getRedeemPointsFromCurrentDeviceUser();
+            return (identities == null || identities.isEmpty()) ? null : identities.get(0);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

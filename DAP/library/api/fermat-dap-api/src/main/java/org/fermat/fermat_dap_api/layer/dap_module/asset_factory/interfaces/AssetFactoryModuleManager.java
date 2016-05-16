@@ -32,7 +32,7 @@ import java.util.List;
 /**
  * Created by franklin on 11/09/15.
  */
-public interface AssetFactoryModuleManager extends ModuleManager<AssetFactorySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetFactorySettings>, Serializable {
+public interface AssetFactoryModuleManager extends ModuleManager, ModuleSettingsImpl<AssetFactorySettings>, Serializable {
     //Implementa solo los metodos que utiliza la sup app
     IdentityAssetIssuer getLoggedIdentityAssetIssuer();
 

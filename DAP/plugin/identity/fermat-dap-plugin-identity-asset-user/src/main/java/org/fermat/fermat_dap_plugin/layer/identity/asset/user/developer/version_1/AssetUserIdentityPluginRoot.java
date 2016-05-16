@@ -152,8 +152,7 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         try {
-            this.serviceStatus = ServiceStatus.STARTED;
-            identityAssetUserManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUserManagerImpl(
+            identityAssetUserManager = new IdentityAssetUserManagerImpl(
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
@@ -161,6 +160,9 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
                     this.deviceUserManager,
                     this.actorAssetUserManager,
                     this);
+
+            this.serviceStatus = ServiceStatus.STARTED;
+
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);

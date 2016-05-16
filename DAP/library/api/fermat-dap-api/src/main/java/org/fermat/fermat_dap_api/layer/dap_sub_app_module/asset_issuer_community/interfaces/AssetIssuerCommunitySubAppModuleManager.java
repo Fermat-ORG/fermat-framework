@@ -22,12 +22,13 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 13/10/15.
  */
-public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetIssuerSettings> {
+public interface AssetIssuerCommunitySubAppModuleManager extends ModuleManager, ModuleSettingsImpl<AssetIssuerSettings>, Serializable {
 
     List<AssetIssuerActorRecord> getAllActorAssetIssuerRegistered() throws CantGetAssetIssuerActorsException;
 

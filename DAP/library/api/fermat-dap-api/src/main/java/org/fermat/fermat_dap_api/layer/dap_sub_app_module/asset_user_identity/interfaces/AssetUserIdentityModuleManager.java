@@ -11,12 +11,13 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUp
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 07/09/15.
  */
-public interface AssetUserIdentityModuleManager extends ModuleManager<UserIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<UserIdentitySettings> {
+public interface AssetUserIdentityModuleManager extends ModuleManager, ModuleSettingsImpl<UserIdentitySettings>, Serializable {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in

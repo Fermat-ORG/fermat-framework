@@ -21,7 +21,7 @@ import org.fermat.fermat_dap_android_sub_app_asset_user_identity.session.UserIde
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class AssetUserFermatAppConnection extends AppConnections{
+public class AssetUserFermatAppConnection extends AppConnections {
 
     public AssetUserFermatAppConnection(Context activity) {
         super(activity);
@@ -34,10 +34,10 @@ public class AssetUserFermatAppConnection extends AppConnections{
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
-                Layers.IDENTITY,
-                Plugins.ASSET_USER,
+                Layers.SUB_APP_MODULE,
+                Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY,
                 Developers.BITDUBAI,
                 new Version()
         );

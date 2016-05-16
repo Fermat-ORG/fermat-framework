@@ -166,10 +166,10 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractModule<Ass
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = AssetUserCommunitySupAppModuleManager.class)
+//    @moduleManagerInterfacea(moduleManager = AssetUserCommunitySupAppModuleManager.class)
     public ModuleManager<AssetUserSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(AssetUserCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Sup AppModule instantiation started...", null, null);
+//            logManager.log(AssetUserCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Sup AppModule instantiation started...", null, null);
 
             if (assetUserCommunitySupAppModuleManager == null) {
                 assetUserCommunitySupAppModuleManager = new AssetUserCommunitySupAppModuleManager(
@@ -188,7 +188,7 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractModule<Ass
                         this);
             }
 
-            logManager.log(AssetUserCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Sup AppModule instantiation finished successfully.", null, null);
+//            logManager.log(AssetUserCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Sup AppModule instantiation finished successfully.", null, null);
 
             return assetUserCommunitySupAppModuleManager;
 
