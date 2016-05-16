@@ -66,6 +66,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_send_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
@@ -80,6 +81,7 @@ import java.util.List;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMoneyType;
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
@@ -102,7 +104,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
-    private TextView balance;
+    private TextView txt_balance;
 
 
     /**
@@ -249,23 +251,18 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        balance = (TextView) rootView.findViewById(R.id.balance);
+        txt_balance = (TextView) rootView.findViewById(R.id.balance);
 
-        try
-        {
-                long balance_a=0;
 
-            if(BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)) {
-                balance_a = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
-                balance.setText(WalletUtils.formatBalanceString(balance_a, lossProtectedWalletSession.getTypeAmount()) + " BTC");
-            }
-            else
-                balance.setText("0.00 BTC");
+        try {
+            long balance = 0;
+            balance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(),
+                   blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+                   txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
+        } catch (CantGetLossProtectedBalanceException e) {
+            e.printStackTrace();
+        }
 
-        }   catch (CantGetLossProtectedBalanceException e)
-            {
-                e.printStackTrace();
-            }
 
         List<String> list = new ArrayList<String>();
         list.add("BTC");
