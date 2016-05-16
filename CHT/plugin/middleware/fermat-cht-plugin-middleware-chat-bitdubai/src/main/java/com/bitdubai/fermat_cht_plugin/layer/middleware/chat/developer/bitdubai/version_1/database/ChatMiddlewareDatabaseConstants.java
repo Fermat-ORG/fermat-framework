@@ -72,6 +72,7 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String ACTIONS_ONLINE_PUBLIC_KEY_COLUMN_NAME = "publik_key";
     public static final String ACTIONS_ONLINE_STATE = "online_state";
     public static final String ACTIONS_ONLINE_VALUE = "online_value";
+    public static final String ACTIONS_ONLINE_LAST_ON = "last_on";
     public static final String ACTIONS_LAST_CONNECTION = "lats_connection";
 
     public static final String ACTIONS_ONLINE_FIRST_KEY_COLUMN = "id_action";

@@ -3,6 +3,7 @@ package com.basic_test;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.enums.RequestAction;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.messages.NetworkServiceMessage;
@@ -27,7 +28,7 @@ public class MessagesTest {
 
     @Test
     public void GetPublicKeyAreEquals(){
-        InformationMessage informationMessageTest = new InformationMessage(
+      /*  InformationMessage informationMessageTest = new InformationMessage(
                 UUID.randomUUID(),
                 RequestAction.INFORM_RECEPTION
         );
@@ -46,7 +47,9 @@ public class MessagesTest {
                 12,
                 0,
                 RequestAction.REQUEST,
-                BlockchainNetworkType.PRODUCTION
+                BlockchainNetworkType.PRODUCTION,
+                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                "bitcoin_wallet"
         );
 
         List<NetworkServiceMessage> messages = new ArrayList<>();
@@ -80,6 +83,6 @@ public class MessagesTest {
                     break;
             }
 
-        }
+        }*/
     }
 }

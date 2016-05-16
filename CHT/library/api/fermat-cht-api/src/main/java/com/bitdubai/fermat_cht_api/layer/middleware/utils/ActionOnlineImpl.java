@@ -15,6 +15,7 @@ public class ActionOnlineImpl implements ActionOnline {
     private ActionState actionState;
     private boolean value;
     private String lastConnection;
+    private boolean lastOn;
 
     @Override
     public UUID getId() {
@@ -64,5 +65,15 @@ public class ActionOnlineImpl implements ActionOnline {
     @Override
     public void setLastConnection(String lastConnection) {
         this.lastConnection = lastConnection;
+    }
+
+    @Override
+    public boolean getLastOn() {
+        return lastOn;
+    }
+
+    @Override
+    public void setLastOn(boolean lastOn) {
+        this.lastOn = lastOn;
     }
 }

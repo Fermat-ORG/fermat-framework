@@ -10,6 +10,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Created by Matias Furszyfer
+ */
+
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE) //on class level
 public @interface PluginInfo {
@@ -19,11 +23,13 @@ public @interface PluginInfo {
 	}
 
 	Dificulty difficulty() default Dificulty.MEDIUM;
-	
+
 	String[] tags() default "";
-	
-	String createdBy() default "furszy";
-	
+
+	String createdBy();
+
+	String maintainerMail();
+
 	String lastModified() default "15/03/2016";
 
 	Platforms platform();

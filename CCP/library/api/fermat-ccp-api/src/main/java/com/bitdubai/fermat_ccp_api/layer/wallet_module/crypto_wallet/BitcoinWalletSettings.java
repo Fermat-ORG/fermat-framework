@@ -20,6 +20,7 @@ public class BitcoinWalletSettings implements WalletSettings,Serializable {
     private Map<Long, Long>  runningDailyBalance ;
     private BlockchainNetworkType blockchainNetworkType;
     private boolean notificationEnabled;
+    private boolean isBlockchainDownloadEnabled;
 
     public BitcoinWalletSettings() {
         this.lastSelectedIdentity = null;
@@ -61,8 +62,17 @@ public class BitcoinWalletSettings implements WalletSettings,Serializable {
         return isPresentationHelpEnabled;
     }
 
+
+    public boolean isBlockchainDownloadEnabled() {
+        return isBlockchainDownloadEnabled;
+    }
+
     public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
+    }
+
+    public void setIsBlockchainDownloadEnabled(boolean isBlockchainDownloadEnabled) {
+        this.isBlockchainDownloadEnabled = isBlockchainDownloadEnabled;
     }
 
     public boolean isContactsHelpEnabled() {

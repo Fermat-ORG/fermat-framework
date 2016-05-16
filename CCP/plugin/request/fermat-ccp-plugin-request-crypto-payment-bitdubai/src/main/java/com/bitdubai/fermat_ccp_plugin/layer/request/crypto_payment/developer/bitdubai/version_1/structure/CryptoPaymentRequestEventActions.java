@@ -247,13 +247,13 @@ public class CryptoPaymentRequestEventActions {
 
                 cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
 
-                InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
+                /*InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
                         cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency(),
                         cryptoPaymentRequest.getIdentityType(),
                         cryptoPaymentRequest.getNetworkType()
-                );
+                );*/
 
-                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, installedWallet.getWalletPublicKey(), "PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, cryptoPaymentRequest.getWalletPublicKey(), "PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
 
             } catch (CantGetCryptoPaymentRequestException e) {
 
@@ -269,41 +269,40 @@ public class CryptoPaymentRequestEventActions {
             try {
                 // then i go to find the new request and a compatible installed wallet to assign it.
 
-                try {
-                    InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
+                   /* InstalledWallet installedWallet = walletManagerManager.getDefaultWallet(
                             cryptoPaymentRequest.getCryptoAddress().getCryptoCurrency(),
                             cryptoPaymentRequest.getIdentityType(),
                             cryptoPaymentRequest.getNetworkType()
-                    );
+                    );*/
 
-                    CryptoPaymentType  type  = CryptoPaymentType .RECEIVED        ;
-                    CryptoPaymentState state = CryptoPaymentState.PENDING_RESPONSE;
+                CryptoPaymentType type = CryptoPaymentType.RECEIVED;
+                CryptoPaymentState state = CryptoPaymentState.PENDING_RESPONSE;
 
-                    // save the record in database
+                // save the record in database
 
-                    cryptoPaymentRequestDao.generateCryptoPaymentRequest(
-                            cryptoPaymentRequest.getRequestId()        ,
-                            installedWallet     .getWalletPublicKey()  ,
-                            cryptoPaymentRequest.getIdentityPublicKey(),
-                            cryptoPaymentRequest.getIdentityType()     ,
-                            cryptoPaymentRequest.getActorPublicKey()   ,
-                            cryptoPaymentRequest.getActorType()        ,
-                            cryptoPaymentRequest.getCryptoAddress()    ,
-                            cryptoPaymentRequest.getDescription()      ,
-                            cryptoPaymentRequest.getAmount()           ,
-                            cryptoPaymentRequest.getStartTimeStamp()   ,
-                            type                                       ,
-                            state                                      ,
-                            cryptoPaymentRequest.getNetworkType()      ,
-                            cryptoPaymentRequest.getReferenceWallet()
-                    );
+                cryptoPaymentRequestDao.generateCryptoPaymentRequest(
+                        cryptoPaymentRequest.getRequestId(),
+                        cryptoPaymentRequest.getWalletPublicKey(),
+                        cryptoPaymentRequest.getIdentityPublicKey(),
+                        cryptoPaymentRequest.getIdentityType(),
+                        cryptoPaymentRequest.getActorPublicKey(),
+                        cryptoPaymentRequest.getActorType(),
+                        cryptoPaymentRequest.getCryptoAddress(),
+                        cryptoPaymentRequest.getDescription(),
+                        cryptoPaymentRequest.getAmount(),
+                        cryptoPaymentRequest.getStartTimeStamp(),
+                        type,
+                        state,
+                        cryptoPaymentRequest.getNetworkType(),
+                        cryptoPaymentRequest.getReferenceWallet()
+                );
 
-                    cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
+                cryptoPaymentRequestManager.informReception(cryptoPaymentRequest.getRequestId());
 
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE,installedWallet.getWalletPublicKey() ,"PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
+                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, cryptoPaymentRequest.getWalletPublicKey(), "PAYMENTREQUEST_" + cryptoPaymentRequest.getRequestId().toString());
 
 
-                } catch(DefaultWalletNotFoundException z) {
+               /* } catch(DefaultWalletNotFoundException z) {
 
                     cryptoPaymentRequestManager.informDenial(cryptoPaymentRequest.getRequestId());
 
@@ -316,18 +315,14 @@ public class CryptoPaymentRequestEventActions {
                 throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in network service.");
             } catch(CantGetInstalledWalletException z ) {
 
-                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in wallet manager manager.");
-            } catch(CantGenerateCryptoPaymentRequestException z ) {
+                throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in wallet manager manager.");*/
+            } catch (CantGenerateCryptoPaymentRequestException z) {
 
                 throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Error in the generation of the request.");
-            } catch(Exception z ) {
+            } catch (Exception z) {
 
                 throw new CantHandleCryptoPaymentRequestReceivedEventException(z, "RequestId: " + cryptoPaymentRequest.getRequestId(), "Unhandled Exception.");
             }
-
-        } catch(Exception e) {
-
-            throw new CantHandleCryptoPaymentRequestReceivedEventException(e, "RequestId: "+cryptoPaymentRequest.getRequestId(), "Unhandled exception.");
         }
 
     }

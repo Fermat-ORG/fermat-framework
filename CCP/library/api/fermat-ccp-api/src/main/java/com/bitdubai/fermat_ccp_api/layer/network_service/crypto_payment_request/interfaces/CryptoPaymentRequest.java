@@ -36,7 +36,7 @@ public interface CryptoPaymentRequest {
 
     long                          getStartTimeStamp()   ;
 
-    RequestType getDirection()        ;
+    RequestType                   getDirection()        ;
 
     RequestAction                 getAction()           ;
 
@@ -49,5 +49,7 @@ public interface CryptoPaymentRequest {
     int                           getSentNumber()   ;
 
     String                        getMessageType();
+
+    String                        getWalletPublicKey();
 
 }
