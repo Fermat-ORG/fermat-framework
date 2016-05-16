@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.*;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
+import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.DepositBankMoneyTransactionPluginRoot;
 
 import java.util.UUID;
 
@@ -31,9 +34,9 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     long timeStamp;
     String memo;
     String status;
-    ErrorManager errorManager;
+    DepositBankMoneyTransactionPluginRoot pluginRoot;
 
-    public BankMoneyTransactionRecordImpl(ErrorManager errorManager,UUID bankTransactionId, String balanceType, String transactionType, float amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
+    public BankMoneyTransactionRecordImpl(DepositBankMoneyTransactionPluginRoot pluginRoot,UUID bankTransactionId, String balanceType, String transactionType, float amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
         this.bankTransactionId = bankTransactionId;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
@@ -49,7 +52,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         this.timeStamp = timeStamp;
         this.memo = memo;
         this.status = status;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
     }
 
     @Override
@@ -72,7 +75,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try{
             return TransactionType.getByCode(transactionType);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return null;
     }
@@ -87,7 +90,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try {
             return FiatCurrency.getByCode(cashCurrencyType);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return null;
     }
@@ -97,7 +100,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try{
             return BankOperationType.getByCode(bankOperationType);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return null;
     }
@@ -122,7 +125,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try {
             return BankAccountType.getByCode(bankAccountType);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError( UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return null;
     }
