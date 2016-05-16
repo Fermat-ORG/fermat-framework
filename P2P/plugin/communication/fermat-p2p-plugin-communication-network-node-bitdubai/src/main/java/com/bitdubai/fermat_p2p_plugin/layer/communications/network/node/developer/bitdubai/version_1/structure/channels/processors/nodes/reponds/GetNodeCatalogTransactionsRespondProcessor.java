@@ -20,6 +20,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.websocket.CloseReason;
@@ -83,7 +84,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                      */
                     List<NodesCatalogTransaction>  transactionList = messageContent.getNodesCatalogTransactions();
 
-                    long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
+                    long totalRowInDb = getDaoFactory().getNodesCatalogTransactionDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("transactionList size = "+transactionList.size());
@@ -96,7 +97,7 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
                         processTransaction(nodesCatalogTransaction);
                     }
 
-                    totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
+                    totalRowInDb = getDaoFactory().getNodesCatalogTransactionDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("Row in catalog seed node = "+messageContent.getCount());
@@ -129,7 +130,11 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
             exception.printStackTrace();
             LOG.error(exception.getMessage());
-
+            try {
+                session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, exception.getMessage()));
+            } catch (IOException e) {
+                LOG.error(e.getMessage());
+            }
         }
 
     }

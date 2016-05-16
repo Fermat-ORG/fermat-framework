@@ -21,6 +21,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.websocket.CloseReason;
@@ -94,7 +95,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
                         processTransaction(actorsCatalogTransaction);
                     }
 
-                    long totalRowInDb = getDaoFactory().getActorsCatalogDao().getAllCount();
+                    long totalRowInDb = getDaoFactory().getActorsCatalogTransactionDao().getAllCount();
 
                     LOG.info("Row in node catalog  = "+totalRowInDb);
                     LOG.info("Row in catalog seed node = "+messageContent.getCount());
@@ -127,6 +128,11 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
             exception.printStackTrace();
             LOG.error(exception.getMessage());
 
+            try {
+                session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, exception.getMessage()));
+            } catch (IOException e) {
+                LOG.error(e.getMessage());
+            }
         }
 
     }

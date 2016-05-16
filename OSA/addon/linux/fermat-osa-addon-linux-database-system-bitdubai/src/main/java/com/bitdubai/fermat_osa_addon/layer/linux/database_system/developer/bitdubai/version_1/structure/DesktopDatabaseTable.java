@@ -208,6 +208,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         } catch (Exception exception) {
             System.out.println("*** * *  *    *      *          * INSERT RECORD EXCEPTION: "+exception.getMessage());
+            System.out.println(exception);
             throw new CantInsertRecordException(exception);
         } finally {
 

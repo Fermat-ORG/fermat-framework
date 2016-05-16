@@ -12,10 +12,12 @@ import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdu
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.ReceiveNodeCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -42,16 +44,24 @@ public class Test {
 
             ECCKeyPair eccKeyPair = new ECCKeyPair("ba68c5945287f8f318773bff4cfc72136eb4d7f7c56de3125f6584b3554e25af");
 
-            NodeProfile nodeProfile = new NodeProfile();
-            nodeProfile.setIp("1.1.1.1");
-            nodeProfile.setDefaultPort(8080);
-            nodeProfile.setIdentityPublicKey(eccKeyPair.getPublicKey());
-            nodeProfile.setName("Fermat Node (black)");
-            nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
 
-            System.out.println(nodeProfile.toJson());
 
-            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+
+            for (int i = 1; i < 500; i++) {
+
+                ECCKeyPair id = new ECCKeyPair();
+                NodeProfile nodeProfile = new NodeProfile();
+                nodeProfile.setIp("1.1.1." + i);
+                nodeProfile.setDefaultPort(8080);
+                nodeProfile.setIdentityPublicKey(id.getPublicKey());
+                nodeProfile.setName("Fermat Node ("+i+")");
+                nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
+
+                AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+                fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+            }
+
 
             // AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
             //fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
