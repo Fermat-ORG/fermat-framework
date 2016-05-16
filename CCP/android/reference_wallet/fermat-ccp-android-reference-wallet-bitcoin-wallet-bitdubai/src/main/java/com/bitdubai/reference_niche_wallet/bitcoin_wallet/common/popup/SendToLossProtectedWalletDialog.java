@@ -333,6 +333,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                                     blockchainNetworkType
                             );
                             Toast.makeText(activity, "Sending btc to Loss Protected Wallet...", Toast.LENGTH_SHORT).show();
+                            dismiss();
                         } else {
                             Toast.makeText(activity, "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
                         }
