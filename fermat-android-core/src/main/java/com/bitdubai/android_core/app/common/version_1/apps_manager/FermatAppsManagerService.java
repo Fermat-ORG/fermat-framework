@@ -137,7 +137,6 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     @Override
     public FermatSession getAppsSession(String appPublicKey) {
         try {
-            Log.i(TAG,"APP Order: ");
             if (fermatSessionManager.isSessionOpen(appPublicKey)) {
 //                orderStackWithThisPkLast(appPublicKey);
                 recents.reOrder(appPublicKey);
