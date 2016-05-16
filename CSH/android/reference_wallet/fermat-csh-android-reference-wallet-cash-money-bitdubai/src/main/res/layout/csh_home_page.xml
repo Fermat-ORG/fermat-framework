@@ -209,9 +209,9 @@
             android:id="@+id/fab_withdraw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/csh_fab_color_normal_w"
+            fab:fab_colorNormal="@color/csh_fab_color_normal"
             fab:fab_title="@string/csh_withdrawal_transaction_text"
-            fab:fab_colorPressed="@color/csh_fab_color_pressed_w"
+            fab:fab_colorPressed="@color/csh_fab_color_pressed"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/csh_withdrawal"/>
 
@@ -219,9 +219,9 @@
             android:id="@+id/fab_deposit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            fab:fab_colorNormal="@color/csh_fab_color_normal_d"
+            fab:fab_colorNormal="@color/csh_fab_color_normal"
             fab:fab_title="@string/csh_deposit_transaction_text"
-            fab:fab_colorPressed="@color/csh_fab_color_pressed_d"
+            fab:fab_colorPressed="@color/csh_fab_color_pressed"
             fab:fab_size="mini"
             fab:fab_icon="@drawable/csh_deposit"/>
 
