@@ -529,7 +529,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             // falto crear dos processor en el client
             // el Transmit y el TransmitRespond
             // ponte de acuerdo con robert leon
-            networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver);
+            //networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver);
         }
 
     }
