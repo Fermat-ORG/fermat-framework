@@ -95,7 +95,7 @@ public interface NetworkClientConnection {
      *
      * @param packageContent
      */
-    void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey);
+    void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination);
 
     /**
      * Through the method <code>getCommunicationChannelType</code> we can get the communication channel type

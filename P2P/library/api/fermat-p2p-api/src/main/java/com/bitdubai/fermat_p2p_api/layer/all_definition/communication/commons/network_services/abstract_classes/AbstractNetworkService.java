@@ -428,7 +428,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             NetworkClientConnection networkClientConnectionTemp = networkClientManager.getConnection(uriToNode);
 
-            String receiver = listActorProfileConnectedInNode.get(uriToNode).getClientIdentityPublicKey();
+            String clientDestination = listActorProfileConnectedInNode.get(uriToNode).getClientIdentityPublicKey();
+            String receiver = listActorProfileConnectedInNode.get(uriToNode).getIdentityPublicKey();
 
             Message message = new Message();
             message.setSender("1489"); // pk of Sender of actor profile
@@ -442,7 +443,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             // falto crear dos processor en el client
             // el Transmit y el TransmitRespond
             // ponte de acuerdo con robert leon
-            networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver);
+            networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver, clientDestination);
         }
 
     }

@@ -571,18 +571,19 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
-    public void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey) {
+    public void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination) {
 
         if (isConnected()){
 
             try {
                 communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
-                        PackageMessage.createInstance(
+                        Package.createInstance(
                                 packageContent.toJson(),
                                 networkServiceType,
                                 PackageType.MESSAGE_TRANSMIT,
                                 clientIdentity.getPrivateKey(),
-                                destinationIdentityPublicKey
+                                destinationIdentityPublicKey,
+                                clientDestination
 
                         )
                 );

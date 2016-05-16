@@ -67,7 +67,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
 
         try {
 
-            PackageMessage packageMessage = (PackageMessage) packageReceived;
+            //PackageMessage packageMessage = (PackageMessage) packageReceived;
 
             /*
              * Get the content
@@ -82,7 +82,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
             /*
              * Get the destination
              */
-            String destinationIdentityPublicKey = packageMessage.getClientDestination();
+            String destinationIdentityPublicKey = packageReceived.getClientDestination();
 
             /*
              * Get the connection to the destination
