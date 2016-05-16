@@ -199,9 +199,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     public boolean onOptionsItemSelected(MenuItem item) {
         int selectedItemId = item.getItemId();
         if (selectedItemId == ReferenceWalletConstants.EDIT_ACCOUNT_ACTION) {
-            appSession.setData("oldAccountNumber", bankAccountNumber.getAccount());
-            appSession.setData("oldAlias", bankAccountNumber.getAlias());
-            appSession.setData("oldImageId", bankAccountNumber.accountImageId());
+
             changeActivity(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT, appSession.getAppPublicKey());
             return true;
         }
