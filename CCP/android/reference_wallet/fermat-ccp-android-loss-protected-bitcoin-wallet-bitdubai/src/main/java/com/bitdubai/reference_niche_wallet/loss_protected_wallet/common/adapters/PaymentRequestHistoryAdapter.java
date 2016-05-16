@@ -202,7 +202,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
 
                             blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
-                            lossProtectedWallet = appSession.getModuleManager().getCryptoWallet();
+                            lossProtectedWallet = appSession.getModuleManager();
 
                             lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
 

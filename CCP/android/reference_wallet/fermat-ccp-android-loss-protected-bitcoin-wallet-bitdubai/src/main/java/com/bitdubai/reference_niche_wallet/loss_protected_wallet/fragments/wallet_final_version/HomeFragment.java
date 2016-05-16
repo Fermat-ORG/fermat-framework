@@ -89,7 +89,6 @@ import static android.widget.Toast.makeText;
 public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSession,ResourceProviderManager> implements OnChartValueSelectedListener {
 
     LossProtectedWalletSession lossProtectedWalletSession;
-    //SettingsManager<LossProtectedWalletSettings> settingsManager;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
     LayoutInflater inflater;

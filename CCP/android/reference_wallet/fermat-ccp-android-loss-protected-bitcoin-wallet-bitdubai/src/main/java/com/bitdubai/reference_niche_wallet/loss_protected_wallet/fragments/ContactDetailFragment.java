@@ -139,10 +139,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
 
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
+          } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
             lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }

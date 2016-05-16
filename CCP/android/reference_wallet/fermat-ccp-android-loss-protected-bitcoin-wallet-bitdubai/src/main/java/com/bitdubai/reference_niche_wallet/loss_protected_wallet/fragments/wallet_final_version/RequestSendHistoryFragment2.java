@@ -51,7 +51,8 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     /**
      * MANAGERS
      */
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
+    private LossProtectedWalletSettings lossProtectedWalletSettings;
     /**
      * DATA
      */
@@ -66,7 +67,6 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     private View rootView;
     private LinearLayout empty;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -104,14 +104,11 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             }
         });
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+            lossProtectedWalletManager = referenceWalletSession.getModuleManager();
 
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             } catch (Exception e) {
 
             }
@@ -119,7 +116,6 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
-            //CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -191,7 +187,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, cryptoWallet, referenceWalletSession, this);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, lossProtectedWalletManager, referenceWalletSession, this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -215,7 +211,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
                 if (refreshType.equals(FermatRefreshTypes.NEW))
                     offset = 0;
 
-                lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
+                lstPaymentRequest = lossProtectedWalletManager.listSentPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
                 offset += MAX_TRANSACTIONS;
             } catch (Exception e) {
                 referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -283,10 +279,10 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             int id = v.getId();
             if (id == R.id.btn_refuse_request) {
 
-                cryptoWallet.refuseRequest(paymentRequest.getRequestId());
+                lossProtectedWalletManager.refuseRequest(paymentRequest.getRequestId());
                 Toast.makeText(getActivity(), "Denegado", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.btn_accept_request) {
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                lossProtectedWalletManager.approveRequest(paymentRequest.getRequestId(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                 Toast.makeText(getActivity(), "Aceptado", Toast.LENGTH_SHORT).show();
             }
 
