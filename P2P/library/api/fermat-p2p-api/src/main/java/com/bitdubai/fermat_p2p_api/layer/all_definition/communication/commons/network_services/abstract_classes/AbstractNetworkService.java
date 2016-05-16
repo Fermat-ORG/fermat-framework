@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.Message;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServicePendingMessagesSupervisorAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
@@ -44,17 +45,22 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.factories.NetworkServiceMessageFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.structure.NetworkServiceConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.structure.NetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +117,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     private NetworkServiceProfile profile;
 
     /**
-     * Represent the dataBase
+     * Represents the dataBase
      */
     private Database networkServiceDatabase;
 
@@ -121,23 +127,23 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     private boolean registered;
 
     /**
-     * Hold the listeners references
+     * Holds the listeners references
      */
     protected List<FermatEventListener> listenersAdded;
 
     /*
-     * Represent the listActorConnectIntoNode
+     * Represents the listActorConnectIntoNode
      */
     protected Map<String,String> listActorConnectIntoNode;
 
     /*
-     * Represent the listActorProfileConnectedInNode
+     * Represents the listActorProfileConnectedInNode
      */
     protected Map<String, ActorProfile> listActorProfileConnectedInNode;
 
 
     /**
-     * Represent the networkServiceConnectionManager
+     * Represents the networkServiceConnectionManager
      */
     private NetworkServiceConnectionManager networkServiceConnectionManager;
 
@@ -145,9 +151,14 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      * AGENTS DEFINITION ----->
      */
     /**
-     * Represent the networkServiceRegistrationProcessAgent
+     * Represents the networkServiceRegistrationProcessAgent
      */
     private NetworkServiceRegistrationProcessAgent networkServiceRegistrationProcessAgent;
+
+    /**
+     * Represents the NetworkServicePendingMessagesSupervisorAgent
+     */
+    private NetworkServicePendingMessagesSupervisorAgent networkServicePendingMessagesSupervisorAgent;
 
     protected ActorProfile actorProfile;
 
@@ -214,6 +225,9 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
              */
             this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
             this.networkServiceRegistrationProcessAgent.start();
+
+            this.networkServicePendingMessagesSupervisorAgent = new NetworkServicePendingMessagesSupervisorAgent(this);
+            this.networkServicePendingMessagesSupervisorAgent.start();
 
             onNetworkServiceStart();
 
@@ -545,11 +559,10 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             if(!networkClientManager.getConnection().isRegistered()) {
 
-                /*
-                if (communicationNetworkServiceConnectionManager != null) {
-                    communicationNetworkServiceConnectionManager.stop();
+                if (networkServiceConnectionManager != null) {
+                    networkServiceConnectionManager.stop();
                 }
-                */
+
 
                 this.registered = Boolean.FALSE;
 /*
@@ -582,17 +595,15 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             if(!networkClientManager.getConnection().isRegistered()) {
 
-/*
-                if (communicationNetworkServiceConnectionManager != null) {
-                    communicationNetworkServiceConnectionManager.closeAllConnection();
-                    communicationNetworkServiceConnectionManager.stop();
+                if (networkServiceConnectionManager != null) {
+                    networkServiceConnectionManager.closeAllConnection();
+                    networkServiceConnectionManager.stop();
                 }
-*/
-                this.registered = Boolean.FALSE;
-/*
-                communicationSupervisorPendingMessagesAgent.removeAllConnectionWaitingForResponse();
 
-                */
+                this.registered = Boolean.FALSE;
+
+                networkServicePendingMessagesSupervisorAgent.removeAllConnectionWaitingForResponse();
+
                 onNetworkClientConnectionClosed();
 
             }
@@ -601,6 +612,106 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Method tha send a new Message
+     */
+    public void sendNewMessage(NetworkServiceProfile destination, String messageContent) throws CantSendMessageException {
+
+        try {
+
+             /*
+             * ask for a previous connection
+             */
+            NetworkServiceLocal communicationNetworkServiceLocal = networkServiceConnectionManager.getNetworkServiceLocalInstance(destination.getIdentityPublicKey());
+
+            if (communicationNetworkServiceLocal != null) {
+                System.out.println("*** 12345 case 7:send msg in NS P2P layer active connection" + new Timestamp(System.currentTimeMillis()));
+                //Send the message
+                communicationNetworkServiceLocal.sendMessage(
+                        messageContent
+                );
+
+            } else {
+                System.out.println("*** 12345 case 6:send msg in NS P2P layer not active connection" + new Timestamp(System.currentTimeMillis()));
+                /*
+                 * Created the message
+                 */
+                NetworkServiceMessage networkServiceMessage = NetworkServiceMessageFactory.buildNetworkServiceMessage(
+                        this.getProfile(),
+                        destination      ,
+                        messageContent   ,
+                        FermatMessageContentType.TEXT
+                );
+
+                /*
+                 * Save to the data base table
+                 */
+                networkServiceConnectionManager.getOutgoingMessagesDao().create(networkServiceMessage);
+
+                /*
+                 * Ask the client to connect
+                 */
+                networkServiceConnectionManager.connectTo(destination);
+            }
+
+        }catch (Exception e){
+
+            System.out.println("Error sending message: " + e.getMessage());
+            throw new CantSendMessageException(e, "destination: "+destination+" - message: "+messageContent, "Unhandled error trying to send a message.");
+        }
+    }
+
+    /**
+     * Method tha send a new Message
+     */
+    public void sendNewMessage(ActorProfile sender, ActorProfile destination, String messageContent) throws CantSendMessageException {
+
+        try {
+
+             /*
+             * ask for a previous connection
+             */
+            NetworkServiceLocal communicationNetworkServiceLocal = networkServiceConnectionManager.getNetworkServiceLocalInstance(destination.getIdentityPublicKey());
+
+            if (communicationNetworkServiceLocal != null) {
+                System.out.println("*** 12345 case 7:send msg in NS P2P layer active connection" + new Timestamp(System.currentTimeMillis()));
+                //Send the message
+                communicationNetworkServiceLocal.sendMessage(
+                        sender        ,
+                        messageContent
+                );
+
+            } else {
+                System.out.println("*** 12345 case 6:send msg in NS P2P layer not active connection" + new Timestamp(System.currentTimeMillis()));
+                /*
+                 * Created the message
+                 */
+                NetworkServiceMessage networkServiceMessage = NetworkServiceMessageFactory.buildNetworkServiceMessage(
+                        sender           ,
+                        destination      ,
+                        this.getProfile(),
+                        messageContent   ,
+                        FermatMessageContentType.TEXT
+                );
+
+                /*
+                 * Save to the data base table
+                 */
+                networkServiceConnectionManager.getOutgoingMessagesDao().create(networkServiceMessage);
+
+                /*
+                 * Ask the client to connect
+                 */
+                networkServiceConnectionManager.connectTo(sender, destination);
+            }
+
+        }catch (Exception e){
+
+            System.out.println("Error sending message: " + e.getMessage());
+            throw new CantSendMessageException(e, "destination: "+destination+" - message: "+messageContent, "Unhandled error trying to send a message.");
+        }
     }
 
     /**
