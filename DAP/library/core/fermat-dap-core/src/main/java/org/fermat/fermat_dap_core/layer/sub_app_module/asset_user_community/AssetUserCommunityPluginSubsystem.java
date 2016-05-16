@@ -1,9 +1,10 @@
 package org.fermat.fermat_dap_core.layer.sub_app_module.asset_user_community;
 
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
+
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.DeveloperBitDubai;
 
 /**
@@ -15,7 +16,7 @@ import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.De
 public class AssetUserCommunityPluginSubsystem extends AbstractPluginSubsystem {
 
     public AssetUserCommunityPluginSubsystem() {
-        super(new PluginReference(Plugins.ASSET_USER_COMMUNITY));
+        super(new PluginReference(Plugins.ASSET_USER));
     }
 
     @Override

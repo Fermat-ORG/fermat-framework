@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -43,6 +45,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -86,10 +91,6 @@ import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.exceptions.CantUpdateRedeemPointException;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.structure.RedeemPointActorAddress;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.structure.RedeemPointActorDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -105,7 +106,7 @@ import java.util.Random;
         createdBy = "nindriago",
         layer = Layers.ACTOR,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.REDEEM_POINT)
+        plugin = Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR)
 public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         ActorAssetRedeemPointManager,
         DatabaseManagerForDevelopers {
@@ -119,9 +120,6 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -168,7 +166,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR);
         }
     }
@@ -190,6 +188,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey);
             }
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
     }
@@ -205,6 +204,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 return this.redeemPointActorDao.getActorRegisteredByPublicKey(actorPublicKey, blockchainNetworkType);
             }
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
     }
@@ -296,10 +296,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 System.out.println("***************************************************************");
             }
         } catch (CantAddPendingRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT", e, "", "");
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorRedeemPointException("CAN'T GET ACTOR ASSET REDEEM POINT", FermatException.wrapException(e), "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT", FermatException.wrapException(e), "", "");
         }
     }
@@ -327,6 +330,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
             redeemPointActorDao.createNewRedeemPointRegisterInNetworkService(redeemPoint);
         } catch (CantAddPendingRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorRedeemPointException();
         }
     }
@@ -336,6 +340,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             redeemPointActorDao.createNewAssetRedeemPointRegisterInNetworkServiceByList(actorAssetRedeemPoints);
         } catch (CantAddPendingRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorRedeemPointException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT REGISTERED", e, "", "");
         }
     }
@@ -347,6 +352,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             actorAssetRedeemPoint = this.redeemPointActorDao.getActorAssetRedeemPoint();
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
 
@@ -365,8 +371,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             else
                 return DAPConnectionState.ERROR_UNKNOWN;
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET ACTOR REDEEM POINT STATE", e, "Error get database info", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET ACTOR REDEEM POINT STATE", FermatException.wrapException(e), "", "");
         }
     }
@@ -377,6 +385,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.redeemPointActorDao.getAllAssetRedeemPointActorRegistered(blockchainNetworkType);
         } catch (CantGetRedeemPointsListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR REGISTERED", e, "", "");
         }
 
@@ -389,6 +398,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.redeemPointActorDao.getAllAssetRedeemPointActorConnected(blockchainNetworkType);
         } catch (CantGetRedeemPointsListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR CONNECTED ", e, "", "");
         }
 
@@ -401,6 +411,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.redeemPointActorDao.getRedeemPointsConnectedForIssuer(issuerPublicKey, blockchainNetworkType);
         } catch (CantGetRedeemPointsListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET REDEEM POINT ACTOR CONNECTED ", e, "", "");
         }
 
@@ -414,8 +425,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             this.redeemPointActorDao.updateOfflineRedeemPointRegisterInNetworkService(actorAssetRedeemPoints);
         }
         catch (CantGetRedeemPointsListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T GET LIST ASSET REDEEM POINT REGISTERED", e, "", "");
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetRedeemPointActorsException("CAN'T UPDATE ACTOR ASSET REDEEM POINT REGISTERED", e, "", "");
         }
 
@@ -433,8 +446,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 assetRedeemPointActorNetworkServiceManager.registerActorAssetRedeemPoint(actorAssetRedeemPoint);
 
         } catch (CantRegisterActorAssetRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetRedeemPointException("CAN'T Register Actor Redeem Poiint in Actor Network Service", e, "", "");
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetRedeemPointException("CAN'T GET ACTOR Redeem Point", e, "", "");
         }
     }
@@ -482,6 +497,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 //                }
 //            }
         } catch (CantSendAddressExchangeRequestException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -491,6 +507,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             this.redeemPointActorDao.updateRedeemPointRegisteredDAPConnectionState(actorPublicKey, state);
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantUpdateRedeemPointException("CAN'T UPDATE REDEEM POINT", e, "", "");
         }
     }
@@ -519,8 +536,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         blockchainNetworkType);
             }
         } catch (CantRequestAlreadySendActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRequestAlreadySendActorAssetException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT CONNECTION", e, "", "The request already send.");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAskConnectionActorAssetException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -530,8 +549,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {//TODO Probar el estado REGISTERED_LOCALLY
             this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -541,8 +562,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToRejectPublicKey, DAPConnectionState.DENIED_LOCALLY);
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -555,8 +578,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             this.redeemPointActorDao.updateRegisteredConnectionState(actorUserToDisconnectPublicKey, actorUserToDisconnectPublicKey, DAPConnectionState.REGISTERED_ONLINE);
 
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDisconnectAssetActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDisconnectAssetActorException("CAN'T CANCEL ACTOR ASSET REDEEM POINT CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -590,8 +615,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
             }
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT REQUEST CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET REDEEM POINT REQUEST CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -601,8 +628,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {//TODO EVALUAR State CANCEL o directamente REGISTERED_ONLINE
             this.redeemPointActorDao.updateRegisteredConnectionState(actorAssetUserToCancelPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -612,8 +641,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             return this.redeemPointActorDao.getAllWaitingActorAssetRedeem(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_LOCALLY, max, offset);
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
@@ -623,8 +654,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             return this.redeemPointActorDao.getAllWaitingActorAssetRedeem(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_REMOTELY, max, offset);
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
@@ -634,8 +667,10 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         try {
             return redeemPointActorDao.getLastNotification(actorAssetUserConnectedPublicKey);
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", e, "Error get database info", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", FermatException.wrapException(e), "", "");
         }
     }
@@ -648,6 +683,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             this.redeemPointActorDao.updateRedeemPointDAPConnectionState(actorAssetRedeemPoint.getActorPublicKey(),
                     DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         System.out.println("***************************************************************");
@@ -671,6 +707,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     try {
                         cryptoAddressesNetworkServiceManager.markReceivedRequest(request.getRequestId());
                     } catch (CantConfirmAddressExchangeRequestException e) {
+                        reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                         throw new CantHandleCryptoAddressesNewsEventException(e, "Error marking request as received.", null);
                     }
 
@@ -681,7 +718,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         } catch (CantListPendingCryptoAddressRequestsException |
 //                CantHandleCryptoAddressDeniedActionException |
                 CantHandleCryptoAddressReceivedActionException e) {
-
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
     }
@@ -721,12 +758,16 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 cryptoAddressesNetworkServiceManager.confirmAddressExchangeRequest(request.getRequestId());
             }
         } catch (PendingRequestNotFoundException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantConfirmAddressExchangeRequestException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantGetAssetRedeemPointActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -746,6 +787,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             extendedPublicKey = (ExtendedPublicKey) XMLParser.parseXML(actorNotification.getMessageXML(), new ExtendedPublicKey());
 //            extendedPublicKey = XMLParser.parseXML(actorNotification.getMessageXML(), new ExtendedPublicKey());
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             //handle this. I might have a Class Cast exception
         }
 
@@ -765,7 +807,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 //                actorAssetIssuerManager.updateIssuerRegisteredDAPConnectionState(dapActorSender.getActorPublicKey(), DAPConnectionState.CONNECTED_ONLINE);
                 actorAssetIssuerManager.updateIssuerRegisteredDAPConnectionState(actorNotification.getActorSenderPublicKey(), DAPConnectionState.CONNECTED_ONLINE);
             } catch (CantInitializeWatchOnlyVaultException | CantInsertRecordException | CantGetAssetRedeemPointActorsException | CantUpdateActorAssetIssuerException | CantRegisterActorAssetRedeemPointException e) {
-                //handle this.
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
@@ -804,7 +846,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                     break;
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -831,9 +873,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return Collections.EMPTY_LIST;
@@ -847,7 +889,6 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 //            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getPublicKey();
             this.actorAssetRedeemPointMonitorAgent = new ActorAssetRedeemPointMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
-                    this.errorManager,
                     this.pluginId,
                     this.assetRedeemPointActorNetworkServiceManager,
                     this.redeemPointActorDao,
@@ -997,12 +1038,16 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                 assetRedeemPointActorNetworkServiceManager.confirmActorAssetNotification(notification.getId());
             }
         } catch (CantAcceptActorAssetUserException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Accepted");
         } catch (CantDisconnectAssetActorException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Disconnected");
         } catch (CantDenyConnectionActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Denied");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
         }
     }

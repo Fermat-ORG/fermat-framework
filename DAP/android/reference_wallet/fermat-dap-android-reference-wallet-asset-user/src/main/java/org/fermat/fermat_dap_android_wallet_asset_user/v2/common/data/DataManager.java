@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.User;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
@@ -20,6 +21,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,12 +32,12 @@ import java.util.List;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
  */
-public class DataManager {
+public class DataManager implements Serializable {
     private static AssetUserWalletSubAppModuleManager moduleManager;
     private static String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
 
     public DataManager(AssetUserWalletSubAppModuleManager moduleManager) {
-        this.moduleManager = moduleManager;
+        DataManager.moduleManager = moduleManager;
     }
 
     public List<Issuer> getIssuers() throws CantLoadWalletException {
@@ -70,17 +72,19 @@ public class DataManager {
     }
 
     public static List<Asset> getAssets() throws CantLoadWalletException, CantGetTransactionsException {
-        List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(walletPublicKey);
+        List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         AssetUserWallet userWallet = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY);
         List<Asset> assets = new ArrayList<>();
-        for (AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
-            List<CryptoAddress> addresses = assetUserWalletList.getAddresses();
-            for (int i = 0; i < assetUserWalletList.getQuantityBookBalance(); i++) {
-                try {
-                    CryptoAddress address = addresses.get(i);
-                    assets.add(new Asset(assetUserWalletList, userWallet.getAllTransactions(address), address));
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if (assetUserWalletBalances != null && userWallet != null) {
+            for (AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
+                List<CryptoAddress> addresses = assetUserWalletList.getAddresses();
+                for (int i = 0; i < assetUserWalletList.getQuantityBookBalance(); i++) {
+                    try {
+                        CryptoAddress address = addresses.get(i);
+                        assets.add(new Asset(assetUserWalletList, userWallet.getAllTransactions(address), address));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -131,36 +135,37 @@ public class DataManager {
         List<Asset> digitalAssets = new ArrayList<>();
         Asset digitalAsset;
 
-        for (AssetNegotiation asset : assetNegotiations) {
+        if (assetNegotiations != null) {
+            for (AssetNegotiation asset : assetNegotiations) {
 
-            digitalAsset = new Asset();
-            digitalAsset.setDigitalAsset(asset.getAssetToOffer());
-            digitalAsset.setName(asset.getAssetToOffer().getName());
-            digitalAsset.setAmount(1);
-            digitalAsset.setId(asset.getNegotiationId().toString());
-            digitalAsset.setDate(new Timestamp(new Date().getTime()));
-            digitalAsset.setStatus(Asset.Status.PENDING);
+                digitalAsset = new Asset();
+                digitalAsset.setDigitalAsset(asset.getAssetToOffer());
+                digitalAsset.setName(asset.getAssetToOffer().getName());
+                digitalAsset.setAmount(1);
+                digitalAsset.setId(asset.getNegotiationId().toString());
+                digitalAsset.setDate(new Timestamp(new Date().getTime()));
+                digitalAsset.setStatus(Asset.Status.PENDING);
 
-            ActorAssetUser seller = moduleManager.getSellerFromNegotiation(asset.getNegotiationId());
+                ActorAssetUser seller = moduleManager.getSellerFromNegotiation(asset.getNegotiationId());
 
-            digitalAsset.setActorName(seller.getName());
-            digitalAsset.setActorImage(seller.getProfileImage());
+                digitalAsset.setActorName(seller.getName());
+                digitalAsset.setActorImage(seller.getProfileImage());
 
-            AssetUserNegotiation userAssetNegotiation = new AssetUserNegotiation();
-            userAssetNegotiation.setId(asset.getNegotiationId());
-            userAssetNegotiation.setAmount(asset.getTotalAmount());
+                AssetUserNegotiation userAssetNegotiation = new AssetUserNegotiation();
+                userAssetNegotiation.setId(asset.getNegotiationId());
+                userAssetNegotiation.setAmount(asset.getTotalAmount());
 
-            digitalAsset.setAssetUserNegotiation(userAssetNegotiation);
-            digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+                digitalAsset.setAssetUserNegotiation(userAssetNegotiation);
+                digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
 
-            digitalAssets.add(digitalAsset);
+                digitalAssets.add(digitalAsset);
 
-            List<Resource> resources = asset.getAssetToOffer().getResources();
-            if (resources != null && !resources.isEmpty()) {
-                digitalAsset.setImage(resources.get(0).getResourceBinayData());
+                List<Resource> resources = asset.getAssetToOffer().getResources();
+                if (resources != null && !resources.isEmpty()) {
+                    digitalAsset.setImage(resources.get(0).getResourceBinayData());
+                }
             }
         }
-
         return digitalAssets;
     }
 }

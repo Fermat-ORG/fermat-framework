@@ -53,7 +53,8 @@ public interface CryptoPaymentRequestManager extends FermatManager {
                                   long                  amount           ,
                                   long                  startTimeStamp   ,
                                   BlockchainNetworkType networkType      ,
-                                  ReferenceWallet       referenceWallet) throws CantSendRequestException;
+                                  ReferenceWallet       referenceWallet,
+                                  String walletPublicKey) throws CantSendRequestException;
 
     /**
      * Throw the method <code>informRefusal</code> you can inform the rejection of a request to its requester.

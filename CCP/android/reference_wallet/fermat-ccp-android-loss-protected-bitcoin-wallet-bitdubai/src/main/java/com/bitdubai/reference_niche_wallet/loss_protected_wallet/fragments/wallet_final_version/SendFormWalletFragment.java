@@ -30,9 +30,10 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -48,8 +49,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
@@ -398,11 +397,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         editTextAmount.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 try {
-                    //Long amount = Long.parseLong(editTextAmount.getText().toString());
-                    //if (amount > 0) {
-                    //long actualBalance = cryptoWallet.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-                    //editTextAmount.setHint("Available amount: " + actualBalance + " bits");
-                    //}
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -491,8 +486,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         } else if (id == R.id.btn_expand_send_form) {
             Object[] objects = new Object[1];
             objects[0] = walletContact;
-            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,
-                    appSession.getCommunityConnection(), objects);
+            changeApp(appSession.getCommunityConnection(), objects);
         }
 
 
@@ -543,7 +537,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                 }
                             }
                             if (wallet != null){
-                                System.out.println("public key"+wallet.getWalletPublicKey());
+
                                 if (operator.compareTo(minSatoshis) == 1) {
                                     cryptoWallet.sendToWallet(
                                             operator.longValueExact(),
@@ -555,8 +549,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                             blockchainNetworkType
 
-                                            // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
-                                    );
+                                           );
                                     Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                     onBack(null);
                                 } else {

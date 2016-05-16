@@ -1,10 +1,13 @@
 package com.bitdubai.android_core.app.common.version_1.classes;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
+import com.bitdubai.android_core.app.common.version_1.receivers.UpdateViewReceiver;
 import com.bitdubai.android_core.app.common.version_1.util.interfaces.BroadcasterInterface;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -31,10 +34,11 @@ public class BroadcastManager implements BroadcasterInterface {
             switch (broadcasterType){
                 case UPDATE_VIEW:
 //                    updateView(code);
-                    sendUpdateIntent(null,code);
+                    sendUpdateIntent(null,code,null);
                     break;
                 case NOTIFICATION_SERVICE:
-                    ApplicationSession.getInstance().getNotificationService().notificate(code, ApplicationSession.getInstance().getAppManager().getAppStructure(null));
+                    sendNotificationIntent(null,code,null);
+                    //ApplicationSession.getInstance().getNotificationService().notificate(code, null);
                     break;
             }
         }catch (Exception e){
@@ -49,10 +53,11 @@ public class BroadcastManager implements BroadcasterInterface {
             switch (broadcasterType){
                 case UPDATE_VIEW:
 //                    updateView(appCode,code);
-                    sendUpdateIntent(appCode,code);
+                    sendUpdateIntent(appCode,code,null);
                     break;
                 case NOTIFICATION_SERVICE:
-                    ApplicationSession.getInstance().getNotificationService().notificate(code, ApplicationSession.getInstance().getAppManager().getAppStructure(appCode));
+                    sendNotificationIntent(appCode, code,null);
+                    //ApplicationSession.getInstance().getNotificationService().notificate(code, appCode);
                     break;
             }
         }catch (Exception e){
@@ -61,16 +66,19 @@ public class BroadcastManager implements BroadcasterInterface {
         }
     }
 
+
+
     @Override
     public void publish(BroadcasterType broadcasterType, String code,Platforms platform) {
         try {
             switch (broadcasterType){
                 case UPDATE_VIEW:
 //                    updateView(code);
-                    sendUpdateIntent(null,code);
+                    sendUpdateIntent(null,code,null);
                     break;
                 case NOTIFICATION_SERVICE:
-                    ApplicationSession.getInstance().getNotificationService().notificate(code, ApplicationSession.getInstance().getAppManager().getAppStructure(null));
+                    sendNotificationIntent(null,code,null);
+//                    ApplicationSession.getInstance().getNotificationService().notificate(code, null);
                     break;
             }
         }catch (Exception e){
@@ -85,7 +93,7 @@ public class BroadcastManager implements BroadcasterInterface {
             switch (broadcasterType){
                 case UPDATE_VIEW:
 //                    updateView(code);
-                    sendUpdateIntent(null,code);
+                    sendUpdateIntent(null,code,null);
                     break;
                 case NOTIFICATION_SERVICE:
 //                    String publicKey = fermatActivity.get().searchAppFromPlatformIdentifier(fermatApps);
@@ -104,9 +112,10 @@ public class BroadcastManager implements BroadcasterInterface {
             switch (broadcasterType){
                 case UPDATE_VIEW:
 //                    updateView(bundle);
-                    sendUpdateIntent(appCode,fermatBundle);
+                    sendUpdateIntent(appCode,null,fermatBundle);
                     break;
                 case NOTIFICATION_SERVICE:
+                    sendNotificationIntent(appCode,null,fermatBundle);
 //                    String publicKey = fermatActivity.get().searchAppFromPlatformIdentifier(fermatApps);
 //                    fermatActivity.get().notificateBroadcast(publicKey,code);
                     break;
@@ -124,7 +133,7 @@ public class BroadcastManager implements BroadcasterInterface {
             switch (broadcasterType){
                 case UPDATE_VIEW:
 //                    updateView(bundle);
-                    sendUpdateIntent(null,bundle);
+                    sendUpdateIntent(null,null,bundle);
                     break;
                 case NOTIFICATION_SERVICE:
 //                    fermatActivity.get().notificateBroadcast(null,bundle);
@@ -140,14 +149,20 @@ public class BroadcastManager implements BroadcasterInterface {
         return id;
     }
 
-    private void sendUpdateIntent(String appCode,FermatBundle bundle) {
 
+    private void sendUpdateIntent(String appPublicKey,@Nullable String code,@Nullable FermatBundle data){
+        Intent intnet = new Intent(UpdateViewReceiver.INTENT_NAME);
+        intnet.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,appPublicKey);
+        intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA,code);
+        intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
+        ApplicationSession.getInstance().sendBroadcast(intnet);
     }
 
-    private void sendUpdateIntent(String appPublicKey,String code){
+    private void sendNotificationIntent(String appPublicKey,@Nullable String code,@Nullable FermatBundle data) {
         Intent intnet = new Intent(NotificationReceiver.INTENT_NAME);
         intnet.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,appPublicKey);
         intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA,code);
+        intnet.putExtra(ApplicationConstants.INTENT_EXTRA_DATA_BUNDLE, data);
         ApplicationSession.getInstance().sendBroadcast(intnet);
     }
 
@@ -155,6 +170,7 @@ public class BroadcastManager implements BroadcasterInterface {
     @Override
     public UUID getId() {
         return id;
+
     }
 
 //    private void updateView(FermatBundle bundle) {

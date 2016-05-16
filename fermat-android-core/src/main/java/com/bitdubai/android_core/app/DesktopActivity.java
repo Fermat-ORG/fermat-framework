@@ -18,40 +18,36 @@ import com.bitdubai.android_core.app.common.version_1.communication.client_syste
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.util.BottomMenuReveal;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAndroidCoreModule;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
@@ -240,7 +236,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         try {
 
-            SubAppRuntimeManager subAppRuntimeManager= getSubAppRuntimeMiddleware();
 
             //loadFragment(subAppRuntimeManager.getLastApp().getType(), idContainer, screen);
 
@@ -257,7 +252,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
         try {
 
-            WalletNavigationStructure walletNavigationStructure= getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
+            FermatStructure walletNavigationStructure= getWalletRuntimeManager().getWallet(installedWallet.getWalletPublicKey());
             intent = new Intent(this, AppActivity.class);
             intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP ,installedWallet);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -284,7 +279,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
                     intent = new Intent(this, EditableWalletActivity.class);
-                    intent.putExtra(EditableWalletActivity.WALLET_NAVIGATION_STRUCTURE,(WalletNavigationStructure)objects[0]);
+                    intent.putExtra(EditableWalletActivity.WALLET_NAVIGATION_STRUCTURE,(AppNavigationStructure)objects[0]);
                     intent.putExtra(EditableWalletActivity.INSTALLED_WALLET,(InstalledWallet)objects[1]);
 
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -345,6 +340,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
     }
 
+    @Override
+    public void connectWithOtherApp(String fermatAppPublicKey, Object[] objectses) {
+
+    }
+
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {
@@ -366,7 +366,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             }else {
 
 
-                SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey());
+                FermatStructure subAppNavigationStructure = getWalletRuntimeManager().getWallet(installedSubApp.getAppPublicKey());
 
 //                if(subAppNavigationStructure.getPlatform() != Platforms.CRYPTO_BROKER_PLATFORM || subAppNavigationStructure.getPlatform() != Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION) {
                     intent = new Intent(this, AppActivity.class);
@@ -416,16 +416,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
     }
 
-
-    @Override
-    public void onCallbackViewObserver(FermatCallback fermatCallback) {
-
-    }
-
-    @Override
-    public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
-
-    }
 
     @Override
     public void onControlledActivityBack(String activityCodeBack) {
@@ -551,6 +541,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
     @Override
     public void setTabCustomImageView(int position,View view) {
+
+    }
+
+    @Override
+    public void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation) {
 
     }
 }

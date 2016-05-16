@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -17,7 +18,7 @@ import java.util.UUID;
  * @version 1.0
  * @since 05/11/15.
  */
-public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerNegotiationInformation {
+public class CustomerBrokerNegotiationInformationImpl implements CustomerBrokerNegotiationInformation, Serializable {
 
     private ActorIdentity customerIdentity;
     private ActorIdentity brokerIdentity;

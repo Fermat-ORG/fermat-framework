@@ -71,17 +71,22 @@ public abstract class LocalSocketSession {
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+//                try {
+//                    out.close();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//                try {
+//                    out.flush();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
             }
 
         }
     }
 
-    public void addWaitingMessage(){
+    public void addWaitingMessage(String dataId){
         Log.i(TAG,"Message arrive, unlocking wait..");
         messageSize.incrementAndGet();
         waitMessageLocker.unblock();
@@ -110,12 +115,10 @@ public abstract class LocalSocketSession {
             try {
                 if(localSocket!=null) {
                     InputStream inputStream = localSocket.getInputStream();
-
                     while (true) {
-                        ObjectInputStream objectInputStream = null;
                         while(messageSize.get()!=0){
-                            if(objectInputStream==null) objectInputStream = new ObjectInputStream(inputStream);
-                            Log.i(TAG,"Cantidad de mensajes a recibir: "+messageSize.get());
+                            ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
+                            Log.i(TAG, "Cantidad de mensajes a recibir: " + messageSize.get());
                             //byte[] readed = new byte[LocalSocketConfiguration.MESSAGE_SIZE];
                             FermatModuleObjectWrapper object = (FermatModuleObjectWrapper) objectInputStream.readObject();
                             //Acá deberia ver tipo de object porque viene el wrapper y el id a donde va
@@ -128,11 +131,11 @@ public abstract class LocalSocketSession {
                         }
                         if(messageSize.get()==0){
                             Log.i(TAG, "Cleaning Socket");
-                            if(objectInputStream!=null) {
-                                objectInputStream.reset();
-                                objectInputStream.close();
-                                objectInputStream = null;
-                            }
+                            //if(objectInputStream!=null) {
+                                //objectInputStream.reset();
+                              //  objectInputStream.close();
+                               // objectInputStream = null;
+                            //}
                             boolean flag = false;
                             while(!flag) {
                                 waitMessageLocker.block();
@@ -140,6 +143,7 @@ public abstract class LocalSocketSession {
                                     Log.i(TAG, "Waiting for message..");
                                     waitMessageLocker.wait();
                                 }
+
                                 if(!waitMessageLocker.getIsBlock()){
                                     flag = true;
                                 }

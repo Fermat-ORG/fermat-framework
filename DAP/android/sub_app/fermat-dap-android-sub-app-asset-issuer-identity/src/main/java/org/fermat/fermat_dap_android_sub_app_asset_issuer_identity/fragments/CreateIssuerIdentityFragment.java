@@ -28,24 +28,22 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.R;
+import com.squareup.picasso.Picasso;
 
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.SessionConstants;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ExecutorService;
@@ -56,7 +54,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
+public class CreateIssuerIdentityFragment extends AbstractFermatFragment<IssuerIdentitySubAppSession, ResourceProviderManager> {
 
     private static final String TAG = "AssetIssuerIdentity";
 
@@ -73,18 +71,18 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
 
     private byte[] brokerImageByteArray;
 
-    private IdentityAssetIssuerManager moduleManager;
+//    private IdentityAssetIssuerManager moduleManager;
     private ErrorManager errorManager;
 
     private Button createButton;
     private EditText mIdentityName;
     private ImageView mIdentityImage;
 
-    IssuerIdentitySubAppSession issuerIdentitySubAppSession;
+//    IssuerIdentitySubAppSession issuerIdentitySubAppSession;
     private IdentityAssetIssuer identitySelected;
     private boolean isUpdate = false;
 
-    SettingsManager<IssuerIdentitySettings> settingsManager;
+//    SettingsManager<IssuerIdentitySettings> settingsManager;
     IssuerIdentitySettings issuerIdentitySettings = null;
 
     private boolean updateProfileImage = false;
@@ -103,19 +101,21 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-            issuerIdentitySubAppSession = (IssuerIdentitySubAppSession) appSession;
-            moduleManager = issuerIdentitySubAppSession.getModuleManager();
+//            issuerIdentitySubAppSession = (IssuerIdentitySubAppSession) appSession;
+//            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 
             executorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    settingsManager = appSession.getModuleManager().getSettingsManager();
+//                    moduleManager = appSession.getModuleManager().getSettingsManager();
 
                     try {
                         if (appSession.getAppPublicKey() != null) {
-                            issuerIdentitySettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                            issuerIdentitySettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+                        } else {
+                            issuerIdentitySettings = appSession.getModuleManager().loadAndGetSettings("1");
                         }
                     } catch (Exception e) {
                         issuerIdentitySettings = null;
@@ -126,7 +126,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                             issuerIdentitySettings = new IssuerIdentitySettings();
                             issuerIdentitySettings.setIsPresentationHelpEnabled(true);
                             if (appSession.getAppPublicKey() != null) {
-                                settingsManager.persistSettings(appSession.getAppPublicKey(), issuerIdentitySettings);
+                                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), issuerIdentitySettings);
+                            } else {
+                                appSession.getModuleManager().persistSettings("1", issuerIdentitySettings);
                             }
                         }
                     } catch (Exception e) {
@@ -134,7 +136,6 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                     }
                 }
             });
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -244,14 +245,14 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public void onDestroy() {
-        executorService.shutdown();
         super.onDestroy();
+        executorService.shutdown();
     }
 
     private void setUpIdentity() {
         try {
 
-            identitySelected = (IdentityAssetIssuer) issuerIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (IdentityAssetIssuer) appSession.getData(SessionConstants.IDENTITY_SELECTED);
 
             if (identitySelected != null) {
                 loadIdentity();
@@ -261,7 +262,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                     public void run() {
                         ActiveActorIdentityInformation activeActorIdentityInformation = null;
                         try {
-                            activeActorIdentityInformation = moduleManager.getSelectedActorIdentity();
+                            activeActorIdentityInformation = appSession.getModuleManager().getSelectedActorIdentity();
                         } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                             e.printStackTrace();
                         }
@@ -279,22 +280,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                                                         }
                                                     }
                         );
-
                     }
                 }).start();
-
             }
-//            } else {
-//                List<IdentityAssetIssuer> lst = moduleManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-//                if (!lst.isEmpty()) {
-//                    identitySelected = lst.get(0);
-//                }
-//                if (identitySelected != null) {
-//                    loadIdentity();
-//                    isUpdate = true;
-//                    createButton.setText("Save changes");
-//                }
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -398,14 +386,14 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
         boolean dataIsValid = validateIdentityData(brokerNameText, brokerImageByteArray);
 
         if (dataIsValid) {
-            if (moduleManager != null) {
+            if (appSession.getModuleManager() != null) {
                 try {
                     if (!isUpdate) {
                         executorService.submit(new Runnable() {
                             @Override
                             public void run() {
                                 try {
-                                    moduleManager.createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_issuer_identity) : brokerImageByteArray);
+                                    appSession.getModuleManager().createNewIdentityAssetIssuer(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.asset_issuer_identity) : brokerImageByteArray);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIdentityAssetIssuerException e) {
                                     e.printStackTrace();
@@ -418,9 +406,9 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-                                        moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
+                                        appSession.getModuleManager().updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray);
                                     else
-                                        moduleManager.updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, identitySelected.getImage());
+                                        appSession.getModuleManager().updateIdentityAssetIssuer(identitySelected.getPublicKey(), brokerNameText, identitySelected.getImage());
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -497,7 +485,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
         try {
 
             if (item.getItemId() == R.id.action_identity_issuer_help) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

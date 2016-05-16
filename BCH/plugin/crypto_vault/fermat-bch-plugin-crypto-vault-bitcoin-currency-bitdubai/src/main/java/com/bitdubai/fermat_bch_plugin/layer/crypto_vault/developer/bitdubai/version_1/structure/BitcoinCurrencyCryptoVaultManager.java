@@ -373,6 +373,12 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             sendRequest.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
         }
 
+        //trying to solve an issue
+        try {
+            sendRequest.changeAddress =  getBitcoinAddress(networkParameters, getAddress(blockchainNetworkType));
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+        }
 
         try {
             wallet.completeTx(sendRequest);

@@ -3,9 +3,9 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters;
 import android.content.Context;
 import android.view.View;
 
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ProviderViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.CurrencyPairAndProvider;
 
 import java.util.List;
 

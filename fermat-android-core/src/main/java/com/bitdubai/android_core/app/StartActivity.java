@@ -36,6 +36,10 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptio
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 
 /**
  * Created by Matias Furszyfer
@@ -68,6 +72,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
     private StartReceiver startReceiver;
     private boolean myReceiverIsRegistered;
+    private ScheduledExecutorService scheduledExecutorService;
 
 
     @Override
@@ -188,6 +193,15 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
                 fermatInit();
             }
 
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if(ApplicationSession.getInstance().isFermatRunning()){
+                    fermatInit();
+                }
+            }
+        },2,2, TimeUnit.SECONDS);
 
     }
 
@@ -265,6 +279,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
             unregisterReceiver(startReceiver);
             myReceiverIsRegistered = false;
         }
+        scheduledExecutorService.shutdownNow();
 
     }
 

@@ -346,7 +346,8 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                 }
             }
 
-            InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+            InstalledWallet installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(
+                    WalletCategory.REFERENCE_WALLET,
                     WalletType.REFERENCE,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
@@ -355,14 +356,15 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                     WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(),
                     "wallet_crypto_broker_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.DEV);
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             Item item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_broker);
             item.setPosition(1);
             lstItemsWithIcon.add(item);
 
-            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(
+                    WalletCategory.REFERENCE_WALLET,
                     WalletType.REFERENCE,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
@@ -371,7 +373,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                     WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(),
                     "wallet_crypto_customer_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.DEV);
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_customer);
@@ -437,7 +439,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                     WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
                     "wallet_banking_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.DEV);
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.bank_wallet_xxhdpi);
@@ -454,7 +456,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                     WalletsPublicKeys.CSH_MONEY_WALLET.getCode(),
                     "wallet_cash_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.DEV);
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.cash_wallet_xxhdpi);

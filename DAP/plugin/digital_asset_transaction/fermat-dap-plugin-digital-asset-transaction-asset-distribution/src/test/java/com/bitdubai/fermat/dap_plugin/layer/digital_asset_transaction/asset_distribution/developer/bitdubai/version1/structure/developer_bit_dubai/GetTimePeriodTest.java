@@ -1,8 +1,8 @@
 package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version1.structure.developer_bit_dubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.DeveloperBitDubai;
 
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.DeveloperBitDubai;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

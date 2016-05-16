@@ -1,6 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -19,6 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
@@ -47,9 +50,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTran
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.AssetIssuerWalletPluginRoot;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,7 +77,6 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     }
 
     private org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDao assetIssuerWalletDao;
-    private ErrorManager errorManager;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -92,7 +92,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     private Broadcaster broadcaster;
 
-    public AssetIssuerWalletImpl(ErrorManager errorManager,
+    AssetIssuerWalletPluginRoot assetIssuerWalletPluginRoot;
+
+    public AssetIssuerWalletImpl(AssetIssuerWalletPluginRoot assetIssuerWalletPluginRoot,
                                  PluginDatabaseSystem pluginDatabaseSystem,
                                  PluginFileSystem pluginFileSystem,
                                  UUID pluginId,
@@ -100,7 +102,8 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                                  ActorAssetRedeemPointManager actorAssetRedeemPointManager,
                                  ActorAssetIssuerManager assetIssuerManager,
                                  Broadcaster broadcaster) {
-        this.errorManager = errorManager;
+
+        this.assetIssuerWalletPluginRoot = assetIssuerWalletPluginRoot;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
@@ -117,12 +120,15 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
             assetIssuerWalletDao = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, assetIssuerManager, actorAssetRedeemPointManager);
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
-        } catch (DatabaseNotFoundException databaseNotFoundException) {
-            throw new CantInitializeAssetIssuerWalletException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
-        } catch (Exception exception) {
-            throw new CantInitializeAssetIssuerWalletException(CantInitializeAssetIssuerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantOpenDatabaseException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeAssetIssuerWalletException("I can't open database", e, "WalletId: " + walletId.toString(), "");
+        } catch (DatabaseNotFoundException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeAssetIssuerWalletException("Database does not exists", e, "WalletId: " + walletId.toString(), "");
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantInitializeAssetIssuerWalletException(CantInitializeAssetIssuerWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -137,10 +143,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
             createdWallets.add(internalWalletId);
             persistAssetIssuerWallet(walletAssetIssuerFile);
             return internalWalletId;
-        } catch (CantCreateWalletException exception) {
-            throw exception;
-        } catch (Exception exception) {
-            throw new CantCreateWalletException(CantCreateWalletException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantCreateWalletException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateWalletException(CantCreateWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
 
     }
@@ -148,9 +156,11 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     private PluginTextFile createAssetIssuerWalletFile() throws CantCreateWalletException {
         try {
             return pluginFileSystem.getTextFile(pluginId, "", ASSET_ISSUER_WALLET_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        } catch (CantCreateFileException cantCreateFileException) {
-            throw new CantCreateWalletException("File could not be created (?)", cantCreateFileException, "File Name: " + ASSET_ISSUER_WALLET_FILE_NAME, "");
+        } catch (CantCreateFileException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateWalletException("File could not be created (?)", e, "File Name: " + ASSET_ISSUER_WALLET_FILE_NAME, "");
         } catch (FileNotFoundException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateWalletException("File could not be found", e, "File Name: " + ASSET_ISSUER_WALLET_FILE_NAME, "");
         }
     }
@@ -163,8 +173,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                     createdWallets.add(UUID.fromString(stringWalletId));
                 }
             }
-        } catch (CantLoadFileException exception) {
-            throw new CantCreateWalletException("Can't load file content from media", exception, "", "");
+        } catch (CantLoadFileException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateWalletException("Can't load file content from media", e, "", "");
         }
     }
 
@@ -172,8 +183,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         try {
             org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDatabaseFactory databaseFactory = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDatabaseFactory(pluginDatabaseSystem);
             database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
-        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-            throw new CantCreateWalletException("Database could not be created", cantCreateDatabaseException, "internalWalletId: " + internalWalletId.toString(), "");
+        } catch (CantCreateDatabaseException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateWalletException("Database could not be created", e, "internalWalletId: " + internalWalletId.toString(), "");
         }
     }
 
@@ -185,8 +197,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         pluginTextFile.setContent(stringBuilder.toString());
         try {
             pluginTextFile.persistToMedia();
-        } catch (CantPersistFileException cantPersistFileException) {
-            throw new CantCreateWalletException("Could not persist in file", cantPersistFileException, "stringBuilder: " + stringBuilder.toString(), "");
+        } catch (CantPersistFileException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantCreateWalletException("Could not persist in file", e, "stringBuilder: " + stringBuilder.toString(), "");
         }
     }
 
@@ -194,9 +207,9 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public AssetIssuerWalletBalance getBalance() throws CantGetTransactionsException {
         try {
             return new AssetIssuerWallletBalanceImpl(assetIssuerWalletDao, broadcaster);
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -204,12 +217,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
         try {
             return assetIssuerWalletDao.listsTransactionsByAssetsAll(balanceType, transactionType, assetPublicKey);
-        } catch (CantGetTransactionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw exception;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantGetTransactionsException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -217,12 +230,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, int max, int offset, String assetPublicKey) throws CantGetTransactionsException {
         try {
             return assetIssuerWalletDao.listsTransactionsByAssets(balanceType, transactionType, max, offset, assetPublicKey);
-        } catch (CantGetTransactionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw exception;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantGetTransactionsException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -240,12 +253,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey, BalanceType balanceType, int max, int offset) throws CantGetTransactionsException {
         try {
             return assetIssuerWalletDao.getTransactionsByActor(actorPublicKey, balanceType, max, offset);
-        } catch (CantGetTransactionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw exception;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantGetTransactionsException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -253,12 +266,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public List<AssetIssuerWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType, TransactionType transactionType, int max, int offset) throws CantGetTransactionsException {
         try {
             return assetIssuerWalletDao.getTransactionsByTransactionType(transactionType, max, offset);
-        } catch (CantGetTransactionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw exception;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantGetTransactionsException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -266,12 +279,12 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
     public void setTransactionDescription(UUID transactionID, String description) throws CantFindTransactionException, CantStoreMemoException {
         try {
             assetIssuerWalletDao.updateMemoField(transactionID, description);
-        } catch (CantStoreMemoException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw exception;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
-            throw new CantStoreMemoException(CantStoreMemoException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        } catch (CantStoreMemoException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw e;
+        } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStoreMemoException(CantStoreMemoException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
     }
 
@@ -337,13 +350,13 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
 
         } catch (FileNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), "File no found", null);
         } catch (CantCreateFileException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), "Cannot create file", null);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetDigitalAssetFromLocalStorageException(FermatException.wrapException(e), null, null);
         }
         return digitalAssetMetadata;
@@ -370,6 +383,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                 toReturn.add(getDigitalAssetMetadata(statistic.genesisTransaction()));
             }
         } catch (CantGetAssetStatisticException e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetDigitalAssetFromLocalStorageException();
         }
         return toReturn;
@@ -453,6 +467,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         try {
             assetStatistic.setOwner(actorAssetUserManager.getActorByPublicKey(assetIssuerWalletDao.getUserPublicKey(transactionId)));
         } catch (Exception e) {
+            assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
             //If this happen it means we couldn't get the user or there were none. So we'll keep it as null.
         }
@@ -468,6 +483,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
                     ActorAssetRedeemPoint redeemPoint = actorAssetRedeemPointManager.getActorByPublicKey(assetIssuerWalletDao.getRedeemPointPublicKey(transactionId));
                     assetStatistic.setRedeemPoint(redeemPoint);
                 } catch (Exception e) {
+                    assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                     e.printStackTrace();
                     //If this happen it means we couldn't get the redeem point or there were none. So we'll keep it as null.
                 }

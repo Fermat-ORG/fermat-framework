@@ -82,8 +82,6 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
     @Override
     public NotificationPainter getNotificationPainter(String code) {
         switch (code){
-            case CCW_CONTRACT_EXPIRATION_NOTIFICATION:
-                return new CryptoCustomerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
             case CCW_WAITING_FOR_CUSTOMER_NOTIFICATION:
                 return new CryptoCustomerNotificationPainter("Negotiation Update","You have received a negotiation update, check your wallet.","");
             case CCW_CANCEL_NEGOTIATION_NOTIFICATION:
@@ -93,11 +91,13 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
             case CCW_CONTRACT_BROKER_ACK_PAYMENT_NOTIFICATION:
                 return new CryptoCustomerNotificationPainter("Contract Update","A broker has acknowledged your payment.","");
             case CCW_CONTRACT_BROKER_SUBMITED_MERCHANDISE:
-                return new CryptoCustomerNotificationPainter("Contract Completed","A Merchandise has been submitted.","");
+                return new CryptoCustomerNotificationPainter("Contract Update","A Merchandise has been submitted.","");
             case CCW_CONTRACT_COMPLETED_NOTIFICATION:
-                return new CryptoCustomerNotificationPainter("Contract Completed","The contract has been completed.","");
+                return new CryptoCustomerNotificationPainter("Contract Update","The contract has been completed.","");
             case CCW_CONTRACT_CANCELLED_NOTIFICATION:
-                return new CryptoCustomerNotificationPainter("Contract Cancelled","The contract has been cancellede.","");
+                return new CryptoCustomerNotificationPainter("Contract Update","The contract has been cancelled.","");
+            case CCW_CONTRACT_EXPIRATION_NOTIFICATION:
+                return new CryptoCustomerNotificationPainter("Expiring contract.","A contract is about to expire, check your wallet.","");
             default:
                 return super.getNotificationPainter(code);
         }

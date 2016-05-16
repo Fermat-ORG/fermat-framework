@@ -1,12 +1,13 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
-
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
@@ -18,7 +19,10 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
+
+
 
 import java.util.UUID;
 
@@ -27,24 +31,17 @@ import java.util.UUID;
  */
 public class DigitalAssetReceptionVault extends AbstractDigitalAssetVault {
 
-    ErrorManager errorManager;
+    AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot;
 
     public DigitalAssetReceptionVault(UUID pluginId,
                                       PluginFileSystem pluginFileSystem,
-                                      ErrorManager errorManager,
+                                      AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot,
                                       AssetUserWalletManager assetUserWalletManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
-        setErrorManager(errorManager);
+        this.assetReceptionDigitalAssetTransactionPluginRoot = assetReceptionDigitalAssetTransactionPluginRoot;
         setAssetUserWalletManager(assetUserWalletManager);
         LOCAL_STORAGE_PATH = "digital-asset-reception/";
-    }
-
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
-        if (errorManager == null) {
-            throw new CantSetObjectException("ErrorManager is null");
-        }
-        this.errorManager = errorManager;
     }
 
     @Override

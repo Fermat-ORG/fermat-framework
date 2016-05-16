@@ -21,6 +21,5 @@ public interface TransactionManager {
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType,
-              double purchasePrice) throws InsufficientFundsException, com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
+              BlockchainNetworkType blockchainNetworkType) throws InsufficientFundsException, com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
 }

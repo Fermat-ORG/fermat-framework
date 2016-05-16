@@ -108,7 +108,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
-
+    List<IntraUserInformation> userCacheList = new ArrayList<>();
     /**
      * Create a new instance of this fragment
      *
@@ -213,9 +213,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-            List list = getSuggestionCache();
-            if(list!=null) {
-                dataSet.addAll(list);
+            userCacheList = getSuggestionCache();
+            if(userCacheList!=null) {
+                dataSet.addAll(userCacheList);
             }
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
@@ -527,49 +527,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
-            //verifico la cache para mostrar los que tenia antes y los nuevos
-             List<IntraUserInformation> userCacheList = new ArrayList<>();
-             try {
-                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-             } catch (CantGetIntraUsersListException e) {
-                 e.printStackTrace();
-             }
+
 
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-             //dataSet.addAll(userList);
-
-             if(userList!=null) {
-                 if (userCacheList.size() == 0) {
-                     dataSet.addAll(userList);
-                     moduleManager.saveCacheIntraUsersSuggestions(userList);
-                 } else {
-                     if (userList.size() == 0) {
-                         dataSet.addAll(userCacheList);
-                     } else {
-                         for (IntraUserInformation intraUserCache : userCacheList) {
-                             boolean exist = false;
-                             for (IntraUserInformation intraUser : userList) {
-                                 if (intraUserCache.getPublicKey().equals(intraUser.getPublicKey())) {
-                                     exist = true;
-                                     break;
-                                 }
-                             }
-                             if (!exist)
-                                 userList.add(intraUserCache);
-                         }
-                         //save cache records
-                         try {
-                             moduleManager.saveCacheIntraUsersSuggestions(userList);
-                         } catch (CantGetIntraUsersListException e) {
-                             e.printStackTrace();
-                         }
-
-                         dataSet.addAll(userList);
-                     }
-                 }
-             }
-
-            //set offset if have more than 1 page;
+            dataSet.addAll(userList);
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
@@ -663,7 +624,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        Boolean isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
+                        Boolean isBackPressed = null;
+                        try {
+                            isBackPressed = (Boolean) intraUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS,Boolean.TRUE);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
                         if (isBackPressed != null) {
                             if (isBackPressed) {
                                 getActivity().onBackPressed();

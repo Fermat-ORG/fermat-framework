@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -26,7 +27,8 @@ import java.util.UUID;
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.cbp_sub_app_module.crypto_broker_community.interfaces.CryptoCustomerModuleManager</code>
  * provides the methods for the Crypto Customer Community sub app, to Identity Management Customers and the relationship with other Customers.
  */
-public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManager<CryptoCustomerCommunitySettings, ActiveActorIdentityInformation>, Serializable {
+public interface CryptoCustomerCommunitySubAppModuleManager extends ModuleManager<CryptoCustomerCommunitySettings, ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<CryptoCustomerCommunitySettings>, Serializable {
 
     /**
      * The method <code>listWorldCryptoCustomers</code> returns the list of all crypto customers in the world,

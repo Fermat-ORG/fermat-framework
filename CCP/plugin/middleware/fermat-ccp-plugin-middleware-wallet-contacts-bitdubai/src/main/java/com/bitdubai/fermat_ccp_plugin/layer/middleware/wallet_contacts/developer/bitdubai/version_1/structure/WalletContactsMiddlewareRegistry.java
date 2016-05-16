@@ -439,7 +439,7 @@ public class WalletContactsMiddlewareRegistry implements WalletContactsRegistry 
                             Compatibility.COMPATIBLE
                     );
 
-                    this.broadcaster.publish(BroadcasterType.UPDATE_VIEW, walletContactRecord.getContactId().toString() );
+                    this.broadcaster.publish(BroadcasterType.UPDATE_VIEW, walletContactRecord.getWalletPublicKey(),walletContactRecord.getContactId().toString() );
 
                 }
 

@@ -3,33 +3,23 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 import android.content.ClipData;
 import android.content.Context;
 import android.os.Build;
-import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatFilter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 
 import java.util.ArrayList;
-import java.util.List;
-
-//import android.support.v4.content.ContextCompat;
-//import android.support.v7.widget.RecyclerView;
-//import com.bitdubai.fermat_cht_api.layer.cht_middleware.cht_chat_factory.interfaces.ChatFactory; //data del middleware
 
 /**
  * ChatAdapter
@@ -39,20 +29,19 @@ import java.util.List;
  */
 
 public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
-        /*implements Filterable*/ {
+        implements Filterable {
 
-    List<ChatMessage> chatMessages = new ArrayList<>();
-    ArrayList<String> messagesData = new ArrayList<>();
+    ArrayList<ChatMessage> chatMessages = new ArrayList<>();
+    ArrayList<ChatMessage> messagesData = new ArrayList<>();
 
     ArrayList<ChatMessage> filteredData;
-    ArrayList<String> originalData;
     private String filterString;
 
     public ChatAdapter(Context context) {
         super(context);
     }
 
-    public ChatAdapter(Context context, List<ChatMessage> chatMessages) {//ChatFactory
+    public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
     }
 
@@ -69,22 +58,22 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         if (data != null) {
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg, data);
-//            final String copiedMessage = holder.txtMessage.getText().toString();
-//            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
-//                        clipboard.setPrimaryClip(clip);}
-//                    else{
-//                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//                        clipboard.setText(copiedMessage);
-//                    }
-//                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
-//                    return true;
-//                }
-//            });
+            final String copiedMessage = holder.txtMessage.getText().toString();
+            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
+                        clipboard.setPrimaryClip(clip);}
+                    else{
+                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard.setText(copiedMessage);
+                    }
+                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
         }
     }
 
@@ -197,42 +186,28 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 //    public long getItemId(int position) {
 //        return position;
 //    }
-//
-//    public void setData(ArrayList<ChatMessage> data) {
-//        this.filteredData = data;
-//    }
-//
-//    public Filter getFilter() {
+
+    public void changeDataSet(ArrayList<ChatMessage> data) {
+        if(filterString.equals(""))
+            this.chatMessages = data;
+        else
+            this.filteredData = data;
+    }
+
+    public Filter getFilter() {
 //        messagesData=null;
 //        for(ChatMessage data:chatMessages){
-//            messagesData.add(data.getMessage());
+//            messagesData.add(data);
 //        }
-//        return new ChatFilter(messagesData, this);
-//    }
-//
-//    public void setFilterString(String filterString) {
-//        this.filterString = filterString;
-//    }
-//
-//    public String getFilterString() {
-//        return filterString;
-//    }
+        return new ChatFilter(chatMessages, this);
+    }
 
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
 
-//
-//    @Override
-//    public ChatMessage getItem(int position) {
-//        if (chatMessages != null) {
-//            return chatMessages.get(position);
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//
-//    public long getItemId(int position) {
-//        return position;
-//    }
-
+    public String getFilterString() {
+        return filterString;
+    }
 
 }

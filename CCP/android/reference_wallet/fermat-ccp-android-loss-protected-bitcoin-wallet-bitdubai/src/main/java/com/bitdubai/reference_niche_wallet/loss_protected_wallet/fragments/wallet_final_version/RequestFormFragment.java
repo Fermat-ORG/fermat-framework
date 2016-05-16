@@ -123,7 +123,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
         try {
             bitcoinConverter = new BitcoinConverter();
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
@@ -381,7 +381,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                     if (cryptoWalletWalletContact != null) {
                         walletContact.name = cryptoWalletWalletContact.getActorName();
                         walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().isEmpty()) {
+                        if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) == null) {
                             appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
                                     appSession.getIntraUserModuleManager().getPublicKey(),
                                     Actors.INTRA_USER,
@@ -394,16 +394,19 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                     blockchainNetworkType
                             );
-                        }
-                    } else {
-                        if (cryptoWalletWalletContact != null)
+
+                            Toast.makeText(getActivity(), "Contact don't have an Address from red " + blockchainNetworkType.getCode() + "\nplease wait 2 minutes.", Toast.LENGTH_LONG).show();
+
+                        } else {
+
                             walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                            walletContact.contactId = cryptoWalletWalletContact.getContactId();
+                            walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
+                            walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+                        }
+
                     }
-                    if (cryptoWalletWalletContact != null) {
-                        walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                        walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                        walletContact.isConnection = cryptoWalletWalletContact.isConnection();
-                    }
+
                     setUpUIData();
 
                 } catch ( CantCreateLossProtectedWalletContactException e)
@@ -552,7 +555,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
             contactName.setText(cryptoWalletWalletContact.getActorName());
         } else {
             isFragmentFromDetail = false;
-            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+            setChangeBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
             Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
         }
     }
@@ -653,7 +656,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
                         if (isFragmentFromDetail) onBack(null);
                         else
-                            onBack(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
+                            onBack(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST.getCode());
                     }else {
                         Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + bitcoinConverter.getSathoshisFromMBTC(String.valueOf(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND)) + " BTC.", Toast.LENGTH_LONG).show();
                     }

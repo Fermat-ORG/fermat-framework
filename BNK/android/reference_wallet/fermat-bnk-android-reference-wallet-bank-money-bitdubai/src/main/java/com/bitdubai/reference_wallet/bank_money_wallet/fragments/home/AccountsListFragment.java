@@ -80,7 +80,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         configureToolbar();
         this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
-        header.setText(moduleManager.getBankingWallet().getBankName());
+        header.setText(moduleManager.getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner_1).setIconRes(R.drawable.bw_icon)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
@@ -97,7 +97,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         });*/
         boolean showDialog;
         try{
-            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
             if(showDialog){
                 presentationDialog.show();
             }
@@ -210,7 +210,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         String grouperText="accounts";
         if(moduleManager!=null) {
             try {
-                bankAccountNumbers = moduleManager.getBankingWallet().getAccounts();
+                bankAccountNumbers = moduleManager.getAccounts();
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {

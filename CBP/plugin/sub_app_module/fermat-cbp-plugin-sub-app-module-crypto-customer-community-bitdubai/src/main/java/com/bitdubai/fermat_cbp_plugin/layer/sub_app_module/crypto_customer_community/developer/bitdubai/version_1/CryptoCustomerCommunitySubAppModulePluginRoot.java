@@ -1,16 +1,15 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -20,7 +19,6 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_customer.i
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.structure.CryptoCustomerCommunityManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 
 /**
@@ -52,13 +50,9 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
         super(new PluginVersionReference(new Version()));
     }
 
-    /**
-     * PlatformService Interface implementation.
-     */
     @Override
-    public void start() throws CantStartPluginException {
-
-        try {
+    public CryptoCustomerCommunityManager getModuleManager() throws CantGetModuleManagerException {
+        if(moduleManager == null)
             moduleManager = new CryptoCustomerCommunityManager(
                     cryptoBrokerIdentityManager,
                     cryptoCustomerActorConnectionManager,
@@ -68,20 +62,6 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
                     pluginId,
                     this.getPluginVersionReference());
 
-            this.serviceStatus = ServiceStatus.STARTED;
-
-        } catch (Exception exception) {
-
-            throw new CantStartPluginException(
-                    exception,
-                    null,
-                    null
-            );
-        }
-    }
-
-    @Override
-    public CryptoCustomerCommunityManager getModuleManager() throws CantGetModuleManagerException {
         return moduleManager;
     }
 }

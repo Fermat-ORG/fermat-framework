@@ -29,6 +29,7 @@ public class ModuleManagerImpl<Z extends FermatSettings> {
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
+    @Deprecated
     public final SettingsManager<Z> getSettingsManager(){
         if (this.settingsManager != null)
             return this.settingsManager;

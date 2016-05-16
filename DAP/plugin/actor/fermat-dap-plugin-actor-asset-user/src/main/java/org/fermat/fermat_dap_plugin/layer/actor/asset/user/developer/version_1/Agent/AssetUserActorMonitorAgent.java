@@ -1,26 +1,27 @@
 package org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.Agent;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRequestListActorAssetUserRegisteredException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.interfaces.AssetUserActorNetworkServiceManager;
-import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.AssetUserActorPluginRoot;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAddPendingActorAssetException;
+import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.AssetUserActorPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,12 +29,11 @@ import java.util.UUID;
 /**
  * Created by Nerio on 24/10/15.
  */
-public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     private Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     AssetUserActorDao assetUserActorDao;
     UUID pluginId;
@@ -41,13 +41,14 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
     AssetUserActorPluginRoot assetActorUserPluginRoot;
 
-    public AssetUserActorMonitorAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem,
-                                      ErrorManager errorManager, UUID pluginId,
+    public AssetUserActorMonitorAgent(EventManager eventManager,
+                                      PluginDatabaseSystem pluginDatabaseSystem,
+                                      UUID pluginId,
                                       AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager,
-                                      AssetUserActorDao assetUserActorDao, AssetUserActorPluginRoot assetActorUserPluginRoot) {
+                                      AssetUserActorDao assetUserActorDao,
+                                      AssetUserActorPluginRoot assetActorUserPluginRoot) {
         this.pluginId = pluginId;
         this.eventManager = eventManager;
-        this.errorManager = errorManager;
         this.assetUserActorNetworkServiceManager = assetUserActorNetworkServiceManager;
         this.assetUserActorDao = assetUserActorDao;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -58,7 +59,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
     @Override
     public void start() throws CantStartAgentException {
 
-        MonitorAgent monitorAgent = new MonitorAgent(this.errorManager, this.pluginDatabaseSystem);
+        MonitorAgent monitorAgent = new MonitorAgent(this.assetActorUserPluginRoot, this.pluginDatabaseSystem);
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
@@ -66,11 +67,6 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
     @Override
     public void stop() {
         this.agentThread.interrupt();
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -95,13 +91,13 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
     private class MonitorAgent implements Runnable {
 
-        ErrorManager errorManager;
+        AssetUserActorPluginRoot assetActorUserPluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 60000;/*  / 1000 = TIME in SECONDS = 60 seconds */
         boolean threadWorking;
 
-        public MonitorAgent(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
-            this.errorManager = errorManager;
+        public MonitorAgent(AssetUserActorPluginRoot assetActorUserPluginRoot, PluginDatabaseSystem pluginDatabaseSystem) {
+            this.assetActorUserPluginRoot = assetActorUserPluginRoot;
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
 
@@ -124,7 +120,7 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
 
                     doTheMainTask();
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    assetActorUserPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }
@@ -154,13 +150,13 @@ public class AssetUserActorMonitorAgent implements Agent, DealsWithLogger, Deals
                     }
                 }
             } catch (CantRequestListActorAssetUserRegisteredException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetActorUserPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateAssetUserActorException("CAN'T REQUEST LIST ACTOR ASSET USER NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetUserActorNetworkServiceManager);
             } catch (CantAddPendingActorAssetException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetActorUserPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateAssetUserActorException("CAN'T ADD LIST ACTOR ASSET USER IN BD ACTORS ", e, "", "");
             } catch (CantGetAssetUserActorsException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetActorUserPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateAssetUserActorException("CAN'T GET ASSET ACTOR ASSET USER", e, "", "");
             }
         }

@@ -25,7 +25,9 @@ import com.bitdubai.android_core.app.common.version_1.communication.server_syste
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.IServerBrokerService;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import java.io.Serializable;
@@ -63,46 +65,60 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     public Object sendMessage(PluginVersionReference pluginVersionReference,String responseStr, Object proxy, Method method, Object[] args) throws Exception {
-        Log.i(TAG,"SendMessage start");
-        FermatModuleObjectWrapper[] parameters = null;
+        //Log.i(TAG,"SendMessage start");
+        ModuleObjectParameterWrapper[] parameters = null;
+        Class<?>[] parametersTypes = method.getParameterTypes();
         if(args!=null) {
-            parameters = new FermatModuleObjectWrapper[args.length];
+            parameters = new ModuleObjectParameterWrapper[args.length];
 
             for (int i = 0; i < args.length; i++) {
                 try {
-                    FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper((Serializable) args[i]);
+                    ModuleObjectParameterWrapper fermatModuleObjectWrapper = new ModuleObjectParameterWrapper((Serializable) args[i],parametersTypes[i]);
                     parameters[i] = fermatModuleObjectWrapper;
                 } catch (ClassCastException e) {
                     //e.printStackTrace();
                     Log.e(TAG, "ERROR: Objeto "+args[i].getClass().getName()+" no implementa interface Serializable");
+                    return null;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }else{
-            parameters = new FermatModuleObjectWrapper[0];
+            parameters = new ModuleObjectParameterWrapper[0];
         }
 
 
         String dataId = UUID.randomUUID().toString();
         boolean isDataChuncked = false;
-
         FermatModuleObjectWrapper objectArrived = null;
-
-        try {
-            objectArrived = iServerBrokerService.invoqueModuleMethod(
-                    serverIdentificationKey,
-                     dataId,
-                     pluginVersionReference.getPlatform().getCode(),
-                     pluginVersionReference.getLayers().getCode(),
-                     pluginVersionReference.getPlugins().getCode(),
-                     pluginVersionReference.getDeveloper().getCode(),
-                     pluginVersionReference.getVersion().toString(),
-                     method.getName(),
-                     parameters);
-        } catch (TransactionTooLargeException t){
+        MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
+        if(methodDetail!=null){
+            if(methodDetail.looType() == MethodDetail.LoopType.BACKGROUND){
+                Log.i(TAG,"Sending background request");
+                try {
+                    objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                            serverIdentificationKey,
+                            dataId,
+                            pluginVersionReference.getPlatform().getCode(),
+                            pluginVersionReference.getLayers().getCode(),
+                            pluginVersionReference.getPlugins().getCode(),
+                            pluginVersionReference.getDeveloper().getCode(),
+                            pluginVersionReference.getVersion().toString(),
+                            method.getName(),
+                            parameters);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i(TAG,"Sending background return");
+            }
+        }else {
             try {
-                objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                objectArrived = iServerBrokerService.invoqueModuleMethod(
                         serverIdentificationKey,
                         dataId,
                         pluginVersionReference.getPlatform().getCode(),
@@ -112,36 +128,49 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         pluginVersionReference.getVersion().toString(),
                         method.getName(),
                         parameters);
+            } catch (TransactionTooLargeException t) {
+                try {
+                    objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                            serverIdentificationKey,
+                            dataId,
+                            pluginVersionReference.getPlatform().getCode(),
+                            pluginVersionReference.getLayers().getCode(),
+                            pluginVersionReference.getPlugins().getCode(),
+                            pluginVersionReference.getDeveloper().getCode(),
+                            pluginVersionReference.getVersion().toString(),
+                            method.getName(),
+                            parameters);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
-            }catch (RuntimeException e){
-                Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface "+proxy.getClass().getInterfaces()[0]+" in method:"+ method.getName());
-                e.printStackTrace();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
         }
-        Log.i(TAG,"SendMessage return from server");
+        //Log.i(TAG,"SendMessage return from server");
 
 
         if(objectArrived!=null){
-            if(objectArrived.getE()!=null) throw objectArrived.getE();
-
+            if(objectArrived.getE()!=null) return objectArrived.getE();
             isDataChuncked = objectArrived.isLargeData();
         }else{
-            Log.e(TAG,"Object arrived null, please check your module");
+            if (!method.getReturnType().equals(Void.TYPE))
+                Log.e(TAG,"Object arrived null in method: "+method.getName()+", this happen when an error occur in the module, please check your module and contact furszy if the error persist,");
             return null;
         }
         Object o = null;
-        Log.i(TAG,"SendMessage almost end");
+        //Log.i(TAG,"SendMessage almost end");
         if(isDataChuncked){
-            if(Looper.myLooper() == Looper.getMainLooper()) throw new LargeWorkOnMainThreadException(proxy,method);
+            if(Looper.myLooper() == Looper.getMainLooper()) return new LargeWorkOnMainThreadException(proxy,method);
             //test reason
-            mReceiverSocketSession.addWaitingMessage();
+            mReceiverSocketSession.addWaitingMessage(dataId);
 
             o = bufferChannelAIDL.getBufferObject(dataId);
             //Log.i(TAG, o != null ? o.toString() : "");
@@ -151,33 +180,6 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             //Log.i(TAG, o1 != null ? o1.toString() : "");
             return o1;
         }
-//        try {
-//            FermatModuleObjectWrapper fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
-//                    pluginVersionReference.getPlatform().getCode(),
-//                    pluginVersionReference.getLayers().getCode(),
-//                    pluginVersionReference.getPlugins().getCode(),
-//                    pluginVersionReference.getDeveloper().getCode(),
-//                    pluginVersionReference.getVersion().toString(),
-//                    method.getName(),
-//                    parameters);
-//
-//            if(fermatModuleObjectWrapper!=null) {
-//                Log.i(TAG, "Object retuned: " + fermatModuleObjectWrapper.toString());
-//            }else{
-//                Log.i(TAG, "Object retuned: null");
-//            }
-//
-//            //Acá si esta en true el flag armo el objeto desde el buffer y lo devuelvo por el return
-//
-//            return (fermatModuleObjectWrapper!=null)?fermatModuleObjectWrapper.getObject():null;
-//
-//        } catch (RemoteException e) {
-//            e.printStackTrace();
-//        } catch (Exception e){
-//            e.printStackTrace();
-//        }
-
-        //return null;
     }
 
     @Override
@@ -352,14 +354,14 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                     //todo: con esto solo estaba el metodo viejo:
 //                    onFullDateRecieve(id,bundle.getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
 
-                    mReceiverSocketSession.addWaitingMessage();
+
                     break;
                 case CommunicationMessages.MSG_SEND_CHUNKED_DATA:
                     bundle = msg.getData();
-                    onChuckedDateRecieve(
-                            id,
-                            bundle.getByteArray(CommunicationDataKeys.DATA_CHUNKED_DATA),
-                            bundle.getBoolean(CommunicationDataKeys.DATA_IS_CHUNKED_DATA_FINISH));
+//                    onChuckedDateRecieve(
+//                            id,
+//                            bundle.getByteArray(CommunicationDataKeys.DATA_CHUNKED_DATA),
+//                            bundle.getBoolean(CommunicationDataKeys.DATA_IS_CHUNKED_DATA_FINISH));
                     break;
                 default:
                     super.handleMessage(msg);
@@ -370,7 +372,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private void onChuckedDateRecieve(String id, byte[] chunkedData,boolean isFinishData) {
         try {
             //bufferChannel.notificateObject(id,data);
-            bufferChannelAIDL.addChunkedData(id,chunkedData,isFinishData);
+         //   bufferChannelAIDL.addChunkedData(id,chunkedData,isFinishData);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -379,7 +381,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private void onFullDateRecieve(String id, Serializable data) {
         try {
             //bufferChannel.notificateObject(id,data);
-            bufferChannelAIDL.addFullData(id,data);
+            bufferChannelAIDL.addFullDataAndNotificateArrive(id, data);
         } catch (Exception e) {
             e.printStackTrace();
         }

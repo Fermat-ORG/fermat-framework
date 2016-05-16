@@ -11,7 +11,6 @@ import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
-import com.bitdubai.android_core.app.common.version_1.recents.RecentAppComparator;
 import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
@@ -24,16 +23,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Predicate;
-
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
@@ -47,7 +40,8 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     private static final String TAG = "AppsManagerService";
 
-    private Map<String,RecentApp> recentsAppsStack;
+//    private Map<String,RecentApp> recentsAppsStack;
+    private RecentsStack recents;
     private FermatSessionManager fermatSessionManager;
     private HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
     // Binder given to clients
@@ -64,11 +58,14 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }
     }
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();
-        this.recentsAppsStack = new HashMap<>();
+//        this.recentsAppsStack = new HashMap<>();
         this.fermatSessionManager = new FermatSessionManager();
+        this.recents = new RecentsStack();
         init();
     }
 
@@ -81,10 +78,24 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     public void init(){
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
-        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
+        //appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
         //if(appsInstalledInDevice.isEmpty()){
-            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+//        appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+//        if(!appsInstalledInDevice.containsKey("main_desktop")){
+//            Log.e(TAG,"Not contains desktop");
+//        }
         //}
+        try {
+            for (FermatAppType fermatAppType : FermatAppType.values()) {
+                RuntimeManager runtimeManager = selectRuntimeManager(fermatAppType);
+                if (runtimeManager != null)
+                    for (String key : runtimeManager.getListOfAppsPublicKey()) {
+                        appsInstalledInDevice.put(key, fermatAppType);
+                    }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public FermatStructure lastAppStructure() {
@@ -97,44 +108,50 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     }
 
     private RecentApp findLastElement(){
-        return (RecentApp) CollectionUtils.find(recentsAppsStack.values(), new Predicate() {
-            @Override
-            public boolean evaluate(Object o) {
-                int pos = ((RecentApp) o).getTaskStackPosition()+1;
-                return ((RecentApp) o).getTaskStackPosition()+1 == recentsAppsStack.size();
-            }
-        });
+//        return (RecentApp) CollectionUtils.find(recentsAppsStack.values(), new Predicate() {
+//            @Override
+//            public boolean evaluate(Object o) {
+//                int pos = ((RecentApp) o).getTaskStackPosition()+1;
+//                return ((RecentApp) o).getTaskStackPosition()+1 == recentsAppsStack.size();
+//            }
+//        });
+        return recents.peek();
     }
 
 
     @Override
     public List<FermatRecentApp> getRecentsAppsStack() {
-        ArrayList list = new ArrayList(recentsAppsStack.values());
-        Collections.sort(list,new RecentAppComparator());
-        return list;
+//        ArrayList list = new ArrayList(recentsAppsStack.values());
+//        Collections.sort(list,new RecentAppComparator());
+        FermatRecentApp[] apps = new FermatRecentApp[recents.size()];
+        recents.copyInto(apps);
+        return Arrays.asList(apps);
     }
 
 
     @Override
     public boolean isAppOpen(String appPublicKey) {
-        return recentsAppsStack.containsKey(appPublicKey);
+        return recents.containsKey(appPublicKey);
     }
 
     @Override
     public FermatSession getAppsSession(String appPublicKey) {
         try {
             if (fermatSessionManager.isSessionOpen(appPublicKey)) {
-                orderStackWithThisPkLast(appPublicKey);
+//                orderStackWithThisPkLast(appPublicKey);
+                recents.reOrder(appPublicKey);
                 return fermatSessionManager.getAppsSession(appPublicKey);
             } else {
+                FermatAppType fermatAppType = appsInstalledInDevice.get(appPublicKey);
+                if(fermatAppType==null) Log.e(TAG,"App with publicKey: "+appPublicKey+ " is not loaded in memory");
                 return openApp(
-                        selectAppManager(
-                                appsInstalledInDevice.get(appPublicKey)).getApp(appPublicKey),
+                        selectAppManager(fermatAppType).getApp(appPublicKey),
                         FermatAppConnectionManager.getFermatAppConnection(
                                 appPublicKey,ApplicationSession.getInstance().getApplicationContext()
                         )
                 );
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -143,23 +160,25 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
 
     private void orderStackWithThisPkLast(String publicKey){
-        RecentApp recentApp = recentsAppsStack.get(publicKey);
-        recentsAppsStack.remove(publicKey);
-        for(RecentApp r : recentsAppsStack.values()){
-            r.setTaskStackPosition(r.getTaskStackPosition()-1);
-        }
-        recentApp.setTaskStackPosition(recentsAppsStack.size());
-        recentsAppsStack.put(publicKey,recentApp);
+//        RecentApp recentApp = recentsAppsStack.get(publicKey);
+//        recentsAppsStack.remove(publicKey);
+//        for(RecentApp r : recentsAppsStack.values()){
+//            r.setTaskStackPosition(r.getTaskStackPosition()-1);
+//        }
+//        recentApp.setTaskStackPosition(recentsAppsStack.size());
+//        recentsAppsStack.put(publicKey,recentApp);
+        recents.reOrder(publicKey);
     }
 
     @Override
     public FermatSession openApp(FermatApp fermatApp, AppConnections fermatAppConnection) {
         if(fermatApp!=null) {
-            if (recentsAppsStack.containsKey(fermatApp.getAppPublicKey())) {
+            if (recents.containsKey(fermatApp.getAppPublicKey())) {
 //            recentsAppsStack.get(fermatApp.getAppPublicKey()).setTaskStackPosition(recentsAppsStack.size());
-                orderStackWithThisPkLast(fermatApp.getAppPublicKey());
+//                orderStackWithThisPkLast(fermatApp.getAppPublicKey());
+                recents.reOrder(fermatApp.getAppPublicKey());
             } else {
-                recentsAppsStack.put(fermatApp.getAppPublicKey(), new RecentApp(fermatApp.getAppPublicKey(), fermatApp, recentsAppsStack.size()));
+                recents.push(new RecentApp(fermatApp.getAppPublicKey(), fermatApp, 0));
             }
             return openSession(fermatApp, fermatAppConnection);
         }
@@ -192,8 +211,8 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     @Override
     public FermatApp getApp(String publicKey,FermatAppType fermatAppType) throws Exception {
         FermatApp fermatApp = null;
-        if(recentsAppsStack.containsKey(publicKey)){
-            fermatApp = recentsAppsStack.get(publicKey).getFermatApp();
+        if(recents.containsKey(publicKey)){
+            fermatApp = recents.getApp(publicKey).getFermatApp();
         }else{
             fermatApp = selectAppManager(fermatAppType).getApp(publicKey);
             openApp(fermatApp,FermatAppConnectionManager.getFermatAppConnection(fermatApp.getAppPublicKey(),ApplicationSession.getInstance().getApplicationContext()));
@@ -206,8 +225,8 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     @Override
     public FermatApp getApp(String appPublicKey) throws Exception {
         FermatApp fermatApp = null;
-        if(recentsAppsStack.containsKey(appPublicKey)){
-            fermatApp = recentsAppsStack.get(appPublicKey).getFermatApp();
+        if(recents.containsKey(appPublicKey)){
+            fermatApp = recents.getApp(appPublicKey).getFermatApp();
         }else{
             fermatApp = selectAppManager(appsInstalledInDevice.get(appPublicKey)).getApp(appPublicKey);
         }
@@ -221,20 +240,25 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     @Override
     public FermatStructure getAppStructure(String appPublicKey) {
-        FermatAppType fermatAppType =appsInstalledInDevice.get(appPublicKey);
-        if(fermatAppType!=null) {
-            return selectRuntimeManager(fermatAppType).getAppByPublicKey(appPublicKey);
-        }else{
+        try {
+            if (appPublicKey.equals("main_desktop")) {
+                return selectRuntimeManager(FermatAppType.DESKTOP).getAppByPublicKey(appPublicKey);
+            } else {
+                return selectRuntimeManager(FermatAppType.WALLET).getAppByPublicKey(appPublicKey);
+            }
+        }catch (Exception e){
             Log.e(TAG,"App instaled in device null: "+appPublicKey);
             Log.e(TAG,"If the public key of the app is fine, try removing data and restart app. filesystem problem..");
+            e.printStackTrace();
             return null;
         }
+
     }
 
     @Override
     public FermatStructure getLastAppStructure() {
         RecentApp recentApp = findLastElement();
-        return selectRuntimeManager(recentApp.getFermatApp().getAppType()).getLastApp();
+        return selectRuntimeManager(recentApp.getFermatApp().getAppType()).getAppByPublicKey(recentApp.getPublicKey());
     }
 
 
@@ -244,8 +268,6 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
             if (getWalletRuntimeManager().getLastWallet() != null)
                 getWalletRuntimeManager().getLastWallet().clear();
 
-            if (getSubAppRuntimeMiddleware().getLastApp() != null)
-                getSubAppRuntimeMiddleware().getLastApp().clear();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -286,11 +308,11 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         //Este swith debe ser cambiado por una petición al core pasandole el FermatAppType
         switch (fermatAppType) {
             case WALLET:
+            case SUB_APP:
                 runtimeManager = FermatSystemUtils.getWalletRuntimeManager();
                 break;
-            case SUB_APP:
-                runtimeManager = FermatSystemUtils.getSubAppRuntimeMiddleware();
-                break;
+//                runtimeManager = FermatSystemUtils.getSubAppRuntimeMiddleware();
+//                break;
             case DESKTOP:
                 runtimeManager = FermatSystemUtils.getDesktopRuntimeManager();
 

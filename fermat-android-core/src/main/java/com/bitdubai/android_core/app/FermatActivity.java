@@ -52,7 +52,6 @@ import com.bitdubai.android_core.app.common.version_1.base_structure.config.Ferm
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
-import com.bitdubai.android_core.app.common.version_1.classes.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
@@ -60,6 +59,7 @@ import com.bitdubai.android_core.app.common.version_1.notifications.Notification
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
+import com.bitdubai.android_core.app.common.version_1.receivers.UpdateViewReceiver;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.android_core.app.common.version_1.runtime_estructure_manager.RuntimeStructureManager;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
@@ -94,7 +94,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -217,7 +216,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
     /**
      * receivers
      */
-    NotificationReceiver notificationReceiver;
+    UpdateViewReceiver updateViewReceiver;
+
 
 
 
@@ -250,9 +250,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
             AndroidCoreUtils.getInstance().setStarted(true);
         runtimeStructureManager = new RuntimeStructureManager(this);
 
-        notificationReceiver = new NotificationReceiver(this);
-        IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
-        registerReceiver(notificationReceiver, intentFilter);
+        updateViewReceiver = new UpdateViewReceiver(this);
+        IntentFilter intentFilter = new IntentFilter(UpdateViewReceiver.INTENT_NAME);
+        registerReceiver(updateViewReceiver, intentFilter);
 
     }
 
@@ -310,8 +310,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                e.printStackTrace();
 //            }
 //
-            unregisterReceiver(notificationReceiver);
-            notificationReceiver.clear();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -432,16 +431,19 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     frameLayout.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            Object[] object = new Object[2];
                             if (viewPainter.hasClickListener())
-                                connectWithOtherApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_IDENTITY, "public_key_ccp_intra_user_identity", object);
+                                try {
+                                    selectApp("public_key_ccp_intra_user_identity");
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                         }
                     });
                     /**
                      * Set adapter
                      */
                     FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-                    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getSideMenu().getMenuItems();
+                    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = sideMenu.getMenuItems();
                     SideMenuBuilder.setAdapter(
                             navigation_recycler_view,
                             mAdapter,
@@ -1428,6 +1430,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             resetThisActivity();
 
+            try {
+                unregisterReceiver(updateViewReceiver);
+                updateViewReceiver.clear();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             executor.shutdownNow();
             super.onDestroy();
         }catch (Exception e){
@@ -1461,7 +1469,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
-            ApplicationSession.getInstance().getNotificationService().notificate(code, ApplicationSession.getInstance().getAppManager().getAppStructure(appPublicKey));
+            ApplicationSession.getInstance().getNotificationService().notificate(code, appPublicKey);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1741,9 +1749,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
 
     public abstract void changeActivity(String activityName,String appBackPublicKey, Object... objects);
-
-    //TODO: to remove
-    public abstract void connectWithOtherApp(Engine engine,String fermatAppPublicKey,Object[] objectses);
 
     /**
      * Report error

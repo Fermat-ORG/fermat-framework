@@ -7,6 +7,7 @@ import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_user.holders.MyAssetsViewHolder;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;

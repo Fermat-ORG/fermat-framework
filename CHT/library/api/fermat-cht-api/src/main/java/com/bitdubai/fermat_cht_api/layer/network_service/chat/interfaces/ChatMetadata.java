@@ -6,7 +6,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,7 +32,7 @@ public interface ChatMetadata {
 
     MessageStatus getMessageStatus();
 
-    Timestamp getDate();
+    String getDate();
 
     UUID getMessageId();
 
@@ -43,5 +42,7 @@ public interface ChatMetadata {
     TypeChat getTypeChat();
 
     List<GroupMember> getGroupMembers();
+
+    String toJson();
 
 }

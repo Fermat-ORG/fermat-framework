@@ -21,8 +21,10 @@ import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUt
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 
 import java.lang.ref.WeakReference;
 
@@ -46,6 +48,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
     private SettingsSlider settingsSlider;
     private WelcomeScrennDialog welcomeScreenDialog;
     private AppStatusCallbackChanges appStatusListener;
+    AndroidCoreSettings androidCoreSettings;
 
     public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
         this.hidden = false;
@@ -68,9 +71,9 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
 
 
                     SupportAnimator animator =
-                            ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, 0, radius);
+                            ViewAnimationUtils.createCircularReveal(mRevealView.getChildAt(0), 0, cy, 0, radius);
                     animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.setDuration(800);
+                    animator.setDuration(650);
 
                     SupportAnimator animator_reverse = animator.reverse();
 
@@ -215,6 +218,24 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                 break;
             case HELP:
                 fermatActivity.get().changeActivity(Activities.DESKTOP_WIZZARD_WELCOME.getCode(), null);
+                break;
+            case REPORT:
+                if(androidCoreSettings==null){
+                    androidCoreSettings = new AndroidCoreSettings(AppsStatus.ALPHA);
+                }
+                //AndroidCoreSettings androidCoreSettings = FermatSystemUtils.getAndroidCoreModule().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
+                int res= 0;
+                if(androidCoreSettings.isErrorReportEnabled()){
+                    res = R.drawable.icon_suport;
+                }else res = R.drawable.icon_suport_on;
+                view.setBackgroundResource(res);
+                try {
+                    FermatSystemUtils.getErrorManager().enabledErrorReport(!androidCoreSettings.isErrorReportEnabled());
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                androidCoreSettings.setIsErrorReportEnabled(!androidCoreSettings.isErrorReportEnabled());
                 break;
         }
     }

@@ -1,9 +1,9 @@
 package org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
+import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/10/15.
  */
-public interface AssetRedeemPointActorNetworkServiceManager extends FermatManager, org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService {
+public interface AssetRedeemPointActorNetworkServiceManager extends DAPNetworkService { //FermatManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *

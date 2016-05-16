@@ -3,17 +3,16 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -131,8 +130,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -733,6 +730,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     @Override
+    public Collection<Platforms> getPlatformsSupported(String customerPublicKey, String brokerPublicKey, String paymentCurrency) throws CantGetListActorExtraDataException {
+
+        return actorExtraDataManager.getPlatformsSupported(customerPublicKey, brokerPublicKey, paymentCurrency);
+    }
+
+    @Override
     public boolean isWalletConfigured(String customerWalletPublicKey) throws CantGetSettingsException, SettingsNotFoundException {
         CryptoCustomerWalletPreferenceSettings walletSettings = loadAndGetSettings(customerWalletPublicKey);
         return walletSettings.isWalletConfigured();
@@ -832,9 +835,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         }
     }
 
+
     @Override
-    public NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException {
-        return new NegotiationBankAccount() {
+    public CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException {
+        return new EmptyCustomerBrokerNegotiationInformationImpl();
+    }
+
+    @Override
+    public void createNewBankAccount(final String bankAccount, final FiatCurrency currency) throws CantCreateBankAccountPurchaseException {
+        customerBrokerPurchaseNegotiationManager.createNewBankAccount(new NegotiationBankAccount() {
             @Override
             public UUID getBankAccountId() {
                 return UUID.randomUUID();
@@ -847,19 +856,9 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
             @Override
             public FiatCurrency getCurrencyType() {
-                return currencyType;
+                return currency;
             }
-        };
-    }
-
-    @Override
-    public CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException {
-        return new EmptyCustomerBrokerNegotiationInformationImpl();
-    }
-
-    @Override
-    public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException {
-        customerBrokerPurchaseNegotiationManager.createNewBankAccount(bankAccount);
+        });
     }
 
     @Override
@@ -955,8 +954,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     @Override
-    public Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(final Currency currencyFrom, final Currency currencyTo) throws CantGetProviderException, CantGetProviderInfoException {
-        Map<String, CurrencyExchangeRateProviderManager> managerMap = new HashMap<>();
+    public Map<String, UUID> getProviderReferencesFromCurrencyPair(final Currency currencyFrom, final Currency currencyTo) throws CantGetProviderException, CantGetProviderInfoException {
+        Map<String, UUID> managerMap = new HashMap<>();
         CurrencyPair currencyPair = new CurrencyPair() {
             @Override
             public Currency getFrom() {
@@ -968,16 +967,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                 return currencyTo;
             }
         };
-        for (CurrencyExchangeRateProviderManager currencyExchangeRateProviderManager : currencyExchangeProviderFilterManager.getProviderReferencesFromCurrencyPair(currencyPair)) {
-            managerMap.put(currencyExchangeRateProviderManager.getProviderName(), currencyExchangeRateProviderManager);
+        final Collection<CurrencyExchangeRateProviderManager> referencesFromCurrencyPair = currencyExchangeProviderFilterManager.getProviderReferencesFromCurrencyPair(currencyPair);
+        for (CurrencyExchangeRateProviderManager currencyExchangeRateProviderManager : referencesFromCurrencyPair) {
+            managerMap.put(currencyExchangeRateProviderManager.getProviderName(), currencyExchangeRateProviderManager.getProviderId());
         }
 
         return managerMap;
-    }
-
-    @Override
-    public CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId) throws CantGetProviderException {
-        return currencyExchangeProviderFilterManager.getProviderReference(providerId);
     }
 
 
@@ -1285,7 +1280,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
         try {
 
-            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation;
+            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation negotiationInformation;
 
             Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
             Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
@@ -1311,7 +1306,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             if (customerBrokerSaleNegotiation.getCancelReason() != null)
                 cancelReason = customerBrokerSaleNegotiation.getCancelReason();
 
-            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+            negotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
                     customerIdentity,
                     brokerIdentity,
                     negotiationId,
@@ -1323,7 +1318,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                     cancelReason
             );
 
-            return cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation;
+            return negotiationInformation;
 
         } catch (CantGetListActorExtraDataException ex) {
             throw new CantGetNegotiationsWaitingForBrokerException(CantGetListActorExtraDataException.DEFAULT_MESSAGE, ex, "Not Get actorExtraData, Identity", "");
@@ -1333,41 +1328,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     private Map<ClauseType, ClauseInformation> getNegotiationClause(Collection<Clause> negotiationClause) {
+        final Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
 
-        Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
         for (Clause item : negotiationClause) {
-            clauses.put(
-                    item.getType(),
-                    putClause(item.getType(), item.getValue())
-            );
+            final ClauseInformation clauseInfo = new CryptoCustomerWalletModuleClauseInformation(item.getType(), item.getValue(), ClauseStatus.DRAFT);
+            clauses.put(item.getType(), clauseInfo);
         }
 
         return clauses;
-    }
-
-    private ClauseInformation putClause(final ClauseType clauseType, final String value) {
-
-        return new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return clauseType;
-            }
-
-            @Override
-            public String getValue() {
-                return (value != null) ? value : "";
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return ClauseStatus.DRAFT;
-            }
-        };
     }
 
     private ContractClauseType getContractClauseType(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation, ClauseType paramClauseType) throws

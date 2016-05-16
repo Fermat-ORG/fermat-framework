@@ -4,12 +4,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by nelson on 05/11/15.
  */
-public class ClauseInformationImpl implements ClauseInformation {
+public class ClauseInformationImpl implements ClauseInformation, Serializable {
     private ClauseType clauseType;
     private String value;
     private ClauseStatus status;

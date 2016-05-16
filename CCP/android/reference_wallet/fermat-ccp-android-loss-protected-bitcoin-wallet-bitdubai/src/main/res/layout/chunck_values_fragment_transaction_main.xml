@@ -63,10 +63,6 @@
                     android:textColor="#fff" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom"
 >
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -79,7 +75,6 @@
                         android:textColor="#fff"
                         />
 
-                </LinearLayout>
             </LinearLayout>
 
 
@@ -97,7 +92,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="1 BTC - 400 USD"
+                android:text="1 BTC - 0 USD"
                 android:id="@+id/txt_exchange_rate"
                 android:textColor="#fff"
                 android:textSize="14sp"

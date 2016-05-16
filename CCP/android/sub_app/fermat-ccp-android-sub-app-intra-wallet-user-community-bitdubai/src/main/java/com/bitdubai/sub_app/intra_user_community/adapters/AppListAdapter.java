@@ -19,7 +19,6 @@ import com.bitdubai.sub_app.intra_user_community.holders.AppWorldHolder;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("unused")
 public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorldHolder> {
@@ -138,11 +137,11 @@ public class AppListAdapter extends FermatAdapter<IntraUserInformation, AppWorld
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            try {
-                TimeUnit.SECONDS.sleep(7);
-            } catch (InterruptedException e) {
-
-            }
+//            try {
+//                TimeUnit.SECONDS.sleep(7);
+//            } catch (InterruptedException e) {
+//
+//            }
             return null;
         }
 
