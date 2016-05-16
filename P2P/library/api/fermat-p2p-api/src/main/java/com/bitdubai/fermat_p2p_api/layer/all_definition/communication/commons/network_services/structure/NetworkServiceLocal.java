@@ -4,7 +4,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.factories.NetworkServiceMessageFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -39,37 +43,48 @@ public final class NetworkServiceLocal implements Observer {
         this.outgoingMessagesDao             = networkServiceConnectionManager.getOutgoingMessagesDao();
     }
 
-    public void sendMessage(final Profile profile       ,
-                            final String  messageContent) {
+    public void sendMessage(final String  messageContent) {
 
         try {
 
-            NetworkServiceMessage fermatMessage  = new NetworkServiceMessage(); // TODO SET THE MESSAGE
-             /*NetworkServiceMessageFactory.constructNetworkServiceMessage(
-                    senderIdentityPublicKey,                           // Sender NetworkService
-                    senderType,                                        // Sender type
-                    senderNsType,                                      // Sender NS type
-                    remoteComponentProfile.getIdentityPublicKey(),     // Receiver
-                    remoteComponentProfile.getPlatformComponentType(), // Receiver Type
-                    remoteComponentProfile.getNetworkServiceType(),    // Receiver NS type
-                    messageContent,                                    // Message Content
-                    FermatMessageContentType.TEXT                      // Type
-            );*/
-            /*
-             * Configure the correct status
-             */
-            fermatMessage.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessageFactory.buildNetworkServiceMessage(
+                    this.networkServiceConnectionManager.getNetworkServiceRoot().getProfile(),
+                    (NetworkServiceProfile) remoteComponentProfile,
+                    messageContent,
+                    FermatMessageContentType.TEXT
+            );
             /*
              * Save to the data base table
              */
-            outgoingMessagesDao.create(fermatMessage);
+            outgoingMessagesDao.create(networkServiceMessage);
 
         } catch (Exception e) {
             e.printStackTrace();
             errorManager.reportUnexpectedPluginException(networkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
         }
+    }
 
+    public void sendMessage(final ActorProfile sender        ,
+                            final String       messageContent) {
+
+        try {
+
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessageFactory.buildNetworkServiceMessage(
+                    sender,
+                    (ActorProfile) remoteComponentProfile,
+                    this.networkServiceConnectionManager.getNetworkServiceRoot().getProfile(),
+                    messageContent,
+                    FermatMessageContentType.TEXT
+            );
+            /*
+             * Save to the data base table
+             */
+            outgoingMessagesDao.create(networkServiceMessage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(networkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
+        }
     }
 
 

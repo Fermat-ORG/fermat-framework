@@ -13,14 +13,14 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.ActorFoundEventHandler</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientActorFoundEventHandler</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 13/05/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActorFoundEventHandler implements FermatEventHandler<ActorFoundEvent> {
+public class NetworkClientActorFoundEventHandler implements FermatEventHandler<ActorFoundEvent> {
 
     /**
      * Represent the networkService
@@ -32,7 +32,7 @@ public class ActorFoundEventHandler implements FermatEventHandler<ActorFoundEven
      *
      * @param networkService
      */
-    public ActorFoundEventHandler(AbstractNetworkService networkService) {
+    public NetworkClientActorFoundEventHandler(AbstractNetworkService networkService) {
         this.networkService = networkService;
     }
 
