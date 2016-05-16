@@ -3,7 +3,7 @@
 buildscript {
     repositories {
         maven {
-            url 'http://192.168.0.102:8081/artifactory/plugins-release'
+            url 'http://52.34.0.33:8081/artifactory/plugins-release'
             credentials {
                 username = "admin"
                 password = "password"
@@ -95,7 +95,7 @@ repositories {
 }
 
 def packageName = 'org.fermat.ccp.android.bitcoin.wallet'
-def libraryVersion = '1.0.1'
+def libraryVersion = '1.0.0'
 
 publishing {
     publications {
@@ -110,7 +110,7 @@ publishing {
 }
 
 artifactory {
-    contextUrl = 'http://192.168.0.102:8081/artifactory'
+    contextUrl = 'http://52.34.0.33:8081/artifactory'
     publish {
         repository {
             repoKey = 'libs-release-local'
