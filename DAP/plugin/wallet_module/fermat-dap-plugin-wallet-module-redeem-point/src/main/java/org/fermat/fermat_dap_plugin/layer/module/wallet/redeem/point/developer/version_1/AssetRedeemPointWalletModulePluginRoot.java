@@ -7,15 +7,12 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -29,6 +26,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.exceptions.CantGetRedeemPointWalletModuleException;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import org.fermat.fermat_dap_plugin.layer.module.wallet.redeem.point.developer.version_1.structure.AssetRedeemPointWalletModuleManager;
 
@@ -58,9 +56,6 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -78,12 +73,6 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
     // TODO MAKE USE OF THE ERROR MANAGER
 
     private AssetRedeemPointWalletModuleManager assetRedeemPointWalletModuleManager;
-
-    private SettingsManager<RedeemPointSettings> settingsManager;
-    RedeemPointSettings settings = null;
-    String publicKeyApp;
-
-    private BlockchainNetworkType selectedNetwork;
 
     public AssetRedeemPointWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -159,7 +148,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = AssetRedeemPointWalletModuleManager.class)
+    @moduleManagerInterfacea(moduleManager = AssetRedeemPointWalletSubAppModule.class)
     public ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
             logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation started...", null, null);
