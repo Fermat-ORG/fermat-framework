@@ -41,6 +41,6 @@ public interface BankAccountNumber extends Serializable {
     /**
     * This image id is used by the wallet so that it can display the selected image associated with the account
     */
-    String accountImageId();
+    String getAccountImageId();
 
 }

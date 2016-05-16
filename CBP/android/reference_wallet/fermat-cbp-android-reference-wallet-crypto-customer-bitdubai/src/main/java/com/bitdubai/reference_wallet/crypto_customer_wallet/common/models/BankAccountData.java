@@ -53,7 +53,7 @@ public class BankAccountData implements BankAccountNumber {
     }
 
     @Override
-    public String accountImageId() {
+    public String getAccountImageId() {
         return imageId;
     }
 

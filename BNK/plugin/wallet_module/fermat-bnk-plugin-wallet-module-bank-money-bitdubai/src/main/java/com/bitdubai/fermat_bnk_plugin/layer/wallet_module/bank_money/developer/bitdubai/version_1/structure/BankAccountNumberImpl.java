@@ -50,5 +50,5 @@ public class BankAccountNumberImpl implements BankAccountNumber {
     }
 
     @Override
-    public String accountImageId() { return this.imageId; }
+    public String getAccountImageId() { return this.imageId; }
 }

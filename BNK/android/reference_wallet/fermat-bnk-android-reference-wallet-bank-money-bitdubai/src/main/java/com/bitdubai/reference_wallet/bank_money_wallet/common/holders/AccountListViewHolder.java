@@ -64,7 +64,7 @@ public class AccountListViewHolder extends FermatViewHolder {
         }else {
             balanceText.setTextColor(itemView.getResources().getColor(R.color.soft_purple));
         }
-        imageView.setImageResource(getResource(itemInfo.accountImageId()));
+        imageView.setImageResource(getResource(itemInfo.getAccountImageId()));
         imageView.setVisibility(View.VISIBLE);
     }
 

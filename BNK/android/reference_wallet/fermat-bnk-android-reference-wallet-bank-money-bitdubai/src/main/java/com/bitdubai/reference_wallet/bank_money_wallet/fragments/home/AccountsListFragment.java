@@ -176,7 +176,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     @Override
     public void onItemClickListener(BankAccountNumber data, int position) {
         appSession.setData("account_data", data);
-        appSession.setData("account_image", AccountListViewHolder.getResource(data.accountImageId()));
+        appSession.setData("account_image", AccountListViewHolder.getResource(data.getAccountImageId()));
         changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
     }
 

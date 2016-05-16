@@ -41,7 +41,7 @@ public class BankAccountNumberImpl implements BankAccountNumber {
     }
 
     @Override
-    public String accountImageId() { return imageId; }
+    public String getAccountImageId() { return imageId; }
 
     @Override
     public String getBankName() {
