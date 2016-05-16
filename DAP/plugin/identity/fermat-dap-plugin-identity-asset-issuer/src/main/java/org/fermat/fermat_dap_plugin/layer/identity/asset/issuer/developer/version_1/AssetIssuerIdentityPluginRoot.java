@@ -1,12 +1,11 @@
 package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -20,10 +19,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -32,7 +29,6 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.database.AssetIssuerIdentityDeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.structure.IdentityAssetIssuerManagerImpl;
@@ -53,7 +49,7 @@ import java.util.regex.Pattern;
         layer = Layers.IDENTITY,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_ISSUER)
-public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
+public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
@@ -148,14 +144,32 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
     }
 
     @Override
+    public FermatManager getManager() {
+        return identityAssetIssuerManager;
+    }
+
+    @Override
     public void start() throws CantStartPluginException {
         try {
+            identityAssetIssuerManager = new IdentityAssetIssuerManagerImpl(
+                    this.errorManager,
+                    this.logManager,
+                    this.pluginDatabaseSystem,
+                    this.pluginFileSystem,
+                    this.pluginId,
+                    this.deviceUserManager,
+                    this.actorAssetIssuerManager);
+
             this.serviceStatus = ServiceStatus.STARTED;
 
-            if (getModuleManager() != null) {
-                registerIdentitiesANS();
-            }
-        } catch (CantGetModuleManagerException | CantRegisterActorAssetIssuerException e) {
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
+        }
+
+        try {
+            registerIdentitiesANS();
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
@@ -179,7 +193,7 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
 //    public void updateIdentityAssetIssuer(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateIdentityAssetIssuerException {
 //        identityAssetIssuerManager.updateIdentityAssetIssuer(identityPublicKey, identityAlias, profileImage);
 //    }
-
+//
 //    @Override
 //    public boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException {
 //        return identityAssetIssuerManager.hasIntraIssuerIdentity();
@@ -237,12 +251,12 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
 //            return null;
 //        }
 //    }
-
+//
 //    @Override
 //    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
 //        identityAssetIssuerManager.createNewIdentityAssetIssuer(name, profile_img);
 //    }
-
+//
 //    @Override
 //    public void setAppPublicKey(String publicKey) {
 //
@@ -252,30 +266,4 @@ public class AssetIssuerIdentityPluginRoot extends AbstractModule implements
 //    public int[] getMenuNotifications() {
 //        return new int[0];
 //    }
-
-    @Override
-//    @moduleManagerInterfacea(moduleManager = IdentityAssetIssuerManagerImpl.class)
-    public ModuleManager getModuleManager() throws CantGetModuleManagerException {
-        try {
-            logManager.log(AssetIssuerIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity instantiation started...", null, null);
-
-            if (identityAssetIssuerManager == null) {
-                identityAssetIssuerManager = new IdentityAssetIssuerManagerImpl(
-                        this.errorManager,
-                        this.logManager,
-                        this.pluginDatabaseSystem,
-                        this.pluginFileSystem,
-                        this.pluginId,
-                        this.deviceUserManager,
-                        this.actorAssetIssuerManager);
-            }
-            registerIdentitiesANS();
-
-            logManager.log(AssetIssuerIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity instantiation finished successfully.", null, null);
-
-        } catch (final Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
-        return identityAssetIssuerManager;
-    }
 }

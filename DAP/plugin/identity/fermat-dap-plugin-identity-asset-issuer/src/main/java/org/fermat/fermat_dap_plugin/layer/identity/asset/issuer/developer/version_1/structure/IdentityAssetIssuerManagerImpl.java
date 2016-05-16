@@ -3,7 +3,6 @@ package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.versi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -22,9 +21,9 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
-import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.database.AssetIssuerIdentityDao;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIdentitySettings> implements IdentityAssetIssuerManager, Serializable {
+public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManager, Serializable {
     //TODO: Documentar
     UUID pluginId;
 
@@ -105,8 +104,6 @@ public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIden
                                           DeviceUserManager deviceUserManager,
                                           ActorAssetIssuerManager actorAssetIssuerManager) {
 
-        super(pluginFileSystem, pluginId);
-
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -125,7 +122,6 @@ public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIden
         try {
 
             List<IdentityAssetIssuer> assetIssuerList = new ArrayList<IdentityAssetIssuer>();
-
 
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             assetIssuerList = getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(loggedUser);
@@ -192,14 +188,14 @@ public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIden
             return getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(loggedUser).size() > 0;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetIssuersException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException e) {
+        } catch (CantListAssetIssuerIdentitiesException e) {
             throw new CantListAssetIssuersException("CAN'T GET IF ASSET ISSUER IDENTITIES EXISTS", e, "", "");
         } catch (Exception e) {
             throw new CantListAssetIssuersException("CAN'T GET ASSET ISSUER ISSUER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
 
-    public void registerIdentities() throws org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException {
+    public void registerIdentities() throws CantListAssetIssuerIdentitiesException {
         try {
             List<IdentityAssetIssuer> identityAssetIssuers = getAssetIssuerIdentityDao().getIdentityAssetIssuersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (identityAssetIssuers.size() > 0) {
@@ -208,13 +204,13 @@ public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIden
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant List Asset Issuer Identities", "");
+            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
+        } catch (CantListAssetIssuerIdentitiesException e) {
+            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant List Asset Issuer Identities", "");
         } catch (CantCreateActorAssetIssuerException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Create ActorAsset Issuer", "");
+            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Create ActorAsset Issuer", "");
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Initialize Asset Issuer Identity Database", "");
+            throw new CantListAssetIssuerIdentitiesException("CAN'T GET IF ASSET ISSUER IDENTITIES  EXISTS", e, "Cant Initialize Asset Issuer Identity Database", "");
         }
     }
 
@@ -226,29 +222,29 @@ public class IdentityAssetIssuerManagerImpl extends ModuleManagerImpl<IssuerIden
         }
     }
 
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        try {
-            List<IdentityAssetIssuer> identities = this.getIdentityAssetIssuersFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @Override
-    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        this.createNewIdentityAssetIssuer(name, profile_img);
-    }
-
-    @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
-    public int[] getMenuNotifications() {
-        return new int[0];
-    }
+//    @Override
+//    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+//        try {
+//            List<IdentityAssetIssuer> identities = this.getIdentityAssetIssuersFromCurrentDeviceUser();
+//            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+//        this.createNewIdentityAssetIssuer(name, profile_img);
+//    }
+//
+//    @Override
+//    public void setAppPublicKey(String publicKey) {
+//
+//    }
+//
+//    @Override
+//    public int[] getMenuNotifications() {
+//        return new int[0];
+//    }
 }

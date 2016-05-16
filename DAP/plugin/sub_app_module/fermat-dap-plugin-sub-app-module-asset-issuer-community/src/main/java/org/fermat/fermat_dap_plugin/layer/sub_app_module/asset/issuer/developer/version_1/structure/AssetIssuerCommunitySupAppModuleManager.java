@@ -458,8 +458,13 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return identityAssetIssuerManager.getSelectedActorIdentity();
-    }
+        try {
+            List<IdentityAssetIssuer> identities = identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
+            return (identities == null || identities.isEmpty()) ? null : identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }    }
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {

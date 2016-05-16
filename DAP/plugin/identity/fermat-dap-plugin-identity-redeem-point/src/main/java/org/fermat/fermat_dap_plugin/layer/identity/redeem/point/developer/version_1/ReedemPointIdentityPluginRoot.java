@@ -2,11 +2,13 @@ package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.versi
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -23,6 +25,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -32,8 +36,15 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.exceptions.CantRegisterActorAssetRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.database.AssetRedeemPointIdentityDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointManagerImpl;
 
 import java.util.ArrayList;
@@ -52,7 +63,7 @@ import java.util.regex.Pattern;
         layer = Layers.IDENTITY,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.REDEEM_POINT)
-public class ReedemPointIdentityPluginRoot extends AbstractModule implements
+public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
@@ -125,39 +136,34 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
         }
     }
 
-    /**
-     * Static method to get the logging level from any class under root.
-     *
-     * @param className
-     * @return
-     */
-    public static LogLevel getLogLevelByClass(String className) {
-        try {
-            /**
-             * sometimes the classname may be passed dinamically with an $moretext
-             * I need to ignore whats after this.
-             */
-            String[] correctedClass = className.split(Pattern.quote("$"));
-            return ReedemPointIdentityPluginRoot.newLoggingLevel.get(correctedClass[0]);
-        } catch (Exception e) {
-            /**
-             * If I couldn't get the correct loggin level, then I will set it to minimal.
-             */
-            return DEFAULT_LOG_LEVEL;
-        }
+    @Override
+    public FermatManager getManager() {
+        return identityAssetRedeemPointManager;
     }
 
     @Override
     public void start() throws CantStartPluginException {
         try {
+            identityAssetRedeemPointManager = new IdentityAssetRedeemPointManagerImpl(
+                    this.errorManager,
+                    this.logManager,
+                    this.pluginDatabaseSystem,
+                    this.pluginFileSystem,
+                    this.pluginId,
+                    this.deviceUserManager,
+                    this.actorAssetRedeemPointManager);
+
             this.serviceStatus = ServiceStatus.STARTED;
 
-            if (getModuleManager() != null) {
-                registerIdentitiesANS();
-            }
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY);
+        }
+
+        try {
+            registerIdentitiesANS();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -179,7 +185,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
             AssetRedeemPointIdentityDeveloperDatabaseFactory dbFactory = new AssetRedeemPointIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
@@ -191,17 +197,17 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
 //    public List<RedeemPointIdentity> getRedeemPointsFromCurrentDeviceUser() throws CantListAssetRedeemPointException {
 //        return identityAssetRedeemPointManager.getIdentityAssetRedeemPointsFromCurrentDeviceUser();
 //    }
-
+//
 //    @Override
 //    public RedeemPointIdentity getIdentityAssetRedeemPoint() throws CantGetRedeemPointIdentitiesException {
 //        return identityAssetRedeemPointManager.getIdentityRedeemPoint();
 //    }
-
+//
 //    @Override
 //    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage) throws CantCreateNewRedeemPointException {
 //        return identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(alias, profileImage);
 //    }
-
+//
 //    @Override
 //    public RedeemPointIdentity createNewRedeemPoint(String alias, byte[] profileImage,
 //                                                    String contactInformation, String countryName, String provinceName, String cityName,
@@ -209,7 +215,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
 //        return identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(alias, profileImage,  contactInformation,
 //                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
 //    }
-
+//
 //    @Override
 //    public void updateIdentityRedeemPoint(String identityPublicKey, String identityAlias, byte[] profileImage,
 //                                          String contactInformation, String countryName, String provinceName, String cityName,
@@ -217,7 +223,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
 //        identityAssetRedeemPointManager.updateIdentityRedeemPoint(identityPublicKey, identityAlias, profileImage,  contactInformation,
 //                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
 //    }
-
+//
 //    @Override
 //    public boolean hasRedeemPointIdentity() throws CantListAssetRedeemPointException {
 //        return identityAssetRedeemPointManager.hasRedeemPointIdentity();
@@ -250,13 +256,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
 //            return null;
 //        }
 //    }
-//
-//    @Override
-//    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-//
-//    }
-//
-//
+
 //    @Override
 //    public void createIdentity(String name, byte[] profile_img,
 //                               String contactInformation, String countryName, String provinceName, String cityName,
@@ -264,40 +264,4 @@ public class ReedemPointIdentityPluginRoot extends AbstractModule implements
 //        identityAssetRedeemPointManager.createNewIdentityAssetRedeemPoint(name, profile_img,contactInformation,
 //                countryName, provinceName, cityName, postalCode, streetName, houseNumber);
 //    }
-//
-//    @Override
-//    public void setAppPublicKey(String publicKey) {
-//
-//    }
-//
-//    @Override
-//    public int[] getMenuNotifications() {
-//        return new int[0];
-//    }
-
-    @Override
-//    @moduleManagerInterfacea(moduleManager = IdentityAssetRedeemPointManagerImpl.class)
-    public ModuleManager getModuleManager() throws CantGetModuleManagerException {
-        try {
-            logManager.log(ReedemPointIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity instantiation started...", null, null);
-
-            if (identityAssetRedeemPointManager == null) {
-                identityAssetRedeemPointManager = new IdentityAssetRedeemPointManagerImpl(
-                this.errorManager,
-                this.logManager,
-                this.pluginDatabaseSystem,
-                this.pluginFileSystem,
-                this.pluginId,
-                this.deviceUserManager,
-                this.actorAssetRedeemPointManager);
-            }
-            registerIdentitiesANS();
-
-            logManager.log(ReedemPointIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity instantiation finished successfully.", null, null);
-
-        } catch (final Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
-        return identityAssetRedeemPointManager;
-    }
 }

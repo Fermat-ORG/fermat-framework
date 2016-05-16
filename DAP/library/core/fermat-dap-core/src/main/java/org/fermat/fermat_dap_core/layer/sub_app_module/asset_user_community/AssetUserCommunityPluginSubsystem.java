@@ -16,7 +16,7 @@ import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.De
 public class AssetUserCommunityPluginSubsystem extends AbstractPluginSubsystem {
 
     public AssetUserCommunityPluginSubsystem() {
-        super(new PluginReference(Plugins.ASSET_USER_COMMUNITY));
+        super(new PluginReference(Plugins.ASSET_USER));
     }
 
     @Override

@@ -35,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentitySettings> implements IdentityAssetUserManager, Serializable {
+public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */
@@ -105,8 +105,6 @@ public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentity
                                         DeviceUserManager deviceUserManager,
                                         ActorAssetUserManager actorAssetUserManager) {
 
-        super(pluginFileSystem, pluginId);
-
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -117,8 +115,7 @@ public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentity
     }
 
     private AssetUserIdentityDao getAssetUserIdentityDao() throws CantInitializeAssetUserIdentityDatabaseException {
-        AssetUserIdentityDao assetUserIdentityDao = new AssetUserIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
-        return assetUserIdentityDao;
+        return new AssetUserIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
     }
 
     public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListAssetUsersException {
@@ -206,14 +203,14 @@ public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentity
             return getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
+        } catch (CantListAssetUserIdentitiesException e) {
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES EXISTS", e, "", "");
         } catch (Exception e) {
             throw new CantListAssetUsersException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
 
-    public void registerIdentities() throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException {
+    public void registerIdentities() throws CantListAssetUserIdentitiesException {
         try {
             List<IdentityAssetUser> identityAssetUsers = getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (identityAssetUsers.size() > 0) {
@@ -222,13 +219,13 @@ public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentity
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
+            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
+        } catch (CantListAssetUserIdentitiesException e) {
+            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
         } catch (CantCreateAssetUserActorException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
+            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
+            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
         }
     }
 
@@ -240,29 +237,29 @@ public class IdentityAssetUserManagerImpl extends ModuleManagerImpl<UserIdentity
         }
     }
 
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
-        try {
-            List<IdentityAssetUser> identities = this.getIdentityAssetUsersFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+//    @Override
+//    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
+//        try {
+//            List<IdentityAssetUser> identities = this.getIdentityAssetUsersFromCurrentDeviceUser();
+//            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+//
+//    @Override
+//    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+//        this.createNewIdentityAssetUser(name, profile_img);
+//    }
 
-    @Override
-    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        this.createNewIdentityAssetUser(name, profile_img);
-    }
-
-    @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
-    public int[] getMenuNotifications() {
-        return new int[0];
-    }
+//    @Override
+//    public void setAppPublicKey(String publicKey) {
+//
+//    }
+//
+//    @Override
+//    public int[] getMenuNotifications() {
+//        return new int[0];
+//    }
 }

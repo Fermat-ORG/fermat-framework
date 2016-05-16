@@ -635,7 +635,13 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return identityAssetUserManager.getSelectedActorIdentity();
+        try {
+            List<IdentityAssetUser> identities = identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser();
+            return (identities == null || identities.isEmpty()) ? null : identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
