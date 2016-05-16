@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class  IdentityAssetUsermpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, IdentityAssetUser, Serializable {
+public class  IdentityAssetUsermpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, IdentityAssetUser {
     private String alias;
     private String publicKey;
     private byte[] profileImage;

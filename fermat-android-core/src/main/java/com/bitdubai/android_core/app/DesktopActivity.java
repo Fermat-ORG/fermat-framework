@@ -24,14 +24,12 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppCon
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -342,6 +340,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
     }
 
+    @Override
+    public void connectWithOtherApp(String fermatAppPublicKey, Object[] objectses) {
+
+    }
+
 
     @Override
     public void selectSubApp(InstalledSubApp installedSubApp) {
@@ -413,16 +416,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }
     }
 
-
-    @Override
-    public void onCallbackViewObserver(FermatCallback fermatCallback) {
-
-    }
-
-    @Override
-    public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
-
-    }
 
     @Override
     public void onControlledActivityBack(String activityCodeBack) {

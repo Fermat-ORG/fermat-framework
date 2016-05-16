@@ -41,7 +41,10 @@ import java.util.UUID;
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
  */
+
 public interface ChatActorCommunitySubAppModuleManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatActorCommunitySettings> {
+
+
 
 
 

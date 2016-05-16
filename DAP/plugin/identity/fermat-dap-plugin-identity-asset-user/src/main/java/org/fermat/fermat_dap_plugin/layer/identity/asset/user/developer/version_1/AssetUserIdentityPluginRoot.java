@@ -1,12 +1,12 @@
 package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -32,7 +32,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_user.exceptions.CantRegisterActorAssetUserException;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUserManagerImpl;
 
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
         layer = Layers.IDENTITY,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_USER)
-public class AssetUserIdentityPluginRoot extends AbstractModule implements
+public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
 
@@ -72,8 +72,6 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
-
-    private SettingsManager<AssetUserSettings> settingsManager;
 
     public AssetUserIdentityPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -149,35 +147,52 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
     }
 
     @Override
+    public FermatManager getManager() {
+        return identityAssetUserManager;
+    }
+
+    @Override
     public void start() throws CantStartPluginException {
         try {
+            identityAssetUserManager = new IdentityAssetUserManagerImpl(
+                    this.errorManager,
+                    this.logManager,
+                    this.pluginDatabaseSystem,
+                    this.pluginFileSystem,
+                    this.pluginId,
+                    this.deviceUserManager,
+                    this.actorAssetUserManager);
+
             this.serviceStatus = ServiceStatus.STARTED;
 
-            if (getModuleManager() != null) {
-                registerIdentitiesANS();
-            }
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
+        }
+
+        try {
+            registerIdentitiesANS();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        AssetUserIdentityDeveloperDatabaseFactory dbFactory = new AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        AssetUserIdentityDeveloperDatabaseFactory dbFactory = new AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            AssetUserIdentityDeveloperDatabaseFactory dbFactory = new AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException e) {
@@ -244,40 +259,4 @@ public class AssetUserIdentityPluginRoot extends AbstractModule implements
 //    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
 //        identityAssetUserManager.createNewIdentityAssetUser(name, profile_img);
 //    }
-//
-//    @Override
-//    public void setAppPublicKey(String publicKey) {
-//
-//    }
-//
-//    @Override
-//    public int[] getMenuNotifications() {
-//        return new int[0];
-//    }
-
-    @Override
-    @moduleManagerInterfacea(moduleManager = IdentityAssetUserManagerImpl.class)
-    public ModuleManager getModuleManager() throws CantGetModuleManagerException {
-        try {
-            logManager.log(AssetUserIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity instantiation started...", null, null);
-
-            if (identityAssetUserManager == null) {
-                identityAssetUserManager = new IdentityAssetUserManagerImpl(
-                this.errorManager,
-                this.logManager,
-                this.pluginDatabaseSystem,
-                this.pluginFileSystem,
-                this.pluginId,
-                this.deviceUserManager,
-                this.actorAssetUserManager);
-            }
-            registerIdentitiesANS();
-
-            logManager.log(AssetUserIdentityPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset User Identity instantiation finished successfully.", null, null);
-
-        } catch (final Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
-        return identityAssetUserManager;
-    }
 }

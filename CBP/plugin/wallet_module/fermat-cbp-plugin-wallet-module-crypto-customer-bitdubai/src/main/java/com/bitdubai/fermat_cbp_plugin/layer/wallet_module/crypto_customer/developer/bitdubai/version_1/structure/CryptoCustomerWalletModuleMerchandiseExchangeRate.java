@@ -5,12 +5,13 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by nelson on 24/11/15.
  */
-public class CryptoCustomerWalletModuleMerchandiseExchangeRate implements MerchandiseExchangeRate {
+public class CryptoCustomerWalletModuleMerchandiseExchangeRate implements MerchandiseExchangeRate, Serializable {
 
     private Currency merchandise;
     private Currency payment;

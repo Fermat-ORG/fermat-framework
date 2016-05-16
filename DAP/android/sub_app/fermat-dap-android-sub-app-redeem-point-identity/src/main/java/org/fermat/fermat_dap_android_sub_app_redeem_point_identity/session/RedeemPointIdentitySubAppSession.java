@@ -4,14 +4,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 
 /**
  * Created by Francisco Vasquez
  */
-public class RedeemPointIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointIdentityManager,SubAppResourcesProviderManager> {
+public class RedeemPointIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp, RedeemPointIdentityModuleManager, SubAppResourcesProviderManager> {
 
-    public RedeemPointIdentitySubAppSession() {}
+    public RedeemPointIdentitySubAppSession() {
+    }
 
     //    /**
 //     * SubApps type

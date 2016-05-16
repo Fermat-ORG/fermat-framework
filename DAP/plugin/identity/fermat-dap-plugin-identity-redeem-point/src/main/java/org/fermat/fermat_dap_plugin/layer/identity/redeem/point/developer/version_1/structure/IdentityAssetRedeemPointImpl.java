@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, RedeemPointIdentity, Serializable {
+public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, RedeemPointIdentity {
     private String alias;
     private String publicKey;
     private byte[] profileImage;

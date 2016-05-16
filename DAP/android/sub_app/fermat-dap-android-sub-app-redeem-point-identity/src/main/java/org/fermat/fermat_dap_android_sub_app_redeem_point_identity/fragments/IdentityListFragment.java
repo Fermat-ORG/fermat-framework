@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_android_sub_app_redeem_point_identity.fragments;
 
-
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +22,7 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.Redee
 import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantListAssetRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
-import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +35,7 @@ public class IdentityListFragment extends FermatListFragment<RedeemPointIdentity
         implements FermatListItemListeners<RedeemPointIdentity> {
 
 
-    private RedeemPointIdentityManager moduleManager;
+    private RedeemPointIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
     private ArrayList<RedeemPointIdentity> identityInformationList;
 

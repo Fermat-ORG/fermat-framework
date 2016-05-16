@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningPairState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
 import java.util.UUID;
@@ -54,12 +53,7 @@ public class EarningsPairTestData implements EarningsPair {
     }
 
     @Override
-    public EarningsSearch getSearch() {
+    public WalletReference getWalletReference() {
         return null;
-    }
-
-    @Override
-    public void changeEarningsWallet(WalletReference earningsWallet) {
-
     }
 }
