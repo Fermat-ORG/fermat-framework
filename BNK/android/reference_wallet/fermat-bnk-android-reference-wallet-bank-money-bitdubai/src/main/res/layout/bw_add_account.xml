@@ -38,7 +38,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="30dp"
                 android:gravity="center_horizontal"
-                android:text="Please choose an account number and currency"
+                android:text="Please enter the following account information:"
                 android:textColor="#fff"
                 android:textSize="@dimen/text_size" />
 
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:maxLength="30"
+                android:maxLength="25"
                 android:gravity="center_horizontal"
                 android:hint="Enter account number"
                 android:textColor="#fff"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:maxLength="15"
+                android:maxLength="10"
                 android:gravity="center_horizontal"
                 android:hint="Enter alias"
                 android:textColor="#fff"
