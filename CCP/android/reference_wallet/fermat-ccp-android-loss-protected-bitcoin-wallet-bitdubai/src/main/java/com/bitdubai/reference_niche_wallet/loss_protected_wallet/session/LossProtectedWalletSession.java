@@ -13,7 +13,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
@@ -51,7 +51,7 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     *
     */
 
-    public static String typeBalanceSelected =BalanceType.AVAILABLE.getCode();
+    public static String typeBalanceSelected =BalanceType.REAL.getCode();
 
     public static int typeAmountSelected= ShowMoneyType.BITCOIN.getCode();
 
@@ -62,7 +62,7 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     private LossProtectedPaymentRequest paymentRequest;
     private String communityConnection;
 
-    private double actualExchangeRate;
+    private double actualExchangeRate = 0;
 
     private UUID transactionDetailId;
     public LossProtectedWalletSession() {

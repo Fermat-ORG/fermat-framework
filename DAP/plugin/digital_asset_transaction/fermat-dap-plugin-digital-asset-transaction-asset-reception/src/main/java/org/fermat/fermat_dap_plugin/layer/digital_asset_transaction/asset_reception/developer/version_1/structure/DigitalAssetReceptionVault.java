@@ -18,7 +18,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -27,24 +29,17 @@ import java.util.UUID;
  */
 public class DigitalAssetReceptionVault extends AbstractDigitalAssetVault {
 
-    ErrorManager errorManager;
+    AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot;
 
     public DigitalAssetReceptionVault(UUID pluginId,
                                       PluginFileSystem pluginFileSystem,
-                                      ErrorManager errorManager,
+                                      AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot,
                                       AssetUserWalletManager assetUserWalletManager) throws CantSetObjectException {
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
-        setErrorManager(errorManager);
+        this.assetReceptionDigitalAssetTransactionPluginRoot = assetReceptionDigitalAssetTransactionPluginRoot;
         setAssetUserWalletManager(assetUserWalletManager);
         LOCAL_STORAGE_PATH = "digital-asset-reception/";
-    }
-
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
-        if (errorManager == null) {
-            throw new CantSetObjectException("ErrorManager is null");
-        }
-        this.errorManager = errorManager;
     }
 
     @Override

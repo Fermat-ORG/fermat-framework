@@ -69,7 +69,7 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.history_transaction_row;
+        return R.layout.loss_history_transaction_row;
     }
 
     /**

@@ -156,33 +156,43 @@ public class BroadcastManager implements BroadcasterInterface {
     }
 
     private void updateView(FermatBundle bundle) {
-        TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
-        if(adapter!=null) {
-            for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
-                fragment.onUpdateView(bundle);
-                fragment.onUpdateViewUIThred(bundle);
+        if (fermatActivity.get() != null) {
+            TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+            if (adapter != null) {
+                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+                    fragment.onUpdateView(bundle);
+                    fragment.onUpdateViewUIThred(bundle);
+                }
             }
         }
     }
 
     private void updateView(String code){
-        TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
-        if(adapter!=null) {
-            for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
-                fragment.onUpdateView(code);
-                fragment.onUpdateViewUIThred(code);
+
+
+        if (fermatActivity.get() != null) {
+            TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+            if (adapter != null) {
+                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+
+                    fragment.onUpdateView(code);
+                    fragment.onUpdateViewUIThred(code);
+                }
             }
         }
+
     }
 
     //TODO: esto va a ser del codigo de la app, el paquete del intent
     private void updateView(String appCode,String code){
-        TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
-        if(adapter!=null) {
-            for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
-                fragment.onUpdateViewHandler(appCode,code);
-                fragment.onUpdateView(code);
-                fragment.onUpdateViewUIThred(code);
+        if (fermatActivity.get() != null) {
+            TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
+            if (adapter != null) {
+                for (AbstractFermatFragment fragment : adapter.getLstCurrentFragments()) {
+                    fragment.onUpdateViewHandler(appCode, code);
+                    fragment.onUpdateView(code);
+                    fragment.onUpdateViewUIThred(code);
+                }
             }
         }
     }

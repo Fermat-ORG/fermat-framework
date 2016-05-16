@@ -41,9 +41,9 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         Database database = null;
         try {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
-            createLossProtetedWalletTable(ownerId, database.getDatabaseFactory());
+            createLossProtectedWalletTable(ownerId, database.getDatabaseFactory());
             createLossProtectedWalletBalancesTable(ownerId, database.getDatabaseFactory());
-            createLossProtectedWalletSpentTableFactory(ownerId, database.getDatabaseFactory());
+            createLossProtectedSpendWalletTable(ownerId, database.getDatabaseFactory());
             insertInitialBalancesRecord(database);
             database.closeDatabase();
             return database;
@@ -60,9 +60,18 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         }
     }
 
-    private void createLossProtetedWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+    private void createLossProtectedWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
         try{
             DatabaseTableFactory tableFactory = createLossProtectedWalletTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch(InvalidOwnerIdException exception){
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
+    private void createLossProtectedSpendWalletTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException{
+        try{
+            DatabaseTableFactory tableFactory = createLossProtectedWalletSpentTableFactory(ownerId, databaseFactory);
             databaseFactory.createTable(tableFactory);
         } catch(InvalidOwnerIdException exception){
             throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
@@ -89,7 +98,7 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_TRANSACTION_STATE_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
-        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.REAL, 0,false);
 
         return table;
     }
@@ -101,6 +110,7 @@ public class BitcoinLossProtectedWalletDatabaseFactory implements DealsWithPlugi
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
         table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME, DatabaseDataType.REAL, 0,false);
+        table.addColumn(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_RUNNING_NETWORK_TYPE, DatabaseDataType.STRING, 10,false);
 
 
         return table;

@@ -60,7 +60,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<LossProtectedWalletSes
 
     @Override
     protected int setLayoutId() {
-        return R.layout.contacts_tutorial_part1_v2;
+        return R.layout.loss_contacts_tutorial_part1_v2;
     }
 
     @Override

@@ -16,10 +16,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
@@ -29,13 +27,12 @@ import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWall
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.CantSendTransactionException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.CantReceiveWalletTransactionException;
-import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.TransferIntraWalletUsersCantCancelTransactionException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.BitcoinWalletTransactionWalletRecord;
 
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.TransferIntraWalletUsersCantInsertRecordException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.BitcoinLossProtectedWalletTransactionWalletRecord;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.TransferIntraWalletUsersWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -49,19 +46,18 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
     private final BitcoinWalletManager bitcoinWalletManager;
     private final ErrorManager errorManager;
     private final TransferIntraWalletUsersDao dao;
-    private final Broadcaster broadcaster;
+
 
 
     public TransferIntraWalletUsersModuleManager(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
                                                  final BitcoinWalletManager bitcoinWalletManager,
                                                  final ErrorManager errorManager,
-                                                 final TransferIntraWalletUsersDao dao,
-                                                 final Broadcaster broadcaster) {
+                                                 final TransferIntraWalletUsersDao dao
+                                                ) {
         this.bitcoinLossWalletManager = bitcoinLossWalletManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.errorManager = errorManager;
         this.dao = dao;
-        this.broadcaster = broadcaster;
     }
 
 
@@ -157,7 +153,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             //change transaction state to reversed and update balance to revert
                             bitcoinWalletWallet.revertTransaction(bitcoinWalletTransactionWalletRecord, false);
                             dao.setToError(transferIntraWalletUsersWrapper);
-                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                            //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
                         }
@@ -167,7 +163,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
 
                     } else {
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                       // broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
                         //change transaction state to error
                         dao.setToError(transferIntraWalletUsersWrapper);
                         //There are not enough funds to perform this transaction
@@ -225,7 +221,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             } catch (CantReceiveWalletTransactionException e){
 
                                 bitcoinLossProtectedWallet.revertTransaction(bitcoinLossProtectedWalletTransactionWalletRecord2, false);
-                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                                //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                                 dao.setToError(transferIntraWalletUsersWrapper);
                                 throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
@@ -238,7 +234,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                     } else {
                         dao.setToError(transferIntraWalletUsersWrapper);
                         //There are not enough funds to perform this transaction
-                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                        //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
 
                         throw new TransferIntraWalletUsersNotEnoughFundsException("There are not enough funds to perform this transaction", null, "", "NotEnoughFunds");
                     }
@@ -265,6 +261,10 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
         } catch (CantLoadTableToMemoryException e) {
             throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        }
+        catch(TransferIntraWalletUsersNotEnoughFundsException e){
+            throw new TransferIntraWalletUsersNotEnoughFundsException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Not Enough Funds Exception");
+
         }
         catch (Exception e){
             throw new CantSendTransactionException("I could not send the transaction", FermatException.wrapException(e), "TransferIntraWalletUsersModuleManager", "unknown reason");
