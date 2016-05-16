@@ -38,6 +38,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     Button okButton, cancelButton;
     List<String> fiatCurrencies = new ArrayList<>();
     List<String> fiatCurrenciesFriendly = new ArrayList<>();
+    List<String> accountImages = new ArrayList<>();
     List<BankAccountNumber> bankAccounts = new ArrayList<>();
 
 
@@ -45,8 +46,11 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     private ErrorManager errorManager;
 
     ArrayAdapter<String> currencySpinnerAdapter;
+    ArrayAdapter<String> imagesSpinnerAdapter;
     Spinner currencySpinner;
+    Spinner accountImageSpinner;
     FiatCurrency selectedCurrency;
+    String selectedImageId;
     EditText accountNumberText;
     EditText accountAliasText;
 
@@ -74,6 +78,13 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
             fiatCurrenciesFriendly.add(f.getFriendlyName() + " (" + f.getCode() + ")");
         }
 
+        //Fill up accountImages
+        accountImages.add("Cube");
+        accountImages.add("Safe");
+        accountImages.add("Money");
+        accountImages.add("Money 2");
+        accountImages.add("Coins");
+        accountImages.add("Coins 2");
     }
 
 
@@ -89,6 +100,16 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         currencySpinner = (Spinner) layout.findViewById(R.id.bnk_add_account_currency_spinner);
         currencySpinner.setAdapter(currencySpinnerAdapter);
         currencySpinner.setOnItemSelectedListener(this);
+
+
+        imagesSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountImages);
+        imagesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        imagesSpinnerAdapter.notifyDataSetChanged();
+        accountImageSpinner = (Spinner) layout.findViewById(R.id.bnk_add_account_image_id_spinner);
+        accountImageSpinner.setAdapter(imagesSpinnerAdapter);
+        accountImageSpinner.setOnItemSelectedListener(this);
+
+
         configureToolbar();
         return layout;
     }
@@ -106,8 +127,20 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
 
     private boolean createAccount(){
 
-        String newAccountNumber = accountNumberText.getText().toString();
-        String newAlias = accountAliasText.getText().toString();
+        String newAccountNumber = accountNumberText.getText().toString().trim();
+        String newAlias = accountAliasText.getText().toString().trim();
+
+        //Check that account number is not blank
+        if(newAccountNumber.isEmpty()){
+            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account number", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        //Check that alias is not blank
+        if(newAlias.isEmpty()){
+            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account alias", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         //Check that newAccountNumber is different than every account number saved into database
         for(BankAccountNumber savedAccount : bankAccounts){
@@ -118,7 +151,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
             }
         }
 
-        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVINGS, newAlias, newAccountNumber, selectedCurrency, "1");
+        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVINGS, newAlias, newAccountNumber, selectedCurrency, selectedImageId);
         Toast.makeText(getActivity().getApplicationContext(), "Account created", Toast.LENGTH_SHORT).show();
 
         return true;
@@ -126,11 +159,18 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        try {
-            selectedCurrency = FiatCurrency.getByCode(fiatCurrencies.get(position));
+        int i = parent.getId();
 
-        } catch(InvalidParameterException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+        if(i == R.id.bnk_add_account_currency_spinner) {
+            try {
+                selectedCurrency = FiatCurrency.getByCode(fiatCurrencies.get(position));
+
+            } catch (InvalidParameterException e) {
+                errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+            }
+        }
+        else if(i == R.id.bnk_add_account_image_id_spinner) {
+            selectedImageId = accountImages.get(position);
         }
 
     }

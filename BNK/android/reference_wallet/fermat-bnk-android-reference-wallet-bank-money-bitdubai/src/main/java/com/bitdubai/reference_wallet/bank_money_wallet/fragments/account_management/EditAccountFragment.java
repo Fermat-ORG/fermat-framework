@@ -37,7 +37,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Alejandro Bicelis on 12/05/16.
  */
-public class EditAccountFragment extends AbstractFermatFragment {
+public class EditAccountFragment extends AbstractFermatFragment implements Spinner.OnItemSelectedListener {
 
     List<BankAccountNumber> bankAccounts = new ArrayList<>();
 
@@ -50,6 +50,11 @@ public class EditAccountFragment extends AbstractFermatFragment {
     private String oldAccountNumber;
     private String oldAlias;
     private String oldImageId;
+    private String newImageId;
+
+    List<String> accountImages = new ArrayList<>();
+    ArrayAdapter<String> imagesSpinnerAdapter;
+    Spinner accountImageSpinner;
 
     public static EditAccountFragment newInstance() {
         return new EditAccountFragment();
@@ -75,6 +80,13 @@ public class EditAccountFragment extends AbstractFermatFragment {
                 errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
 
+        //Fill up accountImages
+        accountImages.add("Cube");
+        accountImages.add("Safe");
+        accountImages.add("Money");
+        accountImages.add("Money 2");
+        accountImages.add("Coins");
+        accountImages.add("Coins 2");
     }
 
 
@@ -87,6 +99,14 @@ public class EditAccountFragment extends AbstractFermatFragment {
 
         accountNumberText.setText(oldAccountNumber);
         accountAliasText.setText(oldAlias);
+
+        imagesSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountImages);
+        imagesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        imagesSpinnerAdapter.notifyDataSetChanged();
+        accountImageSpinner = (Spinner) layout.findViewById(R.id.bnk_edit_account_image_id_spinner);
+        accountImageSpinner.setAdapter(imagesSpinnerAdapter);
+        accountImageSpinner.setOnItemSelectedListener(this);
+        accountImageSpinner.setSelection(accountImages.indexOf(oldImageId));
 
         configureToolbar();
         return layout;
@@ -102,9 +122,19 @@ public class EditAccountFragment extends AbstractFermatFragment {
 
     private boolean editAccount(){
 
-        String newAccountNumber = accountNumberText.getText().toString();
-        String newAlias = accountAliasText.getText().toString();
-        String newImageId = "1";
+        String newAccountNumber = accountNumberText.getText().toString().trim();
+        String newAlias = accountAliasText.getText().toString().trim();
+
+        //Check that account number is not blank
+        if(newAccountNumber.isEmpty()){
+            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account number", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        //Check that alias is not blank
+        if(newAlias.isEmpty()){
+            Toast.makeText(getActivity().getApplicationContext(), "Please enter a valid account alias", Toast.LENGTH_SHORT).show();
+            return false;
+        }
 
         //If something was indeed changed
         if(!oldAccountNumber.equals(newAccountNumber) || !oldAlias.equals(newAlias)) {
@@ -152,4 +182,16 @@ public class EditAccountFragment extends AbstractFermatFragment {
         menu.add(0, ReferenceWalletConstants.SAVE_ACTION, 0, "Save")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        int i = parent.getId();
+
+        if(i == R.id.bnk_edit_account_image_id_spinner) {
+            newImageId = accountImages.get(position);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {}
 }

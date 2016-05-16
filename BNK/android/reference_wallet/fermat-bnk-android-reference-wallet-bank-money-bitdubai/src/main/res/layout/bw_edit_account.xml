@@ -70,18 +70,27 @@
 
             android:textStyle="bold" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="30dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
-                android:gravity="center_horizontal"
-                android:text="Aqui falta la opcion de editar la imagen :)"
-                android:textColor="#ff0000"
-                android:textSize="@dimen/text_size"
-                />
+                android:layout_marginTop="40dp"
+                android:orientation="vertical"
+                android:paddingLeft="60dp"
+                android:paddingRight="60dp">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Image:"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/text_size" />
+
+                <Spinner
+                    android:id="@+id/bnk_edit_account_image_id_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawSelectorOnTop="true" />
+            </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
