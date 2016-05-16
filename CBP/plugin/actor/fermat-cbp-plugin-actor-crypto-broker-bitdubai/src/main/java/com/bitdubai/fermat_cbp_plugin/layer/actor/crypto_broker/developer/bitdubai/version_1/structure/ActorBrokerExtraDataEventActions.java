@@ -41,6 +41,8 @@ public class ActorBrokerExtraDataEventActions {
     private final CryptoBrokerActorPluginRoot pluginRoot;
     private final PluginVersionReference pluginVersionReference;
 
+    private List<CryptoBrokerWalletAssociatedSetting> associatedWallets;
+
     public ActorBrokerExtraDataEventActions(
             final CryptoBrokerManager cryptoBrokerANSManager,
             final CryptoBrokerWalletManager cryptoBrokerWalletManager,
@@ -105,7 +107,7 @@ public class ActorBrokerExtraDataEventActions {
             final CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
 
             final CryptoBrokerWalletSetting setting = wallet.getCryptoWalletSetting();
-            final List<CryptoBrokerWalletAssociatedSetting> associatedWallets = setting.getCryptoBrokerWalletAssociatedSettings();
+            associatedWallets = setting.getCryptoBrokerWalletAssociatedSettings();
 
             for (CryptoBrokerWalletAssociatedSetting merchandiseWallet : associatedWallets) {
                 Currency merchandise = merchandiseWallet.getMerchandise();
@@ -116,7 +118,13 @@ public class ActorBrokerExtraDataEventActions {
                     if (merchandise != currencyPayment) {
                         try {
                             Quote quote = wallet.getQuote(merchandise, 1f, currencyPayment);
-                            quotes.add(new CryptoBrokerQuote(quote));
+                            String supportedPlatforms = supportedPlatforms(merchandise);
+                            quotes.add(new CryptoBrokerQuote(
+                                    (Currency) quote.getMerchandise(),
+                                    quote.getFiatCurrency(),
+                                    quote.getPriceReference(),
+                                    supportedPlatforms
+                            ));
                         } catch (CantGetCryptoBrokerQuoteException e) {
                             this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                         }
@@ -141,5 +149,28 @@ public class ActorBrokerExtraDataEventActions {
         }
 
         return quotes;
+    }
+
+    public String supportedPlatforms(Currency merchandise){
+
+        String result = "";
+
+        ArrayList<String> list = new ArrayList<>();
+
+        for (CryptoBrokerWalletAssociatedSetting paymentWallet : associatedWallets) {
+            Currency currency = paymentWallet.getMerchandise();
+
+            if (merchandise == currency) {
+                if(!list.contains(paymentWallet.getPlatform().getCode())){
+                    list.add(paymentWallet.getPlatform().getCode());
+                }
+            }
+        }
+
+        for(String platform : list){
+            result += platform+":";
+        }
+
+        return result;
     }
 }

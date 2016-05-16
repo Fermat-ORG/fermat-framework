@@ -340,7 +340,8 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      * @throws CantGetCryptoBrokerWalletSettingException
      */
     boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall)
-            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
+            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, EarningsSettingsNotRegisteredException,
+            CantListEarningsPairsException, CantLoadEarningSettingsException;
 
     /**
      * @param location
@@ -743,6 +744,13 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
     void submitMerchandise(String contractHash)
             throws CantSubmitMerchandiseException;
 
+    /**
+     * This method send a merchandise according the contract elements.
+     *
+     * @param contractHash
+     */
+    boolean stockInTheWallet(String contractHash)
+            throws CantSubmitMerchandiseException;
     /**
      * This method execute a Broker Ack payment Business Transaction
      *

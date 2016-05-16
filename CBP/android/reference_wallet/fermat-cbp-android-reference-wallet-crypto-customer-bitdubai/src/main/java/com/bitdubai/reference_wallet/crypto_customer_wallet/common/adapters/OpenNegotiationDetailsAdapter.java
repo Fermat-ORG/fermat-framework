@@ -262,11 +262,11 @@ public class OpenNegotiationDetailsAdapter extends FermatAdapter<ClauseInformati
                 break;
             //DATE CLAUSES
             case CUSTOMER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_customer, clauseNumberImageRes, R.string.delivery_date_title);
+                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_customer, clauseNumberImageRes, R.string.ccw_delivery_date_title);
                 clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
             case BROKER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes, R.string.delivery_date_title);
+                clauseViewHolder.setViewResources(R.string.ccw_date_to_delivery_broker, clauseNumberImageRes, R.string.ccw_delivery_date_title);
                 clauseViewHolder.setStatus(negotiationStepStatus(clause.getStatus()));
                 break;
         }

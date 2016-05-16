@@ -87,7 +87,7 @@ public class CryptoCustomerActorPluginRoot extends AbstractPlugin implements Dat
                     this.cryptoCustomerActorDao = new CryptoCustomerActorDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
                     this.cryptoCustomerActorDao.initializeDatabase();
 
-                    fermatManager = new CustomerActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager, this, getPluginVersionReference());
+                    fermatManager = new CustomerActorManager(this.cryptoCustomerActorDao, cryptoBrokerANSManager, this);
 
                     ActorCustomerExtraDataEventActions handlerAction = new ActorCustomerExtraDataEventActions(cryptoBrokerANSManager, cryptoCustomerActorDao, cryptoBrokerActorConnectionManager);
 

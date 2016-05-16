@@ -188,6 +188,7 @@ public final class CryptoBrokerActorNetworkServiceDeveloperDatabaseFactory {
                 quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
                 quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
                 quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );
+                quotesColumns.add(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_SUPPORTED_PLATFORMS_COLUMN_NAME  );
 
                 /**
                  * Table Quotes addition.
