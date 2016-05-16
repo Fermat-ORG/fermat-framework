@@ -13,7 +13,7 @@ public class HardcodeConstants {
     /**
      * Represent the SERVER IP DEFAULT
      */
-    public static final String SERVER_IP_DEFAULT = "localhost";
+    public static final String SERVER_IP_DEFAULT = "52.35.64.221";
 
     /**
      * Represent the WS_PROTOCOL
@@ -23,7 +23,7 @@ public class HardcodeConstants {
     /**
      * Represent the DEFAULT_PORT
      */
-    public static final int DEFAULT_PORT = 9090;
+    public static final int DEFAULT_PORT = 8080;
 
     /**
      * Represents the value of DISABLE_CLIENT

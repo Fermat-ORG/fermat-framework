@@ -77,6 +77,44 @@ public class Package {
     }
 
     /**
+     * Private constructor with parameters.
+     *
+     * @param content                   content of the package.
+     * @param networkServiceTypeSource  type of network service who is sending the package.
+     * @param packageType               package type.
+     * @param signature                 signature of the package.
+     *
+     * @throws InvalidParameterException if the parameters are bad.
+     */
+    protected Package(final String             content                 ,
+                      final NetworkServiceType networkServiceTypeSource,
+                      final PackageType        packageType             ,
+                      final String             signature,
+                      final String clientDestination) {
+
+        if (content == null)
+            throw new InvalidParameterException("Content can't be null.");
+
+        if (networkServiceTypeSource == null)
+            throw new InvalidParameterException("networkServiceTypeSource can't be null.");
+
+        if (packageType == null)
+            throw new InvalidParameterException("packageType can't be null.");
+
+        if (signature == null)
+            throw new InvalidParameterException("signature can't be null.");
+
+        if (clientDestination == null)
+            throw new InvalidParameterException("clientDestination can't be null.");
+
+        this.content                  = content                 ;
+        this.networkServiceTypeSource = networkServiceTypeSource;
+        this.packageType              = packageType             ;
+        this.signature                = signature               ;
+        this.clientDestination        = clientDestination       ;
+    }
+
+    /**
      * Gets the value of content and returns
      *
      * @return content
@@ -161,6 +199,44 @@ public class Package {
                 networkServiceTypeSource,
                 packageType             ,
                 signature
+        );
+    }
+
+    /**
+     * Construct a package instance encrypted with the destination identity public key and signed
+     * whit the private key passed as an argument
+     *
+     * @param content                       content of the package.
+     * @param networkServiceTypeSource      type of network service who is sending the package.
+     * @param packageType                   package type.
+     * @param senderPrivateKey              the private key of the sender.
+     * @param destinationIdentityPublicKey  the public key of the receiver.
+     *
+     * @return Package signed instance
+     */
+    public static Package createInstance(final String             content              ,
+                                                final NetworkServiceType networkServiceTypeSource    ,
+                                                final PackageType        packageType                 ,
+                                                final String             senderPrivateKey            ,
+                                                final String             destinationIdentityPublicKey,
+                                                final String clientDestination) {
+
+        String messageHash = AsymmetricCryptography.encryptMessagePublicKey(
+                content,
+                destinationIdentityPublicKey
+        );
+
+        String signature   = AsymmetricCryptography.createMessageSignature(
+                messageHash,
+                senderPrivateKey
+        );
+
+        return new Package(
+                content                 ,
+                networkServiceTypeSource,
+                packageType             ,
+                signature,
+                clientDestination
         );
     }
 }

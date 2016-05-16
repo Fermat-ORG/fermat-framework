@@ -6,8 +6,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientRegisteredEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
@@ -161,6 +163,9 @@ public enum P2pEventType implements FermatEventEnum {
     NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED("NCAPR"){
         public NetworkClientProfileRegisteredEvent getNewEvent() { return new NetworkClientProfileRegisteredEvent(this); }
     },
+    NETWORK_CLIENT_CONNECTION_SUCCESS("NCCSU"){
+        public NetworkClientConnectionSuccessEvent getNewEvent() { return new NetworkClientConnectionSuccessEvent(this); }
+    },
     NETWORK_CLIENT_CONNECTION_LOST("NCCL"){
         public NetworkClientConnectionLostEvent getNewEvent() { return new NetworkClientConnectionLostEvent(this); }
     },
@@ -172,6 +177,9 @@ public enum P2pEventType implements FermatEventEnum {
     },
     NETWORK_CLIENT_REGISTERED("NCR"){
         public NetworkClientRegisteredEvent getNewEvent() { return new NetworkClientRegisteredEvent(this); }
+    },
+    NETWORK_CLIENT_ACTOR_FOUND("NCAF"){
+        public ActorFoundEvent getNewEvent() { return new ActorFoundEvent(this); }
     },
 
     /**

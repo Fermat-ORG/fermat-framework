@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -25,17 +24,23 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.Message;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.agents.NetworkServiceRegistrationProcessAgent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.ActorFoundEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionClosedEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionLostEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionSuccessEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNetworkServiceRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
@@ -44,7 +49,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -107,6 +114,16 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     protected List<FermatEventListener> listenersAdded;
 
+    /*
+     * Represent the listActorConnectIntoNode
+     */
+    protected Map<String,String> listActorConnectIntoNode;
+
+    /*
+     * Represent the listActorProfileConnectedInNode
+     */
+    protected Map<String, ActorProfile> listActorProfileConnectedInNode;
+
     /**
      * AGENTS DEFINITION ----->
      */
@@ -114,6 +131,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      * Represent the networkServiceRegistrationProcessAgent
      */
     private NetworkServiceRegistrationProcessAgent networkServiceRegistrationProcessAgent;
+
+    protected ActorProfile actorProfile;
 
     /**
      * Constructor with parameters
@@ -133,6 +152,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         this.registered            = Boolean.FALSE;
         this.listenersAdded        = new CopyOnWriteArrayList<>();
+        this.listActorConnectIntoNode = new HashMap<>();
+        this.listActorProfileConnectedInNode = new HashMap<>();
     }
 
     /**
@@ -356,6 +377,22 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         eventManager.addListener(connectionLostListener);
         listenersAdded.add(connectionLostListener);
 
+          /*
+         * 4. Listen and handle Actor Found Event
+         */
+        FermatEventListener actorFoundListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_FOUND);
+        actorFoundListener.setEventHandler(new ActorFoundEventHandler(this));
+        eventManager.addListener(actorFoundListener);
+        listenersAdded.add(actorFoundListener);
+
+          /*
+         * 4. Listen and handle Network Client Connection Success Event
+         */
+        FermatEventListener connectionSuccessListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS);
+        connectionSuccessListener.setEventHandler(new NetworkClientConnectionSuccessEventHandler(this));
+        eventManager.addListener(connectionSuccessListener);
+        listenersAdded.add(connectionSuccessListener);
+
     }
 
     public final void handleNetworkClientRegisteredEvent(final CommunicationChannels communicationChannel) throws FermatException {
@@ -370,6 +407,43 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         else {
             this.networkServiceRegistrationProcessAgent = new NetworkServiceRegistrationProcessAgent(this);
             this.networkServiceRegistrationProcessAgent.start();
+        }
+
+    }
+
+    public final void handleActorFoundEvent(String uriToNode, ActorProfile actorProfile){
+        listActorConnectIntoNode.put(actorProfile.getIdentityPublicKey(),uriToNode);
+        listActorProfileConnectedInNode.put(uriToNode,actorProfile);
+    }
+
+    /*
+     * with this uriToNode we can get the NetworkClientCommunicationConnection
+     * from the lit of the ClientsConnectionsManager to that connection specific
+     */
+    public final void handleNetworkClientConnectionSuccessEvent(String uriToNode){
+
+        if(listActorProfileConnectedInNode.containsKey(uriToNode)) {
+
+            // this is only to test, in a future we create a agent to do this procedure
+
+            NetworkClientConnection networkClientConnectionTemp = networkClientManager.getConnection(uriToNode);
+
+            String clientDestination = listActorProfileConnectedInNode.get(uriToNode).getClientIdentityPublicKey();
+            String receiver = listActorProfileConnectedInNode.get(uriToNode).getIdentityPublicKey();
+
+            Message message = new Message();
+            message.setSender("1489"); // pk of Sender of actor profile
+            message.setReceiver(receiver);
+            message.setMessageType(null);
+            message.setMessageStatus(MessageStatus.PENDING_TO_SEND);
+            message.setSignature("1489");
+            message.setContent("HELLOOOOOOOOOOOO FROM LAPTOP ACER");
+
+            //TODO aqui se envia el mensaje
+            // falto crear dos processor en el client
+            // el Transmit y el TransmitRespond
+            // ponte de acuerdo con robert leon
+            networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver, clientDestination);
         }
 
     }
@@ -458,28 +532,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
     }
 
     /**
-     * This method is automatically called when the network service receive
-     * a new message
-     *
-     * @param messageReceived
-     */
-    public synchronized void onNewMessageReceived(NetworkServiceMessage messageReceived) {
-
-    }
-
-    public synchronized void onSentMessage(NetworkServiceMessage messageSent) {
-
-    }
-
-    /**
-     * Get the database instance
-     * @return Database
-     */
-    public Database getDataBase() {
-        return null;
-    }
-
-    /**
      * This method is automatically called when the client connection was closed
      */
     protected void onNetworkClientConnectionClosed() {
@@ -499,12 +551,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         return this.identity.getPublicKey();
     }
-
-    public ECCKeyPair getIdentity() {
-
-        return identity;
-    }
-
 
     public final NetworkServiceProfile getProfile() {
 
