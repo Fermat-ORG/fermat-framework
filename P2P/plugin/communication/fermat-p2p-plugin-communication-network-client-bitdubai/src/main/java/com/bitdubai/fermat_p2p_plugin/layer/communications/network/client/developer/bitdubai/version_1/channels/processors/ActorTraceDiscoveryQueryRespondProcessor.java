@@ -184,7 +184,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                         }else{
 
                             // request connection to the Node extern in the clientsConnectionsManager
-                            clientsConnectionsManager.requestConnectionToNodeExtern(
+                            clientsConnectionsManager.requestConnectionToExternalNode(
                                     result.getActorProfile().getIdentityPublicKey(),
                                     uriToNode);
 

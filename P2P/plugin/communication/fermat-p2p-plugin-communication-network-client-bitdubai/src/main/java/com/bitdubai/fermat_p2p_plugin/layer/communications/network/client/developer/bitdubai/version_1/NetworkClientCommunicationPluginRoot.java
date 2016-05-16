@@ -166,7 +166,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * Initialize the clientsConnectionsManager to the Connections
              */
-            clientsConnectionsManager = new ClientsConnectionsManager(identity, errorManager, eventManager, locationManager);
+            clientsConnectionsManager = new ClientsConnectionsManager(identity, errorManager, eventManager, locationManager, this);
 
             /*
              * Add references to the node context
