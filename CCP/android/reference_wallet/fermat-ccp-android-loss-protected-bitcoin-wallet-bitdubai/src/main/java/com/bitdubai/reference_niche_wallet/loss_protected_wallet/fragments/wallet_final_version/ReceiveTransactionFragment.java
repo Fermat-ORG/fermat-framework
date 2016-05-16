@@ -63,7 +63,7 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
     /**
      * MANAGERS
      */
-    private LossProtectedWallet lossProtectedWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * DATA
      */
@@ -80,7 +80,8 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    //SettingsManager<LossProtectedWalletSettings> settingsManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -109,14 +110,11 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
 
             openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0); //get init data
 
-            lossProtectedWallet = lossWalletSession.getModuleManager().getCryptoWallet();
-            settingsManager = lossWalletSession.getModuleManager().getSettingsManager();
+            lossProtectedWalletManager = lossWalletSession.getModuleManager();
 
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
-            try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+           try {
+                   lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             }catch (Exception e){
 
             }
@@ -256,7 +254,7 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
                 LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossWalletSession.getIntraUserModuleManager();
                 if(intraUserLoginIdentity!=null) {
                     String intraUserPk = intraUserLoginIdentity.getPublicKey();
-                    lstTransactionsAvailable= lossProtectedWallet.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                    lstTransactionsAvailable= lossProtectedWalletManager.listAllActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, lossWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                     for (LossProtectedWalletTransaction cryptoWalletTransaction : lstTransactionsAvailable) {
                         List<LossProtectedWalletTransaction> listChild = new ArrayList<>();

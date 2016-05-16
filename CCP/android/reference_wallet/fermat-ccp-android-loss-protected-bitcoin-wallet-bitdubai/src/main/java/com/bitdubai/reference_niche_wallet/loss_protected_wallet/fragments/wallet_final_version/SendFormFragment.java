@@ -89,7 +89,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     /**
      * Plaform reference
      */
-    private LossProtectedWallet lossProtectedWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * UI
      */
@@ -100,8 +100,6 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
-
-
     /**
      * Adapters
      */
@@ -110,7 +108,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     /**
      * User selected
      */
-    private LossProtectedWalletContact cryptoWalletWalletContact;
+    private LossProtectedWalletContact lossProtectedWalletContact;
 
     private WalletContact walletContact;
     private boolean connectionDialogIsShow;
@@ -119,8 +117,9 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private FermatTextView txt_type;
     private ImageView spinnerArrow;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
-    BlockchainNetworkType blockchainNetworkType;
+   // SettingsManager<LossProtectedWalletSettings> settingsManager;
+    private LossProtectedWalletSettings lossProtectedWalletSettings;
+    private BlockchainNetworkType blockchainNetworkType;
     boolean lossProtectedEnabled;
 
 
@@ -136,16 +135,16 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         try {
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            lossProtectedWallet = appSession.getModuleManager().getCryptoWallet();
+            lossProtectedWalletManager = appSession.getModuleManager();
 
-            LossProtectedWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-            if(bitcoinWalletSettings != null) {
+            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            if(lossProtectedWalletSettings != null) {
 
-                lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
+                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+
+                lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
             }
 
 
@@ -428,17 +427,17 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     }
 
     private void setUpUIData() {
-        if(cryptoWalletWalletContact==null) {
-            cryptoWalletWalletContact = appSession.getLastContactSelected();
+        if(lossProtectedWalletContact==null) {
+            lossProtectedWalletContact = appSession.getLastContactSelected();
         }
-        if (cryptoWalletWalletContact != null) {
+        if (lossProtectedWalletContact != null) {
             try {
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView_contact, getResources(), false);
-                bitmapWorkerTask.execute(cryptoWalletWalletContact.getProfilePicture());
+                bitmapWorkerTask.execute(lossProtectedWalletContact.getProfilePicture());
             } catch (Exception e) {
                 Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
             }
-            contactName.setText(cryptoWalletWalletContact.getActorName());
+            contactName.setText(lossProtectedWalletContact.getActorName());
 
         } else {
             Picasso.with(getActivity()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(imageView_contact);
@@ -459,7 +458,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 //add connection like a wallet contact
                 try {
                     if (walletContact.isConnection) {
-                        cryptoWalletWalletContact = appSession.getModuleManager().getCryptoWallet().convertConnectionToContact(
+                        lossProtectedWalletContact = appSession.getModuleManager().getCryptoWallet().convertConnectionToContact(
                                 walletContact.name,
                                 Actors.INTRA_USER,
                                 walletContact.actorPublicKey,
@@ -471,7 +470,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                 blockchainNetworkType);
                     } else {
                         try {
-                            cryptoWalletWalletContact = appSession.getModuleManager().getCryptoWallet().findWalletContactById(walletContact.contactId, appSession.getIntraUserModuleManager().getPublicKey());
+                            lossProtectedWalletContact = appSession.getModuleManager().getCryptoWallet().findWalletContactById(walletContact.contactId, appSession.getIntraUserModuleManager().getPublicKey());
                         } catch (CantFindLossProtectedWalletContactException e) {
                             e.printStackTrace();
                         } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
@@ -479,14 +478,14 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                         }
                     }
 
-                    walletContact.name = cryptoWalletWalletContact.getActorName();
-                    walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
-                    if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) == null) {
+                    walletContact.name = lossProtectedWalletContact.getActorName();
+                    walletContact.actorPublicKey = lossProtectedWalletContact.getActorPublicKey();
+                    if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) == null) {
                         appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
                                 appSession.getIntraUserModuleManager().getPublicKey(),
                                 Actors.INTRA_USER,
-                                cryptoWalletWalletContact.getActorPublicKey(),
-                                cryptoWalletWalletContact.getActorType(),
+                                lossProtectedWalletContact.getActorPublicKey(),
+                                lossProtectedWalletContact.getActorType(),
                                 Platforms.CRYPTO_CURRENCY_PLATFORM,
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
@@ -499,13 +498,13 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                     } else {
 
-                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                        walletContact.address = lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
 
-                        if (cryptoWalletWalletContact != null) {
-                            walletContact.name = cryptoWalletWalletContact.getActorName();
-                            walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
+                        if (lossProtectedWalletContact != null) {
+                            walletContact.name = lossProtectedWalletContact.getActorName();
+                            walletContact.actorPublicKey = lossProtectedWalletContact.getActorPublicKey();
 
-                            appSession.getModuleManager().getCryptoWallet().requestAddressToKnownUser(
+                            lossProtectedWalletManager.requestAddressToKnownUser(
                                     appSession.getIntraUserModuleManager().getPublicKey(),
                                     Actors.INTRA_USER,
                                     cryptoWalletWalletContact.getActorPublicKey(),
@@ -518,9 +517,9 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                     blockchainNetworkType
                             );
 
-                            walletContact.contactId = cryptoWalletWalletContact.getContactId();
-                            walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
-                            walletContact.isConnection = cryptoWalletWalletContact.isConnection();
+                            walletContact.contactId = lossProtectedWalletContact.getContactId();
+                            walletContact.profileImage = lossProtectedWalletContact.getProfilePicture();
+                            walletContact.isConnection = lossProtectedWalletContact.isConnection();
                         }
 
                         setUpUIData();
@@ -528,48 +527,26 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                     }
                 }
 
-                catch(
-                        CantCreateLossProtectedWalletContactException e
-                        )
-
+                catch(CantCreateLossProtectedWalletContactException e)
                 {
                     appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "CantCreateWalletContactException- " + e.getMessage());
 
                 }
-
-                catch(
-                        ContactNameAlreadyExistsException e
-                        )
-
+                catch(ContactNameAlreadyExistsException e )
                 {
                     appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     showMessage(getActivity(), "ContactNameAlreadyExistsException- " + e.getMessage());
-
-
                 }
-
-                catch(
-                        CantListCryptoWalletIntraUserIdentityException e
-                        )
-
+                catch(CantListCryptoWalletIntraUserIdentityException e)
                 {
                     e.printStackTrace();
 
-                }
-
-                catch(
-                        CantRequestLossProtectedAddressException e
-                        )
-
+                }catch(CantRequestLossProtectedAddressException e)
                 {
                     e.printStackTrace();
                 }
-
-                catch(
-                        CantGetCryptoLossProtectedWalletException e
-                        )
-
+                catch(CantGetCryptoLossProtectedWalletException e)
                 {
                     e.printStackTrace();
                 }
@@ -609,7 +586,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
             if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                 im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             }
-            if (cryptoWalletWalletContact != null) {
+            if (lossProtectedWalletContact != null) {
                 sendCrypto();
             } else
                 Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
@@ -629,8 +606,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         try {
             //first check if have exchange rate info
             if(appSession.getActualExchangeRate() != 0){
-                if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
-                    CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWallet);
+                if (lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
+                    CryptoAddress validAddress = WalletUtils.validateAddress(lossProtectedWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), lossProtectedWallet);
                     if (validAddress != null) {
                         EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                         String amount = txtAmount.getText().toString();
@@ -679,10 +656,10 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     validAddress,
                                                     notes,
                                                     appSession.getAppPublicKey(),
-                                                    lossProtectedWallet.getActiveIdentities().get(0).getPublicKey(),
+                                                    lossProtectedWalletManager.getActiveIdentities().get(0).getPublicKey(),
                                                     Actors.INTRA_USER,
-                                                    cryptoWalletWalletContact.getActorPublicKey(),
-                                                    cryptoWalletWalletContact.getActorType(),
+                                                    lossProtectedWalletContact.getActorPublicKey(),
+                                                    lossProtectedWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                                     blockchainNetworkType,
                                                     appSession);
@@ -697,15 +674,15 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                     else{
                                         try {
 
-                                            lossProtectedWallet.send(
+                                            lossProtectedWalletManager.send(
                                                     amountDecimal.longValueExact(),
                                                     validAddress,
                                                     notes,
                                                     appSession.getAppPublicKey(),
                                                     lossProtectedWallet.getActiveIdentities().get(0).getPublicKey(),
                                                     Actors.INTRA_USER,
-                                                    cryptoWalletWalletContact.getActorPublicKey(),
-                                                    cryptoWalletWalletContact.getActorType(),
+                                                    lossProtectedWalletContact.getActorPublicKey(),
+                                                    lossProtectedWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                                     blockchainNetworkType
                                             );
@@ -760,7 +737,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private List<WalletContact> getWalletContactList() {
         List<WalletContact> contacts = new ArrayList<>();
         try {
-            List<LossProtectedWalletContact> walletContactRecords = appSession.getModuleManager().getCryptoWallet().listAllActorContactsAndConnections(appSession.getAppPublicKey(), appSession.getIntraUserModuleManager().getPublicKey());
+            List<LossProtectedWalletContact> walletContactRecords = lossProtectedWalletManager.listAllActorContactsAndConnections(appSession.getAppPublicKey(), appSession.getIntraUserModuleManager().getPublicKey());
             for (LossProtectedWalletContact wcr : walletContactRecords) {
 
                 String contactAddress = "";
