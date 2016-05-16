@@ -30,10 +30,10 @@ public interface NetworkClientManager {
     NetworkClientConnection getConnection(String uriToNode);
 
     /**
-     * Get requestConnectionToNodeExtern
+     * Get requestConnectionToExternalNode
      * @param identityPublicKey
      * @param uriToNode
      */
-    void requestConnectionToNodeExtern(String identityPublicKey, String uriToNode);
+    void requestConnectionToExternalNode(String identityPublicKey, String uriToNode);
 
 }

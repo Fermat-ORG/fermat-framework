@@ -513,7 +513,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      * Request connection to the Node extern in the clientsConnectionsManager
      */
     @Override
-    public void requestConnectionToNodeExtern(String identityPublicKey, String uriToNode) {
+    public void requestConnectionToExternalNode(String identityPublicKey, String uriToNode) {
 
         // request connection to the Node extern in the clientsConnectionsManager
         clientsConnectionsManager.requestConnectionToExternalNode(

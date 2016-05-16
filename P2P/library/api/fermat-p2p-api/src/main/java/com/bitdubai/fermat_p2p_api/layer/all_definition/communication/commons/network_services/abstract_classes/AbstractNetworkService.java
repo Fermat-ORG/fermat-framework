@@ -504,7 +504,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         listActorProfileConnectedInNode.put(uriToNode,actorProfile);
 
         // request connection to the Node extern in the clientsConnectionsManager
-        networkClientManager.requestConnectionToNodeExtern(
+        networkClientManager.requestConnectionToExternalNode(
                 actorProfile.getIdentityPublicKey(),
                 uriToNode);
 

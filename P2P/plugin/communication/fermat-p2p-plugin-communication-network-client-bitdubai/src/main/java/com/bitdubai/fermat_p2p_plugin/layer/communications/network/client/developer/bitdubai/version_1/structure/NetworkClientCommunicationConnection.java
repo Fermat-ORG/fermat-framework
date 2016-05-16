@@ -12,7 +12,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
@@ -25,7 +24,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NetworkServiceCallRequest;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.PackageMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -116,7 +114,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     * is used to validate if is connection to extern node
     * when receive checkinclient then send register all profile
     */
-    private boolean isConnectingToExternNode;
+    private boolean isConnectingToExternalNode;
 
     /*
      * Constructor
@@ -129,7 +127,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final PluginVersionReference pluginVersionReference,
                                                 NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
                                                 Integer nodesListPosition,
-                                                boolean isConnectingToExternNode){
+                                                boolean isConnectingToExternalNode){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -143,7 +141,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
-        this.isConnectingToExternNode = isConnectingToExternNode;
+        this.isConnectingToExternalNode = isConnectingToExternalNode;
 
         this.container              = ClientManager.createClient();
     }
@@ -269,8 +267,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * is used to validate if is connection to extern
      * node when receive checkinclient then send register all profile
      */
-    public boolean isConnectingToExternNode() {
-        return isConnectingToExternNode;
+    public boolean isConnectingToExternalNode() {
+        return isConnectingToExternalNode;
     }
 
     /*
