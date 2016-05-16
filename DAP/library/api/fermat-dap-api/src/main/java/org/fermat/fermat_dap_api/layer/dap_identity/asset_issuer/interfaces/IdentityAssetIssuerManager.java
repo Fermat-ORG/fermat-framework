@@ -1,14 +1,10 @@
 package org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces;
 
-import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantCreateNewIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
-import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
 
 import java.util.List;
 
@@ -21,7 +17,7 @@ import java.util.List;
  * The interface <code>IdentityAssetIssuerManager</code>
  * provides the methods to create and obtain intra users associated to a Device User.
  */
-public interface IdentityAssetIssuerManager extends ModuleManager<IssuerIdentitySettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<IssuerIdentitySettings> {
+public interface IdentityAssetIssuerManager extends FermatManager {
 
     /**
      * The method <code>getAllIntraWalletUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -67,5 +63,4 @@ public interface IdentityAssetIssuerManager extends ModuleManager<IssuerIdentity
      * @throws org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException
      */
     boolean hasIntraIssuerIdentity() throws CantListAssetIssuersException;
-
 }

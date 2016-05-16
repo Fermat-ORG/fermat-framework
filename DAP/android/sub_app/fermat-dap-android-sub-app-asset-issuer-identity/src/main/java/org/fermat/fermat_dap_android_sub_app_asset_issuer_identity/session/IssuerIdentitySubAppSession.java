@@ -4,14 +4,15 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.interfaces.AssetIssuerIdentityModuleManager;
 
 /**
  * Created by Francisco Vasquez
  */
-public class IssuerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp,IdentityAssetIssuerManager,SubAppResourcesProviderManager> {
+public class IssuerIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp, AssetIssuerIdentityModuleManager, SubAppResourcesProviderManager> {
 
-    public IssuerIdentitySubAppSession() {}
+    public IssuerIdentitySubAppSession() {
+    }
 
 //    /**
 //     * SubApps type

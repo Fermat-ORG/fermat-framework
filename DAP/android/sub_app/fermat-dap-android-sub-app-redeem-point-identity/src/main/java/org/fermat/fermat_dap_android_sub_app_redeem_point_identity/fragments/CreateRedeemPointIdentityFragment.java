@@ -44,6 +44,7 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.util.CommonLo
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantCreateNewRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 
 import java.io.ByteArrayOutputStream;
 import java.util.concurrent.ExecutorService;
@@ -108,7 +109,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-//            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
+//            redeemPointIdentitySubAppSession = appSession;
 //            moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
