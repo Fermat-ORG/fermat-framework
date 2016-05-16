@@ -15,6 +15,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateLocationPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
@@ -35,6 +37,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     private FermatEditText addressLineOneEditText;
     private FermatEditText addressLineTwoEditText;
 
+    private CryptoCustomerWalletModuleManager moduleManager;
 
     public static CreateNewLocationFragment newInstance() {
         return new CreateNewLocationFragment();
@@ -64,6 +67,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
+        moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
 
         configureToolbar();
 
@@ -120,11 +124,25 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
             if(locations.get(pos).equals("settings")){
                 locations.remove(pos);
                 locations.add(location.toString());
+
+                for (String loc : locations) {
+                    try {
+                        moduleManager.createNewLocation(loc, appSession.getAppPublicKey());
+                    } catch (CantCreateLocationPurchaseException e) {}
+                }
+
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_MY_LOCATIONS, appSession.getAppPublicKey());
             }
             if(locations.get(pos).equals("wizard")){
                 locations.remove(pos);
                 locations.add(location.toString());
+
+                for (String loc : locations) {
+                    try {
+                        moduleManager.createNewLocation(loc, appSession.getAppPublicKey());
+                    } catch (CantCreateLocationPurchaseException e) {}
+                }
+
                 changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS, appSession.getAppPublicKey());
             }
         } else {
