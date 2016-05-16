@@ -161,6 +161,11 @@ public class ConnectionOtherProfileFragment extends
             }catch (Exception e){
 
             } */
+            //Shows the external platform
+            externalPlatform.setText(
+                    fanCommunityInformation
+                            .getArtExternalPlatform()
+                            .getFriendlyName());
             Bitmap bitmap;
 
             if(fanCommunityInformation.getImage() != null && fanCommunityInformation.getImage().length > 0)
@@ -250,7 +255,7 @@ public class ConnectionOtherProfileFragment extends
                 onBackPressed();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         }
     }

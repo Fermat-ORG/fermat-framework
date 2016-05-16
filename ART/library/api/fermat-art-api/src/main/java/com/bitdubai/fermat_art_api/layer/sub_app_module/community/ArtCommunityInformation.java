@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.community;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -51,4 +52,15 @@ public interface ArtCommunityInformation extends Serializable {
      * @return
      */
     void setActorType(Actors actorType);
+
+    /**
+     * This method returns the Art External Platform.
+     * @return
+     */
+    ArtExternalPlatform getArtExternalPlatform();
+
+    /**
+     * This method sets the Art External Platform.
+     */
+    void setArtExternalPlatform(ArtExternalPlatform artExternalPlatform);
 }

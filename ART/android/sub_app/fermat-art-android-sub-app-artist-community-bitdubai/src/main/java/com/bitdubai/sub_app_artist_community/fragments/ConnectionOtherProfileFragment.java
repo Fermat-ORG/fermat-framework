@@ -164,6 +164,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
             }catch (Exception e){
 
             }*/
+            //Shows the external platform
+            externalPlatform.setText(
+                    artistCommunityInformation
+                            .getArtExternalPlatform()
+                            .getFriendlyName());
             Bitmap bitmap;
 
             if(artistCommunityInformation.getImage() != null && artistCommunityInformation.getImage().length > 0)

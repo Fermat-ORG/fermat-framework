@@ -6,6 +6,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantGetArtistSearchResult;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySearch;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class ArtistCommunitySearchImpl implements ArtistCommunitySearch {
             final List<ArtistCommunityInformation> artistCommunityInformationList = new ArrayList<>();
 
             for(ArtistExposingData aed : artistExposingDataList)
-                artistCommunityInformationList.add(new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(aed));
+                artistCommunityInformationList.add(new ArtistCommunityInformationImpl(aed));
 
             return artistCommunityInformationList;
 

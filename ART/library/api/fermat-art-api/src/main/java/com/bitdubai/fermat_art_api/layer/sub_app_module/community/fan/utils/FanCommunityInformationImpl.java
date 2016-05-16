@@ -2,23 +2,24 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExternalPlatformInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.AbstractArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
 
+import java.util.HashMap;
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/5/16.
  */
-public class FanCommunityInformationImpl implements FanCommunityInformation {
-
-    private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
-    private final ConnectionState connectionState;
-    private final UUID connectionId;
-    private Actors actorType;
+public class FanCommunityInformationImpl
+        extends AbstractArtCommunityInformation
+        implements FanCommunityInformation {
 
     public FanCommunityInformationImpl(final String publicKey,
                                                           final String alias,
@@ -61,39 +62,30 @@ public class FanCommunityInformationImpl implements FanCommunityInformation {
         this.image     = exposingData.getImage()    ;
         this.connectionState = null;
         this.connectionId = null;
+        this.artExternalPlatform = getArtExternalPlatform(
+                exposingData.getFanExternalPlatformInformation());
     }
 
-    @Override
-    public String getPublicKey() {
-        return publicKey;
+    /**
+     * This method returns the Art External Platform.
+     * @return
+     */
+    public ArtExternalPlatform getArtExternalPlatform(
+            FanExternalPlatformInformation fanExternalPlatformInformation){
+        HashMap<ArtExternalPlatform,String> fanExternalPlatformStringHashMap =
+                fanExternalPlatformInformation.getExternalPlatformInformationMap();
+        //We should return the default external platform.
+        if(fanExternalPlatformStringHashMap.containsKey(
+                ArtExternalPlatform.getDefaultExternalPlatform())){
+            return ArtExternalPlatform.getDefaultExternalPlatform();
+        } else{
+            Set<ArtExternalPlatform> keySet = fanExternalPlatformStringHashMap.keySet();
+            for(ArtExternalPlatform key : keySet){
+                //In this version we going to return the first platform that we find.
+                return key;
+            }
+            return ArtExternalPlatform.UNDEFINED;
+        }
     }
 
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
-    @Override
-    public byte[] getImage() {
-        return image;
-    }
-
-    @Override
-    public ConnectionState getConnectionState() {
-        return connectionState;
-    }
-
-    @Override
-    public UUID getConnectionId() {
-        return connectionId;
-    }
-
-    @Override
-    public Actors getActorType() {
-        return actorType;
-    }
-
-    public void setActorType(Actors actorType){
-        this.actorType = actorType;
-    }
 }
