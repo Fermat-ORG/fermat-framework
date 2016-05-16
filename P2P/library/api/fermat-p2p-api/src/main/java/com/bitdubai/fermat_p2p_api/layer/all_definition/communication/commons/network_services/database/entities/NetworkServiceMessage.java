@@ -38,7 +38,7 @@ public class NetworkServiceMessage implements Serializable {
     private           Timestamp                shippingTimestamp      ;
     private           Timestamp                deliveryTimestamp      ;
 
-    private           boolean                  isBetweenActors        ;
+    private           Boolean                  isBetweenActors        ;
     private transient FermatMessagesStatus     fermatMessagesStatus   ;
     private           FermatMessageContentType contentType            ;
 
@@ -49,9 +49,10 @@ public class NetworkServiceMessage implements Serializable {
 
 
     public NetworkServiceMessage() {
-        super();
+
         this.id = UUID.randomUUID();
         this.failCount = 0;
+        this.isBetweenActors = Boolean.FALSE;
     }
 
     public NetworkServiceMessage(final String                   content             ,
@@ -73,6 +74,7 @@ public class NetworkServiceMessage implements Serializable {
         this.shippingTimestamp    = shippingTimestamp   ;
         this.signature            = signature           ;
         this.failCount            = 0                   ;
+        this.isBetweenActors      = Boolean.FALSE       ;
     }
 
     public NetworkServiceMessage(final String                   content                ,
@@ -102,6 +104,11 @@ public class NetworkServiceMessage implements Serializable {
         this.fermatMessagesStatus    = fermatMessagesStatus   ;
         this.contentType             = contentType            ;
         this.signature               = signature              ;
+
+        if (senderActorType != null)
+            this.isBetweenActors     = Boolean.TRUE           ;
+        else
+            this.isBetweenActors     = Boolean.FALSE          ;
     }
 
     public UUID getId() {
@@ -224,11 +231,11 @@ public class NetworkServiceMessage implements Serializable {
         this.failCount = failCount;
     }
 
-    public boolean isBetweenActors() {
+    public Boolean isBetweenActors() {
         return isBetweenActors;
     }
 
-    public void setIsBetweenActors(boolean isBetweenActors) {
+    public void setIsBetweenActors(Boolean isBetweenActors) {
         this.isBetweenActors = isBetweenActors;
     }
 

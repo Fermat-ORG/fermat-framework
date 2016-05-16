@@ -18,6 +18,7 @@ import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.com
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.daos.IncomingMessagesDao</code>
@@ -33,8 +34,8 @@ public class IncomingMessagesDao extends AbstractBaseDao {
     public IncomingMessagesDao(final Database dataBase) {
 
         super(
-                dataBase                                ,
-                null // TODO complete
+                dataBase                    ,
+                INCOMING_MESSAGES_TABLE_NAME
         );
     }
 
