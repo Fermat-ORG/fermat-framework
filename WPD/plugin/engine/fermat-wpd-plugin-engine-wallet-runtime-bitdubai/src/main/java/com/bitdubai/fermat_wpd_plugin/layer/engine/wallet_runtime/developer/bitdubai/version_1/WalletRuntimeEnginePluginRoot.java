@@ -3777,8 +3777,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeHeader = new Header();
         runtimeHeader.setLabel("root");
         runtimeHeader.setHasExpandable(true);
+        runtimeHeader.setRemoveHeaderScroll(false);
+        runtimeHeader.setStartCollapse(true);
         runtimeActivity.setHeader(runtimeHeader);
-
 
 
         runtimeTabStrip = new TabStrip();
@@ -3803,6 +3804,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab = new Tab();
         runtimeTab.setLabel("Following");
         runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
+        runtimeTabStrip.setReduceTabHeight(true);
         runtimeTabStrip.addTab(runtimeTab);
 
 

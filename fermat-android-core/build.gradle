@@ -170,6 +170,6 @@ dependencies {
     //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
-    compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
+   // compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
 }
