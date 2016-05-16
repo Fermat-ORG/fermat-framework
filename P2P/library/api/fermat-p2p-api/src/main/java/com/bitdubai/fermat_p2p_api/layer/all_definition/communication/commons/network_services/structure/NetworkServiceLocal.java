@@ -86,7 +86,7 @@ public final class NetworkServiceLocal implements Observer {
             /*
              * process the new message receive
              */
-            networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(incomingMessage);
+            //networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(incomingMessage);
 
             incomingMessage.setFermatMessagesStatus(FermatMessagesStatus.READ);
             networkServiceConnectionManager.getIncomingMessagesDao().update(incomingMessage);

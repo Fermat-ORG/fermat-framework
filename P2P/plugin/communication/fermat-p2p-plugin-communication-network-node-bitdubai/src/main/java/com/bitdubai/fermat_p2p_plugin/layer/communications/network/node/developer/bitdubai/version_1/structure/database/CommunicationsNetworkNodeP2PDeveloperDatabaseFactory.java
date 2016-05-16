@@ -123,6 +123,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME);
         actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME);
         actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         /**
          * Table actor catalog addition.
          */
@@ -145,6 +146,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME);
         actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME);
         actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME);
         /**
          * Table actor catalog transaction addition.
@@ -168,6 +170,7 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_EXTRA_DATA_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HOSTED_TIMESTAMP_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME);
         /**
          * Table actors catalog transactions pending for propagation addition.

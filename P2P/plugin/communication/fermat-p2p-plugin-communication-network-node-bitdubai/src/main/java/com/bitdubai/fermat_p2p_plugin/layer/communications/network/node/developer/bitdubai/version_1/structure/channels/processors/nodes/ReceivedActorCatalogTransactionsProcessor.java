@@ -194,6 +194,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
+        actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
         actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
         /*
@@ -225,6 +226,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
         actorsCatalog.setName(actorsCatalogTransaction.getName());
         actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
+        actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
         actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
         /*
@@ -289,6 +291,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         transaction.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
         transaction.setName(actorsCatalogTransaction.getName());
         transaction.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
+        transaction.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
         transaction.setPhoto(actorsCatalogTransaction.getPhoto());
         transaction.setTransactionType(actorsCatalogTransaction.getTransactionType());
 

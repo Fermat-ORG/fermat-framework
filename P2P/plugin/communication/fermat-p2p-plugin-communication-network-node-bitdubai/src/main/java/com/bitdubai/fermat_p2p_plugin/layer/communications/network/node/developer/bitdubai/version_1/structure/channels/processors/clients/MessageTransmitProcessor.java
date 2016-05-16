@@ -119,7 +119,8 @@ public class MessageTransmitProcessor extends PackageProcessor {
 
             try {
 
-                LOG.error(exception.getMessage());
+                exception.printStackTrace();
+                //LOG.error(exception.getMessage());
 
                 messageTransmitRespond = new MessageTransmitRespond(MsgRespond.STATUS.FAIL, exception.getMessage(), messageContent.getId());
                 Package packageRespond = Package.createInstance(messageTransmitRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.MESSAGE_TRANSMIT_RESPOND, channelIdentityPrivateKey, senderIdentityPublicKey);

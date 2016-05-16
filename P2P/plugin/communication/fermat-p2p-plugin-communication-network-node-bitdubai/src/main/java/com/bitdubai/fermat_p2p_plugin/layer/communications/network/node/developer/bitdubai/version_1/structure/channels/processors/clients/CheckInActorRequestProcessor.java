@@ -150,6 +150,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         checkedInActor.setPhoto(actorProfile.getPhoto());
         checkedInActor.setExtraData(actorProfile.getExtraData());
         checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
+        checkedInActor.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
@@ -186,6 +187,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         checkedActorsHistory.setPhoto(actorProfile.getPhoto());
         checkedActorsHistory.setExtraData(actorProfile.getExtraData());
         checkedActorsHistory.setCheckType(CheckedActorsHistory.CHECK_TYPE_IN);
+        checkedActorsHistory.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){

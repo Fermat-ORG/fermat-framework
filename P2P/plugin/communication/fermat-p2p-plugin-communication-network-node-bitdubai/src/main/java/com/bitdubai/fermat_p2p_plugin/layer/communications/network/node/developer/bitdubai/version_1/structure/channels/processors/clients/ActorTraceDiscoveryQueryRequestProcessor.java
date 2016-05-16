@@ -203,6 +203,7 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
             actorProfile.setActorType(actorsCatalog.getActorType());
             actorProfile.setPhoto(actorsCatalog.getPhoto());
             actorProfile.setExtraData(actorsCatalog.getExtraData());
+            actorProfile.setClientIdentityPublicKey(actorsCatalog.getClientIdentityPublicKey());
 
             //TODO: SET THE LOCATION
             //actorProfile.setLocation();

@@ -34,6 +34,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_EXTRA_DATA_COLUMN_NAME = "extra_data";
     public static final String ACTOR_CATALOG_HOSTED_TIMESTAMP_COLUMN_NAME = "hosted_timestamp";
     public static final String ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "node_identity_public_key";
+    public static final String ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
 
     public static final String ACTOR_CATALOG_FIRST_KEY_COLUMN = "identity_public_key";
 
@@ -53,6 +54,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_TRANSACTION_EXTRA_DATA_COLUMN_NAME = "extra_data";
     public static final String ACTOR_CATALOG_TRANSACTION_HOSTED_TIMESTAMP_COLUMN_NAME = "hosted_timestamp";
     public static final String ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "node_identity_public_key";
+    public static final String ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
 
     public static final String ACTOR_CATALOG_TRANSACTION_FIRST_KEY_COLUMN = "hash_id";
@@ -73,6 +75,7 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_EXTRA_DATA_COLUMN_NAME = "extra_data";
     public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HOSTED_TIMESTAMP_COLUMN_NAME = "hosted_timestamp";
     public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "node_identity_public_key";
+    public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
 
     public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_FIRST_KEY_COLUMN = "hash_id";
