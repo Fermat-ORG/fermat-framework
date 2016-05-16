@@ -2,7 +2,6 @@ package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_recep
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
->>>>>>> b5b2290bab669f243b317060535a9709114cc9de
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
