@@ -14,6 +14,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.ActorTraceDiscoveryQueryRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.AddActorIntoCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInActorRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInClientRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInNetworkServiceRequestProcessor;
@@ -98,6 +99,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
          */
         registerMessageProcessor(new ActorTraceDiscoveryQueryRequestProcessor(this));
         registerMessageProcessor(new CheckInClientRequestProcessor(this));
+        registerMessageProcessor(new AddActorIntoCatalogProcessor(this));
         registerMessageProcessor(new CheckInNetworkServiceRequestProcessor(this));
         registerMessageProcessor(new CheckInActorRequestProcessor(this));
         registerMessageProcessor(new CheckInProfileDiscoveryQueryRequestProcessor(this));

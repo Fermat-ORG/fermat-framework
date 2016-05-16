@@ -113,6 +113,8 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
              */
             String npki = (String) endpointConfig.getUserProperties().remove(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME);
             session.getUserProperties().put(HeadersAttName.CPKI_ATT_HEADER_NAME,npki);
+            session.setMaxIdleTimeout(FermatWebSocketChannelEndpoint.MAX_IDLE_TIMEOUT);
+            session.setMaxTextMessageBufferSize(FermatWebSocketChannelEndpoint.MAX_MESSAGE_SIZE);
 
             /*
              * Mach the session whit the node public key identity
