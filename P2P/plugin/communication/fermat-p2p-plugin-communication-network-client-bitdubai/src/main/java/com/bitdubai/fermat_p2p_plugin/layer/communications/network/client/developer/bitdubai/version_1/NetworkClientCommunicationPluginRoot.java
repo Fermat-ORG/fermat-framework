@@ -516,7 +516,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     public void requestConnectionToNodeExtern(String identityPublicKey, String uriToNode) {
 
         // request connection to the Node extern in the clientsConnectionsManager
-        clientsConnectionsManager.requestConnectionToNodeExtern(
+        clientsConnectionsManager.requestConnectionToExternalNode(
                 identityPublicKey,
                 uriToNode);
 
