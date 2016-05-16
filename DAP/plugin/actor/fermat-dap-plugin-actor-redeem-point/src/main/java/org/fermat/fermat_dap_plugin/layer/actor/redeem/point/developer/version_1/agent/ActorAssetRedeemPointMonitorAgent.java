@@ -29,14 +29,13 @@ import java.util.UUID;
 /**
  * Created by Nerio on 02/11/15.
  */
-public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger, DealsWithEvents, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
 
     private Thread agentThread;
     private MonitorAgent monitorAgent;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     RedeemPointActorDao redeemPointActorDao;
     UUID pluginId;
@@ -46,7 +45,6 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
     public ActorAssetRedeemPointMonitorAgent(EventManager eventManager,
                                              PluginDatabaseSystem pluginDatabaseSystem,
-                                             ErrorManager errorManager,
                                              UUID pluginId,
                                              AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager,
                                              RedeemPointActorDao redeemPointActorDao,
@@ -54,7 +52,6 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
         this.pluginId = pluginId;
         this.eventManager = eventManager;
-        this.errorManager = errorManager;
         this.assetRedeemPointActorNetworkServiceManager = assetRedeemPointActorNetworkServiceManager;
         this.redeemPointActorDao = redeemPointActorDao;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -63,7 +60,7 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
     @Override
     public void start() throws CantStartAgentException {
-        monitorAgent = new MonitorAgent(this.errorManager, this.pluginDatabaseSystem);
+        monitorAgent = new MonitorAgent(this.redeemPointPluginRoot, this.pluginDatabaseSystem);
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
@@ -71,12 +68,6 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
     @Override
     public void stop() {
         this.agentThread.interrupt();
-    }
-
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -101,13 +92,13 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
     private class MonitorAgent implements Runnable {
 
-        ErrorManager errorManager;
+        RedeemPointActorPluginRoot redeemPointPluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 60000;/*  / 1000 = TIME in SECONDS = 60 seconds */
         boolean threadWorking;
 
-        public MonitorAgent(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
-            this.errorManager = errorManager;
+        public MonitorAgent(RedeemPointActorPluginRoot redeemPointPluginRoot, PluginDatabaseSystem pluginDatabaseSystem) {
+            this.redeemPointPluginRoot = redeemPointPluginRoot;
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
 
@@ -130,7 +121,7 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
 
                     doTheMainTask();
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         }
@@ -160,13 +151,13 @@ public class ActorAssetRedeemPointMonitorAgent implements Agent, DealsWithLogger
                     }
                 }
             } catch (CantRequestListActorAssetRedeemPointRegisteredException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateActorRedeemPointException("CAN'T REQUEST LIST ACTOR ASSET REDEEM POINT NETWORK SERVICE, POSSIBLE NULL", e, "", "POSSIBLE REASON: " + assetRedeemPointActorNetworkServiceManager);
             } catch (CantAddPendingRedeemPointException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateActorRedeemPointException("CAN'T ADD LIST ACTOR ASSET REDEEM POINT IN BD ACTORS ", e, "", "");
             } catch (CantGetAssetRedeemPointActorsException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                redeemPointPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateActorRedeemPointException("CAN'T GET ASSET ACTOR ASSET REDEEM POINT", e, "", "");
             }
         }

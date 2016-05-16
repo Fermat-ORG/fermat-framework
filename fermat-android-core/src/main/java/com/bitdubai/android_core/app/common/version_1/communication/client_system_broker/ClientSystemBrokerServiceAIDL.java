@@ -65,7 +65,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     }
 
     public Object sendMessage(PluginVersionReference pluginVersionReference,String responseStr, Object proxy, Method method, Object[] args) throws Exception {
-        Log.i(TAG,"SendMessage start");
+        //Log.i(TAG,"SendMessage start");
         ModuleObjectParameterWrapper[] parameters = null;
         Class<?>[] parametersTypes = method.getParameterTypes();
         if(args!=null) {
@@ -154,7 +154,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 e.printStackTrace();
             }
         }
-        Log.i(TAG,"SendMessage return from server");
+        //Log.i(TAG,"SendMessage return from server");
 
 
         if(objectArrived!=null){
@@ -166,7 +166,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             return null;
         }
         Object o = null;
-        Log.i(TAG,"SendMessage almost end");
+        //Log.i(TAG,"SendMessage almost end");
         if(isDataChuncked){
             if(Looper.myLooper() == Looper.getMainLooper()) return new LargeWorkOnMainThreadException(proxy,method);
             //test reason

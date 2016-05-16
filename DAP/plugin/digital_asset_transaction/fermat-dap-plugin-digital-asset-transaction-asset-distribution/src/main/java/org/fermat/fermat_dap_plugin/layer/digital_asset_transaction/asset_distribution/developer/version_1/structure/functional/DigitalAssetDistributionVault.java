@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -15,34 +16,32 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
+
+
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/10/15.
  */
 public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
-    ErrorManager errorManager;
+
+    AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot;
 
     public DigitalAssetDistributionVault(UUID pluginId,
                                          PluginFileSystem pluginFileSystem,
-                                         ErrorManager errorManager,
+                                         AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot,
                                          AssetIssuerWalletManager assetIssuerWalletManager,
                                          ActorAssetIssuerManager actorAssetIssuerManager,
                                          BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException {
+
         setPluginFileSystem(pluginFileSystem);
         setPluginId(pluginId);
-        setErrorManager(errorManager);
+        this.assetDistributionDigitalAssetTransactionPluginRoot = assetDistributionDigitalAssetTransactionPluginRoot;
         LOCAL_STORAGE_PATH = "digital-asset-transmission/";
         setAssetIssuerWalletManager(assetIssuerWalletManager);
         setActorAssetIssuerManager(actorAssetIssuerManager);
         setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
-    }
-
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
-        if (errorManager == null) {
-            throw new CantSetObjectException("ErrorManager is null");
-        }
-        this.errorManager = errorManager;
     }
 
     public AssetIssuerWallet getIssuerWallet(BlockchainNetworkType networkType) throws CantLoadWalletException {
@@ -61,6 +60,7 @@ public class DigitalAssetDistributionVault extends AbstractDigitalAssetVault {
         try {
             return getIssuerWallet(networkType).getDigitalAssetMetadata(internalId);
         } catch (CantLoadWalletException e) {
+            this.assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetDigitalAssetFromLocalStorageException();
         }
     }

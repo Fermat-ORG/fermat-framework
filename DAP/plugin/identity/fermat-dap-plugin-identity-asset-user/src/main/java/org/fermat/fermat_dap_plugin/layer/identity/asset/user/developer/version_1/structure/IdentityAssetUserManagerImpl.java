@@ -2,10 +2,8 @@ package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -22,12 +20,11 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantLi
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.AssetUserIdentityPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDao;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -36,6 +33,8 @@ import java.util.UUID;
  * Created by franklin on 02/11/15.
  */
 public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
+
+    private final ActorAssetUserManager actorAssetUserManager;
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */
@@ -67,51 +66,32 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
      */
     private DeviceUserManager deviceUserManager;
 
-    private ActorAssetUserManager actorAssetUserManager;
+    AssetUserIdentityPluginRoot assetUserIdentityPluginRoot;
 
-//    @Override
-//    public void setErrorManager(ErrorManager errorManager) {
-//        this.errorManager = errorManager;
-//    }
-//
-//    @Override
-//    public void setLogManager(LogManager logManager) {
-//        this.logManager = logManager;
-//    }
-//
-//    @Override
-//    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-//        this.pluginDatabaseSystem = pluginDatabaseSystem;
-//    }
-//
-//    @Override
-//    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-//        this.pluginFileSystem = pluginFileSystem;
-//    }
 
     /**
      * Constructor
      *
-     * @param errorManager
      * @param logManager
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityAssetUserManagerImpl(ErrorManager errorManager,
-                                        LogManager logManager,
+
+    public IdentityAssetUserManagerImpl(LogManager logManager,
                                         PluginDatabaseSystem pluginDatabaseSystem,
                                         PluginFileSystem pluginFileSystem,
                                         UUID pluginId,
                                         DeviceUserManager deviceUserManager,
-                                        ActorAssetUserManager actorAssetUserManager) {
-
-        this.errorManager = errorManager;
+                                        ActorAssetUserManager actorAssetUserManager,
+                                        AssetUserIdentityPluginRoot assetUserIdentityPluginRoot) {
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.deviceUserManager = deviceUserManager;
         this.actorAssetUserManager = actorAssetUserManager;
+        this.assetUserIdentityPluginRoot = assetUserIdentityPluginRoot;
+
     }
 
     private AssetUserIdentityDao getAssetUserIdentityDao() throws CantInitializeAssetUserIdentityDatabaseException {
@@ -130,10 +110,13 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
             return assetUserList;
 
         } catch (CantGetLoggedInDeviceUserException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", e, "Error get logged user device", "");
         } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetUsersException("CAN'T GET ASSET USER  IDENTITIES", e, "", "");
         } catch (Exception e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
@@ -154,8 +137,10 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
 
             return identityAssetUser;
         } catch (CantGetLoggedInDeviceUserException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateNewIdentityAssetUserException("CAN'T CREATE NEW ASSET USER IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateNewIdentityAssetUserException("CAN'T CREATE NEW ASSET USER IDENTITY", FermatException.wrapException(e), "", "");
         }
     }
@@ -166,8 +151,10 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
 
             registerIdentities();
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
-        } catch (CantListAssetUserIdentitiesException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -191,6 +178,7 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
         try {
             identityAssetUser = getAssetUserIdentityDao().getIdentityAssetUser();
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         return identityAssetUser;
@@ -202,10 +190,13 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             return getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0;
         } catch (CantGetLoggedInDeviceUserException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        } catch (CantListAssetUserIdentitiesException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES EXISTS", e, "", "");
         } catch (Exception e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListAssetUsersException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
@@ -219,13 +210,17 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
-        } catch (CantListAssetUserIdentitiesException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
         } catch (CantCreateAssetUserActorException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
         }
     }
 
@@ -233,6 +228,7 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
         try {
             actorAssetUserManager.registerActorInActorNetworkService();
         } catch (CantRegisterActorAssetUserException e) {
+            assetUserIdentityPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }

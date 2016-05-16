@@ -34,7 +34,6 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
     }
 
     private final EventManager eventManager;
-    private ErrorManager errorManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private List<FermatEventListener> listenersAdded;

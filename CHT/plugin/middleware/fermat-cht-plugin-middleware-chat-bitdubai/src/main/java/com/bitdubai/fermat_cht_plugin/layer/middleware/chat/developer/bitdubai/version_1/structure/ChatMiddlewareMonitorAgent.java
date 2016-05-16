@@ -55,8 +55,10 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.ibm.icu.text.SimpleDateFormat;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -726,6 +728,16 @@ public class ChatMiddlewareMonitorAgent implements
      * @return
      */
     private Chat getChatFromChatMetadata(ChatMetadata chatMetadata) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        Date parsedDate = null;
+        try {
+            parsedDate = dateFormat.parse(chatMetadata.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+
         return new ChatImpl(
                 chatMetadata.getChatId(),
                 chatMetadata.getObjectId(),
@@ -735,8 +747,8 @@ public class ChatMiddlewareMonitorAgent implements
                 chatMetadata.getLocalActorPublicKey(),
                 chatMetadata.getChatName(),
                 ChatStatus.VISSIBLE,
-                chatMetadata.getDate(),
-                chatMetadata.getDate(),
+                timestamp,
+                timestamp,
                 TypeChat.INDIVIDUAL, //TODO:Revisar
                 false //TODO:Revisar
         );
@@ -787,6 +799,7 @@ public class ChatMiddlewareMonitorAgent implements
             Message message) {
         ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(timestamp);
             chatMetadata = new ChatMetadataRecord(
                     chat.getChatId(),
                     chat.getObjectId(),
@@ -797,7 +810,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chat.getChatName(),
                     ChatMessageStatus.READ_CHAT,
                     MessageStatus.SEND,
-                    timestamp,
+                    timeStamp,
                     message.getMessageId(),
                     message.getMessage(),
                     DistributionStatus.OUTGOING_MSG,

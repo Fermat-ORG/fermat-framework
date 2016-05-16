@@ -47,7 +47,7 @@ import java.util.concurrent.Executors;
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16. - Jose Briceño josebricenor@gmail.com (22/02/16)
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
-        maintainerMail = "nerioindriago@gmail.com",
+        maintainerMail = "marsvicam@gmail.com",
         createdBy = "victor",
         layer = Layers.NETWORK_SERVICE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,

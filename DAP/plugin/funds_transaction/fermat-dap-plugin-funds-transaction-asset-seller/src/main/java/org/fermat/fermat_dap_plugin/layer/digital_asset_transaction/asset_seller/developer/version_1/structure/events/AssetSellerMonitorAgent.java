@@ -66,6 +66,8 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.AssetSellerDigitalAssetTransactionPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/02/16.
@@ -78,20 +80,30 @@ public class AssetSellerMonitorAgent extends FermatAgent {
     private final AssetUserWalletManager userWalletManager;
     private final ActorAssetUserManager actorAssetUserManager;
     private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO dao;
-    private final ErrorManager errorManager;
     private final AssetTransmissionNetworkServiceManager assetTransmission;
     private final AssetVaultManager assetVaultManager;
     private final CryptoVaultManager cryptoVaultManager;
     private final BitcoinNetworkManager bitcoinNetworkManager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final ExtraUserManager extraUserManager;
+    AssetSellerDigitalAssetTransactionPluginRoot assetSellerDigitalAssetTransactionPluginRoot;
     //CONSTRUCTORS
 
-    public AssetSellerMonitorAgent(AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO dao, ErrorManager errorManager, AssetTransmissionNetworkServiceManager assetTransmission, AssetVaultManager assetVaultManager, BitcoinNetworkManager bitcoinNetworkManager, CryptoVaultManager cryptoVaultManager, CryptoAddressBookManager cryptoAddressBookManager, ExtraUserManager extraUserManager) {
+    public AssetSellerMonitorAgent(AssetUserWalletManager userWalletManager,
+                                   ActorAssetUserManager actorAssetUserManager,
+                                   AssetSellerDAO dao,
+                                   AssetSellerDigitalAssetTransactionPluginRoot assetSellerDigitalAssetTransactionPluginRoot,
+                                   AssetTransmissionNetworkServiceManager assetTransmission,
+                                   AssetVaultManager assetVaultManager,
+                                   BitcoinNetworkManager bitcoinNetworkManager,
+                                   CryptoVaultManager cryptoVaultManager,
+                                   CryptoAddressBookManager cryptoAddressBookManager,
+                                   ExtraUserManager extraUserManager) {
+
         this.userWalletManager = userWalletManager;
         this.actorAssetUserManager = actorAssetUserManager;
         this.dao = dao;
-        this.errorManager = errorManager;
+        this.assetSellerDigitalAssetTransactionPluginRoot = assetSellerDigitalAssetTransactionPluginRoot;
         this.assetTransmission = assetTransmission;
         this.assetVaultManager = assetVaultManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
@@ -110,6 +122,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             agentThread.start();
             super.start();
         } catch (Exception e) {
+            assetSellerDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartAgentException(FermatException.wrapException(e), null, null);
         }
     }
@@ -121,6 +134,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             sellerAgent = null; //RELEASE RESOURCES UNTIL WE START IT AGAIN.
             super.stop();
         } catch (Exception e) {
+            assetSellerDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStopAgentException(FermatException.wrapException(e), null, null);
         }
     }
@@ -156,13 +170,13 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                 try {
                     doTheMainTask();
                 } catch (Exception e) {
+                    assetSellerDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     e.printStackTrace();
-                    errorManager.reportUnexpectedPluginException(Plugins.ASSET_SELLER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 } finally {
                     try {
                         Thread.sleep(WAIT_TIME);
                     } catch (InterruptedException e) {
-                        errorManager.reportUnexpectedPluginException(Plugins.ASSET_SELLER, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        assetSellerDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                         agentRunning = false;
                     }
                 }
@@ -338,6 +352,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             try {
                 return extraUserManager.getActorByPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
             } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
+                assetSellerDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 byte[] image = digitalAssetMetadata.getDigitalAsset().getResources().isEmpty() ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
                 String actorName = "Asset " + digitalAssetMetadata.getDigitalAsset().getName() + " sold.";
                 return extraUserManager.createActor(actorName, image);

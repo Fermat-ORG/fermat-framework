@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -35,6 +35,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -71,6 +72,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 23.07.15.
  */
+@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 
 public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         WalletRuntimeManager,
@@ -91,8 +93,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -105,7 +106,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-
+        try {
 
         FermatEventListener fermatEventListener;
         FermatEventHandler fermatEventHandler;
@@ -151,23 +152,29 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
          * * *
          *
          */
-        try {
+
 
             loadLastWalletNavigationStructure();
             factoryReset();
 
         } catch (CantFactoryReset ex) {
+            ex.printStackTrace();
             String message = CantStartPluginException.DEFAULT_MESSAGE;
             FermatException cause = ex;
             String context = "AppNavigationStructure Runtime Start";
 
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
-        } catch (Exception e) {
-            e.printStackTrace();
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            String message = CantStartPluginException.DEFAULT_MESSAGE;
+
+            String context = "WalletNavigationStructure Runtime Start";
+
+            String possibleReason = "unknown error";
+            throw new CantStartPluginException(message, FermatException.wrapException(ex), context, possibleReason);
         }
 
-        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 

@@ -195,44 +195,51 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
                     try {
 
                         //verify loss protected settings
-                        //TODO:  esta verificacion de proteccion solo se valida si sabes que va a perder dinero
-                        settingsManager = appSession.getModuleManager().getSettingsManager();
-                        LossProtectedWalletSettings bitcoinWalletSettings = null;
-                        bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                        if(appSession.getActualExchangeRate() != 0){
+                            settingsManager = appSession.getModuleManager().getSettingsManager();
+                            LossProtectedWalletSettings bitcoinWalletSettings = null;
+                            bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
-                        lossProtectedWallet = appSession.getModuleManager().getCryptoWallet();
+                            lossProtectedWallet = appSession.getModuleManager().getCryptoWallet();
 
-                        lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
+                            lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
 
-                        long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
+                            long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
 
 
-                        if( data.getAmount() > availableBalance) //the amount is greater than the available
-                        {
-                            //check loss protected settings
-                            if (!lossProtectedEnabled) {
-                                //show dialog confirm
-                                Confirm_Send_Payment_Dialog confirm_send_dialog = new Confirm_Send_Payment_Dialog(context,
-                                        data.getAmount(),
-                                        data.getRequestId(), appSession,blockchainNetworkType,lossProtectedWallet);
-                                confirm_send_dialog.show();
+                            if( data.getAmount() > availableBalance) //the amount is greater than the available
+                            {
+                                //check loss protected settings
+                                if (!lossProtectedEnabled) {
+                                    //show dialog confirm
+                                    Confirm_Send_Payment_Dialog confirm_send_dialog = new Confirm_Send_Payment_Dialog(context,
+                                            data.getAmount(),
+                                            data.getRequestId(), appSession,blockchainNetworkType,lossProtectedWallet);
+                                    confirm_send_dialog.show();
+                                }
+                                else
+                                {
+                                    Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
+                                }
                             }
                             else
                             {
-                                Toast.makeText(context, "Action not allowed, You do not have enough funds", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                        else
-                        {
-                            //aprove payment request
+                                //aprove payment request
                                 lossProtectedWallet.approveRequest(data.getRequestId()
                                         , appSession.getIntraUserModuleManager().getPublicKey());
                                 Toast.makeText(context, "Request accepted", Toast.LENGTH_SHORT).show();
                                 notifyDataSetChanged();
                                 onRefreshList.onRefresh();
+                            }
                         }
+                        else
+                        {
+                            Toast.makeText(context, "Action not allowed.Could not retrieve the dollar exchange rate.\nCheck your internet connection.. ", Toast.LENGTH_LONG).show();
+
+                        }
+
 
 
                     } catch (Exception e) {
