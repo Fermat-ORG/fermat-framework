@@ -134,7 +134,14 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         }
 
 
-        openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        getExecutor().submit(new Runnable() {
+            @Override
+            public void run() {
+                openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            }
+        });
+
+
     }
 
     @Nullable
@@ -203,7 +210,13 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
 
-        if (openNegotiationList.isEmpty()) {
+        if(openNegotiationList!=null) {
+            if (openNegotiationList.isEmpty()) {
+                recyclerView.setVisibility(View.GONE);
+                emptyListViewsContainer = layout.findViewById(R.id.empty);
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            }
+        }else{
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = layout.findViewById(R.id.empty);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);

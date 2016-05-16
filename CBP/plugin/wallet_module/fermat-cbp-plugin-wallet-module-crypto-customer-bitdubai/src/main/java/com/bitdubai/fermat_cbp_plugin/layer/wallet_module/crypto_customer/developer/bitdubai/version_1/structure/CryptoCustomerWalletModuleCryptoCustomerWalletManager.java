@@ -1280,7 +1280,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
 
         try {
 
-            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation;
+            CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation negotiationInformation;
 
             Collection<Clause> negotiationClause = customerBrokerSaleNegotiation.getClauses();
             Map<ClauseType, ClauseInformation> clauses = getNegotiationClause(negotiationClause);
@@ -1306,7 +1306,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             if (customerBrokerSaleNegotiation.getCancelReason() != null)
                 cancelReason = customerBrokerSaleNegotiation.getCancelReason();
 
-            cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
+            negotiationInformation = new CryptoCustomerWalletModuleCustomerBrokerNegotiationInformation(
                     customerIdentity,
                     brokerIdentity,
                     negotiationId,
@@ -1318,7 +1318,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                     cancelReason
             );
 
-            return cryptoCustomerWalletModuleCustomerBrokerNegotiationInformation;
+            return negotiationInformation;
 
         } catch (CantGetListActorExtraDataException ex) {
             throw new CantGetNegotiationsWaitingForBrokerException(CantGetListActorExtraDataException.DEFAULT_MESSAGE, ex, "Not Get actorExtraData, Identity", "");
@@ -1328,41 +1328,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     }
 
     private Map<ClauseType, ClauseInformation> getNegotiationClause(Collection<Clause> negotiationClause) {
+        final Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
 
-        Map<ClauseType, ClauseInformation> clauses = new HashMap<>();
         for (Clause item : negotiationClause) {
-            clauses.put(
-                    item.getType(),
-                    putClause(item.getType(), item.getValue())
-            );
+            final ClauseInformation clauseInfo = new CryptoCustomerWalletModuleClauseInformation(item.getType(), item.getValue(), ClauseStatus.DRAFT);
+            clauses.put(item.getType(), clauseInfo);
         }
 
         return clauses;
-    }
-
-    private ClauseInformation putClause(final ClauseType clauseType, final String value) {
-
-        return new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return clauseType;
-            }
-
-            @Override
-            public String getValue() {
-                return (value != null) ? value : "";
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return ClauseStatus.DRAFT;
-            }
-        };
     }
 
     private ContractClauseType getContractClauseType(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation, ClauseType paramClauseType) throws

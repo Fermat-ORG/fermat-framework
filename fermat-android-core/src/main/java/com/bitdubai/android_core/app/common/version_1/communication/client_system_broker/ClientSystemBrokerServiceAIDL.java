@@ -27,6 +27,7 @@ import com.bitdubai.android_core.app.common.version_1.communication.server_syste
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.ModuleObjectParameterWrapper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import java.io.Serializable;
@@ -90,21 +91,34 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         String dataId = UUID.randomUUID().toString();
         boolean isDataChuncked = false;
         FermatModuleObjectWrapper objectArrived = null;
-
-        try {
-            objectArrived = iServerBrokerService.invoqueModuleMethod(
-                    serverIdentificationKey,
-                     dataId,
-                     pluginVersionReference.getPlatform().getCode(),
-                     pluginVersionReference.getLayers().getCode(),
-                     pluginVersionReference.getPlugins().getCode(),
-                     pluginVersionReference.getDeveloper().getCode(),
-                     pluginVersionReference.getVersion().toString(),
-                     method.getName(),
-                     parameters);
-        } catch (TransactionTooLargeException t){
+        MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
+        if(methodDetail!=null){
+            if(methodDetail.looType() == MethodDetail.LoopType.BACKGROUND){
+                Log.i(TAG,"Sending background request");
+                try {
+                    objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                            serverIdentificationKey,
+                            dataId,
+                            pluginVersionReference.getPlatform().getCode(),
+                            pluginVersionReference.getLayers().getCode(),
+                            pluginVersionReference.getPlugins().getCode(),
+                            pluginVersionReference.getDeveloper().getCode(),
+                            pluginVersionReference.getVersion().toString(),
+                            method.getName(),
+                            parameters);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i(TAG,"Sending background return");
+            }
+        }else {
             try {
-                objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                objectArrived = iServerBrokerService.invoqueModuleMethod(
                         serverIdentificationKey,
                         dataId,
                         pluginVersionReference.getPlatform().getCode(),
@@ -114,18 +128,31 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                         pluginVersionReference.getVersion().toString(),
                         method.getName(),
                         parameters);
+            } catch (TransactionTooLargeException t) {
+                try {
+                    objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                            serverIdentificationKey,
+                            dataId,
+                            pluginVersionReference.getPlatform().getCode(),
+                            pluginVersionReference.getLayers().getCode(),
+                            pluginVersionReference.getPlugins().getCode(),
+                            pluginVersionReference.getDeveloper().getCode(),
+                            pluginVersionReference.getVersion().toString(),
+                            method.getName(),
+                            parameters);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
-            }catch (RuntimeException e){
-                Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface "+proxy.getClass().getInterfaces()[0]+" in method:"+ method.getName());
-                e.printStackTrace();
-            } catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
         }
         Log.i(TAG,"SendMessage return from server");
 

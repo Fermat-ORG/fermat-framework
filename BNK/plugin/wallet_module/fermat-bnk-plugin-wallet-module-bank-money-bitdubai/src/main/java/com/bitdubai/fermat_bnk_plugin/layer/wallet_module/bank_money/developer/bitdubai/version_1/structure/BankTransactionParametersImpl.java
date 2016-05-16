@@ -76,6 +76,7 @@ public class BankTransactionParametersImpl implements BankTransactionParameters,
         return memo;
     }
 
+    @Override
     public TransactionType getTransactionType() {
         return transactionType;
     }

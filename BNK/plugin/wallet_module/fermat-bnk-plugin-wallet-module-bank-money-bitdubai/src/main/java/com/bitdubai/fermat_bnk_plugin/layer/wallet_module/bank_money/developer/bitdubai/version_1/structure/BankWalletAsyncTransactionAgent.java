@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.constants.BankWalletBroadcasterConstants;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
@@ -12,7 +13,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyW
 /**
  * Created by nelsonalfo on 11/05/16.
  */
-public class BankWalletAsyncTransactionAgent extends AsyncTransactionAgent<BankTransactionParametersImpl> {
+public class BankWalletAsyncTransactionAgent extends AsyncTransactionAgent<BankTransactionParameters> {
     private final BankMoneyWalletModuleManager moduleManager;
     private final Broadcaster broadcaster;
 
@@ -23,7 +24,7 @@ public class BankWalletAsyncTransactionAgent extends AsyncTransactionAgent<BankT
     }
 
     @Override
-    public void processTransaction(BankTransactionParametersImpl transaction) {
+    public void processTransaction(BankTransactionParameters transaction) {
         try{
             if(transaction.getTransactionType() == TransactionType.CREDIT)
                 moduleManager.makeDeposit(transaction);

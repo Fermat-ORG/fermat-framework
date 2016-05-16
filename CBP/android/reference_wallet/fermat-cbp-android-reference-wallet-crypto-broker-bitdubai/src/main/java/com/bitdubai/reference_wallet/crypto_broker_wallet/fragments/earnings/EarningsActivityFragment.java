@@ -18,14 +18,13 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningTransactionsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsCurrencyPairsAdapter;
@@ -37,9 +36,9 @@ import com.viewpagerindicator.LinePageIndicator;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
 import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
+import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
 
 
 /**
@@ -176,10 +175,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         boolean allExtracted = true;
 
         try {
-            final EarningsSearch earningsSearch = selectedEarningsPair.getSearch();
-            earningsSearch.setTransactionStateFilter(EarningTransactionState.CALCULATED);
-
-            final List<EarningTransaction> earningTransactions = earningsSearch.listResults();
+            final List<EarningTransaction> earningTransactions = moduleManager.searchEarnings(selectedEarningsPair, EarningTransactionState.CALCULATED);
             allExtracted = earningTransactions.isEmpty();
 
         } catch (CantListEarningTransactionsException e) {
@@ -196,8 +192,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
     private void extractEarnings() {
         if (selectedEarningsPair != null) {
             try {
-                final EarningsSearch search = selectedEarningsPair.getSearch();
-                final List<EarningTransaction> earningTransactions = search.listResults();
+                final List<EarningTransaction> earningTransactions = moduleManager.searchEarnings(selectedEarningsPair);
                 boolean earningsExtracted = moduleManager.extractEarnings(selectedEarningsPair, earningTransactions);
 
                 if(earningsExtracted)

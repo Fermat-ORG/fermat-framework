@@ -167,32 +167,64 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
 
     @Override
     public void makeAsyncDeposit(BankTransactionParameters bankTransactionParameters)  {
-        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.CREDIT);
-        tempLastParameter = parameters;
-        agent.queueNewTransaction(parameters);
+        tempLastParameter = new BankTransactionParametersImpl(
+                bankTransactionParameters.getTransactionId(),
+                bankTransactionParameters.getPublicKeyPlugin(),
+                bankTransactionParameters.getPublicKeyWallet(),
+                bankTransactionParameters.getPublicKeyActor(),
+                bankTransactionParameters.getAmount(),
+                bankTransactionParameters.getAccount(),
+                bankTransactionParameters.getCurrency(),
+                bankTransactionParameters.getMemo(),
+                TransactionType.CREDIT);
+
+        agent.queueNewTransaction(bankTransactionParameters);
     }
 
     @Override
     public void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters) {
-        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),bankTransactionParameters.getPublicKeyActor(),bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(),TransactionType.DEBIT);
-        tempLastParameter = parameters;
-        agent.queueNewTransaction(parameters);
+        tempLastParameter = new BankTransactionParametersImpl(
+                bankTransactionParameters.getTransactionId(),
+                bankTransactionParameters.getPublicKeyPlugin(),
+                bankTransactionParameters.getPublicKeyWallet(),
+                bankTransactionParameters.getPublicKeyActor(),
+                bankTransactionParameters.getAmount(),
+                bankTransactionParameters.getAccount(),
+                bankTransactionParameters.getCurrency(),
+                bankTransactionParameters.getMemo(),TransactionType.DEBIT);
+
+        agent.queueNewTransaction(bankTransactionParameters);
     }
 
     @Override
     public List<BankMoneyTransactionRecord> getPendingTransactions() {
         List<BankMoneyTransactionRecord> list = new ArrayList<>();
-        final List<BankTransactionParametersImpl> queuedTransactions = agent.getQueuedTransactions();
+        final List<BankTransactionParameters> queuedTransactions = agent.getQueuedTransactions();
 
-        for(BankTransactionParametersImpl data: queuedTransactions){
-            list.add(new BankTransactionRecordImpl(data.getAmount().floatValue(),data.getMemo(),new Date().getTime(),data.getTransactionType(), BankTransactionStatus.PENDING));
+        for(BankTransactionParameters data: queuedTransactions){
+            list.add(new BankTransactionRecordImpl(
+                    data.getAmount().floatValue(),
+                    data.getMemo(),
+                    new Date().getTime(),
+                    data.getTransactionType(),
+                    BankTransactionStatus.PENDING));
         }
         return list;
     }
 
     @Override
     public void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction) {
-        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(transaction.getBankTransactionId(),tempLastParameter.getPublicKeyPlugin(),tempLastParameter.getPublicKeyWallet(),tempLastParameter.getPublicKeyActor(),new BigDecimal(transaction.getAmount()),transaction.getBankAccountNumber(),transaction.getCurrencyType(),transaction.getMemo(),TransactionType.DEBIT);
+        BankTransactionParameters parameters= new BankTransactionParametersImpl(
+                transaction.getBankTransactionId(),
+                tempLastParameter.getPublicKeyPlugin(),
+                tempLastParameter.getPublicKeyWallet(),
+                tempLastParameter.getPublicKeyActor(),
+                new BigDecimal(transaction.getAmount()),
+                transaction.getBankAccountNumber(),
+                transaction.getCurrencyType(),
+                transaction.getMemo(),
+                TransactionType.DEBIT);
+
         try{
             agent.cancelTransaction(parameters);
         }catch (Exception e){

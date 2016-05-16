@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
@@ -9,12 +8,13 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by guillermo on 03/02/16.
  */
-public class BankTransactionRecordImpl implements BankMoneyTransactionRecord {
+public class BankTransactionRecordImpl implements BankMoneyTransactionRecord, Serializable {
 
     private float amount;
     private String memo;

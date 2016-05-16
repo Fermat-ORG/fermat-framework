@@ -243,6 +243,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
     private void sendLargeData(String dataId, String clientKey, Serializable data) {
         try {
+            Log.i(TAG,"Socket sending response to client");
             LocalServerSocketSession localServerSocketSession = socketsClients.get(clientKey);
             localServerSocketSession.sendMessage(dataId, data);
         } catch (Exception e) {
@@ -320,7 +321,7 @@ public class CommunicationServerService extends Service implements FermatWorkerC
 
                         } else {
                             //throw new NotSerializableException("Object returned: <null> from method: "+method +" is not implementing serializable");
-                            Log.e(TAG, "object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3());
+//                            Log.e(TAG, "object returned null in method: "+method+" from plugin: "+pluginVersionReference.toString3());
                         }
                     }
                     Serializable aidlObject = (Serializable) returnModuleObject;

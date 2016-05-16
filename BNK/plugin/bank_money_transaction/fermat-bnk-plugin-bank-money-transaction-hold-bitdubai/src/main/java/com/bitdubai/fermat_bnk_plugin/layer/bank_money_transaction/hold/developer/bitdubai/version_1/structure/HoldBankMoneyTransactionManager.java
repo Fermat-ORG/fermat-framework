@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantMakeHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
@@ -93,6 +94,7 @@ public class HoldBankMoneyTransactionManager implements HoldManager, Serializabl
 
     private void test(){
         final UUID id=UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+
         BankTransactionParameters t = new BankTransactionParameters() {
 
             @Override
@@ -133,6 +135,11 @@ public class HoldBankMoneyTransactionManager implements HoldManager, Serializabl
             @Override
             public String getMemo() {
                 return "test";
+            }
+
+            @Override
+            public TransactionType getTransactionType() {
+                return TransactionType.HOLD;
             }
         };
         try {
