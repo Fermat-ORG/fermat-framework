@@ -40,6 +40,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
@@ -130,6 +132,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      * Represent the networkServiceRegistrationProcessAgent
      */
     private NetworkServiceRegistrationProcessAgent networkServiceRegistrationProcessAgent;
+
+    protected ActorProfile actorProfile;
 
     /**
      * Constructor with parameters
@@ -425,11 +429,21 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
             NetworkClientConnection networkClientConnectionTemp = networkClientManager.getConnection(uriToNode);
 
+            String receiver = listActorProfileConnectedInNode.get(uriToNode).getClientIdentityPublicKey();
+
+            Message message = new Message();
+            message.setSender("1489"); // pk of Sender of actor profile
+            message.setReceiver(receiver);
+            message.setMessageType(null);
+            message.setMessageStatus(MessageStatus.PENDING_TO_SEND);
+            message.setSignature("1489");
+            message.setContent("HELLOOOOOOOOOOOO FROM LAPTOP ACER");
+
             //TODO aqui se envia el mensaje
             // falto crear dos processor en el client
             // el Transmit y el TransmitRespond
             // ponte de acuerdo con robert leon
-            networkClientConnectionTemp.sendPackageMessage(new Message(), listActorProfileConnectedInNode.get(uriToNode).getClientIdentityPublicKey());
+            networkClientConnectionTemp.sendPackageMessage(message, profile.getNetworkServiceType(), receiver);
         }
 
     }

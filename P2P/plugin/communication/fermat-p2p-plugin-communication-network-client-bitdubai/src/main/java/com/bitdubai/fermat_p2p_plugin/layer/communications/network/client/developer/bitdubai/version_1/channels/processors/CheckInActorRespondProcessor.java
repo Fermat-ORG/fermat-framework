@@ -2,7 +2,10 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientProfileRegisteredEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -63,6 +66,13 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
              */
             System.out.println("CheckInActorRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_PROFILE_REGISTERED");
             getEventManager().raiseEvent(event);
+
+//            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters("CBPCRCU",null,0.0,null,"publicKey2",null,0,null,null,0, NetworkServiceType.CRYPTO_CUSTOMER);
+//            try {
+//                getChannel().getNetworkClientCommunicationConnection().registeredProfileDiscoveryQuery(discoveryQueryParameters);
+//            } catch (CantRequestProfileListException e) {
+//                e.printStackTrace();
+//            }
 
         }else{
             //there is some wrong

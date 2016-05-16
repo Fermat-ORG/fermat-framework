@@ -575,18 +575,18 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
-    public void sendPackageMessage(PackageContent packageContent, String destinationIdentityPublicKey) {
+    public void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey) {
 
         if (isConnected()){
 
             try {
                 communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
                         PackageMessage.createInstance(
-                                packageContent.toJson(), // TODO aqui me bloquee
-                                NetworkServiceType.UNDEFINED, //TODO aqui debe ir el networkservicetype
+                                packageContent.toJson(),
+                                networkServiceType,
                                 PackageType.MESSAGE_TRANSMIT,
                                 clientIdentity.getPrivateKey(),
-                                destinationIdentityPublicKey // TODO le agregue esto porque va a un client en especifico
+                                destinationIdentityPublicKey
 
                         )
                 );
