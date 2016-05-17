@@ -46,8 +46,6 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
 
     private transient int                      failCount              = 0;
 
-
-
     public NetworkServiceMessage() {
 
         this.id = UUID.randomUUID();
@@ -189,10 +187,9 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
         return gson.toJson(this);
     }
 
-    public NetworkServiceMessage fromJson(String json) {
-
+    public static NetworkServiceMessage parseContent(String content) {
         Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateAdapter()).create();
-        return gson.fromJson(json, NetworkServiceMessage.class);
+        return gson.fromJson(content, NetworkServiceMessage.class);
     }
 
     public boolean equals(Object o) {

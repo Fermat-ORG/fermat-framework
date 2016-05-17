@@ -540,17 +540,18 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      *
      * @param incomingMessage received
      */
-    public final void onMessageReceived(NetworkServiceMessage incomingMessage) {
+    public final void onMessageReceived(String incomingMessage) {
 
         try {
 
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.parseContent(incomingMessage);
             /*
              * process the new message receive
              */
-            networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(incomingMessage);
+            networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(networkServiceMessage);
 
-            incomingMessage.setFermatMessagesStatus(FermatMessagesStatus.READ);
-            networkServiceConnectionManager.getIncomingMessagesDao().update(incomingMessage);
+            networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.READ);
+            networkServiceConnectionManager.getIncomingMessagesDao().update(networkServiceMessage);
 
         } catch (CantUpdateRecordDataBaseException | RecordNotFoundException e) {
             e.printStackTrace();
