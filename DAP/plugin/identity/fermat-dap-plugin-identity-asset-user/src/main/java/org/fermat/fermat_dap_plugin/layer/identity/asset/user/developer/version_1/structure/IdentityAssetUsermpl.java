@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetUsermpl implements IdentityAssetUser, Serializable {
+public class IdentityAssetUsermpl implements IdentityAssetUser {
 
     private String alias;
     private String publicKey;
@@ -30,32 +30,11 @@ public class IdentityAssetUsermpl implements IdentityAssetUser, Serializable {
     private PluginFileSystem pluginFileSystem;
     private UUID pluginId;
 
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
-//    @Override
-//    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-//        this.pluginFileSystem = pluginFileSystem;
-//    }
-
-    /**
-     * DealsWithPluginIdentity Interface implementation.
-     */
-//    @Override
-//    public void setPluginId(UUID pluginId) {
-//        this.pluginId = pluginId;
-//    }
-
-    /**
-     * Constructor
-     */
-    public IdentityAssetUsermpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public IdentityAssetUsermpl(String alias, String publicKey, String privateKey, byte[] profileImage) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.privateKey = privateKey;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
     }
 
     public IdentityAssetUsermpl(String alias, String publicKey, byte[] profileImage) {

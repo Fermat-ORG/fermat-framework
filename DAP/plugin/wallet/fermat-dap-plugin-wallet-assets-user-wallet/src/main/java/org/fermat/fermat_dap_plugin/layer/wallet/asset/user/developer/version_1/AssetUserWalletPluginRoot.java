@@ -115,7 +115,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
+            AssetUserWallet userWallet = new AssetUserWalletImpl(
                     this,
                     pluginDatabaseSystem,
                     pluginFileSystem,
@@ -137,7 +137,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            AssetUserWalletImpl userWallet = new AssetUserWalletImpl(
+            AssetUserWallet userWallet = new AssetUserWalletImpl(
                     this,
                     pluginDatabaseSystem,
                     pluginFileSystem,

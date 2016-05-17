@@ -44,6 +44,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteL
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.exceptions.CantExecuteAssetUserTransactionException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.exceptions.CantGetBalanceRecordException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional.AssetUserWalletTransactionWrapper;
@@ -67,7 +68,13 @@ public final class AssetUserWalletDao {
     private final ActorAssetRedeemPointManager redeemPointManager;
     private final Database database;
 
-    public AssetUserWalletDao(Database database, PluginFileSystem pluginFileSystem, UUID pluginId, ActorAssetUserManager userManager, ActorAssetIssuerManager issuerManager, ActorAssetRedeemPointManager redeemPointManager) {
+    public AssetUserWalletDao(Database database,
+                              PluginFileSystem pluginFileSystem,
+                              UUID pluginId,
+                              ActorAssetUserManager userManager,
+                              ActorAssetIssuerManager issuerManager,
+                              ActorAssetRedeemPointManager redeemPointManager) {
+
         this.pluginFileSystem = pluginFileSystem;
         this.database = database;
         this.plugin = pluginId;
@@ -144,7 +151,7 @@ public final class AssetUserWalletDao {
                 e.printStackTrace();
             }
             try {
-                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 DigitalAsset asset = (DigitalAsset) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAsset());
                 assetUserWalletBalance.setDigitalAsset(asset);
                 List<AssetUserWalletTransaction> allTx = listsTransactionsByAssets(asset.getGenesisAddress());
@@ -483,9 +490,9 @@ public final class AssetUserWalletDao {
     }
 
     public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
-        String context = "Path: " + org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Tx Hash: " + transactionHash;
+        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Tx Hash: " + transactionHash;
         try {
-            String metadataXML = pluginFileSystem.getTextFile(plugin, org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot.PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
+            String metadataXML = pluginFileSystem.getTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, transactionHash, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
             return (DigitalAssetMetadata) XMLParser.parseXML(metadataXML, new DigitalAssetMetadata());
         } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
@@ -493,9 +500,9 @@ public final class AssetUserWalletDao {
     }
 
     public DigitalAsset getDigitalAsset(String assetPublicKey) throws CantGetDigitalAssetFromLocalStorageException {
-        String context = "Path: " + org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Asset PK: " + assetPublicKey;
+        String context = "Path: " + AssetUserWalletPluginRoot.PATH_DIRECTORY + " - Asset PK: " + assetPublicKey;
         try {
-            String assetXML = pluginFileSystem.getTextFile(plugin, org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
+            String assetXML = pluginFileSystem.getTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT).getContent();
             return (DigitalAsset) XMLParser.parseXML(assetXML, new DigitalAsset());
         } catch (FileNotFoundException | CantCreateFileException e) {
             throw new CantGetDigitalAssetFromLocalStorageException(e, context, "The path could be wrong or there was an error creating the file.");
@@ -618,11 +625,11 @@ public final class AssetUserWalletDao {
             }
 
             String assetMetadataInnerXML = XMLParser.parseObject(assetUserWalletTransactionRecord.getDigitalAssetMetadata());
-            PluginTextFile metadataTextFile = pluginFileSystem.createTextFile(plugin, org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getGenesisTransaction(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile metadataTextFile = pluginFileSystem.createTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getGenesisTransaction(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             metadataTextFile.setContent(assetMetadataInnerXML);
             metadataTextFile.persistToMedia();
 
-            PluginTextFile assetTextFile = pluginFileSystem.createTextFile(plugin, org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile assetTextFile = pluginFileSystem.createTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             assetTextFile.setContent(assetUserWalletTransactionRecord.getDigitalAsset().toString());
             assetTextFile.persistToMedia();
 

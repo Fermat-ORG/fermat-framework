@@ -106,7 +106,7 @@ public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
 
             getAssetUserIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            IdentityAssetUsermpl identityAssetUser = new IdentityAssetUsermpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            IdentityAssetUser identityAssetUser = new IdentityAssetUsermpl(alias, publicKey, privateKey, profileImage);
 
             registerIdentities();
 
