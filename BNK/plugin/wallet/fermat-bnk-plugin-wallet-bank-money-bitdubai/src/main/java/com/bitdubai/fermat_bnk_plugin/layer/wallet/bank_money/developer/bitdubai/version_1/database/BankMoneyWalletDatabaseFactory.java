@@ -83,8 +83,8 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_NAME_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
-            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.TEXT, 0,false);
+            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.TEXT, 0,false);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_MEMO_COLUMN_NAME, DatabaseDataType.TEXT, 300, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_STATUS_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
@@ -105,8 +105,8 @@ public class BankMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BANK_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 100, Boolean.FALSE);
-            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, DatabaseDataType.TEXT, 0,false);
+            table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, DatabaseDataType.TEXT, 0,false);
             table.addColumn(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME, DatabaseDataType.TEXT, 100, false);
 
             table.addIndex(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
