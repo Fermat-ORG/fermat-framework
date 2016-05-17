@@ -12,10 +12,10 @@ List databaseTables = []
 databaseTables << [
         name: "Wallets",
         columns: [
-                ["Wallet Public Key", "STRING", "100", "true"],
+                ["Wallet Public Key", "TEXT", "100", "true"],
                 ["Available Balance", "MONEY", "100", "false"],
                 ["Book Balance", "MONEY", "100", "false"],
-                ["Currency", "STRING", "100", "false"],
+                ["Currency", "TEXT", "100", "false"],
                 ["Timestamp Wallet Creation", "LONG_INTEGER", "100", "false"],
         ],
         firstKey:"Wallet Public Key"
@@ -24,14 +24,14 @@ databaseTables << [
 databaseTables << [
         name: "Transactions",
         columns: [
-                ["Transaction ID", "STRING", "100", "true"],
-                ["Wallet Public Key", "STRING", "100", "false"],
-                ["Actor Public Key", "STRING", "100", "false"],
-                ["Plugin Public Key", "STRING", "100", "false"],
-                ["Transaction Type", "STRING", "100", "false"],
-                ["Balance Type", "STRING", "100", "false"],
+                ["Transaction ID", "TEXT", "100", "true"],
+                ["Wallet Public Key", "TEXT", "100", "false"],
+                ["Actor Public Key", "TEXT", "100", "false"],
+                ["Plugin Public Key", "TEXT", "100", "false"],
+                ["Transaction Type", "TEXT", "100", "false"],
+                ["Balance Type", "TEXT", "100", "false"],
                 ["Amount", "MONEY", "100", "false"],
-                ["Memo", "STRING", "100", "false"],
+                ["Memo", "TEXT", "100", "false"],
                 ["Timestamp", "LONG_INTEGER", "100", "false"],
         ],
         firstKey:"Transaction ID"
