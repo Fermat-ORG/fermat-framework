@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -18,6 +16,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.TokenlyFanIdentityPluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +24,8 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 10/03/16.
  */
-public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWithPluginIdentity, Fan {
+public class TokenlyFanIdentityImp implements
+        Fan, Serializable {
 
     private UUID id;
     private String tokenlyID;
@@ -266,16 +266,6 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
 
     public void setExternalPlatform(ExternalPlatform externalPlatform) {
         this.externalPlatform = externalPlatform;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     @Override

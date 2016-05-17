@@ -31,7 +31,7 @@ import java.util.UUID;
  */
 public class FanIdentityManager
         extends ModuleManagerImpl<TokenlyFanPreferenceSettings>
-        implements TokenlyFanIdentityManagerModule,Serializable {
+        implements TokenlyFanIdentityManagerModule, Serializable {
     private final ErrorManager errorManager;
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
@@ -118,7 +118,25 @@ public class FanIdentityManager
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws
             CantGetSelectedActorIdentityException,
             ActorIdentityNotSelectedException {
-        return null;
+        try{
+            List<Fan> fanaticList = tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Fan fanatic;
+            if(fanaticList!=null||!fanaticList.isEmpty()){
+                fanatic = fanaticList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(fanatic);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListFanIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
     }
 
     @Override

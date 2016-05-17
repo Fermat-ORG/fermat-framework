@@ -217,8 +217,27 @@ public class FanWalletModuleManagerImpl
     }*/
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+    public ActiveActorIdentityInformation getSelectedActorIdentity()
+            throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try{
+            List<Fan> fanaticList = tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Fan fanatic;
+            if(fanaticList!=null||!fanaticList.isEmpty()){
+                fanatic = fanaticList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(fanatic);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListFanIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
     }
 
     @Override

@@ -6,13 +6,14 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.ImageDe
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Swap;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.TokenlyBalance;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Arrays;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/03/16.
  */
-public class SwapBotRecord implements Bot {
+public class SwapBotRecord implements Bot, Serializable {
 
     private String id;
     private String name;
