@@ -143,11 +143,9 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
 
         if(id == R.id.btn_left){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.ic_profile_male));
+                getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
-                e.printStackTrace();
-            } catch (CantGetCryptoLossProtectedWalletException e) {
                 e.printStackTrace();
             }
             saveSettings();
@@ -155,7 +153,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
         }
         else if(id == R.id.btn_right){
             try {
-                final LossProtectedWallet cryptoWallet = getSession().getModuleManager().getCryptoWallet();
+                final LossProtectedWallet cryptoWallet = getSession().getModuleManager();
                 //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
@@ -168,7 +166,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
                             e.printStackTrace();
                         }
 
-            } catch (CantGetCryptoLossProtectedWalletException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             saveSettings();
@@ -183,11 +181,15 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
         if(type!=TYPE_PRESENTATION)
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
         if(checkbox_not_show.isChecked()){
-            SettingsManager<LossProtectedWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
+
+            LossProtectedWallet lossProtectedWalletManager = getSession().getModuleManager();
+            LossProtectedWalletSettings lossProtectedWalletSettings = null;
             try {
-                LossProtectedWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+
+                  lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(getSession().getAppPublicKey());
+                  lossProtectedWalletSettings.setIsPresentationHelpEnabled(false);
+                  lossProtectedWalletManager.persistSettings(getSession().getAppPublicKey(),lossProtectedWalletSettings);
+
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {

@@ -8,6 +8,7 @@ import com.thoughtworks.xstream.XStream;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,7 +21,7 @@ import java.util.UUID;
  * <p/>
  * Created by rodrigo on 9/4/15.
  */
-public class DigitalAssetMetadata {
+public class DigitalAssetMetadata implements Serializable {
 
     //VARIABLE DECLARATION
     /**

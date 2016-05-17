@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
         createdBy = "nindriago",
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.ASSET_ISSUER)
+        plugin = Plugins.ASSET_ISSUER_COMMUNITY)
 public class AssetIssuerCommunitySubAppModulePluginRoot extends AbstractModule<AssetIssuerSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 

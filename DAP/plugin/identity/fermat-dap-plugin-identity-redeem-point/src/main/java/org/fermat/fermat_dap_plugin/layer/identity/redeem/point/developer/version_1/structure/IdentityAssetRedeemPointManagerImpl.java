@@ -205,7 +205,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
 
             getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
 
-            IdentityAssetRedeemPointImpl identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
+            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId);
 
             registerIdentities();
 
@@ -234,7 +234,7 @@ public class IdentityAssetRedeemPointManagerImpl implements RedeemPointIdentityM
             getAssetRedeemPointIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, contactInformation,
                     countryName, provinceName, cityName, postalCode, streetName, houseNumber);
 
-            IdentityAssetRedeemPointImpl identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, pluginFileSystem, pluginId, contactInformation,
+            RedeemPointIdentity identityAssetRedeemPoint = new IdentityAssetRedeemPointImpl(alias, publicKey, privateKey, profileImage, contactInformation,
                     countryName, provinceName, cityName, postalCode, streetName, houseNumber);
 
             registerIdentities();

@@ -94,7 +94,9 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+
+     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
+
     private EventManager eventManager;
 
     public AppRuntimeEnginePluginRoot() {
@@ -165,11 +167,14 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
             String possibleReason = "Some null definition";
             throw new CantStartPluginException(message, cause, context, possibleReason);
-        }catch (Exception ex) {
+
+        }
+        catch (Exception ex) {
+
             ex.printStackTrace();
             String message = CantStartPluginException.DEFAULT_MESSAGE;
 
-            String context = "WalletNavigationStructure Runtime Start";
+            String context = "AppNavigationStructure Runtime Start";
 
             String possibleReason = "unknown error";
             throw new CantStartPluginException(message, FermatException.wrapException(ex), context, possibleReason);

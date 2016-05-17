@@ -57,7 +57,7 @@ import java.util.regex.Pattern;
         createdBy = "nindriago",
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.REDEEM_POINT)
+        plugin = Plugins.REDEEM_POINT_COMMUNITY)
 public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractModule<RedeemPointSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 

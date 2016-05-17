@@ -109,21 +109,21 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
         this.pluginId = pluginId;
     }
 
-    public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage) {
-        this.alias = alias;
-        this.publicKey = publicKey;
-        this.profileImage = profileImage;
-    }
+//    public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage) {
+//        this.alias = alias;
+//        this.publicKey = publicKey;
+//        this.profileImage = profileImage;
+//    }
+
     public IdentityAssetRedeemPointImpl(String alias, String publicKey, String privateKey, byte[] profileImage,
-                                        PluginFileSystem pluginFileSystem, UUID pluginId,String contactInformation,
-                                         String countryName, String provinceName, String cityName,
+                                        String contactInformation,
+                                        String countryName, String provinceName, String cityName,
                                         String postalCode, String streetName, String houseNumber) {
+
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.privateKey = privateKey;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
         this.contactInformation = contactInformation;
         this.countryName = countryName;
         this.provinceName = provinceName;
@@ -131,9 +131,8 @@ public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serial
         this.postalCode = postalCode;
         this.streetName = streetName;
         this.houseNumber = houseNumber;
-
-
     }
+
     public IdentityAssetRedeemPointImpl(String alias, String publicKey, byte[] profileImage, String contactInformation,
                                         String countryName, String provinceName, String cityName,
                                         String postalCode, String streetName, String houseNumber) {
