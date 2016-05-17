@@ -109,42 +109,34 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
 
             if(messages != null) {
 
-
                 /*
                  * For all destination in the message request a new connection
                  */
                 for (NetworkServiceMessage fermatMessage: messages) {
 
                     if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiverPublicKey())) {
-                        if (networkServiceRoot.getNetworkServiceConnectionManager().getNetworkServiceLocalInstance(fermatMessage.getReceiverPublicKey()) == null) {
 
-                            if (fermatMessage.isBetweenActors()) {
+                        if (fermatMessage.isBetweenActors()) {
 
-                                ActorProfile applicantParticipant = new ActorProfile();
-                                applicantParticipant.setClientIdentityPublicKey(fermatMessage.getSenderClientPublicKey());
-                                applicantParticipant.setIdentityPublicKey(fermatMessage.getSenderPublicKey());
-                                applicantParticipant.setActorType(fermatMessage.getSenderActorType());
+                            ActorProfile remoteParticipant = new ActorProfile();
+                            remoteParticipant.setClientIdentityPublicKey(fermatMessage.getReceiverClientPublicKey());
+                            remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
+                            remoteParticipant.setActorType(fermatMessage.getReceiverActorType());
 
-                                ActorProfile remoteParticipant = new ActorProfile();
-                                applicantParticipant.setClientIdentityPublicKey(fermatMessage.getReceiverClientPublicKey());
-                                applicantParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
-                                applicantParticipant.setActorType(fermatMessage.getReceiverActorType());
+                            networkServiceRoot.getNetworkServiceConnectionManager().connectTo(remoteParticipant);
 
-                                networkServiceRoot.getNetworkServiceConnectionManager().connectTo(applicantParticipant, remoteParticipant);
+                            poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
 
-                                poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
+                        } else {
 
-                            } else {
+                            NetworkServiceProfile remoteParticipant = new NetworkServiceProfile();
 
-                                NetworkServiceProfile remoteParticipant = new NetworkServiceProfile();
+                            remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
+                            remoteParticipant.setNetworkServiceType(networkServiceRoot.getProfile().getNetworkServiceType());
 
-                                remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
-                                remoteParticipant.setNetworkServiceType(networkServiceRoot.getProfile().getNetworkServiceType());
+                            networkServiceRoot.getNetworkServiceConnectionManager().connectTo(remoteParticipant);
 
-                                networkServiceRoot.getNetworkServiceConnectionManager().connectTo(remoteParticipant);
-
-                                poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
-                            }
+                            poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
                         }
                     }
                 }

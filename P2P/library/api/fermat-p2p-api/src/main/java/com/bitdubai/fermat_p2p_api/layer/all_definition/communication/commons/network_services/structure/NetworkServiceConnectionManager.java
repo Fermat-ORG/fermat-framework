@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.structure;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.daos.IncomingMessagesDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.daos.OutgoingMessagesDao;
@@ -12,6 +13,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,7 +30,6 @@ public final class NetworkServiceConnectionManager {
     private AbstractNetworkService networkServiceRoot;
     private final ErrorManager errorManager;
 
-    private Map<String, NetworkServiceLocal> networkServiceLocalsCache;
     private Map<String, NetworkServiceRemoteAgent> networkServiceRemoteAgentsCache;
 
     private IncomingMessagesDao incomingMessagesDao;
@@ -43,7 +44,6 @@ public final class NetworkServiceConnectionManager {
         this.incomingMessagesDao = new IncomingMessagesDao(networkServiceRoot.getDataBase());
         this.outgoingMessagesDao = new OutgoingMessagesDao(networkServiceRoot.getDataBase());
 
-        this.networkServiceLocalsCache       = new HashMap<>();
         this.networkServiceRemoteAgentsCache = new HashMap<>();
     }
 
@@ -64,13 +64,28 @@ public final class NetworkServiceConnectionManager {
 
     }
 
-    public void connectTo(ActorProfile applicantParticipant, ActorProfile applicantNetworkService) throws CantEstablishConnectionException {
+    public void connectTo(ActorProfile applicantNetworkService) throws CantEstablishConnectionException {
 
         try {
 
             /*
              * ask to the communicationLayerManager to connect to other actor
              */
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    applicantNetworkService.getActorType(),
+                    null,
+                    null,
+                    null,
+                    applicantNetworkService.getIdentityPublicKey(),
+                    null,
+                    null,
+                    null,
+                    networkServiceRoot.getProfile().getNetworkServiceType(),
+                    null,
+                    networkServiceRoot.getProfile().getNetworkServiceType()
+            );
+
+            networkServiceRoot.getConnection().actorTraceDiscoveryQuery(discoveryQueryParameters);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
@@ -88,10 +103,6 @@ public final class NetworkServiceConnectionManager {
             networkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();
         }
 
-        if(networkServiceLocalsCache.containsKey(remoteNetworkServicePublicKey)){
-            networkServiceLocalsCache.remove(remoteNetworkServicePublicKey);
-        }
-
     }
 
     public void closeAllConnection() {
@@ -105,46 +116,40 @@ public final class NetworkServiceConnectionManager {
      * Handles events that indicate a connection to been established between two
      * network services and prepares all objects to work with this new connection
      *
-     * @param remoteComponentProfile
+     * @param profileList
      */
-    public void handleEstablishedRequestedNetworkServiceConnection(Profile remoteComponentProfile) {
+    public void handleEstablishedRequestedNetworkServiceConnection(List<ActorProfile> profileList, String uriToNode) {
 
         try {
 
             /*
              * Get the active connection
              */
-            NetworkCallChannel networkCallChannel = null; //networkServiceRoot.getConnection().getCallChannel(networkServiceRoot.getProfile(), remoteComponentProfile);
+            NetworkClientConnection connection = networkServiceRoot.getConnection(uriToNode);
 
             //Validate the connection
-            if (networkCallChannel != null &&
-                    networkCallChannel.isActive()) {
+            if (connection != null &&
+                    connection.isConnected()) {
 
-                 /*
-                 * Instantiate the local reference
-                 */
-                NetworkServiceLocal networkServiceLocal = new NetworkServiceLocal(this, remoteComponentProfile, errorManager);
+                for (Profile profile : profileList) {
 
-                /*
-                 * Instantiate the remote reference
-                 */
-                NetworkServiceRemoteAgent networkServiceRemoteAgent = new NetworkServiceRemoteAgent(this, networkCallChannel, errorManager);
+                    NetworkServiceRemoteAgent networkServiceRemoteAgent = new NetworkServiceRemoteAgent(
+                            this,
+                            connection,
+                            profile,
+                            errorManager
+                    );
 
-                /*
-                 * Register the observer to the observable agent
-                 */
-                networkServiceRemoteAgent.addObserver(networkServiceLocal);
+                    /*
+                     * Start the service thread
+                     */
+                    networkServiceRemoteAgent.start();
 
-                /*
-                 * Start the service thread
-                 */
-                networkServiceRemoteAgent.start();
-
-                /*
-                 * Add to the cache
-                 */
-                networkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), networkServiceLocal);
-                networkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), networkServiceRemoteAgent);
+                    /*
+                     * Add to the cache
+                     */
+                    networkServiceRemoteAgentsCache.put(profile.getIdentityPublicKey(), networkServiceRemoteAgent);
+                }
 
             }
 
@@ -152,12 +157,6 @@ public final class NetworkServiceConnectionManager {
             e.printStackTrace();
             errorManager.reportUnexpectedPluginException(networkServiceRoot.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
-    }
-
-    public NetworkServiceLocal getNetworkServiceLocalInstance(String remoteNetworkServicePublicKey) {
-
-        //return the instance
-        return networkServiceLocalsCache.get(remoteNetworkServicePublicKey);
     }
 
     /*
