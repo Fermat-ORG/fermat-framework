@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -32,22 +31,15 @@ public final class NetworkServiceRemoteAgent extends Observable {
 
     private static final long SLEEP_TIME   = 2000;
     private static final int  SEND_TASK    =    0;
-    private static final int  RECEIVE_TASK =    1;
 
-    private final NetworkCallChannel              networkCallChannel             ;
+    private final NetworkClientConnection         networkClientConnection        ;
+    private final Profile                         remoteParticipant              ;
     private final ErrorManager                    errorManager                   ;
     private final NetworkServiceConnectionManager networkServiceConnectionManager;
     private       ExecutorService                 executorService                ;
     private final Future<?>[]                     futures                        = new Future[2];
 
     private Boolean running;
-
-    private Runnable toReceive = new Runnable() {
-        @Override
-        public void run() {
-            while (running) processMessageReceived();
-        }
-    };
 
     private Runnable toSend = new Runnable() {
         @Override
@@ -57,12 +49,14 @@ public final class NetworkServiceRemoteAgent extends Observable {
     };
 
     public NetworkServiceRemoteAgent(final NetworkServiceConnectionManager networkServiceConnectionManager,
-                                     final NetworkCallChannel              networkCallChannel             ,
+                                     final NetworkClientConnection         networkClientConnection        ,
+                                     final Profile                         remoteParticipant              ,
                                      final ErrorManager                    errorManager                   ) {
 
         this.errorManager                    = errorManager                   ;
         this.networkServiceConnectionManager = networkServiceConnectionManager;
-        this.networkCallChannel              = networkCallChannel             ;
+        this.networkClientConnection         = networkClientConnection        ;
+        this.remoteParticipant               = remoteParticipant              ;
 
         this.running                         = Boolean.FALSE                  ;
     }
@@ -78,13 +72,12 @@ public final class NetworkServiceRemoteAgent extends Observable {
             executorService.shutdownNow();
         }
 
-        this.executorService = Executors.newFixedThreadPool(2);
+        this.executorService = Executors.newFixedThreadPool(1);
 
         //Start the Threads
         futures[SEND_TASK] = executorService.submit(toSend);
-        futures[RECEIVE_TASK] = executorService.submit(toReceive);
 
-        System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
+        System.out.println("NetworkServiceRemoteAgent - started ");
 
     }
 
@@ -109,94 +102,13 @@ public final class NetworkServiceRemoteAgent extends Observable {
 
         //Stop the Threads
         futures[SEND_TASK].cancel(true);
-        futures[RECEIVE_TASK].cancel(true);
 
         executorService.shutdownNow();
         //Disconnect from the service
-        if(networkCallChannel.isActive())
-            networkCallChannel.closeChannel();
+        /*if(networkClientConnection.isConnected())
+            networkClientConnection.closeChannel();*/
 
-        System.out.println("CommunicationNetworkServiceRemoteAgent - stopped ");
-    }
-
-    /**
-     * This method process the message received and save on the
-     * data base in the table <code>incoming_messages</code> and notify all observers
-     * to the new messages received
-     */
-    private void processMessageReceived(){
-
-        try {
-
-            /**
-             * Verified the status of the connection
-             */
-            if (networkCallChannel.isActive()){
-
-                //System.out.println("CommunicationNetworkServiceRemoteAgent - networkCallChannel.getUnreadMessagesCount() = "+networkCallChannel.getUnreadMessagesCount());
-
-                /**
-                 * process all pending messages
-                 */
-                for (int i = 0; i < networkCallChannel.getUnreadMessagesCount(); i++) {
-
-                    /*
-                     * Read the next message in the queue
-                     */
-                    NetworkServiceMessage message = networkCallChannel.getNextUnreadMessage();
-
-                    /*
-                     * Validate the message signature
-                     */
-                    AsymmetricCryptography.verifyMessageSignature(message.getSignature(), message.getContent(), networkCallChannel.getRemoteParticipantNetworkService().getIdentityPublicKey());
-
-                    /*
-                     * Decrypt the message content
-                     */
-                    //message.setContent(AsymmetricCryptography.decryptMessagePrivateKey(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey()));
-
-                    /*
-                     * Change to the new status
-                     */
-                    message.setFermatMessagesStatus(FermatMessagesStatus.NEW_RECEIVED);
-
-                    /*
-                     * Save to the data base table
-                     */
-                    networkServiceConnectionManager.getIncomingMessagesDao().create(message);
-
-                    /*
-                     * Remove the message from the queue
-                     */
-                    networkCallChannel.markMessageAsRead(message);
-
-                    /*
-                     * Notify all observer of this agent that Received a new message
-                     */
-                    setChanged();
-                    notifyObservers(message);
-
-                }
-
-            }else{
-                networkServiceConnectionManager.closeConnection(networkCallChannel.getRemoteParticipant().getIdentityPublicKey());
-            }
-
-            if(Thread.currentThread().isInterrupted() == Boolean.FALSE) {
-                //Sleep for a time
-                Thread.sleep(NetworkServiceRemoteAgent.SLEEP_TIME);
-            }
-        } catch (InterruptedException e) {
-            running = false;
-            Thread.currentThread().interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
-        } catch (CantInsertRecordDataBaseException e) {
-            errorManager.reportUnexpectedPluginException(networkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
-            e.printStackTrace();
-        } catch(Exception e){
-            errorManager.reportUnexpectedPluginException(networkServiceConnectionManager.getNetworkServiceRoot().getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: " + e.getMessage()));
-        }
-
+        System.out.println("NetworkServiceRemoteAgent - stopped ");
     }
 
     /**
@@ -208,12 +120,12 @@ public final class NetworkServiceRemoteAgent extends Observable {
 
         try {
 
-            if (networkCallChannel.isActive()){
+            if (networkClientConnection.isConnected()){
                 try {
 
                     Map<String, Object> filters = new HashMap<>();
-                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
-                    filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME, networkCallChannel.getRemoteParticipant().getIdentityPublicKey());
+                    filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+                    filters.put(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, remoteParticipant.getIdentityPublicKey());
 
                     synchronized (this) {
                     /*
@@ -227,25 +139,23 @@ public final class NetworkServiceRemoteAgent extends Observable {
                         for (NetworkServiceMessage message : messages) {
 
 
-                            if (networkCallChannel.isActive() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)) {
-
-                            /*
-                             * Encrypt the content of the message whit the remote network service public key
-                             */
-                                message.setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), networkCallChannel.getRemoteParticipantNetworkService().getIdentityPublicKey()));
-
-                            /*
-                             * Sing the message
-                             */
-                            //String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
-                            //message.setSignature(signature);
-
-
+                            if (networkClientConnection.isConnected() && (message.getFermatMessagesStatus() == FermatMessagesStatus.PENDING_TO_SEND)) {
 
                                 /*
-                                 * Send the message
+                                 * Encrypt the content of the message whit the remote network service public key
                                  */
-                                networkCallChannel.sendMessage(message);
+                                if (message.isBetweenActors())
+                                    message.setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), message.getReceiverNsPublicKey()));
+                                else
+                                    message.setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), message.getReceiverPublicKey()));
+
+                                /*
+                                 * Sing the message
+                                 */
+                                String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
+                                message.setSignature(signature);
+
+                                networkClientConnection.sendPackageMessage(message, message.getNetworkServiceType(), message.getReceiverPublicKey(), message.getReceiverClientPublicKey());
 
                                 /*
                                  * Change the message and update in the data base
@@ -254,13 +164,12 @@ public final class NetworkServiceRemoteAgent extends Observable {
                                 networkServiceConnectionManager.getOutgoingMessagesDao().update(message);
 
                                 /*
-                                 * Notify a new message send
+                                 * Notify a message sent
                                  */
-                                //networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
-
+                                networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
                             } else {
-                                System.out.println("CommunicationNetworkServiceRemoteAgent - Call Channel is active = " + networkCallChannel.isActive());
+                                System.out.println("NetworkServiceRemoteAgent - Connection is connected = " + networkClientConnection.isConnected());
                             }
 
                         }
@@ -268,13 +177,13 @@ public final class NetworkServiceRemoteAgent extends Observable {
 
 
                 }catch (Exception e){
-                    System.out.println("CommunicationNetworkServiceRemoteAgent - Error sending message: " + e.getMessage());
+                    System.out.println("NetworkServiceRemoteAgent - Error sending message: " + e.getMessage());
                     e.printStackTrace();
                 }
 
 
-            }else{
-                networkServiceConnectionManager.closeConnection(networkCallChannel.getRemoteParticipant().getIdentityPublicKey());
+            } else {
+                networkServiceConnectionManager.closeConnection(remoteParticipant.getIdentityPublicKey());
             }
 
 
@@ -286,7 +195,7 @@ public final class NetworkServiceRemoteAgent extends Observable {
         } catch (InterruptedException e) {
             running = false;
             Thread.currentThread().interrupt();
-            System.out.println("CommunicationNetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
+            System.out.println("NetworkServiceRemoteAgent - Thread Interrupted stopped ...  ");
         }
     }
 }

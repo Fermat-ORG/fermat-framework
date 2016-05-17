@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateAdapter;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -21,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkServiceMessage implements Serializable {
+public class NetworkServiceMessage extends PackageContent implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -32,15 +33,15 @@ public class NetworkServiceMessage implements Serializable {
     private transient String                   senderClientPublicKey  ;
     private transient String                   senderActorType        ;
     private           String                   receiverPublicKey      ;
-    private           String                   receiverClientPublicKey;
-    private           String                   receiverActorType      ;
+    private transient String                   receiverNsPublicKey    ;
+    private transient String                   receiverClientPublicKey;
+    private transient String                   receiverActorType      ;
 
     private           Timestamp                shippingTimestamp      ;
     private           Timestamp                deliveryTimestamp      ;
 
     private           Boolean                  isBetweenActors        ;
     private transient FermatMessagesStatus     fermatMessagesStatus   ;
-    private           FermatMessageContentType contentType            ;
 
     private           String                   signature              ;
 
@@ -57,7 +58,6 @@ public class NetworkServiceMessage implements Serializable {
 
     public NetworkServiceMessage(final String                   content             ,
                                  final Timestamp                deliveryTimestamp   ,
-                                 final FermatMessageContentType contentType         ,
                                  final FermatMessagesStatus     fermatMessagesStatus,
                                  final String                   receiverPublicKey   ,
                                  final String                   senderPublicKey     ,
@@ -67,7 +67,6 @@ public class NetworkServiceMessage implements Serializable {
         this.id                   = UUID.randomUUID()   ;
         this.content              = content             ;
         this.deliveryTimestamp    = deliveryTimestamp   ;
-        this.contentType          = contentType         ;
         this.fermatMessagesStatus = fermatMessagesStatus;
         this.receiverPublicKey    = receiverPublicKey   ;
         this.senderPublicKey      = senderPublicKey     ;
@@ -88,7 +87,6 @@ public class NetworkServiceMessage implements Serializable {
                                  final Timestamp                shippingTimestamp      ,
                                  final Timestamp                deliveryTimestamp      ,
                                  final FermatMessagesStatus     fermatMessagesStatus   ,
-                                 final FermatMessageContentType contentType            ,
                                  final String                   signature              ) {
 
         this.content                 = content                ;
@@ -102,7 +100,6 @@ public class NetworkServiceMessage implements Serializable {
         this.shippingTimestamp       = shippingTimestamp      ;
         this.deliveryTimestamp       = deliveryTimestamp      ;
         this.fermatMessagesStatus    = fermatMessagesStatus   ;
-        this.contentType             = contentType            ;
         this.signature               = signature              ;
 
         if (senderActorType != null)
@@ -207,14 +204,6 @@ public class NetworkServiceMessage implements Serializable {
         this.fermatMessagesStatus = fermatMessagesStatus;
     }
 
-    public FermatMessageContentType getContentType() {
-        return contentType;
-    }
-
-    public void setContentType(FermatMessageContentType contentType) {
-        this.contentType = contentType;
-    }
-
     public String getSignature() {
         return signature;
     }
@@ -229,6 +218,14 @@ public class NetworkServiceMessage implements Serializable {
 
     public void setFailCount(int failCount) {
         this.failCount = failCount;
+    }
+
+    public String getReceiverNsPublicKey() {
+        return receiverNsPublicKey;
+    }
+
+    public void setReceiverNsPublicKey(String receiverNsPublicKey) {
+        this.receiverNsPublicKey = receiverNsPublicKey;
     }
 
     public Boolean isBetweenActors() {
@@ -273,13 +270,14 @@ public class NetworkServiceMessage implements Serializable {
                 ", senderClientPublicKey='" + senderClientPublicKey + '\'' +
                 ", senderActorType='" + senderActorType + '\'' +
                 ", receiverPublicKey='" + receiverPublicKey + '\'' +
+                ", receiverNsPublicKey='" + receiverNsPublicKey + '\'' +
                 ", receiverClientPublicKey='" + receiverClientPublicKey + '\'' +
                 ", receiverActorType='" + receiverActorType + '\'' +
                 ", shippingTimestamp=" + shippingTimestamp +
                 ", deliveryTimestamp=" + deliveryTimestamp +
                 ", isBetweenActors=" + isBetweenActors +
                 ", fermatMessagesStatus=" + fermatMessagesStatus +
-                ", contentType=" + contentType +
+                ", contentType=" + getMessageContentType() +
                 ", signature='" + signature + '\'' +
                 ", failCount=" + failCount +
                 '}';

@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 import java.sql.Timestamp;
@@ -27,6 +27,7 @@ import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.com
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ACTOR_TYPE_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_CLIENT_PUBLIC_KEY_COLUMN_NAME;
+import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ACTOR_TYPE_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_CLIENT_PUBLIC_KEY_COLUMN_NAME;
@@ -66,7 +67,7 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
             networkServiceMessage.setSenderPublicKey(record.getStringValue(OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME));
             networkServiceMessage.setReceiverPublicKey(record.getStringValue(OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME));
             networkServiceMessage.setContent(record.getStringValue(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME));
-            networkServiceMessage.setContentType(FermatMessageContentType.getByCode(record.getStringValue(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME)));
+            networkServiceMessage.setMessageContentType(MessageContentType.getByCode(record.getStringValue(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME)));
             networkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
 
             if (record.getStringValue(OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME) == null)
@@ -89,6 +90,8 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
 
                 networkServiceMessage.setSenderClientPublicKey(record.getStringValue(OUTGOING_MESSAGES_SENDER_CLIENT_PUBLIC_KEY_COLUMN_NAME));
                 networkServiceMessage.setReceiverClientPublicKey(record.getStringValue(OUTGOING_MESSAGES_RECEIVER_CLIENT_PUBLIC_KEY_COLUMN_NAME));
+
+                networkServiceMessage.setReceiverNsPublicKey(record.getStringValue(OUTGOING_MESSAGES_RECEIVER_NS_PUBLIC_KEY_COLUMN_NAME));
             }
 
         } catch (InvalidParameterException e) {
@@ -109,7 +112,7 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
         entityRecord.setStringValue(OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME, entity.getSenderPublicKey());
         entityRecord.setStringValue(OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, entity.getReceiverPublicKey());
         entityRecord.setStringValue(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME, entity.getContent());
-        entityRecord.setStringValue(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME, entity.getContentType().getCode());
+        entityRecord.setStringValue(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME, entity.getMessageContentType().getCode());
         entityRecord.setIntegerValue(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME, entity.getFailCount());
 
         if (entity.getShippingTimestamp() != null) {
@@ -126,15 +129,17 @@ public class OutgoingMessagesDao extends AbstractBaseDao {
 
         entityRecord.setStringValue(OUTGOING_MESSAGES_STATUS_COLUMN_NAME, entity.getFermatMessagesStatus().getCode());
 
-        if (entity.isBetweenActors()) {
+        entityRecord.setStringValue(OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME, entity.isBetweenActors().toString());
 
-            entityRecord.setStringValue(OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME, entity.isBetweenActors().toString());
+        if (entity.isBetweenActors()) {
 
             entityRecord.setStringValue(OUTGOING_MESSAGES_SENDER_CLIENT_PUBLIC_KEY_COLUMN_NAME, entity.getSenderClientPublicKey());
             entityRecord.setStringValue(OUTGOING_MESSAGES_RECEIVER_CLIENT_PUBLIC_KEY_COLUMN_NAME, entity.getReceiverClientPublicKey());
 
             entityRecord.setStringValue(OUTGOING_MESSAGES_SENDER_ACTOR_TYPE_COLUMN_NAME, entity.getSenderActorType());
             entityRecord.setStringValue(OUTGOING_MESSAGES_RECEIVER_ACTOR_TYPE_COLUMN_NAME, entity.getReceiverActorType());
+
+            entityRecord.setStringValue(OUTGOING_MESSAGES_RECEIVER_NS_PUBLIC_KEY_COLUMN_NAME, entity.getReceiverNsPublicKey());
 
         }
 

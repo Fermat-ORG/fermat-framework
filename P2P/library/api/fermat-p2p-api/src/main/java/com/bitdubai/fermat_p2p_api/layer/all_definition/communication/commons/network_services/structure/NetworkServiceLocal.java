@@ -8,7 +8,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -51,7 +51,7 @@ public final class NetworkServiceLocal implements Observer {
                     this.networkServiceConnectionManager.getNetworkServiceRoot().getProfile(),
                     (NetworkServiceProfile) remoteComponentProfile,
                     messageContent,
-                    FermatMessageContentType.TEXT
+                    MessageContentType.TEXT
             );
             /*
              * Save to the data base table
@@ -74,7 +74,7 @@ public final class NetworkServiceLocal implements Observer {
                     (ActorProfile) remoteComponentProfile,
                     this.networkServiceConnectionManager.getNetworkServiceRoot().getProfile(),
                     messageContent,
-                    FermatMessageContentType.TEXT
+                    MessageContentType.TEXT
             );
             /*
              * Save to the data base table
@@ -101,7 +101,7 @@ public final class NetworkServiceLocal implements Observer {
             /*
              * process the new message receive
              */
-            //networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(incomingMessage);
+            networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(incomingMessage);
 
             incomingMessage.setFermatMessagesStatus(FermatMessagesStatus.READ);
             networkServiceConnectionManager.getIncomingMessagesDao().update(incomingMessage);

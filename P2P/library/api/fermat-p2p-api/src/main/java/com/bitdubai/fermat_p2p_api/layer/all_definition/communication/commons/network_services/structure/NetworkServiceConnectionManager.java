@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.structure;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.daos.IncomingMessagesDao;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.daos.OutgoingMessagesDao;
@@ -114,11 +113,11 @@ public final class NetworkServiceConnectionManager {
             /*
              * Get the active connection
              */
-            NetworkCallChannel networkCallChannel = null; //networkServiceRoot.getConnection().getCallChannel(networkServiceRoot.getProfile(), remoteComponentProfile);
+            //NetworkCallChannel networkCallChannel = null; //networkServiceRoot.getConnection().getCallChannel(networkServiceRoot.getProfile(), remoteComponentProfile);
 
             //Validate the connection
-            if (networkCallChannel != null &&
-                    networkCallChannel.isActive()) {
+            /*if (networkCallChannel != null &&
+                    networkCallChannel.isActive()) {*/
 
                  /*
                  * Instantiate the local reference
@@ -128,7 +127,7 @@ public final class NetworkServiceConnectionManager {
                 /*
                  * Instantiate the remote reference
                  */
-                NetworkServiceRemoteAgent networkServiceRemoteAgent = new NetworkServiceRemoteAgent(this, networkCallChannel, errorManager);
+                NetworkServiceRemoteAgent networkServiceRemoteAgent = null;//new NetworkServiceRemoteAgent(this, networkCallChannel, errorManager);
 
                 /*
                  * Register the observer to the observable agent
@@ -145,8 +144,8 @@ public final class NetworkServiceConnectionManager {
                  */
                 networkServiceLocalsCache.put(remoteComponentProfile.getIdentityPublicKey(), networkServiceLocal);
                 networkServiceRemoteAgentsCache.put(remoteComponentProfile.getIdentityPublicKey(), networkServiceRemoteAgent);
-
-            }
+/*
+            }*/
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 
@@ -28,16 +28,16 @@ public class NetworkServiceMessageFactory {
      * @param senderProfile
      * @param receiverProfile
      * @param content
-     * @param fermatMessageContentType
+     * @param messageContentType
      *
      * @return a NetworkServiceMessage instance
      *
      * @throws FMPException
      */
-    public static NetworkServiceMessage buildNetworkServiceMessage(final NetworkServiceProfile    senderProfile           ,
-                                                                   final NetworkServiceProfile    receiverProfile         ,
-                                                                   final String                   content                 ,
-                                                                   final FermatMessageContentType fermatMessageContentType) throws FMPException {
+    public static NetworkServiceMessage buildNetworkServiceMessage(final NetworkServiceProfile senderProfile     ,
+                                                                   final NetworkServiceProfile receiverProfile   ,
+                                                                   final String                content           ,
+                                                                   final MessageContentType    messageContentType) throws FMPException {
 
         NetworkServiceMessage message = new NetworkServiceMessage();
 
@@ -50,7 +50,7 @@ public class NetworkServiceMessageFactory {
         message.setShippingTimestamp(new Timestamp(System.currentTimeMillis()));
         message.setIsBetweenActors(Boolean.FALSE);
         message.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-        message.setContentType(fermatMessageContentType);
+        message.setMessageContentType(messageContentType);
 
         return message;
     }
@@ -62,17 +62,17 @@ public class NetworkServiceMessageFactory {
      * @param receiverActorProfile
      * @param networkServiceProfile
      * @param content
-     * @param fermatMessageContentType
+     * @param messageContentType
      *
      * @return a NetworkServiceMessage instance
      *
      * @throws FMPException
      */
-    public static NetworkServiceMessage buildNetworkServiceMessage(final ActorProfile             senderActorProfile       ,
-                                                                   final ActorProfile             receiverActorProfile     ,
-                                                                   final NetworkServiceProfile    networkServiceProfile    ,
-                                                                   final String                   content                  ,
-                                                                   final FermatMessageContentType fermatMessageContentType ) throws FMPException {
+    public static NetworkServiceMessage buildNetworkServiceMessage(final ActorProfile          senderActorProfile   ,
+                                                                   final ActorProfile          receiverActorProfile ,
+                                                                   final NetworkServiceProfile networkServiceProfile,
+                                                                   final String                content              ,
+                                                                   final MessageContentType    messageContentType   ) throws FMPException {
 
         NetworkServiceMessage message = new NetworkServiceMessage();
 
@@ -84,10 +84,11 @@ public class NetworkServiceMessageFactory {
         message.setReceiverPublicKey(receiverActorProfile.getIdentityPublicKey());
         message.setReceiverClientPublicKey(receiverActorProfile.getClientIdentityPublicKey());
         message.setReceiverActorType(receiverActorProfile.getActorType());
+        message.setReceiverNsPublicKey(receiverActorProfile.getNsIdentityPublicKey());
         message.setShippingTimestamp(new Timestamp(System.currentTimeMillis()));
         message.setIsBetweenActors(Boolean.TRUE);
         message.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
-        message.setContentType(fermatMessageContentType);
+        message.setMessageContentType(messageContentType);
 
         return message;
     }

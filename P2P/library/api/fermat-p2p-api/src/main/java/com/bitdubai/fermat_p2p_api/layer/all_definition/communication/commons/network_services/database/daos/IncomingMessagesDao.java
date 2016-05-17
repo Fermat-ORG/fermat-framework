@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
 import java.sql.Timestamp;
@@ -51,7 +51,7 @@ public class IncomingMessagesDao extends AbstractBaseDao {
             networkServiceMessage.setSenderPublicKey(record.getStringValue(INCOMING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME));
             networkServiceMessage.setReceiverPublicKey(record.getStringValue(INCOMING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME));
             networkServiceMessage.setContent(record.getStringValue(INCOMING_MESSAGES_CONTENT_COLUMN_NAME));
-            networkServiceMessage.setContentType(FermatMessageContentType.getByCode(record.getStringValue(INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME)));
+            networkServiceMessage.setMessageContentType(MessageContentType.getByCode(record.getStringValue(INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME)));
             networkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME)));
 
             if (record.getStringValue(INCOMING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME) == null)
@@ -79,7 +79,7 @@ public class IncomingMessagesDao extends AbstractBaseDao {
         entityRecord.setStringValue(INCOMING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME, entity.getSenderPublicKey());
         entityRecord.setStringValue(INCOMING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, entity.getReceiverPublicKey());
         entityRecord.setStringValue(INCOMING_MESSAGES_CONTENT_COLUMN_NAME, entity.getContent());
-        entityRecord.setStringValue(INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME, entity.getContentType().getCode());
+        entityRecord.setStringValue(INCOMING_MESSAGES_CONTENT_TYPE_COLUMN_NAME, entity.getMessageContentType().getCode());
 
         if (entity.getShippingTimestamp() != null) {
             entityRecord.setLongValue(INCOMING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME, entity.getShippingTimestamp().getTime());
