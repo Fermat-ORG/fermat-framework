@@ -30,6 +30,13 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeve
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityProfileImageException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistProfileImageException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,15 +61,15 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetRedeemPointIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException {
+    public AssetRedeemPointIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetRedeemPointIdentityDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
 
         try {
             initializeDatabase();
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException(e.getMessage());
+        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+            throw new CantInitializeAssetRedeemPointIdentityDatabaseException(e.getMessage());
         }
     }
 
@@ -81,7 +88,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
      *
      * @throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException
      */
-    private void initializeDatabase() throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException {
+    private void initializeDatabase() throws CantInitializeAssetRedeemPointIdentityDatabaseException {
         try {
 
              /*
@@ -95,7 +102,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeAssetRedeemPointIdentityDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -115,12 +122,10 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeAssetRedeemPointIdentityDatabaseException(cantCreateDatabaseException.getMessage());
             }
         } catch (Exception e) {
-
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException(e.getMessage());
-
+            throw new CantInitializeAssetRedeemPointIdentityDatabaseException(e.getMessage());
         }
     }
 
@@ -160,14 +165,11 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         } catch (CantInsertRecordException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
-
         } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
-
         } catch (Exception e) {
             // Failure unknown.
-
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
         }
     }
@@ -218,14 +220,11 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         } catch (CantInsertRecordException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
-
         } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
-
         } catch (Exception e) {
             // Failure unknown.
-
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
         }
     }
@@ -278,16 +277,13 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public List<RedeemPointIdentity> getIdentityAssetRedeemPointsFromCurrentDeviceUser(DeviceUser deviceUser) throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException {
-
-
+    public List<RedeemPointIdentity> getIdentityAssetRedeemPointsFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListAssetRedeemPointIdentitiesException {
         // Setup method.
         List<RedeemPointIdentity> list = new ArrayList<>(); // Intra User list.
         DatabaseTable table; // Intra User table.
 
         // Get Redeem Point identities list.
         try {
-
             /**
              * 1) Get the table.
              */
@@ -299,13 +295,9 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
             }
-
-
             // 2) Find the Redeem Point.
             table.addStringFilter(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
-
-
             // 3) Get Redeem Point.
             for (DatabaseTableRecord record : table.getRecords()) {
 
@@ -316,30 +308,26 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                         getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId), );*/
-                list.add(new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointImpl(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
+                list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetRedeemPointIdentityPrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        pluginFileSystem,
-                        pluginId,
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_CONTACT_INFORMATION_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_COUNTRY_NAME_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_PROVINCE_NAME_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_CITY_NAME_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_POSTAL_CODE_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_STREET_NAME_COLUMN_NAME),
-                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME) ));
+                        record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ADDRESS_HOUSE_NUMBER_COLUMN_NAME)));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");
-        } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException e) {
+            throw new CantListAssetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");
+        } catch (CantGetAssetRedeemPointIdentityPrivateKeyException e) {
             // Failure unknown.
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Can't get private key.");
-
+            throw new CantListAssetRedeemPointIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Can't get private key.");
         } catch (Exception e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantListAssetRedeemPointIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Issuer identity list, unknown failure.");
+            throw new CantListAssetRedeemPointIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Issuer identity list, unknown failure.");
         }
-
         // Return the list values.
         return list;
     }
@@ -352,7 +340,6 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
 
         // Get Asset Issuers identities list.
         try {
-
             /**
              * 1) Get the table.
              */
@@ -364,8 +351,6 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
                  */
                 throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
             }
-
-
             // 2) Find the Identity Issuers.
 
 //            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
@@ -374,13 +359,12 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             // 3) Get Identity Issuers.
 
             for (DatabaseTableRecord record : table.getRecords()) {
-
                 // Add records to list.
                 /*redeemPointIdentityRecord = new IdentityAssetRedeemPointImpl(
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
-                redeemPointIdentityRecord = new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointImpl(
+                redeemPointIdentityRecord = new IdentityAssetRedeemPointImpl(
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetRedeemPointProfileImagePrivateKey(record.getStringValue(AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
@@ -403,7 +387,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         return redeemPointIdentityRecord;
     }
 
-    public byte[] getAssetRedeemPointProfileImagePrivateKey(String publicKey) throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityProfileImageException {
+    public byte[] getAssetRedeemPointProfileImagePrivateKey(String publicKey) throws CantGetAssetRedeemPointIdentityProfileImageException {
         byte[] profileImage;
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -418,12 +402,12 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             profileImage = file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
+            throw new CantGetAssetRedeemPointIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
         } catch (FileNotFoundException | CantCreateFileException e) {
             profileImage = new byte[0];
             // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
+            throw new CantGetAssetRedeemPointIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
         }
 
         return profileImage;
@@ -433,7 +417,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
      * Private Methods
      */
 
-    private void persistNewUserPrivateKeysFile(String publicKey, String privateKey) throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException {
+    private void persistNewUserPrivateKeysFile(String publicKey, String privateKey) throws CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
@@ -446,11 +430,11 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
         } catch (CantCreateFileException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
         } catch (Exception e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", FermatException.wrapException(e), "", "");
+            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -467,11 +451,11 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
         } catch (CantCreateFileException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
         } catch (Exception e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
+            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -483,7 +467,6 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
      * @throws CantCreateNewDeveloperException
      */
     private boolean aliasExists(String alias) throws CantCreateNewDeveloperException {
-
 
         DatabaseTable table;
         /**
@@ -503,7 +486,6 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
 
             return table.getRecords().size() > 0;
 
-
         } catch (CantLoadTableToMemoryException em) {
             throw new CantCreateNewDeveloperException(em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + AssetRedeemPointIdentityDatabaseConstants.ASSET_REDEEM_POINT_IDENTITY_TABLE_NAME + " table in memory.");
 
@@ -512,7 +494,7 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
         }
     }
 
-    public String getAssetRedeemPointIdentityPrivateKey(String publicKey) throws org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException {
+    public String getAssetRedeemPointIdentityPrivateKey(String publicKey) throws CantGetAssetRedeemPointIdentityPrivateKeyException {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
@@ -527,13 +509,12 @@ public class AssetRedeemPointIdentityDao implements DealsWithPluginDatabaseSyste
             privateKey = file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
+            throw new CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
         } catch (FileNotFoundException | CantCreateFileException e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
+            throw new CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
-            throw new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
+            throw new CantGetAssetRedeemPointIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
-
         return privateKey;
     }
 }
