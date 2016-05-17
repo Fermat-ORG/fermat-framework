@@ -3,8 +3,8 @@ buildscript {
         maven {
             url 'http://52.34.0.33:8081/artifactory/plugins-release'
             credentials {
-                username = "admin"
-                password = "password"
+                username = "fermat"
+                password = "fermat"
             }
             name = "maven-main-cache"
         }
@@ -115,8 +115,8 @@ artifactory {
         repository {
             repoKey = 'libs-release-local'
 
-            username = "admin"
-            password = "password"
+            username = "fermat"
+            password = "fermat"
         }
         defaults {
             publications('aar')
