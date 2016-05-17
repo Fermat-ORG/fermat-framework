@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -24,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.exceptions.CantGetSupAppRedeemPointModuleException;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.RedeemPointIdentitySettings;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_identity.interfaces.RedeemPointIdentityModuleManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.redeem_point_identity.developer.version_1.structure.RedeemPointIdentitySubAppModuleManager;
 
 import java.util.ArrayList;
@@ -49,8 +51,8 @@ public class RedeemPointIdentitySubAppModulePluginRoot extends AbstractModule<Re
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
+//    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+//    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
@@ -58,7 +60,7 @@ public class RedeemPointIdentitySubAppModulePluginRoot extends AbstractModule<Re
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.REDEEM_POINT)
     private RedeemPointIdentityManager redeemPointIdentityManager;
 
-    RedeemPointIdentitySubAppModuleManager redeemPointIdentitySubAppModuleManager = null;
+    RedeemPointIdentityModuleManager redeemPointIdentityModuleManager;
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -120,17 +122,28 @@ public class RedeemPointIdentitySubAppModulePluginRoot extends AbstractModule<Re
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = RedeemPointIdentitySubAppModuleManager.class)
+    public void start(){
+        /**
+         * Init the plugin manager
+         */
+        System.out.println("******* Init Redeem Point Sup App Module Identity ******");
+        redeemPointIdentityModuleManager = new RedeemPointIdentitySubAppModuleManager(redeemPointIdentityManager, pluginFileSystem, pluginId);
+
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+//    @moduleManagerInterfacea(moduleManager = RedeemPointIdentitySubAppModuleManager.class)
     public ModuleManager<RedeemPointIdentitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(RedeemPointIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity Sup AppModule instantiation started...", null, null);
+//            logManager.log(RedeemPointIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity Sup AppModule instantiation started...", null, null);
 
-            if (redeemPointIdentitySubAppModuleManager == null)
-                redeemPointIdentitySubAppModuleManager = new RedeemPointIdentitySubAppModuleManager(redeemPointIdentityManager, pluginFileSystem, pluginId);
+            if (redeemPointIdentityModuleManager == null)
+                redeemPointIdentityModuleManager = new RedeemPointIdentitySubAppModuleManager(redeemPointIdentityManager, pluginFileSystem, pluginId);
 
-            logManager.log(RedeemPointIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity Sup AppModule instantiation finished successfully.", null, null);
+//            logManager.log(RedeemPointIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Identity Sup AppModule instantiation finished successfully.", null, null);
 
-            return redeemPointIdentitySubAppModuleManager;
+            return redeemPointIdentityModuleManager;
 
         } catch (final Exception e) {
             throw new CantGetModuleManagerException(CantGetSupAppRedeemPointModuleException.DEFAULT_MESSAGE, FermatException.wrapException(e).toString());

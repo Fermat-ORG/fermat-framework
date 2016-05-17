@@ -4,25 +4,24 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.IssuerIdentitySettings;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_identity.interfaces.AssetIssuerIdentityModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.exceptions.CantGetSupAppRedeemPointModuleException;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset_issuer_identity.developer.version_1.structure.AssetIssuerIdentitySubAppModuleManager;
 
@@ -46,19 +45,19 @@ import java.util.regex.Pattern;
 public class AssetIssuerIdentitySubAppModulePluginRoot extends AbstractModule<IssuerIdentitySettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
+//    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
+//    private LogManager logManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
+//    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
+//    private ErrorManager errorManager;
+//
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.ASSET_ISSUER)
     private IdentityAssetIssuerManager identityAssetIssuerManager;
 
-    AssetIssuerIdentitySubAppModuleManager assetIssuerIdentitySubAppModuleManager = null;
+    AssetIssuerIdentityModuleManager assetIssuerIdentityModuleManager;
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -120,17 +119,28 @@ public class AssetIssuerIdentitySubAppModulePluginRoot extends AbstractModule<Is
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = AssetIssuerIdentitySubAppModuleManager.class)
+    public void start(){
+        /**
+         * Init the plugin manager
+         */
+        System.out.println("******* Init Asset Issuer Sup App Module Identity ******");
+        assetIssuerIdentityModuleManager = new AssetIssuerIdentitySubAppModuleManager(identityAssetIssuerManager, pluginFileSystem, pluginId);
+
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+//    @moduleManagerInterfacea(moduleManager = AssetIssuerIdentitySubAppModuleManager.class)
     public ModuleManager<IssuerIdentitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(AssetIssuerIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity Sup AppModule instantiation started...", null, null);
+//            logManager.log(AssetIssuerIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity Sup AppModule instantiation started...", null, null);
 
-            if (assetIssuerIdentitySubAppModuleManager == null)
-                assetIssuerIdentitySubAppModuleManager = new AssetIssuerIdentitySubAppModuleManager(identityAssetIssuerManager, pluginFileSystem, pluginId);
+            if (assetIssuerIdentityModuleManager == null)
+                assetIssuerIdentityModuleManager = new AssetIssuerIdentitySubAppModuleManager(identityAssetIssuerManager, pluginFileSystem, pluginId);
 
-            logManager.log(AssetIssuerIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity Sup AppModule instantiation finished successfully.", null, null);
+//            logManager.log(AssetIssuerIdentitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Issuer Identity Sup AppModule instantiation finished successfully.", null, null);
 
-            return assetIssuerIdentitySubAppModuleManager;
+            return assetIssuerIdentityModuleManager;
 
         } catch (final Exception e) {
             throw new CantGetModuleManagerException(CantGetSupAppRedeemPointModuleException.DEFAULT_MESSAGE, FermatException.wrapException(e).toString());

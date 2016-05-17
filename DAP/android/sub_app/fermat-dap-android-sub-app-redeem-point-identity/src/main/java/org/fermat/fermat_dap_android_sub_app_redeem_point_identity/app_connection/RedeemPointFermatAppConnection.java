@@ -21,7 +21,7 @@ import org.fermat.fermat_dap_android_sub_app_redeem_point_identity.session.Redee
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class RedeemPointFermatAppConnection extends AppConnections{
+public class RedeemPointFermatAppConnection extends AppConnections {
 
     public RedeemPointFermatAppConnection(Context activity) {
         super(activity);
@@ -34,10 +34,10 @@ public class RedeemPointFermatAppConnection extends AppConnections{
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
-        return  new PluginVersionReference(
+        return new PluginVersionReference(
                 Platforms.DIGITAL_ASSET_PLATFORM,
-                Layers.IDENTITY,
-                Plugins.REDEEM_POINT,
+                Layers.SUB_APP_MODULE,
+                Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY,
                 Developers.BITDUBAI,
                 new Version()
         );

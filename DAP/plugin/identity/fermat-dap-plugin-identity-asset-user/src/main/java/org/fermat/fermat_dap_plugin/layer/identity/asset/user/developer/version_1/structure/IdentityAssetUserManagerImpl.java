@@ -35,35 +35,10 @@ import java.util.UUID;
 public class IdentityAssetUserManagerImpl implements IdentityAssetUserManager {
 
     private final ActorAssetUserManager actorAssetUserManager;
-    /**
-     * IdentityAssetIssuerManagerImpl member variables
-     */
     UUID pluginId;
-
-    /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealsWithLogger interface mmeber variables
-     */
     LogManager logManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem interface member variables
-     */
     PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface member variables
-     */
     PluginFileSystem pluginFileSystem;
-
-
-    /**
-     * DealsWithDeviceUsers Interface member variables.
-     */
     private DeviceUserManager deviceUserManager;
 
     AssetUserIdentityPluginRoot assetUserIdentityPluginRoot;

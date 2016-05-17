@@ -21,38 +21,31 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetIssuerImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, IdentityAssetIssuer {
+public class IdentityAssetIssuerImpl implements IdentityAssetIssuer, Serializable {
+
     private String alias;
     private String publicKey;
     private byte[] profileImage;
     private String privateKey;
-
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
     private PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
     private UUID pluginId;
 
     /**
      * DealWithPluginFileSystem Interface implementation.
      */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-
-    }
-
-    /**
-     * DealsWithPluginIdentity Interface implementation.
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+//        this.pluginFileSystem = pluginFileSystem;
+//
+//    }
+//
+//    /**
+//     * DealsWithPluginIdentity Interface implementation.
+//     */
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 
     /**
      * Constructor

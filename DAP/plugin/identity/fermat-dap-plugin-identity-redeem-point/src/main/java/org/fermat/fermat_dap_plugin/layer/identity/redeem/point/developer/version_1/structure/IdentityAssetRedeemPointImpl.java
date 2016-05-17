@@ -20,7 +20,8 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, DealsWithPluginIdentity, RedeemPointIdentity {
+public class IdentityAssetRedeemPointImpl implements RedeemPointIdentity, Serializable {
+
     private String alias;
     private String publicKey;
     private byte[] profileImage;
@@ -47,19 +48,18 @@ public class IdentityAssetRedeemPointImpl implements DealsWithPluginFileSystem, 
     /**
      * DealWithPluginFileSystem Interface implementation.
      */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-
-    }
+//    @Override
+//    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+//        this.pluginFileSystem = pluginFileSystem;
+//    }
 
     /**
      * DealsWithPluginIdentity Interface implementation.
      */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
+//    @Override
+//    public void setPluginId(UUID pluginId) {
+//        this.pluginId = pluginId;
+//    }
 
     @Override
     public String getContactInformation() {

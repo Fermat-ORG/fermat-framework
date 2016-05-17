@@ -35,43 +35,16 @@ import java.util.UUID;
 /**
  * Created by franklin on 02/11/15.
  */
-public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManager, Serializable {
+public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManager {
 
     //TODO: Documentar
     UUID pluginId;
-
-    /**
-     * DealsWithErrors interface member variables
-     */
-    ErrorManager errorManager;
-
-    /**
-     * DealsWithLogger interface mmeber variables
-     */
     LogManager logManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem interface member variables
-     */
     PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
-     * DealsWithPluginFileSystem interface member variables
-     */
     PluginFileSystem pluginFileSystem;
-
     AssetIssuerIdentityPluginRoot assetIssuerIdentityPluginRoot;
-
-    /**
-     * DealsWithDeviceUsers Interface member variables.
-     */
     private DeviceUserManager deviceUserManager;
-
-    /**
-     * DealsWithActorAssetIssuer Interface member variables.
-     */
     private ActorAssetIssuerManager actorAssetIssuerManager;
-
 
     /**
      * Constructor
@@ -102,7 +75,6 @@ public class IdentityAssetIssuerManagerImpl implements IdentityAssetIssuerManage
     }
 
     public List<IdentityAssetIssuer> getIdentityAssetIssuersFromCurrentDeviceUser() throws CantListAssetIssuersException {
-
         try {
 
             List<IdentityAssetIssuer> assetIssuerList = new ArrayList<IdentityAssetIssuer>();

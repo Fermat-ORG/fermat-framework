@@ -71,7 +71,7 @@ public class AssetIssuerIdentitySubAppModuleManager extends ModuleManagerImpl<Is
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         try {
             List<IdentityAssetIssuer> identities = identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
+            return (identities == null || identities.isEmpty()) ? null : identities.get(0);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

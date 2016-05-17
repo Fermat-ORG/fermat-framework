@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -30,6 +29,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetIssuerWalletModuleException;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.issuer_appropriation.interfaces.IssuerAppropriationManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
@@ -95,7 +95,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractModule<AssetIssue
 
     // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
 
-    private AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+    private AssetIssuerWalletSupAppModuleManager assetIssuerWalletModuleManager;
 
     public AssetIssuerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -172,10 +172,10 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractModule<AssetIssue
 //    }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = AssetIssuerWalletModuleManager.class)
+//    @moduleManagerInterfacea(moduleManager = AssetIssuerWalletModuleManager.class)
     public ModuleManager<AssetIssuerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(AssetIssuerWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetIssuer Wallet Module instantiation started...", null, null);
+//            logManager.log(AssetIssuerWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetIssuer Wallet Module instantiation started...", null, null);
 
             if (assetIssuerWalletModuleManager == null) {
                 assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(
@@ -195,7 +195,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractModule<AssetIssue
 //                assetIssuerWalletModuleManager.initialize();
             }
 
-            logManager.log(AssetIssuerWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetIssuer Wallet Module instantiation finished successfully.", null, null);
+//            logManager.log(AssetIssuerWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetIssuer Wallet Module instantiation finished successfully.", null, null);
 
             return assetIssuerWalletModuleManager;
 
