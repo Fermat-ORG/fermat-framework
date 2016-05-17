@@ -14,7 +14,7 @@
         android:layout_width="?android:attr/listPreferredItemHeight"
         android:scaleType="centerCrop"
         android:padding="10dp"
-        android:src="@drawable/cht_profile_list_icon"
+        android:src="@drawable/cht_center_profile_icon_center"
        />
 
     <!-- Use standard android.R class text2 id instead of app specific id. This is just useful for
