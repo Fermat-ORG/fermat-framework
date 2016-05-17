@@ -255,12 +255,12 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         {
                 long balance_a=0;
 
-            if(BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)) {
-                balance_a = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
-                balance.setText(WalletUtils.formatBalanceString(balance_a, lossProtectedWalletSession.getTypeAmount()) + " BTC");
-            }
-            else
-                balance.setText("0.00 BTC");
+           // if(BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)) {
+                balance_a = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+            balance.setText(WalletUtils.formatBalanceString(balance_a, lossProtectedWalletSession.getTypeAmount()) + " BTC");
+          //  }
+           // else
+                //balance.setText("0.00 BTC");
 
         }   catch (CantGetLossProtectedBalanceException e)
             {
