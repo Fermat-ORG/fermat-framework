@@ -44,6 +44,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionLostEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientConnectionSuccessEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNetworkServiceRegisteredEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNewMessageTransmitEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
@@ -466,21 +467,30 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         eventManager.addListener(connectionLostListener);
         listenersAdded.add(connectionLostListener);
 
-          /*
-         * 4. Listen and handle Actor Found Event
+        /*
+         * 5. Listen and handle Actor Found Event
          */
         FermatEventListener actorFoundListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_ACTOR_FOUND);
         actorFoundListener.setEventHandler(new NetworkClientActorFoundEventHandler(this));
         eventManager.addListener(actorFoundListener);
         listenersAdded.add(actorFoundListener);
 
-          /*
-         * 4. Listen and handle Network Client Connection Success Event
+        /*
+         * 6. Listen and handle Network Client Connection Success Event
          */
         FermatEventListener connectionSuccessListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS);
         connectionSuccessListener.setEventHandler(new NetworkClientConnectionSuccessEventHandler(this));
         eventManager.addListener(connectionSuccessListener);
         listenersAdded.add(connectionSuccessListener);
+
+        /*
+         * 7. Listen and handle Network Client New Message Transmit Event
+         */
+        FermatEventListener newMessageTransmitListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT);
+        newMessageTransmitListener.setEventHandler(new NetworkClientNewMessageTransmitEventHandler(this));
+        eventManager.addListener(newMessageTransmitListener);
+        listenersAdded.add(newMessageTransmitListener);
+
 
     }
 
@@ -655,7 +665,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessageFactory.buildNetworkServiceMessage(
                     this.getProfile(),
                     destination      ,
-                    messageContent   ,
+                    messageContent,
                     MessageContentType.TEXT
             );
 
