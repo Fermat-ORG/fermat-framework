@@ -120,8 +120,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         try {
             if (isRegistered()) {
 
-                final String imageString = Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT);
-
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         chatExposingData.getPublicKey(),

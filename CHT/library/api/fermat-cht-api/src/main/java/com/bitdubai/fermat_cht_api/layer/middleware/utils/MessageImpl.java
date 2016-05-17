@@ -25,7 +25,6 @@ public class MessageImpl implements Message {
     private Timestamp messageDate;
     private UUID contactId;
     private long count;
-
     public MessageImpl(){}
 
     public MessageImpl(
@@ -35,21 +34,21 @@ public class MessageImpl implements Message {
             TypeMessage typeMessage,
             UUID contactId
     ){
-//        messageId=chatMetadata.getMessageId();
-        messageId=UUID.randomUUID();
+        messageId=chatMetadata.getMessageId();
+//        messageId=UUID.randomUUID();
         this.chatId=chatId;
         message=chatMetadata.getMessage();
         status=messageStatus;
         type=typeMessage;
 //        messageDate=new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         Date parsedDate = null;
         try {
             parsedDate = dateFormat.parse(chatMetadata.getDate());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         messageDate=new Timestamp(
                 timestamp.getTime());
         this.contactId=contactId;

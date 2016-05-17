@@ -1062,7 +1062,14 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     @Override
     public void closeMainConnection() {
 
+
+        System.out.println("WsCommunicationsTyrusCloudClientConnection - closeMainConnection()");
+
         if(isConnected()){
+
+            System.out.println("WsCommunicationsTyrusCloudClientConnection - Calling  - wsCommunicationTyrusVPNClientManagerAgent.closeAllVpnConnections()");
+            System.out.println("WsCommunicationsTyrusCloudClientConnection - Calling  - wsCommunicationsTyrusCloudClientChannel.closeConnection(");
+
             wsCommunicationTyrusVPNClientManagerAgent.closeAllVpnConnections();
             wsCommunicationsTyrusCloudClientChannel.closeConnection();
         }

@@ -147,6 +147,16 @@ public class ChatMock implements Chat {
     }
 
     @Override
+    public boolean isOnline() {
+        return false;
+    }
+
+    @Override
+    public void setIsOnline(boolean isWriting) {
+
+    }
+
+    @Override
     public String getContactListString() {
         return null;
     }
