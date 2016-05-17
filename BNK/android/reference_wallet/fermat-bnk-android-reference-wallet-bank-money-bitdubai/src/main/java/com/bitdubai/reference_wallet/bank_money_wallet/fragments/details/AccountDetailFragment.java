@@ -36,6 +36,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSe
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private BankAccountNumber bankAccountNumber;
 
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;
+    com.getbase.floatingactionbutton.FloatingActionButton fabWithdraw;
+
     CreateTransactionFragmentDialog dialog;
 
     private View emtyView;
@@ -111,7 +114,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
         header = (FermatTextView) layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankingWallet().getBankName());
-        this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
+        fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
+        fabWithdraw = (com.getbase.floatingactionbutton.FloatingActionButton) layout.findViewById(R.id.bw_fab_withdraw);
+
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
         presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -147,6 +152,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         bookText = (FermatTextView) layout.findViewById(R.id.book_text);
         updateBalance();
         showOrHideNoTransactionsView(transactionList.isEmpty());
+        handleWidhtrawalFabVisibilityAccordingToBalance();
+
     }
 
     private void launchCreateTransactionDialog(TransactionType transactionType) {
@@ -171,6 +178,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
             bookTextView.setVisibility(View.VISIBLE);
             bookText.setVisibility(View.VISIBLE);
         }
+        handleWidhtrawalFabVisibilityAccordingToBalance();
     }
 
     private void configureToolbar() {
@@ -320,6 +328,15 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     }
 
+    private void handleWidhtrawalFabVisibilityAccordingToBalance()
+    {
+        if(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount()) == 0
+                && moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount()) == 0 )
+            fabWithdraw.setVisibility(View.GONE);
+        else
+            fabWithdraw.setVisibility(View.VISIBLE);
+
+    }
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
