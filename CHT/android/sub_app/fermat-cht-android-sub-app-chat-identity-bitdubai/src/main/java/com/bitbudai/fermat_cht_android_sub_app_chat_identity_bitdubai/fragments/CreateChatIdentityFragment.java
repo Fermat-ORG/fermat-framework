@@ -9,7 +9,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Path;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -480,15 +483,19 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             }
         }
             if (thissbitmap != null) {
-                if (ROTATE_VALUE <= 270) {
-                    ROTATE_VALUE = ROTATE_VALUE + 90;
+                //NEW LOGIC
+                if(ROTATE_VALUE == 0){
+                        ROTATE_VALUE = 90;
+                   }else if(ROTATE_VALUE == 90) {
+                    ROTATE_VALUE = 180;
+                    }else if(ROTATE_VALUE == 180) {
+                        ROTATE_VALUE = 270;
+                    }else if(ROTATE_VALUE == 270){
+                        ROTATE_VALUE = 0;
+                    }
                     cryptoBrokerBitmap = RotateBitmap(thissbitmap, ROTATE_VALUE);
-                    Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
-                } else {
-                    ROTATE_VALUE = 0;
-                    cryptoBrokerBitmap = RotateBitmap(thissbitmap, ROTATE_VALUE);
-                    Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
-                }
+                    cryptoBrokerBitmap = getRoundedShape(cryptoBrokerBitmap);
+                    mBrokerImage.setImageBitmap(cryptoBrokerBitmap);
             }else{
                 Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
             }
@@ -496,7 +503,28 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
         }
     }
+    public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
+        int targetWidth = 200;
+        int targetHeight = 200;
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+                targetHeight,Bitmap.Config.ARGB_8888);
 
+        Canvas canvas = new Canvas(targetBitmap);
+        Path path = new Path();
+        path.addCircle(((float) targetWidth - 1) / 2,
+                ((float) targetHeight - 1) / 2,
+                (Math.min(((float) targetWidth),
+                        ((float) targetHeight)) / 2),
+                Path.Direction.CCW);
+
+        canvas.clipPath(path);
+        Bitmap sourceBitmap = scaleBitmapImage;
+        canvas.drawBitmap(sourceBitmap,
+                new Rect(0, 0, sourceBitmap.getWidth(),
+                        sourceBitmap.getHeight()),
+                new Rect(0, 0, targetWidth, targetHeight), null);
+        return targetBitmap;
+    }
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
