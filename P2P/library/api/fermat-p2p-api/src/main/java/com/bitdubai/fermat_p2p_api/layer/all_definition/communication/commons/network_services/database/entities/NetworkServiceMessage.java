@@ -3,7 +3,6 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.n
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateAdapter;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,7 +32,7 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
     private transient String                   senderClientPublicKey  ;
     private transient String                   senderActorType        ;
     private           String                   receiverPublicKey      ;
-    private transient String                   receiverNsPublicKey    ;
+    private           String                   receiverNsPublicKey    ;
     private transient String                   receiverClientPublicKey;
     private transient String                   receiverActorType      ;
 
@@ -54,58 +53,6 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
         this.id = UUID.randomUUID();
         this.failCount = 0;
         this.isBetweenActors = Boolean.FALSE;
-    }
-
-    public NetworkServiceMessage(final String                   content             ,
-                                 final Timestamp                deliveryTimestamp   ,
-                                 final FermatMessagesStatus     fermatMessagesStatus,
-                                 final String                   receiverPublicKey   ,
-                                 final String                   senderPublicKey     ,
-                                 final Timestamp                shippingTimestamp   ,
-                                 final String                   signature           ) {
-
-        this.id                   = UUID.randomUUID()   ;
-        this.content              = content             ;
-        this.deliveryTimestamp    = deliveryTimestamp   ;
-        this.fermatMessagesStatus = fermatMessagesStatus;
-        this.receiverPublicKey    = receiverPublicKey   ;
-        this.senderPublicKey      = senderPublicKey     ;
-        this.shippingTimestamp    = shippingTimestamp   ;
-        this.signature            = signature           ;
-        this.failCount            = 0                   ;
-        this.isBetweenActors      = Boolean.FALSE       ;
-    }
-
-    public NetworkServiceMessage(final String                   content                ,
-                                 final NetworkServiceType       networkServiceType     ,
-                                 final String                   senderPublicKey        ,
-                                 final String                   senderClientPublicKey  ,
-                                 final String                   senderActorType        ,
-                                 final String                   receiverPublicKey      ,
-                                 final String                   receiverClientPublicKey,
-                                 final String                   receiverActorType      ,
-                                 final Timestamp                shippingTimestamp      ,
-                                 final Timestamp                deliveryTimestamp      ,
-                                 final FermatMessagesStatus     fermatMessagesStatus   ,
-                                 final String                   signature              ) {
-
-        this.content                 = content                ;
-        this.networkServiceType      = networkServiceType     ;
-        this.senderPublicKey         = senderPublicKey        ;
-        this.senderClientPublicKey   = senderClientPublicKey  ;
-        this.senderActorType         = senderActorType        ;
-        this.receiverPublicKey       = receiverPublicKey      ;
-        this.receiverClientPublicKey = receiverClientPublicKey;
-        this.receiverActorType       = receiverActorType      ;
-        this.shippingTimestamp       = shippingTimestamp      ;
-        this.deliveryTimestamp       = deliveryTimestamp      ;
-        this.fermatMessagesStatus    = fermatMessagesStatus   ;
-        this.signature               = signature              ;
-
-        if (senderActorType != null)
-            this.isBetweenActors     = Boolean.TRUE           ;
-        else
-            this.isBetweenActors     = Boolean.FALSE          ;
     }
 
     public UUID getId() {
