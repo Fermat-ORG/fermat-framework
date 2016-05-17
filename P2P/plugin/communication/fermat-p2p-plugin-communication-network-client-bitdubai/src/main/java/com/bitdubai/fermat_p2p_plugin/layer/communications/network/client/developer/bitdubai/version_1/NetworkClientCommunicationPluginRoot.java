@@ -166,7 +166,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * Initialize the clientsConnectionsManager to the Connections
              */
-            clientsConnectionsManager = new ClientsConnectionsManager(identity, errorManager, eventManager, locationManager);
+            clientsConnectionsManager = new ClientsConnectionsManager(identity, errorManager, eventManager, locationManager, this);
 
             /*
              * Add references to the node context
@@ -513,15 +513,15 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
      * Request connection to the Node extern in the clientsConnectionsManager
      */
     @Override
-    public void requestConnectionToNodeExtern(String identityPublicKey, String uriToNode) {
+    public void requestConnectionToExternalNode(String identityPublicKey, String uriToNode) {
 
         String uriActual = networkClientCommunicationConnection.getUri().getHost() + ":"  +
                 networkClientCommunicationConnection.getUri().getPort();
 
-        if(uriActual != uriToNode) {
+        if(!uriActual.equals(uriToNode)) {
 
-            // request connection to the Node extern in the clientsConnectionsManager
-            clientsConnectionsManager.requestConnectionToNodeExtern(
+            // request connection to the external Node in the clientsConnectionsManager
+            clientsConnectionsManager.requestConnectionToExternalNode(
                     identityPublicKey,
                     uriToNode);
         }

@@ -64,7 +64,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
              * if is connection to other node extern then
              * send profile of the Network Service
              */
-            if(getChannel().getNetworkClientCommunicationConnection().isConnectingToExternNode()) {
+            if(getChannel().getNetworkClientCommunicationConnection().isConnectingToExternalNode()) {
 
                 String uriToNode = getChannel().getNetworkClientCommunicationConnection().getUri().getHost() + ":" +
                         getChannel().getNetworkClientCommunicationConnection().getUri().getPort();

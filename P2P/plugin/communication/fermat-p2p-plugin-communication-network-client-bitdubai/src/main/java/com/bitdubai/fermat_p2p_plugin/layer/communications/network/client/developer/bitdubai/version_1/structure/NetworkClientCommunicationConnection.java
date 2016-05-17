@@ -9,23 +9,17 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkCallChannel;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NetworkServiceCallRequest;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.PackageMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -46,8 +40,6 @@ import org.glassfish.tyrus.client.ClientProperties;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -116,7 +108,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     * is used to validate if is connection to extern node
     * when receive checkinclient then send register all profile
     */
-    private boolean isConnectingToExternNode;
+    private boolean isConnectingToExternalNode;
 
     /*
      * Constructor
@@ -129,7 +121,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final PluginVersionReference pluginVersionReference,
                                                 NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
                                                 Integer nodesListPosition,
-                                                boolean isConnectingToExternNode){
+                                                boolean isConnectingToExternalNode){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -143,7 +135,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
-        this.isConnectingToExternNode = isConnectingToExternNode;
+        this.isConnectingToExternalNode = isConnectingToExternalNode;
 
         this.container              = ClientManager.createClient();
     }
@@ -269,8 +261,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * is used to validate if is connection to extern
      * node when receive checkinclient then send register all profile
      */
-    public boolean isConnectingToExternNode() {
-        return isConnectingToExternNode;
+    public boolean isConnectingToExternalNode() {
+        return isConnectingToExternalNode;
     }
 
     /*
@@ -427,95 +419,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
             throw fermatException;
         }
-    }
-
-    @Override
-    public void callNetworkService(final NetworkServiceProfile fromNetworkService,
-                                   final NetworkServiceProfile toNetworkService  ) {
-
-        System.out.println("NetworkClientCommunicationConnection - requestNetworkCall");
-
-        /*
-         * Validate parameter
-         */
-        if (fromNetworkService == null || toNetworkService == null)
-            throw new IllegalArgumentException("All parameters are required, can not be null");
-
-        if (fromNetworkService.getIdentityPublicKey().equals(toNetworkService.getIdentityPublicKey()))
-            throw new IllegalArgumentException("The fromNetworkService and toNetworkService can not be the same component");
-
-        try{
-
-            List<NetworkServiceProfile> participants = new ArrayList<>();
-            participants.add(fromNetworkService);
-            participants.add(toNetworkService);
-
-            /**
-             * Validate all are the same type and NETWORK_SERVICE
-             */
-            for (NetworkServiceProfile participant: participants) {
-
-                if (participant.getNetworkServiceType() != fromNetworkService.getNetworkServiceType()){
-                    throw new IllegalArgumentException("All the Profile has to be the same type of network service type ");
-                }
-            }
-
-            sendPackage(
-                    new NetworkServiceCallRequest(
-                            fromNetworkService,
-                            toNetworkService
-                    ),
-                    PackageType.NETWORK_SERVICE_CALL_REQUEST
-            );
-
-        } catch (Exception e){
-            System.out.println("NetworkClientCommunicationConnection: " + e);
-            CantCreateNetworkCallException cantCreateNetworkCallException = new CantCreateNetworkCallException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateNetworkCallException);
-        }
-    }
-
-    @Override
-    public void callActor(final ActorProfile          fromActor         ,
-                          final ActorProfile          toActor           ,
-                          final NetworkServiceProfile fromNetworkService) {
-
-        System.out.println("NetworkClientCommunicationConnection - requestNetworkCall");
-
-        /*
-         * Validate parameter
-         */
-        if (fromActor == null || fromNetworkService == null || toActor == null)
-            throw new IllegalArgumentException("All parameters are required, can not be null");
-
-        /*
-         * Validate are the  type NETWORK_SERVICE
-         */
-        if (fromActor.getIdentityPublicKey().equals(toActor.getIdentityPublicKey())){
-            throw new IllegalArgumentException("The fromActor and toActor can not be the same component");
-        }
-
-        try {
-
-            sendPackage(
-                    new ActorCallRequest(
-                            fromActor,
-                            fromNetworkService,
-                            toActor
-                    ),
-                    PackageType.ACTOR_CALL_REQUEST
-            );
-
-        } catch (Exception e){
-            CantCreateNetworkCallException cantCreateNetworkCallException = new CantCreateNetworkCallException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateNetworkCallException);
-        }
-
-    }
-
-    @Override
-    public NetworkCallChannel getCallChannel(Profile from, Profile to) {
-        return null;
     }
 
     @Override

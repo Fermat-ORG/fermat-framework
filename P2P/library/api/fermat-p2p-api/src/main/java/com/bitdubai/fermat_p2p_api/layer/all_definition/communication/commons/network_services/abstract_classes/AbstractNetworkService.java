@@ -500,11 +500,11 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     public final void handleActorFoundEvent(String uriToNode, ActorProfile actorProfile){
 
-        listActorConnectIntoNode.put(actorProfile.getIdentityPublicKey(),uriToNode);
+            listActorConnectIntoNode.put(actorProfile.getIdentityPublicKey(),uriToNode);
         listActorProfileConnectedInNode.put(uriToNode,actorProfile);
 
-        // request connection to the Node extern in the clientsConnectionsManager
-        networkClientManager.requestConnectionToNodeExtern(
+        // request connection to the Node external in the clientsConnectionsManager
+        networkClientManager.requestConnectionToExternalNode(
                 actorProfile.getIdentityPublicKey(),
                 uriToNode);
 
