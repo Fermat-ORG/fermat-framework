@@ -990,7 +990,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             try {
                 accountType = BankAccountType.getByCode(accountTypeString);
-                BankAccountData ban = new BankAccountData(ba.getCurrencyType(), accountType, bank, accountNumber, "");
+                BankAccountData ban = new BankAccountData(ba.getCurrencyType(), accountType, bank, accountNumber, "", "");
                 bankAccounts.add(ban);
             } catch (InvalidParameterException e) {
 
