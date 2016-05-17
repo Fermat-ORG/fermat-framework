@@ -240,7 +240,7 @@ public class AssetFactorySupAppModuleManager extends ModuleManagerImpl<AssetFact
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             List<IdentityAssetIssuer> identities = assetFactoryManager.getActiveIdentities();
-            return (identities == null || identities.isEmpty()) ? null : assetFactoryManager.getActiveIdentities().get(0);
+            return (identities == null || identities.isEmpty()) ? null : identities.get(0);
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             exception.printStackTrace();
