@@ -55,11 +55,6 @@ public final class NetworkServiceConnectionManager {
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
-
-
-            /*
-             * ask to the communicationLayerManager to connect to other actor
-             */
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
                     null, // actorType
                     null, // alias

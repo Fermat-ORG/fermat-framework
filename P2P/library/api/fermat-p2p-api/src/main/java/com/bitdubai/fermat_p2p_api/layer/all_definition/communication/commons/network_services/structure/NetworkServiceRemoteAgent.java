@@ -148,16 +148,16 @@ public final class NetworkServiceRemoteAgent extends Observable {
                                 /*
                                  * Encrypt the content of the message whit the remote network service public key
                                  */
-                                if (message.isBetweenActors())
+                             /*   if (message.isBetweenActors())
                                     message.setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), message.getReceiverNsPublicKey()));
                                 else
-                                    message.setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), message.getReceiverPublicKey()));
+                                    message.setContent(AsymmetricCryptography.encryptMessagePublicKey(message.getContent(), message.getReceiverPublicKey()));*/
 
                                 /*
                                  * Sing the message
                                  */
-                                String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
-                                message.setSignature(signature);
+                                /*String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
+                                message.setSignature(signature);*/
 
                                 networkClientConnection.sendPackageMessage(message, networkServiceConnectionManager.getNetworkServiceRoot().getProfile().getNetworkServiceType(), message.getReceiverPublicKey(), message.getReceiverClientPublicKey());
 

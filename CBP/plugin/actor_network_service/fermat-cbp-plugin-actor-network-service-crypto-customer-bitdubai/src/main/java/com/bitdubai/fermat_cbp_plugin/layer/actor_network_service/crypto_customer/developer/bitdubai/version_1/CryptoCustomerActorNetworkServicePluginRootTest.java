@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorNetworkServiceManager;
+import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerActorNetworkServiceManagerTest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractActorNetworkService;
 
 import java.util.List;
@@ -41,28 +42,16 @@ public class CryptoCustomerActorNetworkServicePluginRootTest extends AbstractAct
         );
     }
 
-    private CryptoCustomerActorNetworkServiceManager fermatManager;
+    private CryptoCustomerActorNetworkServiceManagerTest fermatManager;
 
     @Override
     protected void onActorNetworkServiceStart() {
 
-        try {
-
-            for (int i = 0 ; i < 3; i++) {
-                this.registerActor(
-                        "publicKey"+i,
-                        "name"+i,
-                        "alias"+i,
-                        "extraData"+i,
-                        null,
-                        Actors.CBP_CRYPTO_CUSTOMER,
-                        new byte[0]
-                );
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        fermatManager = new CryptoCustomerActorNetworkServiceManagerTest(
+                this,
+                errorManager,
+                getPluginVersionReference()
+        );
     }
 
     @Override

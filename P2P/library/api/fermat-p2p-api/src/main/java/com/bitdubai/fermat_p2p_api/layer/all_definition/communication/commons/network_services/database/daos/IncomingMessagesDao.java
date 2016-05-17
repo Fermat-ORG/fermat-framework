@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 
@@ -37,6 +39,16 @@ public class IncomingMessagesDao extends AbstractBaseDao {
                 dataBase                    ,
                 INCOMING_MESSAGES_TABLE_NAME
         );
+    }
+
+    public void markAsRead(NetworkServiceMessage fermatMessage) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+
+        if (fermatMessage == null) {
+            throw new IllegalArgumentException("The id is required, can not be null");
+        }
+        fermatMessage.setFermatMessagesStatus(FermatMessagesStatus.READ);
+        update(fermatMessage);
+
     }
 
     @Override

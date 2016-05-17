@@ -746,7 +746,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
         System.out.println("Mensaje Delivered "+ networkServiceMessage);
 
-        networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
+        //networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
 
         networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
 
