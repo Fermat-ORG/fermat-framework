@@ -273,7 +273,7 @@ public class DesktopDatabaseBridge {
             throw new RuntimeException(ex);
 
         }finally {
-            connection.close();
+           // connection.close();
         }
     }
 

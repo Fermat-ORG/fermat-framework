@@ -50,8 +50,14 @@ public class NetworkClientSentMessageDeliveredEventHandler implements FermatEven
     public void handleEvent(NetworkClientNewMessageDeliveredEvent fermatEvent) throws FermatException {
 
         if (this.networkService.isStarted() &&
-            this.networkService.getProfile().getNetworkServiceType().equals(fermatEvent.getNetworkServiceTypeSource()))
-                    networkService.onSentMessage(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId()));
+            this.networkService.getProfile().getNetworkServiceType().equals(fermatEvent.getNetworkServiceTypeSource())) {
+
+            NetworkServiceMessage networkServiceMessage = networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId());
+
+            if(networkServiceMessage != null)
+                networkService.onSentMessage(networkServiceMessage);
+
+        }
 
     }
 
