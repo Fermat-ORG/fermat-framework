@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -545,6 +546,8 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         try {
 
             NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.parseContent(incomingMessage);
+
+            networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
             /*
              * process the new message receive
              */
@@ -717,6 +720,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     public synchronized void onNewMessageReceived(NetworkServiceMessage messageReceived) {
 
+        System.out.println("Me llego un nuevo mensaje"+ messageReceived);
     }
 
     public synchronized void onSentMessage(NetworkServiceMessage messageSent) {
