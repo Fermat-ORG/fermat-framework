@@ -1,11 +1,18 @@
 package org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces;
 
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 
@@ -21,40 +28,40 @@ public interface AssetIssuerWallet {
 
     AssetIssuerWalletBalance getBalance() throws CantGetTransactionsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction> getTransactionsAll(org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType,
-                                                          org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType transactionType,
+    List<AssetIssuerWalletTransaction> getTransactionsAll(BalanceType balanceType,
+                                                          TransactionType transactionType,
                                                           String assetPublicKey) throws CantGetTransactionsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction> getTransactions(org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType,
-                                                       org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType transactionType,
+    List<AssetIssuerWalletTransaction> getTransactions(BalanceType balanceType,
+                                                       TransactionType transactionType,
                                                        int max,
                                                        int offset, String assetPublicKey) throws CantGetTransactionsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
+    List<AssetIssuerWalletTransaction> getAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
-                                                              org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType,
+    List<AssetIssuerWalletTransaction> getTransactionsByActor(String actorPublicKey,
+                                                              BalanceType balanceType,
                                                               int max,
                                                               int offset) throws CantGetTransactionsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction> gettLastActorTransactionsByTransactionType(org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType,
-                                                                                  org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType transactionType,
+    List<AssetIssuerWalletTransaction> gettLastActorTransactionsByTransactionType(BalanceType balanceType,
+                                                                                  TransactionType transactionType,
                                                                                   int max,
                                                                                   int offset) throws CantGetTransactionsException;
 
     void setTransactionDescription(UUID transactionID,
-                                   String description) throws org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException, CantStoreMemoException;
+                                   String description) throws CantFindTransactionException, CantStoreMemoException;
 
     AssetIssuerWalletTransactionSummary getActorTransactionSummary(String actorPublicKey,
-                                                                   org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType balanceType) throws org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
+                                                                   BalanceType balanceType) throws CantGetActorTransactionSummaryException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
+    List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String assetPublicKey) throws CantGetTransactionsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException;
+    List<AssetIssuerWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException;
 
     DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException;
 
-    org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset getAssetByPublicKey(String assetPublicKey);
+    DigitalAsset getAssetByPublicKey(String assetPublicKey);
 
     String getUserDeliveredToPublicKey(UUID transactionId) throws RecordsNotFoundException, CantGetAssetStatisticException;
 
@@ -62,9 +69,9 @@ public interface AssetIssuerWallet {
 
     //ASSET STATISTIC METHODS
 
-    void createdNewAsset(DigitalAssetMetadata assetMetadata) throws org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
+    void createdNewAsset(DigitalAssetMetadata assetMetadata) throws CantSaveStatisticException;
 
-    void newMovement(DAPActor actorFrom, DAPActor actorTo, String assetPk, org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType type) throws org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
+    void newMovement(DAPActor actorFrom, DAPActor actorTo, String assetPk, AssetMovementType type) throws CantSaveStatisticException;
 
     void assetDistributed(UUID transactionId, String actorAssetUserPublicKey) throws RecordsNotFoundException, CantGetAssetStatisticException;
 

@@ -181,7 +181,7 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         List<DeveloperDatabaseTableRecord> databaseTableRecords = new ArrayList<>();
         try {
             Database database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
-            databaseTableRecords.addAll(org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
+            databaseTableRecords.addAll(DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable));
         } catch (CantOpenDatabaseException e) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
@@ -201,7 +201,6 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
 
     @Override
     public AssetIssuerWallet loadAssetIssuerWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
-
         try {
             AssetIssuerWalletImpl assetIssuerWallet = new AssetIssuerWalletImpl(
                     this,

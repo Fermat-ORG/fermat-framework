@@ -115,19 +115,20 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public AssetUserWallet loadAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
-            AssetUserWallet userWallet = new AssetUserWalletImpl(
-                    this,
-                    pluginDatabaseSystem,
-                    pluginFileSystem,
-                    pluginId,
-                    userManager,
-                    issuerManager,
-                    redeemPointManager,
-                    broadcaster);
-
+            if (assetUserWallet == null) {
+                assetUserWallet = new AssetUserWalletImpl(
+                        this,
+                        pluginDatabaseSystem,
+                        pluginFileSystem,
+                        pluginId,
+                        userManager,
+                        issuerManager,
+                        redeemPointManager,
+                        broadcaster);
+            }
             UUID internalAssetIssuerWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
-            userWallet.initialize(internalAssetIssuerWalletId);
-            return userWallet;
+            assetUserWallet.initialize(internalAssetIssuerWalletId);
+            return assetUserWallet;
         } catch (Exception e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantLoadWalletException(CantLoadWalletException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
@@ -137,17 +138,18 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     @Override
     public void createAssetUserWallet(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
-            AssetUserWallet userWallet = new AssetUserWalletImpl(
-                    this,
-                    pluginDatabaseSystem,
-                    pluginFileSystem,
-                    pluginId,
-                    userManager,
-                    issuerManager,
-                    redeemPointManager,
-                    broadcaster);
-
-            UUID internalAssetIssuerWalletId = userWallet.create(walletPublicKey, networkType);
+            if (assetUserWallet == null) {
+                assetUserWallet = new AssetUserWalletImpl(
+                        this,
+                        pluginDatabaseSystem,
+                        pluginFileSystem,
+                        pluginId,
+                        userManager,
+                        issuerManager,
+                        redeemPointManager,
+                        broadcaster);
+            }
+            UUID internalAssetIssuerWalletId = assetUserWallet.create(walletPublicKey, networkType);
             userWallets.add(internalAssetIssuerWalletId);
         } catch (CantCreateWalletException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
