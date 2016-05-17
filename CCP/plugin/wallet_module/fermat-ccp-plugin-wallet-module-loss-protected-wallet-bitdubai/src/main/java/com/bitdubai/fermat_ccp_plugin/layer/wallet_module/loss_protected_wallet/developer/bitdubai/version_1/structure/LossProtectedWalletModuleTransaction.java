@@ -21,7 +21,7 @@ import java.util.UUID;
  * Created Natalia Cortez on 07/03/2016.
  * @version 1.0
  */
-public class LossProtectedWalletModuleTransaction implements LossProtectedWalletTransaction {
+public class LossProtectedWalletModuleTransaction implements LossProtectedWalletTransaction,Serializable {
 
     private final UUID                     contactId;
     private final Actor                    involvedActor;
