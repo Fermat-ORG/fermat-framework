@@ -430,13 +430,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                         }
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Error creating the identity", Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
                         Toast.makeText(getActivity(), "fill required items", Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "The module manager is null", Toast.LENGTH_LONG).show();
                         break;
 
 
