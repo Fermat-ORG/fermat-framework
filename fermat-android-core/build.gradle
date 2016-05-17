@@ -37,7 +37,7 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "4g"
         incremental true
         jumboMode=true
         preDexLibraries = false
@@ -86,13 +86,13 @@ dependencies {
     compile project(':fermat-osa-android-core')
     compile 'com.github.ozodrukh:CircularReveal:1.1.0'
     // DMP Projects (Wallets)
-    compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
+    compile(group: 'org.fermat.ccp.android.bitcoin.wallet', name: 'fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai', version: '1.0.0', ext: 'aar')
     //compile(group: 'org.fermat.ccp.android.bitcoin.wallet', name: 'fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai', version: '1.0.1', ext: 'aar')
-    compile project(':fermat-ccp-android-clone-reference-nich-wallet')
-    compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
+    //compile project(':fermat-ccp-android-clone-reference-nich-wallet')
+    compile(group: 'org.fermat.ccp.android.loss.protected.wallet', name: 'fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', version: '1.0.0', ext: 'aar')
     // DMP Projects (Sub APPs)
-    compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
-    compile project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai')
+    compile(group: 'org.fermat.ccp.android.subapp.user.identity', name: 'fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.ccp.android.subapp.user.community', name: 'fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai', version: '1.0.0', ext: 'aar')
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
@@ -100,48 +100,51 @@ dependencies {
     /*
                                                                         Sub APPs on the pipeline
                                                                         */
-    compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
+    compile(group: 'org.fermat.pip.android.subapp.manager', name: 'fermat-pip-android-sub-app-sub-app-manager-bitdubai', version: '1.0.0', ext: 'aar')
     // PIP Projects (Sub APPs)
-    compile project(':fermat-pip-android-sub-app-developer-bitdubai')
+    compile(group: 'org.fermat.pip.android.subapp.developer', name: 'fermat-pip-android-sub-app-developer-bitdubai', version: '1.0.0', ext: 'aar')
     //cbp wallets
+//    compile(group: 'org.fermat.cbp.android.reference.wallet.crypto.broker', name: 'fermat-cbp-android-reference-wallet-crypto-broker-bitdubai', version: '1.0.0', ext: 'aar')
+//    compile(group: 'org.fermat.cbp.android.reference.wallet.crypto.customer', name: 'fermat-cbp-android-reference-wallet-crypto-customer-bitdubai', version: '1.0.0', ext: 'aar')
     compile project(':fermat-cbp-android-reference-wallet-crypto-broker-bitdubai')
     compile project(':fermat-cbp-android-reference-wallet-crypto-customer-bitdubai')
     // CBP Projects
-    compile project(':fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai')
-    compile project(':fermat-cbp-android-sub-app-crypto-broker-community-bitdubai')
-    compile project(':fermat-cbp-android-sub-app-crypto-customer-community-bitdubai')
-    compile project(':fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai')
+    compile(group: 'org.fermat.cbp.android.subapp.crypto.broker.identity', name: 'fermat-cbp-android-sub-app-crypto-broker-identity-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.cbp.android.subapp.crypto.broker.community', name: 'fermat-cbp-android-sub-app-crypto-broker-community-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.cbp.android.subapp.crypto.customer.community', name: 'fermat-cbp-android-sub-app-crypto-customer-community-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.cbp.android.subapp.crypto.identity', name: 'fermat-cbp-android-sub-app-crypto-customer-identity-bitdubai', version: '1.0.0', ext: 'aar')
     // DAP Projects
-    compile project(':fermat-dap-android-desktop-sub-app-manager')
-    compile project(':fermat-dap-android-desktop-wallet-manager')
-    compile project(':fermat-dap-android-reference-wallet-asset-issuer')
-    compile project(':fermat-dap-android-reference-wallet-asset-user')
-    compile project(':fermat-dap-android-reference-wallet-redeem-point')
-    compile project(':fermat-dap-android-sub-app-asset-factory')
-    compile project(':fermat-dap-android-sub-app-asset-user-community')
-    compile project(':fermat-dap-android-sub-app-asset-issuer-community')
-    compile project(':fermat-dap-android-sub-app-redeem-point-community')
-    compile project(':fermat-dap-android-sub-app-asset-issuer-identity')
-    compile project(':fermat-dap-android-sub-app-asset-user-identity')
-    compile project(':fermat-dap-android-sub-app-redeem-point-identity')
+//    compile project(':fermat-dap-android-desktop-sub-app-manager')
+//    compile project(':fermat-dap-android-desktop-wallet-manager')
+    compile(group: 'org.fermat.dap.android.reference.wallet.asset.issuer', name: 'fermat-dap-android-reference-wallet-asset-issuer', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.reference.wallet.asset.user', name: 'fermat-dap-android-reference-wallet-asset-user', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.reference.wallet.redeem.point', name: 'fermat-dap-android-reference-wallet-redeem-point', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.subapp.asset.factory', name: 'fermat-dap-android-sub-app-asset-factory', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.subapp.asset.user.community', name: 'fermat-dap-android-sub-app-asset-user-community', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.subapp.asset.issuer.community', name: 'fermat-dap-android-sub-app-asset-issuer-community', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.subapp.redeem.point.community', name: 'fermat-dap-android-sub-app-redeem-point-community', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.subapp.asset.issuer.identity', name: 'fermat-dap-android-sub-app-asset-issuer-identity', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.subapp.asset.user.identity', name: 'fermat-dap-android-sub-app-asset-user-identity', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.dap.android.subapp.redeem.point.identity', name: 'fermat-dap-android-sub-app-redeem-point-identity', version: '1.0.0', ext: 'aar')
     //BNK wallets
+//    compile(group: 'org.fermat.bnk.android.reference.wallet.bank.money', name: 'fermat-bnk-android-reference-wallet-bank-money-bitdubai', version: '1.0.0', ext: 'aar')
     compile project(':fermat-bnk-android-reference-wallet-bank-money-bitdubai')
     //CSH wallet
-    compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
+    compile(group: 'org.fermat.csh.android.reference.wallet.cash.money', name: 'fermat-csh-android-reference-wallet-cash-money-bitdubai', version: '1.0.0', ext: 'aar')
     //CHT
-    compile project(':fermat-cht-android-sub-app-chat-bitdubai')
-    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-    compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
+    compile(group: 'org.fermat.cht.android.subapp.chat', name: 'fermat-cht-android-sub-app-chat-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.cht.android.subapp.chat.identity', name: 'fermat-cht-android-sub-app-chat-identity-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.cht.android.subapp.chat.community', name: 'fermat-cht-android-sub-app-chat-community-bitdubai', version: '1.0.0', ext: 'aar')
     //TKY
-    compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
-    compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
-    compile project(':fermat-tky-android-sub-app-fan-identity-bitdubai')
+    compile(group: 'org.fermat.tky.android.referencewallet.fan.wallet', name: 'fermat-tky-android-reference-wallet-fan-wallet-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.tky.android.subapp.artist.identity', name: 'fermat-tky-android-sub-app-artist-identity-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.tky.android.subapp.fan.identity', name: 'fermat-tky-android-sub-app-fan-identity-bitdubai', version: '1.0.0', ext: 'aar')
     //ART
-    compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
-    compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
-    compile project(':fermat-art-android-sub-app-fan-community-bitdubai')
-    compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
-    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
+    compile(group: 'org.fermat.art.android.subapp.artist.community', name: 'fermat-art-android-sub-app-artist-community-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.art.android.subapp.artist.identity', name: 'fermat-art-android-sub-app-artist-identity-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.art.android.subapp.fan.community', name: 'fermat-art-android-sub-app-fan-community-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.art.android.subapp.fan.identity', name: 'fermat-art-android-sub-app-fan-identity-bitdubai', version: '1.0.0', ext: 'aar')
+    compile(group: 'org.fermat.art.android.subapp.music.player', name: 'fermat-art-android-sub-app-music-player-bitdubai', version: '1.0.0', ext: 'aar')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:23.1.1'
@@ -168,10 +171,9 @@ dependencies {
     compile project(':horizontalscrollview')
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
+    //compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-    compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
+//    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
 }

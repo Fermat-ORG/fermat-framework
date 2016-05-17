@@ -70,12 +70,11 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
  */
 public class SendFormWalletFragment extends AbstractFermatFragment<LossProtectedWalletSession, ResourceProviderManager> implements View.OnClickListener {
 
-    private AndroidCoreManager androidCoreManager;
-    private NetworkStatus networkStatus;
+
     /**
      * Plaform reference
      */
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * UI
      */
@@ -91,17 +90,14 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
      * Adapters
      */
     private WalletContactListAdapter contactsAdapter;
-
-
-
     private WalletContact walletContact;
-    private boolean onFocus;
+
     private Spinner spinner;
     private Spinner spinner_name;
     private FermatTextView txt_type;
     private ImageView spinnerArrow;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+   LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
     String walletName = "";
     InstalledWallet walletSelected = null;
@@ -116,31 +112,33 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         bitcoinConverter = new BitcoinConverter();
         setHasOptionsMenu(true);
         try {
-            settingsManager = appSession.getModuleManager().getSettingsManager();
-            LossProtectedWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            lossProtectedWalletManager = appSession.getModuleManager();
 
-            if (bitcoinWalletSettings != null) {
+            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            if (lossProtectedWalletSettings != null) {
+
+                if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
+                    lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
-                settingsManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                lossProtectedWalletManager.persistSettings(appSession.getAppPublicKey(), lossProtectedWalletSettings);
 
             }
 
-            blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type" + blockchainNetworkType);
-            cryptoWallet = appSession.getModuleManager().getCryptoWallet();
+            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+
+
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } catch (CantGetSettingsException e) {
-            e.printStackTrace();
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+
         } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
+            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+
         } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
 
@@ -222,7 +220,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         spinner_name = (Spinner) rootView.findViewById(R.id.spinner_name);
         imageview_wallet = (ImageView) rootView.findViewById(R.id.wallet_image);
         try {
-            final List<InstalledWallet> list= cryptoWallet.getInstalledWallets();
+            final List<InstalledWallet> list= lossProtectedWalletManager.getInstalledWallets();
             List<String> walletList = new ArrayList<String>();
             for (int i = 0; i < list.size() ; i++) {
                if (list.get(i).getWalletName().equals("Bitcoin Wallet")){
@@ -529,7 +527,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
 
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);
-                            List<InstalledWallet> list= cryptoWallet.getInstalledWallets();
+                            List<InstalledWallet> list= lossProtectedWalletManager.getInstalledWallets();
                             InstalledWallet wallet = null;
                             for (int i = 0; i < list.size() ; i++) {
                                 if (walletName.equals(list.get(i).getWalletName())){
@@ -539,7 +537,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                             if (wallet != null){
 
                                 if (operator.compareTo(minSatoshis) == 1) {
-                                    cryptoWallet.sendToWallet(
+                                    lossProtectedWalletManager.sendToWallet(
                                             operator.longValueExact(),
                                             appSession.getAppPublicKey(),
                                             wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
