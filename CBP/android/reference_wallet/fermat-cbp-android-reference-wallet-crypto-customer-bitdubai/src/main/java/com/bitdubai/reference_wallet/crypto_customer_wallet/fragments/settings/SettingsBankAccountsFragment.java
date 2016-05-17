@@ -78,8 +78,6 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                 bankAccountList = (List<BankAccountNumber>) data;
             }
 
-
-
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -172,30 +170,6 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
     }
 
     private void saveSettingAndGoNextStep() {
-
-        try {
-
-            //Save bank accounts to appSession data
-            appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
-
-
-
-            for (BankAccountNumber bankAccount : bankAccountList) {
-                BankAccountData bankAccountData = (BankAccountData) bankAccount;
-                NegotiationBankAccount negotiationBankAccount = moduleManager.newEmptyNegotiationBankAccount(
-                        bankAccountData.toString(), bankAccount.getCurrencyType());
-
-                moduleManager.createNewBankAccount(negotiationBankAccount);
-            }
-
-        } catch (FermatException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null) {
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-            }
-        }
-
         appSession.setData(CryptoCustomerWalletSession.CONFIGURED_DATA, true); // TODO: solo para testing, quitar despues
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS, appSession.getAppPublicKey());
     }
