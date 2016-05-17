@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.text.method.DigitsKeyListener;
 import android.view.View;
 import android.view.Window;
 import android.widget.AutoCompleteTextView;
@@ -105,7 +106,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dialogTitle.setText(getTransactionTitleText());
             applyBtn.setText(getTransactionButtonText());
 
-            amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
+            amountText.setFilters(new InputFilter[]{new NumberInputFilter(10, 2)});
+
 
             cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);

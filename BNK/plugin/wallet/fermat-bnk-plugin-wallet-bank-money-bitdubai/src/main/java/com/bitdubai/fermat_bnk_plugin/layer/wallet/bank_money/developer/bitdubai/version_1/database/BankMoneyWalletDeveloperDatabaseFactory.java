@@ -152,6 +152,7 @@ public class BankMoneyWalletDeveloperDatabaseFactory implements DealsWithPluginD
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME);
         bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME);
+        bankMoneyTotalBalancesColumns.add(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME);
 
         /**
          * Table Bank Money Total Balances addition.

@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary;
+package com.bitdubai.reference_wallet.bank_money_wallet.fragments.details;
 
 import android.content.DialogInterface;
 import android.os.Build;
@@ -36,6 +36,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSe
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private BankAccountNumber bankAccountNumber;
 
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;
+    com.getbase.floatingactionbutton.FloatingActionButton fabWithdraw;
+
     CreateTransactionFragmentDialog dialog;
 
     private View emtyView;
@@ -111,7 +114,9 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
         header = (FermatTextView) layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankingWallet().getBankName());
-        this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
+        fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
+        fabWithdraw = (com.getbase.floatingactionbutton.FloatingActionButton) layout.findViewById(R.id.bw_fab_withdraw);
+
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
         presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -147,6 +152,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         bookText = (FermatTextView) layout.findViewById(R.id.book_text);
         updateBalance();
         showOrHideNoTransactionsView(transactionList.isEmpty());
+        handleWidhtrawalFabVisibilityAccordingToBalance();
+
     }
 
     private void launchCreateTransactionDialog(TransactionType transactionType) {
@@ -171,6 +178,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
             bookTextView.setVisibility(View.VISIBLE);
             bookText.setVisibility(View.VISIBLE);
         }
+        handleWidhtrawalFabVisibilityAccordingToBalance();
     }
 
     private void configureToolbar() {
@@ -183,7 +191,31 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     @Override
     protected boolean hasMenu() {
-        return false;
+        return true;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, ReferenceWalletConstants.EDIT_ACCOUNT_ACTION, 0, "Edit Account").setIcon(R.drawable.bw_ic_action_edit)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "Help").setIcon(R.drawable.bw_help_icon_action_bar)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int selectedItemId = item.getItemId();
+        if (selectedItemId == ReferenceWalletConstants.EDIT_ACCOUNT_ACTION) {
+
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT, appSession.getAppPublicKey());
+            return true;
+        }
+        else if (selectedItemId == ReferenceWalletConstants.HELP_ACTION) {
+            presentationDialog.show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -263,13 +295,12 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         appSession.setData("bank_account_number_data",bankAccountNumber);
         System.out.println("(bank) cancel transaction");
         cancelTransaction(data);
-        changeActivity(Activities.BNK_BANK_MONEY_WALLET_UPDATE_RECORD, appSession.getAppPublicKey());
+        changeActivity(Activities.BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL, appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(BankMoneyTransactionRecord data, int position) {
+    public void onLongItemClickListener(BankMoneyTransactionRecord data, int position) {}
 
-    }
 
     @Override
     public void onDismiss(DialogInterface dialogInterface) {
@@ -297,32 +328,15 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.HELP_ACTION, 0, "help").setIcon(R.drawable.bw_help_icon_action_bar)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-    }
+    private void handleWidhtrawalFabVisibilityAccordingToBalance()
+    {
+        if(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount()) == 0
+                && moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount()) == 0 )
+            fabWithdraw.setVisibility(View.GONE);
+        else
+            fabWithdraw.setVisibility(View.VISIBLE);
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == ReferenceWalletConstants.HELP_ACTION) {
-            presentationDialog.show();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
-
-    /*@Override
-    public void onUpdateView(String code) {
-        switch (code) {
-            case BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW:
-                onRefresh();
-                break;
-            default:
-                super.onUpdateView(code);
-        }
-    }*/
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
