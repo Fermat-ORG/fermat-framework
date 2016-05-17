@@ -91,6 +91,10 @@ public final class FanActorNetworkServiceManager implements FanManager {
             }
         }
     }
+
+    public final boolean areIdentityToExpose(){
+        return (!Validate.isObjectNull(fansToExpose) && fansToExpose.size() > 0);
+    }
     @Override
     public final void exposeIdentity(final FanExposingData fan) throws CantExposeIdentityException {
 

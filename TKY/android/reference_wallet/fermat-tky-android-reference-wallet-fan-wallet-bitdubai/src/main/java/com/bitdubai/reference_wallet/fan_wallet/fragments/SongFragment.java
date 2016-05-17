@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -18,10 +17,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -48,7 +51,7 @@ import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
-import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
+import com.bitdubai.reference_wallet.fan_wallet.util.ItemClickSupport;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +61,7 @@ import java.util.UUID;
 /**
  * Created by Miguel Payarez on 16/03/16.
  */
-public class SongFragment extends AbstractFermatFragment {
+public class SongFragment extends AbstractFermatFragment  {
     //FermatManager
     private FanWalletSession fanwalletSession;
     private FanWalletPreferenceSettings fanWalletSettings;
@@ -68,6 +71,8 @@ public class SongFragment extends AbstractFermatFragment {
 
     RecyclerView recyclerView;
     SwipeRefreshLayout swipeContainer;
+    ImageView headerImage;
+    TextView headerText;
     String TAG="SONGFRAGMENT";
     View view;
     private Paint p = new Paint();
@@ -168,6 +173,7 @@ public class SongFragment extends AbstractFermatFragment {
                 "Connection Problem With External Platform",
                 Toast.LENGTH_LONG)
                 .show();
+            System.out.println("TKY_ connection error");
         }
     }
 
@@ -221,6 +227,8 @@ public class SongFragment extends AbstractFermatFragment {
             swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
             swipeContainer.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+            headerImage=(ImageView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_image);
+            headerText=(TextView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_TextView);
             lManager = new LinearLayoutManager(view.getContext());
             recyclerView.setLayoutManager(lManager);
 
@@ -229,6 +237,50 @@ public class SongFragment extends AbstractFermatFragment {
             adapter = new SongAdapter(items);
             recyclerView.setAdapter(adapter);
             recyclerView.getItemAnimator().setChangeDuration(0);
+            final TextView titlebar=((TextView)getToolbar().getRootView().findViewById(R.id.txt_title));
+
+//        ((TextView)getToolbar().findViewById(R.id.txt_body)).setGravity(Gravity.CENTER_HORIZONTAL);
+
+
+
+        ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener (new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    recyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+
+                DisplayMetrics metrics = view.getContext().getResources().getDisplayMetrics();
+                int width = metrics.widthPixels;
+
+       //         System.out.println("metrics:" + width);
+       //         System.out.println("viewwithd:" + view.getWidth());
+       //         System.out.println("titlebar.getMaxWidth():" + titlebar.getMaxWidth());
+                titlebar.setPadding(((width / 2) - titlebar.getWidth()/2)-10, 0, 0, 0);
+
+            }
+        });
+
+
+
+      /*  ViewGroup.LayoutParams params = titlebar.getLayoutParams();
+
+        params.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        getToolbar().getWidth();
+        titlebar.getWidth();
+        getToolbar().setLayoutParams(params);
+        titlebar.setLayoutParams(params);*/
+
+      //  titlebar.setTextAlignment(View.TEXT_ALIGNMENT_GRAVITY);
+      //  titlebar.setGravity(Gravity.RIGHT);
+
+
+
+
+
        //     recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
 
             if(firstTime){
@@ -239,7 +291,7 @@ public class SongFragment extends AbstractFermatFragment {
                 if( syncThread!=null) {
                     System.out.println("AUTO SYNC STATUS RETURN:"+syncThread.getStatus());
                     if (syncThread.getStatus() != AsyncTask.Status.RUNNING
-                            && syncThread.getStatus() != AsyncTask.Status.FINISHED) {
+                            || syncThread.getStatus() == AsyncTask.Status.FINISHED) {
                         initValues();
                     }
                 }
@@ -247,7 +299,7 @@ public class SongFragment extends AbstractFermatFragment {
 
             swipeEffect();
 
-            recyclerView.addOnItemTouchListener(
+         /*   recyclerView.addOnItemTouchListener(
                     new ManageRecyclerviewClick(view.getContext(), new ManageRecyclerviewClick.OnItemClickListener() {
                         @Override
 
@@ -263,7 +315,43 @@ public class SongFragment extends AbstractFermatFragment {
                             }
                         }
                     })
-            );
+
+            );*/
+
+
+        ItemClickSupport itemClick = ItemClickSupport.addTo(recyclerView);
+
+        itemClick.setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                loadHeaderinfo(position);
+
+            }
+
+
+        });
+
+        itemClick.setOnItemLongClickListener(new ItemClickSupport.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+                if (items.get(position).getStatus().equals(SongStatus.CANCELLED.getFriendlyName()) || items.get(position).getStatus().equals(SongStatus.DELETED.getFriendlyName())) {
+                    askQuestion(position, null, 1);
+                } else if (items.get(position).getStatus().equals(SongStatus.AVAILABLE.getFriendlyName())) {
+                    playSong();  // Not in this version
+                } else if (items.get(position).getStatus().equals(SongStatus.DOWNLOADING.getFriendlyName())) {
+                    askQuestion(position, null, 2);
+                }
+                return true;
+            }
+
+
+        });
+
+
+
+
+
+
 
             swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
@@ -291,6 +379,16 @@ public class SongFragment extends AbstractFermatFragment {
 
         return view;
     }
+
+
+    private void loadHeaderinfo(int position){
+
+        headerImage.setImageBitmap(items.get(position).getImagen());
+        headerText.setText(items.get(position).getDescription());
+        items.get(position).setItemSelected(true);
+        adapter.setFilter(items.get(position),true,position);
+    }
+
 
     private void setUpHelpFanWallet(boolean checkButton) {
         try {
@@ -330,7 +428,7 @@ public class SongFragment extends AbstractFermatFragment {
                 System.out.println("TKY_MANUAL SYNC !=NULL");
                 System.out.println("TKY_MANUAL SYNC STATUS:"+syncThread.getStatus());
                 if (syncThread.getStatus() != AsyncTask.Status.RUNNING
-                        && syncThread.getStatus() != AsyncTask.Status.FINISHED) {
+                        || syncThread.getStatus() == AsyncTask.Status.FINISHED) {
 
                     syncThread =new SyncThreadClass(autosync); // Firstthread
                     if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){ // Above Api Level 13
@@ -378,14 +476,20 @@ public class SongFragment extends AbstractFermatFragment {
 
                 public void run() {
                     Bitmap albumArt=downloadBitmapAlbumArt(songOfBroadcast.getDownloadUrl());
-                    items.add(new SongItems(albumArt, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(),song_Id, 0, false));
+                    String description=songOfBroadcast.getCopyright() + "\n" +
+                            songOfBroadcast.getCredits()+"\n" +
+                            songOfBroadcast.getReleaseDate();
+                    headerImage.setImageBitmap(albumArt);
+                    headerText.setText(description);
+
+                    items.add(new SongItems(albumArt, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(), song_Id, 0, false,description));
                     adapter.setFilter(new SongItems(albumArt,
                             songOfBroadcast.getName(),
                             songOfBroadcast.getComposers(),
                             SongStatus.DOWNLOADING.getFriendlyName(),
                             song_Id,
                             0,
-                            false)
+                            false,description)
                             ,false,items.size()-1);
 
                 }
@@ -422,15 +526,23 @@ public class SongFragment extends AbstractFermatFragment {
 
                     myHandlerbitmap.post(new Runnable() {
                     public void run() {
+
                     Bitmap albumArt=downloadBitmapAlbumArt(walletitems.getDownloadUrl());
-                    items.add(new SongItems(albumArt, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false));
+
+                     String description=   walletitems.getCopyright() + "\n" +
+                             walletitems.getCredits()+"\n" +
+                             walletitems.getReleaseDate();
+                    headerImage.setImageBitmap(albumArt);
+                        headerText.setText(description);
+
+                    items.add(new SongItems(albumArt, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false,description));
                     adapter.setFilter(new SongItems(albumArt,
                             walletitems.getName(),
                             walletitems.getComposers(),
                             walletitems.getSongStatus().getFriendlyName(),
                             walletitems.getSongId(),
                             0,
-                            false), false,  items.size()-1);
+                            false,description), false,  items.size()-1);
                         }
                     });
 
@@ -513,7 +625,7 @@ public class SongFragment extends AbstractFermatFragment {
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                Bitmap icon;
+               /* Bitmap icon;
                 if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 
                     View itemView = viewHolder.itemView;
@@ -538,7 +650,7 @@ public class SongFragment extends AbstractFermatFragment {
 
                     }
                 }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);*/
             }
 
 
@@ -719,7 +831,7 @@ public class SongFragment extends AbstractFermatFragment {
     }
 
     void playSong(){
-        //TODO: to implement
+        //TODO: to implement in the next version
     }
 
 
@@ -780,10 +892,13 @@ public class SongFragment extends AbstractFermatFragment {
 
                     } catch (CantDownloadSongException e) {
                         httpErrorResponse = e.getHttpErrorResponse();
+                        System.out.println("TKY_Error thread download1");
                     } catch (CantUpdateSongStatusException e) {
                         e.printStackTrace();
+                        System.out.println("TKY_Error thread download2");
                     } catch (CantUpdateSongDevicePathException e) {
                         e.printStackTrace();
+                        System.out.println("TKY_Error thread download3");
                     }
 
 
@@ -891,6 +1006,7 @@ public class SongFragment extends AbstractFermatFragment {
                         Toast.LENGTH_LONG)
                         .show();
                 System.out.println("TKY_Error manual sync:" + e);
+
             }
 
 

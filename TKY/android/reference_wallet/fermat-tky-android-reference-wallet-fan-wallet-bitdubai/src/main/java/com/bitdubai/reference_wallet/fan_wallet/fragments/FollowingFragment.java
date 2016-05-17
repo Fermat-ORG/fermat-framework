@@ -4,28 +4,21 @@ package com.bitdubai.reference_wallet.fan_wallet.fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -33,8 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -57,7 +48,6 @@ import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -137,10 +127,10 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         inflater.inflate(R.menu.tky_fan_wallet_menu, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+      //  changeColorSearchView(searchView);
 
-        changeColorSearchView(searchView);
-
-        for (int i = 0, size = menu.size(); i < size; i++) {
+   /*     for (int i = 0, size = menu.size(); i < size; i++) {
             MenuItem item2 = menu.getItem(i);
 
             Drawable drawable = item2.getIcon();
@@ -176,7 +166,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
             closebutton.setImageDrawable(getResources().getDrawable(R.drawable.clearbutton));
         } catch (Exception e) {
             Log.e("OncreatedMenu", "Error finding close button", e);
-        }
+        }*/
 
 
 
@@ -256,7 +246,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
 
-    private Drawable getColoredArrow() {
+/*    private Drawable getColoredArrow() {
         Drawable arrowDrawable = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
         Drawable wrapped = DrawableCompat.wrap(arrowDrawable);
 
@@ -268,9 +258,9 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
 
     return wrapped;
-}
+}*/
 
-    void changeColorSearchView(SearchView searchview){
+   /* void changeColorSearchView(SearchView searchview){
 
         LinearLayout ll=(LinearLayout)searchview.getChildAt(0);
         LinearLayout ll2=(LinearLayout)ll.getChildAt(2);
@@ -281,7 +271,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
 
 
-    }
+    }*/
 
     List<FollowingItems> reload(){
         List<FollowingItems> data=new ArrayList<>();
@@ -353,7 +343,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                Bitmap icon;
+               /* Bitmap icon;
                 if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 
                     View itemView = viewHolder.itemView;
@@ -380,7 +370,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
                     }
                 }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);*/
             }
 
         };

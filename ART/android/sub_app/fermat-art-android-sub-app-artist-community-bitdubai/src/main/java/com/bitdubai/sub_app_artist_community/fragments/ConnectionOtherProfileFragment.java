@@ -22,24 +22,23 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.artist_community.R;
+import com.bitdubai.sub_app_artist_community.commons.popups.AcceptDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.CancelDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.DisconnectDialog;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
@@ -59,6 +58,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
     private Button connect;
     private Button disconnect;
     private Button cancel;
+    private Button accept;
+    private List<ArtistActorConnection> actorConnectionList;
 
     /**
      * Create a new instance of this fragment
@@ -94,6 +95,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         disconnect.setOnClickListener(this);
         cancel = (Button) rootView.findViewById(R.id.aac_btn_cancel);
         cancel.setOnClickListener(this);
+        accept = (Button) rootView.findViewById(R.id.aac_btn_accept);
+        accept.setOnClickListener(this);
 
         //Show connect or disconnect button depending on actor's connection
         connect.setVisibility(View.GONE);
@@ -101,6 +104,18 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         cancel.setVisibility(View.GONE);
 
         ConnectionState connectionState = this.artistCommunityInformation.getConnectionState();
+
+        try{
+            ArtistCommunitySelectableIdentity selectedIdentity =
+                    moduleManager.getSelectedActorIdentity();
+            actorConnectionList = moduleManager.getRequestActorConnections(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType(),
+                    artistCommunityInformation.getPublicKey());
+        } catch (Exception e){
+            //No action for now
+        }
+
         if(connectionState != null)
         {
             switch (connectionState) {
@@ -110,12 +125,35 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 case PENDING_REMOTELY_ACCEPTANCE:
                     cancel.setVisibility(View.VISIBLE);
                     break;
+                case PENDING_LOCALLY_ACCEPTANCE:
+                    accept.setVisibility(View.VISIBLE);
+                    break;
                 default:
                     connect.setVisibility(View.VISIBLE);
             }
         }
-        else
-            connect.setVisibility(View.VISIBLE);
+        else{
+            try{
+                boolean isActorConnectExists = !actorConnectionList.isEmpty();
+                if(isActorConnectExists){
+                    ArtistActorConnection artistActorConnection = actorConnectionList.get(0);
+                    ConnectionState actorConnectionState = artistActorConnection.getConnectionState();
+                    switch (actorConnectionState){
+                        case PENDING_LOCALLY_ACCEPTANCE:
+                            accept.setVisibility(View.VISIBLE);
+                            break;
+                        default:
+                            connect.setVisibility(View.VISIBLE);
+                            break;
+                        }
+                    } else{
+                        connect.setVisibility(View.VISIBLE);
+                    }
+                } catch (Exception e) {
+                //For now, not other action required
+                        connect.setVisibility(View.VISIBLE);
+                }
+        }
 
 
         //Show user image if it has one, otherwise show default user image
@@ -126,6 +164,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
             }catch (Exception e){
 
             }*/
+            //Shows the external platform
+            externalPlatform.setText(
+                    artistCommunityInformation
+                            .getArtExternalPlatform()
+                            .getFriendlyName());
             Bitmap bitmap;
 
             if(artistCommunityInformation.getImage() != null && artistCommunityInformation.getImage().length > 0)
@@ -167,7 +210,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 connectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         } else if(i == R.id.aac_btn_disconnect) {
             try {
@@ -180,7 +223,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
         } else if(i == R.id.aac_btn_cancel) {
 
@@ -194,8 +237,35 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 cancelDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
+        } else if(i == R.id.aac_btn_accept) {
+            try {
+                UUID connectionId=null;
+                String alias="";
+                for(ArtistActorConnection fanActorConnection : actorConnectionList){
+                    switch (fanActorConnection.getConnectionState()){
+                        case PENDING_LOCALLY_ACCEPTANCE:
+                            connectionId = fanActorConnection.getConnectionId();
+                            alias = fanActorConnection.getAlias();
+                            break;
+                        }
+                    }
+                AcceptDialog acceptDialog = new AcceptDialog(
+                        getActivity(),
+                        appSession,
+                        null,
+                        connectionId,
+                        alias,
+                        moduleManager.getSelectedActorIdentity());
+                acceptDialog.setTitle("Accept");
+                acceptDialog.setOnDismissListener(this);
+                acceptDialog.show();
+                onBackPressed();
+                } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                }
         }
     }
 
@@ -210,14 +280,17 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 disconnect.setVisibility(View.GONE);
                 connect.setVisibility(View.VISIBLE);
                 cancel.setVisibility(View.GONE);
+                accept.setVisibility(View.GONE);
             } else if(connectionresult == 2) {
                 disconnect.setVisibility(View.GONE);
                 connect.setVisibility(View.GONE);
                 cancel.setVisibility(View.VISIBLE);
+                accept.setVisibility(View.GONE);
             } else if(connectionresult == 3) {
                 disconnect.setVisibility(View.VISIBLE);
                 connect.setVisibility(View.GONE);
                 cancel.setVisibility(View.GONE);
+                accept.setVisibility(View.GONE);
             }
         }catch (Exception e) {}
 
