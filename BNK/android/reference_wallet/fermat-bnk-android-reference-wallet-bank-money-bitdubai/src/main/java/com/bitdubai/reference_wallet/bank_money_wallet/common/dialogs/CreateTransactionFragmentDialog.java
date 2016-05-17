@@ -66,8 +66,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     LinearLayout dialogTitleLayout;
     EditText amountText;
     AutoCompleteTextView memoText;
-    Button applyBtn;
-    Button cancelBtn;
+    FermatTextView applyBtn;
+    FermatTextView cancelBtn;
     String account;
     FiatCurrency fiatCurrency;
     ErrorManager errorManager;
@@ -117,14 +117,17 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dialogTitle = (FermatTextView) findViewById(R.id.bnk_ctd_title);
             amountText = (EditText) findViewById(R.id.bnk_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.bnk_ctd_memo);
-            applyBtn = (Button) findViewById(R.id.bnk_ctd_apply_transaction_btn);
-            //cancelBtn = (Button) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
+            applyBtn = (FermatTextView) findViewById(R.id.bnk_ctd_apply_transaction_btn);
+            cancelBtn = (FermatTextView) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
 
-            //dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
             dialogTitle.setText(getTransactionTitleText());
+            applyBtn.setText(getTransactionButtonText());
+            applyBtn.setTextColor(getTransactionTitleColor());
+            cancelBtn.setTextColor(getTransactionTitleColor());
+
             amountText.setFilters(new InputFilter[]{new NumberInputFilter(10, 2)});
 
-            //cancelBtn.setOnClickListener(this);
+            cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
 
         }catch (Exception e){
@@ -142,6 +145,14 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             return resources.getString(R.string.bw_deposit_transaction_text);
     }
 
+    private String getTransactionButtonText()
+    {
+        if (transactionType == TransactionType.DEBIT)
+            return resources.getString(R.string.bw_withdrawal_transaction_text_btn);
+        else
+            return resources.getString(R.string.bw_deposit_transaction_text_btn);
+    }
+
     private int getTransactionTitleColor()
     {
         if (transactionType == TransactionType.DEBIT)
@@ -155,9 +166,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        /*if (i == R.id.bnk_ctd_cancel_transaction_btn) {
+        if (i == R.id.bnk_ctd_cancel_transaction_btn) {
             dismiss();
-        }*/
+        }
         if( i == R.id.bnk_ctd_apply_transaction_btn){
             applyTransaction();
         }
