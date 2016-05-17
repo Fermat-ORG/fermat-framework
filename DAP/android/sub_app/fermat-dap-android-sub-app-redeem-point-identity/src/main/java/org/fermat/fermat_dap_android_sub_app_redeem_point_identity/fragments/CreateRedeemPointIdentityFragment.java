@@ -34,7 +34,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 import com.squareup.picasso.Picasso;
 
@@ -55,7 +54,7 @@ import static android.widget.Toast.makeText;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<RedeemPointIdentitySubAppSession, ResourceProviderManager> {
+public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
 
     private static final String TAG = "RedeemPointIdentity";
 
@@ -69,11 +68,11 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-//    RedeemPointIdentitySubAppSession redeemPointIdentitySubAppSession;
+    RedeemPointIdentitySubAppSession redeemPointIdentitySubAppSession;
 
     private byte[] brokerImageByteArray;
 
-//    private RedeemPointIdentityManager moduleManager;
+    private RedeemPointIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
 
     private Button createButton;
@@ -109,8 +108,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         executorService = Executors.newFixedThreadPool(3);
 
         try {
-//            redeemPointIdentitySubAppSession = appSession;
-//            moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
+            redeemPointIdentitySubAppSession = (RedeemPointIdentitySubAppSession) appSession;
+            moduleManager = redeemPointIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(true);
 
@@ -121,9 +120,9 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
 
                     try {
                         if (appSession.getAppPublicKey() != null) {
-                            redeemPointIdentitySettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
+                            redeemPointIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                         }else {
-                            redeemPointIdentitySettings = appSession.getModuleManager().loadAndGetSettings("1");
+                            redeemPointIdentitySettings = moduleManager.loadAndGetSettings("1");
                         }
                     } catch (Exception e) {
                         redeemPointIdentitySettings = null;
@@ -134,9 +133,9 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                             redeemPointIdentitySettings = new RedeemPointIdentitySettings();
                             redeemPointIdentitySettings.setIsPresentationHelpEnabled(true);
                             if (appSession.getAppPublicKey() != null) {
-                                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), redeemPointIdentitySettings);
+                                moduleManager.persistSettings(appSession.getAppPublicKey(), redeemPointIdentitySettings);
                             } else {
-                                appSession.getModuleManager().persistSettings("1", redeemPointIdentitySettings);
+                                moduleManager.persistSettings("1", redeemPointIdentitySettings);
                             }
                         }
                     } catch (Exception e) {
@@ -431,7 +430,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                             @Override
                             public void run() {
                                 try {
-                                    appSession.getModuleManager().createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray,
+                                    moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray,
                                             brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode,
                                             brokerAddressStreetName, brokerAddressHouseNumber);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
@@ -446,10 +445,10 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
                             public void run() {
                                 try {
                                     if (updateProfileImage)
-                                        appSession.getModuleManager().updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray, brokerContactInformation,
+                                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray, brokerContactInformation,
                                                 brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode, brokerAddressStreetName, brokerAddressHouseNumber);
                                     else
-                                        appSession.getModuleManager().updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, identitySelected.getImage(), brokerContactInformation,
+                                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, identitySelected.getImage(), brokerContactInformation,
                                                 brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode, brokerAddressStreetName, brokerAddressHouseNumber);
                                     publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (Exception e) {
@@ -527,7 +526,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment<Re
         try {
 
             if (item.getItemId() == R.id.action_identity_redeem_help) {
-                setUpPresentation(appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

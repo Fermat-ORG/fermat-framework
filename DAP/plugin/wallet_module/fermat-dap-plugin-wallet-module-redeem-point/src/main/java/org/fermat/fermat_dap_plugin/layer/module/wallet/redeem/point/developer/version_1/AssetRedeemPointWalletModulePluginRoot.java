@@ -72,7 +72,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
 
     // TODO MAKE USE OF THE ERROR MANAGER
 
-    private AssetRedeemPointWalletModuleManager assetRedeemPointWalletModuleManager;
+    private AssetRedeemPointWalletSubAppModule assetRedeemPointWalletModuleManager;
 
     public AssetRedeemPointWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -148,10 +148,10 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = AssetRedeemPointWalletSubAppModule.class)
+//    @moduleManagerInterfacea(moduleManager = AssetRedeemPointWalletSubAppModule.class)
     public ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation started...", null, null);
+//            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation started...", null, null);
 
             if (assetRedeemPointWalletModuleManager == null) {
                 assetRedeemPointWalletModuleManager = new AssetRedeemPointWalletModuleManager(
@@ -165,7 +165,7 @@ public class AssetRedeemPointWalletModulePluginRoot extends AbstractModule<Redee
                         this);
             }
 
-            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation finished successfully.", null, null);
+//            logManager.log(AssetRedeemPointWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "AssetRedeem Wallet Module instantiation finished successfully.", null, null);
 
             return assetRedeemPointWalletModuleManager;
 

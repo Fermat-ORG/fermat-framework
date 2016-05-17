@@ -79,11 +79,6 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
     // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
 
     private AssetFactorySupAppModuleManager assetFactorySupAppModuleManager;
-//    private SettingsManager<AssetFactorySettings> settingsManager;
-//    private BlockchainNetworkType selectedNetwork;
-//    AssetFactorySettings settings = null;
-//    String publicKeyApp;
-    // TODO ADDED ERROR MANAGER REFERENCE, PLEASE MAKE USE OF THE ERROR MANAGER.
 
     public AssetFactorySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -232,7 +227,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
 //    @moduleManagerInterfacea(moduleManager = AssetFactorySupAppModuleManager.class)
     public ModuleManager<AssetFactorySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(AssetFactorySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Module instantiation started...", null, null);
+//            logManager.log(AssetFactorySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Module instantiation started...", null, null);
 
             if (assetFactorySupAppModuleManager == null) {
                 assetFactorySupAppModuleManager = new AssetFactorySupAppModuleManager(
@@ -247,7 +242,7 @@ public final class AssetFactorySubAppModulePluginRoot extends AbstractModule<Ass
                         this);
             }
 
-            logManager.log(AssetFactorySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Module instantiation finished successfully.", null, null);
+//            logManager.log(AssetFactorySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Factory Module instantiation finished successfully.", null, null);
 
             return assetFactorySupAppModuleManager;
 

@@ -31,13 +31,14 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.Identi
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 13/10/15.
  */
 
-public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings> {
+public interface AssetUserCommunitySubAppModuleManager extends ModuleManager, ModuleSettingsImpl<AssetUserSettings>, Serializable {
 
     DAPConnectionState getActorRegisteredDAPConnectionState(String actorAssetPublicKey) throws CantGetAssetUserActorsException;
 

@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -24,7 +25,7 @@ import java.util.List;
 /**
  * Created by franklin on 07/09/15.
  */
-public interface AssetFactoryManager {//extends FermatManager {
+public interface AssetFactoryManager extends FermatManager {
     //Getters
     /**
      * This method returns the information stored about the Asset Factory

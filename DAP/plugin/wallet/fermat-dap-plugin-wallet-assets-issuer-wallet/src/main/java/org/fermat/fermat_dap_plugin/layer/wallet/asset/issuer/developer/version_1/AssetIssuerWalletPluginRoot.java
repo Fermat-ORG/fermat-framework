@@ -44,6 +44,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.exceptions.CantDeliverDatabaseException;
+
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional.AssetIssuerWalletImpl;
 
 import java.util.ArrayList;
@@ -164,13 +167,13 @@ public class AssetIssuerWalletPluginRoot extends AbstractPlugin implements
         Collection<UUID> ids = this.issuerWallets;
         for (UUID id : ids)
             databasesNames.add(id.toString());
-        org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory(this.pluginId.toString(), databasesNames);
+        DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(this.pluginId.toString(), databasesNames);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.DeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return DeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override

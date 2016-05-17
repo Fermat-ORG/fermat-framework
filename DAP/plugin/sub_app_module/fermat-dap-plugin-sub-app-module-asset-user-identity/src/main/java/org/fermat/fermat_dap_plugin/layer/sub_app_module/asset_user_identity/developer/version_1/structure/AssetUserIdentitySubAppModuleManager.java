@@ -70,8 +70,8 @@ public class AssetUserIdentitySubAppModuleManager extends ModuleManagerImpl<User
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException {
         try {
-            List<IdentityAssetUser> identities = this.getIdentityAssetUsersFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : this.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
+            List<IdentityAssetUser> identities = identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser();
+            return (identities == null || identities.isEmpty()) ? null : identities.get(0);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

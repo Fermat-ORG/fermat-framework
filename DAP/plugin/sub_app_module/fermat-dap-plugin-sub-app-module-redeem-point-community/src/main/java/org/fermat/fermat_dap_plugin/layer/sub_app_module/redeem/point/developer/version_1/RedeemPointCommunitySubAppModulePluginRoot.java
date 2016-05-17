@@ -157,10 +157,10 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractModule<R
     }
 
     @Override
-    @moduleManagerInterfacea(moduleManager = RedeemPointCommunitySupAppModuleManager.class)
+//    @moduleManagerInterfacea(moduleManager = RedeemPointCommunitySupAppModuleManager.class)
     public ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
-            logManager.log(RedeemPointCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Sup AppModule instantiation started...", null, null);
+//            logManager.log(RedeemPointCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Sup AppModule instantiation started...", null, null);
 
             if (redeemPointCommunitySupAppModuleManager == null) {
                 redeemPointCommunitySupAppModuleManager = new RedeemPointCommunitySupAppModuleManager(
@@ -178,7 +178,7 @@ public class RedeemPointCommunitySubAppModulePluginRoot extends AbstractModule<R
                         this);
             }
 
-            logManager.log(RedeemPointCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Sup AppModule instantiation finished successfully.", null, null);
+//            logManager.log(RedeemPointCommunitySubAppModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "Redeem Point Sup AppModule instantiation finished successfully.", null, null);
 
             return redeemPointCommunitySupAppModuleManager;
 

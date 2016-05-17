@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
@@ -10,7 +11,7 @@ import java.util.UUID;
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 10/02/16.
  */
-public interface AssetBuyerManager {//extends FermatManager {
+public interface AssetBuyerManager extends FermatManager {
     /**
      * @param negotiationId   the {@link UUID} that represents the negotiation that I am going to accept.
      * @param walletPublicKey the BTC wallet from where I'll get the bitcoins for buying that asset.
