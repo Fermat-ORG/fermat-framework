@@ -204,7 +204,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Get the server ip
              */
-            serverIp = IPAddressHelper.getCurrentIPAddress();
+            serverIp = "192.168.1.5";
             LOG.info("Server ip: " + serverIp);
 
             /*

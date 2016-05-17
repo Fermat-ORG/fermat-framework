@@ -46,6 +46,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNetworkServiceRegisteredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientNewMessageTransmitEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientRegisteredEventHandler;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers.NetworkClientSentMessageDeliveredEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeIdentityException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantInitializeNetworkServiceProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.exceptions.CantSendMessageException;
@@ -491,6 +492,14 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         eventManager.addListener(newMessageTransmitListener);
         listenersAdded.add(newMessageTransmitListener);
 
+        /*
+         * 8. Listen and handle Network Client Sent Message Delivered Event
+         */
+        FermatEventListener sentMessageDeliveredListener = eventManager.getNewListener(P2pEventType.NETWORK_CLIENT_SENT_MESSAGE_DELIVERED);
+        sentMessageDeliveredListener.setEventHandler(new NetworkClientSentMessageDeliveredEventHandler(this));
+        eventManager.addListener(sentMessageDeliveredListener);
+        listenersAdded.add(sentMessageDeliveredListener);
+
 
     }
 
@@ -564,9 +573,9 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
             networkServiceConnectionManager.getNetworkServiceRoot().onNewMessageReceived(networkServiceMessage);
 
             networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.READ);
-            networkServiceConnectionManager.getIncomingMessagesDao().update(networkServiceMessage);
+            networkServiceConnectionManager.getIncomingMessagesDao().create(networkServiceMessage);
 
-        } catch (CantUpdateRecordDataBaseException | RecordNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -733,7 +742,19 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
         System.out.println("Me llego un nuevo mensaje"+ messageReceived);
     }
 
-    public synchronized void onSentMessage(NetworkServiceMessage messageSent) {
+    public synchronized void onSentMessage(NetworkServiceMessage networkServiceMessage) {
+
+        System.out.println("Mensaje Delivered "+ networkServiceMessage);
+
+        networkServiceMessage.setContent(AsymmetricCryptography.decryptMessagePrivateKey(networkServiceMessage.getContent(), this.identity.getPrivateKey()));
+
+        networkServiceMessage.setFermatMessagesStatus(FermatMessagesStatus.DELIVERED);
+
+        try {
+            networkServiceConnectionManager.getOutgoingMessagesDao().update(networkServiceMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

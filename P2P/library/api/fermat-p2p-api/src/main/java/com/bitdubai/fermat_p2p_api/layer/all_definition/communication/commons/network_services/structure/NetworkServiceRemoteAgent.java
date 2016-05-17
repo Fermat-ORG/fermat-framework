@@ -170,7 +170,8 @@ public final class NetworkServiceRemoteAgent extends Observable {
                                 /*
                                  * Notify a message sent
                                  */
-                                networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
+                                // TODO: esto debe ser lanzado es cuando llega al otro lado
+                                // networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
                             } else {
                                 System.out.println("NetworkServiceRemoteAgent - Connection is connected = " + networkClientConnection.isConnected());

@@ -54,7 +54,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
             /*
              * Raise the event
              */
-            System.out.println("CheckInClientRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT");
+            System.out.println("MessageTransmitProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_NEW_MESSAGE_TRANSMIT");
             getEventManager().raiseEvent(event);
 
         } catch (Exception exception){
