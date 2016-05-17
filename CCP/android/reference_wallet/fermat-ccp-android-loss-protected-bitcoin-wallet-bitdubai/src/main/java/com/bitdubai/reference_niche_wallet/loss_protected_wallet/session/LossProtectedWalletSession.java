@@ -9,6 +9,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
@@ -25,7 +26,7 @@ import java.util.UUID;
  * Created by Matias Furszyfer on 2015.07.20..
  */
 
-public class LossProtectedWalletSession extends AbstractFermatSession<InstalledWallet,LossProtectedWalletManager,WalletResourcesProviderManager>  {
+public class LossProtectedWalletSession extends AbstractFermatSession<InstalledWallet,LossProtectedWallet,WalletResourcesProviderManager>  {
 
 
 
@@ -69,7 +70,7 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     }
 
 
-    public LossProtectedWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, LossProtectedWalletManager moduleManager, WalletResourcesProviderManager resourceProviderManager) {
+    public LossProtectedWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, LossProtectedWallet moduleManager, WalletResourcesProviderManager resourceProviderManager) {
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
 
@@ -141,10 +142,8 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     public LossProtectedWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException {
         List<LossProtectedWalletIntraUserIdentity> lst = null;
         try {
-            lst = getModuleManager().getCryptoWallet().getAllIntraWalletUsersFromCurrentDeviceUser();
+            lst = getModuleManager().getAllIntraWalletUsersFromCurrentDeviceUser();
         } catch (CantListLossProtectedWalletIntraUserIdentityException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
             e.printStackTrace();
         }
         return (lst.isEmpty()) ? null : lst.get(0);

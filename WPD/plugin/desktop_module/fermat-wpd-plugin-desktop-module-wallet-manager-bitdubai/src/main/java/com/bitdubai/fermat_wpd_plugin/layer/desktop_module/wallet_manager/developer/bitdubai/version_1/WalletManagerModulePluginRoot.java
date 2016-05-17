@@ -170,7 +170,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         boolean existWalletLoss = false;
         try {
 
-             //load user's wallets ids
+            //load user's wallets ids
             this.loadUserWallets(deviceUserPublicKey);
 
             Iterator iterator = walletIds.entrySet().iterator();
@@ -212,11 +212,11 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
 
             if (!existWalletLoss) {
-                  try {
+                try {
 
 
                     bitcoinLossProtectedWalletManager.createWallet(lossProtectedwalletPublicKey);
-                      walletIds.put(UUID.randomUUID().toString(), lossProtectedwalletPublicKey);
+                    walletIds.put(UUID.randomUUID().toString(), lossProtectedwalletPublicKey);
                     //Save wallet id on file
 
                     try {
@@ -463,7 +463,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
 
         //fileContent+= deviceUserPublicKey + "," + walletId + ";";
 
-       StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
+        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
 
         Iterator iterator = walletIds.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -494,7 +494,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
     public void createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws WalletCreateNewIntraUserIdentityException {
         try
         {
-           intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage);
+            intraWalletUserIdentityManager.createNewIntraWalletUser(alias,phrase,profileImage);
 
         }
         catch( CantCreateNewIntraWalletUserException e)
@@ -663,7 +663,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.DEV);
+                        AppsStatus.ALPHA);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
@@ -751,8 +751,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         String[] idPair = stringWalletId.split(",", -1);
 
                         //put wallets of this user
-                      //  if (idPair[0].equals(deviceUserPublicKey))
-                            walletIds.put(idPair[0], idPair[1]);
+                        //  if (idPair[0].equals(deviceUserPublicKey))
+                        walletIds.put(idPair[0], idPair[1]);
 
                         /**
                          * Great, now the wallet list is in memory.

@@ -66,9 +66,9 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
     private LossProtectedWalletSession lossProtectedWalletSession;
-    private LossProtectedWallet lossProtectedWallet;
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
-    private LossProtectedWalletSettings bitcoinWalletSettings = null;
+    private LossProtectedWallet lossProtectedWalletManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
+    //private LossProtectedWalletSettings bitcoinWalletSettings = null;
     private String previousSelectedItem = "RegTest";
     private String previousSelectedItemExchange = null;
 
@@ -83,12 +83,17 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         super.onCreate(savedInstanceState);
         lossProtectedWalletSession = appSession;
         try {
-            lossProtectedWallet = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
+            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-            settingsManager = lossProtectedWalletSession.getModuleManager().getSettingsManager();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
+            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+           } catch (CantGetSettingsException e) {
             lossProtectedWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+
+        } catch (SettingsNotFoundException e) {
+            lossProtectedWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+
         }
     }
 
@@ -105,14 +110,14 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         try{
 
 
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
 
-            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",bitcoinWalletSettings.getNotificationEnabled()));
+            list.add(new PreferenceSettingsSwithItem(1,"Enabled Notifications",lossProtectedWalletSettings.getNotificationEnabled()));
 
-            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getLossProtectedEnabled()));
+            list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",lossProtectedWalletSettings.getLossProtectedEnabled()));
 
-            if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            if (lossProtectedWalletSettings.getBlockchainNetworkType() != null) {
+                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
                 switch (blockchainNetworkType) {
                     case PRODUCTION:
@@ -140,10 +145,10 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
             // Exchange Rate Provider
-           if (lossProtectedWallet.getExchangeProvider() != null)
-                exchangeProviderId =  lossProtectedWallet.getExchangeProvider();
+           if (lossProtectedWalletManager.getExchangeProvider() != null)
+                exchangeProviderId =  lossProtectedWalletManager.getExchangeProvider();
 
-            List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWallet.getExchangeRateProviderManagers());
+            List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
             String itemsProviders[] = new String[providers.size()];
             for (int i=0; i<providers.size(); i++) {
                 CurrencyExchangeRateProviderManager provider = providers.get(i);
@@ -191,7 +196,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         try {
 
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
@@ -199,13 +204,13 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             }
             if(preferenceSettingsItem.getId() == 10){
                 //Get providers list
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWallet.getExchangeRateProviderManagers());
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWalletManager.getExchangeRateProviderManagers());
 
                 String stringsProviders[] = new String[providers.size()];
                 int i = 0;
                 for (CurrencyExchangeRateProviderManager provider :  providers)
                 {
-                    if(lossProtectedWallet.getExchangeProvider().equals(provider.getProviderId()))
+                    if(lossProtectedWalletManager.getExchangeProvider().equals(provider.getProviderId()))
                         previousSelectedItem = provider.getProviderName();
 
                     stringsProviders[i] = provider.getProviderName();
@@ -242,7 +247,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
         try {
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
@@ -252,18 +257,18 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             if (preferenceSettingsItem.getId() == 1){
                 //enable notifications settings
-                bitcoinWalletSettings.setNotificationEnabled(isChecked);
+                lossProtectedWalletSettings.setNotificationEnabled(isChecked);
             }
 
             if (preferenceSettingsItem.getId() == 2){
                 //enable Loss Protected
-                bitcoinWalletSettings.setLossProtectedEnabled(isChecked);
+                lossProtectedWalletSettings.setLossProtectedEnabled(isChecked);
             }
 
 
 
             try {
-                settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                lossProtectedWalletManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -299,7 +304,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 // Exchange Rate Provider
                 try {
                     UUID exchangeProviderId = null;
-                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWallet.getExchangeRateProviderManagers());
+                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
 
                     for (int i=0; i<providers.size(); i++) {
                         CurrencyExchangeRateProviderManager provider = providers.get(i);
@@ -310,7 +315,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
                     }
 
-                    lossProtectedWallet.setExchangeProvider(exchangeProviderId);
+                    lossProtectedWalletManager.setExchangeProvider(exchangeProviderId);
                 } catch (CantGetProviderInfoException e) {
                     e.printStackTrace();
                 }
@@ -323,18 +328,18 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
         if (blockchainNetworkType == null) {
-            if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            if (lossProtectedWalletSettings.getBlockchainNetworkType() != null) {
+                blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             } else {
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
             }
         }
 
-        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+        lossProtectedWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
 
 
         try {
-            settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            lossProtectedWalletManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }
@@ -387,7 +392,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                             CryptoAddress cryptoAddress = new CryptoAddress(finalReceivedAddress, CryptoCurrency.BITCOIN);
                             LossProtectedWalletContact cryptoWalletWalletContact = null;
                             try {
-                                cryptoWalletWalletContact = lossProtectedWallet.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
+                                cryptoWalletWalletContact = lossProtectedWalletManager.createWalletContact(cryptoAddress, "regtest_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey(), blockchainNetworkType);
 
                             } catch (Exception e) {
 
@@ -429,7 +434,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         String walletAddres="";
         try {
             //TODO parameters deliveredByActorId deliveredByActorType harcoded..
-            CryptoAddress cryptoAddress = lossProtectedWallet.requestAddressToKnownUser(
+            CryptoAddress cryptoAddress = lossProtectedWalletManager.requestAddressToKnownUser(
                     lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey(),
                     Actors.INTRA_USER,
                     actorPublicKey,

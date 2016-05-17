@@ -1,6 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,7 +12,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -29,17 +29,16 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
+
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
@@ -50,10 +49,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
 
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
@@ -93,14 +89,14 @@ import static android.widget.Toast.makeText;
 public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSession,ResourceProviderManager> implements OnChartValueSelectedListener {
 
     LossProtectedWalletSession lossProtectedWalletSession;
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
     LayoutInflater inflater;
 
     /**
      * Manager
      * */
-    private LossProtectedWallet lossProtectedWallet;
+    private LossProtectedWallet lossProtectedWalletmanager;
 
     private ErrorManager errorManager;
 
@@ -125,14 +121,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private long balanceAvailable;
     private long realBalance;
     private View rootView;
-    private Activity activity;
-
-    private int progress1=1;
 
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
-   // private FermatTextView txt_balance_amount_type;
-
 
     private UUID exchangeProviderId = null;
 
@@ -153,54 +144,56 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         setHasOptionsMenu(true);
 
         try {
+
+
+
             lossProtectedWalletSession = appSession;
-            lossProtectedWallet = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
+            lossProtectedWalletmanager = lossProtectedWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-
-            settingsManager = lossProtectedWalletSession.getModuleManager().getSettingsManager();
-
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-            }catch (Exception e){
-                bitcoinWalletSettings = null;
+                lossProtectedWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+            } catch (Exception e) {
+                lossProtectedWalletSettings = null;
             }
-            if(bitcoinWalletSettings == null){
-                bitcoinWalletSettings = new LossProtectedWalletSettings();
-                bitcoinWalletSettings.setIsContactsHelpEnabled(true);
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
-                bitcoinWalletSettings.setNotificationEnabled(true);
-                bitcoinWalletSettings.setLossProtectedEnabled(true);
 
-                settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+            if(lossProtectedWalletSettings == null){
+                lossProtectedWalletSettings = new LossProtectedWalletSettings();
+                lossProtectedWalletSettings.setIsContactsHelpEnabled(true);
+                lossProtectedWalletSettings.setIsPresentationHelpEnabled(true);
+                lossProtectedWalletSettings.setNotificationEnabled(true);
+                lossProtectedWalletSettings.setLossProtectedEnabled(true);
+
             }
 
             //default btc network
-            if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
-                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            if(lossProtectedWalletSettings.getBlockchainNetworkType()==null){
+                lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
-            settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 
-            blockchainNetworkType = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+            try {
+                if(lossProtectedWalletmanager!=null) lossProtectedWalletmanager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
 
-            final LossProtectedWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
-
+            final LossProtectedWalletSettings lossProtectedWalletSettingstemp = lossProtectedWalletSettings;
 
             //default Exchange rate Provider
             try {
-                if(lossProtectedWallet.getExchangeProvider()==null) {
-                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWallet.getExchangeRateProviderManagers());
+                if(lossProtectedWalletmanager.getExchangeProvider()==null) {
+                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWalletmanager.getExchangeRateProviderManagers());
 
                     exchangeProviderId = providers.get(0).getProviderId();
-                    lossProtectedWallet.setExchangeProvider(exchangeProviderId);
+                    lossProtectedWalletmanager.setExchangeProvider(exchangeProviderId);
 
                 }
                 else
                 {
-                    exchangeProviderId =lossProtectedWallet.getExchangeProvider();
+                    exchangeProviderId =lossProtectedWalletmanager.getExchangeProvider();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -209,7 +202,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
                 public void run() {
-                    if(bitcoinWalletSettingsTemp.isPresentationHelpEnabled()){
+                    if(lossProtectedWalletSettingstemp.isPresentationHelpEnabled()){
                         setUpPresentation(false);
                     }
                 }}, 500);
@@ -229,7 +222,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         getActivity(),
                         lossProtectedWalletSession,
                         null,
-                        (lossProtectedWallet.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                        (lossProtectedWalletmanager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
 
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -359,9 +352,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             long balance = 0;
             if (BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE))
-                balance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
+                balance = lossProtectedWalletmanager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
             else
-                balance = lossProtectedWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+                balance = lossProtectedWalletmanager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
 
@@ -395,7 +388,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //Get all wallet spending from the manager
             //for especific network
-            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType);
+            allWalletSpendingList = lossProtectedWalletmanager.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType);
 
             LineData data = getData(allWalletSpendingList);
             //LineData data = new LineData(labels, dataset);
@@ -564,7 +557,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             }
 
             //Get the transaction of this Spending
-            LossProtectedWalletTransaction transaction = lossProtectedWallet.getTransaction(
+            LossProtectedWalletTransaction transaction = lossProtectedWalletmanager.getTransaction(
                     transactionId,
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk);
@@ -670,7 +663,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
                 return true;
             }else if(id == LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION){
-                setUpPresentation(settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
                 return true;
             }
 
@@ -712,10 +705,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         try {
 
             if(balanceType.equals(BalanceType.REAL))
-                balance =  lossProtectedWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+                balance =  lossProtectedWalletmanager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             if(balanceType.equals(BalanceType.AVAILABLE))
-                balance =  lossProtectedWallet.getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+                balance =  lossProtectedWalletmanager.getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
 
 
         } catch (CantGetLossProtectedBalanceException e) {
@@ -746,7 +739,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 ExchangeRate rate = null;
                 try{
-                     rate =  lossProtectedWallet.getCurrencyExchange(exchangeProviderId);
+                     rate =  lossProtectedWalletmanager.getCurrencyExchange(exchangeProviderId);
                 }
                 catch (Exception e) {
                     e.printStackTrace();

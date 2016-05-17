@@ -56,7 +56,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     /**
      * MANAGERS
      */
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * DATA
      */
@@ -72,8 +72,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     private LinearLayout empty;
     com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
     FloatingActionMenu actionMenu;
-
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    private LossProtectedWalletSettings lossProtectedWalletSettings;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -93,20 +92,15 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
 
         referenceWalletSession = (LossProtectedWalletSession) appSession;
 
-        lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
+        lstPaymentRequest = new ArrayList<>();
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            lossProtectedWalletManager = referenceWalletSession.getModuleManager();
 
             lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
-
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             } catch (Exception e) {
 
             }
@@ -237,7 +231,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
     @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-             adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, cryptoWallet, referenceWalletSession, this);
+             adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, lossProtectedWalletManager, referenceWalletSession, this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
         }
@@ -262,7 +256,7 @@ public class RequestReceiveHistoryFragment2 extends FermatWalletListFragment<Los
                 //when refresh offset set 0
                 if (refreshType.equals(FermatRefreshTypes.NEW))
                     offset = 0;
-                lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
+                lstPaymentRequest = lossProtectedWalletManager.listReceivedPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
                 offset += MAX_TRANSACTIONS;
             } catch (Exception e) {
                 referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,

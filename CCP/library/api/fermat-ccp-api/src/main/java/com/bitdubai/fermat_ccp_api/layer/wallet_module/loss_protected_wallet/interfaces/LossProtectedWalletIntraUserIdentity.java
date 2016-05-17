@@ -10,7 +10,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.in
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface LossProtectedWalletIntraUserIdentity {
+public interface LossProtectedWalletIntraUserIdentity  {
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the identity.
