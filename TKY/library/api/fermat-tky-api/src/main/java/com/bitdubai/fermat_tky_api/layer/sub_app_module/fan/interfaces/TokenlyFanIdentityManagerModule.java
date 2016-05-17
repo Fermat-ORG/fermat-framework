@@ -33,7 +33,7 @@ public interface TokenlyFanIdentityManagerModule extends
      * @return
      * @throws CantListFanIdentitiesException
      */
-    List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    FanIdentitiesList listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
      *

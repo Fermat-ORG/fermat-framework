@@ -19,6 +19,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanId
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
+import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.FanIdentitiesList;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 
@@ -32,31 +33,29 @@ import java.util.UUID;
 public class FanIdentityManager
         extends ModuleManagerImpl<TokenlyFanPreferenceSettings>
         implements TokenlyFanIdentityManagerModule, Serializable {
-    private final ErrorManager errorManager;
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
 
     /**
      * Default constructor with parameters.
-     * @param errorManager
      * @param tokenlyFanIdentityManager
      * @param tokenlyApiManager
      */
     public FanIdentityManager(
-            ErrorManager errorManager,
             TokenlyFanIdentityManager tokenlyFanIdentityManager,
             TokenlyApiManager tokenlyApiManager,
             PluginFileSystem pluginFileSystem,
             UUID pluginId) {
         super(pluginFileSystem, pluginId);
-        this.errorManager = errorManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
         this.tokenlyApiManager = tokenlyApiManager;
     }
 
     @Override
-    public List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
-        return tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
+    public FanIdentitiesList listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        FanIdentitiesList fanIdentitiesList = new FanIdentitiesListRecord(
+                tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser());
+        return fanIdentitiesList;
     }
 
     @Override

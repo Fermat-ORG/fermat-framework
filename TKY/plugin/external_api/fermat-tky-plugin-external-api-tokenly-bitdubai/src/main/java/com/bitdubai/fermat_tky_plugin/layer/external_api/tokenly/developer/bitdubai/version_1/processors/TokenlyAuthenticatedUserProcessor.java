@@ -13,12 +13,13 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public abstract class TokenlyAuthenticatedUserProcessor extends AbstractTokenlyProcessor {
+public abstract class TokenlyAuthenticatedUserProcessor extends AbstractTokenlyProcessor implements Serializable {
 
     /**
      * This method returns an user from Tokenly protected API.

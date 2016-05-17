@@ -24,12 +24,13 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlySongProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlySwapBotProcessor;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/03/16.
  */
-public class TokenlyManager implements TokenlyApiManager {
+public class TokenlyManager implements TokenlyApiManager, Serializable {
 
     /**
      * This method returns a Tokenly Bot by bot Id.

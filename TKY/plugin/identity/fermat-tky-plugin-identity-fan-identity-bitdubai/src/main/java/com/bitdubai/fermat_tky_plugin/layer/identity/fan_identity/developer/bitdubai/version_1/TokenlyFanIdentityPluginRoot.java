@@ -97,7 +97,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
         try {
             this.serviceStatus = ServiceStatus.STARTED;
             identityFanManager = new TokenlyIdentityFanManagerImpl(
-                    this.errorManager,
+                    //this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,

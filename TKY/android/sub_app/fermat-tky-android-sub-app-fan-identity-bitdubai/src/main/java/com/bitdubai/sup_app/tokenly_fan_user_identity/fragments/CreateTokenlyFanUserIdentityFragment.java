@@ -47,6 +47,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanId
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.FanIdentitiesList;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 import com.bitdubai.sub_app.fan_identity.R;
@@ -191,8 +192,8 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             if (identitySelected != null) {
                 loadIdentity();
             } else {
-
-                lst = moduleManager.listIdentitiesFromCurrentDeviceUser();
+                FanIdentitiesList fanIdentitiesList = moduleManager.listIdentitiesFromCurrentDeviceUser();
+                lst = fanIdentitiesList.getFanIdentitiesList();
                 if(lst!=null&&!lst.isEmpty()){
                     identitySelected = lst.get(0);
                 }

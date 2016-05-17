@@ -16,12 +16,13 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
  */
-public interface TokenlyApiManager extends FermatManager {
+public interface TokenlyApiManager extends FermatManager, Serializable {
 
     /**
      * This method returns String that contains a swap bot by botId

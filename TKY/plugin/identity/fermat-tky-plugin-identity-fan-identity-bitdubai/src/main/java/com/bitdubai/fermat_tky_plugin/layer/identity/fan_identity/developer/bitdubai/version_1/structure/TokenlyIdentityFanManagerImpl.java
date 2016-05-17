@@ -49,7 +49,7 @@ public class TokenlyIdentityFanManagerImpl
     /**
      * DealsWithErrors interface member variables
      */
-    ErrorManager errorManager;
+    //ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface mmeber variables
@@ -77,13 +77,12 @@ public class TokenlyIdentityFanManagerImpl
     /**
      * Constructor
      *
-     * @param errorManager
      * @param logManager
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public TokenlyIdentityFanManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, TokenlyApiManager tokenlyApiManager){
-        this.errorManager = errorManager;
+    public TokenlyIdentityFanManagerImpl(/*ErrorManager errorManager,*/ LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, TokenlyApiManager tokenlyApiManager){
+        //this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
@@ -152,7 +151,7 @@ public class TokenlyIdentityFanManagerImpl
             getFanIdentityDao().createNewUser(user, id, publicKey, privateKey, deviceUser, profileImage, externalPassword, externalPlatform);
 
 
-            return new TokenlyFanIdentityImp(user,id,publicKey,profileImage,externalPlatform,pluginFileSystem, pluginId);
+            return new TokenlyFanIdentityRecord(user,id,publicKey,profileImage,externalPlatform);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateFanIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {

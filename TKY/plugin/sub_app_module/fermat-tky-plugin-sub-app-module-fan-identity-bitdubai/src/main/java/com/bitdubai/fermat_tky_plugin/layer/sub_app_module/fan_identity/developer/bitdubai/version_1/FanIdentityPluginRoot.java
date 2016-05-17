@@ -53,7 +53,6 @@ public class FanIdentityPluginRoot extends AbstractModule<TokenlyFanPreferenceSe
 
     private void initPluginManager(){
         this.fanIdentityManager = new FanIdentityManager(
-                errorManager,
                 tokenlyFanIdentityManager,
                 tokenlyApiManager,
                 pluginFileSystem,
