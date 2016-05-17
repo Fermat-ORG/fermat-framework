@@ -2,6 +2,7 @@ package com.bitdubai.reference_wallet.bank_money_wallet.fragments.account_manage
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -104,6 +105,9 @@ public class EditAccountFragment extends AbstractFermatFragment implements Spinn
         accountImageSpinner.setAdapter(imagesSpinnerAdapter);
         accountImageSpinner.setOnItemSelectedListener(this);
         accountImageSpinner.setSelection(accountImages.indexOf(oldData.getAccountImageId()));
+
+        //Allow only numbers and dashes
+        accountNumberText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
 
         configureToolbar();
         return layout;
