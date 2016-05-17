@@ -53,7 +53,6 @@ public class FanWalletModulePluginRoot extends AbstractModule<FanWalletPreferenc
 
     private void initPluginManager(){
         this.fanWalletModuleManagerImpl = new FanWalletModuleManagerImpl(
-                errorManager,
                 songWalletTokenlyManager,
                 tokenlyFanIdentityManager,
                 tokenlyApiManager,

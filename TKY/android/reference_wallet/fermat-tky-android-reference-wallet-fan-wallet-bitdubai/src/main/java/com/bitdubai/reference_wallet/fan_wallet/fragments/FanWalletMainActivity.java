@@ -43,7 +43,6 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
             try {
                     fanWalletSettings =  fanwalletSession
                             .getModuleManager()
-                            .getSettingsManager()
                             .loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
@@ -55,7 +54,6 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
                 try {
                     fanwalletSession
                             .getModuleManager()
-                            .getSettingsManager()
                             .persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(

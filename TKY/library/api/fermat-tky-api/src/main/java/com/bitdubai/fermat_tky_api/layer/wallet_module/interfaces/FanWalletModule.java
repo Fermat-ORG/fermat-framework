@@ -30,6 +30,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongSt
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -42,7 +43,7 @@ public interface FanWalletModule extends
         ModuleManager<
                 FanWalletPreferenceSettings,
                 ActiveActorIdentityInformation>,
-        ModuleSettingsImpl<FanWalletPreferenceSettings> {
+        ModuleSettingsImpl<FanWalletPreferenceSettings>, Serializable {
 
     //Song Wallet
     /**

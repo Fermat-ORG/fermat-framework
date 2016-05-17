@@ -86,7 +86,8 @@ public class SongFragment extends AbstractFermatFragment  {
     private RecyclerView.LayoutManager lManager;
     String code;
     FermatBundle bundle;
-    PresentationDialog presentationDialog;
+    //TODO: I'll remove the presentation dialog for now, is not working with the new android core
+    //PresentationDialog presentationDialog;
     Boolean firstTime=true;
     Boolean downloading=false;
     /**
@@ -131,7 +132,7 @@ public class SongFragment extends AbstractFermatFragment  {
             fanWalletModule=fanwalletSession.getModuleManager();
 
             try {
-                fanWalletSettings =  fanwalletSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanwalletSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -140,7 +141,7 @@ public class SongFragment extends AbstractFermatFragment  {
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanwalletSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -167,7 +168,7 @@ public class SongFragment extends AbstractFermatFragment  {
         if (swipeContainer.isRefreshing()){
             swipeContainer.setRefreshing(false);
         }
-        if(code.equals("Connection Error")) {
+        if(code!=null&&code.equals("Connection Error")) {
               Toast.makeText(
                 getActivity(),
                 "Connection Problem With External Platform",
@@ -347,12 +348,6 @@ public class SongFragment extends AbstractFermatFragment  {
 
         });
 
-
-
-
-
-
-
             swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -392,7 +387,7 @@ public class SongFragment extends AbstractFermatFragment  {
 
     private void setUpHelpFanWallet(boolean checkButton) {
         try {
-            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+            /*presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.bannerfanwallet)
                     .setIconRes(R.drawable.banner_tky)
@@ -402,7 +397,7 @@ public class SongFragment extends AbstractFermatFragment  {
                     .setIsCheckEnabled(checkButton)
                     .build();
 
-            presentationDialog.show();
+            presentationDialog.show();*/
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(
                     Wallets.TKY_FAN_WALLET,

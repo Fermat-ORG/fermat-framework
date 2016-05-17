@@ -98,7 +98,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
             System.out.println("HERE START FOLLOWING");
 
             try {
-                fanWalletSettings =  fanWalletModuleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanWalletModuleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -107,7 +107,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanWalletModuleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanWalletModuleManager.persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -445,19 +445,20 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                     }
                     for(Fan artistUsername:fanList){
                         List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
-                        for(String botUsername : connectedArtistTKYUsername){
-                            artistBot= fanWalletModuleManager.getBotBySwapbotUsername(botUsername);
-                            System.out.println(
-                                    "tky_artistBot:" + artistBot);
-                            items.add(new FollowingItems(convertUrlToBMP(artistBot.getLogoImageDetails().originalUrl()),
-                                   //extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
-                                    artistBot.getBotUrl(),
-                                    artistBot.getName(),
-                                    artistBot.getDescriptionHtml()));
+                        if(connectedArtistTKYUsername!=null&&!connectedArtistTKYUsername.isEmpty()){
+                            for(String botUsername : connectedArtistTKYUsername){
+                                artistBot= fanWalletModuleManager.getBotBySwapbotUsername(botUsername);
+                                System.out.println(
+                                        "tky_artistBot:" + artistBot);
+                                items.add(new FollowingItems(convertUrlToBMP(artistBot.getLogoImageDetails().originalUrl()),
+                                        //extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
+                                        artistBot.getBotUrl(),
+                                        artistBot.getName(),
+                                        artistBot.getDescriptionHtml()));
 
+                            }
                         }
                     }
-
                     } catch (CantGetBotException e) {
                     errorManager.reportUnexpectedUIException(
                             UISource.VIEW,
