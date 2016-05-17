@@ -157,6 +157,9 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
             if (profile.getLocation() != null) {
                 checkedInClient.setLatitude(profile.getLocation().getLatitude());
                 checkedInClient.setLongitude(profile.getLocation().getLongitude());
+            }else{
+                checkedInClient.setLatitude(0.0);
+                checkedInClient.setLongitude(0.0);
             }
 
             /*
@@ -200,6 +203,9 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
         if (profile.getLocation() != null) {
             clientsRegistrationHistory.setLastLatitude(profile.getLocation().getLatitude());
             clientsRegistrationHistory.setLastLongitude(profile.getLocation().getLongitude());
+        }else{
+            clientsRegistrationHistory.setLastLatitude(0.0);
+            clientsRegistrationHistory.setLastLongitude(0.0);
         }
 
         /*

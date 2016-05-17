@@ -187,8 +187,8 @@ public class CheckOutActorRequestProcessor extends PackageProcessor {
         checkedActorsHistory.setName(checkedInActor.getName());
         checkedActorsHistory.setPhoto(checkedInActor.getPhoto());
         checkedActorsHistory.setExtraData(checkedInActor.getExtraData());
-        checkedActorsHistory.setLastLatitude(checkedInActor.getLatitude());
-        checkedActorsHistory.setLastLongitude(checkedInActor.getLongitude());
+        checkedActorsHistory.setLastLatitude((checkedInActor.getLatitude() != null ? checkedInActor.getLatitude() : 0.0));
+        checkedActorsHistory.setLastLongitude((checkedInActor.getLongitude() != null ? checkedInActor.getLongitude() : 0.0));
         checkedActorsHistory.setCheckType(CheckedActorsHistory.CHECK_TYPE_OUT);
 
         /*

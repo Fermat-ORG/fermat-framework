@@ -159,7 +159,7 @@ public final class NetworkServiceRemoteAgent extends Observable {
                                 String signature = AsymmetricCryptography.createMessageSignature(message.getContent(), networkServiceConnectionManager.getNetworkServiceRoot().getIdentity().getPrivateKey());
                                 message.setSignature(signature);
 
-                                networkClientConnection.sendPackageMessage(message, message.getNetworkServiceType(), message.getReceiverPublicKey(), message.getReceiverClientPublicKey());
+                                networkClientConnection.sendPackageMessage(message, networkServiceConnectionManager.getNetworkServiceRoot().getProfile().getNetworkServiceType(), message.getReceiverPublicKey(), message.getReceiverClientPublicKey());
 
                                 /*
                                  * Change the message and update in the data base
@@ -170,7 +170,8 @@ public final class NetworkServiceRemoteAgent extends Observable {
                                 /*
                                  * Notify a message sent
                                  */
-                                networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
+                                // TODO: esto debe ser lanzado es cuando llega al otro lado
+                                // networkServiceConnectionManager.getNetworkServiceRoot().onSentMessage(message);
 
                             } else {
                                 System.out.println("NetworkServiceRemoteAgent - Connection is connected = " + networkClientConnection.isConnected());

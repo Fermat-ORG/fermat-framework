@@ -6,9 +6,14 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageDeliveredEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientNewMessageTransmitEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.*;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MessageTransmitRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 
@@ -47,6 +52,20 @@ public class MessageTransmitRespondProcessor extends PackageProcessor{
 
         if(messageTransmitRespond.getStatus() == MessageTransmitRespond.STATUS.SUCCESS){
 
+            /*
+             * Create a raise a new event whit NETWORK_CLIENT_SENT_MESSAGE_DELIVERED
+             */
+            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_SENT_MESSAGE_DELIVERED);
+            event.setSource(EventSource.NETWORK_CLIENT);
+
+            ((NetworkClientNewMessageDeliveredEvent) event).setId(messageTransmitRespond.getMessageId().toString());
+            ((NetworkClientNewMessageDeliveredEvent) event).setNetworkServiceTypeSource(packageReceived.getNetworkServiceTypeSource());
+
+            /*
+             * Raise the event
+             */
+            System.out.println("MessageTransmitRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_SENT_MESSAGE_DELIVERED");
+            getEventManager().raiseEvent(event);
 
 
         }else{

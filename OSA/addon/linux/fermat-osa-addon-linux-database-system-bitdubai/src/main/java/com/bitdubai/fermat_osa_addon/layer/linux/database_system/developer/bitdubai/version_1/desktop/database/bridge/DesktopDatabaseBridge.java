@@ -26,29 +26,30 @@ public class DesktopDatabaseBridge {
      */
     private Connection connection = null;
     private Statement stmt = null;
-    private boolean transaccionSatisfactoria=false;
+    private boolean transaccionSatisfactoria = false;
     private String databasePath;
 
     /**
      * Constructor
      */
-    public DesktopDatabaseBridge(String databasePath){
-        this.databasePath=databasePath;
+    public DesktopDatabaseBridge(String databasePath) {
+        this.databasePath = databasePath;
     }
 
     /**
      * Method who open the database connection
      * if the database not exist the method create a new one
-     * @exception SQLException    //if the Driver is not available
+     *
+     * @throws SQLException //if the Driver is not available
      **/
-    public void connect(){
+    public void connect() {
         try {
             //SQLite Driver
             Class.forName("org.sqlite.JDBC");
             connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
             connection.setAutoCommit(false);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             if (connection != null)
                 close();
@@ -67,16 +68,17 @@ public class DesktopDatabaseBridge {
 
     /**
      * Method who close the database connection
-     * @exception SQLException	//if the database is not open
+     *
+     * @throws SQLException //if the database is not open
      **/
-    private void close(){
+    private void close() {
         try {
 
-            if (stmt != null){
+            if (stmt != null) {
                 stmt.close();
             }
 
-            if (connection != null){
+            if (connection != null) {
                 connection.close();
             }
 
@@ -91,7 +93,7 @@ public class DesktopDatabaseBridge {
 
         Connection conn = null;
         Statement statement = null;
-        ResultSet rs=null;
+        ResultSet rs = null;
 
         try {
             conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
@@ -124,10 +126,11 @@ public class DesktopDatabaseBridge {
 
     /**
      * Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
-     * @param sql  //the SQL query
-     * Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
-    "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
-     @exception SQLException	//if the SQL string is invalid
+     *
+     * @param sql //the SQL query
+     *            Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
+     *            "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
+     * @throws SQLException //if the SQL string is invalid
      */
     public void execSQL(final String sql) throws SQLException {
 
@@ -168,15 +171,16 @@ public class DesktopDatabaseBridge {
      * If any errors are encountered between this and endTransaction the transaction will still be committed.
      */
     public void setTransactionSuccessful() {
-        transaccionSatisfactoria=true;
+        transaccionSatisfactoria = true;
     }
 
     /**
      * End a transaction
-     * @exception SQLException if the database connection is not open
+     *
+     * @throws SQLException if the database connection is not open
      */
     public void endTransaction() {
-        if (transaccionSatisfactoria){
+        if (transaccionSatisfactoria) {
             try {
                 connection.commit();
             } catch (SQLException ex) {
@@ -184,7 +188,7 @@ public class DesktopDatabaseBridge {
                 throw new RuntimeException(ex);
             }
             if (connection != null)
-               close();
+                close();
         }
 
     }
@@ -236,25 +240,25 @@ public class DesktopDatabaseBridge {
      * @param recordUpdateList
      * @param whereClause
      * @param whereArg
-     * @exception SQLException if the database is close or the driver is not more available
+     * @throws SQLException if the database is close or the driver is not more available
      */
-    public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) throws SQLException {
+    public void update(String tableName, Map<String, Object> recordUpdateList, String whereClause, String[] whereArg) throws SQLException {
 
         // create our java preparedstatement using a sql update query
         String setVariables = "";
         int limited = recordUpdateList.entrySet().size();
         int i = 1;
         String com;
-        String pk= (whereArg!=null) ?  whereArg[0] : null;
-        for(Map.Entry<String, Object> entry : recordUpdateList.entrySet()) {
+        String pk = (whereArg != null) ? whereArg[0] : null;
+        for (Map.Entry<String, Object> entry : recordUpdateList.entrySet()) {
 
-            if(i !=limited){
-                com=", ";
-            }else{
-                com="";
+            if (i != limited) {
+                com = ", ";
+            } else {
+                com = "";
             }
 
-            if(pk== null || !pk.equalsIgnoreCase(entry.getKey())) {
+            if (pk == null || !pk.equalsIgnoreCase(entry.getKey())) {
                 setVariables += entry.getKey() + "= '" + entry.getValue() + "'" + com;
             }
 
@@ -276,12 +280,12 @@ public class DesktopDatabaseBridge {
 
             conn.commit();
 
-        } catch(SQLException ex){
+        } catch (SQLException ex) {
 
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
 
-        }finally {
+        } finally {
 
             try {
                 if (statement != null)
@@ -292,5 +296,4 @@ public class DesktopDatabaseBridge {
             }
         }
     }
-
 }

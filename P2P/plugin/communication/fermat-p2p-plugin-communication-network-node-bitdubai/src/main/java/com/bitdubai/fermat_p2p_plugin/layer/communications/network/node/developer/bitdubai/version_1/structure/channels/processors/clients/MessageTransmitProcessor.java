@@ -5,6 +5,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.Message;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns.PackageMessage;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -63,7 +64,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String senderIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
         MessageTransmitRespond messageTransmitRespond = null;
-        Message messageContent = null;
+        NetworkServiceMessage messageContent = null;
 
         try {
 
@@ -72,7 +73,7 @@ public class MessageTransmitProcessor extends PackageProcessor {
             /*
              * Get the content
              */
-            messageContent = GsonProvider.getGson().fromJson(packageReceived.getContent(), Message.class);
+            messageContent = GsonProvider.getGson().fromJson(packageReceived.getContent(), NetworkServiceMessage.class);
 
             /*
              * Create the method call history

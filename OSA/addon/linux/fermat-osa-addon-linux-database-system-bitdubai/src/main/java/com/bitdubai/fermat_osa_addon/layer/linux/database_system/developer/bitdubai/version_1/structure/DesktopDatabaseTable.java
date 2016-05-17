@@ -489,6 +489,12 @@ public class DesktopDatabaseTable implements DatabaseTable {
                 )
         );
 
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                this.tableFilter,
+                null            ,
+                null
+        );
+
     }
 
     @Override
@@ -516,6 +522,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
         filter.setType(type);
 
         this.tableFilter.add(filter);
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                this.tableFilter,
+                null            ,
+                null
+        );
 
     }
 

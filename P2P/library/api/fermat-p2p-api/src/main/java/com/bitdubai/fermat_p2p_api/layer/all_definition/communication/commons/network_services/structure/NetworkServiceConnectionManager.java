@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
@@ -54,6 +55,27 @@ public final class NetworkServiceConnectionManager {
             /*
              * ask to the communicationLayerManager to connect to other network service
              */
+
+
+            /*
+             * ask to the communicationLayerManager to connect to other actor
+             */
+            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
+                    null, // actorType
+                    null, // alias
+                    null, // distance
+                    null, // extraData
+                    remoteNetworkService.getIdentityPublicKey(), // IdentityPublicKey
+                    null, // location
+                    0, // max
+                    null, // name
+                    remoteNetworkService.getNetworkServiceType(), // this is filter in the Node if was a NetworkService or an Actor who realized the request discovery
+                    0, // offset
+                    networkServiceRoot.getProfile().getNetworkServiceType() // this is the NetworkService Intermediate who handle the request
+            );
+
+            networkServiceRoot.getConnection().registeredProfileDiscoveryQuery(discoveryQueryParameters);
+
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     networkServiceRoot.getPluginVersionReference(),
@@ -72,20 +94,20 @@ public final class NetworkServiceConnectionManager {
              * ask to the communicationLayerManager to connect to other actor
              */
             DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                    applicantNetworkService.getActorType(),
-                    null,
-                    null,
-                    null,
-                    applicantNetworkService.getIdentityPublicKey(),
-                    null,
-                    null,
-                    null,
-                    networkServiceRoot.getProfile().getNetworkServiceType(),
-                    null,
-                    networkServiceRoot.getProfile().getNetworkServiceType()
+                    ((applicantNetworkService.getActorType() != null) ? applicantNetworkService.getActorType() : null), // actorType
+                    ((applicantNetworkService.getAlias() != null) ? applicantNetworkService.getAlias() : null), // alias
+                    null, // distance
+                    ((applicantNetworkService.getExtraData() != null) ? applicantNetworkService.getExtraData() : null), // extraData
+                    ((applicantNetworkService.getIdentityPublicKey() != null) ? applicantNetworkService.getIdentityPublicKey() : null), // IdentityPublicKey
+                    null, // location
+                    0, // max
+                    ((applicantNetworkService.getName() != null) ? applicantNetworkService.getName() : null), // name
+                    NetworkServiceType.UNDEFINED, // this is filter in the Node if was a NetworkService or an Actor who realized the request discovery
+                    0, // offset
+                    networkServiceRoot.getProfile().getNetworkServiceType() // this is the NetworkService Intermediate who handle the request
             );
 
-            networkServiceRoot.getConnection().actorTraceDiscoveryQuery(discoveryQueryParameters);
+            networkServiceRoot.getConnection().registeredProfileDiscoveryQuery(discoveryQueryParameters);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(

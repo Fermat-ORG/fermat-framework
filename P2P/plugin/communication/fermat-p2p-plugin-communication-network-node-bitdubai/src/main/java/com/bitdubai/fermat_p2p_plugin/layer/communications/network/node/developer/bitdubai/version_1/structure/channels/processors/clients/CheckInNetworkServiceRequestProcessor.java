@@ -149,6 +149,9 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
         if (networkServiceProfile.getLocation() != null) {
             checkedInNetworkService.setLatitude(networkServiceProfile.getLocation().getLatitude());
             checkedInNetworkService.setLongitude(networkServiceProfile.getLocation().getLongitude());
+        }else{
+            checkedInNetworkService.setLatitude(0.0);
+            checkedInNetworkService.setLongitude(0.0);
         }
 
         /*
