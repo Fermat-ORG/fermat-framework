@@ -17,6 +17,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantCreateBankAccountPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
@@ -40,6 +43,7 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
     private FermatEditText accountNumberEditText;
     private FermatEditText accountAliasEditText;
 
+    private CryptoCustomerWalletModuleManager moduleManager;
 
     public static SettingsCreateNewBankAccountFragment newInstance() {
         return new SettingsCreateNewBankAccountFragment();
@@ -74,6 +78,7 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
+        moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
 
         configureToolbar();
 
@@ -116,8 +121,21 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
                 accountAliasEditText.getText().toString(), "");
 
         if (data.isAllDataFilled()) {
-            List<BankAccountNumber> locations = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
-            locations.add(data);
+            List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
+            bankAccounts.add(data);
+
+            if( moduleManager != null) {
+                for (BankAccountNumber bankAccount : bankAccounts) {
+                    NegotiationBankAccount negotiationBankAccount = null;
+                    try {
+                        negotiationBankAccount = moduleManager.newEmptyNegotiationBankAccount(
+                                bankAccount.toString(),
+                                bankAccount.getCurrencyType()
+                        );
+                        moduleManager.createNewBankAccount(negotiationBankAccount);
+                    } catch (CantCreateBankAccountPurchaseException e) {}
+                }
+            }
 
             changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SETTINGS_BANK_ACCOUNTS, appSession.getAppPublicKey());
 
