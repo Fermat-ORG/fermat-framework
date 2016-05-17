@@ -58,6 +58,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdenti
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
+import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.ArtistIdentitiesList;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistPreferenceSettings;
 import com.squareup.picasso.Picasso;
@@ -100,7 +101,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     private Spinner mArtistExternalPlatform;
     private Spinner MexposureLevel;
     private Spinner MartistAcceptConnectionsType;
-    private SettingsManager<TokenlyArtistPreferenceSettings> settingsManager;
+    //private SettingsManager<TokenlyArtistPreferenceSettings> settingsManager;
     private TokenlyArtistPreferenceSettings tokenlyArtistPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
@@ -131,14 +132,13 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             moduleManager = tkyIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
-            settingsManager = tkyIdentitySubAppSession.getModuleManager().getSettingsManager();
 
             try {
                 if (tkyIdentitySubAppSession.getAppPublicKey()!= null){
-                    tokenlyArtistPreferenceSettings = settingsManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
+                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings(tkyIdentitySubAppSession.getAppPublicKey());
                 }else{
                     //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                    tokenlyArtistPreferenceSettings = settingsManager.loadAndGetSettings("123456789");
+                    tokenlyArtistPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
                 }
 
             } catch (Exception e) {
@@ -148,11 +148,11 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             if (tokenlyArtistPreferenceSettings == null) {
                 tokenlyArtistPreferenceSettings = new TokenlyArtistPreferenceSettings();
                 tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
-                if(settingsManager != null){
+                if(moduleManager != null){
                     if (tkyIdentitySubAppSession.getAppPublicKey()!=null){
-                        settingsManager.persistSettings(tkyIdentitySubAppSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
+                        moduleManager.persistSettings(tkyIdentitySubAppSession.getAppPublicKey(), tokenlyArtistPreferenceSettings);
                     }else{
-                        settingsManager.persistSettings("123456789", tokenlyArtistPreferenceSettings);
+                        moduleManager.persistSettings("123456789", tokenlyArtistPreferenceSettings);
                     }
                 }
             }
@@ -345,7 +345,8 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
             if (identitySelected != null) {
                 loadIdentity();
             } else {
-                List<Artist> lst = moduleManager.listIdentitiesFromCurrentDeviceUser();
+                ArtistIdentitiesList artistIdentitiesList = moduleManager.listIdentitiesFromCurrentDeviceUser();
+                List<Artist> lst = artistIdentitiesList.getFanIdentitiesList();
                 if(!lst.isEmpty()){
                     identitySelected = lst.get(0);
                 }

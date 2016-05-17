@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -58,7 +59,6 @@ import java.util.concurrent.ExecutionException;
 @PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM, maintainerMail = "gabe_512@hotmail.com", createdBy = "gabohub", layer = Layers.IDENTITY, platform = Platforms.TOKENLY, plugin = Plugins.TOKENLY_ARTIST)
 public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        TokenlyArtistIdentityManager,
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -96,7 +96,6 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
         try {
             this.serviceStatus = ServiceStatus.STARTED;
             identityArtistManager = new TokenlyIdentityArtistManagerImpl(
-                    this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
@@ -118,8 +117,10 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 //            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 //        }
     }
-
-    private void testCreateArtist(){
+    public FermatManager getManager(){
+        return identityArtistManager;
+    }
+    /*private void testCreateArtist(){
         try {
             String alias = "username";
             byte[] image = new byte[0];
@@ -141,7 +142,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 //    private void testUpdateArtist(Artist artist){
 //        String externalName = "El gabo artist que envia";
 //        String externalAccessToken = "El access token";
@@ -154,49 +155,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 //            e.printStackTrace();
 //        }
 //    }
-    @Override
-    public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
-        return identityArtistManager.getIdentityArtistFromCurrentDeviceUser();
-    }
 
-    @Override
-    public Artist createArtistIdentity(String userName, byte[] profileImage, String password,ExternalPlatform externalPlatform,
-                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
-        //TODO: Fix this Gabo. Manuel
-        User user=null;
-        try{
-            if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
-                user = tokenlyApiManager.validateTokenlyUser(userName, password);
-        } catch (CantGetUserException | InterruptedException | ExecutionException  e) {
-            e.printStackTrace();
-        }
-        if(user!=null){
-            return identityArtistManager.createNewIdentityArtist(user,password,profileImage,externalPlatform,exposureLevel,artistAcceptConnectionsType);
-        }else{
-            return null;
-        }
-    }
-
-
-    @Override
-    public Artist updateArtistIdentity(String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
-                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException, WrongTokenlyUserCredentialsException {
-        User user=null;
-        try{
-            if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
-                user = tokenlyApiManager.validateTokenlyUser(username, password);
-        } catch (CantGetUserException |InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
-        if(user != null)
-            return identityArtistManager.updateIdentityArtist(user, password, id, publicKey, profileImage, externalPlatform,exposureLevel,artistAcceptConnectionsType);
-        return null;
-    }
-
-    @Override
-    public Artist getArtistIdentity(UUID id) throws CantGetArtistIdentityException, IdentityNotFoundException {
-        return identityArtistManager.getIdentitArtist(id);
-    }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {

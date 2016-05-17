@@ -146,7 +146,10 @@ public class TokenlyIdentityFanManagerImpl
                 if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
                     user = tokenlyApiManager.validateTokenlyUser(userName, externalPassword);
             } catch (CantGetUserException |InterruptedException | ExecutionException e) {
-                e.printStackTrace();
+                throw new CantCreateFanIdentityException(
+                        e,
+                        "Validating Tokenly User",
+                        "Cannot create Tokenly User");
             }
             getFanIdentityDao().createNewUser(user, id, publicKey, privateKey, deviceUser, profileImage, externalPassword, externalPlatform);
 
@@ -160,14 +163,23 @@ public class TokenlyIdentityFanManagerImpl
     }
 
     @Override
-    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException {
+    public Fan updateFanIdentity(
+            String userName,
+            String password,
+            UUID id,
+            String publicKey,
+            byte[] profileImage,
+            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException {
         try {
             User user=null;
             try{
                 if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
                     user = tokenlyApiManager.validateTokenlyUser(userName, password);
             } catch (CantGetUserException |InterruptedException | ExecutionException  e) {
-                e.printStackTrace();
+                throw new CantUpdateFanIdentityException(
+                        e,
+                        "Validating Tokenly User",
+                        "Cannot create Tokenly User");
             }
             getFanIdentityDao().updateIdentityFanUser(user, password, id, publicKey, profileImage, externalPlatform);
             return getFanIdentityDao().getIdentityFan(id);
