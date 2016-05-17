@@ -4,6 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
@@ -86,30 +87,39 @@ public class DesktopDatabaseBridge {
 
     }
 
-    /**
-     *
-     * @param sql   //the SQL query
-     * @param selectionArgs  //The values will be bound as Strings.
-     * @exception SQLException	//if the SQL string is invalid
-     * @return  //A Cursor object, which is positioned before the first entry.
-     */
+    public boolean isTableExists(String tableName) throws SQLException {
 
-    public ResultSet rawQuery(String sql,String[] selectionArgs) {
-        if (connection == null)
-            connect();
-
+        Connection conn = null;
+        Statement statement = null;
         ResultSet rs=null;
+
         try {
-            stmt = connection.createStatement();
-            rs = stmt.executeQuery(sql);
-            connection.commit();
+            conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            statement = conn.createStatement();
+            rs = statement.executeQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'");
+            ResultSetMetaData rsmd = rs.getMetaData();
 
-        }catch(SQLException ex){
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
+            if (rsmd.getColumnCount() > 0)
+                return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+            } finally {
+
+                try {
+                    if (statement != null)
+                        statement.close();
+                } finally {
+                    if (conn != null)
+                        conn.close();
+                }
+            }
         }
-
-        return rs;
+        return false;
     }
 
     /**
@@ -251,21 +261,20 @@ public class DesktopDatabaseBridge {
             i++;
         }
 
-        System.out.println("Connection for update = " + connection + " is closed = "+connection.isClosed());
-
-        if (connection == null || connection.isClosed()){
-            connect();
-        }
+        Connection conn = null;
+        Statement statement = null;
 
         try {
 
             String SQL = "UPDATE " + tableName + " SET " + setVariables + whereClause;
             System.out.println("UPDATE QUERY = " + SQL);
 
-            stmt = connection.createStatement();
-            stmt.executeUpdate(SQL);
+            conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
 
-            connection.commit();
+            statement = conn.createStatement();
+            statement.executeUpdate(SQL);
+
+            conn.commit();
 
         } catch(SQLException ex){
 
@@ -273,7 +282,14 @@ public class DesktopDatabaseBridge {
             throw new RuntimeException(ex);
 
         }finally {
-            connection.close();
+
+            try {
+                if (statement != null)
+                    statement.close();
+            } finally {
+                if (conn != null)
+                    conn.close();
+            }
         }
     }
 

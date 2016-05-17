@@ -354,24 +354,12 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public boolean isTableExists() {
 
-        ResultSet cursor = this.database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + this.tableName + "'", null);
         try {
-            ResultSetMetaData rsmd = cursor.getMetaData();
-
-            if (rsmd.getColumnCount() > 0)
-                return true;
-
+            return database.isTableExists(tableName);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (cursor != null)
-                    cursor.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            return false;
         }
-        return false;
     }
 
     /**
