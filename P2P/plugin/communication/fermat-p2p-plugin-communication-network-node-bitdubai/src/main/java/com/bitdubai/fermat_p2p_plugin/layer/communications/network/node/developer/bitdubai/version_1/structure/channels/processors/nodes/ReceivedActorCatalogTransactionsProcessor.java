@@ -19,6 +19,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
+import com.google.gson.Gson;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -163,7 +164,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
             }
 
             insertActorsCatalogTransaction(actorsCatalogTransaction);
-            insertActorsCatalogTransaction(actorsCatalogTransaction);
+            //insertActorsCatalogTransaction(actorsCatalogTransaction);
             insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
 
         }
@@ -177,30 +178,34 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * @param actorsCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method insertActorsCatalog");
+
+        if (!getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())) {
 
         /*
          * Create the ActorsCatalog
          */
-        ActorsCatalog actorsCatalog = new ActorsCatalog();
-        actorsCatalog.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
-        actorsCatalog.setActorType(actorsCatalogTransaction.getActorType());
-        actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
-        actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
-        actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
-        actorsCatalog.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
-        actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
-        actorsCatalog.setName(actorsCatalogTransaction.getName());
-        actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
-        actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
-        actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
+            ActorsCatalog actorsCatalog = new ActorsCatalog();
+            actorsCatalog.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
+            actorsCatalog.setActorType(actorsCatalogTransaction.getActorType());
+            actorsCatalog.setAlias(actorsCatalogTransaction.getAlias());
+            actorsCatalog.setExtraData(actorsCatalogTransaction.getExtraData());
+            actorsCatalog.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
+            actorsCatalog.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
+            actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
+            actorsCatalog.setName(actorsCatalogTransaction.getName());
+            actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
+            actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
+            actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
         /*
          * Save into the data base
          */
-        getDaoFactory().getActorsCatalogDao().create(actorsCatalog);
+            getDaoFactory().getActorsCatalogDao().create(actorsCatalog);
+
+        }
     }
 
     /**
