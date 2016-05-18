@@ -102,7 +102,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private boolean isUpdate = false;
     private Spinner mFanExternalPlatform;
     private Spinner mFanExternalUser;
-    private SettingsManager<FanIdentitySettings> settingsManager;
+    //private SettingsManager<FanIdentitySettings> settingsManager;
     private FanIdentitySettings fanIdentitySettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
@@ -130,15 +130,15 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             moduleManager = artFanUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
-            settingsManager = artFanUserIdentitySubAppSession.getModuleManager().
-                    getSettingsManager();
+            //settingsManager = artFanUserIdentitySubAppSession.getModuleManager().
+             //       getSettingsManager();
 
             try {
                 if (artFanUserIdentitySubAppSession.getAppPublicKey()!= null){
-                    fanIdentitySettings = settingsManager.loadAndGetSettings(
+                    fanIdentitySettings = moduleManager.loadAndGetSettings(
                             artFanUserIdentitySubAppSession.getAppPublicKey());
                 }else{
-                    fanIdentitySettings = settingsManager.loadAndGetSettings("art_fan_identity");
+                    fanIdentitySettings = moduleManager.loadAndGetSettings("art_fan_identity");
                 }
 
             } catch (Exception e) {
@@ -148,12 +148,12 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             if (fanIdentitySettings == null) {
                 fanIdentitySettings = new FanIdentitySettings();
                 fanIdentitySettings.setIsPresentationHelpEnabled(false);
-                if(settingsManager != null){
+                if(moduleManager != null){
                     if (artFanUserIdentitySubAppSession.getAppPublicKey()!=null){
-                        settingsManager.persistSettings(
+                        moduleManager.persistSettings(
                                 artFanUserIdentitySubAppSession.getAppPublicKey(), fanIdentitySettings);
                     }else{
-                        settingsManager.persistSettings("art_fan_identity", fanIdentitySettings);
+                        moduleManager.persistSettings("art_fan_identity", fanIdentitySettings);
                     }
                 }
             }

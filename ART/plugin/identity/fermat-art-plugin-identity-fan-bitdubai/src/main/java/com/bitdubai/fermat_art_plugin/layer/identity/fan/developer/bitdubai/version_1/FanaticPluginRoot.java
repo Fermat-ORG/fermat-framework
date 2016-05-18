@@ -127,7 +127,6 @@ public class FanaticPluginRoot extends AbstractPlugin implements
         try {
             this.serviceStatus = ServiceStatus.STARTED;
             identityFanaticManager = new IdentityFanaticManagerImpl(
-                    this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,

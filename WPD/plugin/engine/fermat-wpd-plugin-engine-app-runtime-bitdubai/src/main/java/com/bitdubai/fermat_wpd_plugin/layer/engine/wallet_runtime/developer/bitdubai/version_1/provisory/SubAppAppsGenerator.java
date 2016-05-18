@@ -726,8 +726,8 @@ public class SubAppAppsGenerator {
          /*
              *TKY ARTIST IDENTITY
              */
-            runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.ART_FAN_IDENTITY);
+            //runtimeSubApp = new RuntimeSubApp();
+            //runtimeSubApp.setType(SubApps.ART_FAN_IDENTITY);
             String artFanUserIdentityPublicKey = SubAppsPublicKeys.ART_FAN_IDENTITY.getCode();
             runtimeSubApp.setPublicKey(artFanUserIdentityPublicKey);
             // Activity: Create New Identity

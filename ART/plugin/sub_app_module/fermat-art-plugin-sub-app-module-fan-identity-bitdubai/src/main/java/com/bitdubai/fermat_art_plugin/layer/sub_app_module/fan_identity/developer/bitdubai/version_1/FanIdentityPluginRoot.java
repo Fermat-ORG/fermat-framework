@@ -48,7 +48,6 @@ public class FanIdentityPluginRoot extends AbstractModule<FanIdentitySettings, A
         this.moduleFanIdentityManager = new ModuleFanIdentityManager(
                 pluginFileSystem,
                 pluginId,
-                errorManager,
                 fanaticIdentityManager);
     }
 
