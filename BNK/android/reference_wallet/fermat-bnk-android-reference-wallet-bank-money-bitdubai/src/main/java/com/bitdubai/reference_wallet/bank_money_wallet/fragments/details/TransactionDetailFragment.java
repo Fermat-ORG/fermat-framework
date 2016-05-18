@@ -1,5 +1,6 @@
 package com.bitdubai.reference_wallet.bank_money_wallet.fragments.details;
 
+import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.format.DateUtils;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -22,14 +24,18 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankTransactionParametersImpl;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
+import com.bitdubai.reference_wallet.bank_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -37,21 +43,25 @@ import java.util.UUID;
 /**
  * Created by memo on 19/01/16.
  */
-public class TransactionDetailFragment extends AbstractFermatFragment {
-
-
+public class TransactionDetailFragment extends AbstractFermatFragment implements View.OnClickListener, DialogInterface.OnDismissListener {
     private static final String TAG = "updatetransactionFragment";
 
+    //Managers
+    private BankMoneyWalletModuleManager moduleManager;
+    private ErrorManager errorManager;
+
+    //DATA
+    private boolean transactionIsEditable;
+    private BankMoneyTransactionRecord transactionRecord;
+    private BankAccountNumber bankAccountNumber;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
+    //UI
     private EditText transactionType;
     private EditText transactionAmount;
     private EditText transactionDate;
     private EditText transactionConcept;
-
-    private BankMoneyTransactionRecord transactionRecord;
-    private BankAccountNumber bankAccountNumber;
-
-    private BankMoneyWalletModuleManager moduleManager;
-    private ErrorManager errorManager;
+    CreateTransactionFragmentDialog transactionFragmentDialog;
 
     public static TransactionDetailFragment newInstance() {
         return new TransactionDetailFragment();
@@ -63,8 +73,10 @@ public class TransactionDetailFragment extends AbstractFermatFragment {
         setHasOptionsMenu(true);
         transactionRecord = (BankMoneyTransactionRecord) appSession.getData("transaction_data");
         bankAccountNumber = (BankAccountNumber) appSession.getData("bank_account_number_data");
-        try {
+        transactionIsEditable = (transactionRecord.getStatus() == BankTransactionStatus.PENDING);
 
+
+        try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
@@ -78,59 +90,68 @@ public class TransactionDetailFragment extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.bw_transaction_detail, container, false);
+
         transactionAmount = (EditText) layout.findViewById(R.id.transaction_amount);
         transactionType = (EditText) layout.findViewById(R.id.transaction_type);
         transactionDate = (EditText) layout.findViewById(R.id.transaction_date);
         transactionConcept = (EditText) layout.findViewById(R.id.transaction_concept);
 
-        transactionAmount.setText(String.valueOf(transactionRecord.getAmount()));
+        transactionAmount.setText(moneyFormat.format(transactionRecord.getAmount()));
         transactionType.setText(transactionRecord.getTransactionType().getCode());
         transactionDate.setText(getPrettyTime(transactionRecord.getTimestamp()));
         transactionConcept.setText(transactionRecord.getMemo());
+
+        layout.findViewById(R.id.bw_transaction_detail_delete_btn).setOnClickListener(this);
+        layout.findViewById(R.id.bw_transaction_detail_update_btn).setOnClickListener(this);
+
+        //Show edit buttons if editable
+        if(transactionIsEditable)
+            layout.findViewById(R.id.bw_transaction_detail_btn_container).setVisibility(View.VISIBLE);
+
         configureToolbar();
-        transactionType.setEnabled(false);
-        if (transactionRecord.getStatus() != BankTransactionStatus.PENDING) {
-            transactionAmount.setEnabled(false);
-            transactionType.setEnabled(false);
-            transactionDate.setEnabled(false);
-            transactionConcept.setEnabled(false);
-        }
         return layout;
     }
+
 
     private void configureToolbar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background, null));
         else
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
+
         getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == ReferenceWalletConstants.UPDATE_RECORD_ACTION) {
-            System.out.println("item selected UPDATE ACTION");
-            //TODO:update transaction
-            makeTransaction(false);
-            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onBackPressed() {
-        makeTransaction(true);
+
+        //If transaction is editable, was stopped before completing, and user pressed the device's back button
+        //Create and apply the same transaction again.
+        if(transactionIsEditable)
+            reapplyTransaction();
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, ReferenceWalletConstants.UPDATE_RECORD_ACTION, 0, "Save")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    public void onClick(View view) {
+        int i = view.getId();
+
+        if (i == R.id.bw_transaction_detail_delete_btn) {
+            changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
+        }else if(i == R.id.bw_transaction_detail_update_btn) {
+            transactionFragmentDialog = new CreateTransactionFragmentDialog( errorManager,getActivity(), (BankMoneyWalletSession) appSession, getResources(), transactionRecord.getTransactionType(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getAmount(), transactionRecord.getMemo());
+            transactionFragmentDialog.setOnDismissListener(this);
+            transactionFragmentDialog.show();
+        }
     }
 
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        changeActivity(Activities.BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS, appSession.getAppPublicKey());
+    }
+
+
+    /* HELPER FUNCTIONS */
     private String getPrettyTime(long timestamp)
     {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -139,146 +160,10 @@ public class TransactionDetailFragment extends AbstractFermatFragment {
                 + DateUtils.getRelativeTimeSpanString(timestamp).toString();
     }
 
-    private void makeTransaction(boolean transactionUpdateCancelled) {
-        if (transactionRecord.getStatus() == BankTransactionStatus.PENDING) {
-
-            //Make transaction without changes
-            if(transactionUpdateCancelled)
-            {
-                moduleManager.getBankingWallet().makeAsyncWithdraw(new BankTransactionParameters() {
-                    @Override
-                    public UUID getTransactionId() {
-                        return UUID.randomUUID();
-                    }
-
-                    @Override
-                    public String getPublicKeyPlugin() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
-                    }
-
-                    @Override
-                    public String getPublicKeyActor() {
-                        return "pkeyActorRefWallet";
-                    }
-
-                    @Override
-                    public BigDecimal getAmount() {
-                        BigDecimal bAmount = new BigDecimal(transactionRecord.getAmount());
-                        return bAmount;
-                    }
-
-                    @Override
-                    public String getAccount() {
-                        return bankAccountNumber.getAccount();
-                    }
-
-                    @Override
-                    public FiatCurrency getCurrency() {
-                        return bankAccountNumber.getCurrencyType();
-                    }
-
-                    @Override
-                    public String getMemo() {
-                        return transactionRecord.getMemo();
-
-                    }
-                });
-
-            } else if (transactionRecord.getTransactionType() == TransactionType.DEBIT) {
-                moduleManager.getBankingWallet().makeAsyncWithdraw(new BankTransactionParameters() {
-                    @Override
-                    public UUID getTransactionId() {
-                        return UUID.randomUUID();
-                    }
-
-                    @Override
-                    public String getPublicKeyPlugin() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
-                    }
-
-                    @Override
-                    public String getPublicKeyActor() {
-                        return "pkeyActorRefWallet";
-                    }
-
-                    @Override
-                    public BigDecimal getAmount() {
-                        BigDecimal bAmount = new BigDecimal(transactionAmount.getText().toString());
-                        return bAmount;
-                    }
-
-                    @Override
-                    public String getAccount() {
-                        return bankAccountNumber.getAccount();
-                    }
-
-                    @Override
-                    public FiatCurrency getCurrency() {
-                        return bankAccountNumber.getCurrencyType();
-                    }
-
-                    @Override
-                    public String getMemo() {
-                        return transactionConcept.getText().toString();
-
-                    }
-                });
-
-            } else if (transactionRecord.getTransactionType() == TransactionType.CREDIT) {
-                moduleManager.getBankingWallet().makeAsyncDeposit(new BankTransactionParameters() {
-                    @Override
-                    public UUID getTransactionId() {
-                        return UUID.randomUUID();
-                    }
-
-                    @Override
-                    public String getPublicKeyPlugin() {
-                        return null;
-                    }
-
-                    @Override
-                    public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
-                    }
-
-                    @Override
-                    public String getPublicKeyActor() {
-                        return "pkeyActorRefWallet";
-                    }
-
-                    @Override
-                    public BigDecimal getAmount() {
-                        BigDecimal bAmount = new BigDecimal(transactionAmount.getText().toString());
-                        return bAmount;
-                    }
-
-                    @Override
-                    public String getAccount() {
-                        return bankAccountNumber.getAccount();
-                    }
-
-                    @Override
-                    public FiatCurrency getCurrency() {
-                        return bankAccountNumber.getCurrencyType();
-                    }
-
-                    @Override
-                    public String getMemo() {
-                        return transactionConcept.getText().toString();
-
-                    }
-                });
-            }
-        }
+    private void reapplyTransaction() {
+        BankTransactionParameters t = new BankTransactionParametersImpl(UUID.randomUUID(), null, WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), "pkeyActorRefWallet",
+                                        transactionRecord.getAmount(), bankAccountNumber.getAccount(), bankAccountNumber.getCurrencyType(), transactionRecord.getMemo(), TransactionType.DEBIT);
+        moduleManager.getBankingWallet().makeAsyncWithdraw(t);
     }
+
 }
