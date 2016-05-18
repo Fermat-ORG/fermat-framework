@@ -188,6 +188,7 @@ public class GetActorsCatalogTransactionsRespondProcessor extends PackageProcess
             actorsCatalog.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
             actorsCatalog.setName(actorsCatalogTransaction.getName());
             actorsCatalog.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
+            actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
             actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
             /*
