@@ -4,6 +4,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.*;
 
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public interface BankMoneyWallet {
 
     List<BankMoneyTransactionRecord> getTransactions(TransactionType type, int max, int offset,String account)throws CantGetBankMoneyWalletTransactionsException;
 
-    double getHeldFunds(String account) throws  CantGetHeldFundsException;
+    BigDecimal getHeldFunds(String account) throws  CantGetHeldFundsException;
 
     void hold(BankMoneyTransactionRecord bankMoneyTransactionRecord) throws CantRegisterHoldException;
 
