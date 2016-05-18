@@ -206,20 +206,17 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
                                     setUpPresentation(false);
                                 }
-
                                 setRunningDailyBalance();
-
-                                //get Blockchain Download Progress status
+//get Blockchain Download Progress status
                                 try {
                                     int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
                                     final Toolbar toolBar = getToolbar();
                                     int toolbarColor = 0;
                                     if (pendingBlocks > 0) {
-                                        //paint toolbar on red
+//paint toolbar on red
                                         toolbarColor = Color.RED;
                                         if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
                                             setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
-
                                     } else {
                                         toolbarColor = Color.parseColor("#12aca1");
                                     }
@@ -230,30 +227,29 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                             toolBar.setBackgroundColor(finalToolbarColor);
                                         }
                                     });
-
-                                 }catch (Exception e){
+                                }catch (Exception e){
                                     e.printStackTrace();
-                                } openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-
+                                }
                             }
                         }, 500);
-
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 }
             });
 
-
-
-
+            getExecutor().submit(new Runnable() {
+                @Override
+                public void run() {
+                    openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                }
+            });
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
     }
+
 
     private void setUpPresentation(boolean checkButton) {
         PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
