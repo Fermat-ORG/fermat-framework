@@ -26,8 +26,8 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.dev
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.OutgoingIntraActorCantInsertRecordException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.exceptions.OutgoingIntraActorInconsistentTableStateException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.utils.OutgoingDeviceUserTransactionWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;

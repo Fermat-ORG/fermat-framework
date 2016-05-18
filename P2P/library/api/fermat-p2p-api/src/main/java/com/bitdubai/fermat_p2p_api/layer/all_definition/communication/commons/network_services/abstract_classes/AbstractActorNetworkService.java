@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -19,7 +20,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ne
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.interfaces.ActorNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
