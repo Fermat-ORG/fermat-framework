@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music;
 
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
@@ -20,7 +21,9 @@ public class TokenlyAlbumProcessor extends AbstractTokenlyProcessor {
 
     private static String swabotTokenlyURL= TokenlyConfiguration.URL_TOKENLY_MUSIC_API;
 
-    public static Album[] getAlbums() throws CantGetAlbumException{
+    public static Album[] getAlbums() throws
+            CantGetAlbumException,
+            CantConnectWithTokenlyException {
         //Request URL to get a song by tokenly Id.
         String requestedURL=swabotTokenlyURL+"catalog/albums";
         try{
@@ -45,7 +48,7 @@ public class TokenlyAlbumProcessor extends AbstractTokenlyProcessor {
     }
 
     private static Album getAlbumFromJsonObject(JsonObject jsonObject)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException, CantConnectWithTokenlyException {
         //Id
         String id = getStringFromJsonObject(jsonObject, TokenlyAlbumAttNames.ID);
         //Name

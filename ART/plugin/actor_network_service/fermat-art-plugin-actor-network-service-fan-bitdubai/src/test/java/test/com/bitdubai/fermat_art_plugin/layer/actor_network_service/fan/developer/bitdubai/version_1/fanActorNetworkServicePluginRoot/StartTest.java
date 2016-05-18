@@ -8,7 +8,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.STARTED;
 import static com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus.STARTING;
 
 /**

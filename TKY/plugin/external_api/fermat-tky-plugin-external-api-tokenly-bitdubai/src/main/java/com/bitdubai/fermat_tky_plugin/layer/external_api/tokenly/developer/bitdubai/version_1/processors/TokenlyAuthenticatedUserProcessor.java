@@ -6,7 +6,6 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseE
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
-import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music.TokenlyMusicUserJSonAttNames;
@@ -14,12 +13,13 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public abstract class TokenlyAuthenticatedUserProcessor extends AbstractTokenlyProcessor {
+public abstract class TokenlyAuthenticatedUserProcessor extends AbstractTokenlyProcessor implements Serializable {
 
     /**
      * This method returns an user from Tokenly protected API.

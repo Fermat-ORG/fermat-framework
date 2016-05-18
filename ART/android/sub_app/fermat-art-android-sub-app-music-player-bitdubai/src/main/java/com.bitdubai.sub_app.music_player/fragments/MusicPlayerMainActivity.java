@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
@@ -50,14 +52,12 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     private MusicPlayerPreferenceSettings musicPlayerSettings;
     private ErrorManager errorManager;
 
-
     ImageButton bplay;
     ImageButton bbb;
     ImageButton bff;
     SeekBar pb;
     TextView tiempo;
     TextView song;
-
 
     RecyclerView recyclerView;
     private MusicPlayerAdapter adapter;
@@ -75,7 +75,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     boolean firstTime=true;
 
     View view;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -109,10 +108,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                 System.out.println("ART_ I CAN LISTEN");
             }
 
-
-
             try {
-                musicPlayerSettings = musicPlayermoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                musicPlayerSettings = musicPlayermoduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 musicPlayerSettings = null;
             }
@@ -120,19 +117,19 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             if (musicPlayerSettings == null) {
                 musicPlayerSettings = new MusicPlayerPreferenceSettings();
                 musicPlayerSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    musicPlayermoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), musicPlayerSettings);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.ART_MUSIC_PLAYER, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                if(musicPlayermoduleManager!=null){
+                    musicPlayermoduleManager.persistSettings(appSession.getAppPublicKey(), musicPlayerSettings);
                 }
-            }
 
+            }
 
         } catch (Exception e) {
             if (errorManager != null)
-                errorManager.reportUnexpectedSubAppException(SubApps.ART_MUSIC_PLAYER, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                errorManager.reportUnexpectedSubAppException(
+                        SubApps.ART_MUSIC_PLAYER,
+                        UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        e);
         }
-
 
     }
 
@@ -166,7 +163,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-
         if(firstTime) {
             view=inflater.inflate(R.layout.art_music_player_activity,container,false);
       //      getActivity().getWindow().setBackgroundDrawableResource(R.drawable.musicplayer_background_viewpager);
@@ -177,7 +173,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             tiempo = (TextView) view.findViewById((R.id.tiempo));
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
             song = (TextView) view.findViewById(R.id.songname);
-
 
 
             pb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
