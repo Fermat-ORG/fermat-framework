@@ -68,7 +68,7 @@ public class Profiles implements RestFulServices {
     @POST
     @Path("/actors")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response listActors(@FormParam("discovery_params") String discoveryParam){
+    public Response getList(@FormParam("client_public_key") String clientIdentityPublicKey, @FormParam("discovery_params") String discoveryParam){
 
         LOG.info(" --------------------------------------------------------------------- ");
         LOG.info("Profiles - Starting listActors");
@@ -81,12 +81,13 @@ public class Profiles implements RestFulServices {
              */
             DiscoveryQueryParameters discoveryQueryParameters = DiscoveryQueryParameters.parseContent(discoveryParam);
 
+            LOG.debug("clientIdentityPublicKey  = " + clientIdentityPublicKey);
             LOG.debug("discoveryQueryParameters = " + discoveryQueryParameters.toJson());
 
             /*
              * hold the result list
              */
-            List<ActorProfile> resultList = filterActors(discoveryQueryParameters);
+            List<ActorProfile> resultList = filterActors(discoveryQueryParameters, clientIdentityPublicKey);
 
             LOG.info("filteredLis.size() =" + resultList.size());
 
@@ -124,7 +125,7 @@ public class Profiles implements RestFulServices {
      * @param discoveryQueryParameters
      * @return List<ActorProfile>
      */
-    private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters) throws CantReadRecordDataBaseException, InvalidParameterException {
+    private List<ActorProfile> filterActors(DiscoveryQueryParameters discoveryQueryParameters, String clientIdentityPublicKey) throws CantReadRecordDataBaseException, InvalidParameterException {
 
         List<ActorProfile> profileList = new ArrayList<>();
 
@@ -133,24 +134,26 @@ public class Profiles implements RestFulServices {
 
         for (ActorsCatalog actorsCatalog : actors) {
 
-            ActorProfile actorProfile = new ActorProfile();
-            actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
-            actorProfile.setAlias(actorsCatalog.getAlias());
-            actorProfile.setName(actorsCatalog.getName());
-            actorProfile.setActorType(actorsCatalog.getActorType());
-            actorProfile.setPhoto(actorsCatalog.getPhoto());
-            actorProfile.setExtraData(actorsCatalog.getExtraData());
+            if (clientIdentityPublicKey == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
+                ActorProfile actorProfile = new ActorProfile();
+                actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
+                actorProfile.setAlias(actorsCatalog.getAlias());
+                actorProfile.setName(actorsCatalog.getName());
+                actorProfile.setActorType(actorsCatalog.getActorType());
+                actorProfile.setPhoto(actorsCatalog.getPhoto());
+                actorProfile.setExtraData(actorsCatalog.getExtraData());
 
-            Location location = new DeviceLocation(
-                    actorsCatalog.getLastLatitude(),
-                    actorsCatalog.getLastLongitude(),
-                    null,
-                    null,
-                    null
-            );
-            actorProfile.setLocation(location);
+                Location location = new DeviceLocation(
+                        actorsCatalog.getLastLatitude(),
+                        actorsCatalog.getLastLongitude(),
+                        null,
+                        null,
+                        null
+                );
+                actorProfile.setLocation(location);
 
-            profileList.add(actorProfile);
+                profileList.add(actorProfile);
+            }
         }
 
         return profileList;
