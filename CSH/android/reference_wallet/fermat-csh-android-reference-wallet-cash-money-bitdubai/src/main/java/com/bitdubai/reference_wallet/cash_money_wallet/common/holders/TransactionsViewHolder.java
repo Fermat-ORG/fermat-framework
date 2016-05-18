@@ -27,6 +27,8 @@ public class TransactionsViewHolder extends FermatViewHolder {
     public FermatTextView amount;
     public FermatTextView date;
     public FermatTextView memo;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
 
     public TransactionsViewHolder(View itemView) {
         super(itemView);
@@ -53,7 +55,7 @@ public class TransactionsViewHolder extends FermatViewHolder {
 
         date.setText(getPrettyTime(itemInfo.getTimestamp()));
         memo.setText(itemInfo.getMemo());
-        amount.setText(itemInfo.getAmount().toPlainString());
+        amount.setText(moneyFormat.format(itemInfo.getAmount()));
         transactionType.setText(getTransactionTypeText(itemInfo.getTransactionType()));
         transactionType.setTextColor(getTransactionTypeColor(itemInfo.getTransactionType()));
     }
