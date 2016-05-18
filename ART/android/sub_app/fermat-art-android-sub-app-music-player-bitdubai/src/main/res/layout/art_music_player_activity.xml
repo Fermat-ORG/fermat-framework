@@ -15,79 +15,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        android:background="#e8e8e8"
+        android:background="#ffffff"
         android:layout_marginTop="1dp"
-        android:layout_above="@+id/other" />
+        android:layout_above="@+id/other"
+        android:layout_alignParentBottom="false"
+        android:layout_alignWithParentIfMissing="false" />
 
         <RelativeLayout
             android:id="@+id/other"
-            android:layout_width="365dp"
-            android:layout_height="120dp"
-            android:background="@drawable/rectangle"
-            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="150dp"
+            android:layout_marginBottom="5dp"
             android:layout_marginRight="10dp"
             android:layout_marginLeft="10dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginTop="15dp">
-
-            <TextView
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="tiempo"
-                android:id="@+id/tiempo"
-                android:textColor="@color/textviewcolor"
-                android:layout_column="4"
-                android:layout_row="2"
-                android:layout_width="50dp"
-                android:layout_gravity="right|bottom"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginTop="75dp" />
+            android:layout_alignWithParentIfMissing="false"
+            android:layout_marginTop="10dp"
+            android:layout_centerHorizontal="true">
 
             <TextView
 
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="Medium Text"
                 android:id="@+id/songname"
-                android:textColor="@color/textviewcolor"
+                android:textColor="#6D6F71"
                 android:layout_column="1"
                 android:layout_row="3"
                 android:layout_columnSpan="3"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_width="fill_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="95dp"
-                android:textSize="16sp"
+                android:textAlignment="center"
+                android:textSize="20sp"
                 android:layout_centerHorizontal="true"
-                android:gravity="center" />
-
-            <SeekBar
-                style="?android:attr/progressBarStyleHorizontal"
-                android:id="@+id/progressBar"
-                android:backgroundTint="#100f0f"
-                android:layout_column="1"
-                android:layout_row="2"
-                android:layout_columnSpan="3"
-                android:indeterminate="false"
-                android:layout_width="fill_parent"
-                android:layout_gravity="center_horizontal|bottom"
-                android:progressBackgroundTint="#000000"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="70dp"
-                android:layout_marginLeft="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginRight="40dp"
-                android:layout_alignParentBottom="false"
-                android:layout_alignParentLeft="false"
-                android:layout_alignParentTop="false" />
+                android:layout_alignParentBottom="true"
+                android:paddingBottom="5dp" />
 
             <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:text="Back"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:id="@+id/back"
-                android:src="@drawable/backarrow"
+                android:src="@drawable/button_play_back"
                 android:background="@android:color/transparent"
                 android:layout_column="1"
                 android:layout_row="1"
@@ -95,28 +65,28 @@
                 android:layout_gravity="left|bottom"
                 android:layout_marginTop="15dp"
                 android:layout_toLeftOf="@+id/play"
-                android:layout_marginRight="60dp" />
+                android:layout_marginRight="70dp" />
 
             <ImageButton
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:scaleType="centerCrop"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:scaleType="fitXY"
                 android:text="Play"
                 android:id="@+id/play"
                 android:background="@android:color/transparent"
                 android:layout_column="2"
                 android:layout_row="1"
                 android:layout_gravity="center_horizontal|bottom"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="5dp"
                 android:layout_centerHorizontal="true" />
 
             <ImageButton
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:text="forward"
                 android:id="@+id/forward"
-                android:src="@drawable/nextarrow"
+                android:src="@drawable/button_play_forward"
                 android:background="@android:color/transparent"
                 android:layout_column="3"
                 android:layout_row="1"
@@ -128,6 +98,52 @@
                 android:layout_alignParentRight="false"
                 android:layout_alignWithParentIfMissing="false"
                 android:layout_toRightOf="@+id/play"
-                android:layout_marginLeft="60dp" />
+                android:layout_marginLeft="70dp" />
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_below="@+id/back"
+                android:layout_above="@+id/songname"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="tiempo"
+                    android:id="@+id/tiempo"
+                    android:textColor="#939598"
+                    android:layout_column="4"
+                    android:layout_row="2"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_centerInParent="true" />
+
+                <SeekBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:id="@+id/progressBar"
+                    android:layout_column="1"
+                    android:layout_row="2"
+                    android:layout_columnSpan="3"
+                    android:indeterminate="false"
+                    android:layout_width="match_parent"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_height="30dp"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentLeft="false"
+                    android:layout_alignParentTop="false"
+                    android:layout_toLeftOf="@+id/tiempo"
+                    android:layout_marginLeft="10dp"
+                    android:progressDrawable="@drawable/seekbar_design"
+                    android:thumbTint="#7BEF30"
+                    android:layout_centerInParent="true"
+                    android:progress="50"
+                    android:minHeight="3dp"
+                    android:maxHeight="6dp" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

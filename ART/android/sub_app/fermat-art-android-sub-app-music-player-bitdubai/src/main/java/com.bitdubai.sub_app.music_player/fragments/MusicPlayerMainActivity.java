@@ -3,13 +3,16 @@ package com.bitdubai.sub_app.music_player.fragments;
 
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -179,6 +182,31 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             song = (TextView) view.findViewById(R.id.songname);
 
 
+            /*final TextView titlebar=((TextView)getToolbar().getRootView().findViewById(R.id.txt_title));
+
+
+            ViewTreeObserver observer = recyclerView.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener (new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                        recyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    } else {
+                        recyclerView.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                    }
+
+                    DisplayMetrics metrics = view.getContext().getResources().getDisplayMetrics();
+                    int width = metrics.widthPixels;
+
+                    //         System.out.println("metrics:" + width);
+                    //         System.out.println("viewwithd:" + view.getWidth());
+                    //         System.out.println("titlebar.getMaxWidth():" + titlebar.getMaxWidth());
+                    titlebar.setPadding(((width / 2) - titlebar.getWidth()/2)-10, 0, 0, 0);
+
+                }
+            });*/
+
+
 
             pb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
@@ -346,11 +374,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             if(mp.isPlaying()){
                 mp.pause();
                 pause=true;
-                bplay.setBackgroundResource(R.drawable.pausebars);
+                bplay.setBackgroundResource(R.drawable.button_pause);
             }else if(pause){
                 mp.start();
                 pause=false;
-                bplay.setBackgroundResource(R.drawable.playarrow);
+                bplay.setBackgroundResource(R.drawable.button_play);
             }
 
         } catch (IllegalArgumentException e) {
@@ -379,7 +407,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             pb.setProgress(0);
             tiempo.setText("");
             song.setText("");
-            bplay.setBackgroundResource(R.drawable.playarrow);
+            bplay.setBackgroundResource(R.drawable.button_play);
         }
 
         loadmysong();

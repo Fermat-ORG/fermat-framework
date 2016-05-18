@@ -1,68 +1,71 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="85dp"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="2dp"
-    card_view:cardMaxElevation="2dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:contentPadding="2dp">
+    android:layout_height="106dp"
+    card_view:cardBackgroundColor="@android:color/transparent">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="#ffd5d5d5"
-            android:id="@+id/linea1"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true">
-
-        </View>
 
         <ImageView
             android:id="@+id/imagen"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:scaleType="centerCrop"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:layout_alignParentTop="false"
+            android:layout_alignParentStart="true"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_centerVertical="true" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textviewcolor"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Large Text"
-            android:id="@+id/songname"
-            android:layout_toRightOf="@+id/imagen"
-            android:layout_alignParentTop="true"
-            android:textSize="16dp"
-            android:layout_marginLeft="5dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/textviewcolor"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
-            android:id="@+id/artistname"
-            android:layout_below="@+id/songname"
-            android:layout_alignLeft="@+id/songname"
-            android:textSize="13dp" />
         <View
             android:layout_width="wrap_content"
-            android:layout_height="1dp"
-            android:background="#ffd5d5d5"
-            android:id="@+id/linea2"
+            android:layout_height="2dp"
+            android:background="@drawable/line_colored"
+            android:id="@+id/linea"
             android:layout_alignParentBottom="true"
             android:layout_alignParentTop="false"
-            android:layout_alignParentStart="true">
+            android:layout_alignParentStart="false"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
 
         </View>
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/imagen"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#939598"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:text="Small Text"
+                android:id="@+id/artistname"
+                android:textSize="16sp"
+                android:textStyle="italic"
+                android:fontFamily="sans-serif-light"
+                android:paddingTop="5dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="false"
+                android:layout_alignParentBottom="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#6D6F71"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Large Text"
+                android:id="@+id/songname"
+                android:textSize="20sp"
+                android:fontFamily="sans-serif"
+                android:layout_above="@+id/artistname"
+                android:layout_alignParentStart="true" />
+        </RelativeLayout>
 
 
     </RelativeLayout>
