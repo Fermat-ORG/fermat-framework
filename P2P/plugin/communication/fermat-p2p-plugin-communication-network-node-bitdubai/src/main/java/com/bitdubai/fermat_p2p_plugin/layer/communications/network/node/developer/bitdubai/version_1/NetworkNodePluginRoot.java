@@ -3,15 +3,16 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -72,6 +73,8 @@ import java.sql.Timestamp;
  * @version 1.0
  * @since   Java JDK 1.7
  */
+@PluginInfo(createdBy = "Roberto Requena", maintainerMail = "rart3001@gmail.com", platform = Platforms.COMMUNICATION_PLATFORM, layer = Layers.COMMUNICATION, plugin = Plugins.NETWORK_NODE)
+
 public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNodeManager {
 
     /**
@@ -88,12 +91,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Represent the IDENTITY_FILE_NAME
      */
     private static final String IDENTITY_FILE_NAME      = "nodeIdentity";
-
-    /**
-     * ErrorManager references definition.
-     */
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     /**
      * EventManager references definition.
@@ -272,7 +269,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             String possibleCause = "The Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
 
@@ -285,7 +282,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             String possibleCause = "The Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
 
             throw pluginStartException;
         }
@@ -302,7 +300,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         } catch (Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
         }
     }
 
@@ -316,7 +315,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         } catch (Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -331,7 +330,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         } catch (Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+
         }
     }
 
@@ -385,7 +385,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
          * If all resources are inject
          */
         if (pluginDatabaseSystem == null         ||
-                errorManager == null             ||
                     eventManager == null         ||
                         pluginFileSystem == null ) {
 
@@ -394,15 +393,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("pluginFileSystem: " + pluginFileSystem);
 
             String context = contextBuffer.toString();
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
             throw pluginStartException;
 
         }
@@ -459,7 +457,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                 /*
                  * The file cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+
                 throw new CantInitializeNetworkNodeIdentityException(exception, "", "Unhandled Error.");
             }
 
@@ -469,7 +468,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * The file cannot be load. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+
             throw new CantInitializeNetworkNodeIdentityException(cantCreateFileException, "", "Error trying to create the file.");
 
         }
@@ -498,7 +498,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+
             throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -522,7 +523,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                 /*
                  * The database cannot be created. We can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                super.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeCommunicationsNetworkNodeP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
