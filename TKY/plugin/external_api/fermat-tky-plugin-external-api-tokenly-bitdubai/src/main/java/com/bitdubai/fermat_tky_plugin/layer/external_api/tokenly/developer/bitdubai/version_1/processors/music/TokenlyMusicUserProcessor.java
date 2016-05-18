@@ -8,12 +8,13 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.TokenlyAuthenticatedUserProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.music.MusicUserRecord;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public class TokenlyMusicUserProcessor extends TokenlyAuthenticatedUserProcessor {
+public class TokenlyMusicUserProcessor extends TokenlyAuthenticatedUserProcessor implements Serializable {
 
     public static MusicUser getAuthenticatedMusicUser(
             String username,

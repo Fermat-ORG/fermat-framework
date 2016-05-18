@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -79,11 +78,9 @@ import org.fermat.fermat_dap_plugin.layer.module.asset.user.developer.version_1.
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -622,36 +619,6 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
     @Override
     public void setAppPublicKey(String publicKey) {
         this.publicKeyApp = publicKey;
-
-        try {
-            settings = settingsManager.loadAndGetSettings(publicKeyApp);
-        } catch (Exception e) {
-            settings = null;
-        }
-
-        if (settings != null && settings.getBlockchainNetwork() != null) {
-            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
-        } else {
-            int position = 0;
-            List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
-
-            for (BlockchainNetworkType networkType : list) {
-                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
-                    settings.setBlockchainNetworkPosition(position);
-                    break;
-                } else {
-                    position++;
-                }
-            }
-            settings.setBlockchainNetwork(list);
-        }
-
-        try {
-            settingsManager.persistSettings(publicKeyApp, settings);
-        } catch (CantPersistSettingsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            exception.printStackTrace();
-        }
     }
 
     @Override

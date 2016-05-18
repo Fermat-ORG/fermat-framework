@@ -55,7 +55,6 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
     }
     private void initPluginManager(){
         this.artistIdentityManager = new ArtistIdentityManager(
-                errorManager,
                 tokenlyArtistIdentityManager,
                 tokenlyApiManager,
                 pluginFileSystem,
@@ -66,7 +65,6 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
         try{
             if(artistIdentityManager == null) {
                 artistIdentityManager = new ArtistIdentityManager(
-                        errorManager,
                         tokenlyArtistIdentityManager,
                         tokenlyApiManager,
                         pluginFileSystem,

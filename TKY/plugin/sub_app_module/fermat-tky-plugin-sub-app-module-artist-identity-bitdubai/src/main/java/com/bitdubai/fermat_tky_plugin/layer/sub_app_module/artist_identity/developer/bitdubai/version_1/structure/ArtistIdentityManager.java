@@ -21,6 +21,8 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArti
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.ArtistIdentitiesList;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistPreferenceSettings;
 
@@ -35,34 +37,38 @@ public class ArtistIdentityManager
         extends ModuleManagerImpl<TokenlyArtistPreferenceSettings>
         implements TokenlyArtistIdentityManagerModule,Serializable {
 
-    private final ErrorManager errorManager;
     private final TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
 
     /**
      * Default constructor with parameters.
-     * @param errorManager
      * @param tokenlyArtistIdentityManager
      * @param tokenlyApiManager
      */
-    public ArtistIdentityManager(ErrorManager errorManager,
-                                 TokenlyArtistIdentityManager tokenlyArtistIdentityManager,
+    public ArtistIdentityManager(TokenlyArtistIdentityManager tokenlyArtistIdentityManager,
                                  TokenlyApiManager tokenlyApiManager,
                                  PluginFileSystem pluginFileSystem,
                                  UUID pluginId) {
         super(pluginFileSystem, pluginId);
-        this.errorManager = errorManager;
         this.tokenlyArtistIdentityManager = tokenlyArtistIdentityManager;
         this.tokenlyApiManager = tokenlyApiManager;
     }
 
     @Override
-    public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
-        return tokenlyArtistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+    public ArtistIdentitiesList listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+        List<Artist> artistList = tokenlyArtistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        ArtistIdentitiesList artistIdentitiesList = new ArtistIdentitiesListRecord(artistList);
+        return artistIdentitiesList;
     }
 
     @Override
-    public Artist createArtistIdentity(String username, byte[] profileImage,String password, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
+    public Artist createArtistIdentity(
+            String username,
+            byte[] profileImage,
+            String password,
+            ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
         return tokenlyArtistIdentityManager.createArtistIdentity(
                 username,
                 profileImage,
@@ -73,7 +79,15 @@ public class ArtistIdentityManager
     }
 
     @Override
-    public Artist updateArtistIdentity(String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException, WrongTokenlyUserCredentialsException {
+    public Artist updateArtistIdentity(
+            String username,
+            String password,
+            UUID id,
+            String publicKey,
+            byte[] profileImage,
+            ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException, WrongTokenlyUserCredentialsException {
         return tokenlyArtistIdentityManager.updateArtistIdentity(
                 username,
                 password,
@@ -106,8 +120,27 @@ public class ArtistIdentityManager
     }*/
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+    public ActiveActorIdentityInformation getSelectedActorIdentity()
+            throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try{
+            List<Artist> artistList = tokenlyArtistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Artist artist;
+            if(artistList!=null||!artistList.isEmpty()){
+                artist = artistList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(artist);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListArtistIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
     }
 
     @Override

@@ -28,7 +28,6 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces
  */
 public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIssuerSession> {
 
-    IdentityAssetIssuer identityAssetIssuer;
     AssetIssuerWalletSupAppModuleManager moduleManager;
     AssetIssuerSession assetIssuerSession;
 

@@ -9,8 +9,7 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAs
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionRecord;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.*;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 
 import java.util.HashMap;

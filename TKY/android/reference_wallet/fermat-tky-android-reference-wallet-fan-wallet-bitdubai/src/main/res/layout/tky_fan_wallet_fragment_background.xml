@@ -1,0 +1,38 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/amyback"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+     >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="500dp"
+        android:src="@drawable/amyback"
+        android:scaleType="centerCrop"
+        android:paddingBottom="100dp"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.8">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="3dp"
+                android:scrollbars="vertical"
+                android:background="#090223"
+                android:alpha="0.8" />
+            <!--android:visibility="gone"/> to avoid null when recycler view is empty-->
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+        </RelativeLayout>

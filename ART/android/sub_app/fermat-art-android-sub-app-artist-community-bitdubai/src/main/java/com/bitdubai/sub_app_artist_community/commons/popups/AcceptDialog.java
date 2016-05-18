@@ -17,6 +17,8 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
 
+import java.util.UUID;
+
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
@@ -27,7 +29,6 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
      * UI components
      */
 
-    ArtistCommunityInformation artistCommunityInformation;
 
     ArtistCommunitySelectableIdentity identity;
     private FermatTextView title;
@@ -35,19 +36,35 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
     private FermatTextView userName;
     private FermatButton positiveBtn;
     private FermatButton negativeBtn;
+    //Identity data
+    private UUID connectionId;
+    private String alias;
 
-    public AcceptDialog(Activity a                                 ,
-                        ArtistSubAppSession      artistSubAppSession,
-                        SubAppResourcesProviderManager          subAppResources                   ,
-                        ArtistCommunityInformation        artistCommunityInformation           ,
-                        ArtistCommunitySelectableIdentity identity                          ) {
+    public AcceptDialog(
+            Activity a,
+            ArtistSubAppSession artistSubAppSession,
+            SubAppResourcesProviderManager subAppResources,
+            ArtistCommunityInformation artistCommunityInformation,
+            ArtistCommunitySelectableIdentity identity) {
 
         super(a, artistSubAppSession, subAppResources);
-
-        this.artistCommunityInformation = artistCommunityInformation;
-        this.identity             = identity               ;
+        this.connectionId = artistCommunityInformation.getConnectionId();
+        this.alias = artistCommunityInformation.getAlias();
+        this.identity = identity;
     }
 
+    public AcceptDialog(
+            Activity a,
+            ArtistSubAppSession artistSubAppSession,
+            SubAppResourcesProviderManager subAppResources,
+            UUID connectionId,
+            String alias,
+            ArtistCommunitySelectableIdentity identity) {
+        super(a, artistSubAppSession, subAppResources);
+        this.connectionId = connectionId;
+        this.alias = alias;
+        this.identity = identity;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +81,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
 
         title.setText("Connect");
         description.setText("Do you want to accept");
-        userName.setText(artistCommunityInformation.getAlias());
+        userName.setText(alias);
 
     }
 
@@ -84,19 +101,20 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
         int i = v.getId();
         if (i == R.id.aac_positive_button) {
             // try {
-            if (artistCommunityInformation != null && identity != null) {
+            if (connectionId != null && alias !=null && identity != null) {
                 try {
-                    getSession().getModuleManager().acceptArtist(artistCommunityInformation.getConnectionId());
+                    getSession().getModuleManager().acceptArtist(connectionId);
                 } catch (CantAcceptRequestException e) {
-                    Toast.makeText(getContext(), artistCommunityInformation.getAlias() + " Can not accept the request.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), alias + " Can not accept the request.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 } catch (ConnectionRequestNotFoundException e) {
-                    Toast.makeText(getContext(), artistCommunityInformation.getAlias() + "Request ID not found.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), alias + "Request ID not found.", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                 }
-                Toast.makeText(getContext(), artistCommunityInformation.getAlias() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), alias + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                getSession().setData("connectionresult", 3);
             } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
             }
             dismiss();
             /*} catch (CantAcceptRequestException e) {
@@ -104,17 +122,17 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
             }*/
             dismiss();
         } else if (i == R.id.aac_negative_button) {
-            //try {
-            if (artistCommunityInformation != null && identity != null) {
-                Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
-                // getSession().getModuleManager().denyConnection(identity.getPublicKey(), information.getPublicKey());
-            } else {
-                Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
-            }
-            dismiss();
-            /*} catch (IntraUserConnectionDenialFailedException e) {
+            try {
+                if (connectionId != null && alias !=null && identity != null) {
+                    Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();
+                    getSession().getModuleManager().denyConnection(connectionId);
+                } else {
+                    Toast.makeText(getContext(), "Oooops! recovering from system error - ", Toast.LENGTH_SHORT).show();
+                }
+                dismiss();
+            } catch (Exception e) {
                 e.printStackTrace();
-            }*/
+            }
             dismiss();
         }
     }

@@ -214,7 +214,6 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     tokenlySongWalletDao,
                     tokenlyWalletSongVault,
                     tokenlyApiManager,
-                    errorManager,
                     broadcaster);
             //testDownloadFile();
             //testSynchronizeSongs();

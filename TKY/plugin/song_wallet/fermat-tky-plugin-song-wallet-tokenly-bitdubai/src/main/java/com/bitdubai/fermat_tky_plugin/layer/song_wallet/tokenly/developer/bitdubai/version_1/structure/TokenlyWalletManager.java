@@ -1,11 +1,8 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.BroadcasterNotificationType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
@@ -35,6 +32,7 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSynchronizeDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 15/03/16.
  */
-public class TokenlyWalletManager implements SongWalletTokenlyManager {
+public class TokenlyWalletManager implements SongWalletTokenlyManager, Serializable {
 
     /**
      * Represents the TokenlySongWalletDao.
@@ -63,7 +61,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
     /**
      * Represents the errorManager
      */
-    ErrorManager errorManager;
+    //ErrorManager errorManager;
 
     /**
      * Represents the broadcaster.
@@ -90,12 +88,10 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             TokenlySongWalletDao tokenlySongWalletDao,
             TokenlyWalletSongVault tokenlyWalletSongVault,
             TokenlyApiManager tokenlyApiManager,
-            ErrorManager errorManager,
             Broadcaster broadcaster){
         this.tokenlySongWalletDao = tokenlySongWalletDao;
         this.tokenlyWalletSongVault = tokenlyWalletSongVault;
         this.tokenlyApiManager = tokenlyApiManager;
-        this.errorManager = errorManager;
         this.broadcaster = broadcaster;
     }
     //TODO: implement this methods
@@ -283,10 +279,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                         ObjectNotSetException |
                         CantPersistSongException |
                         CancelDownloadException e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.TOKENLY_WALLET,
-                            UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
-                            e);
+
                     //Inform to UI this download exception.
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_EXCEPTION.getCode(),song);

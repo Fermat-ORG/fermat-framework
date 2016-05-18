@@ -18,8 +18,6 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateAr
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 
 
-
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -36,7 +34,7 @@ public interface TokenlyArtistIdentityManagerModule extends
      * @return
      * @throws CantListArtistIdentitiesException
      */
-    List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException;
+    ArtistIdentitiesList listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException;
 
     /**
      *

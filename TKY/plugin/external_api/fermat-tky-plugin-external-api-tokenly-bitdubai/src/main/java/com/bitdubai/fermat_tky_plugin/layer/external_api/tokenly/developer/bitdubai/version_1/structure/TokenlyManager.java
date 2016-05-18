@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
@@ -23,12 +24,13 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlySongProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlySwapBotProcessor;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/03/16.
  */
-public class TokenlyManager implements TokenlyApiManager {
+public class TokenlyManager implements TokenlyApiManager, Serializable {
 
     /**
      * This method returns a Tokenly Bot by bot Id.
@@ -37,7 +39,9 @@ public class TokenlyManager implements TokenlyApiManager {
      * @throws CantGetBotException
      */
     @Override
-    public Bot getBotByBotId(String botId) throws CantGetBotException {
+    public Bot getBotByBotId(String botId) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         Bot bot = TokenlySwapBotProcessor.getBotByBotId(botId);
         return bot;
     }
@@ -49,7 +53,9 @@ public class TokenlyManager implements TokenlyApiManager {
      * @throws CantGetBotException
      */
     @Override
-    public Bot getBotBySwapbotUsername(String username) throws CantGetBotException {
+    public Bot getBotBySwapbotUsername(String username) throws
+            CantGetBotException,
+            CantConnectWithTokenlyException {
         Bot bot = TokenlySwapBotProcessor.getBotByTokenlyUsername(username);
         return bot;
     }
@@ -60,13 +66,15 @@ public class TokenlyManager implements TokenlyApiManager {
      * @throws CantGetAlbumException
      */
     @Override
-    public Album[] getAlbums() throws CantGetAlbumException {
+    public Album[] getAlbums() throws CantGetAlbumException, CantConnectWithTokenlyException {
         Album[] albums = TokenlyAlbumProcessor.getAlbums();
         return albums;
     }
 
     @Override
-    public DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException {
+    public DownloadSong getDownloadSongBySongId(String id) throws
+            CantGetSongException,
+            CantConnectWithTokenlyException {
         DownloadSong downloadSong = TokenlyDownloadSongProcessor.getDownloadSongById(id);
         return downloadSong;
     }

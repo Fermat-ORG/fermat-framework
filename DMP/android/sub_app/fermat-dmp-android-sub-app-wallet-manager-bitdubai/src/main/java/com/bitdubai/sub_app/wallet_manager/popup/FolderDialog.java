@@ -57,6 +57,14 @@ public class FolderDialog extends FermatDialog<DesktopSession,SubAppResourcesPro
         this.appStatus = appsStatus;
 
     }
+    public FolderDialog(Activity activity, DesktopSession fermatSession, SubAppResourcesProviderManager resources,String title,List<Item> lstItems, DesktopHolderClickCallback desktopHolderClickCallback,AppsStatus appsStatus) {
+        super(activity, fermatSession, resources);
+        this.lstItems = lstItems;
+        this.desktopHolderClickCallback = desktopHolderClickCallback;
+        this.title = title;
+        this.appStatus = appsStatus;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -19,6 +19,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanId
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
+import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.FanIdentitiesList;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 
@@ -31,32 +32,30 @@ import java.util.UUID;
  */
 public class FanIdentityManager
         extends ModuleManagerImpl<TokenlyFanPreferenceSettings>
-        implements TokenlyFanIdentityManagerModule,Serializable {
-    private final ErrorManager errorManager;
+        implements TokenlyFanIdentityManagerModule, Serializable {
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
     private final TokenlyApiManager tokenlyApiManager;
 
     /**
      * Default constructor with parameters.
-     * @param errorManager
      * @param tokenlyFanIdentityManager
      * @param tokenlyApiManager
      */
     public FanIdentityManager(
-            ErrorManager errorManager,
             TokenlyFanIdentityManager tokenlyFanIdentityManager,
             TokenlyApiManager tokenlyApiManager,
             PluginFileSystem pluginFileSystem,
             UUID pluginId) {
         super(pluginFileSystem, pluginId);
-        this.errorManager = errorManager;
         this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
         this.tokenlyApiManager = tokenlyApiManager;
     }
 
     @Override
-    public List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
-        return tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
+    public FanIdentitiesList listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        FanIdentitiesList fanIdentitiesList = new FanIdentitiesListRecord(
+                tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser());
+        return fanIdentitiesList;
     }
 
     @Override
@@ -118,7 +117,25 @@ public class FanIdentityManager
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws
             CantGetSelectedActorIdentityException,
             ActorIdentityNotSelectedException {
-        return null;
+        try{
+            List<Fan> fanaticList = tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Fan fanatic;
+            if(fanaticList!=null||!fanaticList.isEmpty()){
+                fanatic = fanaticList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(fanatic);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListFanIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
     }
 
     @Override

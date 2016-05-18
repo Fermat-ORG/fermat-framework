@@ -2,8 +2,7 @@ package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.u
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ExposingData;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.AbstractExposingData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,47 +15,20 @@ import java.util.List;
  * <p>
  * Created by Gabriel Araujo.
  */
-public final class FanExposingData implements ExposingData {
+public final class FanExposingData extends AbstractExposingData {
 
-    private final String publicKey;
-    private final String alias    ;
-    private final byte[] image    ;
     private final FanExternalPlatformInformation fanExternalPlatformInformation;
 
     public FanExposingData(
             final String publicKey,
             final String alias,
             String extraData) {
-
-        this.publicKey = publicKey;
-        this.alias     = alias    ;
-        List data = getListFromExtraData(extraData);
-        image = (byte[]) data.get(0);
-        HashMap<ArtExternalPlatform,String> externalPlatformInformationMap =
-                (HashMap<ArtExternalPlatform, String>) data.get(1);
+        super(publicKey,alias, extraData);
+        //External platform information.
+        HashMap<ArtExternalPlatform, String> externalPlatformInformationMap=
+                getExternalPlatformInformationMap(data.get(EXTERNAL_DATA_INDEX));
         fanExternalPlatformInformation = new FanExternalPlatformInformation(
                 externalPlatformInformationMap);
-    }
-
-    /**
-     * @return a string representing the public key.
-     */
-    public final String getPublicKey() {
-        return publicKey;
-    }
-
-    /**
-     * @return a string representing the alias of the crypto broker.
-     */
-    public final String getAlias() {
-        return alias;
-    }
-
-    /**
-     * @return an array of bytes with the image exposed by the Crypto Broker.
-     */
-    public final byte[] getImage() {
-        return image;
     }
 
     /**
@@ -65,17 +37,6 @@ public final class FanExposingData implements ExposingData {
      */
     public final FanExternalPlatformInformation getFanExternalPlatformInformation(){
         return fanExternalPlatformInformation;
-    }
-
-    /**
-     * This method returns the extra data list.
-     * @param extraData
-     * @return
-     */
-    private List getListFromExtraData(String extraData){
-        List data = new ArrayList();
-        data = (List) XMLParser.parseXML(extraData, data);
-        return data;
     }
 
     /**
@@ -95,6 +56,7 @@ public final class FanExposingData implements ExposingData {
                 "publicKey='" + publicKey + '\'' +
                 ", alias='" + alias + '\'' +
                 ", image=" + Arrays.toString(image) +
+                ", externalPlatform=" + fanExternalPlatformInformation +
                 '}';
     }
 

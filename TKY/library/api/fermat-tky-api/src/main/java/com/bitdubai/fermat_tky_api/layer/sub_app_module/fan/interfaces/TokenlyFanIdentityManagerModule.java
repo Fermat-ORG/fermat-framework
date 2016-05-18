@@ -15,6 +15,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanId
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,14 +26,14 @@ public interface TokenlyFanIdentityManagerModule extends
         ModuleManager<
                 TokenlyFanPreferenceSettings,
                 ActiveActorIdentityInformation>,
-        ModuleSettingsImpl<TokenlyFanPreferenceSettings> {
+        ModuleSettingsImpl<TokenlyFanPreferenceSettings>, Serializable {
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the fan
      * identities linked to the current logged device user.
      * @return
      * @throws CantListFanIdentitiesException
      */
-    List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    FanIdentitiesList listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
      *

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 
 import java.util.UUID;
 
@@ -9,6 +10,8 @@ import java.util.UUID;
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
 public final class ArtistActorConnection extends ActorConnection<ArtistLinkedActorIdentity> {
+
+    private ArtExternalPlatform artExternalPlatform;
 
     /**
      * Constructor with parameters
@@ -41,6 +44,25 @@ public final class ArtistActorConnection extends ActorConnection<ArtistLinkedAct
                 creationTime   ,
                 updateTime
         );
+    }
+
+    /**
+     * This method sets the ArtExternalPlatform.
+     * @param artExternalPlatform
+     */
+    public void setArtExternalPlatform(ArtExternalPlatform artExternalPlatform){
+        this.artExternalPlatform = artExternalPlatform;
+    }
+
+    /**
+     * This method returns the ArtExternalPlatform
+     * @return
+     */
+    public ArtExternalPlatform getArtExternalPlatform() {
+        if(this.artExternalPlatform==null){
+            return ArtExternalPlatform.UNDEFINED;
+        }
+        return this.artExternalPlatform;
     }
 
 }

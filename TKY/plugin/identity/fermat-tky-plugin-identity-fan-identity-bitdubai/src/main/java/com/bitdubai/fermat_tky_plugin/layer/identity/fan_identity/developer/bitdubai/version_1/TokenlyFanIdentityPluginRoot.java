@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -59,7 +60,6 @@ import java.util.concurrent.ExecutionException;
 @PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM, maintainerMail = "gabe_512@hotmail.com", createdBy = "gabohub", layer = Layers.IDENTITY, platform = Platforms.TOKENLY, plugin = Plugins.TOKENLY_FAN)
 public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        TokenlyFanIdentityManager,
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -97,7 +97,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
         try {
             this.serviceStatus = ServiceStatus.STARTED;
             identityFanManager = new TokenlyIdentityFanManagerImpl(
-                    this.errorManager,
+                    //this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
@@ -120,7 +120,11 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
 //        }
     }
 
-    private void testCreateArtist(){
+    public FermatManager getManager(){
+        return identityFanManager;
+    }
+
+    /*private void testCreateArtist(){
         try {
             String username = "perezilla";
             byte[] image = new byte[0];
@@ -135,7 +139,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+    }*/
 //    private void testUpdateArtist(Artist artist){
 //        String externalName = "El gabo artist que envia";
 //        String externalAccessToken = "El access token";
@@ -148,66 +152,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
 //            e.printStackTrace();
 //        }
 //    }
-    @Override
-    public List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
-        return identityFanManager.getIdentityFanFromCurrentDeviceUser();
-    }
 
-    @Override
-    public Fan createFanIdentity(String userName, byte[] profileImage, String externalPassword, ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, WrongTokenlyUserCredentialsException {
-
-        User user=null;
-        try{
-            if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
-                user = tokenlyApiManager.validateTokenlyUser(userName, externalPassword);
-        } catch (CantGetUserException |InterruptedException | ExecutionException  e) {
-            e.printStackTrace();
-        }
-        if(user!=null){
-            return identityFanManager.createNewIdentityFan(user, externalPassword,profileImage, externalPlatform);
-        }else{
-            return null;
-        }
-    }
-
-
-    @Override
-    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException {
-        User user=null;
-        try{
-            if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
-                user = tokenlyApiManager.validateTokenlyUser(userName, password);
-        } catch (CantGetUserException |InterruptedException | ExecutionException  e) {
-            e.printStackTrace();
-        }
-        if(user != null)
-            return identityFanManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
-        return null;
-    }
-
-    /**
-     * This method updates a Fan identity in database.
-     * This method can be used to update the plugin database when the Fan identity object include a
-     * new artist connected to be persisted.
-     * @param fan
-     * @throws CantUpdateFanIdentityException
-     */
-    public void updateFanIdentity(Fan fan) throws CantUpdateFanIdentityException{
-        try{
-            ObjectChecker.checkArgument(fan, "The Fan identity is null");
-            identityFanManager.updateIdentityFan(fan);
-        } catch (ObjectNotSetException e){
-            throw new CantUpdateFanIdentityException(
-                    e,
-                    "Cannot update the fan identity",
-                    "The fan identity is probably null");
-        }
-    }
-
-    @Override
-    public Fan getFanIdentity(UUID id) throws CantGetFanIdentityException, IdentityNotFoundException {
-        return identityFanManager.getIdentitFan(id);
-    }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {

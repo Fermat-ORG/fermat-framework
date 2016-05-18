@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
@@ -18,14 +17,13 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActor
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by franklin on 05/10/15.
  */
-public interface AssetUserWallet extends Serializable {
+public interface AssetUserWallet {
 
     //TODO:Documentar y manejo de excepciones
 
