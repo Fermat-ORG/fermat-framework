@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -57,6 +58,7 @@ import java.util.UUID;
  * * * * * * *
  * * *
  */
+@PluginInfo(createdBy = "Luis", maintainerMail = "matiasfurszyfer@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.CCP_OUTGOING_DRAFT_TRANSACTION)
 
 public class OutgoingDraftTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,

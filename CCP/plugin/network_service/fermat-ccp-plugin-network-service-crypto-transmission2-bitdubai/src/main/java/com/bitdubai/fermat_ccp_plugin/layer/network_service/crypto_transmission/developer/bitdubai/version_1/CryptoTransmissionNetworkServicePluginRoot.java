@@ -77,7 +77,7 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_transmission.
  * Created by natalia on 12/02/16.
  */
 
-@PluginInfo(createdBy = "Matias", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Matias", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_TRANSMISSION)
 
 public class CryptoTransmissionNetworkServicePluginRoot extends AbstractNetworkServiceBase  implements
         CryptoTransmissionNetworkServiceManager,

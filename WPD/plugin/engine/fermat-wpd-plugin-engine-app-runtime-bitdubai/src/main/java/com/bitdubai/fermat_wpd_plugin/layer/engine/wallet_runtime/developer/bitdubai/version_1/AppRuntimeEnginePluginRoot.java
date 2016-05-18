@@ -72,7 +72,7 @@ import java.util.UUID;
 /**
  * Created by Matias Furszyfer on 23.07.15.
  */
-@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "nattyco@gmail.com", platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.ENGINE, plugin = Plugins.WALLET_RUNTIME)
 
 public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         WalletRuntimeManager,
