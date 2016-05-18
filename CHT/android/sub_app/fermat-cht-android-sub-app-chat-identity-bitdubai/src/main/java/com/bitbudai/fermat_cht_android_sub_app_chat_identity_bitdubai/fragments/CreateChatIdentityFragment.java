@@ -320,8 +320,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoBrokerBitmap = (Bitmap) extras.get("data");
-                    cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
-                    final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(),appSession,null,cryptoBrokerBitmap);
+                    if(cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
+                        cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(),appSession,null,cryptoBrokerBitmap);
                     dialogCropImage.show();
                     dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
@@ -334,6 +335,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             }
                         }
                     });
+                    }else{
+                        Dialog dg = new Dialog(getActivity());
+                        dg.setTitle("The image selected is too small. Please select a photo with height and width of at least 192x192");
+                        dg.show();
+                        cryptoBrokerBitmap = null;
+                        //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                    }
+
                     break;
                 case REQUEST_LOAD_IMAGE:
                      Uri selectedImage = data.getData();
@@ -342,9 +351,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+
                             //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                            if(cryptoBrokerBitmap.getWidth() >= 200 && cryptoBrokerBitmap.getHeight() >= 200) {
+                            if(cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
+                                cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                                 final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
                                 dialogCropImagee.show();
                                 dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -359,7 +369,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     }
                                 });
                             }else{
-                                Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
+                                Dialog dg = new Dialog(getActivity());
+                                dg.setTitle("The image selected is too small. Please select a photo with height and width of at least 192x192");
+                                dg.show();
+                                cryptoBrokerBitmap = null;
+                               // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
 
                         }
