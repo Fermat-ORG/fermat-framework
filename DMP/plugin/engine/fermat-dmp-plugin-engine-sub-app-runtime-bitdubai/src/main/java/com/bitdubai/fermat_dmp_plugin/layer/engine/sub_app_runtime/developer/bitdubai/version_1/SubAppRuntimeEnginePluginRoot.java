@@ -4344,8 +4344,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fermat Music Player");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
-        runtimeTitleBar.setTitleColor("#000000");
-        runtimeTitleBar.setColor("#fafafa");
+        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setColor("#E6E7E8");
+      //  runtimeTitleBar.setFont("sans-serif");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
