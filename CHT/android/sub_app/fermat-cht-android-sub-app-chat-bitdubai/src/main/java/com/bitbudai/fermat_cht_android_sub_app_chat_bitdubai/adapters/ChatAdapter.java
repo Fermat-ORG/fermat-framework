@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -32,10 +33,10 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         implements Filterable {
 
     ArrayList<ChatMessage> chatMessages = new ArrayList<>();
-    ArrayList<ChatMessage> messagesData = new ArrayList<>();
 
     ArrayList<ChatMessage> filteredData;
     private String filterString;
+    private int filterSet =0;
 
     public ChatAdapter(Context context) {
         super(context);
@@ -43,6 +44,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
+        this.chatMessages = chatMessages;
     }
 
     @Override
@@ -52,6 +54,10 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     @Override
     protected int getCardViewResource() {return R.layout.chat_list_item;  }
+
+    public void setFilterSetted(int filterSet) { this.filterSet=filterSet;  }
+
+    public int getFilterSetted() {return this.filterSet;  }
 
     @Override
     protected void bindHolder(ChatHolder holder, ChatMessage data, int position) {
@@ -98,7 +104,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
         holder.tickstatusimage.setImageResource(0);
-        holder.txtMessage.setText(data.getMessage());
+        holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage().toString()));
         holder.txtInfo.setText(data.getDate());
         if (isMe) {
             holder.contentWithBG.setBackgroundResource(R.drawable.burble_green_shadow);
@@ -151,54 +157,34 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         }
     }
 
-//    public int getCount() {
-//        if (chatMessages != null) {
-//            if (filteredData != null) {
-//                if (filteredData.size() <= chatMessages.size()) {
-//                    return filteredData.size();
-//                } else {
-//                    return chatMessages.size();
-//                }
-//            }else  return chatMessages.size();
-//        } else {
-//            return 0;
-//        }
-//    }
-//
-//    @Override
-//    public ChatMessage getItem(int position) {
-//        ChatMessage dataM;
-//        if (chatMessages != null) {
-//            if (filteredData != null) {
-//                if (filteredData.size() <= chatMessages.size()) {
-//                    dataM= filteredData.get(position);
-//                } else {
-//                    dataM= chatMessages.get(position);
-//                }
-//            }else dataM=chatMessages.get(position);
-//        } else {
-//            dataM=chatMessages.get(position);
-//        }
-//        return dataM;
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
+    @Override
+    public int getItemCount() {
+        if(filterString!=null)
+            return filteredData == null ? 0 : filteredData.size();
+        else
+            return chatMessages == null ? 0 : chatMessages.size();
+    }
+
+    @Override
+    public ChatMessage getItem(int position) {
+        if(filterString!=null)
+            return filteredData != null ? (!filteredData.isEmpty()
+                        && position < filteredData.size()) ? filteredData.get(position) : null : null;
+        else
+            return chatMessages != null ? (!chatMessages.isEmpty()
+                    && position < chatMessages.size()) ? chatMessages.get(position) : null : null;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
     public void changeDataSet(ArrayList<ChatMessage> data) {
-        if(filterString.equals(""))
-            this.chatMessages = data;
-        else
-            this.filteredData = data;
+        this.filteredData = data;
     }
 
     public Filter getFilter() {
-//        messagesData=null;
-//        for(ChatMessage data:chatMessages){
-//            messagesData.add(data);
-//        }
         return new ChatFilter(chatMessages, this);
     }
 

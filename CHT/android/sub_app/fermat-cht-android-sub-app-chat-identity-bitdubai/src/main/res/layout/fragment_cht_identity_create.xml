@@ -9,7 +9,7 @@
         android:id="@+id/cht_image_background"
         android:layout_width="170dp"
         android:layout_height="170dp"
-        android:background="@drawable/bg_circular_other_profile"
+        android:background="@drawable/bg_circular_cht"
         android:gravity="center"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -17,8 +17,8 @@
 
         <ImageView
             android:id="@+id/cht_image"
-            android:background="#f7f7f7"
-            android:src="@drawable/button_new_idenditity"
+            android:background="#00000000"
+            android:src="@drawable/icon_profile"
             android:contentDescription="ignore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,88 +29,95 @@
     <Button
         android:id="@+id/cht_button"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:background="#47BF73"
-        android:text="@string/create"
+        android:background="#00000000"
+        android:drawableStart="@drawable/chort_buttom_accept"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_alignEnd="@+id/editTextStatus"
+        android:layout_alignStart="@+id/editTextStatus" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Your name"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="User Name"
+        android:layout_marginTop="24dp"
         android:id="@+id/textViewChtTitle"
-        android:textColor="#808080"
+        android:textColor="#47BF73"
         android:fontFamily="h"
         android:layout_below="@+id/cht_image_background"
         android:layout_centerHorizontal="true" />
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/editTextName"
+        android:hint="Name"
+        android:layout_below="@+id/cht_image_background"
+        android:textColor="#808080"
+        android:foregroundTint="#808080"
+        android:textColorHint="#808080"
+        android:drawableTint="#808080"
+        android:layout_marginTop="38dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center" />
 
-    <RelativeLayout
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:textColor="#808080"
+        android:id="@+id/editTextStatus"
+        android:hint="Status"
+        android:textColorHint="#808080"
+        android:foregroundTint="#808080"
+        android:layout_below="@+id/cht_image_background"
+        android:layout_marginTop="107dp"
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Status"
+        android:textColor="#47BF73"
+        android:id="@+id/statusView"
+        android:layout_below="@+id/cht_image_background"
+        android:layout_marginTop="94dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Button
+        android:id="@+id/btnRotate"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="40dp"
+        android:background="#47BF73"
+        android:text="@string/rotate"
+        android:textColor="@android:color/white"
+        android:textSize="16sp"
+        android:visibility="gone"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_above="@+id/cht_button"
-        android:layout_alignStart="@+id/cht_button">
+        android:layout_alignStart="@+id/editTextStatus"
+        android:layout_alignEnd="@+id/editTextStatus" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="User Name"
-            android:textColor="#808080"
-            android:id="@+id/textView"
-            android:layout_above="@+id/editTextName"
-            android:layout_alignParentStart="true" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeholdImg"
+        android:visibility="gone"
+        android:layout_alignTop="@+id/cht_image_background"
+        android:layout_alignEnd="@+id/statusView" />
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/editTextName"
-            android:hint="John Doe"
-            android:textColor="#808080"
-            android:layout_above="@+id/textView2"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:foregroundTint="#808080"
-            android:textColorHint="#808080"
-            android:drawableTint="#808080" />
 
-        <EditText
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:textColor="#808080"
-            android:id="@+id/editTextStatus"
-            android:hint="Available"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:textColorHint="#808080"
-            android:foregroundTint="#808080" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Status"
-            android:textColor="#808080"
-            android:id="@+id/textView2"
-            android:layout_above="@+id/editTextStatus"
-            android:layout_alignParentStart="true" />
-
-        <!--<CheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="You are a user pay"
-            android:id="@+id/checkBox"
-            android:textColor="#000"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" /> -->
-
-    </RelativeLayout>
 </RelativeLayout>

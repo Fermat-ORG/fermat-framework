@@ -218,7 +218,7 @@ public class WsCommunicationTyrusVPNClientManagerAgent{
 
         try {
 
-            System.out.println("WsCommunicationVPNClientManagerAgent - closeAllVpnConnections()");
+            System.out.println("WsCommunicationTyrusVPNClientManagerAgent - closeAllVpnConnections() -- Calling wsCommunicationVPNClient.close().");
 
             if (!instance.vpnClientActiveCache.isEmpty()) {
 

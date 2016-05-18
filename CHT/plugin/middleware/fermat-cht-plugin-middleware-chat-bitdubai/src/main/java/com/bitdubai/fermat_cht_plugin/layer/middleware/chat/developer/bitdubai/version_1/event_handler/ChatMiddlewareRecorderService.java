@@ -151,20 +151,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
         }
     }
 
-    public void IncomingNewOnlineStatusUpdateEventHandler(IncomingNewOnlineStatusUpdate event) throws CantSaveEventException {
-        try{
-            chatMiddlewareMonitorAgent.checkIncomingOnlineStatus(event.getChatId());
-        } catch (Exception exception) {
-//            errorManager.reportUnexpectedPluginException(
-//                    Plugins.CHAT_MIDDLEWARE,
-//                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-//                    FermatException.wrapException(exception));
-            throw new CantSaveEventException(
-                    exception,
-                    "Saving OutgoingChat event",
-                    "Unexpected Exception");
-        }
-    }
+
 
     @Override
     public void start() throws CantStartServiceException {
@@ -203,12 +190,12 @@ public class ChatMiddlewareRecorderService implements CHTService {
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
 
-            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ONLINE_STATUS);
-            fermatEventHandler = new IncomingNewOnlineStatusUpdateEventHandler();
-            ((IncomingNewOnlineStatusUpdateEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
-            fermatEventListener.setEventHandler(fermatEventHandler);
-            eventManager.addListener(fermatEventListener);
-            listenersAdded.add(fermatEventListener);
+//            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ONLINE_STATUS);
+//            fermatEventHandler = new IncomingNewOnlineStatusUpdateEventHandler();
+//            ((IncomingNewOnlineStatusUpdateEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
+//            fermatEventListener.setEventHandler(fermatEventHandler);
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){

@@ -76,6 +76,6 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
 
     @Override
     public boolean hasClickListener() {
-        return true;
+        return false;
     }
 }

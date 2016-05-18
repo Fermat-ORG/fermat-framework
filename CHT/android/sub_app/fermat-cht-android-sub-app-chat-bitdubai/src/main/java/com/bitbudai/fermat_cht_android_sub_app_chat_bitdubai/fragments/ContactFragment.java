@@ -159,6 +159,7 @@ public class ContactFragment extends AbstractFermatFragment {
         menu.clear();
         // Inflate the menu items
 //        inflater.inflate(R.menu.contact_detail_menu, menu);
+
     }
 
     @Override

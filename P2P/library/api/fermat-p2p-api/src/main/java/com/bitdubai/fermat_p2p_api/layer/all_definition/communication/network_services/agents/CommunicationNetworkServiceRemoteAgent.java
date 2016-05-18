@@ -173,8 +173,10 @@ public final class CommunicationNetworkServiceRemoteAgent extends Observable {
 
         executorService.shutdownNow();
         //Disconnect from the service
-        if(communicationsVPNConnection.isConnected())
+        if(communicationsVPNConnection.isConnected()) {
+            System.out.println("CommunicationNetworkServiceConnectionManager - stop() -- Calling communicationsVPNConnection.close()");
             communicationsVPNConnection.close();
+        }
 
         System.out.println("CommunicationNetworkServiceRemoteAgent - stopped ");
     }
