@@ -36,6 +36,8 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -45,9 +47,6 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
@@ -565,7 +564,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             @Override
             public void onPostExecute(Object... result) {
                 if (result != null && result.length > 0) {
-                        dataSet.addAll((List<IntraUserInformation>)result[0]);
+                        dataSet.addAll((List<IntraUserInformation>) result[0]);
+                        if(dataSet!=null){
+                            if(!dataSet.isEmpty()){
+                                showEmpty(false, emptyView);
+                                adapter.changeDataSet(dataSet);
+                            }else{
+                                showEmpty(true, emptyView);
+                            }
+                        }else{
+                            showEmpty(true, emptyView);
+                        }
+
                 }
                 else {
                     makeText(getActivity(), "Cant't Get suggestion cache list.", Toast.LENGTH_SHORT).show();

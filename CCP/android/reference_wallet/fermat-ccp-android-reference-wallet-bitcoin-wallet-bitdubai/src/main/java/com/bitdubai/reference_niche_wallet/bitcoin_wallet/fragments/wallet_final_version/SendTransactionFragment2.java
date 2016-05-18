@@ -911,12 +911,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         long balanceSum = 0;
         int average = 0;
         try {
-            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
-                balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
+            if(runningDailyBalance!=null) {
+                for (Map.Entry<Long, Long> entry : runningDailyBalance.entrySet())
+                    balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
 
-            if(balanceSum > 0 )
-                average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
+                if (balanceSum > 0)
+                    average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
 
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
