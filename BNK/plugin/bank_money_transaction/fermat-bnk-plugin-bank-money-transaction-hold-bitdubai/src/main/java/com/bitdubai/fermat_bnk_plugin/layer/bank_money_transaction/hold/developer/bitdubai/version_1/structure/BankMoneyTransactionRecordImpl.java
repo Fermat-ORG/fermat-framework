@@ -7,6 +7,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -19,21 +20,21 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     String publicKeyCustomer;
     String balanceType;
     String transactionType;
-    float amount;
+    BigDecimal amount;
     String cashCurrencyType;
     String bankOperationType;
     String bankDocumentReference;
     String bankName;
     String bankAccountNumber;
     String bankAccountType;
-    long runningBookBalance;
-    long runningAvailableBalance;
+    BigDecimal runningBookBalance;
+    BigDecimal runningAvailableBalance;
     long timeStamp;
     String memo;
     String status;
     ErrorManager errorManager;
 
-    public BankMoneyTransactionRecordImpl(ErrorManager errorManager,UUID bankTransactionId, String balanceType, String transactionType, float amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
+    public BankMoneyTransactionRecordImpl(ErrorManager errorManager,UUID bankTransactionId, String balanceType, String transactionType, BigDecimal amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, BigDecimal runningBookBalance, BigDecimal runningAvailableBalance, long timeStamp, String memo, String status) {
         this.bankTransactionId = bankTransactionId;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
@@ -83,7 +84,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -138,12 +139,12 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     }
 
     @Override
-    public long getRunningBookBalance() {
+    public BigDecimal getRunningBookBalance() {
         return runningBookBalance;
     }
 
     @Override
-    public long getRunningAvailableBalance() {
+    public BigDecimal getRunningAvailableBalance() {
         return runningAvailableBalance;
     }
 
