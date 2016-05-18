@@ -218,7 +218,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                         //paint toolbar on red
                                         toolbarColor = Color.RED;
                                         if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
-                                            getActivity().runUIThrad/Runnable(setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled()));
+                                            setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
 
                                     } else {
                                         toolbarColor = Color.parseColor("#12aca1");
@@ -292,22 +292,32 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         presentationBitcoinWalletDialog.show();
     }
 
-    private void setUpBlockchainProgress(boolean checkButton) {
-        BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
-                new BlockchainDownloadInfoDialog(
-                        getActivity(),
-                        referenceWalletSession,
-                        null,
-                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                        checkButton);
+    private void setUpBlockchainProgress(final boolean checkButton) {
+
+        final int type = (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES;
 
 
-        blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
+            public void run() {
+                BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
+                        new BlockchainDownloadInfoDialog(
+                                getActivity(),
+                                referenceWalletSession,
+                                null,
+                                type,
+                                checkButton);
+
+
+                blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                    }
+                });
+                blockchainDownloadInfoDialog.show();
             }
         });
-        blockchainDownloadInfoDialog.show();
+
     }
 
     @Override
