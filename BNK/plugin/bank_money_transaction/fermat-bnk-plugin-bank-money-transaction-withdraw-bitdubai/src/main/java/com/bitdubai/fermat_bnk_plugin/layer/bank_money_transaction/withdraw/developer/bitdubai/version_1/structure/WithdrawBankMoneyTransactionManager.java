@@ -16,6 +16,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.deve
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.UUID;
 
@@ -56,10 +57,13 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
     public BankTransaction makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException {
         withdrawBankMoneyTransactionDao.registerWithdrawTransaction(bankTransactionParameters);
         try{
-            //TODO: Revisar Guillermo BigDecimal
-            if(bankTransactionParameters.getAmount().floatValue()<bankMoneyWallet.getAvailableBalance().getBalance(bankTransactionParameters.getAccount())&& bankTransactionParameters.getAmount().floatValue()<bankMoneyWallet.getBookBalance().getBalance(bankTransactionParameters.getAccount())){
-                bankMoneyWallet.getAvailableBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
-                bankMoneyWallet.getBookBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
+            BigDecimal availableBalance = bankMoneyWallet.getAvailableBalance().getBalance(bankTransactionParameters.getAccount());
+            BigDecimal bookBalance = bankMoneyWallet.getBookBalance().getBalance(bankTransactionParameters.getAccount());
+
+            if(bankTransactionParameters.getAmount().compareTo(availableBalance) <= 0 && bankTransactionParameters.getAmount().compareTo(bookBalance) <= 0)
+            {
+                bankMoneyWallet.getAvailableBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), new BigDecimal(0), new BigDecimal(0), (new Date().getTime()), bankTransactionParameters.getMemo(), null));
+                bankMoneyWallet.getBookBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), new BigDecimal(0), new BigDecimal(0), (new Date().getTime()), bankTransactionParameters.getMemo(), null));
             }
             else{
                 throw new CantMakeWithdrawTransactionException(CantMakeWithdrawTransactionException.DEFAULT_MESSAGE + " no posee suficiente fondos para realizar esta transaccion",null,"no posee suficiente fondos para realizar esta transaccion",null);
@@ -68,9 +72,8 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantMakeWithdrawTransactionException(CantRegisterDebitException.DEFAULT_MESSAGE,e,null,null);
         }
-        //TODO: Revisar Guillermo BigDecimal
         return new BankTransactionImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),
-                bankTransactionParameters.getAmount().floatValue(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.WITHDRAW, TransactionType.DEBIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
+                bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.WITHDRAW, TransactionType.DEBIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
     }
     public void setBankMoneyWallet(BankMoneyWallet bankMoneyWallet) {
         this.bankMoneyWallet = bankMoneyWallet;
