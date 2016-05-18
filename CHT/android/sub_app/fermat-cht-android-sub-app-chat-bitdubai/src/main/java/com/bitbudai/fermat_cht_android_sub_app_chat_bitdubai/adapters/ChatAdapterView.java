@@ -239,9 +239,9 @@ public class ChatAdapterView extends LinearLayout {
                         Date dated = new java.util.Date(milliseconds);
                         DateFormat formatter = DateFormat.getDateTimeInstance();
                         if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-                        } else {
                             formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                        } else {
+                            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
                         }
                         if (Validate.isDateToday(dated)) {
                             if (android.text.format.DateFormat.is24HourFormat(getContext())) {
