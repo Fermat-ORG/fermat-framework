@@ -3,7 +3,6 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.graphics.Bitmap;
 import android.widget.AdapterView;
-import android.widget.AlphabetIndexer;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,10 +42,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorComm
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
-import org.w3c.dom.Text;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -95,6 +91,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     private ChatSession chatSession;
     private ChatPreferenceSettings chatSettings;
     ChatActorCommunitySelectableIdentity chatIdentity;
+    PresentationDialog presentationDialog;
     //private Toolbar toolbar;
     ListView list;
     // Defines a tag for identifying log entries
@@ -317,6 +314,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.contact_list_menu, menu);
+
         // Locate the search item
         MenuItem searchItem = menu.findItem(R.id.menu_search);
         searchView = (SearchView) searchItem.getActionView();
@@ -355,17 +353,20 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id == ChtConstants.CHT_ICON_HELP){
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setBannerRes(R.drawable.cht_banner)
-                    .setIconRes(R.drawable.chat_subapp)
-                    .setSubTitle(R.string.cht_chat_subtitle)
-                    .setBody(R.string.cht_chat_body)
-                    .setTextFooter(R.string.cht_chat_footer)
-                    .build();
-            presentationDialog.show();
-            return true;
+            setUpHelpChat(false);
         }
+//        if(id == ChtConstants.CHT_ICON_HELP){
+//            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                    .setBannerRes(R.drawable.cht_banner)
+//                    .setIconRes(R.drawable.chat_subapp)
+//                    .setSubTitle(R.string.cht_chat_subtitle)
+//                    .setBody(R.string.cht_chat_body)
+//                    .setTextFooter(R.string.cht_chat_footer)
+//                    .build();
+//            presentationDialog.show();
+//            return true;
+//        }
 
         if (id == R.id.menu_search) {
             return true;
@@ -382,6 +383,22 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     // annotation tells Android lint that they are properly guarded so they won't run on older OS
     // versions and can be ignored by lint.
 
+    private void setUpHelpChat(boolean checkButton) {
+        try {
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.cht_banner)
+                    .setIconRes(R.drawable.chat_subapp)
+                    .setSubTitle(R.string.cht_chat_subtitle)
+                    .setBody(R.string.cht_chat_body)
+                    .setTextFooter(R.string.cht_chat_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
+    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {

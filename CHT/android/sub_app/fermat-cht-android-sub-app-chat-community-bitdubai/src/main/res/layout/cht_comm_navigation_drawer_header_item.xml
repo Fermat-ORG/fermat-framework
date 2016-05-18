@@ -12,7 +12,7 @@
         android:layout_height="350dp"
         android:paddingBottom="0dp"
         android:clickable="false"
-        android:background="@drawable/cht_comm_background_drawer">
+        android:background="@drawable/cht_comm_background_profile_drawer">
 
         <ImageView
             android:id="@+id/image_view_circle"

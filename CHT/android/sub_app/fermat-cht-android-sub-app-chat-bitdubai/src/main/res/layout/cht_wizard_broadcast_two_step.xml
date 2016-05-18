@@ -14,7 +14,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="ADD BROADCAST LIST RECIPIENTS"
             android:id="@+id/textView"
-            android:drawableEnd="@drawable/ic_action_add"
+            android:drawableEnd="@android:drawable/btn_plus"
             android:textColor="#808080"
             android:singleLine="false"
             android:textAlignment="center"

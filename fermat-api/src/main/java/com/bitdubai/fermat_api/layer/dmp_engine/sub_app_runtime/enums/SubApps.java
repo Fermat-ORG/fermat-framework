@@ -46,7 +46,7 @@ public enum SubApps {
     CHT_CHAT_IDENTITY("CHTCHATI"),
     CHT_COMMUNITY("CHTCOM"),
     Scanner("S"),
-    SETTINGS("SET");
+    SETTINGS("SET"), REPORT_EXCEPTION("RE");
 
 
     private final String code;
@@ -122,6 +122,8 @@ public enum SubApps {
                 return ART_FAN_COMMUNITY;
             case "AMP":
                 return ART_MUSIC_PLAYER;
+            case "RE":
+                return REPORT_EXCEPTION;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 

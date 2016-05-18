@@ -15,10 +15,11 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNew
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -34,7 +35,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
-    private ErrorManager errorManager;
+    private ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
     private ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent;
     /**
      * TransactionService Interface member variables.
@@ -44,25 +45,21 @@ public class ChatMiddlewareRecorderService implements CHTService {
     public ChatMiddlewareRecorderService(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             EventManager eventManager,
-            ErrorManager errorManager,
+            ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
             ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent) throws CantStartServiceException {
         try {
             this.chatMiddlewareMonitorAgent = chatMiddlewareMonitorAgent;
             setDatabaseDao(chatMiddlewareDatabaseDao);
             setEventManager(eventManager);
-            this.errorManager=errorManager;
+            this.chatMiddlewarePluginRoot=chatMiddlewarePluginRoot;
         } catch (CantSetObjectException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantStartServiceException(exception,
                     "Cannot set the customer ack offline merchandise database handler",
                     "The database handler is null");
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantStartServiceException(exception,
                     "Unexpected error",
@@ -91,9 +88,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
                     event.getSource().getCode(),
                     event.getChatId());
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantSaveEventException(
                     exception,
@@ -113,9 +108,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
 //                    event.getChatId());
             chatMiddlewareMonitorAgent.checkIncomingChat(event.getChatMetadata());
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantSaveEventException(
                     exception,
@@ -136,9 +129,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
 //                    event.getChatId());
             chatMiddlewareMonitorAgent.checkIncomingStatus(event.getChatMetadata());
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantSaveEventException(
                     exception,
@@ -153,9 +144,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
         try{
             chatMiddlewareMonitorAgent.checkIncomingWritingStatus(event.getChatId());
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantSaveEventException(
                     exception,
@@ -230,9 +219,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
                     "Starting the ChatMiddlewareRecorderService",
                     "The ChatMiddlewareRecorderService is probably null");
         } catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             throw new CantStartServiceException(
                     exception,
@@ -248,9 +235,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         } catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
     }

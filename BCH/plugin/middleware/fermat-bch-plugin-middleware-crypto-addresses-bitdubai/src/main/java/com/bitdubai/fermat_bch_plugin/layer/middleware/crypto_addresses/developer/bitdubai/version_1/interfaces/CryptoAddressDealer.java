@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatVault
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CallToGetByCodeOnNONEException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGenerateAndRegisterCryptoAddressException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.CantGenerateCryptoAddressException;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.excep
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
 import com.bitdubai.fermat_bch_plugin.layer.middleware.crypto_addresses.developer.bitdubai.version_1.exceptions.DefaultWalletNotFoundException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 
 
@@ -93,6 +95,30 @@ public abstract class CryptoAddressDealer {
         }
     }
 
+
+    protected final InstalledWallet getInstalledtWallet(final Platforms platform ,final String walletPublicKey ) throws CantGetDefaultWalletException ,
+            DefaultWalletNotFoundException {
+        try
+        {
+            InstalledWallet wallet = null;
+
+            for (InstalledWallet installedWallet : walletManagerSelector.getWalletManager(platform).getInstalledWallets())
+            {
+                if(installedWallet.getWalletPublicKey().equals(walletPublicKey))
+                    wallet = installedWallet;
+            }
+
+            return wallet;
+
+            } catch (CantIdentifyWalletManagerException e) {
+                throw new CantGetDefaultWalletException(e, "", "Problem identifying wallet manager.");
+            } catch (CantListWalletsException e) {
+            throw new CantGetDefaultWalletException(e, "", "Cant ListWallets Exception.");
+        }
+
+    }
+
+
     protected final void registerCryptoAddress(final CryptoAddress        cryptoAddress  ,
                                                final CryptoAddressRequest request        ,
                                                final InstalledWallet      installedWallet,
@@ -133,11 +159,8 @@ public abstract class CryptoAddressDealer {
 
         try {
 
-            InstalledWallet wallet = this.getDefaultWallet(
-                    request.getIdentityTypeResponding(),
-                    request.getCryptoCurrency()        ,
-                    request.getBlockchainNetworkType() ,
-                    platform
+            InstalledWallet wallet = this.getInstalledtWallet(
+                   platform, request.getWalletPublicKey()
             );
 
             final CryptoAddress cryptoAddress = this.getAddress(vaultType, request.getCryptoCurrency(), request.getBlockchainNetworkType());

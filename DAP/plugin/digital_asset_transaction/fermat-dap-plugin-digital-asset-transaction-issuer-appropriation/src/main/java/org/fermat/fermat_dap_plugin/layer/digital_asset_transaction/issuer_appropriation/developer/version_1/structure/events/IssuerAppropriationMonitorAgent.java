@@ -53,8 +53,8 @@ import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appro
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.exceptions.CantLoadIssuerAppropriationEventListException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.database.IssuerAppropriationDAO;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.functional.IssuerAppropriationVault;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -72,7 +72,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
         this.status = ServiceStatus.CREATED;
     }
 
-    private final ErrorManager errorManager;
+    IssuerAppropriationDigitalAssetTransactionPluginRoot issuerAppropriationDigitalAssetTransactionPluginRoot;
     private final LogManager logManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final IssuerAppropriationVault assetVault;
@@ -99,7 +99,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
     public IssuerAppropriationMonitorAgent(IssuerAppropriationVault assetVault,
                                            PluginDatabaseSystem pluginDatabaseSystem,
                                            LogManager logManager,
-                                           ErrorManager errorManager,
+                                           IssuerAppropriationDigitalAssetTransactionPluginRoot issuerAppropriationDigitalAssetTransactionPluginRoot,
                                            UUID pluginId,
                                            AssetVaultManager assetVaultManager,
                                            BitcoinNetworkManager bitcoinNetworkManager,
@@ -112,7 +112,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
         this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
-        this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
+        this.issuerAppropriationDigitalAssetTransactionPluginRoot = Validate.verifySetter(issuerAppropriationDigitalAssetTransactionPluginRoot, "errorManager is null");
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.assetVaultManager = Validate.verifySetter(assetVaultManager, "assetVaultManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
@@ -136,6 +136,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
             Thread eventThread = new Thread(appropriationAgent, "Issuer Appropriation MonitorAgent");
             eventThread.start();
         } catch (Exception e) {
+            issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartAgentException();
         }
         this.status = ServiceStatus.STARTED;
@@ -149,7 +150,7 @@ public class IssuerAppropriationMonitorAgent implements Agent {
         try {
             latch.await(); //WAIT UNTIL THE LAST RUN FINISH
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         appropriationAgent = null; //RELEASE RESOURCES.
         logManager.log(IssuerAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: successfully stopped...", null, null);
@@ -183,13 +184,12 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                     /*If this happen there's a chance that the information remains
                     in a corrupt state. That probably would be fixed in a next run.
                     */
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                    issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 } catch (Exception e) {
+                    issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     e.printStackTrace();
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
-
             latch.countDown();
         }
 
@@ -199,13 +199,13 @@ public class IssuerAppropriationMonitorAgent implements Agent {
                 statusMonitoring(dao);
 
             } catch (InvalidParameterException | CantRegisterDebitException | CantLoadWalletException | CantGetCryptoTransactionException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantLoadIssuerAppropriationEventListException | CantGetTransactionsException | CantLoadAssetAppropriationTransactionListException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (RecordsNotFoundException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
 

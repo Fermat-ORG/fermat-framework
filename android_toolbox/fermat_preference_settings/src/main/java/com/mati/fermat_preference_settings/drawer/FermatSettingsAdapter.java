@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity;
@@ -29,6 +30,7 @@ import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwith
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.lang.ref.WeakReference;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 
@@ -44,8 +46,10 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     static final int TEXT_PLUS_LINK_TYPE = 5;
 
     WeakReference<FermatPreferenceFragment> fragmentWeakReference;
-
     private String previousSelectedItem;
+    private LinkedHashMap<String,String> defaultItems;
+    private final FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
+
 
     protected FermatSettingsAdapter(Activity context) {
         super(context);
@@ -53,6 +57,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
     protected FermatSettingsAdapter(Activity context,FermatPreferenceFragment fermatPreferenceFragment ,List<PreferenceSettingsItem> dataSet) {
         super(context, dataSet);
+        this.defaultItems = new LinkedHashMap<>();
         this.fragmentWeakReference = new WeakReference<>(fermatPreferenceFragment);
     }
 
@@ -120,12 +125,8 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             case OPEN_DIALOG_TEXT_TYPE:
                 SettingTextOpenDialogViewHolder settingTextOpenDialogViewHolder = (SettingTextOpenDialogViewHolder) holder;
                 final PreferenceSettingsOpenDialogText preferenceSettingsOpenDialogText = (PreferenceSettingsOpenDialogText) data;
+                defaultItems.put(preferenceSettingsOpenDialogText.getText(), preferenceSettingsOpenDialogText.getDialogData().getString("previous_selected_item"));
                 settingTextOpenDialogViewHolder.getTextView().setText(preferenceSettingsOpenDialogText.getText());
-                settingTextOpenDialogViewHolder.getTextView();
-                // context.registerForContextMenu(lblMensaje);
-
-                final FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
-                final CustomDialogFragment dialog = CustomDialogFragment.newInstance(context, preferenceSettingsOpenDialogText.getDialogData());
                 CustomDialogFragment.CustomDialogListener listener = new CustomDialogFragment.CustomDialogListener();
                 listener.setListener(new CustomDialogFragment.DialogListener() {
                     @Override
@@ -133,22 +134,30 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                         CustomDialogFragment customDialogFragment = (CustomDialogFragment) dialog;
                         previousSelectedItem = customDialogFragment.getPreviousSelectedItem();
                         getCallback().dialogOptionSelected(previousSelectedItem, 0);
-                     }
+                    }
 
                     @Override
                     public void onDialogNegativeClick(DialogFragment dialog) {
-                        System.out.println(getClass().getSimpleName() + "------------------------------ CANCEL button pressed");
+                        // no-op
                     }
                 });
 
                 settingTextOpenDialogViewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
-                       //new SettingsDialog(context, getCallback(), preferenceSettingsOpenDialogText.getOptionList()).show();
-                        dialog.show(fragmentManager, "CustomFragmentDialog");
+                    public void onClick(View view) {
+                        FermatTextView textView = (FermatTextView) view;
+                        Bundle data = preferenceSettingsOpenDialogText.getDialogData();
+                        String defaultItem = defaultItems.get(textView.getText().toString());
+                        if(defaultItem != null) {
+                            data.putString("previous_selected_item", defaultItem);
+                            defaultItems.put(textView.getText().toString(), null);
+                        } else
+                            data.putString("previous_selected_item", previousSelectedItem);
+
+                        CustomDialogFragment.newInstance(context, data).show(fragmentManager, "CustomFragmentDialog");
                     }
                 });
-                break;
+            break;
             case EDIT_TEXT_TYPE:
                 SettingEditTextViewHolder settingEditTextViewHolder = (SettingEditTextViewHolder) holder;
                 final PreferenceSettingsEditText preferenceSettingsEditText = (PreferenceSettingsEditText) data;

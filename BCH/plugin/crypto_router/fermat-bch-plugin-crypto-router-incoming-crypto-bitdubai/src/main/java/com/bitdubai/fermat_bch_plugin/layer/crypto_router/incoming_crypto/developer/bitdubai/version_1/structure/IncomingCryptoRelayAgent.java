@@ -14,8 +14,8 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.EventsLauncher;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistAndCryptoStatus;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistSelector;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
@@ -216,7 +216,7 @@ public class IncomingCryptoRelayAgent implements DealsWithRegistry , Transaction
             if(responsibleTransactionList.isEmpty())
                 return;
 
-            System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + " TRANSACTION(s) DETECTED");
+            //System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + " TRANSACTION(s) DETECTED");
 
             // Por cada una de ellas haría los siguientes pasos en el orden enunciado:
             // Deduciría a partir de la información de las mismas su Specialist y lo marcaría.
@@ -225,7 +225,7 @@ public class IncomingCryptoRelayAgent implements DealsWithRegistry , Transaction
                 try {
                     this.registry.setToNotify(transaction.getTransactionID(),
                                               this.specialistSelector.getSpecialist(transaction.getInformation()));
-                    System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST SETTED");
+                    //System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST SETTED");
                 } catch (CantSelectSpecialistException e) {
                     // TODO: MANAGE EXCEPTION
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -241,12 +241,12 @@ public class IncomingCryptoRelayAgent implements DealsWithRegistry , Transaction
                 specialistSet = this.registry.getSpecialists();
             } catch (InvalidParameterException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                System.out.println("TTF - INCOMING CRYPTO RELAY: GETSPECIALISTS FAILED");
+                System.out.println("TTF - INCOMING CRYPTO RELAY: GET SPECIALISTS FAILED");
                 return;
             }
 
-            System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST LIST CALCULATED");
-            System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistSet.size() + " SPECIALIST(s) TO CALL");
+            //System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST LIST CALCULATED");
+            //System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistSet.size() + " SPECIALIST(s) TO CALL");
 
 
             try {
@@ -256,7 +256,7 @@ public class IncomingCryptoRelayAgent implements DealsWithRegistry , Transaction
                 return;
             }
 
-            System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST(s) INFORMED");
+            //System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST(s) INFORMED");
 
 
             //  Pasa cada transacción con ProtocolStatus TO_BE_NOTIFIED a SENDING_NOTIFED.
