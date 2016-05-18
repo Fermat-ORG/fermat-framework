@@ -65,7 +65,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg, data);
             final String copiedMessage = holder.txtMessage.getText().toString();
-            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
+            holder.content.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
