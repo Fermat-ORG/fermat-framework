@@ -1,0 +1,82 @@
+package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.ImageView;
+
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.edmodo.cropper.CropImageView;
+/**
+ * FERMAT-ORG
+ * Developed by Lozadaa on 13/05/16.
+ */
+public class DialogCropImage extends FermatDialog implements View.OnClickListener{
+
+    /**
+     * UI components
+     */
+    private ImageView camBtn;
+    private ImageView galleryBtn;
+    private ImageView rotateBtn;
+    int BUTTON_TOUCH = 0;
+    public int TOUCH_GALLERY = 1;
+    public int TOUCH_CAM = 2;
+    public int TOUCH_ROTATE = 3;
+    CropImageView cropImageView;
+    Bitmap image;
+    Bitmap croppedImage;
+    public DialogCropImage(Context activity, FermatSession fermatSession, ResourceProviderManager resources, Bitmap image) {
+        super(activity, fermatSession, resources);
+        this.image = image;
+    }
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        try {
+            cropImageView = (CropImageView) findViewById(R.id.CropImageView);
+            cropImageView.setImageBitmap(image);
+            cropImageView.setFixedAspectRatio(true);
+            cropImageView.setGuidelines(2);
+
+            Button btnCrop = (Button) findViewById(R.id.btnCrop);
+            btnCrop.setOnClickListener(this);
+        }catch(Exception e){
+            getSession().getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    protected int setLayoutId() {
+        return R.layout.dialog_crop_image;
+    }
+
+    @Override
+    protected int setWindowFeature() {
+        return Window.FEATURE_NO_TITLE;
+    }
+
+    public Bitmap getCroppedImage(){
+        return croppedImage;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int i = v.getId();
+        if (i == R.id.btnCrop) {
+            croppedImage = cropImageView.getCroppedImage();
+            dismiss();
+        }
+    }
+}

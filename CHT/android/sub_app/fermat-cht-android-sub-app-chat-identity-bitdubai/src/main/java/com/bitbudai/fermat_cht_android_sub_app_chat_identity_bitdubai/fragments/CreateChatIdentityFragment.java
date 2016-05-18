@@ -41,6 +41,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.Commo
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogCropImage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.DialogSelectCamOrPic;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.MenuConstants.MENU_ADD_ACTION;
@@ -319,16 +320,41 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoBrokerBitmap = (Bitmap) extras.get("data");
-                    Picasso.with(getActivity()).load(getImageUri(getActivity(),cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
+                    final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(),appSession,null,cryptoBrokerBitmap);
+                    dialogCropImage.show();
+                    dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            if (dialogCropImage.getCroppedImage() != null) {
+                                cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
+                                Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                            } else {
+                                cryptoBrokerBitmap = null;
+                            }
+                        }
+                    });
                     break;
                 case REQUEST_LOAD_IMAGE:
-                    Uri selectedImage = data.getData();
+                     Uri selectedImage = data.getData();
+
                     try {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-                            cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mBrokerImage);
+                            cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, cryptoBrokerBitmap.getWidth(), cryptoBrokerBitmap.getHeight(), true);
+                            final DialogCropImage  dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
+                            dialogCropImagee.show();
+                            dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    if (dialogCropImagee.getCroppedImage() != null) {
+                                        cryptoBrokerBitmap = dialogCropImagee.getCroppedImage();
+                                        Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImagee.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                                    } else {
+                                        cryptoBrokerBitmap = null;
+                                    }
+                                }
+                            });
                         }
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
