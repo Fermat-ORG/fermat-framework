@@ -41,6 +41,8 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.exceptions.CantGetSupAppUserModuleException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.version_1.structure.AssetUserCommunitySupAppModuleManager;
 
 
@@ -90,11 +92,11 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractModule<Ass
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     ActorAssetUserManager actorAssetUserManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.ASSET_ISSUER)
-    AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_ISSUER)
+    AssetIssuerWalletManager assetIssuerWalletManager;
 
-    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.ASSET_USER)
-    AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
+    @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_USER)
+    AssetUserWalletManager assetUserWalletManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
     AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
@@ -182,8 +184,8 @@ public class AssetUserCommunitySubAppModulePluginRoot extends AbstractModule<Ass
                         identityAssetUserManager,
                         actorAssetIssuerManager,
                         actorAssetUserManager,
-                        assetIssuerWalletSupAppModuleManager,
-                        assetUserWalletSubAppModuleManager,
+                        assetIssuerWalletManager,
+                        assetUserWalletManager,
                         assetUserActorNetworkServiceManager,
                         this);
             }

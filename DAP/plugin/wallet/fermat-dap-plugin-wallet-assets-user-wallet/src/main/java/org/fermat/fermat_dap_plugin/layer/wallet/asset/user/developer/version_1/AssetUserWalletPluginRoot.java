@@ -88,6 +88,8 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
     }
 
     private static final String WALLET_USER_FILE_NAME = "walletsIds";
+    BlockchainNetworkType selectedNetwork;
+
     private List<UUID> userWallets = new ArrayList<>();
     public static final String PATH_DIRECTORY = "asset-user-swap/";
     private static final String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
@@ -127,6 +129,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
                         broadcaster);
             }
             UUID internalAssetIssuerWalletId = WalletUtilities.constructWalletId(walletPublicKey, networkType);
+            changeNetworkType(networkType);
             assetUserWallet.initialize(internalAssetIssuerWalletId);
             return assetUserWallet;
         } catch (Exception e) {
@@ -150,6 +153,7 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
                         broadcaster);
             }
             UUID internalAssetIssuerWalletId = assetUserWallet.create(walletPublicKey, networkType);
+            changeNetworkType(networkType);
             userWallets.add(internalAssetIssuerWalletId);
         } catch (CantCreateWalletException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -232,5 +236,35 @@ public class AssetUserWalletPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
+    }
+
+    @Override
+    public void changeNetworkType(BlockchainNetworkType networkType) {
+        if (networkType == null) {
+            selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+        } else {
+            selectedNetwork = networkType;
+        }
+    }
+
+    @Override
+    public BlockchainNetworkType getSelectedNetwork() {
+//        if (selectedNetwork == null) {
+//            try {
+//                if (settings == null) {
+//                    settingsManager = getSettingsManager();
+//                }
+//                settings = settingsManager.loadAndGetSettings(WalletsPublicKeys.DAP_ISSUER_WALLET.getCode());
+//                selectedNetwork = settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition());
+//            } catch (CantGetSettingsException exception) {
+//                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+//                exception.printStackTrace();
+//            } catch (SettingsNotFoundException e) {
+//                //TODO: Only enter while the Active Actor Wallet is not open.
+//                selectedNetwork = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+////                e.printStackTrace();
+//            }
+//        }
+        return selectedNetwork;
     }
 }

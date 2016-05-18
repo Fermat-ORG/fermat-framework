@@ -50,6 +50,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.version_1.AssetIssuerCommunitySubAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -79,7 +80,7 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
     private final IdentityAssetIssuerManager                    identityAssetIssuerManager;
     private final ActorAssetIssuerManager                       actorAssetIssuerManager;
     private final ActorAssetRedeemPointManager                  actorAssetRedeemPointManager;
-    private final AssetRedeemPointWalletSubAppModule            assetRedeemPointWalletSubAppModule;
+    private final AssetRedeemPointWalletManager                 assetRedeemPointWalletManager;
     private final AssetIssuerActorNetworkServiceManager         assetIssuerActorNetworkServiceManager;
 
     private SettingsManager<AssetIssuerSettings> settingsManager;
@@ -89,7 +90,7 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
     public AssetIssuerCommunitySupAppModuleManager(IdentityAssetIssuerManager identityAssetIssuerManager,
                                                    ActorAssetIssuerManager actorAssetIssuerManager,
                                                    ActorAssetRedeemPointManager actorAssetRedeemPointManager,
-                                                   AssetRedeemPointWalletSubAppModule assetRedeemPointWalletSubAppModule,
+                                                   AssetRedeemPointWalletManager assetRedeemPointWalletManager,
                                                    AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager,
                                                    ErrorManager errorManager,
                                                    EventManager eventManager,
@@ -104,7 +105,7 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
         this.identityAssetIssuerManager = identityAssetIssuerManager;
         this.actorAssetIssuerManager = actorAssetIssuerManager;
         this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
-        this.assetRedeemPointWalletSubAppModule = assetRedeemPointWalletSubAppModule;
+        this.assetRedeemPointWalletManager = assetRedeemPointWalletManager;
         this.assetIssuerActorNetworkServiceManager = assetIssuerActorNetworkServiceManager;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
@@ -187,7 +188,7 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
         try {
             actorAssetRedeemPoint = actorAssetRedeemPointManager.getActorAssetRedeemPoint();
 
-            blockchainNetworkType = assetRedeemPointWalletSubAppModule.getSelectedNetwork();
+            blockchainNetworkType = assetRedeemPointWalletManager.getSelectedNetwork();
 
             RedeemPointActorRecord redeemPointActorRecord = new RedeemPointActorRecord(
                     actorAssetRedeemPoint.getActorPublicKey(),
