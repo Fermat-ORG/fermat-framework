@@ -851,6 +851,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * ART FAN IDENTITY
              */
 
+         /*
+             *TKY ARTIST IDENTITY
+             */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.ART_FAN_IDENTITY);
             String artFanUserIdentityPublicKey = SubAppsPublicKeys.ART_FAN_IDENTITY.getCode();
@@ -883,9 +886,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
-            /*
-             *TKY ARTIST IDENTITY
-             */
+
             //createTkyArtistIdentityNavigationStructure();
             /**
              * Start ART
@@ -4344,8 +4345,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fermat Music Player");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
-        runtimeTitleBar.setTitleColor("#000000");
-        runtimeTitleBar.setColor("#fafafa");
+        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();

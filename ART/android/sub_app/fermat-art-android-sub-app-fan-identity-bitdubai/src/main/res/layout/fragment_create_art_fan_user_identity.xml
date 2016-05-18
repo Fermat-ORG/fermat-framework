@@ -3,169 +3,146 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/afi_my_identity">
+    android:background="@color/cardview_light_background">
 
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/afi_user_image"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="32dp"
+
 
         android:gravity="center">
 
+        <View
+            android:id="@+id/line"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@drawable/line_coloured" />
+
         <ImageView
             android:id="@+id/afi_fan_image"
-            android:layout_width="140dp"
-            android:layout_height="140dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/afi_circular_other_profile"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="73dp"
+            android:background="@drawable/button_add_picture"
             tools:ignore="ContentDescription"
 
             />
+
+        <View
+            android:id="@+id/circle_space"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="73dp"
+            android:background="@drawable/picture_space" />
+
         <View
             android:id="@+id/warning_cirlcle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/warnning_circle"/>
+            android:background="@drawable/warnning_circle"
+            android:visibility="gone" />
 
 
-
-
-    </RelativeLayout>
+    </FrameLayout>
 
     <TextView
         android:id="@+id/warning_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="missing picture"
-        android:layout_centerHorizontal="true"
         android:layout_below="@+id/afi_user_image"
-        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:text="missing picture"
         android:textColor="#DF0101"
-        />
+        android:textStyle="bold"
+        android:visibility="gone" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <EditText
+        android:id="@+id/afi_alias"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/afi_user_image"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:id="@+id/afi_linearLayout"
-        android:layout_above="@+id/afi_create_art_fan_identity"
-        android:weightSum="1">
+        android:background="@android:color/transparent"
+        android:hint="Your Name"
+        android:paddingTop="23dp"
+        android:textColorHint="@color/cardview_dark_background"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="25dp"></EditText>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+    <View
+        android:id="@+id/edit_buttom"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignBottom="@+id/afi_alias"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_toEndOf="@+id/afi_alias"
+        android:background="@drawable/button_edit"
+        android:paddingRight="10dp"
+        android:paddingTop="29dp" />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_below="@+id/edit_buttom"
+        android:layout_marginTop="20dp">
+
+        <Spinner
+            android:id="@+id/afi_external_platform"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:background="@android:color/transparent">
+            android:background="#A8DE7B"
+            android:popupBackground="#A8DE7B"
+            android:spinnerMode="dropdown"
+            android:textColor="#919090"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginRight="100dp"
+            />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/afi_alias_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:background="@android:color/transparent"
-                android:text="Alias"
-                android:textColor="#919090"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/afi_external_platform_user_id"
 
-            <EditText
-                android:id="@+id/afi_alias"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/afi_alias_label"
-                android:layout_marginTop="4dp"
-                android:hint="Username"
-                android:lines="1"
-                android:padding="8dp"
-                android:singleLine="true"
-                android:textColor="@android:color/black"
-                android:textColorHint="@android:color/darker_gray"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
-
-        </RelativeLayout>
+            android:textColor="#919090"
+            android:background="#37C7EE"
+            android:popupBackground="#37C7EE"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="100dp" />
 
 
-        <RelativeLayout
-            android:layout_width="349dp"
-            android:layout_height="104dp"
-            android:layout_gravity="center_horizontal">
+    </FrameLayout>
 
-            <!--android:entries="@array/externalPlatforms"/>-->
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/afi_alias_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:background="@android:color/transparent"
+        android:text="Alias"
+        android:textColor="#919090"
+        android:textSize="14sp"
+        android:visibility="gone"
+        tools:ignore="HardcodedText" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/afi_external_platform_label"
-                    android:text="External Platform"
-                    android:textColor="#919090"
-                    tools:ignore="HardcodedText"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true" />
-
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/afi_external_platform"
-                    android:spinnerMode="dropdown"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/afi_external_platform_label"
-                    android:layout_alignParentLeft="true"
-                    android:textColor="#919090"
-                    android:background="#0080FF"
-                    android:popupBackground="#0080FF"                    />
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/afi_external_identity"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentEnd="true"
-                    android:text="External Identity"
-                    android:textColor="#919090"
-                    tools:ignore="HardcodedText"
-                    android:layout_below="@+id/afi_external_platform"
-                    android:layout_alignParentLeft="true" />
-
-                <Spinner
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/afi_external_platform_user_id"
-                    android:layout_alignParentStart="true"
-                    android:layout_below="@+id/afi_external_identity"
-                    android:layout_alignParentLeft="true"
-                    android:textColor="#919090"
-                    android:background="#0080FF"
-                    android:popupBackground="#0080FF"                    />
-            </RelativeLayout>
-        </RelativeLayout>
-
-    </LinearLayout>
 
     <Button
         android:id="@+id/afi_create_art_fan_identity"
-        android:layout_width="match_parent"
+
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:background="#0072bc"
-        android:text="@string/create"
-        android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="66dp"
+        android:background="@drawable/button_save_inactive"
+        android:minHeight="0dp"
+        android:minWidth="0dp" />
 
 </RelativeLayout>
