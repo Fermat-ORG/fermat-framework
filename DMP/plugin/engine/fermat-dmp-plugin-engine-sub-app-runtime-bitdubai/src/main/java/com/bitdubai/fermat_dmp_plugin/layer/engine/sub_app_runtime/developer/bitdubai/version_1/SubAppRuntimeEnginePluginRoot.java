@@ -851,6 +851,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * ART FAN IDENTITY
              */
 
+         /*
+             *TKY ARTIST IDENTITY
+             */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.ART_FAN_IDENTITY);
             String artFanUserIdentityPublicKey = SubAppsPublicKeys.ART_FAN_IDENTITY.getCode();
@@ -883,9 +886,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
-            /*
-             *TKY ARTIST IDENTITY
-             */
+
             //createTkyArtistIdentityNavigationStructure();
             /**
              * Start ART
