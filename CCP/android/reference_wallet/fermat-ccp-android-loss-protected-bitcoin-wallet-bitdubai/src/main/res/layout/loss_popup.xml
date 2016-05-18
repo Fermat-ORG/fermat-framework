@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="@string/action_share"
-                android:background="@color/green"
+                android:background="#073487"
                 android:textColor="#FFFFFF"
                 android:layout_weight="1" />
 
@@ -47,7 +47,7 @@
                 android:id="@+id/back_btn"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ffe48d68"
+                android:background="#DC5A0F"
                 android:text="@string/back_text"
                 android:textColor="#FFFFFF"
                 android:layout_weight="1" />

@@ -122,6 +122,26 @@
                         android:src="@drawable/ic_action_camera_grey" />
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="right"
+                    android:padding="16dp">
+                    <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available Balance"
+                        android:layout_marginLeft="16dp"
+                        android:textColor="#073487" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.245 BTC"
+                        android:id="@+id/balance"
+                        android:textColor="#0b0a0a" />
+                </LinearLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.5dp"
