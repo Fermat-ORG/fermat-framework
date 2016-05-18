@@ -1076,7 +1076,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override //TODO BNK
-    public double getBalanceBankWallet(String walletPublicKey, String accountNumber) throws CantCalculateBalanceException, CantLoadBankMoneyWalletException {
+    public BigDecimal getBalanceBankWallet(String walletPublicKey, String accountNumber) throws CantCalculateBalanceException, CantLoadBankMoneyWalletException {
         return bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).getAvailableBalance().getBalance(accountNumber);
     }
 
@@ -1281,7 +1281,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     walletAssociated            = getWalletAssociated(cryptoBrokerPublicKey, merchandiseWalletPlatform, merchandiseCurrency);
                     if(walletAssociated.getWalletPublicKey().isEmpty())
                         throw new CantSubmitMerchandiseException(null,"Submitting the merchandise, Validate Stock", "getPublicKeyWalletAssociated IS NULL");
-                    balance = bankMoneyWalletManager.loadBankMoneyWallet(walletAssociated.getWalletPublicKey()).getAvailableBalance().getBalance(walletAssociated.getBankAccount());
+                    balance = bankMoneyWalletManager.loadBankMoneyWallet(walletAssociated.getWalletPublicKey()).getAvailableBalance().getBalance(walletAssociated.getBankAccount()).doubleValue();
                     break;
                 default:
                     //STOCK IN CSH
