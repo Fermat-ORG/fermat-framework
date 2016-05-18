@@ -1,5 +1,4 @@
-![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
-
+![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/62517a1ca7bf08166140453e64a5f6982f1aa2fe/MediaKit/Logotype/fermat_logo_3D/Fermat_logo_v2_readme_1024x466.png "Fermat Logo")
 # Dev Teams
 
 ## Introduction
@@ -471,6 +470,8 @@ We can talk about any topic outside of work, as movies, video games (!), politic
 
 ### Navi Charlie:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/62517a1ca7bf08166140453e64a5f6982f1aa2fe/MediaKit/Logotype/Fermat%20Teams/logo_charlie_team.jpg)
+
 Developers of dev.fermat.org on the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
 
 #### Team Members:
