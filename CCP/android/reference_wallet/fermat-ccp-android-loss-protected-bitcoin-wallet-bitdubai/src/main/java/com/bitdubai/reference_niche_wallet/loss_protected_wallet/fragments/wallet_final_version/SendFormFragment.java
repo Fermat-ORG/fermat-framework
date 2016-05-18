@@ -56,6 +56,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantFindLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
@@ -65,6 +66,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_send_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
@@ -79,6 +81,7 @@ import java.util.List;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMoneyType;
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
@@ -89,7 +92,12 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     /**
      * Plaform reference
      */
+
+
     private LossProtectedWallet lossProtectedWalletManager;
+
+    private LossProtectedWalletSession lossProtectedWalletSession;
+
     /**
      * UI
      */
@@ -100,6 +108,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
+    private TextView txt_balance;
+
     /**
      * Adapters
      */
@@ -119,8 +129,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     private LossProtectedWalletSettings lossProtectedWalletSettings;
     private BlockchainNetworkType blockchainNetworkType;
-    boolean lossProtectedEnabled;
 
+    boolean lossProtectedEnabled;
 
     public static SendFormFragment newInstance() {
         return new SendFormFragment();
@@ -132,9 +142,9 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         bitcoinConverter = new BitcoinConverter();
         setHasOptionsMenu(true);
         try {
+            lossProtectedWalletSession = appSession;
 
             lossProtectedWalletManager = appSession.getModuleManager();
-
 
             lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(appSession.getAppPublicKey());
 
@@ -144,8 +154,6 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                 lossProtectedEnabled = lossProtectedWalletSettings.getLossProtectedEnabled();
             }
-
-
 
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -239,6 +247,19 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
+        txt_balance = (TextView) rootView.findViewById(R.id.balance);
+
+
+        try {
+            long balance = 0;
+            balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(),
+
+                   blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+                   txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
+        } catch (CantGetLossProtectedBalanceException e) {
+            e.printStackTrace();
+        }
+
         List<String> list = new ArrayList<String>();
         list.add("BTC");
         list.add("Bits");

@@ -251,8 +251,9 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
         try {
             if(clientConnection.isOpen()) {
-//                System.out.println(" WsCommunicationsTyrusCloudClientChannel - close connection");
-                clientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+
+                System.out.println(" WsCommunicationsTyrusCloudClientChannel - closing the main connection");
+                clientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the main connection, intentionally."));
                 raiseClientConnectionCloseNotificationEvent();
             }
         } catch (IOException e) {

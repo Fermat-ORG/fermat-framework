@@ -10,13 +10,14 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIden
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public interface TokenlyFanIdentityManager extends FermatManager {
+public interface TokenlyFanIdentityManager extends  FermatManager, Serializable {
 
 
     /**

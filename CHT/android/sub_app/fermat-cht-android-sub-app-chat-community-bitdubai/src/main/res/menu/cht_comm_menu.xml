@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!--item
-        android:id="@+id/action_search"
+        android:id="@+id/menu_search"
         android:title="Search"
         android:icon="@drawable/cht_ic_action_search"
         app:showAsAction="ifRoom|collapseActionView"
-        tools:ignore="HardcodedText" /-->
-    <!-- android:icon="@drawable/ic_action_search" app:actionViewClass="android.support.v7.widget.SearchView" -->
+        tools:ignore="HardcodedText"
+        app:actionViewClass="android.support.v7.widget.SearchView"/-->
+
     <item
         android:id="@+id/action_help"
         android:title="Help"
-        android:icon="@drawable/cht_ic_menu_help"
+        android:icon="@drawable/cht_help_icon"
         app:showAsAction="ifRoom|collapseActionView"
         tools:ignore="HardcodedText" />
     <!-- android:icon="@drawable/help_icon"-->

@@ -329,6 +329,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             SideMenu sideMenu = activity.getSideMenu();
 
+
+
             setMainLayout(sideMenu, activity.getHeader());
            // Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
 
@@ -498,6 +500,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     txt_title.setText(title);
                     txt_title.setTypeface(typeface);
                     txt_title.setTextSize(titleBar.getLabelSize());
+
+
                     if(titleBar.getTitleColor()!=null)txt_title.setTextColor(Color.parseColor(titleBar.getTitleColor()));
                     mToolbar.addView(toolabarContainer);
                 }else {
@@ -537,6 +541,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
 
                 }
+
+
 
 
                 setActionBarProperties(title, activity);
@@ -721,6 +727,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             appBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
 
+
             if (appBarLayout != null)
                 appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
                     int scrollRange = -1;
@@ -743,13 +750,31 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     }
                 });
 
+
+
+
             if (header == null) {
                 if (appBarLayout != null) {
                     appBarLayout.setExpanded(false);
                     appBarLayout.setEnabled(false);
                 }
 
+            }else{
+                if(header.getRemoveHeaderScroll()) {
+                    final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams)
+                            collapsingToolbarLayout.getLayoutParams();
+                    params.setScrollFlags(0);
+                    collapsingToolbarLayout.setLayoutParams(params);
+                }
+
+                if(header.getStartCollapse()){
+                    appBarLayout.setExpanded(false);
+                }
+
+
+
             }
+
 
             mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -870,6 +895,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
             if (tabs.getIndicatorHeight() != -1) {
                 tabLayout.setSelectedTabIndicatorHeight(tabs.getIndicatorHeight());
             }
+            if(tabs.isReduceTabHeight()){
+                float heightDp = getResources().getDisplayMetrics().heightPixels *0.32F;
+                CoordinatorLayout.LayoutParams lp = (CoordinatorLayout.LayoutParams)appBarLayout.getLayoutParams();
+              //  System.out.println("TOOLBARTAMANO:"+heightDp);
+                lp.height = (int)heightDp;
+            }
+
+
         }
     }
 
@@ -1724,7 +1757,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //        YourOwnSender yourOwnSender = new YourOwnSender(this);
 //        String log = LogReader.getLog().toString();
 //        yourOwnSender.send(mailUserTo,log );
-        LogReader.getLog(this,mailUserTo);
+        LogReader.getLog(this, mailUserTo);
       //  AndroidExternalAppsIntentHelper.sendMail(this,new String[]{mailUserTo},"Error report",log);
 
 

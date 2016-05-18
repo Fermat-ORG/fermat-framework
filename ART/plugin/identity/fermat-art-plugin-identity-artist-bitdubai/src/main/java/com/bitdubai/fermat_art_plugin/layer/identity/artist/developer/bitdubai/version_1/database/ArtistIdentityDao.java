@@ -278,7 +278,6 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME,
                         alias);
                 //External platform
-                record.setUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,externalIdentityID);
                 if(artExternalPlatform==null){
                     record.setStringValue(
                             ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
@@ -288,6 +287,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                             ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
                             artExternalPlatform.getCode());
                 }
+                if(externalIdentityID!= null)
+                    record.setUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, externalIdentityID);
 
                 record.setStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,

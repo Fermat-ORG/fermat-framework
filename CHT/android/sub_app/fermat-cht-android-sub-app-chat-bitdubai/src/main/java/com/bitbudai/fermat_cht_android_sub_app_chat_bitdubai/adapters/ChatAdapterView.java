@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -11,10 +12,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +35,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -44,6 +48,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
@@ -55,6 +60,11 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
@@ -101,6 +111,8 @@ public class ChatAdapterView extends LinearLayout {
     private boolean chatWasCreate = false;
     private Calendar today;
     UUID newChatId;
+    int CounterText;
+    Boolean isOnline = false;
     Boolean textNeverChange = false;
     static final int TIME_TO_REFRESH_TOOLBAR = 6000;
     public ChatAdapterView(Context context, ArrayList<ChatMessage> chatHistory,
@@ -119,7 +131,6 @@ public class ChatAdapterView extends LinearLayout {
         this.chatSettings = chatSettings;
         //this.background=background;
         initControls();
-        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
     }
 
     public ChatAdapterView(Context context, AttributeSet attrs) {
@@ -130,13 +141,13 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ChatAdapterView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
     void findValues(Contact contact) { //With contact Id find chatId,pkremote,actortype
         try {
-
             if (contact != null) {
                 remotePk = contact.getRemoteActorPublicKey();
                 remotePCT = PlatformComponentType.ACTOR_CHAT;
@@ -146,8 +157,15 @@ public class ChatAdapterView extends LinearLayout {
                 contactIcon = bmd.getBitmap();
                 leftName = contact.getAlias();
                 Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
-                if (cht != null)
+                try {
+                    chatManager.activeOnlineStatus(remotePk);
+                } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+                    cantGetOnlineStatus.printStackTrace();
+                }
+                if (cht != null){
                     chatId = cht.getChatId();
+                    appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId));
+                }
                 else chatId = null;
             }
         } catch (CantGetChatException e) {
@@ -197,47 +215,54 @@ public class ChatAdapterView extends LinearLayout {
 
             if (chatId != null) {
                 List<Message> messL = chatManager.getMessagesByChatId(chatId);
-
-                MessageImpl messagei;
-                for (Message mess : messL) {
-                    msg = new ChatMessage();
-                    message = mess.getMessage();
-                    inorout = mess.getType().toString();
-                    estatus = mess.getStatus().toString();
-                    msg.setId(mess.getMessageId());
-                    if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
-                    else {
-                        msg.setMe(false);
-                        if (estatus != MessageStatus.READ.toString()) {
-                            messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
-                            msg.setStatus(MessageStatus.READ.toString());
-                            messagei.setStatus(MessageStatus.READ);
-                            chatManager.saveMessage(messagei);
-                            chatManager.sendReadMessageNotification(messagei);
+                if(messL!=null) {
+                    MessageImpl messagei;
+                    for (Message mess : messL) {
+                        msg = new ChatMessage();
+                        message = mess.getMessage();
+                        inorout = mess.getType().toString();
+                        estatus = mess.getStatus().toString();
+                        msg.setId(mess.getMessageId());
+                        if (inorout == TypeMessage.OUTGOING.toString()) msg.setMe(true);
+                        else {
+                            msg.setMe(false);
+                            if (estatus != MessageStatus.READ.toString()) {
+                                messagei = (MessageImpl) chatManager.getMessageByMessageId(msg.getId());
+                                msg.setStatus(MessageStatus.READ.toString());
+                                messagei.setStatus(MessageStatus.READ);
+                                chatManager.saveMessage(messagei);
+                                chatManager.sendReadMessageNotification(messagei);
+                            }
                         }
+                        msg.setStatus(mess.getStatus().toString());
+                        long timemess = mess.getMessageDate().getTime();
+                        long nanos = (mess.getMessageDate().getNanos() / 1000000);
+                        long milliseconds = timemess + nanos;
+                        Date dated = new java.util.Date(milliseconds);
+                        DateFormat formatter = DateFormat.getDateTimeInstance();
+                        if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
+                        } else {
+                            formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                        }
+                        if (Validate.isDateToday(dated)) {
+                            if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                formatter = new SimpleDateFormat("HH:mm");
+                            } else {
+                                formatter = new SimpleDateFormat("hh:mm aa");
+                            }
+                        }
+                        formatter.setTimeZone(TimeZone.getDefault());
+                        msg.setDate(formatter.format(new java.util.Date(milliseconds)));
+                        msg.setUserId(mess.getContactId());
+                        msg.setMessage(message);
+                        msg.setType(mess.getType().toString());
+                        chatHistory.add(msg);
                     }
-                    msg.setStatus(mess.getStatus().toString());
-                    long timemess = mess.getMessageDate().getTime();
-                    long nanos = (mess.getMessageDate().getNanos() / 1000000);
-                    long milliseconds = timemess + nanos;
-                    Date dated = new java.util.Date(milliseconds);
-                    DateFormat formatter = DateFormat.getDateTimeInstance();
-                    if (Validate.isDateToday(dated)) {
-                        formatter = new SimpleDateFormat("HH:mm");
-                    }
-                    formatter.setTimeZone(TimeZone.getDefault());
-                    msg.setDate(formatter.format(new java.util.Date(milliseconds)));
-                    msg.setUserId(mess.getContactId());
-                    msg.setMessage(message);
-                    msg.setType(mess.getType().toString());
-                    chatHistory.add(msg);
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-                checkStatusWriting();
-
-
-            }
+           }
         } catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
@@ -258,11 +283,11 @@ public class ChatAdapterView extends LinearLayout {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                    try {
-                            chatManager.sendWritingStatus(chatId);
-                    } catch (CHTException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    chatManager.sendWritingStatus(chatId);
+                } catch (CHTException e) {
+                    e.printStackTrace();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -335,15 +360,53 @@ public class ChatAdapterView extends LinearLayout {
         rootView.getWindowVisibleDisplayFrame(r);
         DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
         int heightDiff = rootView.getBottom() - r.bottom;
-        // Threshold size: dp to pixels, multiply with display density
         boolean isKeyboardShown = heightDiff > SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD * dm.density;
         return isKeyboardShown;
     }
 
-    public void ChangeStatusOnTheSubtitleBar(int state) {
+    public String setFormatLastTime(String date){
+        String fecha = date;
+        SimpleDateFormat formatter;
+        String formattedTime;
+        if(android.text.format.DateFormat.is24HourFormat(getContext())) {
+            formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        } else {
+            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
+        }
+        try {
+            formatter.setTimeZone(TimeZone.getDefault());
+
+             formattedTime = formatter.format(new java.util.Date(date));
+            //String formattedTime = formatter.format(dater);
+            if(date.length() > 16) {
+                 formattedTime = formattedTime.substring(11, 19);
+            }else {
+                 formattedTime = formattedTime.substring(11, 16);
+            }
+
+            if(Validate.isDateToday(new java.util.Date(date))){
+                    fecha = "today at "+formattedTime;
+                }else{
+                    Date today = new Date();
+                    long dias = (today.getTime() - new java.util.Date(date).getTime()) / (1000 * 60 * 60 * 24);
+                    if(dias == 1){
+                        fecha = "yesterday at "+formattedTime;
+                    }
+                }
+        }catch(Exception e){
+            Log.e("ErrorOnSetFormatLastTim", e.getMessage(),e);
+        }
+
+        return fecha;
+    }
+    public void ChangeStatusOnTheSubtitleBar(int state, String date) {
         switch (state) {
             case ConstantSubtitle.IS_OFFLINE:
-                toolbar.setSubtitle("Last time today at 12:00pm");
+                if(date != null && date != "no record") {
+                    toolbar.setSubtitle(Html.fromHtml("<small><small>Last time "+setFormatLastTime(date)+"</small></small>"));
+                }else{
+                    Log.i("159753**LastTimeOnChat", "No show");
+                }
                 break;
             case ConstantSubtitle.IS_ONLINE:
                 toolbar.setSubtitle("Online");
@@ -351,7 +414,7 @@ public class ChatAdapterView extends LinearLayout {
 
             case ConstantSubtitle.IS_WRITING:
                 // toolbar.setSubtitleTextColor(Color.parseColor("#fff"));
-                toolbar.setSubtitle("Writing..");
+                toolbar.setSubtitle("Typing...");
                 break;
         }
     }
@@ -361,9 +424,6 @@ public class ChatAdapterView extends LinearLayout {
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
-
-
-
         messageET.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -384,12 +444,21 @@ public class ChatAdapterView extends LinearLayout {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (chatWasCreate) {
+                    CounterText++;
+                    if(CounterText == 5){
+                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
+                        batw.execute();
+                        CounterText = 0;
+                    }
                     if (messageET.length() > 0 && textNeverChange == false) {
                         BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
                         batw.execute();
                         textNeverChange = true;
-                    }else if(messageET.length() == 0 && textNeverChange == true){
+                    } else if (messageET.length() == 0 && textNeverChange == true) {
                         textNeverChange = false;
+                        BackgroundAsyncTaskWriting batw = new BackgroundAsyncTaskWriting();
+                        batw.execute();
+
                     }
                 }
             }
@@ -398,7 +467,6 @@ public class ChatAdapterView extends LinearLayout {
             public void afterTextChanged(Editable s) {
             }
         });
-
 
         //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
@@ -412,7 +480,7 @@ public class ChatAdapterView extends LinearLayout {
             whatToDo();
             findMessage();
             scroll();
-
+            checkStatus();
 //        if (rightName != null) {
 //            meLabel.setText(rightName);
 //        } else {
@@ -461,9 +529,11 @@ public class ChatAdapterView extends LinearLayout {
             public void onClick(View v) {
                 BackgroundAsyncTask sendMessageAsync = new BackgroundAsyncTask();
                 String messageText = messageET.getText().toString();
-                if (TextUtils.isEmpty(messageText)) {
+                if (TextUtils.isEmpty(messageText) || messageText.trim().length()==0) {
                     return;
                 }
+
+                messageText = messageText.trim();
 
                 try {
                     ChatImpl chat = new ChatImpl();
@@ -613,21 +683,36 @@ public class ChatAdapterView extends LinearLayout {
 
     public void refreshEvents() {
         //whatToDo();
+        findValues(chatSession.getSelectedContact());
         findMessage();
+        checkStatus();
         scroll();
     }
 
-    public void checkStatusWriting(){
+    public void checkStatus(){
         try {
-            if (chatManager.checkWritingStatus(chatId)) {
-                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING);
-            }else {
-                ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE);
-            }
+           if(chatSession.getData("whocallme").equals("chatlist")) {
+               if (chatManager.checkWritingStatus(chatId)) {
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null);
+               } else if(chatManager.checkOnlineStatus(remotePk)){
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
+               }else{
+                   String date = chatManager.checkLastConnection(remotePk);
+                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
+               }
+           }else {
+               if(chatManager.checkOnlineStatus(remotePk)){
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
+               }else{
+                   String date = chatManager.checkLastConnection(remotePk);
+                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
+               }
+           }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();
+        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+            cantGetOnlineStatus.printStackTrace();
         }
-
     }
 
     private void scroll() {

@@ -163,7 +163,7 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
             futures[SEND_TASK] = executorService.submit(toSend);
             futures[RECEIVE_TASK] = executorService.submit(toReceive);
 
-            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - started ");
+            System.out.println("CommunicationNetworkServiceRemoteAgent - started ");
 
         }catch (Exception e){
             e.printStackTrace();
@@ -191,17 +191,23 @@ public class CommunicationNetworkServiceRemoteAgent extends Observable {
     public void stop(){
         try {
 
+            System.out.println("CommunicationNetworkServiceRemoteAgent - stopped ");
+
+
             //Stop the Threads
             futures[SEND_TASK].cancel(true);
             futures[RECEIVE_TASK].cancel(true);
 
             executorService.shutdownNow();
 
+            System.out.println("Old Template CommunicationNetworkServiceRemoteAgent - stop() - calling  communicationsVPNConnection.close()");
+
+
             //Disconnect from the service
             if (communicationsVPNConnection.isConnected())
                 communicationsVPNConnection.close();
 
-            System.out.println("IntraCommunicationNetworkServiceRemoteAgent - stopped ");
+            System.out.println("CommunicationNetworkServiceRemoteAgent - stopped ");
         }catch (Exception e){
             e.printStackTrace();
         }

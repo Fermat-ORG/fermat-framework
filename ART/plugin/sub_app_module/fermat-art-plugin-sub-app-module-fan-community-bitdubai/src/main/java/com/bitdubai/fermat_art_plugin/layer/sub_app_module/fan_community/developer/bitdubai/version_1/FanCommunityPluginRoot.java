@@ -16,7 +16,9 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
@@ -51,6 +53,12 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM,                addon  = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.ARTIST_ACTOR_CONNECTION)
+    private ArtistActorConnectionManager artistActorConnectionManager;
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST   )
+    private ArtistManager artistNetworkServiceManager;
+
     private FanCommunityManager fanCommunityManager;
     /**
      * Default constructor
@@ -68,7 +76,9 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
                 errorManager,
                 pluginFileSystem,
                 pluginId,
-                this.getPluginVersionReference());
+                this.getPluginVersionReference(),
+                artistActorConnectionManager,
+                artistNetworkServiceManager);
     }
 
     @Override

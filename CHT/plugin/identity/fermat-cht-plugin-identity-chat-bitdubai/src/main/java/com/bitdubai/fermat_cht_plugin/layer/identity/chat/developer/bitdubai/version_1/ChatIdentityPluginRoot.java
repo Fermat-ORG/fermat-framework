@@ -109,6 +109,9 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
         } catch (CantExposeIdentitiesException e) {
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant Expose Identity.", FermatException.wrapException(e), null, null);
+        } catch (CantExposeIdentityException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Cant Update Expose Identity.", FermatException.wrapException(e), null, null);
         }
     }
 
@@ -143,10 +146,10 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
         return developerDatabaseTableRecordList;
     }
 
-    private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException {
+    private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException, CantExposeIdentityException {
         List<ChatExposingData> chatExposingDatas = new ArrayList<>();
 
-        for (ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
+        for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
         {
             chatExposingDatas.add(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
             try {

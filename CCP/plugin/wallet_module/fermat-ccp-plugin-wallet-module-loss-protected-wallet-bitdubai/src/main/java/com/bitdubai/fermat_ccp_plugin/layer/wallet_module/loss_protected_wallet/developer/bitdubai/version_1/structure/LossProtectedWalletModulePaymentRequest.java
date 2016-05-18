@@ -5,12 +5,13 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created Natalia Cortez on 07/03/2016.
  */
-public class LossProtectedWalletModulePaymentRequest implements LossProtectedPaymentRequest {
+public class LossProtectedWalletModulePaymentRequest implements LossProtectedPaymentRequest,Serializable {
 
     private String date;
 

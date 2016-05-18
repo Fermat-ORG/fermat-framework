@@ -41,14 +41,14 @@ public class MessageImpl implements Message {
         status=messageStatus;
         type=typeMessage;
 //        messageDate=new Timestamp(System.currentTimeMillis());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
         Date parsedDate = null;
         try {
             parsedDate = dateFormat.parse(chatMetadata.getDate());
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         messageDate=new Timestamp(
                 timestamp.getTime());
         this.contactId=contactId;

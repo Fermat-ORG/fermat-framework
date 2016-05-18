@@ -28,9 +28,9 @@ public class FanCommunityFragmentFactory extends
         AbstractFermatFragment currentFragment = null;
 
         switch (fragments) {
-            case ART_WALLET_STORE_ALL_FRAGMENT:
+            /*case ART_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsWorldFragment.newInstance();
-                break;
+                break;*/
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTIONS:
                 currentFragment = ConnectionsFragment.newInstance();
                 break;

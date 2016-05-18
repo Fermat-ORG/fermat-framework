@@ -3731,10 +3731,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         TitleBar runtimeTitleBar;
         TabStrip runtimeTabStrip;
         Tab runtimeTab;
+        Header runtimeHeader;
         final String publicKey = WalletsPublicKeys.TKY_FAN_WALLET.getCode();
-        final String statusBarColor = "#000000";
-        final String titleBarLabelColor = "#000000";
-        final String BackgroundtitleBarLabelColor = "#f5f5f5";
+        final String statusBarColor = "#23056A";
+        final String titleBarLabelColor = "#FFFFFF";
+        final String BackgroundtitleBarLabelColor = "#23056A";
         final int titleBarLabelSize = 20;
 
 
@@ -3753,7 +3754,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setColor(BackgroundtitleBarLabelColor);
-        runtimeTitleBar.setIsTitleTextStatic(false);
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
 
@@ -3761,22 +3762,21 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        /*runtimeHeader = new Header();
-        runtimeHeader.setLabel("Market rate");
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("root");
         runtimeHeader.setHasExpandable(true);
-        runtimeActivity.setHeader(runtimeHeader);*/
-
-        /*runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);*/
+        runtimeHeader.setRemoveHeaderScroll(false);
+        runtimeHeader.setStartCollapse(true);
+        runtimeActivity.setHeader(runtimeHeader);
 
 
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#f5f5f5");
-        runtimeTabStrip.setTabsTextColor("#b9b9b9");
-        runtimeTabStrip.setTabsIndicateColor("#0c6908");
-        runtimeTabStrip.setSelectTabTextColor("#000000");
+        runtimeTabStrip.setTabsColor("#23056A");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#D1BD00");
+        runtimeTabStrip.setSelectTabTextColor("#FFFFFF");
         runtimeTabStrip.setDividerColor(0x72af9c);
+
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeTab = new Tab();
@@ -3792,6 +3792,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab = new Tab();
         runtimeTab.setLabel("Following");
         runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
+        runtimeTabStrip.setReduceTabHeight(true);
         runtimeTabStrip.addTab(runtimeTab);
 
 

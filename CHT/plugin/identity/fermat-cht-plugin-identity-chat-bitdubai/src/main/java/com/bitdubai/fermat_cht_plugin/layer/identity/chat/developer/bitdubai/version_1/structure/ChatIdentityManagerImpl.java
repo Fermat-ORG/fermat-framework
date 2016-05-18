@@ -183,6 +183,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
             final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity());
             chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
+
             if (isIdentityNew)
             {
                 new Thread() {
