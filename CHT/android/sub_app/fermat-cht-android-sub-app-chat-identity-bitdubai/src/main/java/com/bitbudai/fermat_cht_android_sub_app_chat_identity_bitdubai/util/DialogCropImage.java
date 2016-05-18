@@ -1,11 +1,17 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
+import android.app.ActionBar;
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -47,11 +53,11 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
         try {
             cropImageView = (CropImageView) findViewById(R.id.CropImageView);
             cropImageView.setImageBitmap(image);
-            cropImageView.setFixedAspectRatio(true);
             cropImageView.setGuidelines(2);
-
             Button btnCrop = (Button) findViewById(R.id.btnCrop);
+            Button btnCancel = (Button) findViewById(R.id.btnCancel);
             btnCrop.setOnClickListener(this);
+            btnCancel.setOnClickListener(this);
         }catch(Exception e){
             getSession().getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
         }
@@ -76,6 +82,9 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
         int i = v.getId();
         if (i == R.id.btnCrop) {
             croppedImage = cropImageView.getCroppedImage();
+            dismiss();
+        }
+        if (i == R.id.btnCancel) {
             dismiss();
         }
     }
