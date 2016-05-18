@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
-import android.util.Base64;
-
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -64,18 +62,7 @@ public final class CryptoBrokerActorNetworkServiceSearchTest extends CryptoBroke
 
             for (final ActorProfile actorProfile : list) {
 
-                System.out.println("************** I'm a crypto broker searched: "+actorProfile);
-                System.out.println("************** Do I have profile image?: "+(actorProfile.getPhoto() != null));
-
-                byte[] imageByte;
-
-                if (actorProfile.getExtraData() != null)
-                    imageByte = Base64.decode(actorProfile.getExtraData(), Base64.DEFAULT);
-                else
-                    imageByte = null;
-
-
-                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), imageByte));
+                cryptoBrokerExposingDataList.add(new CryptoBrokerExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto()));
             }
 
             return cryptoBrokerExposingDataList;
