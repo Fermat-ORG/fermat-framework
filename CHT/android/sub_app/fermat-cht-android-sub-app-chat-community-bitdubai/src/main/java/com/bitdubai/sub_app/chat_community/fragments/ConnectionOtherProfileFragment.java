@@ -254,6 +254,26 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             CommonLogger.info(TAG, "User connection state "
                     + chatUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+            ConnectDialog connectDialog;
+            try {
+                connectDialog =
+                        new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                                chatUserInformation, moduleManager.getSelectedActorIdentity());
+                connectDialog.setTitle("Resend Connection Request");
+                connectDialog.setDescription("Do you want to resend ");
+                connectDialog.setUsername(chatUserInformation.getAlias());
+                connectDialog.setSecondDescription("a connection request?");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                connectDialog.show();
+            } catch ( CantGetSelectedActorIdentityException
+                    | ActorIdentityNotSelectedException e) {
+                e.printStackTrace();
+            }
         }
         if (i == R.id.btn_connection_request_reject) {
             CommonLogger.info(TAG, "User connection state "

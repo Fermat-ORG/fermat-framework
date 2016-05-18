@@ -231,7 +231,7 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
 
             System.out.println(" WsCommunicationVPNClient - close connection");
             if(vpnClientConnection.isOpen()) {
-                vpnClientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "The cloud client close the connection, intentionally."));
+                vpnClientConnection.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Close the vpn connection to "+remoteParticipant.getAlias()+" intentionally."));
             }
             wsCommunicationTyrusVPNClientManagerAgent.riseVpnConnectionCloseNotificationEvent(remoteParticipantNetworkService.getNetworkServiceType(), remoteParticipant, true);
 

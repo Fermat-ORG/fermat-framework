@@ -61,5 +61,6 @@ public class ChatFilter extends
         //adapter.setData((ArrayList<ChatMessage>) filterResults.values);
         adapter.changeDataSet((ArrayList<ChatMessage>) filterResults.values);
         adapter.notifyDataSetChanged();
+        adapter.setFilterSetted(1);
     }
 }

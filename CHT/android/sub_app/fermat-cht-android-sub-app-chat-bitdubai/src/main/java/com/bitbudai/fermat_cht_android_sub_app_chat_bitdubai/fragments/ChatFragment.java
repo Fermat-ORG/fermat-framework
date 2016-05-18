@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -155,6 +157,15 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         return adapterView;
     }
 
+    public void onStop () {
+        try {
+            chatManager.activeOnlineStatus(null);
+        } catch (CantGetOnlineStatus cantGetOnlineStatus) {
+            cantGetOnlineStatus.printStackTrace();
+        }
+        super.onStop();
+    }
+
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         // Inflate the menu items
@@ -173,7 +184,6 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    adapterView.refreshEvents();
                     adapterView.getFilter(s);
                 }
                 return false;

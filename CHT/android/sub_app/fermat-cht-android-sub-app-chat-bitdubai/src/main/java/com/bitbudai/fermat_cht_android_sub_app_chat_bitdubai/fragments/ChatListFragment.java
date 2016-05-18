@@ -102,6 +102,7 @@ public class ChatListFragment extends AbstractFermatFragment{
 
     public void chatlistview (){
         UUID chatidtemp;
+        int chatscounter=0;
         try {
             List<Chat> chats = chatManager.getChats();
             if (chats != null && chats.size() > 0) {
@@ -126,10 +127,15 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 String pk2 = chat.getRemoteActorPublicKey();
                                 if (pk2.equals(pk1)) {
                                     contactName.add(cont.getAlias());
-                                    Message mess = chatManager.getMessageByChatId(chatidtemp);
+                                    Message mess=null;
+                                    try {
+                                        mess = chatManager.getMessageByChatId(chatidtemp);
+                                    }catch (Exception e){
+                                        mess=null;
+                                    }
                                     if (mess != null) {
                                         if(chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Writing..");
+                                            message.add("Typing...");
                                         }else{
                                             message.add(mess.getMessage());
                                         }
@@ -137,7 +143,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                         typeMessage.add(mess.getType().toString());
                                     }else{
                                         if(chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Writing..");
+                                            message.add("Typing...");
                                         }else {
                                             message.add("");
                                         }
@@ -148,11 +154,26 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
                                     long milliseconds = timemess + nanos;
                                     Date dated = new java.util.Date(milliseconds);
-                                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
                                     formatter.setTimeZone(TimeZone.getDefault());
                                     String datef = formatter.format(new java.util.Date(milliseconds));
                                     if (Validate.isDateToday(dated)) {
-                                        formatter = new SimpleDateFormat("HH:mm");
+                                        if (Validate.isDateToday(dated)) {
+                                            if (Build.VERSION.SDK_INT < 23) {
+                                                if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
+                                                    formatter = new SimpleDateFormat("HH:mm");
+                                                } else {
+                                                    formatter = new SimpleDateFormat("hh:mm aa");
+                                                }
+                                            }else{
+                                                if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                    formatter = new SimpleDateFormat("HH:mm");
+                                                } else {
+                                                    formatter = new SimpleDateFormat("hh:mm aa");
+                                                }
+                                            }
+
+                                        }
                                         formatter.setTimeZone(TimeZone.getDefault());
                                         datef = formatter.format(new java.util.Date(milliseconds));
                                     } else {
@@ -168,11 +189,28 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
                                     BitmapDrawable bmd = new BitmapDrawable(bytes);
                                     imgId.add(bmd.getBitmap());
+                                    chatscounter++;
                                     break;
                                 }
                             }
                         }else setUpHelpChat(false);
                     }
+                }
+                if (chatscounter==0)
+                {
+                    layout.setBackgroundResource(R.drawable.cht_background_color);
+                    noData.setVisibility(View.VISIBLE);
+                    noDatalabel.setVisibility(View.VISIBLE);
+                    getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
+                    contactName.clear();
+                    message.clear();
+                    chatId.clear();
+                    dateMessage.clear();
+                    contactId.clear();
+                    status.clear();
+                    typeMessage.clear();
+                    noReadMsgs.clear();
+                    imgId.clear();
                 }
             }
         } catch (CantGetChatException e) {
@@ -422,7 +460,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                searchView.setIconified(false);
            }
         }
-        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.cht_help_icon)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -471,10 +509,10 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
 
-        if (id == R.id.menu_error_report) {
-            changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_error_report) {
+//            changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
