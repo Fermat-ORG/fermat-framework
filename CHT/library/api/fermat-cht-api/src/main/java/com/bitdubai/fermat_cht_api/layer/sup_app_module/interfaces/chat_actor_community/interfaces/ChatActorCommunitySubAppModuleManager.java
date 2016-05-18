@@ -68,6 +68,8 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
 
     void cancelChatActor(UUID requestId) throws ChatActorCancellingFailedException, ActorConnectionRequestNotFoundException, ConnectionRequestNotFoundException;
 
+    public void exposeIdentityInWat();
+
     List<ChatActorCommunityInformation> listAllConnectedChatActor(final ChatActorCommunitySelectableIdentity selectedIdentity,
                                                                          final int                                     max             ,
                                                                          final int                                     offset          ) throws CantListChatActorException;
@@ -101,4 +103,6 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
 
     @Override
     int[] getMenuNotifications();
+
+
 }

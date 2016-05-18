@@ -80,7 +80,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
     @Override
     public void exposeIdentity(ChatExposingData chatExposingData) throws CantExposeIdentityException {
-
+        System.out.println("12345 expose Identity "+chatExposingData.getAlias());
         try {
 
             if (!isRegistered()) {
@@ -459,10 +459,12 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         chatToExpose.putIfAbsent(chatExposingData.getPublicKey(), chatExposingData);
     }
 
+    @Override
     public final void exposeIdentitiesInWait() throws CantExposeIdentityException {
         if(!Validate.isObjectNull(chatToExpose) && chatToExpose.size() > 0){
             for (ChatExposingData chatExposingData :
                     chatToExpose.values()) {
+                System.out.println("12345 exposing identities in wait "+chatExposingData.getAlias());
                 exposeIdentity(chatExposingData);
 
             }
