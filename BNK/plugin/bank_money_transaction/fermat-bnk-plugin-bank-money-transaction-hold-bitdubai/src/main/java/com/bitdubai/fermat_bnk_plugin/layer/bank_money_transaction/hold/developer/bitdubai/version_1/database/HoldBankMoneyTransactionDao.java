@@ -21,6 +21,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develope
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -197,9 +198,8 @@ public class HoldBankMoneyTransactionDao {
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyWallet());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyActor());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME, holdParameters.getPublicKeyPlugin());
-        //TODO: Colocar BigDecimal holdParameters.getAmount().floatValue()
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACCOUNT_NUMBER_COLUMN_NAME,holdParameters.getAccount());
-        newRecord.setDoubleValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount().floatValue());
+        newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME, holdParameters.getAmount().toPlainString());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_CURRENCY_COLUMN_NAME, holdParameters.getCurrency().getCode());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME, holdParameters.getMemo());
         newRecord.setStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, BankTransactionStatus.ACKNOWLEDGE.getCode());
@@ -213,7 +213,7 @@ public class HoldBankMoneyTransactionDao {
         String publicKeyWallet = record.getStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_WALLET_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyActor = record.getStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_ACTOR_PUBLIC_KEY_COLUMN_NAME);
         String publicKeyPlugin = record.getStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_PLUGIN_PUBLIC_KEY_COLUMN_NAME);
-        float amount = record.getFloatValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME);
+        BigDecimal amount = new BigDecimal(record.getStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_AMOUNT_COLUMN_NAME));
         String memo = record.getStringValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_MEMO_COLUMN_NAME);
         long timestampAcknowledged = record.getLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME);
         long timestampConfirmedRejected = record.getLongValue(HoldBankMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME);
