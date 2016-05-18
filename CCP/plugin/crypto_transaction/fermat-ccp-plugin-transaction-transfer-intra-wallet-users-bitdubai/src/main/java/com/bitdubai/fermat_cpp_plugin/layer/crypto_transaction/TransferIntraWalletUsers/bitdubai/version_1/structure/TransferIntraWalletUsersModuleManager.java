@@ -68,7 +68,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             String txHash, //ESTE TX HASH PARA QUE SERIA?
             long cryptoAmount,
             String notes,
-            Actors actortype,
+            Actors actortypeFrom,
+            Actors actortypeTo,
             ReferenceWallet reference_wallet_sending,
             ReferenceWallet reference_wallet_receiving,
             String wallet_public_key_sending,
@@ -86,7 +87,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                     txHash,
                     cryptoAmount,
                     notes,
-                    actortype,
+                    actortypeTo,
                     reference_wallet_sending,
                     reference_wallet_receiving,
                     wallet_public_key_sending,
@@ -127,8 +128,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 "",
                                 wallet_public_key_sending,
                                 wallet_public_key_receiving,
-                                actortype,
-                                actortype,
+                                actortypeTo,
+                                actortypeFrom,
                                 blockchainNetworkType);
 
 
@@ -143,7 +144,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 txHash,
                                 cryptoAmount,
                                 notes,
-                                actortype,
+                                actortypeFrom,
+                                actortypeTo,
                                 reference_wallet_sending,
                                 reference_wallet_receiving,
                                 wallet_public_key_sending,
@@ -198,8 +200,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                 "",
                                 "",
                                 "",
-                                actortype,
-                                actortype,
+                                actortypeTo,
+                                actortypeFrom,
                                 blockchainNetworkType);
 
 
@@ -211,7 +213,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                         txHash,
                                         cryptoAmount,
                                         notes,
-                                        actortype,
+                                        actortypeFrom,
+                                        actortypeTo,
                                         reference_wallet_sending,
                                         reference_wallet_receiving,
                                         wallet_public_key_sending,
@@ -279,7 +282,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                  String txHash,
                                  long cryptoAmount,
                                  String notes,
-                                 Actors actortype,
+                                  Actors actortypeFrom,
+                                 Actors actortypeTo,
                                  ReferenceWallet reference_wallet_sending,
                                  ReferenceWallet reference_wallet_receiving,
                                  String wallet_public_key_sending,
@@ -306,8 +310,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             "",
                             wallet_public_key_sending,
                             wallet_public_key_receiving,
-                            actortype,
-                            actortype,
+                            actortypeTo,
+                            actortypeFrom,
                             blockchainNetworkType);
 
                     BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving);
@@ -342,8 +346,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             "",
                             wallet_public_key_sending,
                             wallet_public_key_receiving,
-                            actortype,
-                            actortype,
+                            actortypeTo,
+                            actortypeFrom,
                             blockchainNetworkType);
 
                  try {
