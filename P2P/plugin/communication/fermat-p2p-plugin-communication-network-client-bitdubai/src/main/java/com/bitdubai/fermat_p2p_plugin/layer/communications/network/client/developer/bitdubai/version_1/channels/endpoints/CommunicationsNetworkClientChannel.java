@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
@@ -82,14 +80,10 @@ public class CommunicationsNetworkClientChannel {
      */
     private Session clientConnection;
 
-    private ECCKeyPair   clientIdentity;
-    private ErrorManager errorManager  ;
     private EventManager eventManager  ;
 
     public CommunicationsNetworkClientChannel(NetworkClientCommunicationConnection networkClientCommunicationConnection) {
 
-        this.clientIdentity            = (ECCKeyPair)   ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
-        this.errorManager              = (ErrorManager) ClientContext.get(ClientContextItem.ERROR_MANAGER  );
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
 
         this.networkClientCommunicationConnection = networkClientCommunicationConnection;
@@ -181,7 +175,6 @@ public class CommunicationsNetworkClientChannel {
                     } else {
                         raiseClientConnectionClosedNotificationEvent();
                         setIsRegistered(Boolean.FALSE);
-                        networkClientCommunicationConnection.setIsConnected(Boolean.FALSE);
                     }
 
                     break;
@@ -244,24 +237,6 @@ public class CommunicationsNetworkClientChannel {
      */
     public void setIsRegistered(boolean isRegistered) {
         this.isRegistered = isRegistered;
-    }
-
-    /**
-     * Get the ErrorManager
-     *
-     * @return ErrorManager
-     */
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-    /**
-     * Get the EventManager
-     *
-     * @return EventManager
-     */
-    public EventManager getEventManager() {
-        return eventManager;
     }
 
     /**

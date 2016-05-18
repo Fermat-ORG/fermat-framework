@@ -165,18 +165,15 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             /*
              * Initialize the networkClientConnectionsManager to the Connections
              */
-            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, errorManager, eventManager, locationManager, this);
+            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, eventManager, locationManager, this);
 
             /*
              * Add references to the node context
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
-            ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
             ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, networkClientConnectionsManager);
-
-
 
             //nodesProfileList = getNodesProfileList();
 
@@ -186,11 +183,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                         uri,
-                        errorManager,
                         eventManager,
                         locationManager,
                         identity,
-                        getPluginVersionReference(),
                         this,
                         0,
                         Boolean.FALSE
@@ -202,11 +197,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                         uri,
-                        errorManager,
                         eventManager,
                         locationManager,
                         identity,
-                        getPluginVersionReference(),
                         this,
                         -1,
                         Boolean.FALSE
@@ -444,11 +437,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                     uri,
-                    errorManager,
                     eventManager,
                     locationManager,
                     identity,
-                    getPluginVersionReference(),
                     this,
                     i+1,
                     Boolean.FALSE
@@ -466,11 +457,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                     uri,
-                    errorManager,
                     eventManager,
                     locationManager,
                     identity,
-                    getPluginVersionReference(),
                     this,
                     -1,
                     Boolean.FALSE

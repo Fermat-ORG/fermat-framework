@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -67,11 +65,9 @@ import javax.websocket.Session;
 public class NetworkClientCommunicationConnection implements NetworkClientConnection {
 
     private URI                    uri                   ;
-    private ErrorManager           errorManager          ;
     private EventManager           eventManager          ;
     private LocationManager        locationManager       ;
     private ECCKeyPair             clientIdentity        ;
-    private PluginVersionReference pluginVersionReference;
     private Session                session               ;
 
     /**
@@ -83,11 +79,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * Represent the webSocketContainer
      */
     private ClientManager container;
-
-    /**
-     * Represent the if is Connected
-     */
-    private boolean isConnected;
 
     /**
      * Represent the serverIdentity
@@ -124,26 +115,21 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * Constructor
      */
     public NetworkClientCommunicationConnection(final URI                    uri                   ,
-                                                final ErrorManager           errorManager          ,
                                                 final EventManager           eventManager          ,
                                                 final LocationManager        locationManager       ,
                                                 final ECCKeyPair             clientIdentity        ,
-                                                final PluginVersionReference pluginVersionReference,
                                                 NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
                                                 Integer nodesListPosition,
                                                 boolean isConnectingToExternalNode){
 
         this.uri                    = uri                   ;
-        this.errorManager           = errorManager          ;
         this.eventManager           = eventManager          ;
         this.locationManager        = locationManager       ;
         this.clientIdentity         = clientIdentity        ;
-        this.pluginVersionReference = pluginVersionReference;
         this.networkClientCommunicationPluginRoot = networkClientCommunicationPluginRoot;
         this.nodesListPosition = nodesListPosition;
         this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this);
 
-        this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
         this.isConnectingToExternalNode = isConnectingToExternalNode;
 
@@ -316,8 +302,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
+            networkClientCommunicationPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -348,8 +333,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Unsupported profile type."
             );
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
+            networkClientCommunicationPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -369,8 +353,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
+            networkClientCommunicationPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -399,8 +382,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Unsupported profile type."
             );
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
+            networkClientCommunicationPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -421,8 +403,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
+            networkClientCommunicationPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -449,8 +430,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
+            networkClientCommunicationPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -477,8 +457,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
+            networkClientCommunicationPluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -650,10 +629,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     public void setServerIdentity(String serverIdentity) {
         this.serverIdentity = serverIdentity;
-    }
-
-    public void setIsConnected(boolean isConnected) {
-        this.isConnected = isConnected;
     }
 
     public String getServerIdentity() {

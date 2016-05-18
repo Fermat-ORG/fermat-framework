@@ -226,7 +226,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             NodeContext.add(NodeContextItem.DAO_FACTORY, daoFactory);
             NodeContext.add(NodeContextItem.DEVELOPER_DATABASE_FACTORY, developerDatabaseFactory);
-            NodeContext.add(NodeContextItem.ERROR_MANAGER              , errorManager            );
             NodeContext.add(NodeContextItem.EVENT_MANAGER              , eventManager            );
             NodeContext.add(NodeContextItem.FERMAT_EMBEDDED_NODE_SERVER, fermatEmbeddedNodeServer);
             NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM     , pluginDatabaseSystem    );

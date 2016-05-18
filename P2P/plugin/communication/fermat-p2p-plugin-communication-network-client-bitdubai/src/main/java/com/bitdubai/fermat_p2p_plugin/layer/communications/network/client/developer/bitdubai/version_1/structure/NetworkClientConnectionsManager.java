@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.net.URI;
@@ -38,18 +37,15 @@ public class NetworkClientConnectionsManager {
 
     private NetworkClientCommunicationPluginRoot pluginRoot;
 
-    private ErrorManager errorManager;
-
     private EventManager eventManager;
 
     private LocationManager locationManager;
 
-    public NetworkClientConnectionsManager(ECCKeyPair identity, ErrorManager errorManager, EventManager eventManager, LocationManager locationManager, NetworkClientCommunicationPluginRoot pluginRoot){
+    public NetworkClientConnectionsManager(ECCKeyPair identity, EventManager eventManager, LocationManager locationManager, NetworkClientCommunicationPluginRoot pluginRoot){
         this.listActorConnectIntoNode = new HashMap<>();
         this.listConnectionActiveToNode = new HashMap<>();
         this.pluginRoot = pluginRoot;
         this.identity = identity;
-        this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.locationManager = locationManager;
     }
@@ -78,11 +74,9 @@ public class NetworkClientConnectionsManager {
 
             final NetworkClientCommunicationConnection networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                     uri,
-                    errorManager,
                     eventManager,
                     locationManager,
                     identity,
-                    pluginRoot.getPluginVersionReference(),
                     pluginRoot,
                     -1,
                     Boolean.TRUE
