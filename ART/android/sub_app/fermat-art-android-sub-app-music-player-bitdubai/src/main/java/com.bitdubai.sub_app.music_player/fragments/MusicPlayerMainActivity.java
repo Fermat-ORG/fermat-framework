@@ -182,7 +182,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             song = (TextView) view.findViewById(R.id.songname);
 
 
-         /*   final TextView titlebar=((TextView)getToolbar().getRootView().findViewById(R.id.txt_title));
+            /*final TextView titlebar=((TextView)getToolbar().getRootView().findViewById(R.id.txt_title));
 
 
             ViewTreeObserver observer = recyclerView.getViewTreeObserver();
