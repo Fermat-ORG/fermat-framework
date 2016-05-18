@@ -320,6 +320,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     cryptoBrokerBitmap = (Bitmap) extras.get("data");
+                    cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                     final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(),appSession,null,cryptoBrokerBitmap);
                     dialogCropImage.show();
                     dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {

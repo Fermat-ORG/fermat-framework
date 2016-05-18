@@ -13,14 +13,12 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.edmodo.cropper.CropImageView;
 /**
  * FERMAT-ORG
@@ -50,7 +48,6 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
             cropImageView = (CropImageView) findViewById(R.id.CropImageView);
             cropImageView.setImageBitmap(image);
             cropImageView.setGuidelines(2);
@@ -58,9 +55,7 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
             Button btnCancel = (Button) findViewById(R.id.btnCancel);
             btnCrop.setOnClickListener(this);
             btnCancel.setOnClickListener(this);
-        }catch(Exception e){
-            getSession().getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-        }
+
     }
 
     @Override
@@ -81,8 +76,12 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btnCrop) {
-            croppedImage = cropImageView.getCroppedImage();
-            dismiss();
+            if(cropImageView.getCroppedImage().getHeight() >= 200 && cropImageView.getCroppedImage().getWidth() >= 200) {
+                croppedImage = cropImageView.getCroppedImage();
+                dismiss();
+            }else{
+                Toast.makeText(getActivity(), "Image crop is too small", Toast.LENGTH_SHORT).show();
+            }
         }
         if (i == R.id.btnCancel) {
             dismiss();
