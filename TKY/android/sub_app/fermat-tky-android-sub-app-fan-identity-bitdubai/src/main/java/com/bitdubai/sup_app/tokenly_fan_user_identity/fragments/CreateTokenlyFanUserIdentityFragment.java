@@ -646,7 +646,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         break;
                     case UPDATE_IMAGE_IDENTITY:
                         fan = updateIdentityImage(fanExternalName,fanPassword,externalPlatform);
-                        Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
                         break;
                 }
 
