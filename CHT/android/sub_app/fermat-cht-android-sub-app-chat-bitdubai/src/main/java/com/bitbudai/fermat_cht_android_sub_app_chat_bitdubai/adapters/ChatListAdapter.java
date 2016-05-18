@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +11,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
