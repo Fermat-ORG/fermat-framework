@@ -81,7 +81,6 @@ import java.util.List;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMoneyType;
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
