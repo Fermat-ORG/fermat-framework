@@ -81,7 +81,6 @@ import java.util.List;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMoneyType;
 
 /**
  * Created by Matias Furszyfer on 2015.11.05..
@@ -156,7 +155,6 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                 lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
             }
-
 
 
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -257,8 +255,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         try {
             long balance = 0;
             balance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(),
-                   blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
-                   txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
+                      blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+                      txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
         } catch (CantGetLossProtectedBalanceException e) {
             e.printStackTrace();
         }
@@ -373,6 +371,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         /**
          * Listeners
          */
+
         imageView_contact.setOnClickListener(this);
         send_button.setOnClickListener(this);
         rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
@@ -469,7 +468,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     }
 
     private void setUpContactAddapter() {
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item, getWalletContactList());
 
         contactName.setAdapter(contactsAdapter);
         //autocompleteContacts.setTypeface(tf);
