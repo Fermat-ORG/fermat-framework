@@ -73,20 +73,24 @@ public class DataManager implements Serializable {
 
     public static List<Asset> getAssets() throws CantLoadWalletException, CantGetTransactionsException {
         List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
-        AssetUserWallet userWallet = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY);
         List<Asset> assets = new ArrayList<>();
-        if (assetUserWalletBalances != null && userWallet != null) {
-            for (AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
-                List<CryptoAddress> addresses = assetUserWalletList.getAddresses();
-                for (int i = 0; i < assetUserWalletList.getQuantityBookBalance(); i++) {
-                    try {
-                        CryptoAddress address = addresses.get(i);
-                        assets.add(new Asset(assetUserWalletList, userWallet.getAllTransactions(address), address));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        try {
+            AssetUserWallet userWallet = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY);
+            if (assetUserWalletBalances != null && userWallet != null) {
+                for (AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
+                    List<CryptoAddress> addresses = assetUserWalletList.getAddresses();
+                    for (int i = 0; i < assetUserWalletList.getQuantityBookBalance(); i++) {
+                        try {
+                            CryptoAddress address = addresses.get(i);
+                            assets.add(new Asset(assetUserWalletList, userWallet.getAllTransactions(address), address));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         Collections.sort(assets, new Comparator<Asset>() {
             @Override
@@ -131,40 +135,44 @@ public class DataManager implements Serializable {
     }
 
     public static List<Asset> getAllPendingNegotiations() throws Exception {
-        List<AssetNegotiation> assetNegotiations = moduleManager.getPendingAssetNegotiations();
         List<Asset> digitalAssets = new ArrayList<>();
-        Asset digitalAsset;
+        try {
+            List<AssetNegotiation> assetNegotiations = moduleManager.getPendingAssetNegotiations();
+            Asset digitalAsset;
 
-        if (assetNegotiations != null) {
-            for (AssetNegotiation asset : assetNegotiations) {
+            if (assetNegotiations != null) {
+                for (AssetNegotiation asset : assetNegotiations) {
 
-                digitalAsset = new Asset();
-                digitalAsset.setDigitalAsset(asset.getAssetToOffer());
-                digitalAsset.setName(asset.getAssetToOffer().getName());
-                digitalAsset.setAmount(1);
-                digitalAsset.setId(asset.getNegotiationId().toString());
-                digitalAsset.setDate(new Timestamp(new Date().getTime()));
-                digitalAsset.setStatus(Asset.Status.PENDING);
+                    digitalAsset = new Asset();
+                    digitalAsset.setDigitalAsset(asset.getAssetToOffer());
+                    digitalAsset.setName(asset.getAssetToOffer().getName());
+                    digitalAsset.setAmount(1);
+                    digitalAsset.setId(asset.getNegotiationId().toString());
+                    digitalAsset.setDate(new Timestamp(new Date().getTime()));
+                    digitalAsset.setStatus(Asset.Status.PENDING);
 
-                ActorAssetUser seller = moduleManager.getSellerFromNegotiation(asset.getNegotiationId());
+                    ActorAssetUser seller = moduleManager.getSellerFromNegotiation(asset.getNegotiationId());
 
-                digitalAsset.setActorName(seller.getName());
-                digitalAsset.setActorImage(seller.getProfileImage());
+                    digitalAsset.setActorName(seller.getName());
+                    digitalAsset.setActorImage(seller.getProfileImage());
 
-                AssetUserNegotiation userAssetNegotiation = new AssetUserNegotiation();
-                userAssetNegotiation.setId(asset.getNegotiationId());
-                userAssetNegotiation.setAmount(asset.getTotalAmount());
+                    AssetUserNegotiation userAssetNegotiation = new AssetUserNegotiation();
+                    userAssetNegotiation.setId(asset.getNegotiationId());
+                    userAssetNegotiation.setAmount(asset.getTotalAmount());
 
-                digitalAsset.setAssetUserNegotiation(userAssetNegotiation);
-                digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+                    digitalAsset.setAssetUserNegotiation(userAssetNegotiation);
+                    digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
 
-                digitalAssets.add(digitalAsset);
+                    digitalAssets.add(digitalAsset);
 
-                List<Resource> resources = asset.getAssetToOffer().getResources();
-                if (resources != null && !resources.isEmpty()) {
-                    digitalAsset.setImage(resources.get(0).getResourceBinayData());
+                    List<Resource> resources = asset.getAssetToOffer().getResources();
+                    if (resources != null && !resources.isEmpty()) {
+                        digitalAsset.setImage(resources.get(0).getResourceBinayData());
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return digitalAssets;
     }

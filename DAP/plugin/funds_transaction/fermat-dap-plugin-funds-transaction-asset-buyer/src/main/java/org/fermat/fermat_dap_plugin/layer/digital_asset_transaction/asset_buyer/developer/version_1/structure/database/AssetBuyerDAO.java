@@ -42,6 +42,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSav
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -383,7 +384,7 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord> getNewNegotiations(BlockchainNetworkType networkType) throws DAPException {
+    public List<NegotiationRecord> getNewNegotiations(BlockchainNetworkType networkType) throws DAPException {
         DatabaseTableFilter statusFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.WAITING_CONFIRMATION.getCode());
         DatabaseTableFilter networkFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_NETWORK_TYPE_COLUMN_NAME, networkType.getCode());
         try {
@@ -393,7 +394,7 @@ public class AssetBuyerDAO {
         }
     }
 
-    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer.developer.version_1.structure.functional.NegotiationRecord> getNegotiationAnswer() throws DAPException {
+    public List<NegotiationRecord> getNegotiationAnswer() throws DAPException {
         DatabaseTableFilter confirmedFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_CONFIRMED.getCode());
         DatabaseTableFilter rejectedFilter = constructEqualFilter(AssetBuyerDatabaseConstants.ASSET_BUYER_NEGOTIATION_STATUS_COLUMN_NAME, AssetSellStatus.NEGOTIATION_REJECTED.getCode());
         try {

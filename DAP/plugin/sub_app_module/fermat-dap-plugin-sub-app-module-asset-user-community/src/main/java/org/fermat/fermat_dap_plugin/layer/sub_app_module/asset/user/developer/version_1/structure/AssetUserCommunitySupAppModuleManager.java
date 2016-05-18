@@ -57,6 +57,8 @@ import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSet
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.version_1.AssetUserCommunitySubAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -85,8 +87,8 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
     private final IdentityAssetUserManager identityAssetUserManager;
     private final ActorAssetIssuerManager actorAssetIssuerManager;
     private final ActorAssetUserManager actorAssetUserManager;
-    private final AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager;
-    private final AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager;
+    private final AssetIssuerWalletManager assetIssuerWalletManager;
+    private final AssetUserWalletManager assetUserWalletManager;
     private final AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
     private final AssetUserCommunitySubAppModulePluginRoot assetUserCommunitySubAppModulePluginRoot;
 
@@ -103,8 +105,8 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
                                                  IdentityAssetUserManager identityAssetUserManager,
                                                  ActorAssetIssuerManager actorAssetIssuerManager,
                                                  ActorAssetUserManager actorAssetUserManager,
-                                                 AssetIssuerWalletSupAppModuleManager assetIssuerWalletSupAppModuleManager,
-                                                 AssetUserWalletSubAppModuleManager assetUserWalletSubAppModuleManager,
+                                                 AssetIssuerWalletManager assetIssuerWalletManager,
+                                                 AssetUserWalletManager assetUserWalletManager,
                                                  AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager,
                                                  AssetUserCommunitySubAppModulePluginRoot assetUserCommunitySubAppModulePluginRoot) {
 
@@ -119,8 +121,8 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
         this.identityAssetUserManager = identityAssetUserManager;
         this.actorAssetIssuerManager = actorAssetIssuerManager;
         this.actorAssetUserManager = actorAssetUserManager;
-        this.assetIssuerWalletSupAppModuleManager = assetIssuerWalletSupAppModuleManager;
-        this.assetUserWalletSubAppModuleManager = assetUserWalletSubAppModuleManager;
+        this.assetIssuerWalletManager = assetIssuerWalletManager;
+        this.assetUserWalletManager = assetUserWalletManager;
         this.assetUserActorNetworkServiceManager = assetUserActorNetworkServiceManager;
         this.assetUserCommunitySubAppModulePluginRoot = assetUserCommunitySubAppModulePluginRoot;
     }
@@ -360,7 +362,7 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
         try {
             ActorAssetIssuer actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
             if (actorAssetIssuer != null) {
-                blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                blockchainNetworkType = assetIssuerWalletManager.getSelectedNetwork();
 
                 for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                     this.actorAssetUserManager.askActorAssetUserForConnection(
@@ -390,7 +392,7 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
             } else {
                 ActorAssetUser actorAssetUserLogging = actorAssetUserManager.getActorAssetUser();
                 if (actorAssetUserLogging != null) {
-                    blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
+                    blockchainNetworkType = assetUserWalletManager.getSelectedNetwork();
 
                     for (ActorAssetUser actorAssetUser : actorAssetUsers) {
                         this.actorAssetUserManager.askActorAssetUserForConnection(
@@ -681,12 +683,12 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
             actorAssetIssuer = actorAssetIssuerManager.getActorAssetIssuer();
 
             if (actorAssetIssuer != null) {
-                blockchainNetworkType = assetIssuerWalletSupAppModuleManager.getSelectedNetwork();
+                blockchainNetworkType = assetIssuerWalletManager.getSelectedNetwork();
             } else {
                 ActorAssetUser actorAssetUser = actorAssetUserManager.getActorAssetUser();
 
                 if (actorAssetUser != null) {
-                    blockchainNetworkType = assetUserWalletSubAppModuleManager.getSelectedNetwork();
+                    blockchainNetworkType = assetUserWalletManager.getSelectedNetwork();
                 } else {
                     blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 }

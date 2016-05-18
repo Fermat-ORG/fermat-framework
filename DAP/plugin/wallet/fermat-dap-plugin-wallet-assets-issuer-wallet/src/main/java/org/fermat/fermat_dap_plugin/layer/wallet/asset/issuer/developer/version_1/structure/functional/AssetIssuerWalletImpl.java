@@ -51,6 +51,8 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActor
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.AssetIssuerWalletPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDao;
+import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -119,7 +121,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
-            assetIssuerWalletDao = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, assetIssuerManager, actorAssetRedeemPointManager);
+            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, assetIssuerManager, actorAssetRedeemPointManager);
         } catch (CantOpenDatabaseException e) {
             assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeAssetIssuerWalletException("I can't open database", e, "WalletId: " + walletId.toString(), "");
@@ -181,7 +183,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
-            org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDatabaseFactory databaseFactory = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDatabaseFactory(pluginDatabaseSystem);
+            AssetIssuerWalletDatabaseFactory databaseFactory = new AssetIssuerWalletDatabaseFactory(pluginDatabaseSystem);
             database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException e) {
             assetIssuerWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

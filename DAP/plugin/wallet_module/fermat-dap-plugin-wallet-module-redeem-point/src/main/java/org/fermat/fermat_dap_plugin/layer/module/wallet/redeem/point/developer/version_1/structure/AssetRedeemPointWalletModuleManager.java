@@ -182,37 +182,6 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
     @Override
     public void setAppPublicKey(String publicKey) {
         this.publicKeyApp = publicKey;
-
-        try {
-            settings = settingsManager.loadAndGetSettings(publicKeyApp);
-        } catch (Exception e) {
-            settings = null;
-        }
-
-        if(settings != null && settings.getBlockchainNetwork() != null) {
-            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
-        } else {
-            int position = 0;
-            List<BlockchainNetworkType> list = Arrays.asList(BlockchainNetworkType.values());
-
-            for (BlockchainNetworkType networkType : list) {
-
-                if(Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
-                    settings.setBlockchainNetworkPosition(position);
-                    break;
-                } else {
-                    position++;
-                }
-            }
-            settings.setBlockchainNetwork(list);
-        }
-
-        try {
-            settingsManager.persistSettings(publicKeyApp, settings);
-        } catch (CantPersistSettingsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_REDEEM_POINT_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            exception.printStackTrace();
-        }
     }
 
     @Override
