@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters</code>
@@ -204,6 +205,24 @@ public class DiscoveryQueryParameters {
      */
     public NetworkServiceType getNetworkServiceTypeIntermediate() {
         return networkServiceTypeIntermediate;
+    }
+
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
+
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return DiscoveryQueryParameters
+     */
+    public static DiscoveryQueryParameters parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, DiscoveryQueryParameters.class);
     }
 
     @Override

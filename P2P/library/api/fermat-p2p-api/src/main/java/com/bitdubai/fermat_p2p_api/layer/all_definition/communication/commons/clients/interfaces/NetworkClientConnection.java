@@ -12,6 +12,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
+import java.util.List;
+
 /**
  * The interface <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection</code>
  * contains all the method related with a network client connection.
@@ -69,6 +71,8 @@ public interface NetworkClientConnection {
      * @param packageContent
      */
     void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination);
+
+    List<ActorProfile> listRegisteredActorProfiles(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
 
     /**
      * Through the method <code>getCommunicationChannelType</code> we can get the communication channel type

@@ -12,14 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 05/05/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientsConnectionsManager {
+public class NetworkClientConnectionsManager {
 
     /*
      * Represent the listActorConnectIntoNode
@@ -44,7 +44,7 @@ public class ClientsConnectionsManager {
 
     private LocationManager locationManager;
 
-    public ClientsConnectionsManager(ECCKeyPair identity, ErrorManager errorManager, EventManager eventManager, LocationManager locationManager, NetworkClientCommunicationPluginRoot pluginRoot){
+    public NetworkClientConnectionsManager(ECCKeyPair identity, ErrorManager errorManager, EventManager eventManager, LocationManager locationManager, NetworkClientCommunicationPluginRoot pluginRoot){
         this.listActorConnectIntoNode = new HashMap<>();
         this.listConnectionActiveToNode = new HashMap<>();
         this.pluginRoot = pluginRoot;

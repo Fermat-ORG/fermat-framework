@@ -31,15 +31,25 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -547,6 +557,68 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         }
 
     }
+
+    @Override
+    public List<ActorProfile> listRegisteredActorProfiles(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException {
+
+        System.out.println("NetworkClientCommunicationConnection - new listRegisteredActorProfiles");
+        List<ActorProfile> resultList = new ArrayList<>();
+
+        /*
+         * Validate parameter
+         */
+        if (discoveryQueryParameters == null){
+            throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
+        }
+
+        try {
+
+            /*
+             * Construct the parameters
+             */
+            MultiValueMap<String,Object> parameters = new LinkedMultiValueMap<>();
+            parameters.add("client_public_key", clientIdentity.getPublicKey());
+            parameters.add("discovery_params", discoveryQueryParameters.toJson());
+
+            // Create a new RestTemplate instance
+            RestTemplate restTemplate = new RestTemplate(true);
+            String respond = restTemplate.postForObject("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT+ "/fermat/rest/api/v1/profiles/actors", parameters, String.class);
+
+            /*
+             * if respond have the result list
+             */
+            if (respond.contains("data")){
+
+                /*
+                 * Decode into a json object
+                 */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond);
+
+                 /*
+                 * Get the receivedList
+                 */
+                Gson gson = new Gson();
+                resultList = gson.fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<ActorProfile>>() {
+                }.getType());
+
+                System.out.println("NetworkClientCommunicationConnection - resultList.size() = " + resultList.size());
+
+            }else {
+                System.out.println("NetworkClientCommunicationConnection - Requested list is not available, resultList.size() = " + resultList.size());
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            CantRequestProfileListException cantRequestListException = new CantRequestProfileListException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
+            throw cantRequestListException;
+
+        }
+
+        return resultList;
+    }
+
+
 
 
 

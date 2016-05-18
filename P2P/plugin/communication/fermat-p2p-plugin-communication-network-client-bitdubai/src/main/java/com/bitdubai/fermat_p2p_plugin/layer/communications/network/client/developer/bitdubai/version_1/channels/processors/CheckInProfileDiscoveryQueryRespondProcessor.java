@@ -10,7 +10,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 
@@ -29,9 +29,9 @@ import javax.websocket.Session;
 public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcessor {
 
     /*
-     * Represent the clientsConnectionsManager
+     * Represent the networkClientConnectionsManager
      */
-    private ClientsConnectionsManager clientsConnectionsManager;
+    private NetworkClientConnectionsManager networkClientConnectionsManager;
 
     /**
      * Constructor whit parameter
@@ -43,7 +43,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
                 communicationsNetworkClientChannel,
                 PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND
         );
-        this.clientsConnectionsManager =  (ClientsConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
+        this.networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }
 
     /**
@@ -71,7 +71,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
                  * the uriToNode to can find the NetworkClientCommunicationConnection in the
                  * ListConnectionActiveToNode
                  */
-                clientsConnectionsManager.getListActorConnectIntoNode().put(
+                networkClientConnectionsManager.getListActorConnectIntoNode().put(
                         checkInProfileListMsgRespond.getProfileList().get(0).getIdentityPublicKey(),
                         uriToNode
                 );
@@ -80,7 +80,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
                  * set the ListConnectionActiveToNode with uriToNode and the
                  * NetworkClientCommunicationConnection respective
                  */
-                clientsConnectionsManager.getListConnectionActiveToNode().put(
+                networkClientConnectionsManager.getListConnectionActiveToNode().put(
                         uriToNode,
                         getChannel().getNetworkClientCommunicationConnection()
                 );

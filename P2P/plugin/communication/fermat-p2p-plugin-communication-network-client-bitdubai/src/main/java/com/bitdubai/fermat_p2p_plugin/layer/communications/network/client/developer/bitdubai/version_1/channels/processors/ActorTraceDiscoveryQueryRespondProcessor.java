@@ -10,7 +10,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.google.gson.JsonObject;
@@ -37,9 +37,9 @@ import javax.websocket.Session;
 public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
 
     /*
-     * Represent the clientsConnectionsManager
+     * Represent the networkClientConnectionsManager
      */
-    private ClientsConnectionsManager clientsConnectionsManager;
+    private NetworkClientConnectionsManager networkClientConnectionsManager;
 
     /**
      * Constructor whit parameter
@@ -51,7 +51,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                 communicationsNetworkClientChannel,
                 PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND
         );
-        this.clientsConnectionsManager =  (ClientsConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
+        this.networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }
 
     /**
@@ -119,14 +119,14 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                          * if exist conenction to node use the actual NetworkClientCommunicationConnection
                          * else then request a new NetworkClientCommunicationConnection to that Node
                          */
-                        if(clientsConnectionsManager.getListConnectionActiveToNode().containsKey(uriToNode)){
+                        if(networkClientConnectionsManager.getListConnectionActiveToNode().containsKey(uriToNode)){
 
                             /*
                              * set the ListActorConnectIntoNode with IdentityPublicKey of Actor and
                              * the uriToNode to can find the NetworkClientCommunicationConnection in the
                              * ListConnectionActiveToNode
                              */
-                            clientsConnectionsManager.getListActorConnectIntoNode().put(
+                            networkClientConnectionsManager.getListActorConnectIntoNode().put(
                                     result.getActorProfile().getIdentityPublicKey(),
                                     uriToNode
                             );
@@ -135,9 +135,9 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                              * set the ListConnectionActiveToNode with uriToNode and the
                              * NetworkClientCommunicationConnection respective
                              */
-                            clientsConnectionsManager.getListConnectionActiveToNode().put(
+                            networkClientConnectionsManager.getListConnectionActiveToNode().put(
                                     uriToNode,
-                                    clientsConnectionsManager.getListConnectionActiveToNode().get(uriToNode)
+                                    networkClientConnectionsManager.getListConnectionActiveToNode().get(uriToNode)
                             );
 
                                                          /*

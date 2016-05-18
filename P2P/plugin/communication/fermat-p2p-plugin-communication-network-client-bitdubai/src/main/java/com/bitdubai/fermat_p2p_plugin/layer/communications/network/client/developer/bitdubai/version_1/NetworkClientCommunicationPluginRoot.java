@@ -25,7 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.ClientsConnectionsManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants;
@@ -123,9 +123,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     private ScheduledExecutorService scheduledExecutorService;
 
     /*
-     * Represent the clientsConnectionsManager
+     * Represent the networkClientConnectionsManager
      */
-    private ClientsConnectionsManager clientsConnectionsManager;
+    private NetworkClientConnectionsManager networkClientConnectionsManager;
 
 
     @Override
@@ -164,9 +164,9 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             initializeDb();
 
             /*
-             * Initialize the clientsConnectionsManager to the Connections
+             * Initialize the networkClientConnectionsManager to the Connections
              */
-            clientsConnectionsManager = new ClientsConnectionsManager(identity, errorManager, eventManager, locationManager, this);
+            networkClientConnectionsManager = new NetworkClientConnectionsManager(identity, errorManager, eventManager, locationManager, this);
 
             /*
              * Add references to the node context
@@ -175,7 +175,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
             ClientContext.add(ClientContextItem.LOCATION_MANAGER, locationManager);
-            ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, clientsConnectionsManager);
+            ClientContext.add(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER, networkClientConnectionsManager);
 
 
 
@@ -502,15 +502,15 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     @Override
     public NetworkClientConnection getConnection(String uriToNode) {
 
-        if(clientsConnectionsManager.getListConnectionActiveToNode().containsKey(uriToNode))
-            return clientsConnectionsManager.getListConnectionActiveToNode().get(uriToNode);
+        if(networkClientConnectionsManager.getListConnectionActiveToNode().containsKey(uriToNode))
+            return networkClientConnectionsManager.getListConnectionActiveToNode().get(uriToNode);
         else
             return null;
 
     }
 
     /*
-     * Request connection to the Node extern in the clientsConnectionsManager
+     * Request connection to the Node extern in the networkClientConnectionsManager
      */
     @Override
     public void requestConnectionToExternalNode(String identityPublicKey, String uriToNode) {
@@ -520,8 +520,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         if(!uriActual.equals(uriToNode)) {
 
-            // request connection to the external Node in the clientsConnectionsManager
-            clientsConnectionsManager.requestConnectionToExternalNode(
+            // request connection to the external Node in the networkClientConnectionsManager
+            networkClientConnectionsManager.requestConnectionToExternalNode(
                     identityPublicKey,
                     uriToNode);
         }
@@ -556,13 +556,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
                 * Decode into a json Object
                 */
                 JsonParser parser = new JsonParser();
-                JsonObject respondJsonobject = (JsonObject) parser.parse(respond.trim());
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
 
                 Gson gson = new Gson();
-                List<NodeProfile> listServer = gson.fromJson(respondJsonobject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
+                List<NodeProfile> listServer = gson.fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
                 }.getType());
 
-                System.out.println(respondJsonobject);
+                System.out.println(respondJsonObject);
 
                 return listServer;
 
