@@ -1603,6 +1603,11 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
+    public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed {
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
+    }
+
+    @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         createIntraUser(name, phrase, profile_img);
     }
