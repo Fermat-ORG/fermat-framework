@@ -12,14 +12,14 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ChunckValuesHistoryFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.HomeFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.NoIdentityFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestReceiveHistoryFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestSendHistoryFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
 
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment3;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -74,10 +74,10 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                    // currentFragment = RequestHistorySendFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
-                    currentFragment = ReceiveTransactionFragment.newInstance();
+                    currentFragment = ReceiveTransactionFragment2.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_SENT_HISTORY:
-                    currentFragment = SendTransactionFragment3.newInstance();
+                    currentFragment = SendTransactionFragment2.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY:
                     currentFragment = RequestReceiveHistoryFragment2.newInstance();
