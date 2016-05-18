@@ -333,30 +333,30 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                         }
                     }
                     if (wallet != null){
-                        Bitmap bitmap = null;
-
-                        switch (wallet.getWalletName()){
-                            case "Loss Protected Wallet":
-                                bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.bitcoin_wallet_2);
-                                bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-                                break;
-
-                        }
-
-                        byte[] walletImage = toByteArray(bitmap);
-
-
-                        CryptoAddress cryptoAddress = new CryptoAddress("", CryptoCurrency.BITCOIN);
-                        walletContact =  cryptoWallet.createWalletContactWithPhoto(
-                                cryptoAddress,
-                                wallet.getWalletName(),
-                                null,
-                                null,
-                                Actors.DEVICE_USER,
-                                appSession.getAppPublicKey(),
-                                walletImage,
-                                blockchainNetworkType
-                        );
+//                        Bitmap bitmap = null;
+//
+//                        switch (wallet.getWalletName()){
+//                            case "Loss Protected Wallet":
+//                                bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.bitcoin_wallet_2);
+//                                bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+//                                break;
+//
+//                        }
+//
+//                        byte[] walletImage = toByteArray(bitmap);
+//
+//
+//                        CryptoAddress cryptoAddress = new CryptoAddress("", CryptoCurrency.BITCOIN);
+//                        walletContact =  cryptoWallet.createWalletContactWithPhoto(
+//                                cryptoAddress,
+//                                wallet.getWalletName(),
+//                                null,
+//                                null,
+//                                Actors.DEVICE_USER,
+//                                appSession.getAppPublicKey(),
+//                                walletImage,
+//                                blockchainNetworkType
+//                        );
 
 
                         if (operator.compareTo(minSatoshis) == 1) {
