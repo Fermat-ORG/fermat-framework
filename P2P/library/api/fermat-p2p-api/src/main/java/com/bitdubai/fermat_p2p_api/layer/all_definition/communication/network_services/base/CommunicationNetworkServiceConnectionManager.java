@@ -136,6 +136,8 @@ public final class CommunicationNetworkServiceConnectionManager implements Netwo
     @Override
     public void closeConnection(String remoteNetworkServicePublicKey) {
 
+        System.out.println("CommunicationNetworkServiceConnectionManager - closeConnection ()");
+
         //Remove the instance and stop his threads
         if(communicationNetworkServiceRemoteAgentsCache.containsKey(remoteNetworkServicePublicKey)) {
             communicationNetworkServiceRemoteAgentsCache.remove(remoteNetworkServicePublicKey).stop();

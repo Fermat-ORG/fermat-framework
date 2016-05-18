@@ -132,7 +132,7 @@
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:text="Janeth Williams"
-            android:textColor="#292929"
+            android:textColor="#212121"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
 
@@ -170,7 +170,7 @@
             android:hint="User Phrase"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:textColor="#292929"
+            android:textColor="#212121"
             android:textSize="14sp"
             tools:ignore="HardcodedText" />
 

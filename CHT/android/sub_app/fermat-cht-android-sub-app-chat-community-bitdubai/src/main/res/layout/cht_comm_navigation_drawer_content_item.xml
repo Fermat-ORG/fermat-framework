@@ -8,49 +8,51 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp">
-
-    <ImageView
-        android:id="@+id/imageView_icon"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:layout_gravity="center"
-        android:background="#ffffff"
-        android:src="@drawable/cht_ic_connections"
-        tools:ignore="ContentDescription" />
-    <!--  android:src="@drawable/ic_nav_connections" -->
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/textView_label"
+    <LinearLayout
+        android:id="@+id/llayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="#ffffff"
-        android:paddingBottom="25dp"
-        android:paddingLeft="16dp"
-        android:paddingTop="25dp"
-        android:text="Home"
-        android:textColor="#757575"
-        android:textSize="20sp"
-        tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+        android:orientation="horizontal"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:background="@drawable/cht_comm_list_backg">
 
-    <View
-        android:id="@+id/badge"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3"
-        />
+        <ImageView
+            android:id="@+id/imageView_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/cht_ic_connections"
+            tools:ignore="ContentDescription" />
+        <!--  android:src="@drawable/ic_nav_connections" -->
 
-</LinearLayout>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/textView_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:paddingBottom="5dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="5dp"
+            android:text="Home"
+            android:textColor="#47BF73"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
+
+
+        <View
+            android:id="@+id/badge"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            />
+
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="#DBDBDB" />
+        android:background="#ffffff" />
+
 
 </LinearLayout>

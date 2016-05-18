@@ -16,10 +16,12 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveActionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
@@ -33,7 +35,9 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
 import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -45,6 +49,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMet
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -663,6 +668,12 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException {
         try {
+            ActionState writingState = chatMiddlewareDatabaseDao.getWritingActionById(chatId);
+            System.out.println("12345 writingState " + writingState);
+            if(writingState != null && writingState == ActionState.ACTIVE) return;
+
+            chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.ACTIVE);
+
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             if (chat == null) {
                 throw new SendWritingStatusMessageNotificationException("Chat not found");
@@ -676,6 +687,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     chat.getRemoteActorType(),
                     chat.getChatId()
             );
+//            chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.PENDING);
+
         }catch(Exception e){
             throw new SendWritingStatusMessageNotificationException(
                     e,
@@ -686,7 +699,10 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus {
         try {
-            return chatMiddlewareDatabaseDao.getChatByChatId(chatId).isWriting();
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            if (chat!=null)
+                return chat.isWriting();
+            else return false;
         }catch(CantGetChatException e){
             throw new CantGetWritingStatus(
                     e,
@@ -694,6 +710,61 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     "");
         } catch (DatabaseOperationException e) {
             throw new CantGetWritingStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
+
+    public void activeOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus {
+        try {
+            if(remotePublicKey==null) {
+                List<ActionOnline> actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
+                if(actionOnlines==null || actionOnlines.isEmpty()) return;
+                for(ActionOnline actionOnline: actionOnlines) {
+                    chatMiddlewareDatabaseDao.saveOnlineActionState(actionOnline.getPublicKey(), ActionState.NONE);
+                }
+                return;
+            }
+
+            ActionState onlineState = chatMiddlewareDatabaseDao.getOnlineActionStateByPk(remotePublicKey);
+            System.out.println("12345 onlineState " + onlineState);
+            if(onlineState != null && onlineState == ActionState.ACTIVE) return;
+
+            chatMiddlewareDatabaseDao.saveOnlineActionState(remotePublicKey, ActionState.ACTIVE);
+
+        } catch (CantSaveActionException e) {
+            throw new CantGetOnlineStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        } catch (CantGetPendingActionListException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus {
+            try {
+                ActionOnline onlineAction = chatMiddlewareDatabaseDao.getOnlineActionByPk(remotePublicKey);
+                if (onlineAction!=null)
+                    return onlineAction.getValue();
+                else return false;
+            } catch (CantSaveActionException e) {
+                throw new CantGetOnlineStatus(
+                        e,
+                        "Something went wrong",
+                        "");
+            }
+    }
+
+    public String checkLastConnection(String remotePublicKey) throws CantGetOnlineStatus {
+        try {
+            ActionOnline onlineAction = chatMiddlewareDatabaseDao.getOnlineActionByPk(remotePublicKey);
+            if (onlineAction!=null && onlineAction.getLastConnection()!=null)
+                return onlineAction.getLastConnection();
+            else return "no record";
+        } catch (CantSaveActionException e) {
+            throw new CantGetOnlineStatus(
                     e,
                     "Something went wrong",
                     "");
@@ -889,7 +960,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             Message message) {
         ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS").format(timestamp);
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
         chatMetadata = new ChatMetadataRecord(
                 chat.getChatId(),
                 chat.getObjectId(),

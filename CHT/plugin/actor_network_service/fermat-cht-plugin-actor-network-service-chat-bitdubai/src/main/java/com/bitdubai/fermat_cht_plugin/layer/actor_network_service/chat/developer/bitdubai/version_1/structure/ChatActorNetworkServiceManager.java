@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType;
@@ -99,8 +100,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
 
-                if (chatToExpose != null && chatToExpose.containsKey(chatExposingData.getPublicKey()))
-                    chatToExpose.remove(chatExposingData.getPublicKey());
+                addChatToExpose(chatExposingData);
             }
 
         } catch (final CantRegisterComponentException e) {
@@ -119,8 +119,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     public void updateIdentity(ChatExposingData chatExposingData) throws CantExposeIdentityException {
         try {
             if (isRegistered()) {
-
-                final String imageString = Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT);
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
@@ -459,6 +457,20 @@ public class ChatActorNetworkServiceManager implements ChatManager {
             chatToExpose = new ConcurrentHashMap<>();
 
         chatToExpose.putIfAbsent(chatExposingData.getPublicKey(), chatExposingData);
+    }
+
+    public final void exposeIdentitiesInWait() throws CantExposeIdentityException {
+        if(!Validate.isObjectNull(chatToExpose) && chatToExpose.size() > 0){
+            for (ChatExposingData chatExposingData :
+                    chatToExpose.values()) {
+                exposeIdentity(chatExposingData);
+
+            }
+        }
+    }
+
+    public final boolean areIdentitiesToExpose(){
+        return (!Validate.isObjectNull(chatToExpose) && chatToExpose.size() > 0);
     }
 
     private String buildJsonInformationMessage(final ChatConnectionRequest aer) {
