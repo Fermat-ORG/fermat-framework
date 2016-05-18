@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.wallet_manager.fragment;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -561,8 +562,14 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                     if(data.getInterfaceObject().getName().equals("Communities")){
                         changeActivity(Activities.DESKTOP_COMMUNITY_ACTIVITY);
                     }else {
-                        FolderDialog folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus());
-                        folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        FolderDialog folderDialog = null;
+                        if(Build.VERSION.SDK_INT>Build.VERSION_CODES.JELLY_BEAN_MR1) {
+                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus());
+                            folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+                        }else{
+                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus());
+
+                        }
                         folderDialog.show();
                     }
                     break;
