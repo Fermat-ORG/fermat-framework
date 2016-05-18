@@ -91,7 +91,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     LossProtectedWalletSession lossProtectedWalletSession;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
-    LayoutInflater inflater;
+
 
     /**
      * Manager
@@ -128,6 +128,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private UUID exchangeProviderId = null;
 
     private long exchangeRate = 0;
+
+    private LayoutInflater inflater;
 
     /**
      * Constants
@@ -267,13 +269,19 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             this.inflater = inflater;
             rootView = inflater.inflate(R.layout.lossprotected_home, container, false);
-            setUp(inflater);
+
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
+                public void run() {
+                    setUp(inflater);
+                }
+            }, 500);
 
 
             return rootView;
@@ -292,7 +300,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         try {
             setUpHeader(inflater);
             setUpChart(inflater);
-            //setUpDonut(inflater);
 
         }catch (Exception e){
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,

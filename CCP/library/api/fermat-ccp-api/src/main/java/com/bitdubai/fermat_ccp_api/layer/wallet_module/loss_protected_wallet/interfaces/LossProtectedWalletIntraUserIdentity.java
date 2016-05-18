@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces;
 
+import java.io.Serializable;
+
 /**
  * The interface <code>CryptoWalletIntraUserIdentity</code>
  * haves all consumable methods of a crypto wallet intra user identity.
@@ -10,7 +12,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.in
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface LossProtectedWalletIntraUserIdentity  {
+public interface LossProtectedWalletIntraUserIdentity extends Serializable {
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the identity.

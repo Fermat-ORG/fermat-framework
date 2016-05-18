@@ -206,6 +206,34 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
                                     setUpPresentation(false);
                                 }
+
+                                setRunningDailyBalance();
+
+                                //get Blockchain Download Progress status
+                                try {
+                                    int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
+                                    final Toolbar toolBar = getToolbar();
+                                    int toolbarColor = 0;
+                                    if (pendingBlocks > 0) {
+                                        //paint toolbar on red
+                                        toolbarColor = Color.RED;
+                                        if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                                            setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
+                                    } else {
+                                        toolbarColor = Color.parseColor("#12aca1");
+                                    }
+                                    final int finalToolbarColor = toolbarColor;
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            toolBar.setBackgroundColor(finalToolbarColor);
+                                        }
+                                    });
+
+                                 }catch (Exception e){
+                                    e.printStackTrace();
+                                } openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
                             }
                         }, 500);
 
@@ -216,42 +244,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             });
 
 
-            _executor.submit(new Runnable() {
-                @Override
-                public void run() {
-
-                    setRunningDailyBalance();
-
-                    //get Blockchain Download Progress status
-                    try {
-                        int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
-                        final Toolbar toolBar = getToolbar();
-                        int toolbarColor = 0;
-                        if (pendingBlocks > 0) {
-                            //paint toolbar on red
-                            toolbarColor = Color.RED;
-                            if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
-                                setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
-                        } else {
-                            toolbarColor = Color.parseColor("#12aca1");
-                        }
-                        final int finalToolbarColor = toolbarColor;
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                toolBar.setBackgroundColor(finalToolbarColor);
-                            }
-                        });
-
-
-
-                        //todo: Esto acá lo veo horrible, esto debe hacer despues fijate natalia porqué está aca.
-                        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
-            });
 
 
 
@@ -887,7 +879,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         long balance = 0;
         //noinspection TryWithIdenticalCatches
         try {
-            balance = referenceWalletSession.getModuleManager().getBalance(balanceType, referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
+            balance = moduleManager.getBalance(balanceType, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
 
         } catch (CantGetBalanceException e) {
             e.printStackTrace();

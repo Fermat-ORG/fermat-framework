@@ -333,32 +333,40 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                                     blockchainNetworkType
                             );
                             Toast.makeText(activity, "Sending btc to Loss Protected Wallet...", Toast.LENGTH_SHORT).show();
+                            dismiss();
                         } else {
                             Toast.makeText(activity, "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
+                            dismiss();
                         }
 
                     }else{
                         Toast.makeText(activity, "Wallet Public key not found " , Toast.LENGTH_LONG).show();
+                        dismiss();
                     }
 
 
                 } catch (LossProtectedInsufficientFundsException e) {
                     Toast.makeText(activity, "Insufficient funds", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
+                    dismiss();
                 } catch (CantSendLossProtectedCryptoException e) {
                     appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                     Toast.makeText(activity, "Error Send not Complete", Toast.LENGTH_LONG).show();
+                    dismiss();
                 } catch (Exception e) {
                     appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     Toast.makeText(activity, "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
+                    dismiss();
                 }
             } else {
                 Toast.makeText(activity, "Invalid Amount", Toast.LENGTH_LONG).show();
+                dismiss();
             }
 
         } catch (Exception e) {
             Toast.makeText(activity, "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            dismiss();
         }
 
     }
