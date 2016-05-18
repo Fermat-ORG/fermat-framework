@@ -63,7 +63,7 @@ public class CreateContactFragmentDialog extends Dialog implements
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
     private LossProtectedWalletSession referenceWalletSession;
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    private LossProtectedWallet lossProtectedWalletmanager;
     BlockchainNetworkType blockchainNetworkType;
 
     /**
@@ -112,10 +112,11 @@ public class CreateContactFragmentDialog extends Dialog implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setUpScreenComponents();
-        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+        lossProtectedWalletmanager = referenceWalletSession.getModuleManager();
+
         LossProtectedWalletSettings bitcoinWalletSettings = null;
         try {
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            bitcoinWalletSettings = lossProtectedWalletmanager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -128,20 +129,16 @@ public class CreateContactFragmentDialog extends Dialog implements
                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
             try {
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                lossProtectedWalletmanager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
 
         }
 
-        try {
-            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
-            e.printStackTrace();
-        }
+
+            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
 
 //        user_address_wallet= getWalletAddress(walletContact.actorPublicKey);
 //
@@ -226,7 +223,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     private void saveContact() {
         try {
 
-            LossProtectedWallet cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            LossProtectedWallet cryptoWallet = referenceWalletSession.getModuleManager();
 
             CryptoAddress validAddress = WalletUtils.validateAddress(txt_address.getText().toString(), cryptoWallet);
 
@@ -298,7 +295,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 EditText editText = (EditText) findViewById(R.id.txt_address);
-                CryptoAddress validAddress = WalletUtils.validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager().getCryptoWallet());
+                CryptoAddress validAddress = WalletUtils.validateAddress(item.getText().toString(),lossProtectedWalletmanager);
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {

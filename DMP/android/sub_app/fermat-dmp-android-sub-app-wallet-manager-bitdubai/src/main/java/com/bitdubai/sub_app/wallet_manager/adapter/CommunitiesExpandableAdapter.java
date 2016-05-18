@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
+import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTaskWithRes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledApp;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
@@ -14,6 +15,7 @@ import com.bitdubai.sub_app.wallet_manager.commons.model.CommunityViewHolder;
 import com.bitdubai.sub_app.wallet_manager.commons.model.GrouperItem;
 import com.bitdubai.sub_app.wallet_manager.holder.GrouperViewHolder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,6 +26,8 @@ public class CommunitiesExpandableAdapter
 
     private Resources res;
 
+    private List<BitmapWorkerTaskWithRes> taskList;
+
     /**
      * Public primary constructor.
      *
@@ -32,6 +36,7 @@ public class CommunitiesExpandableAdapter
      */
     public CommunitiesExpandableAdapter(Context context, List<GrouperItem> parentItemList, Resources res) {
         super(parentItemList);
+        taskList = new ArrayList<>();
         mInflater = LayoutInflater.from(context);
         this.res = res;
         for (int i=0;i<parentItemList.size();i++)
@@ -89,7 +94,21 @@ public class CommunitiesExpandableAdapter
      */
     @Override
     public void onBindChildViewHolder(CommunityViewHolder childViewHolder, int position, InstalledApp childListItem) {
-        childViewHolder.bind(childListItem);
+        taskList.add(childViewHolder.bind(childListItem).getTask());
     }
+
+    @Override
+    protected void onChangeDataSet(){
+        for (BitmapWorkerTaskWithRes bitmapWorkerTaskWithRes : taskList) {
+            try{
+                bitmapWorkerTaskWithRes.cancel(true);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
 
 }

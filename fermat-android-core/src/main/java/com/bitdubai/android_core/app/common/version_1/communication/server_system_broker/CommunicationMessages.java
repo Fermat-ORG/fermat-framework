@@ -10,4 +10,7 @@ public class CommunicationMessages {
     public static final int  MSG_REQUEST_DATA_MESSAGE = 4;
 
 
+
+
+    public static final int MSG_SEND_CHUNKED_DATA = 5;
 }

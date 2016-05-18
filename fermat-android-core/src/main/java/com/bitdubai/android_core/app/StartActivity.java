@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
-import com.bitdubai.android_core.app.common.version_1.util.task.GetTaskV2;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.FermatException;
@@ -36,6 +35,10 @@ import com.bitdubai.fermat_osa_android_core.OSAPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -69,6 +72,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
     private StartReceiver startReceiver;
     private boolean myReceiverIsRegistered;
+    private ScheduledExecutorService scheduledExecutorService;
 
 
     @Override
@@ -180,15 +184,24 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
 
 
-                GetTaskV2 getTask = new GetTaskV2(this,this);
-                getTask.setCallBack(this);
-                getTask.execute();
+//                GetTaskV2 getTask = new GetTaskV2(this,this);
+//                getTask.setCallBack(this);
+//                getTask.execute();
 
 
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
                 fermatInit();
             }
 
+        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        scheduledExecutorService.scheduleAtFixedRate(new Runnable() {
+            @Override
+            public void run() {
+                if(ApplicationSession.getInstance().isFermatRunning()){
+                    fermatInit();
+                }
+            }
+        },2,2, TimeUnit.SECONDS);
 
     }
 
@@ -266,6 +279,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
             unregisterReceiver(startReceiver);
             myReceiverIsRegistered = false;
         }
+        scheduledExecutorService.shutdownNow();
 
     }
 

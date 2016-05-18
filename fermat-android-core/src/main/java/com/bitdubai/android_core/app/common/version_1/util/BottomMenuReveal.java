@@ -71,9 +71,9 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
 
 
                     SupportAnimator animator =
-                            ViewAnimationUtils.createCircularReveal(mRevealView, cx, cy, 0, radius);
+                            ViewAnimationUtils.createCircularReveal(mRevealView.getChildAt(0), 0, cy, 0, radius);
                     animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                    animator.setDuration(800);
+                    animator.setDuration(650);
 
                     SupportAnimator animator_reverse = animator.reverse();
 

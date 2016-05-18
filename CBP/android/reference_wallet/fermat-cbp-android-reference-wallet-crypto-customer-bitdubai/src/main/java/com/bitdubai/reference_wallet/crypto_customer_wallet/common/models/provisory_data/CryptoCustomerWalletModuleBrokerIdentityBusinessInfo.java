@@ -8,13 +8,14 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by nelson on 24/11/15.
  */
-public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements BrokerIdentityBusinessInfo {
+public class CryptoCustomerWalletModuleBrokerIdentityBusinessInfo implements BrokerIdentityBusinessInfo, Serializable {
 
     private String publicKey;
     private String alias;

@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.AppsStatus;
@@ -28,14 +26,12 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -45,7 +41,6 @@ import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
-import com.bitdubai.sub_app.wallet_manager.popup.FolderDialog;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
@@ -369,6 +364,14 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(4);
             lstItemsWithIcon.add(item);
 
+            installedSubApp = new InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0), Platforms.ART_PLATFORM, AppsStatus.DEV);
+            installedSubApp.setAppStatus(AppsStatus.ALPHA);
+            item = new Item(installedSubApp);
+            item.setIconResource(R.drawable.subapp_art_music_player);
+            item.setPosition(5);
+            lstItemsWithIcon.add(item);
+
+
             for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
                 emptyItem.setIconResource(-1);
@@ -406,14 +409,13 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 
     @Override
     public void onHolderItemClickListener(Item data, int position) {
+        //TODO: I put this here to test our Music player sub app. Manuel
         try {
             switch (data.getType()) {
                 case SUB_APP:
                     if (((InstalledSubApp) data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)) {
                         Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
-                    } else {
-                        selectSubApp((InstalledSubApp) data.getInterfaceObject());
-                    }
+                    } else selectSubApp((InstalledSubApp) data.getInterfaceObject());
                     break;
                 case WALLET:
                     selectWallet((InstalledWallet) data.getInterfaceObject());
@@ -421,20 +423,22 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
                 case EMPTY:
                     break;
                 case FOLDER:
-                    if (data.getInterfaceObject().getName().equals("Communities")) {
-                        changeActivity(Activities.DESKTOP_COMMUNITY_ACTIVITY);
-                    } else {
-                        FolderDialog folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this, ((FermatActivityManager) getActivity()).getAppStatus());
-                        folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                        folderDialog.show();
-                    }
+//                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,desktopSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+////                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+////                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+////                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
+////                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+////                    folderDialog.getWindow().setAttributes(lp);
+//                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                    folderDialog.show();
                     break;
                 default:
                     break;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+        //TODO: End of experimental code. Manuel.
     }
 
 

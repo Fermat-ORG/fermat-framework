@@ -102,7 +102,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     /**
      * Wallet session
      */
-    LossProtectedWalletSession referenceWalletSession;
+    LossProtectedWalletSession lossWalletSession;
     // unsorted list items
     List<LossProtectedWalletContact> mItems;
     // array list to store section positions
@@ -131,14 +131,14 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
-    private LossProtectedWalletManager cryptoWalletManager;
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     private ErrorManager errorManager;
     private Bitmap contactImageBitmap;
     private WalletContact walletContact;
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
-    private SettingsManager<LossProtectedWalletSettings> settingsManager;
+    //private SettingsManager<LossProtectedWalletSettings> settingsManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
     private boolean isScrolled = false;
 
     public static ContactsFragment newInstance() {
@@ -152,20 +152,22 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        referenceWalletSession = (LossProtectedWalletSession) appSession;
-        setHasOptionsMenu(true);
-        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
-        errorManager = appSession.getErrorManager();
-        cryptoWalletManager = referenceWalletSession.getModuleManager();
-        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
         try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "Unexpected error getting Contact list - " + e.getMessage());
-        } catch (Exception e) {
+            lossWalletSession = (LossProtectedWalletSession) appSession;
+            setHasOptionsMenu(true);
+            tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
+            errorManager = appSession.getErrorManager();
+            lossProtectedWalletManager = lossWalletSession.getModuleManager();
+
+            lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
+
+        } catch (CantGetSettingsException e) {
+            e.printStackTrace();
+        } catch (SettingsNotFoundException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -186,7 +188,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+                            boolean isHelpEnabled = lossProtectedWalletSettings.isContactsHelpEnabled();
 
                             if (isHelpEnabled)
                                 setUpTutorial(true);
@@ -203,7 +205,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            lossWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
         return container;
     }
@@ -262,7 +264,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             super.onActivityCreated(new Bundle());
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
+            lossWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
     }
 
@@ -337,7 +339,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     private void onRefresh() {
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+            walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
         } catch (CantGetCryptoLossProtectedWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             WalletUtils.showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
@@ -358,15 +360,15 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
         //if (isHelpEnabled) {
-            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, checkButton);
+            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), lossWalletSession, null, checkButton);
             contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    Object b = referenceWalletSession.getData(SessionConstant.CREATE_EXTRA_USER);
+                    Object b = lossWalletSession.getData(SessionConstant.CREATE_EXTRA_USER);
                     if (b != null) {
                         if ((Boolean) b) {
                             lauchCreateContactDialog(false);
-                            referenceWalletSession.removeData(SessionConstant.CREATE_EXTRA_USER);
+                            lossWalletSession.removeData(SessionConstant.CREATE_EXTRA_USER);
                         }
                     }
 
@@ -421,7 +423,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             public void onClick(View v) {
                 ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(
                         getActivity(),
-                        referenceWalletSession,
+                        lossWalletSession,
                         null);
 
                 connectionWithCommunityDialog.show();
@@ -489,26 +491,26 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
                     PinnedHeaderAdapter adapter = (PinnedHeaderAdapter) adapterView.getAdapter();
 
-                    referenceWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
+                    lossWalletSession.setAccountName(String.valueOf(adapter.getItem(position)));
 
                     if (position == 1)
-                        referenceWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
+                        lossWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
                     else
-                        referenceWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
+                        lossWalletSession.setLastContactSelected((LossProtectedWalletContact) adapterView.getItemAtPosition(position));
 
 
-                    Boolean isFromActionBarSend = (Boolean) referenceWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
+                    Boolean isFromActionBarSend = (Boolean) lossWalletSession.getData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS);
 
                     if (isFromActionBarSend != null) {
                         if (isFromActionBarSend) {
-                            referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, Boolean.FALSE);
-                            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                            lossWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, Boolean.FALSE);
+                            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY, lossWalletSession.getAppPublicKey());
 
                         } else {
-                            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY, lossWalletSession.getAppPublicKey());
                         }
                     } else {
-                        changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                        changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CONTACT_DETAIL_ACTIVITY, lossWalletSession.getAppPublicKey());
                     }
 
 
@@ -547,13 +549,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         getActivity().openContextMenu(mClearSearchImageButton);
     }
 
-    public void setWalletSession(LossProtectedWalletSession appSession) {
-        this.appSession = appSession;
-    }
 
-    public void setWalletResourcesProviderManager(WalletResourcesProviderManager walletResourcesProviderManager) {
-        this.walletResourcesProviderManager = walletResourcesProviderManager;
-    }
 
     @Override
     public void onClick(View v) {
@@ -565,7 +561,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             walletContact.setName("");
             lauchCreateContactDialog(false);
         } else if (id == ID_BTN_INTRA_USER) {
-            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_ACTIVITY, referenceWalletSession.getAppPublicKey());
+            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_ACTIVITY, lossWalletSession.getAppPublicKey());
         }
     }
 
@@ -588,7 +584,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     private void lauchCreateContactDialog(boolean withImage) {
         dialog = new CreateContactFragmentDialog(
                 getActivity(),
-                referenceWalletSession,
+                lossWalletSession,
                 walletContact,
                 user_id,
                 ((withImage) ? contactImageBitmap : null),
@@ -606,7 +602,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
-        referenceWalletSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception());
+        lossWalletSession.getErrorManager().reportUnexpectedPluginException(Plugins.BITDUBAI_BANK_NOTES_WALLET_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception());
         Toast.makeText(getActivity(), "oooopps", Toast.LENGTH_SHORT).show();
     }
 

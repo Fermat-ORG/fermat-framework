@@ -190,8 +190,8 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return getPaintActivtyFeactures().getToolbar();
     }
 
-    protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {
-        getFermatScreenSwapper().connectWithOtherApp(emgine, fermatAppToConnectPublicKey, objects);
+    protected void changeApp(String fermatAppToConnectPublicKey, Object[] objects) {
+        getFermatScreenSwapper().connectWithOtherApp(fermatAppToConnectPublicKey, objects);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper() {

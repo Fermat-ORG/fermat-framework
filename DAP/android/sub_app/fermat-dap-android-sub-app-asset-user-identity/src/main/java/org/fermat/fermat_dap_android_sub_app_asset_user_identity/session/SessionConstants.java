@@ -5,6 +5,6 @@ package org.fermat.fermat_dap_android_sub_app_asset_user_identity.session;
  */
 public class SessionConstants {
 
-    public static final String IDENTITY_SELECTED = "identity_selected";
+    public static final String IDENTITY_SELECTED = "user_identity_selected";
 
 }

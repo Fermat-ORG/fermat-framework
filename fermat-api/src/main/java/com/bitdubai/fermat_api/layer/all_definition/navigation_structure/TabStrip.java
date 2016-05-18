@@ -52,6 +52,8 @@ public class TabStrip implements FermatTabStrip {
 
     int startItem;
 
+    boolean reduceTabHeight;
+
     List<Tab> tabs = new ArrayList<>();
 
     public void addTab(Tab tab) {
@@ -139,6 +141,8 @@ public class TabStrip implements FermatTabStrip {
         return tabs;
     }
 
+    public boolean isReduceTabHeight(){return reduceTabHeight;}
+
     /**
      * TabStrip class setters
      */
@@ -217,6 +221,8 @@ public class TabStrip implements FermatTabStrip {
     public void setHasText(boolean hasText) {
         this.hasText = hasText;
     }
+
+    public void setReduceTabHeight(boolean reduceTabHeight){this.reduceTabHeight=reduceTabHeight;}
 
     /**
      * Add wizard to attach to this Tab

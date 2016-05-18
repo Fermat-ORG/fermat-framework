@@ -55,7 +55,7 @@ public class AppListAdapter extends FermatAdapter<ArtistCommunityInformation, Ap
             holder.thumbnail.setImageBitmap(bitmap);
         }
         else
-            Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
+            Picasso.with(context).load(R.drawable.aac_profile_image).into(holder.thumbnail);
 
     }
 

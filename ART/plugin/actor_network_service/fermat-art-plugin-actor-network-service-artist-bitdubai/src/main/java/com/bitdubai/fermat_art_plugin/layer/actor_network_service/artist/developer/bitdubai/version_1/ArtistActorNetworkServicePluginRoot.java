@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -29,12 +30,16 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.event_handler.ArtistCustomeP2PCompletedConnectionRegistrationEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.InformationMessage;
@@ -42,11 +47,16 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Gabriel Araujo 1/04/2016.
@@ -62,6 +72,13 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     
     ArtistActorNetworkServiceManager artistActorNetworkServiceManager;
     /**
+     * Hold the listeners references
+     */
+    private List<FermatEventListener> listenersAdded;
+
+    private ExecutorService executor;
+
+    /**
      * Constructor of the Network Service.
      */
     public ArtistActorNetworkServicePluginRoot() {
@@ -74,6 +91,9 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                 "Artist",
                 null
         );
+
+        listenersAdded = new ArrayList<>();
+        executor = Executors.newSingleThreadExecutor();
     }
 
     /**
@@ -96,6 +116,11 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                     getPluginVersionReference()
             );
 
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+            fermatEventListener.setEventHandler(new ArtistCustomeP2PCompletedConnectionRegistrationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
         } catch(final CantInitializeDatabaseException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -113,7 +138,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
         artistActorNetworkServiceManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().pause();
-
+        executor.shutdownNow();
         super.pause();
     }
 
@@ -122,7 +147,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
         // resume connections manager.
         getCommunicationNetworkServiceConnectionManager().resume();
-
+        executor = Executors.newSingleThreadExecutor();
         super.resume();
     }
 
@@ -131,7 +156,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
 
         artistActorNetworkServiceManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().stop();
-
+        executor.shutdownNow();
         super.stop();
     }
 
@@ -220,24 +245,95 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                     getCommunicationNetworkServiceConnectionManager().closeConnection(requestMessage.getSenderPublicKey());
                     break;
 
+                case INFORMATION_REQUEST:
+                    ArtistActorNetworkServiceExternalPlatformInformationRequest
+                            informationRequestMessage =
+                            ArtistActorNetworkServiceExternalPlatformInformationRequest.fromJson(
+                                    jsonMessage);
+                    System.out.println("********************* Content:  " + informationRequestMessage);
+                    receiveQuotesRequest(informationRequestMessage);
+
+                    getCommunicationNetworkServiceConnectionManager().
+                            closeConnection(informationRequestMessage.getRequesterPublicKey());
+                    break;
                 default:
                     throw new CantHandleNewMessagesException(
                             "message type: " +networkServiceMessage.getMessageType().name(),
                             "Message type not handled."
                     );
             }
-
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(
+                    this.getPluginVersionReference(),
+                    UnexpectedPluginExceptionSeverity.
+                            DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         }
-
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
             e.printStackTrace();
         }
     }
+
+    private void receiveQuotesRequest(
+            final ArtistActorNetworkServiceExternalPlatformInformationRequest informationRequest)
+            throws CantHandleNewMessagesException {
+        try {
+            ArtistConnectionRequest informationRequestInDatabase =
+                    artistActorNetworkServiceDao.getConnectionRequest(
+                            informationRequest.getRequestId());
+            if (informationRequestInDatabase.getRequestType() == RequestType.SENT) {
+                artistActorNetworkServiceDao.answerInformationRequest(
+                        informationRequest.getRequestId(),
+                        informationRequest.getUpdateTime(),
+                        informationRequest.listInformation(),
+                        ProtocolState.PENDING_LOCAL_ACTION
+                );
+                FermatEvent eventToRaise = eventManager.getNewEvent(
+                        EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
+                eventToRaise.setSource(eventSource);
+                eventManager.raiseEvent(eventToRaise);
+            }
+        } catch (CantFindRequestException quotesRequestNotFoundException) {
+
+            try {
+                final ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
+                final RequestType type = RequestType.RECEIVED;
+
+                artistActorNetworkServiceDao.createExternalPlatformInformationRequest(
+                        informationRequest.getRequestId(),
+                        informationRequest.getRequesterPublicKey(),
+                        informationRequest.getRequesterActorType(),
+                        informationRequest.getArtistPublicKey(),
+                        state,
+                        type
+                );
+
+                FermatEvent eventToRaise = eventManager.getNewEvent(
+                        EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
+                eventToRaise.setSource(eventSource);
+                eventManager.raiseEvent(eventToRaise);
+            } catch (CantRequestExternalPlatformInformationException e) {
+                errorManager.reportUnexpectedPluginException(
+                        this.getPluginVersionReference(),
+                        UnexpectedPluginExceptionSeverity.
+                                DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(
+                    this.getPluginVersionReference(),
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantHandleNewMessagesException(
+                    e,
+                    "",
+                    "Unhandled Exception.");
+        }
+    }
+
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_RECEIVE.    .
@@ -273,7 +369,10 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                             state
                     );
                     break;
-
+                case CANCEL:
+                    artistActorNetworkServiceDao.cancelConnection(informationMessage.getRequestId(),
+                            state);
+                    break;
                 default:
                     throw new CantHandleNewMessagesException(
                             "action not supported: " +informationMessage.getAction(),
@@ -348,14 +447,41 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     protected void onNetworkServiceRegistered() {
 
         artistActorNetworkServiceManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
+
+        runExposeIdentityThread();
         //testCreateAndList();
 
+    }
+
+    public final void runExposeIdentityThread(){
+
+        final PluginVersionReference pluginReference = getPluginVersionReference();
+
+        if(artistActorNetworkServiceManager.areIdentitiesToExpose()){
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(3000);
+                        artistActorNetworkServiceManager.exposeIdentitiesInWait();
+                    } catch (CantExposeIdentityException | InterruptedException e) {
+                        errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+    @Override
+    protected void onClientSuccessfulReconnect() {
+        runExposeIdentityThread();
     }
 
     private void testCreateAndList(){
         ECCKeyPair identity = new ECCKeyPair();
         try {
-            artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo artist", new byte[0]));
+            artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo artist", ""));
             ActorSearch<ArtistExposingData> artistActorNetworkServiceSearch = artistActorNetworkServiceManager.getSearch();
             List<ArtistExposingData> artistExposingDatas = artistActorNetworkServiceSearch.getResult();
             for (ArtistExposingData artistExposingData:

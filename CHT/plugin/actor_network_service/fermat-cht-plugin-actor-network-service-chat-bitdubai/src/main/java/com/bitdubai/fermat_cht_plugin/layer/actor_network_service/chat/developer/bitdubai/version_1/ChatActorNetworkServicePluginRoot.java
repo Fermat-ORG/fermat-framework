@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -24,21 +25,26 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionInformation;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database.ChatActorNetworkServiceDao;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database.ChatActorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.event_handler.ChatP2PCompletedConnectionRegistrationEventHandler;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.structure.ChatActorNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
@@ -54,6 +60,8 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
     private ChatActorNetworkServiceManager fermatManager;
 
+    private ExecutorService executor;
+
     public ChatActorNetworkServicePluginRoot() {
 
         super(
@@ -65,6 +73,8 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                 null
         );
     }
+
+    private List<FermatEventListener> listenersAdded;
 
     @Override
     public FermatManager getManager() {
@@ -86,6 +96,13 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                     this,
                     getPluginVersionReference()
             );
+
+            executor = Executors.newSingleThreadExecutor();
+
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+            fermatEventListener.setEventHandler(new ChatP2PCompletedConnectionRegistrationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
 
             System.out.println("******* Init Chat Actor Network Service ******");
 
@@ -126,6 +143,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
     @Override
     protected void onNetworkServiceRegistered() {
         fermatManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
+        runExposeIdentityThread();
     }
 
     @Override
@@ -167,6 +185,11 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
             System.out.println(e.toString());
             reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    @Override
+    protected void onClientSuccessfulReconnect() {
+        runExposeIdentityThread();
     }
 
     @Override
@@ -283,6 +306,46 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
             throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }
+
+
+
+    public final void runExposeIdentityThread(){
+
+        final PluginVersionReference pluginReference = getPluginVersionReference();
+
+        if(fermatManager.areIdentitiesToExpose()){
+
+            executor.submit(new Runnable() {
+
+                @Override
+
+                public void run() {
+
+                    try {
+
+                        Thread.sleep(3000);
+
+                        fermatManager.exposeIdentitiesInWait();
+
+                    } catch (CantExposeIdentityException | InterruptedException e) {
+
+                        errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+
+                    }
+
+                }
+
+            });
+
+        }
+
+    }
+
+
 
 
     /**

@@ -6,11 +6,27 @@ import android.os.Parcelable;
 import java.io.Serializable;
 
 /**
- * Created by mati on 2016.04.18..
+ * Created by Matias Furszyfer on 2016.04.18..
  */
-public class FermatModuleObjectWrapper implements Parcelable {
+public class FermatModuleObjectWrapper implements Parcelable,Serializable {
 
+    private String objectRequestId;
     private Serializable object;
+    private boolean isLargeData = false;
+    private Exception e;
+
+    public FermatModuleObjectWrapper(Serializable object,boolean isLargeData,String objectRequestId) {
+        this.object = object;
+        this.isLargeData = isLargeData;
+        this.objectRequestId = objectRequestId;
+    }
+
+    public FermatModuleObjectWrapper(String objectRequestId, Serializable object, boolean isLargeData, Exception e) {
+        this.objectRequestId = objectRequestId;
+        this.object = object;
+        this.isLargeData = isLargeData;
+        this.e = e;
+    }
 
     public FermatModuleObjectWrapper(Serializable object) {
         this.object = object;
@@ -20,6 +36,8 @@ public class FermatModuleObjectWrapper implements Parcelable {
         Serializable moduleObjectSerializable = in.readSerializable();
 //        this.object = new FermatModuleObject(moduleObjectSerializable);
         this.object = moduleObjectSerializable;
+        this.e = (Exception) in.readSerializable();
+        this.isLargeData = in.readByte() != 0;
     }
 
     public static final Creator<FermatModuleObjectWrapper> CREATOR = new Creator<FermatModuleObjectWrapper>() {
@@ -34,9 +52,20 @@ public class FermatModuleObjectWrapper implements Parcelable {
         }
     };
 
+    public boolean isLargeData() {
+        return isLargeData;
+    }
 
     public Object getObject() {
         return object;
+    }
+
+    public String getObjectRequestId() {
+        return objectRequestId;
+    }
+
+    public Exception getE() {
+        return e;
     }
 
     @Override
@@ -48,6 +77,8 @@ public class FermatModuleObjectWrapper implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         try{
             dest.writeSerializable(object);
+            dest.writeSerializable(e);
+            dest.writeByte((byte) (isLargeData ? 1 : 0));
         }catch (Exception e){
             e.printStackTrace();
         }

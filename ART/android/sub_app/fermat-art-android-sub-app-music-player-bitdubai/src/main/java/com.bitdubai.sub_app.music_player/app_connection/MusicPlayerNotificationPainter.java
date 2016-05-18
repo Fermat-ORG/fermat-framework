@@ -5,7 +5,7 @@ import android.widget.RemoteViews;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 
 /**
- * Created by miguel payarez on 20/02/16.
+ * Created by miguel payarez on 13/04/16.
  */
 public class MusicPlayerNotificationPainter implements NotificationPainter{
 

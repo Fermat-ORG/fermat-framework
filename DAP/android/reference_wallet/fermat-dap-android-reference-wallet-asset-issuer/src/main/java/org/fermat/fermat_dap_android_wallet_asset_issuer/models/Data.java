@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_wallet_asset_issuer.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
@@ -26,27 +27,31 @@ import java.util.List;
  * Created by frank on 12/9/15.
  */
 public class Data {
+
     public static List<DigitalAsset> getAllDigitalAssets(AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
-        List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
         List<DigitalAsset> digitalAssets = new ArrayList<>();
-        DigitalAsset digitalAsset;
-        for (AssetIssuerWalletList balance : balances) {
-            digitalAsset = new DigitalAsset();
-            digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
-            digitalAsset.setName(balance.getDigitalAsset().getName());
-            digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
-            digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
-            digitalAsset.setAvailableBalance(balance.getAvailableBalance());
-            Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
-            digitalAsset.setExpDate(expirationDate);
 
-            List<Resource> resources = balance.getDigitalAsset().getResources();
-            if (resources != null && resources.size() > 0) {
-                digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
+            List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
+            DigitalAsset digitalAsset;
+            if (balances != null) {
+                for (AssetIssuerWalletList balance : balances) {
+                    digitalAsset = new DigitalAsset();
+                    digitalAsset.setAssetPublicKey(balance.getDigitalAsset().getPublicKey());
+                    digitalAsset.setName(balance.getDigitalAsset().getName());
+                    digitalAsset.setAvailableBalanceQuantity(balance.getQuantityAvailableBalance());
+                    digitalAsset.setBookBalanceQuantity(balance.getQuantityBookBalance());
+                    digitalAsset.setAvailableBalance(balance.getAvailableBalance());
+                    Timestamp expirationDate = (Timestamp) balance.getDigitalAsset().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue();
+                    digitalAsset.setExpDate(expirationDate);
+
+                    List<Resource> resources = balance.getDigitalAsset().getResources();
+                    if (resources != null && resources.size() > 0) {
+                        digitalAsset.setImage(balance.getDigitalAsset().getResources().get(0).getResourceBinayData());
+                    }
+
+                    digitalAssets.add(digitalAsset);
+                }
             }
-
-            digitalAssets.add(digitalAsset);
-        }
         return digitalAssets;
     }
 
@@ -125,7 +130,7 @@ public class Data {
 //        users.add(new User("Rodrigo Acosta"));
         List<User> users = new ArrayList<>();
         List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
-        for (ActorAssetUser actorAssetUser:actorAssetUsers) {
+        for (ActorAssetUser actorAssetUser : actorAssetUsers) {
             User newUser = new User(actorAssetUser.getName(), actorAssetUser);
 //            int index = usersSelected.indexOf(newUser);
 //            if (index > 0) newUser.setSelected(usersSelected.get(index).isSelected());
@@ -137,7 +142,7 @@ public class Data {
     public static List<Group> getGroups(AssetIssuerWalletSupAppModuleManager moduleManager, List<Group> groupsSelected) throws CantGetAssetUserGroupException, CantGetAssetUserActorsException {
         List<Group> groups = new ArrayList<>();
         List<ActorAssetUserGroup> actorAssetUserGroups = moduleManager.getAssetUserGroupsList();
-        for (ActorAssetUserGroup actorAssetUserGroup:actorAssetUserGroups) {
+        for (ActorAssetUserGroup actorAssetUserGroup : actorAssetUserGroups) {
             Group newGroup = new Group(actorAssetUserGroup.getGroupName(), actorAssetUserGroup);
             List<ActorAssetUser> actorAssetUsers = moduleManager.getListActorAssetUserByGroups(actorAssetUserGroup.getGroupId());
             List<User> users = new ArrayList<>();

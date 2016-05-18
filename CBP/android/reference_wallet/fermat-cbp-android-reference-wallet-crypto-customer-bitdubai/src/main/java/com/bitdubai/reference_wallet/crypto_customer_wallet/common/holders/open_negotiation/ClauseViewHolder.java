@@ -9,17 +9,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
-import java.util.UUID;
 
 /**
- *Created by Yordin Alayn on 22.01.16.
+ * Created by Yordin Alayn on 22.01.16.
  * Based in ClauseViewHolder of Star_negotiation by nelson
  */
 public abstract class ClauseViewHolder extends FermatViewHolder {
@@ -33,7 +30,7 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
     protected TextView titleTextView;
 
     protected Listener listener;
-//    protected ListenerConfirm listenerConfirm;
+    //    protected ListenerConfirm listenerConfirm;
     protected ClauseInformation clause;
     protected CustomerBrokerNegotiationInformation negotiationInformation;
     protected int clausePosition;
@@ -76,20 +73,17 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
 
     public interface Listener {
         void onClauseClicked(Button triggerView, ClauseInformation clause, int clausePosition);
+
         void onConfirmCLicked(ClauseInformation clause);
-//        boolean getValuesHasChanged();
-//        ClauseType getClauseType();
     }
-/*
-    public interface ListenerConfirm{
-        void onConfirmCLicked();
-    }*/
 
     private void configClauseViews(View itemView) {
 
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) { listener.onConfirmCLicked(clause); }
+            public void onClick(View view) {
+                listener.onConfirmCLicked(clause);
+            }
         });
 
     }
@@ -127,43 +121,4 @@ public abstract class ClauseViewHolder extends FermatViewHolder {
         else
             return res.getColor(colorResId);
     }
-
-    protected void modifyData(NegotiationStepStatus status) {
-        setStatus(status);
-    }
-
-    //PUT CLAUSE
-    public void putClause(final ClauseInformation clause, final ClauseStatus status) {
-
-        final ClauseType type = clause.getType();
-
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return type;
-            }
-
-            @Override
-            public String getValue() {
-                return clause.getValue();
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return status;
-            }
-        };
-
-        this.negotiationInformation.getClauses().put(type, clauseInformation);
-    }
-
-    public CustomerBrokerNegotiationInformation getNegotiationInformation(){
-        return this.negotiationInformation;
-    }
-
 }

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -25,6 +26,8 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+
 
 /**
  * Created by Alejandro Bicelis on 12/15/2015.
@@ -180,7 +183,10 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
                         cryptoBrokerWalletModuleManager.createTransactionRestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletModuleManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
+                        double doubleValue = DecimalFormat.getInstance().parse(amount).doubleValue();
+                        doubleValue = BitcoinConverter.convert(doubleValue, BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
+
+                        cryptoBrokerWalletModuleManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(doubleValue), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
                     }
                     dismiss();
                     return;
@@ -195,7 +201,10 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
                         cryptoBrokerWalletModuleManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletModuleManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
+                        double doubleValue = DecimalFormat.getInstance().parse(amount).doubleValue();
+                        doubleValue = BitcoinConverter.convert(doubleValue, BitcoinConverter.Currency.BITCOIN, BitcoinConverter.Currency.SATOSHI);
+
+                        cryptoBrokerWalletModuleManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(doubleValue), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
                     }
                     dismiss();
                     return;

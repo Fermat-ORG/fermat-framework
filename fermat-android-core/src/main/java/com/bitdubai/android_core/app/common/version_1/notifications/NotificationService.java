@@ -1,4 +1,5 @@
 package com.bitdubai.android_core.app.common.version_1.notifications;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,7 +20,6 @@ import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatA
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 /**
- * Created by mati on 2016.03.01..
+ * Created by Matias Furszyfer on 2016.03.01..
  */
 public class NotificationService extends Service {
     public static String LOG_TAG = "NotificationService";
@@ -47,6 +47,10 @@ public class NotificationService extends Service {
             return NotificationService.this;
         }
     }
+
+
+
+
     public NotificationService() {
         this.lstNotifications = new HashMap<>();
         this.mapNotifications = new HashMap<>();
@@ -72,12 +76,12 @@ public class NotificationService extends Service {
         super.onDestroy();
         Log.v(LOG_TAG, "in onDestroy");
     }
-    public void notificate(String code,FermatStructure fermatStructure){
+    public void notificate(String publicKey,String code){
         Notification.Builder builder = null;
-        if (fermatStructure != null) {
+        if (publicKey != null) {
             // notificationIdCount++;
             // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this, ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(publicKey, this, ApplicationSession.getInstance().getAppManager().getAppsSession(publicKey));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(code);
@@ -88,7 +92,7 @@ public class NotificationService extends Service {
                 if(notificationPainter.showNotification()) {  //get if notification settings enabled view
                     RemoteViews remoteViews = notificationPainter.getNotificationView(code);
                     Intent intent = new Intent(this,AppActivity.class);
-                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
+                    intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     PendingIntent pi = PendingIntent
@@ -120,7 +124,7 @@ public class NotificationService extends Service {
 
             }else{
                 Intent intent = new Intent(this,AppActivity.class);
-                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, fermatStructure.getPublicKey());
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
                 intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 PendingIntent pi = PendingIntent
                         .getActivity(this, 0, intent, 0);

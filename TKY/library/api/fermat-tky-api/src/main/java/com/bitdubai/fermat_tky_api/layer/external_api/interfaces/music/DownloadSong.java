@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music;
 
+import java.io.Serializable;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/03/16.
  */
-public interface DownloadSong {
+public interface DownloadSong extends Serializable {
 
     /**
      * This method returns the DownloadSong Id.

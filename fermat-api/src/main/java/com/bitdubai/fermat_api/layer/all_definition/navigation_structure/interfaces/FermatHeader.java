@@ -12,4 +12,9 @@ public interface FermatHeader extends Serializable {
 
 
     boolean hasExpandable();
+
+
+    boolean getRemoveHeaderScroll();
+
+    boolean getStartCollapse();
 }

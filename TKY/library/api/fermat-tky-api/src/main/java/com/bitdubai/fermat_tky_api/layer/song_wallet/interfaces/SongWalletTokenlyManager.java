@@ -13,6 +13,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeW
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ import java.util.UUID;
  * This public interface contains all the methods to implement in Song Wallet Tokenly.
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 15/03/16.
  */
-public interface SongWalletTokenlyManager extends FermatManager{
+public interface SongWalletTokenlyManager extends FermatManager, Serializable{
 
     /**
      * This method returns a songs list by SongStatus enum

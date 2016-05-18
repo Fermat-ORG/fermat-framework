@@ -110,7 +110,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         imageView.setVisibility(View.VISIBLE);
 
         header = (FermatTextView) layout.findViewById(R.id.textView_header_text);
-        header.setText(moduleManager.getBankingWallet().getBankName());
+        header.setText(moduleManager.getBankName());
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.bw_fab_multiple_actions);
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.available_balance);
         this.bookTextView = (FermatTextView) layout.findViewById(R.id.book_balance);
@@ -161,8 +161,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         aliasText.setText(bankAccountNumber.getAlias());
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(8);
-        availableTextView.setText(df.format(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
-        bookTextView.setText(df.format(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        availableTextView.setText(df.format(moduleManager.getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        bookTextView.setText(df.format(moduleManager.getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
         balanceText.setTextColor(getResources().getColor(R.color.text_color_soft_blue));
         if (availableTextView.getText().equals(bookTextView.getText())) {
             bookTextView.setVisibility(View.GONE);
@@ -283,8 +283,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
         List<BankMoneyTransactionRecord> data = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                data.addAll(moduleManager.getBankingWallet().getPendingTransactions());
-                data.addAll(moduleManager.getBankingWallet().getTransactions(bankAccountNumber.getAccount()));
+                data.addAll(moduleManager.getPendingTransactions());
+                data.addAll(moduleManager.getTransactions(bankAccountNumber.getAccount()));
 
             } catch (Exception ex) {
                 if (errorManager != null)
@@ -338,7 +338,7 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
     private void cancelTransaction(BankMoneyTransactionRecord data){
         if (data.getStatus()== BankTransactionStatus.PENDING){
             //TODO: cancel transction
-            moduleManager.getBankingWallet().cancelAsyncBankTransaction(data);
+            moduleManager.cancelAsyncBankTransaction(data);
         }
     }
 }

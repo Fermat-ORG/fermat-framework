@@ -1,4 +1,24 @@
+buildscript {
+    repositories {
+        maven {
+            url 'http://52.34.0.33:8081/artifactory/plugins-release'
+            credentials {
+                username = "fermat"
+                password = "fermat"
+            }
+            name = "maven-main-cache"
+        }
+    }
+    dependencies {
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.0.1"
+    }
+}
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
+
 android {
 
     lintOptions {
@@ -11,7 +31,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -72,4 +92,38 @@ dependencies {
 
 repositories {
     maven { url 'https://jitpack.io' }
+}
+
+def packageName = 'org.fermat.ccp.android.loss.protected.wallet'
+def libraryVersion = '1.0.0'
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId packageName
+            version libraryVersion
+            artifactId project.getName()
+
+            artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+        }
+    }
+}
+
+artifactory {
+    contextUrl = 'http://52.34.0.33:8081/artifactory'
+    publish {
+        repository {
+            repoKey = 'libs-release-local'
+
+            username = "fermat"
+            password = "fermat"
+        }
+        defaults {
+            publications('aar')
+            publishArtifacts = true
+
+            properties = ['qa.level': 'basic', 'q.os': 'android', 'dev.team': 'core']
+            publishPom = true
+        }
+    }
 }

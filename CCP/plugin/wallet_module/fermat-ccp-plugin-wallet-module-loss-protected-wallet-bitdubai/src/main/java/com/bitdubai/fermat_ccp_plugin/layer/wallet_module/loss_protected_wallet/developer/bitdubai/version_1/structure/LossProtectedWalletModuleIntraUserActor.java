@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet
 
 
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
+import java.io.Serializable;
 
 /**
  * The class <code>CryptoWalletWalletModuleIntraUserActor</code>
@@ -10,7 +11,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
  * Created Natalia Cortez on 07/03/2016.
  * @version 1.0
  */
-public class LossProtectedWalletModuleIntraUserActor implements LossProtectedWalletIntraUserActor {
+public class LossProtectedWalletModuleIntraUserActor implements LossProtectedWalletIntraUserActor ,Serializable{
 
     private final String     alias;
     private final boolean    isContact;

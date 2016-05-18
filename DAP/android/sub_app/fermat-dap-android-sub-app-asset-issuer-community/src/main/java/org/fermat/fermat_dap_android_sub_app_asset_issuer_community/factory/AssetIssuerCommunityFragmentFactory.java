@@ -3,13 +3,14 @@ package org.fermat.fermat_dap_android_sub_app_asset_issuer_community.factory;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunityConnectionOtherProfileFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunityConnectionsListFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunityHomeFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunityNotificationsFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.fragments.IssuerCommunitySettingsFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * Created by francisco on 21/10/15.
