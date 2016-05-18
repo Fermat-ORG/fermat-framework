@@ -219,14 +219,13 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
     }
 
 
-    private SettingsManager<LossProtectedWalletSettings> settingsManager;
 
     LossProtectedWalletModuleManager walletModuleLossProtectedWallet = null;
     @Override
     public ModuleManager<LossProtectedWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
 
-            logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "LossProtectedWallet instantiation started...", null, null);
+           // logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "LossProtectedWallet instantiation started...", null, null);
 
             if(walletModuleLossProtectedWallet == null) {
                 walletModuleLossProtectedWallet = new LossProtectedWalletModuleManager(
@@ -253,7 +252,7 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
 
             walletModuleLossProtectedWallet.initialize();
 
-            logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
+           // logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
 
             return walletModuleLossProtectedWallet;
         } catch (final Exception e) {
