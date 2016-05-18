@@ -55,7 +55,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return new AccountsListFragment();
     }
 
-    private View emtyView;
+    private View emptyView;
     private FermatTextView header;
 
     private PresentationDialog presentationDialog;
@@ -78,7 +78,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
-        this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+        this.emptyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankingWallet().getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
@@ -230,10 +230,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     private void showOrHideNoAccountListView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
-            emtyView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            emtyView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
         }
     }
 
