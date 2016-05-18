@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * Created by Nerio on 22/09/15.
  */
-public class RedeemPointActorRecord implements org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint {
+public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
     private String                  actorPublicKey      ;
     private String                  name                ;

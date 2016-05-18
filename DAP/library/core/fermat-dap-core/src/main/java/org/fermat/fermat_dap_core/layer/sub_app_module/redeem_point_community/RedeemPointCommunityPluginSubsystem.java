@@ -16,7 +16,7 @@ import org.fermat.fermat_dap_plugin.layer.sub_app_module.redeem.point.developer.
 public class RedeemPointCommunityPluginSubsystem extends AbstractPluginSubsystem {
 
     public RedeemPointCommunityPluginSubsystem() {
-        super(new PluginReference(Plugins.REDEEM_POINT));
+        super(new PluginReference(Plugins.REDEEM_POINT_COMMUNITY));
     }
 
     @Override
