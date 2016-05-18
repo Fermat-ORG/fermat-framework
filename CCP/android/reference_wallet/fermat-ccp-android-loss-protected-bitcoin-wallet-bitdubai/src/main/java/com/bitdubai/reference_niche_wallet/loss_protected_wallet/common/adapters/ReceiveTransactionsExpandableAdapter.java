@@ -10,14 +10,18 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.GrouperViewHolder;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ListItemTransactionChild;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ListItemTransactionParent;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.TransactionViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
 
 import java.util.List;
 
-
-public class ReceivetransactionsExpandableAdapter
-        extends ExpandableRecyclerAdapter<GrouperViewHolder, TransactionViewHolder, GrouperItem, LossProtectedWalletTransaction> {
+/**
+ * Created by Gian Barboza on 17/05/16.
+ */
+public class ReceiveTransactionsExpandableAdapter
+        extends ExpandableRecyclerAdapter<ListItemTransactionParent, ListItemTransactionChild, GrouperItem, LossProtectedWalletTransaction> {
 
     private LayoutInflater mInflater;
 
@@ -29,7 +33,7 @@ public class ReceivetransactionsExpandableAdapter
      * @param context        the activity context where the RecyclerView is going to be displayed
      * @param parentItemList the list of parent items to be displayed in the RecyclerView
      */
-    public ReceivetransactionsExpandableAdapter(Context context, List<GrouperItem> parentItemList,Resources res) {
+    public ReceiveTransactionsExpandableAdapter(Context context, List<GrouperItem> parentItemList, Resources res) {
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
         this.res = res;
@@ -45,9 +49,9 @@ public class ReceivetransactionsExpandableAdapter
      * @return the user's custom parent ViewHolder that must extend ParentViewHolder
      */
     @Override
-    public GrouperViewHolder onCreateParentViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.ccp_grouper_list_item, parent, false);
-        return new GrouperViewHolder(view,res);
+    public ListItemTransactionParent onCreateParentViewHolder(ViewGroup parent) {
+        View view = mInflater.inflate(R.layout.list_item_trasaction_parent, parent, false);
+        return new ListItemTransactionParent(view,res);
     }
 
     /**
@@ -58,11 +62,10 @@ public class ReceivetransactionsExpandableAdapter
      * @return the user's custom parent ViewHolder that must extend ParentViewHolder
      */
     @Override
-    public TransactionViewHolder onCreateChildViewHolder(ViewGroup parent) {
-        View view = mInflater.inflate(R.layout.ccp_transaction_list_item, parent, false);
-        return new TransactionViewHolder(view);
+    public ListItemTransactionChild onCreateChildViewHolder(ViewGroup parent) {
+        View view = mInflater.inflate(R.layout.list_item_transaction_child, parent, false);
+        return new ListItemTransactionChild(view);
     }
-
 
 
     /**
@@ -73,8 +76,8 @@ public class ReceivetransactionsExpandableAdapter
      * @param position         the position in the RecyclerView of the item
      */
     @Override
-    public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
-        parentViewHolder.bind(parentListItem.getChildCount(),(LossProtectedWalletTransaction) parentListItem.getCryptoWalletTransaction());
+    public void onBindParentViewHolder(ListItemTransactionParent parentViewHolder, int position, GrouperItem parentListItem) {
+        parentViewHolder.bind((LossProtectedWalletTransaction) parentListItem.getCryptoWalletTransaction());
     }
 
     /**
@@ -85,7 +88,8 @@ public class ReceivetransactionsExpandableAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(TransactionViewHolder childViewHolder, int position, LossProtectedWalletTransaction childListItem) {
+    public void onBindChildViewHolder(ListItemTransactionChild childViewHolder, int position, LossProtectedWalletTransaction childListItem) {
         childViewHolder.bind(childListItem);
     }
+
 }
