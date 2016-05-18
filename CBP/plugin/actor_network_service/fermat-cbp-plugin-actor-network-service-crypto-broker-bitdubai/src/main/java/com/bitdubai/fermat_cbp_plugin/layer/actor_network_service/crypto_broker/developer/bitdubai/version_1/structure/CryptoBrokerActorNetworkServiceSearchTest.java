@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListCryptoBrokersException;
@@ -25,16 +23,10 @@ import java.util.List;
 public final class CryptoBrokerActorNetworkServiceSearchTest extends CryptoBrokerSearch {
 
     private final CryptoBrokerActorNetworkServicePluginRootTest pluginRoot;
-    private final ErrorManager                   errorManager                  ;
-    private final PluginVersionReference         pluginVersionReference        ;
 
-    public CryptoBrokerActorNetworkServiceSearchTest(final CryptoBrokerActorNetworkServicePluginRootTest pluginRoot,
-                                                     final ErrorManager errorManager,
-                                                     final PluginVersionReference pluginVersionReference) {
+    public CryptoBrokerActorNetworkServiceSearchTest(final CryptoBrokerActorNetworkServicePluginRootTest pluginRoot) {
 
         this.pluginRoot = pluginRoot;
-        this.errorManager = errorManager;
-        this.pluginVersionReference = pluginVersionReference;
     }
 
     @Override
@@ -69,12 +61,12 @@ public final class CryptoBrokerActorNetworkServiceSearchTest extends CryptoBroke
 
         } catch (final CantRequestProfileListException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Problem trying to request list of registered components in communication layer.");
 
         } catch (final Exception e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListCryptoBrokersException(e, "", "Unhandled error.");
         }
     }

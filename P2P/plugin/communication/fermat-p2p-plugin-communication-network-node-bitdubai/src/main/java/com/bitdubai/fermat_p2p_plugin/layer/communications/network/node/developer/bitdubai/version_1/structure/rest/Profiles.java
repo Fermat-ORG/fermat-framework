@@ -134,7 +134,7 @@ public class Profiles implements RestFulServices {
 
         for (ActorsCatalog actorsCatalog : actors) {
 
-            if (clientIdentityPublicKey == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
+            if (clientIdentityPublicKey == null || actorsCatalog.getClientIdentityPublicKey() == null || !actorsCatalog.getClientIdentityPublicKey().equals(clientIdentityPublicKey)) {
                 ActorProfile actorProfile = new ActorProfile();
                 actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
                 actorProfile.setAlias(actorsCatalog.getAlias());

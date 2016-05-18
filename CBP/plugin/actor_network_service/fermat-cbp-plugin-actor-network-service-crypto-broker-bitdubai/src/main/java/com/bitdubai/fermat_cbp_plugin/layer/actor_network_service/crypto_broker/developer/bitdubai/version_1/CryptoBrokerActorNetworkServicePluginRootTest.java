@@ -83,9 +83,7 @@ public class CryptoBrokerActorNetworkServicePluginRootTest extends AbstractActor
 
             fermatManager = new CryptoBrokerActorNetworkServiceManagerTest(
                     cryptoBrokerActorNetworkServiceDao ,
-                    this,
-                    errorManager                       ,
-                    getPluginVersionReference()
+                    this
             );
 
         } catch(final CantInitializeDatabaseException e) {

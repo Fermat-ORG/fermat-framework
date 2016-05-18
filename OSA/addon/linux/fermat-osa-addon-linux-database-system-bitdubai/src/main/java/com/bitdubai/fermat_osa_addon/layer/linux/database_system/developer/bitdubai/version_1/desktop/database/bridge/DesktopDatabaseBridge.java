@@ -278,8 +278,6 @@ public class DesktopDatabaseBridge {
             statement = conn.createStatement();
             statement.executeUpdate(SQL);
 
-            conn.commit();
-
         } catch (SQLException ex) {
 
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);

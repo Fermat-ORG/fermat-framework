@@ -24,6 +24,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -44,8 +45,14 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -550,18 +557,27 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             throw new IllegalArgumentException("The discoveryQueryParameters is required, can not be null");
         }
 
+        HttpURLConnection conn = null;
+
         try {
 
-            /*
-             * Construct the parameters
-             */
-            MultiValueMap<String,Object> parameters = new LinkedMultiValueMap<>();
-            parameters.add("client_public_key", clientIdentity.getPublicKey());
-            parameters.add("discovery_params", discoveryQueryParameters.toJson());
+            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/rest/api/v1/profiles/actors");
 
-            // Create a new RestTemplate instance
-            RestTemplate restTemplate = new RestTemplate(true);
-            String respond = restTemplate.postForObject("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + HardcodeConstants.DEFAULT_PORT+ "/fermat/rest/api/v1/profiles/actors", parameters, String.class);
+            String formParameters = "client_public_key=" + URLEncoder.encode(clientIdentity.getPublicKey(), "UTF-8") + "&discovery_params=" + URLEncoder.encode(discoveryQueryParameters.toJson(), "UTF-8");
+
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", Integer.toString(formParameters.length()));
+            conn.setRequestProperty("Accept", "application/json");
+
+            OutputStream os = conn.getOutputStream();
+            os.write(formParameters.getBytes());
+            os.flush();
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
 
             /*
              * if respond have the result list
@@ -577,8 +593,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                  /*
                  * Get the receivedList
                  */
-                Gson gson = new Gson();
-                resultList = gson.fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<ActorProfile>>() {
+                resultList = GsonProvider.getGson().fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<List<ActorProfile>>() {
                 }.getType());
 
                 System.out.println("NetworkClientCommunicationConnection - resultList.size() = " + resultList.size());
@@ -592,7 +607,11 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
             CantRequestProfileListException cantRequestListException = new CantRequestProfileListException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw cantRequestListException;
 
+        }finally {
+            if (conn != null)
+                conn.disconnect();
         }
+
 
         return resultList;
     }

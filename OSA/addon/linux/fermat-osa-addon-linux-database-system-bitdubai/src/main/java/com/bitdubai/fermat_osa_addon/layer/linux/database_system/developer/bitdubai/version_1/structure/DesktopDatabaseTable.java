@@ -593,31 +593,38 @@ public class DesktopDatabaseTable implements DatabaseTable {
      * DatabaseTable interface public void.
      */
 
-    @Override
+    /**
+     * DatabaseTable interface private void.
+     */
     public String makeFilter() {
 
         // I check the definition for the filter object, filter type, filter columns names
         // and build the WHERE statement
+        String filter = "";
         StringBuilder strFilter = new StringBuilder();
 
-        if (this.tableFilterGroup != null) {
-            for (int i = 0; i < tableFilterGroup.getFilters().size(); ++i) {
+        if (this.tableFilter != null) {
+            for (int i = 0; i < tableFilter.size(); ++i) {
 
-                strFilter.append(makeInternalCondition(tableFilterGroup.getFilters().get(i)));
+                strFilter.append(makeInternalCondition(tableFilter.get(i)));
 
-                if (i < (tableFilterGroup.getFilters().size() - 1)) {
-                    strFilter.append(" ")
-                            .append(tableFilterGroup.getOperator())
-                            .append(" ");
-                }
+                if (i < tableFilter.size() - 1)
+                    strFilter.append(" AND ");
+            }
 
+
+            filter = strFilter.toString();
+            if (strFilter.length() > 0) filter = " WHERE " + filter;
+
+            return filter;
+        } else {
+            //if set group filter
+            if (this.tableFilterGroup != null) {
+                return makeGroupFilters(this.tableFilterGroup);
+            } else {
+                return filter;
             }
         }
-
-        String filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = " WHERE " + filter;
-
-        return filter;
     }
 
     @Override
@@ -763,38 +770,44 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
         StringBuilder strFilter = new StringBuilder();
+        String filter;
 
         if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
             strFilter.append("(");
             strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
 
             int ix = 0;
-            for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                if (subGroup.getFilters().size() > 0 || ix > 0) {
-                    switch (databaseTableFilterGroup.getOperator()) {
-                        case AND:
-                            strFilter.append(" AND ");
-                            break;
-                        case OR:
-                            strFilter.append(" OR ");
-                            break;
-                        default:
-                            strFilter.append(" ");
+
+            if (databaseTableFilterGroup.getSubGroups() != null){
+
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
                     }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
                 }
-                strFilter.append("(");
-                strFilter.append(makeGroupFilters(subGroup));
-                strFilter.append(")");
-                ix++;
+
             }
+
             strFilter.append(")");
         }
 
-        String filter = strFilter.toString();
+        filter = strFilter.toString();
         if (strFilter.length() > 0) filter = " WHERE " + filter;
 
         return filter;
     }
-
 
 }
