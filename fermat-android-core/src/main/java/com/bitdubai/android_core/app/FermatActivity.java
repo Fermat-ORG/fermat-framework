@@ -427,18 +427,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                      * Set header
                      */
                     FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter,appConnections.getActiveIdentity());
-                    assert frameLayout != null;
-                    frameLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (viewPainter.hasClickListener())
-                                try {
-                                    selectApp("public_key_ccp_intra_user_identity");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                        }
-                    });
                     /**
                      * Set adapter
                      */
