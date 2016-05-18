@@ -263,7 +263,6 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
                         listChild.add(cryptoWalletTransaction);
                       GrouperItem<LossProtectedWalletTransaction,LossProtectedWalletTransaction> grouperItem = new GrouperItem<>(listChild,false,cryptoWalletTransaction);
                         data.add(grouperItem);
-                        listChild.clear();
 
                     }
 

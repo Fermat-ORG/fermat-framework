@@ -337,7 +337,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
                         switch (wallet.getWalletName()){
                             case "Loss Protected Wallet":
-                                bitmap = BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.bitcoin_wallet_2);
+                                bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.bitcoin_wallet_2);
                                 bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
                                 break;
 
