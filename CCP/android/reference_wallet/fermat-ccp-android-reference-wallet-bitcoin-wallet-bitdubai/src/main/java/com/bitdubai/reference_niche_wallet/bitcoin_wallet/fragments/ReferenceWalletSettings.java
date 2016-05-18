@@ -208,13 +208,16 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 m_Text = input.getText().toString();
-                final List<String> mnemonicCode = Arrays.asList(m_Text.split(" "));
-                final long date = Long.parseLong(mnemonicCode.get(mnemonicCode.size()));
+                final List<String> mnemonicCodePlusDate = Arrays.asList(m_Text.split(" "));
+                final long date = Long.parseLong(mnemonicCodePlusDate.get(mnemonicCodePlusDate.size()-1));
+                ArrayList<String> mnemonicCode = new ArrayList<String>(mnemonicCodePlusDate);
+                mnemonicCode.remove(mnemonicCode.size() - 1);
+                final List<String> tempList = new ArrayList<String>(mnemonicCode);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            cryptoWallet.importMnemonicCode(mnemonicCode,date,BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            cryptoWallet.importMnemonicCode(tempList,date,BlockchainNetworkType.getDefaultBlockchainNetworkType());
                         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
                             cantLoadExistingVaultSeed.printStackTrace();
                         }
