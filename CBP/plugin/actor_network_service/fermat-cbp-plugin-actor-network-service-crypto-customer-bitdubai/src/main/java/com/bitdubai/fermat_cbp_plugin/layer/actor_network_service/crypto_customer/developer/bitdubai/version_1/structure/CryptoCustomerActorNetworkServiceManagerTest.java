@@ -105,7 +105,7 @@ public final class CryptoCustomerActorNetworkServiceManagerTest implements Crypt
 
     @Override
     public final CryptoCustomerSearch getSearch() {
-        return null;
+        return new CryptoCustomerActorNetworkServiceSearchTest(pluginRoot, errorManager, pluginVersionReference);
     }
 
 }

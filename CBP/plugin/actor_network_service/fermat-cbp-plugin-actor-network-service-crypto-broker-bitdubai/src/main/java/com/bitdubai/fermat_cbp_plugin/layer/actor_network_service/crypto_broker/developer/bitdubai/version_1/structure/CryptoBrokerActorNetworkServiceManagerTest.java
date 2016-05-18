@@ -177,7 +177,10 @@ public final class CryptoBrokerActorNetworkServiceManagerTest implements CryptoB
 
     @Override
     public final CryptoBrokerSearch getSearch() {
-        return null;
+
+        return new CryptoBrokerActorNetworkServiceSearchTest(
+                pluginRoot, errorManager,pluginVersionReference
+        );
     }
 
     /**
