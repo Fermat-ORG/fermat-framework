@@ -5,17 +5,16 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_gradient"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+
+    >
 
     <LinearLayout
         android:id="@+id/fragment_container2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="15dp"
-        android:background="@drawable/search_contacts_container"
+        android:layout_height="48dp"
+        android:background="@drawable/header_bg_gradient_color"
         android:orientation="horizontal">
 
         <ImageView
@@ -40,7 +39,7 @@
             android:singleLine="true"
             android:textColor="#ffffff"
             android:textColorHint="#fff"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <ImageButton
 
@@ -60,13 +59,15 @@
         android:id="@+id/contacts_container"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/color_white">
 
         <include layout="@layout/loading_empty_view" />
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/color_white">
 
             <com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
                 android:id="@+id/list_view"
@@ -82,21 +83,22 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                android:visibility="gone"
+                android:background="@color/color_white">
 
                 <ImageView
                     android:layout_width="125dp"
                     android:layout_height="125dp"
-                    android:src="@drawable/contacts_empty_icon" />
+                    android:src="@drawable/nocontacts_icon" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="15dp"
+                    android:padding="20dp"
                     android:text="@string/click_me_to_search_text"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textColor="#fff"
+                    android:textColor="#666666"
                     app:typeface="ROBOTO_REGULAR" />
 
             </LinearLayout>

@@ -1,5 +1,6 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -13,10 +14,11 @@ import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.i
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantDistributeDigitalAssetsException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.interfaces.AssetDistributionManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantGetActorAssetIssuerException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -28,7 +30,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
 
     AssetVaultManager assetVaultManager;
     DigitalAssetDistributor digitalAssetDistributor;
-    ErrorManager errorManager;
+    AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot;
     UUID pluginId;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
@@ -36,18 +38,19 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
     //DigitalAssetDistributionVault digitalAssetDistributionVault;
 
     public AssetDistributionTransactionManager(AssetVaultManager assetVaultManager,
-                                               ErrorManager errorManager,
+                                               AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot,
                                                UUID pluginId,
                                                PluginDatabaseSystem pluginDatabaseSystem,
                                                PluginFileSystem pluginFileSystem,
                                                BitcoinNetworkManager bitcoinNetworkManager,
-                                               org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault,
+                                               DigitalAssetDistributionVault digitalAssetDistributionVault,
                                                AssetDistributionDao assetDistributionDao,
                                                AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                                ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
 
-        this.digitalAssetDistributor = new DigitalAssetDistributor(assetVaultManager,
-                errorManager,
+        this.digitalAssetDistributor = new DigitalAssetDistributor(
+                assetVaultManager,
+                assetDistributionDigitalAssetTransactionPluginRoot,
                 pluginId,
                 pluginFileSystem,
                 bitcoinNetworkManager);
@@ -76,7 +79,7 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.digitalAssetDistributor.setAssetDistributionDao(assetDistributionDatabaseDao);
     }
 
-    public void setDigitalAssetDistributionVault(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException {
+    public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException {
         this.digitalAssetDistributor.setDigitalAssetDistributionVault(digitalAssetDistributionVault);
     }
 
@@ -105,13 +108,6 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    public void setErrorManager(ErrorManager errorManager) throws CantSetObjectException {
-        if (errorManager == null) {
-            throw new CantSetObjectException("ErrorManager is null");
-        }
-        this.errorManager = errorManager;
-    }
-
     public void setAssetVaultManager(AssetVaultManager assetVaultManager) throws CantSetObjectException {
         if (assetVaultManager == null) {
             throw new CantSetObjectException("AssetVaultManager is null");
@@ -125,10 +121,10 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         }
         try {
             this.digitalAssetDistributor.setActorAssetIssuerManager(actorAssetIssuerManager);
-        } catch (CantGetActorAssetIssuerException exception) {
-            throw new CantSetObjectException(exception, "Setting the Actor Asset Issuer Manager", "Getting the Actor Asset Issuer");
+        } catch (CantGetActorAssetIssuerException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantSetObjectException(e, "Setting the Actor Asset Issuer Manager", "Getting the Actor Asset Issuer");
         }
-
     }
 
     @Override
@@ -136,8 +132,9 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         try {
             this.digitalAssetDistributor.setWalletPublicKey(walletPublicKey);
             this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
-        } catch (Exception exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "Unexpected exception");
+        } catch (Exception e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDistributeDigitalAssetsException(e, "Distributing Assets", "Unexpected exception");
         }
 
     }

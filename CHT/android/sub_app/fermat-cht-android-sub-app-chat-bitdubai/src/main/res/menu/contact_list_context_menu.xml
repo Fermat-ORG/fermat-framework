@@ -1,14 +1,15 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_view_contact"
         android:title="@string/menu_view_contact"
-        android:showAsAction="ifRoom"/>
-    <item
+        app:showAsAction="collapseActionView"/>
+    <!--item
         android:id="@+id/menu_edit_contact"
         android:title="@string/menu_edit_contact"
         android:showAsAction="ifRoom"/>
     <item
         android:id="@+id/menu_block_contact"
         android:title="@string/menu_block_contact"
-        android:showAsAction="ifRoom"/>
+        app:showAsAction="collapseActionView"/-->
 </menu>

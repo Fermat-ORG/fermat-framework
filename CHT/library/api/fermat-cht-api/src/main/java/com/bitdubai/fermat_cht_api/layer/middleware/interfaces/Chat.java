@@ -38,7 +38,11 @@ public interface Chat {
     List<Contact> getContactAssociated();
     void setContactAssociated(List<Contact> chatContacts);
     void setContactAssociated(Contact contact);
-    /**
+    boolean isWriting();
+    void setIsWriting(boolean isWriting);
+    boolean isOnline();
+    void setIsOnline(boolean isWriting);
+     /**
      * This method will return a String with xml format with the contact list
      * @return
      */

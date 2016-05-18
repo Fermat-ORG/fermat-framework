@@ -20,14 +20,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +45,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         this.pluginId = pluginId;
     }
 
-    public ChatActorConnection chatActorConnectionExists(final ChatLinkedActorIdentity linkedIdentity,
+    public ChatActorConnection chatActorConnectionExists(ChatLinkedActorIdentity linkedIdentity,
                                          final String publicKey) throws CantGetActorConnectionException {
 
         if (linkedIdentity == null)
@@ -78,12 +77,12 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             throw new CantGetActorConnectionException(
                     e,
-                    "linkedIdentity: " + linkedIdentity + " - publicKey: " + publicKey,
+                    "linkedIdentity: - publicKey: " + publicKey,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetActorConnectionException(
                     e,
-                    "linkedIdentity: " + linkedIdentity + " - publicKey: " + publicKey,
+                    "linkedIdentity: - publicKey: " + publicKey,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
@@ -93,10 +92,9 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
         try {
 
-            ChatActorConnection oldActorConnection = chatActorConnectionExists(actorConnection.getLinkedIdentity(),actorConnection.getPublicKey());
+            ChatActorConnection oldActorConnection = chatActorConnectionExists(actorConnection.getLinkedIdentity(), actorConnection.getPublicKey());
 
-            if (oldActorConnection != null && !oldActorConnection.getConnectionState().equals(ConnectionState.DISCONNECTED_LOCALLY)
-                    && !oldActorConnection.getConnectionState().equals(ConnectionState.DISCONNECTED_REMOTELY)) {
+            if (oldActorConnection != null && oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED)) {
 
                 throw new ActorConnectionAlreadyExistsException(
                         "actorConnection: " + actorConnection,
@@ -107,24 +105,20 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
             DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
-            DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
-
             entityRecord = buildDatabaseRecord(
                     entityRecord,
                     actorConnection
             );
 
-            if(oldActorConnection == null) {
-                actorConnectionsTable.insertRecord(entityRecord);
-            }
-            else {
+            if (oldActorConnection != null) {
+                DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
                 entityRecordOld = buildDatabaseRecord(
                         entityRecordOld,
                         oldActorConnection
                 );
                 actorConnectionsTable.deleteRecord(entityRecordOld);
-                actorConnectionsTable.insertRecord(entityRecord);
             }
+            actorConnectionsTable.insertRecord(entityRecord);
 
             return buildActorConnectionNewRecord(entityRecord);
 

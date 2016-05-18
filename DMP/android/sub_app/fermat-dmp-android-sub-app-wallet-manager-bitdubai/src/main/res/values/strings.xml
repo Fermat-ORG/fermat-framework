@@ -102,7 +102,7 @@
     <string name="wizzard_welcome_text">Here you will be able to chat, get a taxi, rent apartments, find a date, publish and search classifieds, find a job, hire or provide freelance services, get digital coupons, vouchers, and discounts, buy and sell goods and services and much more!  Fermat is open source and it is under construction.</string>
     <string name="welcome_wizzard_first_title" >Welcome to</string>
     <string name="welcome_wizzard_second_title">Fermat Apps</string>
-    <string name="wizzard_welcome_second_text">* Fermat apps are open source.\n* Fermat apps are peer to peer (no company in the middle or info on the cloud).\n* Fermat business apps are middleman-free resulting in cheaper transactions.</string>
+    <string name="wizzard_welcome_second_text">* Fermat apps are open source.\n* Fermat apps are peer to peer (no company in the middle or info at the cloud).\n* Fermat business apps are middleman-free resulting in cheaper transactions.</string>
     <string name="welcome_wizzard_third_title">User Profiles</string>
     <string name="welcome_wizzard_fourth_title">Communities</string>
     <string name="welcome_wizzard_fifth_title" >Ready to go!</string>

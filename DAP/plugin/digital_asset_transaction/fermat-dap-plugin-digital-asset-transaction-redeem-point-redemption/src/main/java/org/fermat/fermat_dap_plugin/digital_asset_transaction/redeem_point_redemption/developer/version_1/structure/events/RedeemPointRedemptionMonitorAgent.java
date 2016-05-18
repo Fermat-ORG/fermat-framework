@@ -53,9 +53,10 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         this.status = ServiceStatus.CREATED;
     }
 
-    private ErrorManager errorManager;
+    RedeemPointRedemptionDigitalAssetTransactionPluginRoot redeemPointRedemptionDigitalAssetTransactionPluginRoot;
     private LogManager logManager;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -95,7 +96,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
     private final TransactionProtocolManager<CryptoTransaction> protocolManager;
     //CONSTRUCTORS
 
-    public RedeemPointRedemptionMonitorAgent(ErrorManager errorManager,
+    public RedeemPointRedemptionMonitorAgent(RedeemPointRedemptionDigitalAssetTransactionPluginRoot redeemPointRedemptionDigitalAssetTransactionPluginRoot,
                                              LogManager logManager,
                                              AssetTransmissionNetworkServiceManager assetTransmissionManager,
                                              PluginDatabaseSystem pluginDatabaseSystem,
@@ -107,7 +108,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                              BitcoinNetworkManager bitcoinNetworkManager,
                                              ActorAssetIssuerManager actorAssetIssuerManager,
                                              IncomingCryptoManager incomingCryptoManager) throws CantSetObjectException {
-        this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
+
+        this.redeemPointRedemptionDigitalAssetTransactionPluginRoot = Validate.verifySetter(redeemPointRedemptionDigitalAssetTransactionPluginRoot, "errorManager is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.assetTransmissionManager = Validate.verifySetter(assetTransmissionManager, "assetTransmissionManager is null");
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
@@ -134,6 +136,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             Thread agentThread = new Thread(agent, "Redeem Point Redemption MonitorAgent");
             agentThread.start();
         } catch (Exception e) {
+            redeemPointRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             throw new CantStartAgentException();
         }
         this.status = ServiceStatus.STARTED;
@@ -147,7 +150,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         try {
             latch.await(); //WAIT UNTIL THE LAST RUN FINISH
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            redeemPointRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
         }
         agent = null; //RELEASE RESOURCES.
         logManager.log(org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: successfully stopped...", null, null);
@@ -189,7 +192,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                     /*If this happen there's a chance that the information remains
                     in a corrupt state. That probably would be fixed in a next run.
                     */
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                    redeemPointRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                 }
             }
             latch.countDown();
@@ -362,9 +365,9 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                     }
                 }
             } catch (CantGetAssetUserActorsException | org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException | org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                redeemPointRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                redeemPointRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             }
         }
 

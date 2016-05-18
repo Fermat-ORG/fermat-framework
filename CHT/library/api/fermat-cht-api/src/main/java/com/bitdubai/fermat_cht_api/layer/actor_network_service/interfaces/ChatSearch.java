@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces;
 
-import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 
@@ -50,6 +49,8 @@ public abstract class ChatSearch {
      * @throws CantListChatException  if something goes wrong.
      */
     public abstract List<ChatExposingData> getResult(final Integer max) throws CantListChatException;
+
+    public abstract ChatExposingData getResult(final String publicKey) throws CantListChatException;
 
     /**
      * Through the method <code>resetFilters</code> you can reset the filters set,

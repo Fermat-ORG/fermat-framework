@@ -11,7 +11,6 @@ import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
-import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.script.ScriptChunk;
 
 import java.util.ArrayList;

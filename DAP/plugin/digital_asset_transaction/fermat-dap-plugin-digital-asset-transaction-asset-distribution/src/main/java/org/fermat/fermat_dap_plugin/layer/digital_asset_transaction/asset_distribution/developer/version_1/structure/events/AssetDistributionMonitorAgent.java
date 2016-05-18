@@ -62,10 +62,14 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantCheckAssetDistributionProgressException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributor;
 
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.Date;
 import java.util.List;
@@ -74,38 +78,40 @@ import java.util.UUID;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/10/15.
  */
-public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     private Thread agentThread;
     private LogManager logManager;
-    private ErrorManager errorManager;
+    AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot;
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
     private AssetVaultManager assetVaultManager;
-    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault;
+    private DigitalAssetDistributionVault digitalAssetDistributionVault;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
-    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributor distributor;
+    private DigitalAssetDistributor distributor;
 
     public AssetDistributionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
-                                         ErrorManager errorManager,
+                                         AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot,
                                          UUID pluginId,
                                          PluginFileSystem pluginFileSystem,
                                          AssetVaultManager assetVaultManager,
                                          BitcoinNetworkManager bitcoinNetworkManager,
                                          LogManager logManager,
-                                         org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault,
+                                         DigitalAssetDistributionVault digitalAssetDistributionVault,
                                          AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.assetDistributionDigitalAssetTransactionPluginRoot = assetDistributionDigitalAssetTransactionPluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
         this.assetTransmissionManager = assetTransmissionManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
-        this.distributor = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributor(
+
+        this.distributor = new DigitalAssetDistributor(
                 assetVaultManager,
-                errorManager,
+                assetDistributionDigitalAssetTransactionPluginRoot,
                 pluginId,
                 pluginFileSystem,
                 bitcoinNetworkManager);
@@ -141,25 +147,17 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             MonitorAgent monitorAgent = new MonitorAgent();
 
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-            monitorAgent.setErrorManager(this.errorManager);
-            monitorAgent.setAssetDistributionDao(new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault));
+            monitorAgent.setAssetDistributionDao(new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault));
             this.agentThread = new Thread(monitorAgent, "Asset Distribution MonitorAgent");
             this.agentThread.start();
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_ISSUING_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch (Exception e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
-
-
     }
 
     @Override
     public void stop() {
         this.agentThread.interrupt();
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -181,18 +179,12 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements AssetIssuingTransactionNotificationAgent, DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgent implements AssetIssuingTransactionNotificationAgent, DealsWithPluginDatabaseSystem, Runnable {
 
         public final int SLEEP_TIME = AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME;
-        ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
         int iterationNumber = 0;
-        org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao assetDistributionDao;
-
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
-        }
+        AssetDistributionDao assetDistributionDao;
 
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
@@ -221,12 +213,10 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
 
                     logManager.log(AssetDistributionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } catch (CantCheckAssetDistributionProgressException | CantExecuteQueryException exception) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                } catch (CantCheckAssetDistributionProgressException | CantExecuteQueryException e) {
+                    assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 }
-
             }
-
         }
 
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetDistributionProgressException {
@@ -235,31 +225,44 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 checkPendingTransactions();
                 checkDeliveringTime();
 
-            } catch (CantExecuteDatabaseOperationException exception) {
-                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset distribution monitor agent", "Cannot execute database operation");
-            } catch (CantSendAssetBitcoinsToUserException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Cannot send crypto currency to asset user");
-            } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Unexpected result in database query");
-            } catch (CantGetCryptoTransactionException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Cannot get genesis transaction from asset vault");
-            } catch (CantDeliverPendingTransactionsException | CantSendTransactionNewStatusNotificationException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Cannot deliver pending transactions");
-            } catch (CantDistributeDigitalAssetsException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Cannot distribute digital asset");
-            } catch (CantConfirmTransactionException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Cannot confirm transaction");
-            } catch (CantGetDigitalAssetFromLocalStorageException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Cannot get DigitalAssetMetadata from local storage");
-            } catch (CantDeliverDigitalAssetToAssetWalletException exception) {
-                throw new CantCheckAssetDistributionProgressException(exception, "Exception in asset distribution monitor agent", "Cannot set Credit in asset issuer wallet");
+            } catch (CantExecuteDatabaseOperationException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Exception in asset distribution monitor agent", "Cannot execute database operation");
+            } catch (CantSendAssetBitcoinsToUserException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Cannot send crypto currency to asset user");
+            } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Unexpected result in database query");
+            } catch (CantGetCryptoTransactionException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Cannot get genesis transaction from asset vault");
+            } catch (CantDeliverPendingTransactionsException | CantSendTransactionNewStatusNotificationException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Cannot deliver pending transactions");
+            } catch (CantDistributeDigitalAssetsException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Cannot distribute digital asset");
+            } catch (CantConfirmTransactionException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Cannot confirm transaction");
+            } catch (CantGetDigitalAssetFromLocalStorageException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Cannot get DigitalAssetMetadata from local storage");
+            } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "Cannot set Credit in asset issuer wallet");
             } catch (RecordsNotFoundException | CantGetAssetStatisticException | CantLoadWalletException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "There was a problem registering the distribution statistic");
             } catch (CantGetTransactionsException | CantGetTransactionCryptoStatusException | CantGetAssetIssuerActorsException | CantRegisterDebitException | CantRegisterCreditException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while reversing a transaction.");
             } catch (CantAssetUserActorNotFoundException | CantGetAssetUserActorsException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCheckAssetDistributionProgressException(e, "Exception in asset distribution monitor agent", "There was a problem while getting the user list.");
             } catch (CantCancellBroadcastTransactionException | CantCreateDigitalAssetFileException | CantGetBroadcastStatusException | CantBroadcastTransactionException | InvalidParameterException | CantGetDAPMessagesException | CantUpdateMessageStatusException e) {
+                assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }
@@ -276,7 +279,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
          */
         private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetDistributionProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException, CantLoadWalletException, RecordsNotFoundException, CantGetAssetStatisticException, CantGetTransactionCryptoStatusException, CantGetBroadcastStatusException, CantBroadcastTransactionException, CantCancellBroadcastTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantCreateDigitalAssetFileException {
 
-            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord record : assetDistributionDao.getDeliveredRecords()) {
+            for (DeliverRecord record : assetDistributionDao.getDeliveredRecords()) {
                 switch (bitcoinNetworkManager.getCryptoStatus(record.getGenesisTransactionSent())) {
                     case ON_BLOCKCHAIN:
                     case IRREVERSIBLE:
@@ -299,7 +302,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 }
             }
 
-            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord record : assetDistributionDao.getSendingCryptoRecords()) {
+            for (DeliverRecord record : assetDistributionDao.getSendingCryptoRecords()) {
                 BroadcastStatus status = bitcoinNetworkManager.getBroadcastStatus(record.getGenesisTransactionSent());
                 switch (status.getStatus()) {
                     case WITH_ERROR:
@@ -407,12 +410,13 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         }
 
         private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantCheckAssetDistributionProgressException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, InvalidParameterException {
-            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord record : assetDistributionDao.getDeliveringRecords()) {
+            for (DeliverRecord record : assetDistributionDao.getDeliveringRecords()) {
                 DistributionStatus currentStatus = assetDistributionDao.getDistributionStatusForGenesisTx(record.getGenesisTransaction());
                 if (new Date().after(record.getTimeOut()) && currentStatus == DistributionStatus.DELIVERING) {
                     try {
                         bitcoinNetworkManager.cancelBroadcast(record.getDigitalAssetMetadata().getLastTransactionHash());
                     } catch (CantCancellBroadcastTransactionException e) {
+                        assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                         e.printStackTrace();
                     }
                     record.getDigitalAssetMetadata().removeLastTransaction();

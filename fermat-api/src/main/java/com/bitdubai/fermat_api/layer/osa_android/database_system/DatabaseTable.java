@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
-import java.util.List;
-import java.util.UUID;
-
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  *

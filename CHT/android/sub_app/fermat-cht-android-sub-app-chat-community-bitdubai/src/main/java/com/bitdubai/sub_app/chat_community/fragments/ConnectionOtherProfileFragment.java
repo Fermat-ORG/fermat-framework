@@ -29,7 +29,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
 import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
@@ -196,7 +196,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(chatUserInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -218,8 +218,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                         new DisconnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
-                disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(chatUserInformation.getAlias());
+                disconnectDialog.setDescription("Do you want to disconnect from");
+                disconnectDialog.setUsername(chatUserInformation.getAlias()+"?");
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -254,6 +254,26 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             CommonLogger.info(TAG, "User connection state "
                     + chatUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
+            ConnectDialog connectDialog;
+            try {
+                connectDialog =
+                        new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                                chatUserInformation, moduleManager.getSelectedActorIdentity());
+                connectDialog.setTitle("Resend Connection Request");
+                connectDialog.setDescription("Do you want to resend ");
+                connectDialog.setUsername(chatUserInformation.getAlias());
+                connectDialog.setSecondDescription("a connection request?");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                connectDialog.show();
+            } catch ( CantGetSelectedActorIdentityException
+                    | ActorIdentityNotSelectedException e) {
+                e.printStackTrace();
+            }
         }
         if (i == R.id.btn_connection_request_reject) {
             CommonLogger.info(TAG, "User connection state "

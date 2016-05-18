@@ -35,8 +35,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPersistProfileI
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure.ChatIdentityImpl;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -280,8 +280,8 @@ public class ChatIdentityDatabaseDao {
 
 
         // Setup method.
-        List<ChatIdentity> list = new ArrayList<ChatIdentity>(); // Issuer list.
-        DatabaseTable table; // Intra User table.
+        List<ChatIdentity> list = new ArrayList<ChatIdentity>(); // Chat list.
+        DatabaseTable table; // Chat User table.
 
         // Get Chat identities list.
         try {

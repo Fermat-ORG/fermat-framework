@@ -4,13 +4,9 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -18,74 +14,62 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
-import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
-import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeCHTAgent;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveActionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
+import com.bitdubai.fermat_cht_api.layer.middleware.enums.ActionState;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ActionOnline;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
-import com.bitdubai.fermat_cht_api.layer.middleware.utils.EventRecord;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
-import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageNewStatusNotificationException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseFactory;
-import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingEventListException;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -96,7 +80,6 @@ public class ChatMiddlewareMonitorAgent implements
         CHTTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
@@ -105,7 +88,6 @@ public class ChatMiddlewareMonitorAgent implements
     Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     NetworkServiceChatManager chatNetworkServiceManager;
@@ -115,20 +97,22 @@ public class ChatMiddlewareMonitorAgent implements
     ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     public final String BROADCAST_CODE = "13";
     ChatActorConnectionManager chatActorConnectionManager;
-
+    ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
+    ChatManager chatActorNetworkServiceManager;
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                       LogManager logManager,
-                                      ErrorManager errorManager,
+                                      ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
                                       EventManager eventManager,
                                       UUID pluginId,
                                       NetworkServiceChatManager chatNetworkServiceManager,
                                       MiddlewareChatManager chatMiddlewareManager,
                                       Broadcaster broadcaster, PluginFileSystem pluginFileSystem,
-                                      ChatActorConnectionManager chatActorConnectionManager) throws CantSetObjectException {
+                                      ChatActorConnectionManager chatActorConnectionManager,
+                                      ChatManager chatActorNetworkServiceManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.chatNetworkServiceManager = chatNetworkServiceManager;
@@ -136,6 +120,7 @@ public class ChatMiddlewareMonitorAgent implements
         this.broadcaster = broadcaster;
         this.pluginFileSystem = pluginFileSystem;
         this.chatActorConnectionManager = chatActorConnectionManager;
+        this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
     @Override
@@ -146,7 +131,7 @@ public class ChatMiddlewareMonitorAgent implements
         monitorAgent = new MonitorAgent();
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
+        this.monitorAgent.setChatMiddlewarePluginRoot(chatMiddlewarePluginRoot);
 
         /**
          * Init the plugin database dao
@@ -155,9 +140,7 @@ public class ChatMiddlewareMonitorAgent implements
         try {
             this.monitorAgent.Initialize();
         } catch (CantInitializeCHTAgent exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
         }
 
@@ -169,11 +152,6 @@ public class ChatMiddlewareMonitorAgent implements
     @Override
     public void stop() {
         this.agentThread.interrupt();
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -200,19 +178,17 @@ public class ChatMiddlewareMonitorAgent implements
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
-
-        ErrorManager errorManager;
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable {
         PluginDatabaseSystem pluginDatabaseSystem;
-        public final int SLEEP_TIME = 10000; //2000;
-        public final int DISCOVER_ITERATION_LIMIT = 1;
+        public final int SLEEP_TIME = 5000; //2000;
+        public final int DISCOVER_ITERATION_LIMIT = 2;
         int discoverIteration = 0;
         int iterationNumber = 0;
         boolean threadWorking;
+        ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public void setChatMiddlewarePluginRoot(ChatMiddlewarePluginRoot chatMiddlewarePluginRoot) {
+            this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         }
 
         @Override
@@ -247,9 +223,7 @@ public class ChatMiddlewareMonitorAgent implements
                             "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CHAT_MIDDLEWARE,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                             e);
                 }
 
@@ -272,26 +246,20 @@ public class ChatMiddlewareMonitorAgent implements
                     database = chatMiddlewareDatabaseFactory.createDatabase(pluginId,
                             ChatMiddlewareDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CHAT_MIDDLEWARE,
-                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                             cantCreateDatabaseException);
                     throw new CantInitializeCHTAgent(cantCreateDatabaseException,
                             "Initialize Monitor Agent - trying to create the plugin database",
                             "Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         exception);
                 throw new CantInitializeCHTAgent(exception,
                         "Initialize Monitor Agent - trying to open the plugin database",
                         "Please, check the cause");
             } catch (Exception exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         FermatException.wrapException(exception));
                 throw new CantInitializeCHTAgent(
                         FermatException.wrapException(exception),
@@ -309,6 +277,11 @@ public class ChatMiddlewareMonitorAgent implements
 
                 if (discoverIteration == 0) {
                     sendChatBroadcasting();
+                    resetWritingStatus();
+                    checkOnlineStatus();
+                }
+                if(discoverIteration == 2){
+                    resetOnlineStatus();
                 }
                 discoverIteration++;
                 if (discoverIteration == DISCOVER_ITERATION_LIMIT) {
@@ -316,9 +289,7 @@ public class ChatMiddlewareMonitorAgent implements
                 }
 
             } catch (Exception exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         FermatException.wrapException(exception));
                 throw new DatabaseOperationException(
                         DatabaseOperationException.DEFAULT_MESSAGE,
@@ -339,7 +310,7 @@ public class ChatMiddlewareMonitorAgent implements
                 pluginDatabaseSystem,
                 pluginId,
                 database,
-                errorManager,
+                chatMiddlewarePluginRoot,
                 pluginFileSystem);
 
         try {
@@ -411,7 +382,7 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    errorManager,
+                    chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING CHAT");
@@ -420,9 +391,8 @@ public class ChatMiddlewareMonitorAgent implements
                     saveMessage(chatMetadata);
 
                     //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
-                    //broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, BROADCAST_CODE);
-                    //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, BROADCAST_CODE);
-                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+            //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "public_key_cht_chat", ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {
             throw new CantGetPendingTransactionException(
@@ -474,7 +444,7 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    errorManager,
+                    chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
                     System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == "+chatMetadata.getMessage() + " MESSAGE STATUS == "+chatMetadata.getMessageStatus());
@@ -510,6 +480,260 @@ public class ChatMiddlewareMonitorAgent implements
             );
         }
     }
+
+    public void checkOnlineStatus() throws
+            CantGetPendingTransactionException,
+            UnexpectedResultReturnedFromDatabaseException {
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    chatMiddlewarePluginRoot,
+                    pluginFileSystem);
+
+            List<ActionOnline> onlineActions = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
+
+            if(onlineActions==null || onlineActions.isEmpty()) return;
+
+            System.out.println("12345 CHECKING ONLINE STATUS");
+
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            for(ActionOnline actionOnline : onlineActions){
+                boolean isOnline = chatActorSearch.getResult(actionOnline.getPublicKey()) != null;
+                actionOnline.setValue(isOnline);
+                System.out.println("12345 is online " + isOnline);
+                if(isOnline) actionOnline.setLastOn(false);
+                if(!isOnline && actionOnline.getLastOn()!=true){
+                    DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                    Date today = Calendar.getInstance().getTime();
+                    actionOnline.setLastConnection(df.format(today));
+                    actionOnline.setLastOn(true);
+                }
+                chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
+            }
+
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+        } catch (CantGetPendingActionListException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantListChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantSaveActionException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        }
+    }
+
+    public void resetWritingStatus(){
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    chatMiddlewarePluginRoot,
+                    pluginFileSystem);
+
+            boolean changes=false;
+
+            //Resetear los writing state enviados
+            List<UUID> chatsId = chatMiddlewareDatabaseDao.getWritingActions();
+//            System.out.println("12345 Chats to reset enviados "+ chatsId.size());
+
+            if(chatsId != null && !chatsId.isEmpty()) {
+                for (UUID chatId : chatsId) {
+                    chatMiddlewareDatabaseDao.saveWritingAction(chatId, ActionState.NONE);
+//                    System.out.println("12345 Action writing Updated " + chatId);
+                    changes = true;
+                }
+            }
+
+            //Resetear los writing state recibidos
+            List<Chat> chats = chatMiddlewareDatabaseDao.getChatListByWriting();
+//            System.out.println("12345 Chats to reset recibidos "+ chatsId.size());
+
+            if(chats == null && chats.isEmpty()) return;
+
+            for(Chat chat : chats){
+                chat.setIsWriting(false);
+                chatMiddlewareDatabaseDao.saveChat(chat);
+//                System.out.println("12345 Chat writing Updated "+chat.getChatId());
+                changes = true;
+            }
+
+            if(changes)
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+        }catch(DatabaseOperationException e){
+            e.printStackTrace();
+        } catch (CantGetChatException e) {
+            e.printStackTrace();
+        } catch (CantSaveChatException e) {
+            e.printStackTrace();
+        } catch (CantGetPendingActionListException e) {
+            e.printStackTrace();
+        } catch (CantSaveActionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetOnlineStatus(){
+        try {
+        chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                pluginDatabaseSystem,
+                pluginId,
+                database,
+                chatMiddlewarePluginRoot,
+                pluginFileSystem);
+
+        boolean changes=false;
+
+
+        List<ActionOnline> actionOnlines = null;
+            actionOnlines = chatMiddlewareDatabaseDao.getOnlineActionsByOnline();
+
+        if(actionOnlines == null || actionOnlines.isEmpty()) return;
+
+        for(ActionOnline actionOnline : actionOnlines){
+            actionOnline.setValue(false);
+            DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+            Date today = Calendar.getInstance().getTime();
+            actionOnline.setLastConnection(df.format(today));
+            chatMiddlewareDatabaseDao.saveOnlineAction(actionOnline);
+            changes = true;
+        }
+
+        if(changes)
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+        } catch (CantGetPendingActionListException e) {
+            e.printStackTrace();
+        } catch (CantSaveActionException e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public void checkOutgoingWritingStatus(){
+//        try {
+//            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+//                    pluginDatabaseSystem,
+//                    pluginId,
+//                    database,
+//                    errorManager,
+//                    pluginFileSystem);
+//
+//            List<UUID> chatIds = chatMiddlewareDatabaseDao.getWritingActions();
+//
+//            if(chatIds == null || chatIds.isEmpty()) return;
+//
+//            for(UUID chatId : chatIds){
+//                Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+//                chat.setIsWriting(false);
+//                chatMiddlewareDatabaseDao.saveChat(chat);
+//            }
+//
+////            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+//        }catch(DatabaseOperationException e){
+//            e.printStackTrace();
+//        } catch (CantGetChatException e) {
+//            e.printStackTrace();
+//        } catch (CantSaveChatException e) {
+//            e.printStackTrace();
+//        } catch (CantGetPendingActionListException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void checkIncomingWritingStatus(UUID chatId) throws
+            CantGetPendingTransactionException,
+            UnexpectedResultReturnedFromDatabaseException {
+        try {
+            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    chatMiddlewarePluginRoot,
+                    pluginFileSystem);
+
+            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+            if(chat != null) {
+                System.out.println("12345 Saving is writing chat "+chat.getChatId());
+                chat.setIsWriting(true);
+                chatMiddlewareDatabaseDao.saveChat(chat);
+                System.out.println("12345 chat saved");
+            }
+
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+
+        } catch (CantSaveChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (DatabaseOperationException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        } catch (CantGetChatException e) {
+            throw new CantGetPendingTransactionException(
+                    e,
+                    "Checking the incoming status pending transactions",
+                    "Cannot update message from database"
+            );
+        }
+    }
+
+//    public void checkIncomingOnlineStatus(UUID chatId) throws
+//            CantGetPendingTransactionException,
+//            UnexpectedResultReturnedFromDatabaseException {
+//        try {
+//            chatMiddlewareDatabaseDao = new ChatMiddlewareDatabaseDao(
+//                    pluginDatabaseSystem,
+//                    pluginId,
+//                    database,
+//                    errorManager,
+//                    pluginFileSystem);
+//
+//            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
+//            chat.setIsOnline(true);
+//            chatMiddlewareDatabaseDao.saveChat(chat);
+//
+//            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+//
+//        } catch (CantSaveChatException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot update message from database"
+//            );
+//        } catch (DatabaseOperationException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot update message from database"
+//            );
+//        } catch (CantGetChatException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot update message from database"
+//            );
+//        }
+//    }
 
     /**
      * This method returns true if the chat and the message exists in database.
@@ -559,8 +783,9 @@ public class ChatMiddlewareMonitorAgent implements
             CantGetMessageException, SendStatusUpdateMessageNotificationException {
         UUID messageId = chatMetadata.getMessageId();
         System.out.println("12345 SAVING MESSAGE");
-        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
-        if (messageRecorded == null) {
+//        Message messageRecorded = chatMiddlewareDatabaseDao.getMessageByMessageId(messageId);
+                Message messageRecorded = null;
+//        if (messageRecorded == null) {
             /**
              * In this case, the message is not created in database, so, is an incoming message,
              * I need to create a new message
@@ -568,7 +793,7 @@ public class ChatMiddlewareMonitorAgent implements
             messageRecorded = getMessageFromChatMetadata(
                     chatMetadata);
             if (messageRecorded == null) return;
-        }
+//        }
 
         messageRecorded.setStatus(MessageStatus.RECEIVE);
         chatMiddlewareDatabaseDao.saveMessage(messageRecorded);
@@ -621,10 +846,8 @@ public class ChatMiddlewareMonitorAgent implements
             throw new CantGetMessageException("The chat metadata from network service is null");
         }
         try {
-//                UUID chatId = chatMetadata.getChatId();
             Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
-//                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-//            String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
+
             ChatLinkedActorIdentity chatLinkedActorIdentity = new ChatLinkedActorIdentity(
                 chatFromDatabase.getLocalActorPublicKey(),
                 Actors.CHAT
@@ -643,16 +866,6 @@ public class ChatMiddlewareMonitorAgent implements
                 return null;
             }
 
-//            Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
-//            if (contact == null) {
-//                //contact = createUnregisteredContact(chatMetadata);
-//                if (contact == null) return null;
-//            }
-
-            //I'll associated the contact, message and chat with the following method
-//            addContactToChat(chatFromDatabase, contact);
-
-//            UUID contactId = contact.getContactId();
             Message message = new MessageImpl(
                     chatFromDatabase.getChatId(),
                     chatMetadata,
@@ -665,10 +878,6 @@ public class ChatMiddlewareMonitorAgent implements
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Unexpected exception in database");
-//        } catch (CantGetContactException e) {
-//            throw new CantGetMessageException(e,
-//                    "Getting message from ChatMetadata",
-//                    "Cannot get the contact");
         } catch (CantGetChatException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
@@ -688,6 +897,16 @@ public class ChatMiddlewareMonitorAgent implements
      * @return
      */
     private Chat getChatFromChatMetadata(ChatMetadata chatMetadata) {
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+        Date parsedDate = null;
+        try {
+            parsedDate = dateFormat.parse(chatMetadata.getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+
         return new ChatImpl(
                 chatMetadata.getChatId(),
                 chatMetadata.getObjectId(),
@@ -697,8 +916,8 @@ public class ChatMiddlewareMonitorAgent implements
                 chatMetadata.getLocalActorPublicKey(),
                 chatMetadata.getChatName(),
                 ChatStatus.VISSIBLE,
-                chatMetadata.getDate(),
-                chatMetadata.getDate(),
+                timestamp,
+                timestamp,
                 TypeChat.INDIVIDUAL, //TODO:Revisar
                 false //TODO:Revisar
         );
@@ -738,71 +957,6 @@ public class ChatMiddlewareMonitorAgent implements
     }
 
     /**
-     * This method sends the message through the Chat Network Service
-     *
-     * @param createdMessage
-     * @throws CantSendChatMessageException
-     */
-    private void sendMessage(Message createdMessage) throws CantSendChatMessageException {
-        try {
-            System.out.println("*** 12345 case 5:send msg in Agent layer" + new Timestamp(System.currentTimeMillis()));
-            UUID chatId = createdMessage.getChatId();
-            Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            if (chat == null) {
-                return;
-            }
-            String localActorPublicKey = chat.getLocalActorPublicKey();
-            String remoteActorPublicKey = chat.getRemoteActorPublicKey();
-            ChatMetadata chatMetadata = constructChatMetadata(
-                    chat,
-                    createdMessage
-            );
-            System.out.println("ChatMetadata to send:\n" + chatMetadata);
-            try {
-                chatNetworkServiceManager.sendChatMetadata(
-                        localActorPublicKey,
-                        remoteActorPublicKey,
-                        chatMetadata
-                );
-                createdMessage.setStatus(MessageStatus.SEND);
-            } catch (IllegalArgumentException e) {
-                /**
-                 * In this case, any argument in chat or message was null or not properly set.
-                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
-                 */
-                createdMessage.setStatus(MessageStatus.CANNOT_SEND);
-            }
-            chatMiddlewareDatabaseDao.saveMessage(createdMessage);
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-        } catch (DatabaseOperationException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Unexpected error in database"
-            );
-        } catch (CantGetChatException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Cannot get the chat"
-            );
-        } catch (CantSendChatMessageMetadataException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Cannot send the ChatMetadata"
-            );
-        } catch (CantSaveMessageException e) {
-            throw new CantSendChatMessageException(
-                    e,
-                    "Sending a message",
-                    "Cannot save the message"
-            );
-        }
-
-    }
-
-    /**
      * This method return a ChatMetadata from a Chat and Message objects.
      *
      * @param chat
@@ -814,6 +968,7 @@ public class ChatMiddlewareMonitorAgent implements
             Message message) {
         ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
+        String timeStamp = new SimpleDateFormat("MM/dd/yyyy HH:mm").format(timestamp);
             chatMetadata = new ChatMetadataRecord(
                     chat.getChatId(),
                     chat.getObjectId(),
@@ -824,7 +979,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chat.getChatName(),
                     ChatMessageStatus.READ_CHAT,
                     MessageStatus.SEND,
-                    timestamp,
+                    timeStamp,
                     message.getMessageId(),
                     message.getMessage(),
                     DistributionStatus.OUTGOING_MSG,
@@ -832,41 +987,6 @@ public class ChatMiddlewareMonitorAgent implements
                     chat.getGroupMembersAssociated()
             );
         return chatMetadata;
-    }
-
-
-    /**
-     * This method delete all contacts connections.
-     *
-     * @return void
-     */
-    private void deleteActorConnections() throws CantDeleteContactException {
-        try {
-            List<ContactConnection> contactConnections = chatMiddlewareDatabaseDao.getContactConnections(null);
-
-            for (ContactConnection contactConnection : contactConnections) {
-                chatMiddlewareDatabaseDao.deleteContactConnection(contactConnection);
-            }
-
-        } catch (CantGetContactException e) {
-            throw new CantDeleteContactException(
-                    e,
-                    "delete contact connections",
-                    "Cannot get the contact connection"
-            );
-        } catch (DatabaseOperationException e) {
-            throw new CantDeleteContactException(
-                    e,
-                    "delete contact connections",
-                    "Cannot Database operation"
-            );
-        } catch (CantDeleteContactConnectionException e) {
-            throw new CantDeleteContactException(
-                    e,
-                    "delete contact connections",
-                    "Cannot delete contact connections"
-            );
-        }
     }
 }
 

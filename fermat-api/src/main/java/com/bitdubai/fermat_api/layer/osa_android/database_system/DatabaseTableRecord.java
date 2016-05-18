@@ -3,7 +3,6 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
