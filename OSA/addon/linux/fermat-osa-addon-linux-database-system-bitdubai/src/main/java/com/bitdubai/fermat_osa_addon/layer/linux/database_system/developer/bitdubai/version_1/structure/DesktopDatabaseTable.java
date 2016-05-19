@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.tomcat.jdbc.pool.ConnectionPool;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -49,10 +50,10 @@ public class DesktopDatabaseTable implements DatabaseTable {
      */
     String tableName;
     DesktopDatabaseBridge database;
+    ConnectionPool connectionProvider;
 
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
-    private DatabaseTableRecord tableRecord;
     private List<DataBaseTableOrder> tableOrder;
     private String top = "";
     private String offset = "";
@@ -61,8 +62,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     // Public constructor declarations.
     public DesktopDatabaseTable(DesktopDatabaseBridge database, String tableName) {
+        connectionProvider = database.getConnectionPool();
         this.tableName = tableName;
-        //this.context = context;
         this.database = database;
     }
 
@@ -178,11 +179,10 @@ public class DesktopDatabaseTable implements DatabaseTable {
          * First I get the table records with values.
          * and construct de ContentValues array for SqlLite
          */
-
         Connection conn = null;
         PreparedStatement preparedStatement = null;
         try {
-            conn = database.getConnection();
+
             List<String> strRecords = new ArrayList<>();
             List<String> strValues  = new ArrayList<>();
             List<String> strSigns  = new ArrayList<>();
@@ -197,12 +197,13 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
             String query = "INSERT INTO " + tableName + "(" + StringUtils.join(strRecords, ",") + ")" + " VALUES (" + StringUtils.join(strSigns, ",") + ")";
 
+            conn = connectionProvider.getConnection();
             preparedStatement = conn.prepareStatement(query);
 
             for(int i = 0; i < strSigns.size() ; i++)
                 preparedStatement.setString(i + 1, strValues.get(i));
 
-            preparedStatement.executeUpdate();
+            preparedStatement.execute();
 
             System.out.println("*** * *   *   *     *      * Im executing the query: " + query);
 
@@ -217,13 +218,17 @@ public class DesktopDatabaseTable implements DatabaseTable {
                     preparedStatement.close();
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+
+                try {
+                    if (conn != null)
+                        conn.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                
             }
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+
         }
 
     }
@@ -236,7 +241,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
         ResultSet rs = null;
 
         try {
-            conn = this.database.getConnection();
+            conn = connectionProvider.getConnection();
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter());
 
@@ -258,12 +263,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
                     stmt.close();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } finally {
+
+                try {
+                    if (conn != null)
+                        conn.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -288,12 +295,12 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         try {
 
-            conn = this.database.getConnection();
+            conn = connectionProvider.getConnection();
             stmt = conn.createStatement();
 
             String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
 
-            System.out.println("QUERY = "+SQL_QUERY);
+            System.out.println("QUERY = " + SQL_QUERY);
 
             rs = stmt.executeQuery(SQL_QUERY);
 
@@ -336,12 +343,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
                     stmt.close();
             } catch (Exception e) {
                 e.printStackTrace();
-            }
-            try {
-                if (conn != null)
-                    conn.close();
-            } catch (Exception e) {
-                e.printStackTrace();
+            }finally {
+
+                try {
+                    if (conn != null)
+                        conn.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
@@ -589,9 +598,30 @@ public class DesktopDatabaseTable implements DatabaseTable {
         );
     }
 
-    /**
-     * DatabaseTable interface public void.
-     */
+    @Override
+    public String getTableName() {
+        return tableName;
+    }
+
+    @Override
+    public void addAggregateFunction(String columnName, DataBaseAggregateFunctionType operator, String alias) {
+
+        if (this.tableSelectOperator == null)
+            this.tableSelectOperator = new ArrayList<>();
+
+        DatabaseAggregateFunction selectOperator = new DesktopDatabaseSelectOperator(
+                columnName,
+                operator,
+                alias
+        );
+
+        this.tableSelectOperator.add(selectOperator);
+    }
+
+    @Override
+    public List<DatabaseAggregateFunction> getTableAggregateFunction() {
+        return tableSelectOperator;
+    }
 
     /**
      * DatabaseTable interface private void.
@@ -627,29 +657,47 @@ public class DesktopDatabaseTable implements DatabaseTable {
         }
     }
 
-    @Override
-    public String getTableName() {
-        return tableName;
-    }
+    public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
 
-    @Override
-    public void addAggregateFunction(String columnName, DataBaseAggregateFunctionType operator, String alias) {
+        StringBuilder strFilter = new StringBuilder();
+        String filter;
 
-        if (this.tableSelectOperator == null)
-            this.tableSelectOperator = new ArrayList<>();
+        if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
+            strFilter.append("(");
+            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
 
-        DatabaseAggregateFunction selectOperator = new DesktopDatabaseSelectOperator(
-                columnName,
-                operator,
-                alias
-        );
+            int ix = 0;
 
-        this.tableSelectOperator.add(selectOperator);
-    }
+            if (databaseTableFilterGroup.getSubGroups() != null){
 
-    @Override
-    public List<DatabaseAggregateFunction> getTableAggregateFunction() {
-        return tableSelectOperator;
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
+                    }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
+                }
+
+            }
+
+            strFilter.append(")");
+        }
+
+        filter = strFilter.toString();
+        if (strFilter.length() > 0) filter = " WHERE " + filter;
+
+        return filter;
     }
 
     private String makeOrder() {
@@ -765,49 +813,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         }
         return strFilter.toString();
-    }
-
-    public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
-
-        StringBuilder strFilter = new StringBuilder();
-        String filter;
-
-        if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
-            strFilter.append("(");
-            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
-
-            int ix = 0;
-
-            if (databaseTableFilterGroup.getSubGroups() != null){
-
-                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                    if (subGroup.getFilters().size() > 0 || ix > 0) {
-                        switch (databaseTableFilterGroup.getOperator()) {
-                            case AND:
-                                strFilter.append(" AND ");
-                                break;
-                            case OR:
-                                strFilter.append(" OR ");
-                                break;
-                            default:
-                                strFilter.append(" ");
-                        }
-                    }
-                    strFilter.append("(");
-                    strFilter.append(makeGroupFilters(subGroup));
-                    strFilter.append(")");
-                    ix++;
-                }
-
-            }
-
-            strFilter.append(")");
-        }
-
-        filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = " WHERE " + filter;
-
-        return filter;
     }
 
 }

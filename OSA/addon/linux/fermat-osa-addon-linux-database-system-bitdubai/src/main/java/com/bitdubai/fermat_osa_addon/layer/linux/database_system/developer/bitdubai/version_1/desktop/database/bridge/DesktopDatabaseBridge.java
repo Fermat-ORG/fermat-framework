@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge;
 
+import org.apache.tomcat.jdbc.pool.ConnectionPool;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
+
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -24,6 +27,7 @@ public class DesktopDatabaseBridge {
     /**
      * Database member variables.
      */
+    private ConnectionPool connectionPool;
     private Connection connection = null;
     private Statement stmt = null;
     private boolean transaccionSatisfactoria = false;
@@ -33,6 +37,22 @@ public class DesktopDatabaseBridge {
      * Constructor
      */
     public DesktopDatabaseBridge(String databasePath) {
+
+        try {
+            PoolProperties p = new PoolProperties();
+            p.setUrl("jdbc:sqlite:" + databasePath);
+            p.setDriverClassName("org.sqlite.JDBC");
+            p.setMaxActive(10);
+            p.setMaxIdle(10);
+            p.setInitialSize(2);
+            p.setMaxWait(10000);
+            p.setRemoveAbandonedTimeout(60);
+            p.setMinEvictableIdleTimeMillis(30000);
+            p.setMinIdle(10);
+            this.connectionPool = new ConnectionPool(p);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.databasePath = databasePath;
     }
 
@@ -96,7 +116,7 @@ public class DesktopDatabaseBridge {
         ResultSet rs = null;
 
         try {
-            conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            conn = connectionPool.getConnection();
             statement = conn.createStatement();
             rs = statement.executeQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'");
             ResultSetMetaData rsmd = rs.getMetaData();
@@ -115,6 +135,7 @@ public class DesktopDatabaseBridge {
                 try {
                     if (statement != null)
                         statement.close();
+                    
                 } finally {
                     if (conn != null)
                         conn.close();
@@ -138,8 +159,7 @@ public class DesktopDatabaseBridge {
         Statement statement = null;
 
         try {
-            conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-
+            conn = connectionPool.getConnection();
             statement = conn.createStatement();
             statement.executeUpdate(sql);
         } finally {
@@ -147,10 +167,12 @@ public class DesktopDatabaseBridge {
             try {
                 if (statement != null)
                     statement.close();
+
             } finally {
                 if (conn != null)
                     conn.close();
             }
+
         }
     }
 
@@ -273,7 +295,7 @@ public class DesktopDatabaseBridge {
             String SQL = "UPDATE " + tableName + " SET " + setVariables + whereClause;
             System.out.println("UPDATE QUERY = " + SQL);
 
-            conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            conn = connectionPool.getConnection();
 
             statement = conn.createStatement();
             statement.executeUpdate(SQL);
@@ -293,5 +315,9 @@ public class DesktopDatabaseBridge {
                     conn.close();
             }
         }
+    }
+
+    public ConnectionPool getConnectionPool() {
+        return connectionPool;
     }
 }
