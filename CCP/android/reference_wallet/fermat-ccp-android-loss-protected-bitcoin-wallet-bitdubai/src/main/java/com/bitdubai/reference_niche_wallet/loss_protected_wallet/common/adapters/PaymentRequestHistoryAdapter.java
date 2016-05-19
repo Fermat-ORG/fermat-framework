@@ -41,7 +41,6 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
 
     boolean lossProtectedEnabled;
     BlockchainNetworkType blockchainNetworkType;
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
 
 
     protected PaymentRequestHistoryAdapter(Context context) {
@@ -193,13 +192,15 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<LossProtectedPa
 
                         //verify loss protected settings
                         if(appSession.getActualExchangeRate() != 0){
-                            settingsManager = appSession.getModuleManager().getSettingsManager();
-                            LossProtectedWalletSettings bitcoinWalletSettings = null;
-                            bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
 
-                            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
 
                             lossProtectedWallet = appSession.getModuleManager();
+
+                            LossProtectedWalletSettings bitcoinWalletSettings = null;
+                            bitcoinWalletSettings = lossProtectedWallet.loadAndGetSettings(appSession.getAppPublicKey());;
+
+                            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
                             lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
 

@@ -173,10 +173,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                         providerDialog.putString("previous_selected_item", previousSelectedItemExchange);
                         list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
 
-                    } catch (CantGetProviderInfoException e) {
-                        e.printStackTrace();
                     } catch (Exception e) {
-                    e.printStackTrace();
+                        e.printStackTrace();
                      }
                 }
             });
