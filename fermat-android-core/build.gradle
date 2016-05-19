@@ -77,7 +77,6 @@ android {
 
 repositories {
     maven { url "https://jitpack.io" }
-    maven { url "http://52.34.0.33:8081/artifactory/libs-release-local" }
 }
 
 dependencies {
@@ -174,3 +173,4 @@ dependencies {
     compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
 }
+
