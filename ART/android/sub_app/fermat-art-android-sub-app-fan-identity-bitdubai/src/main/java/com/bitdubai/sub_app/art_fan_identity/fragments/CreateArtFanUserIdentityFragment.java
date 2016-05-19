@@ -409,7 +409,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             }
         });
 
-        configureToolbar();
+       // configureToolbar();
     }
 
     private void configureToolbar() {
