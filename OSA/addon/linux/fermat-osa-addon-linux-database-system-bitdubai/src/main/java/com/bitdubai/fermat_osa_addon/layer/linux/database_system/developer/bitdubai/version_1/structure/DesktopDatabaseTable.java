@@ -50,7 +50,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
      */
     String tableName;
     DesktopDatabaseBridge database;
-    ConnectionPool connectionProvider;
+    ConnectionPool connectionPool;
 
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
@@ -62,7 +62,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     // Public constructor declarations.
     public DesktopDatabaseTable(DesktopDatabaseBridge database, String tableName) {
-        connectionProvider = database.getConnectionPool();
+        connectionPool = database.getConnectionPool();
         this.tableName = tableName;
         this.database = database;
     }
@@ -179,99 +179,54 @@ public class DesktopDatabaseTable implements DatabaseTable {
          * First I get the table records with values.
          * and construct de ContentValues array for SqlLite
          */
-        Connection conn = null;
-        PreparedStatement preparedStatement = null;
-        try {
 
-            List<String> strRecords = new ArrayList<>();
-            List<String> strValues  = new ArrayList<>();
-            List<String> strSigns  = new ArrayList<>();
+        List<String> strRecords = new ArrayList<>();
+        List<String> strValues  = new ArrayList<>();
+        List<String> strSigns  = new ArrayList<>();
 
-            List<DatabaseRecord> records = record.getValues();
+        List<DatabaseRecord> records = record.getValues();
 
-            for (DatabaseRecord databaseRecord : records) {
-                strRecords.add(databaseRecord.getName());
-                strValues.add(databaseRecord.getValue());
-                strSigns.add("?");
-            }
+        for (DatabaseRecord databaseRecord : records) {
+            strRecords.add(databaseRecord.getName());
+            strValues.add(databaseRecord.getValue());
+            strSigns.add("?");
+        }
 
-            String query = "INSERT INTO " + tableName + "(" + StringUtils.join(strRecords, ",") + ")" + " VALUES (" + StringUtils.join(strSigns, ",") + ")";
+        String SQL_QUERY = "INSERT INTO " + tableName + "(" + StringUtils.join(strRecords, ",") + ")" + " VALUES (" + StringUtils.join(strSigns, ",") + ")";
+        System.out.println("*** * *   *   *     *      * Im executing the query: " + SQL_QUERY);
 
-            conn = connectionProvider.getConnection();
-            preparedStatement = conn.prepareStatement(query);
+        try (Connection connection = connectionPool.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY)) {
 
             for(int i = 0; i < strSigns.size() ; i++)
                 preparedStatement.setString(i + 1, strValues.get(i));
 
             preparedStatement.execute();
 
-            System.out.println("*** * *   *   *     *      * Im executing the query: " + query);
-
         } catch (Exception exception) {
             System.out.println("*** * *  *    *      *          * INSERT RECORD EXCEPTION: "+exception.getMessage());
             System.out.println(exception);
             throw new CantInsertRecordException(exception);
-        } finally {
-
-            try {
-                if (preparedStatement != null)
-                    preparedStatement.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-
-                try {
-                    if (conn != null)
-                        conn.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                
-            }
-
         }
-
     }
 
     @Override
     public long getCount() throws CantLoadTableToMemoryException {
 
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
+        String SQL_QUERY = "SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter();
 
-        try {
-            conn = connectionProvider.getConnection();
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter());
+        System.out.println("QUERY = " + SQL_QUERY);
+
+        try (Connection connection = connectionPool.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
             rs.next();
 
             return rs.getLong("COUNT");
 
         } catch (Exception e) {
-            throw new CantLoadTableToMemoryException();
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-
-                try {
-                    if (conn != null)
-                        conn.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+            throw new CantLoadTableToMemoryException(e);
         }
     }
 
@@ -289,20 +244,13 @@ public class DesktopDatabaseTable implements DatabaseTable {
         if (!this.offset.isEmpty())
             offsetSentence = " OFFSET " + this.offset;
 
-        Connection conn = null;
-        Statement stmt = null;
-        ResultSet rs = null;
+        String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
 
-        try {
+        System.out.println("QUERY = " + SQL_QUERY);
 
-            conn = connectionProvider.getConnection();
-            stmt = conn.createStatement();
-
-            String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
-
-            System.out.println("QUERY = " + SQL_QUERY);
-
-            rs = stmt.executeQuery(SQL_QUERY);
+        try (Connection connection = connectionPool.getConnection();
+                Statement stmt = connection.createStatement();
+                ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
             if(rs.next()) {
 
@@ -331,27 +279,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
             System.out.println("an error loading to memory");
             e.printStackTrace();
             throw new CantLoadTableToMemoryException(e);
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (stmt != null)
-                    stmt.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }finally {
-
-                try {
-                    if (conn != null)
-                        conn.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 

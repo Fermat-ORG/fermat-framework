@@ -29,8 +29,7 @@ public class DesktopDatabaseBridge {
      */
     private ConnectionPool connectionPool;
     private Connection connection = null;
-    private Statement stmt = null;
-    private boolean transaccionSatisfactoria = false;
+    private boolean successfulTransaction = false;
     private String databasePath;
 
     /**
@@ -77,15 +76,6 @@ public class DesktopDatabaseBridge {
         }
     }
 
-    public Connection getConnection() {
-        try {
-            return DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-        } catch (Exception e) {
-            System.out.println("database does not exist?" + e.getMessage());
-            return null;
-        }
-    }
-
     /**
      * Method who close the database connection
      *
@@ -93,10 +83,6 @@ public class DesktopDatabaseBridge {
      **/
     private void close() {
         try {
-
-            if (stmt != null) {
-                stmt.close();
-            }
 
             if (connection != null) {
                 connection.close();
@@ -111,14 +97,12 @@ public class DesktopDatabaseBridge {
 
     public boolean isTableExists(String tableName) throws SQLException {
 
-        Connection conn = null;
-        Statement statement = null;
-        ResultSet rs = null;
+        String SQL_QUERY = "select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'";
 
-        try {
-            conn = connectionPool.getConnection();
-            statement = conn.createStatement();
-            rs = statement.executeQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'");
+        try (Connection connection = connectionPool.getConnection();
+             Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
+
             ResultSetMetaData rsmd = rs.getMetaData();
 
             if (rsmd.getColumnCount() > 0)
@@ -126,21 +110,6 @@ public class DesktopDatabaseBridge {
 
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
-            } finally {
-
-                try {
-                    if (statement != null)
-                        statement.close();
-                    
-                } finally {
-                    if (conn != null)
-                        conn.close();
-                }
-            }
         }
         return false;
     }
@@ -148,31 +117,17 @@ public class DesktopDatabaseBridge {
     /**
      * Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
      *
-     * @param sql //the SQL query
+     * @param SQL_QUERY //the SQL query
      *            Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
      *            "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
      * @throws SQLException //if the SQL string is invalid
      */
-    public void execSQL(final String sql) throws SQLException {
+    public void execSQL(final String SQL_QUERY) throws SQLException {
 
-        Connection conn = null;
-        Statement statement = null;
+        try (Connection connection = connectionPool.getConnection();
+             Statement stmt = connection.createStatement()) {
 
-        try {
-            conn = connectionPool.getConnection();
-            statement = conn.createStatement();
-            statement.executeUpdate(sql);
-        } finally {
-
-            try {
-                if (statement != null)
-                    statement.close();
-
-            } finally {
-                if (conn != null)
-                    conn.close();
-            }
-
+            stmt.executeUpdate(SQL_QUERY);
         }
     }
 
@@ -193,7 +148,7 @@ public class DesktopDatabaseBridge {
      * If any errors are encountered between this and endTransaction the transaction will still be committed.
      */
     public void setTransactionSuccessful() {
-        transaccionSatisfactoria = true;
+        successfulTransaction = true;
     }
 
     /**
@@ -202,7 +157,7 @@ public class DesktopDatabaseBridge {
      * @throws SQLException if the database connection is not open
      */
     public void endTransaction() {
-        if (transaccionSatisfactoria) {
+        if (successfulTransaction) {
             try {
                 connection.commit();
             } catch (SQLException ex) {
@@ -287,33 +242,18 @@ public class DesktopDatabaseBridge {
             i++;
         }
 
-        Connection conn = null;
-        Statement statement = null;
+        String SQL_QUERY = "UPDATE " + tableName + " SET " + setVariables + whereClause;
+        System.out.println("UPDATE QUERY = " + SQL_QUERY);
 
-        try {
+        try (Connection connection = connectionPool.getConnection();
+             Statement stmt = connection.createStatement()) {
 
-            String SQL = "UPDATE " + tableName + " SET " + setVariables + whereClause;
-            System.out.println("UPDATE QUERY = " + SQL);
-
-            conn = connectionPool.getConnection();
-
-            statement = conn.createStatement();
-            statement.executeUpdate(SQL);
+            stmt.executeUpdate(SQL_QUERY);
 
         } catch (SQLException ex) {
 
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
-
-        } finally {
-
-            try {
-                if (statement != null)
-                    statement.close();
-            } finally {
-                if (conn != null)
-                    conn.close();
-            }
         }
     }
 
