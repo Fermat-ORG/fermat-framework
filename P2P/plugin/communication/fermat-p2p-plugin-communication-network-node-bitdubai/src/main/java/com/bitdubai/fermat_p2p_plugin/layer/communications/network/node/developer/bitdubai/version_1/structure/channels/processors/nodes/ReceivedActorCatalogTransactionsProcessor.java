@@ -233,7 +233,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
         actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
-        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getId())) {
+        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())) {
             /*
              * Save into the data base
              */

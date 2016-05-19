@@ -223,7 +223,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
         nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
         nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 
-        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getId())) {
+        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())) {
             /*
              * Save into the data base
              */
