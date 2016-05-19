@@ -22,7 +22,6 @@ import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -34,7 +33,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.provisionalAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
 
@@ -218,9 +216,9 @@ public class SendTransactionFragment3 extends FermatWalletExpandableListFragment
     @SuppressWarnings("unchecked")
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new provisionalAdapter(getActivity(), openNegotiationList,getResources());
+          //  adapter = new provisionalAdapter(getActivity(), openNegotiationList,getResources());
             // setting up event listeners
-            adapter.setChildItemFermatEventListeners(this);
+          //  adapter.setChildItemFermatEventListeners(this);
         }
         return adapter;
     }

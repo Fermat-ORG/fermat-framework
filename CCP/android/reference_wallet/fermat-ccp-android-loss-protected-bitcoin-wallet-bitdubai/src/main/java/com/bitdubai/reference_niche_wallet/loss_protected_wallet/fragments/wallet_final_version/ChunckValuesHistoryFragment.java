@@ -57,6 +57,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRat
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
@@ -437,7 +438,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         menu.add(1, LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.loos_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //inflater.inflate(R.menu.home_menu, menu);
     }
 
     @Override
@@ -450,7 +450,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
                 return true;
             }else if(id == LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION){
+
                 setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
+
                 return true;
             }
 
@@ -595,8 +597,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                     lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
 
                     updateBalances();
-
                     onRefresh();
+
+                }else{
+                    ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                    dialog_error.show();
 
                 }
             }
@@ -613,6 +618,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 else
                     Log.e("Exchange Rate", ex.getMessage(), ex);
+
+                ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                dialog_error.show();
             }
         });
 
