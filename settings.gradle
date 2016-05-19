@@ -22,40 +22,11 @@ apply from: 'android_toolbox/settings.gradle'
 include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':transactions-fragment'
 
 include ':fermat-android-core'
+include ':fermat-linux-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
 
-/**
- * network node implementation start
- */
-
-include ':fermat-linux-core'
-
-include ':fermat-osa-linux-core'
-project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
-
-include ':fermat-osa-addon-linux-file-system-bitdubai'
-project(':fermat-osa-addon-linux-file-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-file-system-bitdubai')
-
-include ':fermat-osa-addon-linux-database-system-bitdubai'
-project(':fermat-osa-addon-linux-database-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-database-system-bitdubai')
-
-include ':fermat-osa-addon-linux-device-location-bitdubai'
-project(':fermat-osa-addon-linux-device-location-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-device-location-bitdubai')
-
-include ':fermat-osa-addon-linux-broadcaster-system'
-project(':fermat-osa-addon-linux-broadcaster-system').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-broadcaster-system')
-
-include ':fermat-p2p-plugin-communication-network-node-bitdubai'
-project(':fermat-p2p-plugin-communication-network-node-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-node-bitdubai')
-
-include ':fermat-p2p-plugin-communication-network-client-bitdubai'
-project(':fermat-p2p-plugin-communication-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-client-bitdubai')
-
-/**
- * network node implementation end
- */
 //include ':manifest_generator'
 
 //BNP Projects
