@@ -333,7 +333,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                         }
                     }
                     if (wallet != null){
-                        Actors actor = null;
+                        Actors actor = Actors.LOSS_PROTECTED_USER;
 
                         switch (wallet.getWalletName()){
 
