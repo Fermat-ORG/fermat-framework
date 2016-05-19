@@ -248,6 +248,12 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
+        try{
+            moduleManager.exposeIdentityInWat();
+        }catch (Exception ex){
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
+        }
+
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
