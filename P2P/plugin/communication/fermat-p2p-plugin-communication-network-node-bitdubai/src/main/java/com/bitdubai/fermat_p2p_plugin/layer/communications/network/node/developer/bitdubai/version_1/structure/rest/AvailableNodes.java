@@ -6,10 +6,14 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.model.DeviceLocation;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -62,30 +66,62 @@ public class AvailableNodes implements RestFulServices {
     @Produces(MediaType.APPLICATION_JSON)
     public String listAvailableNodesProfile(){
 
-        List<NodeProfile> listnode = new ArrayList<>();
-
-        NodeProfile nodeProfile1 = new NodeProfile();
-        nodeProfile1.setName("nodeInexistent");
-        nodeProfile1.setIdentityPublicKey("147258369");
-        nodeProfile1.setIp("192.168.1.24");
-        nodeProfile1.setDefaultPort(9090);
-
-        listnode.add(nodeProfile1);
-
-        NodeProfile nodeProfile2 = new NodeProfile();
-        nodeProfile2.setName("nodetest");
-        nodeProfile2.setIdentityPublicKey("123456789");
-        nodeProfile2.setIp("192.168.1.4");
-        nodeProfile2.setDefaultPort(9090);
-
-        listnode.add(nodeProfile2);
-
         JsonObject jsonObject = new JsonObject();
 
-        jsonObject.addProperty("success", Boolean.TRUE);
-        jsonObject.addProperty("data", gson.toJson(listnode));
 
-        return gson.toJson(jsonObject);
+        try {
+
+            List<NodesCatalog> listNodesCatalog = daoFactory.getNodesCatalogDao().findAll();
+
+            if(listNodesCatalog != null) {
+
+                List<NodeProfile> listNodeProfile = new ArrayList<>();
+
+                for (NodesCatalog nodesCatalog : listNodesCatalog) {
+
+                    NodeProfile nodeProfile = new NodeProfile();
+                    nodeProfile.setName((nodesCatalog.getName() != null ? nodesCatalog.getName() : null));
+                    nodeProfile.setIp(nodesCatalog.getIp());
+                    nodeProfile.setDefaultPort(nodesCatalog.getDefaultPort());
+                    nodeProfile.setIdentityPublicKey(nodesCatalog.getIdentityPublicKey());
+
+                    if(nodesCatalog.getLastLatitude() != null && nodesCatalog.getLastLongitude() != null &&
+                            nodesCatalog.getLastLatitude() != 0 && nodesCatalog.getLastLongitude() != 0){
+
+                        DeviceLocation location = new DeviceLocation(
+                                nodesCatalog.getLastLatitude() ,
+                                nodesCatalog.getLastLongitude(),
+                                null     ,
+                                null     ,
+                                null     ,
+                                System.currentTimeMillis(),
+                                LocationSource.IP_CALCULATED
+                        );
+
+                        nodeProfile.setLocation(location);
+
+                    }
+
+                    listNodeProfile.add(nodeProfile);
+
+                }
+
+                jsonObject.addProperty("success", Boolean.TRUE);
+                jsonObject.addProperty("data", gson.toJson(listNodeProfile));
+
+            }else{
+
+                jsonObject.addProperty("success", Boolean.FALSE);
+                jsonObject.addProperty("message", "There are content in the Table");
+
+            }
+
+        } catch (CantReadRecordDataBaseException e) {
+            jsonObject.addProperty("success", Boolean.FALSE);
+            jsonObject.addProperty("message", gson.toJson(e));
+        }
+
+       return gson.toJson(jsonObject);
     }
 
 }
