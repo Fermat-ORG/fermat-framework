@@ -88,20 +88,6 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
     @Override
     protected void bindHolder(final ChunckValuesHistoryItemViewHolder holder, final LossProtectedWalletTransaction data, int position) {
 
-
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()));
-        holder.getTxt_amount().setTypeface(tf) ;
-
-        if (lossProtectedWalletSession.getActualExchangeRate() >= data.getExchangeRate())
-            holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
-        else
-            holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
-
-
-
-        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " + data.getExchangeRate());
-
-
         LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
         try {
             intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
@@ -125,9 +111,17 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
             e.printStackTrace();
         }
 
-        final double percentage = getSpendingPercentage(transaction);
-        holder.getTxt_spend_percentage().setText("Spend "+percentage+"%");
-        holder.getTxt_spend_percentage().setTypeface(tf) ;
+        final int percentage = getSpendingPercentage(transaction);
+
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()) + "  ("+percentage+"% Spend)" );
+        holder.getTxt_amount().setTypeface(tf) ;
+
+        if (lossProtectedWalletSession.getActualExchangeRate() >= data.getExchangeRate())
+            holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
+        else
+            holder.getTxt_amount().setTextColor(Color.parseColor("#FF0000"));
+
+        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " + data.getExchangeRate());
 
     }
 

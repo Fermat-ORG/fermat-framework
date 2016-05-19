@@ -96,7 +96,6 @@ public class NewGrouperHolder extends ParentViewHolder {
         super.onExpansionToggled(wasExpanded);
 
         //mNumberTextView.setVisibility(wasExpanded ? View.VISIBLE : View.GONE);
-
         if (!HONEYCOMB_AND_ABOVE) {
             return;
         }

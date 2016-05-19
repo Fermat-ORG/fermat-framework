@@ -85,7 +85,7 @@ public class GrouperViewHolder extends ParentViewHolder {
                 contactName = cryptoWalletTransaction.getInvolvedActor().getName();
             }else{
             if (cryptoWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
-                contactName = "Device User Transaction";
+                contactName = "Intra Wallet Transaction";
             }
         }
 
