@@ -117,8 +117,8 @@ public class ActorCallRespondProcessor extends PackageProcessor {
                         String uriToNode =  result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort();
 
                         /*
-                         * if exist conenction to node use the actual NetworkClientCommunicationConnection
-                         * else then request a new NetworkClientCommunicationConnection to that Node
+                         * if the connection to the node already exists use the current NetworkClientCommunicationConnection
+                         * else request a new NetworkClientCommunicationConnection to that Node
                          */
                         if(networkClientConnectionsManager.getActiveConnectionsToExternalNodes().containsKey(uriToNode)) {
 
@@ -154,15 +154,14 @@ public class ActorCallRespondProcessor extends PackageProcessor {
 
                         }
 
-                        //raise event success found actor
-
                         break;
                     }
 
                 }
 
             } catch (Exception e) {
-               // e.printStackTrace();
+                e.printStackTrace();
+                // todo we should handle the exceptions here.
             }
 
         }
