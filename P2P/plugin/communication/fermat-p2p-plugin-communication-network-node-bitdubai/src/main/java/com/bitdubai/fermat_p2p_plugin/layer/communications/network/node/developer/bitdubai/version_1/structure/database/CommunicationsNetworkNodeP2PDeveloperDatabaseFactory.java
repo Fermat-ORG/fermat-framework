@@ -199,7 +199,6 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedinactorColumns = new ArrayList<>();
 
-        checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_UUID_COLUMN_NAME);
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME);
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME);
@@ -239,7 +238,6 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedinnetworkserviceColumns = new ArrayList<>();
 
-        checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_UUID_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LONGITUDE_COLUMN_NAME);

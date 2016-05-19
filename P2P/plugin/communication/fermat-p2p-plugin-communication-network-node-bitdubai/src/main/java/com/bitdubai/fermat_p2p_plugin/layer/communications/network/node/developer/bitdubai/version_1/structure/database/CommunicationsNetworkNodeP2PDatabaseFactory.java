@@ -93,8 +93,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_FIRST_KEY_COLUMN);
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
@@ -118,8 +116,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -145,8 +141,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_FIRST_KEY_COLUMN);
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
@@ -163,8 +157,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_START_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_STEP_COLUMN_NAME, DatabaseDataType.STRING, 2500, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_FIRST_KEY_COLUMN);
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
@@ -175,7 +167,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
              */
             table = databaseFactory.newTableFactory(ownerId, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_TABLE_NAME);
 
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_UUID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
@@ -187,8 +178,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -216,15 +205,12 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
              */
             table = databaseFactory.newTableFactory(ownerId, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_TABLE_NAME);
 
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_UUID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LONGITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -248,8 +234,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_EXTRA_DATA_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -294,8 +278,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_FIRST_KEY_COLUMN);
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
@@ -313,8 +295,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -335,8 +315,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN);
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
@@ -352,8 +330,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME, DatabaseDataType.STRING, 1000, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -376,8 +352,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_FIRST_KEY_COLUMN);
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
@@ -399,8 +373,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_FIRST_KEY_COLUMN);
-
             try {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
@@ -421,8 +393,6 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_REGISTERED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

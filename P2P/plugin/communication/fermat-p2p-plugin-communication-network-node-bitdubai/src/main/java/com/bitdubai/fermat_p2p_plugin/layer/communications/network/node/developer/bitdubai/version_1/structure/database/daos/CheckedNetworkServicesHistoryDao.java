@@ -28,7 +28,7 @@ public class CheckedNetworkServicesHistoryDao extends AbstractBaseDao<CheckedNet
      * @param dataBase
      */
     public CheckedNetworkServicesHistoryDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_FIRST_KEY_COLUMN);
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_UUID_COLUMN_NAME);
     }
 
     /**

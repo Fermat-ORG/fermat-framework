@@ -28,7 +28,7 @@ public class NodeConnectionHistoryDao extends AbstractBaseDao<NodeConnectionHist
      * @param dataBase
      */
     public NodeConnectionHistoryDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN);
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_UUID_COLUMN_NAME);
     }
 
     /**

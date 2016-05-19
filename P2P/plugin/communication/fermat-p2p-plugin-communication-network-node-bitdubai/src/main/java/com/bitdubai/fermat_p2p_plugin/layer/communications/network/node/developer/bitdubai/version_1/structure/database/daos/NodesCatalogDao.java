@@ -36,7 +36,7 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
      * @param dataBase
      */
     public NodesCatalogDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_FIRST_KEY_COLUMN );
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME );
     }
 
     /**

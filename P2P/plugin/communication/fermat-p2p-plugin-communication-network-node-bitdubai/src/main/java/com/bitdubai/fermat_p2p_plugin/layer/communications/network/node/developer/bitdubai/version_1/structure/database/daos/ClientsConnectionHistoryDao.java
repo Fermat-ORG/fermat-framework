@@ -28,7 +28,7 @@ public class ClientsConnectionHistoryDao extends AbstractBaseDao<ClientsConnecti
      * @param dataBase
      */
     public ClientsConnectionHistoryDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN);
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ClientsConnectionHistoryDao extends AbstractBaseDao<ClientsConnecti
 
         ClientsConnectionHistory entity = new ClientsConnectionHistory();
 
-        entity.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN));
+        entity.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_UUID_COLUMN_NAME));
         entity.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
         entity.setConnectionTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME)));
         entity.setDeviceType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME));
@@ -60,7 +60,7 @@ public class ClientsConnectionHistoryDao extends AbstractBaseDao<ClientsConnecti
 
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
-        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN, entity.getUuid());
+        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_UUID_COLUMN_NAME, entity.getUuid());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
         databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getConnectionTimestamp()));
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME, entity.getDeviceType());

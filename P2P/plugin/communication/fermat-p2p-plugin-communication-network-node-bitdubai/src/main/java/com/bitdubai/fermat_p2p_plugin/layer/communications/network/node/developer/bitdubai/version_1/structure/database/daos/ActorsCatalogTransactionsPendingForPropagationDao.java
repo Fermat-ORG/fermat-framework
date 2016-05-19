@@ -32,7 +32,7 @@ public class ActorsCatalogTransactionsPendingForPropagationDao extends AbstractB
     public ActorsCatalogTransactionsPendingForPropagationDao(Database dataBase) {
         super(dataBase,
                 CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME,
-                CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_FIRST_KEY_COLUMN);
+                CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
     }
 
     /**

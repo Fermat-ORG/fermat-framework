@@ -30,7 +30,7 @@ public class CallsLogDao extends AbstractBaseDao<CallsLog> {
     public CallsLogDao(Database dataBase) {
         super(dataBase,
                 CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_TABLE_NAME,
-                CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_FIRST_KEY_COLUMN);
+                CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_ID_COLUMN_NAME);
     }
 
     /**

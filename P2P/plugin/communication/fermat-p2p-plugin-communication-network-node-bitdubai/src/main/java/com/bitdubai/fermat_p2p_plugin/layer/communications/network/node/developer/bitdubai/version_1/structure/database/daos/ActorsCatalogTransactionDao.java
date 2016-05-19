@@ -33,7 +33,7 @@ public class ActorsCatalogTransactionDao extends AbstractBaseDao<ActorsCatalogTr
     public ActorsCatalogTransactionDao(Database dataBase) {
         super(dataBase,
                 CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_TABLE_NAME,
-                CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_FIRST_KEY_COLUMN);
+                CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME);
     }
 
     /**

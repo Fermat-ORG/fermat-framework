@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
@@ -135,29 +136,32 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
      * @param networkServiceProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedInNetworkService(NetworkServiceProfile networkServiceProfile) throws CantInsertRecordDataBaseException {
+    private void insertCheckedInNetworkService(NetworkServiceProfile networkServiceProfile) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
+
+        if (!getDaoFactory().getCheckedInNetworkServiceDao().exists(networkServiceProfile.getIdentityPublicKey())) {
 
         /*
         * Create the checkedInNetworkService
         */
-        CheckedInNetworkService checkedInNetworkService = new CheckedInNetworkService();
-        checkedInNetworkService.setIdentityPublicKey(networkServiceProfile.getIdentityPublicKey());
-        checkedInNetworkService.setClientIdentityPublicKey(networkServiceProfile.getClientIdentityPublicKey());
-        checkedInNetworkService.setNetworkServiceType(networkServiceProfile.getNetworkServiceType().getCode());
+            CheckedInNetworkService checkedInNetworkService = new CheckedInNetworkService();
+            checkedInNetworkService.setIdentityPublicKey(networkServiceProfile.getIdentityPublicKey());
+            checkedInNetworkService.setClientIdentityPublicKey(networkServiceProfile.getClientIdentityPublicKey());
+            checkedInNetworkService.setNetworkServiceType(networkServiceProfile.getNetworkServiceType().getCode());
 
-        //Validate if location are available
-        if (networkServiceProfile.getLocation() != null) {
-            checkedInNetworkService.setLatitude(networkServiceProfile.getLocation().getLatitude());
-            checkedInNetworkService.setLongitude(networkServiceProfile.getLocation().getLongitude());
-        }else{
-            checkedInNetworkService.setLatitude(0.0);
-            checkedInNetworkService.setLongitude(0.0);
-        }
+            //Validate if location are available
+            if (networkServiceProfile.getLocation() != null) {
+                checkedInNetworkService.setLatitude(networkServiceProfile.getLocation().getLatitude());
+                checkedInNetworkService.setLongitude(networkServiceProfile.getLocation().getLongitude());
+            } else {
+                checkedInNetworkService.setLatitude(0.0);
+                checkedInNetworkService.setLongitude(0.0);
+            }
 
         /*
          * Save into the data base
          */
-        getDaoFactory().getCheckedInNetworkServiceDao().create(checkedInNetworkService);
+            getDaoFactory().getCheckedInNetworkServiceDao().create(checkedInNetworkService);
+        }
     }
 
     /**

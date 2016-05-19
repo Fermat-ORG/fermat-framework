@@ -28,7 +28,7 @@ public class MethodCallsHistoryDao extends AbstractBaseDao<MethodCallsHistory> {
      * @param dataBase
      */
     public MethodCallsHistoryDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_FIRST_KEY_COLUMN);
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME);
     }
 
     /**

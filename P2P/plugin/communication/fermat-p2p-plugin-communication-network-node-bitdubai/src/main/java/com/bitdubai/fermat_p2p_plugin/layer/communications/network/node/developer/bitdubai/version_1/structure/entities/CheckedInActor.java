@@ -3,7 +3,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.UUID;
 
 
 /**
@@ -13,8 +12,6 @@ import java.util.UUID;
 public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	private UUID uuid;
 
 	private String identityPublicKey;
 
@@ -39,8 +36,6 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 	private String clientIdentityPublicKey;
 
 	public CheckedInActor() {
-		super();
-        this.uuid = UUID.randomUUID();
         this.checkedInTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
@@ -132,17 +127,9 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
 		this.photo = photo;
 	}
 
-    public UUID getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
-    }
-
     @Override
 	public String getId() {
-		return uuid.toString();
+		return identityPublicKey;
 	}
 
     @Override
@@ -150,22 +137,12 @@ public class CheckedInActor extends AbstractBaseEntity implements Serializable {
         if (this == o) return true;
         if (!(o instanceof CheckedInActor)) return false;
         CheckedInActor that = (CheckedInActor) o;
-        return Objects.equals(getLatitude(), that.getLatitude()) &&
-                Objects.equals(getLongitude(), that.getLongitude()) &&
-                Objects.equals(uuid, that.uuid) &&
-                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-                Objects.equals(getActorType(), that.getActorType()) &&
-                Objects.equals(getAlias(), that.getAlias()) &&
-                Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
-                Objects.equals(getExtraData(), that.getExtraData()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getPhoto(), that.getPhoto()) &&
-                Objects.equals(getNsIdentityPublicKey(), that.getNsIdentityPublicKey());
+        return Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, getIdentityPublicKey(), getActorType(), getAlias(), getCheckedInTimestamp(), getExtraData(), getLatitude(), getLongitude(), getName(), getPhoto(), getNsIdentityPublicKey());
+        return Objects.hash(getIdentityPublicKey());
     }
 
     @Override

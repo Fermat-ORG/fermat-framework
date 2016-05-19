@@ -32,7 +32,7 @@ public class CheckedActorsHistoryDao extends AbstractBaseDao<CheckedActorsHistor
     public CheckedActorsHistoryDao(Database dataBase) {
         super(dataBase,
                 CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_TABLE_NAME,
-                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_FIRST_KEY_COLUMN);
+                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_UUID_COLUMN_NAME);
     }
 
     /**

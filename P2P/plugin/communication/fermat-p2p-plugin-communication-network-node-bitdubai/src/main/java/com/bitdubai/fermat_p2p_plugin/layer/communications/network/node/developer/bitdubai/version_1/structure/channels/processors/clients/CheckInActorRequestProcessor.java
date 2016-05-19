@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
@@ -137,35 +138,37 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedInActor(ActorProfile actorProfile) throws CantInsertRecordDataBaseException {
+    private void insertCheckedInActor(final ActorProfile actorProfile) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        /*
-         * Create the CheckedInActor
-         */
-        CheckedInActor checkedInActor = new CheckedInActor();
-        checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
-        checkedInActor.setActorType(actorProfile.getActorType());
-        checkedInActor.setAlias(actorProfile.getAlias());
-        checkedInActor.setName(actorProfile.getName());
-        checkedInActor.setPhoto(actorProfile.getPhoto());
-        checkedInActor.setExtraData(actorProfile.getExtraData());
-        checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
-        checkedInActor.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
+        if (!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey())) {
 
-        //Validate if location are available
-        if (actorProfile.getLocation() != null){
-            checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
-            checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
-        }else{
-            checkedInActor.setLatitude(0.0);
-            checkedInActor.setLongitude(0.0);
+            /*
+             * Create the CheckedInActor
+             */
+            CheckedInActor checkedInActor = new CheckedInActor();
+            checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
+            checkedInActor.setActorType(actorProfile.getActorType());
+            checkedInActor.setAlias(actorProfile.getAlias());
+            checkedInActor.setName(actorProfile.getName());
+            checkedInActor.setPhoto(actorProfile.getPhoto());
+            checkedInActor.setExtraData(actorProfile.getExtraData());
+            checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
+            checkedInActor.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
+
+            //Validate if location are available
+            if (actorProfile.getLocation() != null){
+                checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
+                checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
+            }else{
+                checkedInActor.setLatitude(0.0);
+                checkedInActor.setLongitude(0.0);
+            }
+
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getCheckedInActorDao().create(checkedInActor);
         }
-
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getCheckedInActorDao().create(checkedInActor);
-
     }
 
     /**

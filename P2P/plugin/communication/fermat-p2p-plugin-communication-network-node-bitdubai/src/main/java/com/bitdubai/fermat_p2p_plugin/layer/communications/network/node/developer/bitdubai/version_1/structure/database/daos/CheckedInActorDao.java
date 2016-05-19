@@ -32,7 +32,7 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
     public CheckedInActorDao(Database dataBase) {
         super(dataBase,
                 CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_TABLE_NAME,
-                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_FIRST_KEY_COLUMN);
+                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
     }
 
     /**
@@ -46,7 +46,6 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
 
         try{
 
-            checkedInActor.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_UUID_COLUMN_NAME));
             checkedInActor.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
             checkedInActor.setName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME));
             checkedInActor.setAlias(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME));
@@ -81,7 +80,6 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
          */
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
-        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_UUID_COLUMN_NAME, entity.getUuid());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME,entity.getName());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME,entity.getAlias());
@@ -93,7 +91,6 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
         databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getCheckedInTimestamp()));
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getNsIdentityPublicKey());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getClientIdentityPublicKey());
-
 
         return databaseTableRecord;
     }

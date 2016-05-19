@@ -28,7 +28,7 @@ public class CheckedInNetworkServiceDao extends AbstractBaseDao<CheckedInNetwork
      * @param dataBase
      */
     public CheckedInNetworkServiceDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_FIRST_KEY_COLUMN);
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
     }
 
     /**
@@ -40,7 +40,6 @@ public class CheckedInNetworkServiceDao extends AbstractBaseDao<CheckedInNetwork
 
         CheckedInNetworkService entity = new CheckedInNetworkService();
 
-        entity.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_UUID_COLUMN_NAME));
         entity.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
         entity.setCheckedInTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME)));
         entity.setLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME));
@@ -60,7 +59,6 @@ public class CheckedInNetworkServiceDao extends AbstractBaseDao<CheckedInNetwork
 
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
-        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_UUID_COLUMN_NAME, entity.getUuid());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
         databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getCheckedInTimestamp()));
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME, entity.getLatitude());

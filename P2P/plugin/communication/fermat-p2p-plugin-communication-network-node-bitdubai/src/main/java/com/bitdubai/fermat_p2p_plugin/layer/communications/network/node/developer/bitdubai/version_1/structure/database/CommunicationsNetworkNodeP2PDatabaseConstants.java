@@ -36,8 +36,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "node_identity_public_key";
     public static final String ACTOR_CATALOG_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
 
-    public static final String ACTOR_CATALOG_FIRST_KEY_COLUMN = "identity_public_key";
-
     /**
      * actor catalog transaction database table definition.
      */
@@ -56,8 +54,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTOR_CATALOG_TRANSACTION_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "node_identity_public_key";
     public static final String ACTOR_CATALOG_TRANSACTION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String ACTOR_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
-
-    public static final String ACTOR_CATALOG_TRANSACTION_FIRST_KEY_COLUMN = "hash_id";
 
     /**
      * actors catalog transactions pending for propagation database table definition.
@@ -78,8 +74,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
 
-    public static final String ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_FIRST_KEY_COLUMN = "hash_id";
-
     /**
      * calls log database table definition.
      */
@@ -91,14 +85,11 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CALLS_LOG_START_TIMESTAMP_COLUMN_NAME = "start_timestamp";
     public static final String CALLS_LOG_STEP_COLUMN_NAME = "step";
 
-    public static final String CALLS_LOG_FIRST_KEY_COLUMN = "call_id";
-
     /**
      * checked in actor database table definition.
      */
     public static final String CHECKED_IN_ACTOR_TABLE_NAME = "checked_in_actor";
 
-    public static final String CHECKED_IN_ACTOR_UUID_COLUMN_NAME = "uuid";
     public static final String CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
     public static final String CHECKED_IN_ACTOR_NAME_COLUMN_NAME = "name";
     public static final String CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME = "alias";
@@ -110,8 +101,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME = "checked_in_timestamp";
     public static final String CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "ns_identity_public_key";
     public static final String CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
-
-    public static final String CHECKED_IN_ACTOR_FIRST_KEY_COLUMN = "uuid";
 
     /**
      * checked in clients database table definition.
@@ -129,15 +118,12 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
      */
     public static final String CHECKED_IN_NETWORK_SERVICE_TABLE_NAME = "checked_in_network_service";
 
-    public static final String CHECKED_IN_NETWORK_SERVICE_UUID_COLUMN_NAME = "uuid";
     public static final String CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
     public static final String CHECKED_IN_NETWORK_SERVICE_LATITUDE_COLUMN_NAME = "latitude";
     public static final String CHECKED_IN_NETWORK_SERVICE_LONGITUDE_COLUMN_NAME = "longitude";
     public static final String CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String CHECKED_IN_NETWORK_SERVICE_NETWORK_SERVICE_TYPE_COLUMN_NAME = "network_service_type";
     public static final String CHECKED_IN_NETWORK_SERVICE_CHECKED_IN_TIMESTAMP_COLUMN_NAME = "checked_in_timestamp";
-
-    public static final String CHECKED_IN_NETWORK_SERVICE_FIRST_KEY_COLUMN = "uuid";
 
     /**
      * checked actors history database table definition.
@@ -156,8 +142,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CHECKED_ACTORS_HISTORY_EXTRA_DATA_COLUMN_NAME = "extra_data";
     public static final String CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME = "checked_timestamp";
     public static final String CHECKED_ACTORS_HISTORY_CHECK_TYPE_COLUMN_NAME = "check_type";
-
-    public static final String CHECKED_ACTORS_HISTORY_FIRST_KEY_COLUMN = "uuid";
 
     /**
      * Clients Registration History database table definition.
@@ -188,8 +172,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME = "checked_timestamp";
     public static final String CHECKED_NETWORK_SERVICE_HISTORY_CHECK_TYPE_COLUMN_NAME = "check_type";
 
-    public static final String CHECKED_NETWORK_SERVICE_HISTORY_FIRST_KEY_COLUMN = "uuid";
-
     /**
      * clients connections history database table definition.
      */
@@ -202,8 +184,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CLIENTS_CONNECTIONS_HISTORY_DEVICE_TYPE_COLUMN_NAME = "device_type";
     public static final String CLIENTS_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME = "connection_timestamp";
     public static final String CLIENTS_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME = "status";
-
-    public static final String CLIENTS_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN = "uuid";
 
     /**
      * nodes connections history database table definition.
@@ -219,8 +199,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String NODES_CONNECTIONS_HISTORY_CONNECTION_TIMESTAMP_COLUMN_NAME = "connection_timestamp";
     public static final String NODES_CONNECTIONS_HISTORY_STATUS_COLUMN_NAME = "status";
 
-    public static final String NODES_CONNECTIONS_HISTORY_FIRST_KEY_COLUMN = "uuid";
-
     /**
      * method calls history database table definition.
      */
@@ -231,8 +209,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME = "parameters";
     public static final String METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "client_identity_public_key";
     public static final String METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME = "create_timestamp";
-
-    public static final String METHOD_CALLS_HISTORY_FIRST_KEY_COLUMN = "uuid";
 
     /**
      * nodes catalog database table definition.
@@ -250,8 +226,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String NODES_CATALOG_REGISTERED_TIMESTAMP_COLUMN_NAME = "registered_timestamp";
     public static final String NODES_CATALOG_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME = "last_connection_timestamp";
 
-    public static final String NODES_CATALOG_FIRST_KEY_COLUMN = "identity_public_key";
-
     /**
      * nodes catalog transaction database table definition.
      */
@@ -268,8 +242,6 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String NODES_CATALOG_TRANSACTION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME = "last_connection_timestamp";
     public static final String NODES_CATALOG_TRANSACTION_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
 
-    public static final String NODES_CATALOG_TRANSACTION_FIRST_KEY_COLUMN = "hash_id";
-
     /**
      * nodes catalog transactions pending for propagation database table definition.
      */
@@ -285,7 +257,5 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_REGISTERED_TIMESTAMP_COLUMN_NAME = "registered_timestamp";
     public static final String NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME = "last_connection_timestamp";
     public static final String NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TRANSACTION_TYPE_COLUMN_NAME = "transaction_type";
-
-    public static final String NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_FIRST_KEY_COLUMN = "hash_id";
 
 }
