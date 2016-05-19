@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
@@ -69,6 +70,12 @@ public interface MiddlewareChatManager extends FermatManager{
     public void sendWritingStatus(UUID chatId) throws SendWritingStatusMessageNotificationException;
 
     public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus;
+
+    public boolean checkOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
+
+    public String checkLastConnection(String remotePublicKey) throws CantGetOnlineStatus;
+
+    public void activeOnlineStatus(String remotePublicKey) throws CantGetOnlineStatus;
 
     void notificationNewIncomingMessage(
             String publicKey,

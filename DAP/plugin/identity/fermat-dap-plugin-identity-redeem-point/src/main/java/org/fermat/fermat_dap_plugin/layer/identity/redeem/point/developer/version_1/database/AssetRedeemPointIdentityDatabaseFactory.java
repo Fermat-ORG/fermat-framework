@@ -17,17 +17,13 @@ import java.util.UUID;
 /**
  * Created by Nerio on 17/09/15.
  */
-public class AssetRedeemPointIdentityDatabaseFactory implements DealsWithErrors, DealsWithPluginDatabaseSystem {
+public class AssetRedeemPointIdentityDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
-    /**
-     * DealsWithErrors Interface member variables.
-     */
-    private ErrorManager errorManager;
 
     public AssetRedeemPointIdentityDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -103,10 +99,5 @@ public class AssetRedeemPointIdentityDatabaseFactory implements DealsWithErrors,
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 }

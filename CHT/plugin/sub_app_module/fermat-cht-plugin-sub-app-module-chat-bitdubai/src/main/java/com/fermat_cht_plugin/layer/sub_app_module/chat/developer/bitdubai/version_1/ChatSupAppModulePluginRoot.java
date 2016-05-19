@@ -37,9 +37,6 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
         super(new PluginVersionReference(new Version()));
     }
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
 
@@ -60,7 +57,7 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
         /**
          * Init the plugin manager
          */
-        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, errorManager);
+        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this);
 
         System.out.println("******* Init Chat Sup App Module Chat ******");
     }
@@ -68,7 +65,7 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
     @Override
     public ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if (chatManager == null)
-            chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, errorManager);
+            chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this);
         return chatManager;
     }
 }

@@ -945,7 +945,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * @param peerIp
      * @throws CantExecuteDatabaseOperationException
      */
-    public void storeBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String txHash, UUID transactionId, int peerCount, String peerIp) throws CantExecuteDatabaseOperationException {
+    public void storeBroadcastBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String txHash, UUID transactionId, int peerCount, String peerIp) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
 
         /**
@@ -962,7 +962,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
          * delete if already exists.
          */
         if (!databaseTable.getRecords().isEmpty()){
-            this.deleteStoredBitcoinTransaction(txHash);
+            this.deleteStoredBroadcastBitcoinTransaction(txHash);
         }
 
         /**
@@ -1010,7 +1010,7 @@ public class BitcoinCryptoNetworkDatabaseDao {
      * T TransTio
      * @param txHash
      */
-    public void deleteStoredBitcoinTransaction(String txHash) throws CantExecuteDatabaseOperationException {
+    public void deleteStoredBroadcastBitcoinTransaction(String txHash) throws CantExecuteDatabaseOperationException {
         DatabaseTable databaseTable = database.getTable(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TABLE_NAME);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_TX_HASH, txHash, DatabaseFilterType.EQUAL);
         databaseTable.addStringFilter(BitcoinCryptoNetworkDatabaseConstants.BROADCAST_STATUS, Status.IDLE.getCode(), DatabaseFilterType.EQUAL);

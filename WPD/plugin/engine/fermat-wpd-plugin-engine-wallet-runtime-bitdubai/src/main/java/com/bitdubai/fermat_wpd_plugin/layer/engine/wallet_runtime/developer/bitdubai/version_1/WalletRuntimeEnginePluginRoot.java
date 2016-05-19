@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
@@ -158,6 +157,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
             factoryReset();
 
         } catch (CantFactoryReset ex) {
+            ex.printStackTrace();
             String message = CantStartPluginException.DEFAULT_MESSAGE;
             FermatException cause = ex;
             String context = "WalletNavigationStructure Runtime Start";
@@ -166,6 +166,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(message, cause, context, possibleReason);
         }
         catch (Exception ex) {
+            ex.printStackTrace();
             String message = CantStartPluginException.DEFAULT_MESSAGE;
 
             String context = "WalletNavigationStructure Runtime Start";

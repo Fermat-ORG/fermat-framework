@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -31,8 +33,10 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
-import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
@@ -48,13 +52,12 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.A
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.developer_utils.AssetTransferDeveloperDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDAO;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferMonitorAgent;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferRecorderService;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.AssetTransferTransactionManager;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.DigitalAssetTransferVault;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,7 +69,7 @@ import java.util.regex.Pattern;
  * Created by Víctor Mars (marsvicam@gmail.com) on 08/01/16.
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.HIGH,
-        maintainerMail = "nerioindriago@gmail.com",
+        maintainerMail = "marsvicam@gmail.com",
         createdBy = "victor",
         layer = Layers.DIGITAL_ASSET_TRANSACTION,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
@@ -100,8 +103,6 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
     private PluginDatabaseSystem pluginDatabaseSystem;
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
     private LogManager logManager;
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -138,26 +139,29 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
     public void start() throws CantStartPluginException {
         try {
             try {
-                this.assetDistributionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
-            } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
+                this.assetDistributionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
+            } catch (CantOpenDatabaseException | DatabaseNotFoundException ex) {
                 try {
                     createAssetDistributionTransactionDatabase();
-                } catch (CantCreateDatabaseException innerException) {
-                    throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset Distribution plugin - " + this.pluginId, "Cannot open or create the plugin database");
+                } catch (CantCreateDatabaseException e) {
+                    reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "Starting Asset Distribution plugin - " + this.pluginId, "Cannot open or create the plugin database");
                 }
             }
             this.digitalAssetTransferVault = new DigitalAssetTransferVault(this.pluginId,
                     pluginFileSystem,
-                    errorManager,
+                    this,
                     assetUserWalletManager,
                     actorAssetUserManager,
                     bitcoinNetworkManager);
+
             AssetTransferDAO assetDistributionDao = new AssetTransferDAO(pluginDatabaseSystem,
                     pluginId,
                     digitalAssetTransferVault);
+
             this.assetTransferTransactionManager = new AssetTransferTransactionManager(
                     this.assetVaultManager,
-                    this.errorManager,
+                    this,
                     this.pluginId,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
@@ -167,23 +171,25 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
                     assetTransmissionNetworkServiceManager,
                     actorAssetUserManager);
             //Starting Event Recorder
-            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferRecorderService assetTransferRecorderService = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferRecorderService(assetDistributionDao, eventManager);
+            AssetTransferRecorderService assetTransferRecorderService = new AssetTransferRecorderService(assetDistributionDao, eventManager);
             try {
                 assetTransferRecorderService.start();
-            } catch (CantStartServiceException exception) {
+            } catch (CantStartServiceException e) {
                 //This plugin must be stopped if this happens.
                 this.serviceStatus = ServiceStatus.STOPPED;
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-                throw new CantStartPluginException("Asset reception Event Recorded could not be started", exception, Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION.getCode(), "The plugin event recorder is not started");
-            }
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                e.printStackTrace();            }
             startMonitorAgent();
-        } catch (CantSetObjectException exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting Asset Distribution plugin", "Cannot set an object, probably is null");
-        } catch (CantExecuteDatabaseOperationException exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, "Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
-        } catch (Exception exception) {
-            System.out.println("Asset Distribution test exception " + exception);
-            exception.printStackTrace();
+        } catch (CantSetObjectException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Starting Asset Distribution plugin", "Cannot set an object, probably is null");
+        } catch (CantExecuteDatabaseOperationException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Starting pluginDatabaseSystem in DigitalAssetDistributor", "Error in constructor method AssetDistributor");
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            System.out.println("Asset Distribution test exception " + e);
+            e.printStackTrace();
         }
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -202,8 +208,9 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (this.assetTransferMonitorAgent == null) {
-            this.assetTransferMonitorAgent = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferMonitorAgent(this.pluginDatabaseSystem,
-                    this.errorManager,
+            this.assetTransferMonitorAgent = new AssetTransferMonitorAgent(
+                    this.pluginDatabaseSystem,
+                    this,
                     this.pluginId,
                     pluginFileSystem,
                     assetVaultManager,
@@ -241,18 +248,18 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
             return AssetTransferDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+        } catch (CantOpenDatabaseException e) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            FermatException e = new CantDeliverDatabaseException("Cannot open the database", cantOpenDatabaseException, "DeveloperDatabase: " + developerDatabase.getName(), "");
-            this.errorManager.reportUnexpectedPluginException(Plugins.ASSET_TRANSFER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (DatabaseNotFoundException databaseNotFoundException) {
-            FermatException e = new CantDeliverDatabaseException("Database does not exists", databaseNotFoundException, "DeveloperDatabase: " + developerDatabase.getName(), "");
-            this.errorManager.reportUnexpectedPluginException(Plugins.ASSET_TRANSFER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (Exception exception) {
-            FermatException e = new CantDeliverDatabaseException("Unexpected Exception", exception, "DeveloperDatabase: " + developerDatabase.getName(), "");
-            this.errorManager.reportUnexpectedPluginException(Plugins.ASSET_TRANSFER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            e.printStackTrace();
+        } catch (DatabaseNotFoundException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            e.printStackTrace();
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            e.printStackTrace();
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
