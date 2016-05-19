@@ -351,7 +351,7 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                         if (operator.compareTo(minSatoshis) == 1) {
                             cryptoWallet.sendToWallet(
                                     operator.longValueExact(),
-                                    walletContact.getActorPublicKey(),
+                                    appSession.getAppPublicKey(),
                                     wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
                                     notes,
                                     Actors.BITCOIN_BASIC_USER,
