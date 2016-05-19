@@ -1,5 +1,7 @@
 package com.bitdubai.sub_app.music_player.common.models;
 
+import android.graphics.Bitmap;
+
 import java.util.UUID;
 
 /**
@@ -9,11 +11,11 @@ public class MusicPlayerItems {
 
     private String song_name;
     private String artist_name;
-    private int imagen;
+    private Bitmap imagen;
     private byte[] song;
     private UUID song_id;
 
-    public MusicPlayerItems(String artist_name,String song_name,int imagen,byte[] song,UUID song_id){
+    public MusicPlayerItems(String artist_name,String song_name,Bitmap imagen,byte[] song,UUID song_id){
         this.artist_name=artist_name;
         this.song_name = song_name;
         this.imagen = imagen;
@@ -29,7 +31,9 @@ public class MusicPlayerItems {
     public String getSong_name(){return song_name;}
 
 
-    public int getImagen(){return imagen;}
+    public void setImagen(Bitmap imagen){this.imagen=imagen;}
+
+    public Bitmap getImagen(){return imagen;}
 
     public byte[] getSong(){return song;}
 
