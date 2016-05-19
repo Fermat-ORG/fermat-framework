@@ -13,13 +13,12 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetRedeemPointWalletSubAppModule extends ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings>, Serializable {
+public interface AssetRedeemPointWalletSubAppModule extends ModuleManager<RedeemPointSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<RedeemPointSettings> {
     /**
      * (non-Javadoc)
      * @see List<AssetRedeemPointWalletList> getAssetRedeemPointWalletBalancesBook(String publicKey)

@@ -76,7 +76,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.asset.user.developer.version_1.AssetUserWalletModulePluginRoot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,7 +91,7 @@ import java.util.UUID;
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_USER)
-public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> implements AssetUserWalletSubAppModuleManager, Serializable {
+public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> implements AssetUserWalletSubAppModuleManager {
 
     private final AssetUserWalletManager            assetUserWalletManager;
     private final AssetAppropriationManager         assetAppropriationManager;
@@ -102,8 +101,8 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
     private final ErrorManager                      errorManager;
     private final EventManager                      eventManager;
     private final Broadcaster                       broadcaster;
-    private final UUID                              pluginId;
-    private final PluginFileSystem                  pluginFileSystem;
+//    private final UUID                              pluginId;
+//    private final PluginFileSystem                  pluginFileSystem;
     private final ActorAssetRedeemPointManager      actorAssetRedeemPointManager;
     private final WalletManagerManager              walletMiddlewareManager;
     private final AssetFactoryManager               assetFactoryManager;
@@ -155,8 +154,8 @@ public class AssetUserWalletModule extends ModuleManagerImpl<AssetUserSettings> 
         this.errorManager                       = errorManager;
         this.broadcaster                        = broadcaster;
         this.eventManager                       = eventManager;
-        this.pluginId                           = pluginId;
-        this.pluginFileSystem                   = pluginFileSystem;
+//        this.pluginId                           = pluginId;
+//        this.pluginFileSystem                   = pluginFileSystem;
         this.actorAssetRedeemPointManager       = actorAssetRedeemPointManager;
         this.walletMiddlewareManager            = walletMiddlewareManager;
         this.assetFactoryManager                = assetFactoryManager;

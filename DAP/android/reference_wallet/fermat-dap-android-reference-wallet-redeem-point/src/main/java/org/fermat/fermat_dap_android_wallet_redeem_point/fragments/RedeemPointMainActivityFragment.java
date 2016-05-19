@@ -54,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -79,6 +81,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     private View noAssetsView;
     private SearchView searchView;
 
+    private ExecutorService _executor;
+
     public static RedeemPointMainActivityFragment newInstance() {
         return new RedeemPointMainActivityFragment();
     }
@@ -86,9 +90,11 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
         try {
+            setHasOptionsMenu(true);
+
+            _executor = Executors.newFixedThreadPool(3);
+
             redeemPointSession = ((RedeemPointSession) appSession);
             moduleManager = redeemPointSession.getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -163,8 +169,13 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             configureToolbar();
             noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            showOrHideNoAssetsView(digitalAssets.isEmpty());
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                    showOrHideNoAssetsView(digitalAssets.isEmpty());
+                }
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
