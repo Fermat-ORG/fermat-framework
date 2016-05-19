@@ -338,7 +338,7 @@ public class ConnectionsWorldFragment
         } catch (Exception e) {
             //Toast.makeText(getActivity(), "No Chat Identity Created",
             //        Toast.LENGTH_LONG).show();
-            //e.printStackTrace();
+            e.printStackTrace();
         }
         return dataSet;
     }
