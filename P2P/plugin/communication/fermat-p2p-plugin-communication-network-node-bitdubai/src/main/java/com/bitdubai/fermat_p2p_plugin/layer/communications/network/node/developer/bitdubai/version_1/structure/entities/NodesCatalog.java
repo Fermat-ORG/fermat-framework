@@ -141,21 +141,12 @@ public class NodesCatalog extends AbstractBaseEntity implements Serializable {
         if (this == o) return true;
         if (!(o instanceof NodesCatalog)) return false;
         NodesCatalog that = (NodesCatalog) o;
-        return Objects.equals(getLastLatitude(), that.getLastLatitude()) &&
-                Objects.equals(getLastLongitude(), that.getLastLongitude()) &&
-                Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-                Objects.equals(getDefaultPort(), that.getDefaultPort()) &&
-                Objects.equals(getIp(), that.getIp()) &&
-                Objects.equals(getLastConnectionTimestamp(), that.getLastConnectionTimestamp()) &&
-                Objects.equals(getLateNotificationsCounter(), that.getLateNotificationsCounter()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getOfflineCounter(), that.getOfflineCounter()) &&
-                Objects.equals(getRegisteredTimestamp(), that.getRegisteredTimestamp());
+        return Objects.equals(getId(), that.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getIdentityPublicKey(), getDefaultPort(), getIp(), getLastLatitude(), getLastConnectionTimestamp(), getLateNotificationsCounter(), getLastLongitude(), getName(), getOfflineCounter(), getRegisteredTimestamp());
+        return Objects.hash(getIdentityPublicKey());
     }
 
     @Override
