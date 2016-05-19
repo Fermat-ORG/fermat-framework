@@ -16,6 +16,7 @@ import com.bitdubai.android_core.app.common.version_1.receivers.NotificationRece
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.engine.ApplicationManager;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_core.FermatSystem;
 
@@ -24,7 +25,6 @@ import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -38,7 +38,7 @@ import java.util.List;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text)
 
-public class ApplicationSession extends MultiDexApplication implements Serializable,FermatApplicationSession {
+public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession {
 
     private final String TAG = "ApplicationSession";
 
@@ -102,6 +102,11 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             fermatSystem = FermatSystem.getInstance();
         }
         return fermatSystem;
+    }
+
+    @Override
+    public ApplicationManager getApplicationManager() {
+        return new ApplicationManager(this);
     }
 
     /**
@@ -204,10 +209,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
         String myProcessName =getApplicationContext().getPackageName();
         Log.i(TAG,"context:"+myProcessName);
-
-
-
-
 
     }
 
