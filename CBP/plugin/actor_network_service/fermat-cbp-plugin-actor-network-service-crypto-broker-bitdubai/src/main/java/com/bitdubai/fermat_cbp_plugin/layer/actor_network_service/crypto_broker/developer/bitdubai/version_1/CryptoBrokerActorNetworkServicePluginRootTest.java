@@ -46,9 +46,9 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
 
- * @author lnacosta
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
 public class CryptoBrokerActorNetworkServicePluginRootTest extends AbstractActorNetworkService implements DatabaseManagerForDevelopers {
 
