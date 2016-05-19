@@ -173,28 +173,30 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        LOG.info("Executing method insertNodesCatalog");
+        if (!getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getId())) {
+            LOG.info("Executing method insertNodesCatalog");
 
-        /*
-         * Create the NodesCatalog
-         */
-        NodesCatalog nodeCatalog = new NodesCatalog();
-        nodeCatalog.setIp(nodesCatalogTransaction.getIp());
-        nodeCatalog.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
-        nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
-        nodeCatalog.setName(nodesCatalogTransaction.getName());
-        nodeCatalog.setOfflineCounter(0);
-        nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-        nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
-        nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
-        nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalog nodeCatalog = new NodesCatalog();
+            nodeCatalog.setIp(nodesCatalogTransaction.getIp());
+            nodeCatalog.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
+            nodeCatalog.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
+            nodeCatalog.setName(nodesCatalogTransaction.getName());
+            nodeCatalog.setOfflineCounter(0);
+            nodeCatalog.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
+            nodeCatalog.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
+            nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
+            nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+        }
     }
 
     /**
@@ -203,11 +205,11 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void updateNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
+    private void updateNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
         LOG.info("Executing method updateNodesCatalog");
 
-       /*
+        /*
          * Create the NodesCatalog
          */
         NodesCatalog nodeCatalog = new NodesCatalog();
@@ -221,10 +223,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
         nodeCatalog.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
         nodeCatalog.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getNodesCatalogDao().update(nodeCatalog);
+        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getId())) {
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getNodesCatalogDao().update(nodeCatalog);
+        } else {
+            // if it does not exists i create it
+            getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+        }
     }
 
     /**
@@ -234,14 +241,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @throws CantDeleteRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private void deleteNodesCatalog(String identityPublicKey) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
+    private void deleteNodesCatalog(String identityPublicKey) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method deleteNodesCatalog");
 
         /*
          * Delete from the data base
          */
-        getDaoFactory().getNodesCatalogDao().delete(identityPublicKey);
+        if (getDaoFactory().getNodesCatalogDao().exists(identityPublicKey))
+            getDaoFactory().getNodesCatalogDao().delete(identityPublicKey);
     }
 
     /**
@@ -250,14 +258,15 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertNodesCatalogTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertNodesCatalogTransaction(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method insertNodesCatalogTransaction");
 
         /*
          * Save into the data base
          */
-        getDaoFactory().getNodesCatalogTransactionDao().create(nodesCatalogTransaction);
+        if (!getDaoFactory().getNodesCatalogTransactionDao().exists(nodesCatalogTransaction.getId()))
+            getDaoFactory().getNodesCatalogTransactionDao().create(nodesCatalogTransaction);
     }
 
     /**
@@ -266,29 +275,31 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @param nodesCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        LOG.info("Executing method insertNodesCatalogTransactionsPendingForPropagation");
+        if (!getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().exists(nodesCatalogTransaction.getId())) {
+            LOG.info("Executing method insertNodesCatalogTransactionsPendingForPropagation");
 
-        /*
-         * Create the NodesCatalog
-         */
-        NodesCatalogTransactionsPendingForPropagation transaction = new NodesCatalogTransactionsPendingForPropagation();
-        transaction.setIp(nodesCatalogTransaction.getIp());
-        transaction.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
-        transaction.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
-        transaction.setName(nodesCatalogTransaction.getName());
-        transaction.setTransactionType(nodesCatalogTransaction.getTransactionType());
-        transaction.setHashId(transaction.getHashId());
-        transaction.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-        transaction.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
-        transaction.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
-        transaction.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalogTransactionsPendingForPropagation transaction = new NodesCatalogTransactionsPendingForPropagation();
+            transaction.setIp(nodesCatalogTransaction.getIp());
+            transaction.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
+            transaction.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
+            transaction.setName(nodesCatalogTransaction.getName());
+            transaction.setTransactionType(nodesCatalogTransaction.getTransactionType());
+            transaction.setHashId(transaction.getHashId());
+            transaction.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
+            transaction.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
+            transaction.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
+            transaction.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
+        }
     }
 
 }

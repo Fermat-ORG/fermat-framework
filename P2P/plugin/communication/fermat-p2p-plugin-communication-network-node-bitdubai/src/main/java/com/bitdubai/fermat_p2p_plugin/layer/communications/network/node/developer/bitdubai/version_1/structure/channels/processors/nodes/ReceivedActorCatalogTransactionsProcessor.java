@@ -213,13 +213,13 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * @param actorsCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void updateActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
+    private void updateActorsCatalog(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method updateActorsCatalog");
 
         /*
-         * Create the ActorsCatalog
-         */
+             * Create the ActorsCatalog
+             */
         ActorsCatalog actorsCatalog = new ActorsCatalog();
         actorsCatalog.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
         actorsCatalog.setActorType(actorsCatalogTransaction.getActorType());
@@ -233,10 +233,15 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         actorsCatalog.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
         actorsCatalog.setPhoto(actorsCatalogTransaction.getPhoto());
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getActorsCatalogDao().update(actorsCatalog);
+        if (getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getId())) {
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getActorsCatalogDao().update(actorsCatalog);
+        } else {
+            // if not exist i create it
+            getDaoFactory().getActorsCatalogDao().create(actorsCatalog);
+        }
     }
 
     /**
@@ -246,14 +251,15 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * @throws CantDeleteRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private void deleteActorsCatalog(String identityPublicKey) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
+    private void deleteActorsCatalog(String identityPublicKey) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method deleteActorsCatalog");
 
         /*
          * Delete from the data base
          */
-        getDaoFactory().getActorsCatalogDao().delete(identityPublicKey);
+        if(getDaoFactory().getActorsCatalogDao().exists(identityPublicKey))
+            getDaoFactory().getActorsCatalogDao().delete(identityPublicKey);
     }
 
     /**
