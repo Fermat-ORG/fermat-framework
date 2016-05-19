@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_sub_app_redeem_point_community.app_connection;
 
 import android.content.Context;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.factory.AssetRedeemPointCommunityFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.navigation_drawer.RedeemPointCommunityNavigationViewPainter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
@@ -72,7 +74,7 @@ public class CommunityRedeemPointFermatAppConnection extends AppConnections<Asse
     public NotificationPainter getNotificationPainter(String code) {
         NotificationPainter notification = null;
         try {
-            this.assetRedeemPointCommunitySubAppSession = (AssetRedeemPointCommunitySubAppSession) this.getSession();
+            this.assetRedeemPointCommunitySubAppSession = this.getFullyLoadedSession();
             if (assetRedeemPointCommunitySubAppSession != null)
                 manager = assetRedeemPointCommunitySubAppSession.getModuleManager();
             String[] params = code.split("_");

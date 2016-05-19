@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
@@ -60,7 +61,10 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public FanaticIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeFanaticIdentityDatabaseException {
+    public FanaticIdentityDao(
+            PluginDatabaseSystem pluginDatabaseSystem,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId) throws CantInitializeFanaticIdentityDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
@@ -131,9 +135,9 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
     }
 
     /**
-     * first i persist private key on a file
-     * second i insert the record in database
-     * third i save the profile image file
+     * first I persist private key on a file
+     * second I insert the record in database
+     * third I save the profile image file
      *
      * @param alias
      * @param publicKey
@@ -143,7 +147,15 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param externalIdentityID
      * @throws CantCreateFanIdentityException
      */
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, UUID externalIdentityID) throws CantCreateFanIdentityException {
+    public void createNewUser(
+            String alias,
+            String publicKey,
+            String privateKey,
+            DeviceUser deviceUser,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantCreateFanIdentityException {
 
         try {
             if (aliasExists(alias)) {
@@ -152,14 +164,42 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
 
-            DatabaseTable table = this.database.getTable(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME);
+            DatabaseTable table = this.database.getTable(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
-
-            record.setStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
-            record.setStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME, alias);
-            record.setStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-            record.setUUIDValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, externalIdentityID);
-
+            //Public key
+            record.setStringValue(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                    publicKey);
+            //Alias
+            record.setStringValue(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME,
+                    alias);
+            //Device User public key
+            record.setStringValue(
+                    FanaticIdentityDatabaseConstants.
+                            FANATIC_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME,
+                    deviceUser.getPublicKey());
+            //External Identity Id
+            if(externalIdentityID!=null){
+                record.setUUIDValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
+                        externalIdentityID);
+            }
+            //External platform
+            if(artExternalPlatform==null){
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        artExternalPlatform.UNDEFINED.getCode());
+            } else {
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        artExternalPlatform.getCode());
+            }
+            //External username
+            record.setStringValue(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
+                    externalUsername);
             table.insertRecord(record);
 
             if (profileImage != null)
@@ -167,92 +207,150 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantInsertRecordException e) {
             // Cant insert record.
-            throw new CantCreateFanIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
-
+            throw new CantCreateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Fan Identity",
+                    "Cant create new Fan Identity, insert database problems.");
         } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
-            throw new CantCreateFanIdentityException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
-
+            throw new CantCreateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Fan Identity",
+                    "Cant create new Fan identity, persist private key error.");
         } catch (Exception e) {
             // Failure unknown.
-
-            throw new CantCreateFanIdentityException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
+            throw new CantCreateFanIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Fan Identity",
+                    "Cant create new Fan Identity, unknown failure.");
         }
     }
 
-    public void updateIdentityFanaticUser(String publicKey, String alias, byte[] profileImage,
-                                          UUID externalIdentityID) throws CantUpdateFanIdentityException {
+    /**
+     * This method updates the Fan identity
+     * @param publicKey
+     * @param alias
+     * @param profileImage
+     * @param externalIdentityID
+     * @throws CantUpdateFanIdentityException
+     */
+    public void updateIdentityFanaticUser(
+            String publicKey,
+            String alias,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateFanIdentityException {
         try {
             /**
              * 1) Get the table.
              */
-            DatabaseTable table = this.database.getTable(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME);
-
+            DatabaseTable table = this.database.getTable(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME);
             if (table == null) {
                 /**
                  * Table not found.
                  */
-                throw new CantUpdateFanIdentityException("Cant get Fanatic identity list, table not found.");
+                throw new CantUpdateFanIdentityException(
+                        "Cant get Fanatic identity list, table not found.");
             }
-
-            // 2) Find the Intra users.
-            table.addStringFilter(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            // 2) Find the Fan identities.
+            table.addStringFilter(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                    publicKey,
+                    DatabaseFilterType.EQUAL);
             table.loadToMemory();
-
-
             // 3) Get Intra users.
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
-                record.setStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
-                record.setStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME, alias);
-                record.setUUIDValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, externalIdentityID);
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                        publicKey);
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME,
+                        alias);
+                //External Id
+                if(externalIdentityID!=null){
+                    record.setUUIDValue(
+                            FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
+                            externalIdentityID);
+                }
+                //External platform
+                if(artExternalPlatform==null){
+                    record.setStringValue(
+                            FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                            artExternalPlatform.UNDEFINED.getCode());
+                } else {
+                    record.setStringValue(
+                            FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                            artExternalPlatform.getCode());
+                }
+                //External username
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
+                        externalUsername);
 
                 table.updateRecord(record);
             }
-
             if (profileImage != null)
                 persistNewUserProfileImage(publicKey, profileImage);
-
         } catch (CantUpdateRecordException e) {
-            throw new CantUpdateFanIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, database problems.");
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(), e,
+                    "Fan Identity",
+                    "Cant update Fan Identity, we got database problems.");
         } catch (CantPersistProfileImageException e) {
-            throw new CantUpdateFanIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, persist image error.");
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Fan Identity",
+                    "Cant update Fan Identity, persist image error.");
         } catch (Exception e) {
-            throw new CantUpdateFanIdentityException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant update Redeem Point Identity, unknown failure.");
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Fan Identity",
+                    "Cant update Fan Identity, unknown failure.");
         }
     }
 
-    public List<Fanatic> getIdentityFanaticsFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListFanIdentitiesException {
-
-
+    /**
+     * This method returns a Fan Identity persisted in the device
+     * @param deviceUser
+     * @return
+     * @throws CantListFanIdentitiesException
+     */
+    public List<Fanatic> getIdentityFanaticsFromCurrentDeviceUser(DeviceUser deviceUser)
+            throws CantListFanIdentitiesException {
         // Setup method.
         List<Fanatic> list = new ArrayList<>(); // Intra User list.
         DatabaseTable table; // Intra User table.
-
-        // Get Redeem Point identities list.
+        // Get Fan identities list.
         try {
-
             /**
              * 1) Get the table.
              */
-            table = this.database.getTable(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME);
-
+            table = this.database.getTable(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME);
             if (table == null) {
                 /**
                  * Table not found.
                  */
-                throw new CantUpdateFanIdentityException("Cant get Fanatic identity list, table not found.");
+                throw new CantUpdateFanIdentityException(
+                        "Cant get Fanatic identity list, table not found.");
             }
-
-
-            // 2) Find the Redeem Point.
-            table.addStringFilter(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
+            // 2) Find the Fan identity.
+            table.addStringFilter(
+                    FanaticIdentityDatabaseConstants
+                            .FANATIC_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME,
+                    deviceUser.getPublicKey(),
+                    DatabaseFilterType.EQUAL);
             table.loadToMemory();
-
-
-            // 3) Get Redeem Point.
+            // 3) Get Fan identity.
             for (DatabaseTableRecord record : table.getRecords()) {
-
                 // Add records to list.
                 /*list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
@@ -260,16 +358,52 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         getFanaticProfileImagePrivateKey(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId), );*/
-                list.add(new FanaticIdentityImp(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        record.getUUIDValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME),
-                        pluginFileSystem,
-                        pluginId));
+                //External ID
+                UUID externalIdentityId;
+                String externalIdentityString = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+                if(externalIdentityString==null || externalIdentityString.isEmpty()){
+                    externalIdentityId=null;
+                } else {
+                    externalIdentityId = UUID.fromString(externalIdentityString);
+                }
+                //External platform
+                ArtExternalPlatform externalPlatform;
+                String externalPlatformString = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
+                    externalPlatform = ArtExternalPlatform.UNDEFINED;
+                } else{
+                    externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
+                }
+                //External username
+                String externalUsername = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
+                list.add(
+                        new FanaticIdentityImp(
+                                record.getStringValue(
+                                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
+                                record.getStringValue(
+                                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                                getFanaticProfileImagePrivateKey(
+                                        record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                                externalIdentityId,
+                                pluginFileSystem,
+                                pluginId,
+                                externalPlatform,
+                                externalUsername));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListFanIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantListFanIdentitiesException(
+                    e.getMessage(),
+                    e, "Fan Identity",
+                    "Cannot load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantListFanIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Issuer identity list, unknown failure.");
+            throw new CantListFanIdentitiesException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Fan Identity",
+                    "Cant get Fan identity list, unknown failure.");
         }
 
         // Return the list values.
@@ -282,7 +416,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
         Fanatic Fanatic = null;
         DatabaseTable table; // Intra User table.
 
-        // Get Asset Issuers identities list.
+        // Get Fan identities list.
         try {
 
             /**
@@ -298,12 +432,12 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
             }
 
 
-            // 2) Find the Identity Issuers.
+            // 2) Find the Fan identities.
 
 //            table.addStringFilter(AssetIssuerIdentityDatabaseConstants.ASSET_ISSUER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-            // 3) Get Identity Issuers.
+            // 3) Get Identity Fan.
 
             for (DatabaseTableRecord record : table.getRecords()) {
 
@@ -312,19 +446,53 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getFanaticProfileImagePrivateKey(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
+                //External platform Id
+                UUID externalIdentityId;
+                String externalIdentityString = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+                if(externalIdentityString==null || externalIdentityString.isEmpty()){
+                    externalIdentityId=null;
+                } else {
+                    externalIdentityId = UUID.fromString(externalIdentityString);
+                }
+                //External platform
+                ArtExternalPlatform externalPlatform;
+                String externalPlatformString = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
+                    externalPlatform = ArtExternalPlatform.UNDEFINED;
+                } else{
+                    externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
+                }
+                //External username
+                String externalUsername = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 Fanatic = new FanaticIdentityImp(
-                        record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getFanaticProfileImagePrivateKey(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getUUIDValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(
+                                FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(
+                                FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getFanaticProfileImagePrivateKey(
+                                record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        externalIdentityId,
                         pluginFileSystem,
-                        pluginId);
+                        pluginId,
+                        externalPlatform,
+                        externalUsername);
 
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetFanIdentityException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantGetFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Fan Identity",
+                    "Cant load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantGetFanIdentityException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Redeem Point identity list, unknown failure.");
+            throw new CantGetFanIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Fan Identity",
+                    "Cant get Fan identity list, unknown failure.");
         }
 
         // Return the list values.
@@ -366,26 +534,62 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getFanaticProfileImagePrivateKey(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
+                //External platform Id
+                UUID externalIdentityId;
+                String externalIdentityString = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+                if(externalIdentityString==null || externalIdentityString.isEmpty()){
+                    externalIdentityId=null;
+                } else {
+                    externalIdentityId = UUID.fromString(externalIdentityString);
+                }
+                //External platform
+                //External platform
+                ArtExternalPlatform externalPlatform;
+                String externalPlatformString = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
+                    externalPlatform = ArtExternalPlatform.UNDEFINED;
+                } else{
+                    externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
+                }
+                //External username
+                String externalUsername = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 Fanatic = new FanaticIdentityImp(
-                        record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getFanaticProfileImagePrivateKey(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getUUIDValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(
+                                FanaticIdentityDatabaseConstants
+                                        .FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(
+                                FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getFanaticProfileImagePrivateKey(
+                                record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        externalIdentityId,
                         pluginFileSystem,
-                        pluginId);
-
+                        pluginId,
+                        externalPlatform,
+                        externalUsername);
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetFanIdentityException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantGetFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Fan Identity",
+                    "Cant load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantGetFanIdentityException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Redeem Point identity list, unknown failure.");
+            throw new CantGetFanIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Fan Identity",
+                    "Cant get Fan identity list, unknown failure.");
         }
 
         // Return the list values.
         return Fanatic;
     }
 
-    public byte[] getFanaticProfileImagePrivateKey(String publicKey) throws CantGetArtistIdentityProfileImageException {
+    public byte[] getFanaticProfileImagePrivateKey(String publicKey)
+            throws CantGetArtistIdentityProfileImageException {
         byte[] profileImage;
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
@@ -394,18 +598,24 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
-
             file.loadFromMedia();
-
             profileImage = file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new CantGetArtistIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error loaded file.", null);
+            throw new CantGetArtistIdentityProfileImageException(
+                    "CAN'T GET IMAGE PROFILE ",
+                    e,
+                    "Error loaded file.",
+                    null);
         } catch (FileNotFoundException | CantCreateFileException e) {
             profileImage = new byte[0];
             // throw new CantGetIntraWalletUserIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
-            throw new CantGetArtistIdentityProfileImageException("CAN'T GET IMAGE PROFILE ", FermatException.wrapException(e), "", "");
+            throw new CantGetArtistIdentityProfileImageException(
+                    "CAN'T GET IMAGE PROFILE ",
+                    FermatException.wrapException(e),
+                    "",
+                    "");
         }
 
         return profileImage;
@@ -414,8 +624,9 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
     /**
      * Private Methods
      */
-
-    private void persistNewUserPrivateKeysFile(String publicKey, String privateKey) throws CantPersistPrivateKeyException {
+    private void persistNewUserPrivateKeysFile(
+            String publicKey,
+            String privateKey) throws CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
@@ -487,15 +698,22 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
 
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateFanIdentityException(em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantCreateFanIdentityException(
+                    em.getMessage(),
+                    em,
+                    "Fan  Identity",
+                    "Cant load " + FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
-            throw new CantCreateFanIdentityException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer  Identity", "unknown failure.");
+            throw new CantCreateFanIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Fan Identity", "unknown failure.");
         }
     }
 
     public String getArtistIdentityPrivateKey(String publicKey) throws CantGetFanaticIdentityPrivateKeyException {
-        String privateKey = "";
+        String privateKey;
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
@@ -509,13 +727,24 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
             privateKey = file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new CantGetFanaticIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
+            throw new CantGetFanaticIdentityPrivateKeyException(
+                    "CAN'T GET PRIVATE KEY ",
+                    e,
+                    "Error loaded file.",
+                    null);
         } catch (FileNotFoundException | CantCreateFileException e) {
-            throw new CantGetFanaticIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
+            throw new CantGetFanaticIdentityPrivateKeyException(
+                    "CAN'T GET PRIVATE KEY ",
+                    e,
+                    "Error getting developer identity private keys file.",
+                    null);
         } catch (Exception e) {
-            throw new CantGetFanaticIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
+            throw new CantGetFanaticIdentityPrivateKeyException(
+                    "CAN'T GET PRIVATE KEY ",
+                    FermatException.wrapException(e),
+                    "",
+                    "");
         }
-
         return privateKey;
     }
 }

@@ -23,11 +23,14 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+import com.software.shell.fab.ActionButton;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.dialogs.ConfirmDeleteDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserViewHolder;
@@ -46,9 +49,6 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAsse
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,9 @@ import static android.widget.Toast.makeText;
  */
 public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static AssetUserCommunitySubAppModuleManager manager;
+    private AssetUserCommunitySubAppModuleManager moduleManager;
+    AssetUserSettings settings = null;
+    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
     private static final int MAX = 20;
 
     private List<Actor> actors;
@@ -80,7 +82,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     private Menu menu;
     private CreateGroupFragmentDialog dialog;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
     /**
      * Flags
      */
@@ -96,9 +98,10 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         setHasOptionsMenu(true);
         try {
             group = (Group) appSession.getData("group_selected");
-            manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
+
+            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -171,10 +174,9 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         //getToolbar().getMenu().getItem(1).setVisible(true);
 
         //initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetUserSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -182,9 +184,13 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
             settings = new AssetUserSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
@@ -233,7 +239,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
 
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
             else
@@ -251,17 +257,17 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                             String groupSelectedID;
                             try {
                                 groupSelectedID = (String) appSession.getData("group_ID");
-                                List<ActorAssetUser> userList = manager.getListActorAssetUserByGroups(groupSelectedID);
+                                List<ActorAssetUser> userList = moduleManager.getListActorAssetUserByGroups(groupSelectedID);
                                 for (ActorAssetUser user : userList){
 
                                     AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
                                     actorGroup.setGroupId(groupSelectedID);
                                     actorGroup.setActorPublicKey(user.getActorPublicKey());
-                                    manager.removeActorAssetUserFromGroup(actorGroup);
+                                    moduleManager.removeActorAssetUserFromGroup(actorGroup);
 
                                 }
 
-                                manager.deleteGroup(groupSelectedID);
+                                moduleManager.deleteGroup(groupSelectedID);
                                 Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
                                 changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_MAIN, appSession.getAppPublicKey());
                             } catch (CantDeleteAssetUserGroupException e) {
@@ -291,7 +297,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
                                         AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
                                         actorGroup.setGroupId(group.getGroupId());
                                         actorGroup.setActorPublicKey(actor.getActorPublicKey());
-                                        manager.removeActorAssetUserFromGroup(actorGroup);
+                                        moduleManager.removeActorAssetUserFromGroup(actorGroup);
                                     }
                                 }
                                 Toast.makeText(getActivity(), "Selected users deleted from the group", Toast.LENGTH_SHORT).show();
@@ -351,7 +357,7 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
     }
     private void lauchCreateGroupDialog(){
         dialog = new CreateGroupFragmentDialog(
-                getActivity(),manager,group);
+                getActivity(), moduleManager,group);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -417,10 +423,10 @@ public class UserCommuinityGroupUsersFragment extends AbstractFermatFragment imp
         List<Actor> dataSet = new ArrayList<>();
         List<AssetUserActorRecord> result = null;
         List<ActorAssetUser> resultAux = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-        resultAux = manager.getListActorAssetUserByGroups(group.getGroupId());
+        resultAux = moduleManager.getListActorAssetUserByGroups(group.getGroupId());
 
 
         if (resultAux != null && resultAux.size() > 0) {

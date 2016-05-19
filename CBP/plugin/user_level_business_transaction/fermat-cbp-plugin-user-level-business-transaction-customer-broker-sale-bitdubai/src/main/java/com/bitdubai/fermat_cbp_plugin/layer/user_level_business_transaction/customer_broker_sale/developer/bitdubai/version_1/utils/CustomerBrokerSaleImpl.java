@@ -67,6 +67,11 @@ public class CustomerBrokerSaleImpl implements CustomerBrokerSale {
         return contractStatus;
     }
 
+    @Override
+    public void setContractStatus(String contractStatus) {
+        this.contractStatus = contractStatus;
+    }
+
     public TransactionStatus getTransactionStatus() {
         return transactionStatus;
     }

@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.10.18..
@@ -20,7 +19,8 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
     private M moduleManager;
     private R resourceProviderManager;
     private ErrorManager errorManager;
-    private Map<String,Object> data;
+    //private FermatBundle data;
+    private HashMap<String,Object> data;
 
     /**
      * Map with subApps and public that wallet can connect
@@ -57,6 +57,14 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
      */
     public Object getData(String key){
         return data.get(key);
+    }
+
+    public Object getData(String key,Object defaultParamenter) throws IllegalAccessException {
+        if (data.containsKey(key)){
+            return data.get(key);
+        }else{
+            return defaultParamenter;
+        }
     }
 
 

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -15,7 +16,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 29/02/16.
  * @version 1.0
  */
-public class ChatPreferenceSettings implements FermatSettings {
+public class ChatPreferenceSettings implements FermatSettings, Serializable {
     private boolean isHomeTutorialDialogEnabled;
     private Actors localActorType;
     private String localPublicKey;

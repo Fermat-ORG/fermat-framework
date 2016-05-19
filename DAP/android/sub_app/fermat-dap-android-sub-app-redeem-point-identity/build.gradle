@@ -1,4 +1,7 @@
+
 apply plugin: 'com.android.library'
+
+
 
 android {
     lintOptions {
@@ -9,7 +12,7 @@ android {
     buildToolsVersion '21.1.2'
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -53,5 +56,9 @@ dependencies {
         testCompile 'com.googlecode.catch-exception:catch-exception:1.2.0'
 
     }
+
+
+def packageName = 'org.fermat.dap.android.subapp.redeem.point.identity'
+def libraryVersion = '1.0.0'
 
 

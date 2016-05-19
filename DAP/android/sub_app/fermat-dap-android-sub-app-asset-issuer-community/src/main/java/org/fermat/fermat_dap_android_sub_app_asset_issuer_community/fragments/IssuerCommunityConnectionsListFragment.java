@@ -23,9 +23,12 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.adapters.IssuerConnectionsListAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.AssetIssuerCommunitySubAppSession;
@@ -33,13 +36,8 @@ import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions.Ses
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantGetActorAssetIssuerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,12 +61,12 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     private boolean isRefreshing = false;
     private View rootView;
     private IssuerConnectionsListAdapter adapter;
-    private AssetIssuerCommunitySubAppSession actorIssuerSubAppSession;
+    private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
     private LinearLayout emptyView;
-    private static AssetIssuerCommunitySubAppModuleManager manager;
+    private AssetIssuerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private List<ActorIssuer> lstActorIssuers;
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     public static IssuerCommunityConnectionsListFragment newInstance() {
         return new IssuerCommunityConnectionsListFragment();
@@ -78,10 +76,11 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        actorIssuerSubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
-        manager = actorIssuerSubAppSession.getModuleManager();
+
+        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+
         lstActorIssuers = new ArrayList<>();
     }
 
@@ -181,10 +180,10 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
 
         List<ActorAssetIssuer> result;
         try {
-            if (manager == null)
+            if (moduleManager == null)
                 throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
 
-            result = manager.getAllActorAssetIssuerConnected();
+            result = moduleManager.getAllActorAssetIssuerConnected();
             if (result != null && result.size() > 0) {
                 for (ActorAssetIssuer record : result) {
                     dataSet.add((new ActorIssuer((AssetIssuerActorRecord) record)));
@@ -230,7 +229,7 @@ public class IssuerCommunityConnectionsListFragment extends AbstractFermatFragme
 
         try {
             if (id == SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {

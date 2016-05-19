@@ -29,7 +29,7 @@ android {
 
     defaultConfig {
         applicationId "org.fermat"
-        minSdkVersion 20
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 39
         versionName "0.71"
@@ -37,7 +37,7 @@ android {
     }
 
     dexOptions {
-        javaMaxHeapSize "2g"
+        javaMaxHeapSize "4g"
         incremental true
         jumboMode=true
         preDexLibraries = false
@@ -86,6 +86,7 @@ dependencies {
     compile 'com.github.ozodrukh:CircularReveal:1.1.0'
     // DMP Projects (Wallets)
     compile project(':fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai')
+    //compile(group: 'org.fermat.ccp.android.bitcoin.wallet', name: 'fermat-ccp-android-reference-wallet-bitcoin-wallet-bitdubai', version: '1.0.1', ext: 'aar')
     compile project(':fermat-ccp-android-clone-reference-nich-wallet')
     compile project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
     // DMP Projects (Sub APPs)
@@ -135,11 +136,11 @@ dependencies {
     compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
     compile project(':fermat-tky-android-sub-app-fan-identity-bitdubai')
     //ART
-
-    // compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-fan-community-bitdubai')
+    compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
+    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:23.1.1'
@@ -150,7 +151,6 @@ dependencies {
     compile 'com.android.support:design:23.1.1'
     compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
     // compile files('src/main/libs/beans.jar')
-
     //widget
     compile project(':bitcoin_exchange_widget')
     compile 'ch.acra:acra:4.6.2'
@@ -160,17 +160,17 @@ dependencies {
         }
     }
     //    compile files('src/main/libs/activation.jar')
-
     //    compile files('src/main/libs/additionnal.jar')
-
     //    compile files('src/main/libs/mail.jar')
-   // compile 'com.sun.mail:android-mail:1.5.5'
+    // compile 'com.sun.mail:android-mail:1.5.5'
     //compile 'com.sun.mail:android-activation:1.5.5'
     compile project(':horizontalscrollview')
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.github.Bossyao168:StackOverView:9808f07dca'
-    compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
+    //compile 'com.github.Bossyao168:StackOverView:9808f07dca'
+    //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
+//    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
 }
+

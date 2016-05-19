@@ -1,8 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -18,8 +18,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
@@ -44,7 +42,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMem
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.AssetUserWalletPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.AssetUserWalletDao;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.AssetUserWalletDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.exceptions.CantInitializeAssetUserWalletException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.exceptions.CantInitializeAssetUserWalletException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,6 +95,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         this.broadcaster = broadcaster;
     }
 
+    @Override
     public void initialize(UUID walletId) throws CantInitializeAssetUserWalletException {
         if (walletId == null)
             throw new CantInitializeAssetUserWalletException("InternalId is null", null, "Parameter walletId is null", "loadWallet didn't find the asociated id");
@@ -116,6 +115,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         }
     }
 
+    @Override
     public UUID create(String walletPublicKey, BlockchainNetworkType networkType) throws CantCreateWalletException {
         try {
             // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
@@ -167,7 +167,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
             AssetUserWalletDatabaseFactory databaseFactory = new AssetUserWalletDatabaseFactory(pluginDatabaseSystem);
-            database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
+            databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException e) {
             assetUserWalletPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateWalletException("Database could not be created", e, "internalWalletId: " + internalWalletId.toString(), "");

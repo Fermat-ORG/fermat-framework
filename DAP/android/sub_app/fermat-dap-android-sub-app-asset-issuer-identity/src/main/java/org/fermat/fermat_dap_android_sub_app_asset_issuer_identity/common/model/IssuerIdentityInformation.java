@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.common.model;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 /**

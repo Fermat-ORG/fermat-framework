@@ -1,11 +1,14 @@
+
 apply plugin: 'com.android.library'
+
+
 
 android {
     compileSdkVersion 23
     buildToolsVersion '21.1.2'
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 16
         versionCode 1
         versionName "1.0"
     }
@@ -47,4 +50,12 @@ dependencies {
     compile 'com.github.shell-software:fab:1.0.5'
     compile 'com.squareup.picasso:picasso:2.3.2'
 }
+
+
+def packageName = 'org.fermat.dap.android.subapp.asset.user.community'
+def libraryVersion = '1.0.0'
+
+
+
+
 

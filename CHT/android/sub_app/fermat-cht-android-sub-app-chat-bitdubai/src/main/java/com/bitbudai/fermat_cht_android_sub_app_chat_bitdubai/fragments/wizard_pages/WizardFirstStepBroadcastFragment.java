@@ -43,7 +43,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      private ErrorManager errorManager;
      private SettingsManager<ChatSettings> settingsManager;
      private ChatPreferenceSettings chatSettings;
-
+     private ChatSession chatSession;
+     private ChatManager chatManager;
      public static WizardFirstStepBroadcastFragment newInstance() {
         return new WizardFirstStepBroadcastFragment();
      }
@@ -51,6 +52,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
  @Override
      public void onCreate(Bundle savedInstanceState) {
      super.onCreate(savedInstanceState);
+     chatSession=((ChatSession) appSession);
+     chatManager= chatSession.getModuleManager();
      ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
      //TODO:Revisar esto
 //         try {
@@ -64,7 +67,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      //Obtain chatSettings  or create new chat settings if first time opening chat platform
      chatSettings = null;
      try {
-         chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+         chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
      } catch (Exception e) {
          chatSettings = null;
      }
@@ -73,7 +76,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
          chatSettings = new ChatPreferenceSettings();
          chatSettings.setIsPresentationHelpEnabled(true);
          try {
-             moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+             chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
          } catch (Exception e) {
              if (errorManager != null)
                  errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

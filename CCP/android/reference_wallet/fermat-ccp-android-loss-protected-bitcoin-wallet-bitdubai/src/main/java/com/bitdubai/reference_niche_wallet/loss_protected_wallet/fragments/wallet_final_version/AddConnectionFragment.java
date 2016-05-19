@@ -23,19 +23,18 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
@@ -58,7 +57,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     private LossProtectedWallet moduleManager;
     private ErrorManager errorManager;
     private ArrayList<LossProtectedWalletIntraUserActor> intraUserInformationList;
-    private LossProtectedWalletSession referenceWalletSession;
+    private LossProtectedWalletSession lossProtectedWalletSession;
     private Menu menu;
     private boolean isMenuVisible;
     private boolean isContactAddPopUp = false;
@@ -66,7 +65,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
     private LinearLayout empty_view;
     private boolean connectionDialogIsShow=false;
     Handler hnadler;
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
 
     public static AddConnectionFragment newInstance() {
@@ -79,28 +78,27 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
         try {
             // setting up  module
-            referenceWalletSession = (LossProtectedWalletSession) appSession;
-            moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
-            errorManager = referenceWalletSession.getErrorManager();
+            lossProtectedWalletSession = (LossProtectedWalletSession) appSession;
+            moduleManager = lossProtectedWalletSession.getModuleManager();
+            errorManager = lossProtectedWalletSession.getErrorManager();
             intraUserInformationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             isMenuVisible=false;
             connectionPickCounter = 0;
             hnadler = new Handler();
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-            LossProtectedWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
-            if(bitcoinWalletSettings != null) {
+            lossProtectedWalletSettings = moduleManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
 
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+            if(lossProtectedWalletSettings != null) {
+
+                if (lossProtectedWalletSettings.getBlockchainNetworkType() == null) {
+                    lossProtectedWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                moduleManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), lossProtectedWalletSettings);
 
             }
 
-            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -147,7 +145,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, referenceWalletSession.getCommunityConnection(), object);
+                    changeApp( lossProtectedWalletSession.getCommunityConnection(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -175,7 +173,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
             public void onClick(View v) {
                 ConnectionWithCommunityDialog connectionWithCommunityDialog = new ConnectionWithCommunityDialog(
                         getActivity(),
-                        referenceWalletSession,
+                        lossProtectedWalletSession,
                         null);
                 if (isContactAddPopUp){
                     connectionWithCommunityDialog.show();
@@ -299,7 +297,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
                                     cryptoWalletIntraUserActor.getPublicKey(),
                                     cryptoWalletIntraUserActor.getProfileImage(),
                                     Actors.INTRA_USER,
-                                    referenceWalletSession.getIntraUserModuleManager().getPublicKey()
+                                    lossProtectedWalletSession.getIntraUserModuleManager().getPublicKey()
                                     , appSession.getAppPublicKey(),
                                     CryptoCurrency.BITCOIN,
                                     blockchainNetworkType);
@@ -331,7 +329,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
                 Toast.makeText(getActivity(),"Nodule manager null",Toast.LENGTH_SHORT).show();
             } else {
                 data = moduleManager.listAllIntraUserConnections(moduleManager.getActiveIdentities().get(0).getPublicKey(),
-                        referenceWalletSession.getAppPublicKey(),
+                        lossProtectedWalletSession.getAppPublicKey(),
                         MAX_USER_SHOW,
                         offset);
             }

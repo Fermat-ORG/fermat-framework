@@ -1,9 +1,10 @@
 package org.fermat.fermat_dap_core.layer.sub_app_module.asset_issuer_community;
 
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
+
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.DeveloperBitDubai;
 
 /**
@@ -15,7 +16,7 @@ import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.
 public class AssetIssuerCommunityPluginSubsystem extends AbstractPluginSubsystem {
 
     public AssetIssuerCommunityPluginSubsystem() {
-        super(new PluginReference(Plugins.ASSET_ISSUER_COMMUNITY));
+        super(new PluginReference(Plugins.ASSET_ISSUER));
     }
 
     @Override

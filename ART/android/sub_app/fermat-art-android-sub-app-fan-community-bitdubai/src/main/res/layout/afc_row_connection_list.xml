@@ -27,6 +27,14 @@
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 tools:ignore="ContentDescription" />
+            <ImageView
+                android:id="@+id/afc_recycler_icon"
+                android:src="@drawable/afc_people"
+                android:contentDescription="@string/app_name"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:scaleType="centerCrop"
+                tools:listitem="@layout/afc_row_connection_list"/>
 
         </RelativeLayout>
 
@@ -41,6 +49,7 @@
             android:textColor="#0072bb"
             android:textSize="14sp"
             tools:ignore="HardcodedText,RtlSymmetry" />
+
 
     </LinearLayout>
 

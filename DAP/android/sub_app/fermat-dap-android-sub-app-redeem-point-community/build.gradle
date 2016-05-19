@@ -1,10 +1,13 @@
+
 apply plugin: 'com.android.library'
+
+
 android {
     compileSdkVersion 23
     buildToolsVersion '21.1.2'
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 16
         versionCode 1
         versionName "1.0"
     }
@@ -47,3 +50,10 @@ dependencies {
 repositories {
     maven { url 'https://jitpack.io' }
 }
+
+
+def packageName = 'org.fermat.dap.android.subapp.redeem.point.community'
+def libraryVersion = '1.0.0'
+
+
+

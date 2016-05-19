@@ -1,13 +1,14 @@
 package com.bitdubai.fermat_art_api.all_definition.interfaces;
 
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public interface ArtIdentity {
+public interface ArtIdentity extends Serializable {
 
     String getAlias();
     /**
@@ -39,6 +40,6 @@ public interface ArtIdentity {
      * This method returns the external platform that the identity uses to redeem tokens.
      * @return
      */
-    ExternalPlatform getExternalPlatform();
+    ArtExternalPlatform getExternalPlatform();
 
 }

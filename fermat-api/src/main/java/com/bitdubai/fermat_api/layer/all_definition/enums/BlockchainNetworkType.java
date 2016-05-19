@@ -2,13 +2,15 @@ package com.bitdubai.fermat_api.layer.all_definition.enums;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 
+import java.io.Serializable;
+
 /**
  * * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType</code>
  * Represents the different Network Types available in Fermat.
  * <p/>
  * Created by rodrigo on 9/21/15.
  */
-public enum BlockchainNetworkType implements FermatEnum {
+public enum BlockchainNetworkType implements FermatEnum,Serializable {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
@@ -19,7 +21,7 @@ public enum BlockchainNetworkType implements FermatEnum {
     /**
      * sets the default network that will be used at start up.
      */
-    private static final BlockchainNetworkType DEFAULT_BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkType.TEST_NET;
+    private static final BlockchainNetworkType DEFAULT_BLOCKCHAIN_NETWORK_TYPE = BlockchainNetworkType.REG_TEST;
 
     private final String code;
 

@@ -18,7 +18,9 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TKYException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.TokenlyArtistPreferenceSettings;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure.ArtistIdentityManager;
@@ -34,6 +36,12 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
     @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.IDENTITY,plugin = Plugins.TOKENLY_ARTIST)
     private TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API,plugin = Plugins.TOKENLY_API)
+    private TokenlyApiManager tokenlyApiManager;
+
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon  = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
     /**
      * Represents the plugin manager.
      */
@@ -47,14 +55,20 @@ public class ArtistIdentityPluginRoot extends AbstractModule<TokenlyArtistPrefer
     }
     private void initPluginManager(){
         this.artistIdentityManager = new ArtistIdentityManager(
-                errorManager,
-                tokenlyArtistIdentityManager);
+                tokenlyArtistIdentityManager,
+                tokenlyApiManager,
+                pluginFileSystem,
+                pluginId);
     }
 
     public ArtistIdentityManager getFanIdentityManager() throws TKYException {
         try{
             if(artistIdentityManager == null) {
-                artistIdentityManager = new ArtistIdentityManager(errorManager, tokenlyArtistIdentityManager);
+                artistIdentityManager = new ArtistIdentityManager(
+                        tokenlyArtistIdentityManager,
+                        tokenlyApiManager,
+                        pluginFileSystem,
+                        pluginId);
             }
             return artistIdentityManager;
         }catch (Exception e){

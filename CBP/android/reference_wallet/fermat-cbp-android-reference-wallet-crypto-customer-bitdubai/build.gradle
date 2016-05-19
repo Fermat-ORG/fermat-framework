@@ -1,4 +1,7 @@
+
 apply plugin: 'com.android.library'
+
+
 apply plugin: 'jacoco'
 
 android {
@@ -9,7 +12,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 17
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -109,5 +112,11 @@ task testCoverage(dependsOn: jacocoTestReport) << {
 
 tasks.assemble.dependsOn clean
 tasks.assemble.mustRunAfter clean
+
+def packageName = 'org.fermat.cbp.android.reference.wallet.crypto.customer'
+def libraryVersion = '1.0.0'
+
+
+
 
 

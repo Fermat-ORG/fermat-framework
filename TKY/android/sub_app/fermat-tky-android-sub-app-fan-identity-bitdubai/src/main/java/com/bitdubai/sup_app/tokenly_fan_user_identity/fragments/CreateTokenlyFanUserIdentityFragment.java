@@ -1,15 +1,19 @@
 package com.bitdubai.sup_app.tokenly_fan_user_identity.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -31,15 +36,18 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.FanIdentitiesList;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 import com.bitdubai.sub_app.fan_identity.R;
@@ -50,7 +58,9 @@ import com.bitdubai.sup_app.tokenly_fan_user_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
+
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -83,11 +93,21 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private boolean isUpdate = false;
     private EditText mFanExternalPassword;
     private Spinner mFanExternalPlatform;
-    private SettingsManager<TokenlyFanPreferenceSettings> settingsManager;
+    //private SettingsManager<TokenlyFanPreferenceSettings> settingsManager;
     private TokenlyFanPreferenceSettings tokenlyFanPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean authenticationSuccessful = false;
+    private boolean isWaitingForResponse = false;
+    private ProgressDialog tokenlyRequestDialog;
+    //private View WarningCircle;
+    //private TextView WarningLabel;
+    private String WarningColor = "#DF0101";
+    private String NormalColor  =  "#23056A";
+    private View buttonCam;
 
+    private TextView UserNameLabel;
+    private TextView PassWordLabel;
 
     private Handler handler;
 
@@ -104,14 +124,14 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             moduleManager = tokenlyFanUserIdentitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
-            settingsManager = tokenlyFanUserIdentitySubAppSession.getModuleManager().getSettingsManager();
+            //settingsManager = tokenlyFanUserIdentitySubAppSession.getModuleManager().;
 
             try {
                 if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!= null){
-                    tokenlyFanPreferenceSettings = settingsManager.loadAndGetSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey());
+                    tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey());
                 }else{
                     //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                    tokenlyFanPreferenceSettings = settingsManager.loadAndGetSettings("123456789");
+                    tokenlyFanPreferenceSettings = moduleManager.loadAndGetSettings("123456789");
                 }
 
             } catch (Exception e) {
@@ -121,11 +141,11 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             if (tokenlyFanPreferenceSettings == null) {
                 tokenlyFanPreferenceSettings = new TokenlyFanPreferenceSettings();
                 tokenlyFanPreferenceSettings.setIsPresentationHelpEnabled(false);
-                if(settingsManager != null){
+                if(moduleManager != null){
                     if (tokenlyFanUserIdentitySubAppSession.getAppPublicKey()!=null){
-                        settingsManager.persistSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
+                        moduleManager.persistSettings(tokenlyFanUserIdentitySubAppSession.getAppPublicKey(), tokenlyFanPreferenceSettings);
                     }else{
-                        settingsManager.persistSettings("123456789", tokenlyFanPreferenceSettings);
+                        moduleManager.persistSettings("123456789", tokenlyFanPreferenceSettings);
                     }
                 }
             }
@@ -163,22 +183,24 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         PresentationTokenlyFanUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(),tokenlyFanUserIdentitySubAppSession, null,moduleManager);
         presentationTokenlyFanUserIdentityDialog.show();
     }
+
     private void setUpIdentity() {
         try {
-
+            List<Fan> lst = new ArrayList<>();
             identitySelected = (Fan) tokenlyFanUserIdentitySubAppSession.getData(SessionConstants.IDENTITY_SELECTED);
-
 
             if (identitySelected != null) {
                 loadIdentity();
             } else {
-                List<Fan> lst = moduleManager.listIdentitiesFromCurrentDeviceUser();
-                if(!lst.isEmpty()){
+                FanIdentitiesList fanIdentitiesList = moduleManager.listIdentitiesFromCurrentDeviceUser();
+                lst = fanIdentitiesList.getFanIdentitiesList();
+                if(lst!=null&&!lst.isEmpty()){
                     identitySelected = lst.get(0);
                 }
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
+                    buttonCam.setBackgroundResource(R.drawable.boton_editar);
                     createButton.setText("Save changes");
                 }
             }
@@ -234,53 +256,108 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         createButton = (Button) layout.findViewById(R.id.create_tokenly_fan_identity);
         mFanExternalUserName = (EditText) layout.findViewById(R.id.external_username);
         mFanExternalPassword = (EditText) layout.findViewById(R.id.tokenly_access_password);
-        fanImage = (ImageView) layout.findViewById(R.id.tokenly_fan_image);
+        fanImage = (ImageView) layout.findViewById(R.id.tokenly_Fan_image);
         mFanExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
-        relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+        //relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mFanExternalUserName.requestFocus();
         List<String> arraySpinner = ExternalPlatform.getArrayItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mFanExternalPlatform.setAdapter(adapter);
         mFanExternalUserName.requestFocus();
+        mFanExternalPlatform.setVisibility(View.GONE);
+
+        //WarningCircle = (View) layout.findViewById(R.id.warning_cirlcle);
+        //WarningCircle.setVisibility(View.GONE);
+
+        //WarningLabel = (TextView) layout.findViewById(R.id.warning_label);
+        //WarningLabel.setVisibility(View.GONE);
+
+        buttonCam = (View) layout.findViewById(R.id.boton_cam);
+
+        UserNameLabel = (TextView) layout.findViewById(R.id.external_username_label);
+
+        PassWordLabel = (TextView) layout.findViewById(R.id.tokenly_acces_password_label);
+
+
+
         registerForContextMenu(fanImage);
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //WarningLabel.setVisibility(View.GONE);
+                //WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
+                buttonCam.setBackgroundResource(R.drawable.boton_editar);
             }
         });
+
+
+
+
+
+
+
+
 
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
-
-
-                int resultKey = createNewIdentity();
-                switch (resultKey) {
-                    case CREATE_IDENTITY_SUCCESS:
-//                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        if (!isUpdate) {
-                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                tokenlyRequestDialog = new ProgressDialog(getActivity());
+                tokenlyRequestDialog.setMessage("Please Wait");
+                tokenlyRequestDialog.setTitle("Connecting to Tokenly");
+                tokenlyRequestDialog.show();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isWaitingForResponse) {
+                            int resultKey = createNewIdentity();
+                            switch (resultKey) {
+                                case CREATE_IDENTITY_SUCCESS:
+                                    break;
+                                case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
+                                    Toast.makeText(getActivity(), "Create identity Error", Toast.LENGTH_LONG).show();
+                                    break;
+                                case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
+                                    Toast.makeText(getActivity(), "Invalid data", Toast.LENGTH_LONG).show();
+                                    break;
+                                case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
+                                    Toast.makeText(getActivity(), "Could not access module manager, it's null", Toast.LENGTH_LONG).show();
+                                    break;
+                            }
                         } else {
-                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                            tokenlyRequestDialog.dismiss();
+                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                         }
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
-                        break;
-                }
+                    }
+                });
             }
         });
+        configureToolbar();
     }
+
+
+
+
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.toolbar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
+
+
+
+
+
 
     /**
      * Crea una nueva identidad para un Fan de tokenly
@@ -329,6 +406,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             }
             return CREATE_IDENTITY_FAIL_MODULE_IS_NULL;
         }
+        tokenlyRequestDialog.dismiss();
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
 
     }
@@ -357,17 +435,39 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     }
 
     private boolean validateIdentityData(String fanExternalName, String fanPassWord, byte[] fanImageBytes, ExternalPlatform externalPlatform) {
+
+        ShowWarnings(fanExternalName,fanPassWord,fanImageBytes);
         if (fanExternalName.isEmpty())
             return false;
         if (fanPassWord.isEmpty())
             return false;
-        if (fanImageBytes == null)
+        /*if (fanImageBytes == null)
             return false;
         if (fanImageBytes.length > 0)
-            return true;
+            return true;*/
 //        if(externalPlatform != null)
 //            return  true;
         return true;
+    }
+
+    private void ShowWarnings(String fanExternalName,String fanPassWord, byte[] fanImageBytes) {
+
+
+
+        if (fanExternalName.isEmpty()){
+            mFanExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
+        }
+
+        if (fanPassWord.isEmpty()){
+            mFanExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
+        }
+
+        /*if (fanImageBytes == null){
+                WarningLabel.setVisibility(View.VISIBLE);
+           // WarningCircle.setVisibility(View.VISIBLE);
+        }*/
+
+
     }
 
     @Override
@@ -388,6 +488,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     Uri selectedImage = data.getData();
                     try {
                         if (isAttached) {
+                            buttonCam.setBackgroundResource(R.drawable.boton_editar);
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
@@ -397,7 +498,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading picture", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -458,6 +559,10 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -488,7 +593,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         public static final int CREATE_IDENTITY = 0;
         public static final int UPDATE_IDENTITY = 1;
         public static final int UPDATE_IMAGE_IDENTITY = 2;
-
+        private Fan fan;
         public ManageIdentity(
                 String fanExternalName,
                 String fanPassword,
@@ -499,20 +604,49 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             this.fanPassword = fanPassword;
             this.externalPlatform = externalPlatform;
             this.identityAction = identityAction;
+            authenticationSuccessful = true;
+            isWaitingForResponse = true;
         }
+        @Override
+        protected void onPostExecute(Object result) {
 
+            if(!authenticationSuccessful){
+                //I'll launch a toast
+                tokenlyRequestDialog.dismiss();
+                Toast.makeText(
+                        getActivity(),
+                        "Authentication credentials are invalid.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            if(Validate.isObjectNull(fan)){
+                tokenlyRequestDialog.dismiss();
+                Toast.makeText(getActivity(), "The tokenly authentication failed.", Toast.LENGTH_SHORT).show();
+            }else{
+                if(isUpdate){
+                    tokenlyRequestDialog.dismiss();
+                    Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
+                }else{
+                    tokenlyRequestDialog.dismiss();
+                    Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
+                }
+            }
+            isWaitingForResponse = false;
+        }
         @Override
         protected Object doInBackground(Object... arg0) {
             try{
                 switch (identityAction){
                     case CREATE_IDENTITY:
-                        createIdentity(fanExternalName,fanPassword,externalPlatform);
+                        fan = createIdentity(fanExternalName, fanPassword, externalPlatform);
                         break;
                     case UPDATE_IDENTITY:
-                        updateIdentity(fanExternalName,fanPassword,externalPlatform);
+                        fan = updateIdentity(fanExternalName, fanPassword, externalPlatform);
                         break;
                     case UPDATE_IMAGE_IDENTITY:
-                        updateIdentityImage(fanExternalName,fanPassword,externalPlatform);
+                        fan = updateIdentityImage(fanExternalName,fanPassword,externalPlatform);
+                        //Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
                         break;
                 }
 
@@ -531,27 +665,36 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         UISource.VIEW,
                         UnexpectedUIExceptionSeverity.UNSTABLE,
                         e);
+            } catch (WrongTokenlyUserCredentialsException e) {
+                //We are not going to report this exception
+                authenticationSuccessful=false;
+                //System.out.println("TKY WTUCE:" + e);
+
             }
             return null;
         }
     }
 
-    private void createIdentity(
+    private Fan createIdentity(
             String fanExternalName,
             String fanPassword,
             ExternalPlatform externalPlatform) throws
-            CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-        moduleManager.createFanIdentity(
-                fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
+            CantCreateFanIdentityException,
+            FanIdentityAlreadyExistsException,
+            WrongTokenlyUserCredentialsException {
+        return moduleManager.createFanIdentity(
+                fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_tokenly) : fanImageByteArray,
                 fanPassword,
                 externalPlatform) ;
     }
 
-    private void updateIdentity(
+    private Fan updateIdentity(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        moduleManager.updateFanIdentity(
+            ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException,
+            WrongTokenlyUserCredentialsException {
+        return moduleManager.updateFanIdentity(
                 fanExternalName,
                 fanPassword, identitySelected.getId(),
                 identitySelected.getPublicKey(),
@@ -559,11 +702,13 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 externalPlatform);
     }
 
-    private void updateIdentityImage(
+    private Fan updateIdentityImage(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        moduleManager.updateFanIdentity(
+            ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException,
+            WrongTokenlyUserCredentialsException {
+        return moduleManager.updateFanIdentity(
                 fanExternalName,
                 fanPassword,
                 identitySelected.getId(),

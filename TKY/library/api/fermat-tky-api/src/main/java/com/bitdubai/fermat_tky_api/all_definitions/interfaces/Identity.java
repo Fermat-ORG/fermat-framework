@@ -3,13 +3,13 @@ package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 
-import java.util.List;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by GAbriel Araujo 16/03/16.
  */
-public interface Identity extends User{
+public interface Identity extends User, Serializable {
 
     /**
      * This method returns the identity id.

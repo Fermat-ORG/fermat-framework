@@ -3,9 +3,6 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -312,6 +309,10 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
 
                 //return intra user information - if not connected - status return null
                 IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Offline");
+
+                //testing reason
+                intraUserInformation.setProfileImageNull();
+
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
@@ -746,15 +747,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
         return notifications;
     }
 
-    @Override
-    public void persistSettings(String publicKey, IntraUserWalletSettings settings) throws CantPersistSettingsException {
-        getSettingsManager().persistSettings(publicKey,settings);
-    }
-
-    @Override
-    public IntraUserWalletSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
-        return getSettingsManager().loadAndGetSettings(publicKey);
-    }
 
 
 

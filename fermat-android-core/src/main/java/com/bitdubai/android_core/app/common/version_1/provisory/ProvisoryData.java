@@ -122,7 +122,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(),
                 "sub_app_crypto_broker_identity",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
+                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.crypto_broker_identity);
@@ -138,25 +138,68 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode(),
                 "sub_app_crypto_customer_identity",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
+                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.crypto_customer_identity);
         item2.setPosition(5);
         lstIdentities.add(item2);
+/**
+ * Chat identity added by Lozadaa
+ */
 
-        /*installedSubApp = new InstalledSubApp(
-                SubApps.TKY_FAN_IDENTITY_SUB_APP,
+        installedSubApp = new InstalledSubApp(
+                SubApps.CHT_CHAT_IDENTITY,
                 null,
                 null,
-                "tky_fan_sub_app",
-                "Tokenly Fan",
-                "sub_app_tky_fan_create_identity",
-                "tky_fan_sub_app",
-                new Version(1,0,0),Platforms.TOKENLY);
+                "sub_app_chat_identity",
+                "Chat",
+                SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),
+                "sub_app_chat_identity",
+                new Version(1, 0, 0),
+                Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.tokenly_fan);
+        item2.setIconResource(R.drawable.chat_identity_subapp);
         item2.setPosition(6);
+        lstIdentities.add(item2);
+
+
+
+        //ART Identities
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_ARTIST_IDENTITY,
+                null,
+                null,
+                "sub_app_art_artist_identity",
+                "Artist Identity",
+                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                "sub_app_art_artist_identity",
+                new Version(1, 0, 0),
+                Platforms.ART_PLATFORM,
+                AppsStatus.DEV);
+
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.icon_bitcoin_network_active);
+        item2.setPosition(7);
+        lstIdentities.add(item2);
+
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_FAN_IDENTITY,
+                null,
+                null,
+                "sub_app_art_fan_identity",
+                "Art Fan Identity",
+                SubAppsPublicKeys.ART_FAN_IDENTITY.getCode(),
+                "sub_app_art_fan_identity",
+                new Version(1,0,0),
+                Platforms.ART_PLATFORM,
+                AppsStatus.DEV);
+
+
+
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.subapp_art_fan_icon);
+        item2.setPosition(8);
         lstIdentities.add(item2);
 
 
@@ -169,52 +212,41 @@ public class ProvisoryData {
                 SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(),
                 "sub_app_tky_artist_identity",
                 new Version(1, 0, 0),
-                Platforms.TOKENLY);
+                Platforms.TOKENLY,
+                AppsStatus.DEV);
 
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.bitcoin_icon);
-        item2.setPosition(7);
-        lstIdentities.add(item2);
-
-
-
-        /**
-         * Chat identity added by Lozadaa
-         */
-
-        installedSubApp = new InstalledSubApp(
-                SubApps.CHT_CHAT_IDENTITY,
-                null,
-                null,
-                "public_key_cht_identity_chat",
-                "Chat",
-                SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),
-                "public_key_cht_identity_chat",
-                new Version(1, 0, 0),
-                Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.chat_identity_subapp);
-        item2.setPosition(8);
-        lstIdentities.add(item2);
-
-/*
-        installedSubApp = new InstalledSubApp(
-                SubApps.ART_ARTIST_IDENTITY,
-                null,
-                null,
-                "sub_app_art_artist_identity",
-                "Artist Identity",
-                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
-                "sub_app_art_artist_identity",
-                new Version(1, 0, 0),
-                Platforms.TOKENLY);
-
-        item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.icon_bitcoin_network_active);
+        item2.setIconResource(R.drawable.subapp_tky_artist_icon);
         item2.setPosition(9);
         lstIdentities.add(item2);
 
-*/
+
+
+        installedSubApp = new InstalledSubApp(
+                SubApps.TKY_FAN_IDENTITY_SUB_APP,
+                null,
+                null,
+                "tky_fan_sub_app",
+                "Tokenly Fan",
+                "sub_app_tky_fan_create_identity",
+                "tky_fan_sub_app",
+                new Version(1,0,0),
+                Platforms.TOKENLY,
+                AppsStatus.DEV);
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.subapp_tky_fan_icon);
+        item2.setPosition(10);
+        lstIdentities.add(item2);
+
+
+
+
+
+
+
+
+
+
 
         FermatFolder fermatFolder = new FermatFolder("Profiles",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
@@ -330,10 +362,28 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                 "sub_app_art_fan_community",
                 new Version(1, 0, 0),
-                Platforms.ART_PLATFORM, AppsStatus.DEV);
+                Platforms.ART_PLATFORM,
+                AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.communities_bar);
+        item1.setPosition(6);
+        lstCommunities.add(item1);
+
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_ARTIST_COMMUNITY,
+                null,
+                null,
+                "sub_app_art_artist_community",
+                "Artist",
+                SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
+                "sub_app_art_artist_community",
+                new Version(1, 0, 0),
+                Platforms.ART_PLATFORM,
+                AppsStatus.ALPHA);
+
+        item1 = new Item(installedSubApp);
+        item1.setIconResource(R.drawable.artist_banner);
         item1.setPosition(6);
         lstCommunities.add(item1);
 

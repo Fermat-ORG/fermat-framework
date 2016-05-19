@@ -1,20 +1,20 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database;
 
-        import com.bitdubai.fermat_api.FermatException;
-        import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-        import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-        import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-        import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
-        import java.util.UUID;
+import java.util.UUID;
 /**
  *  The Class  <code>com.bitdubai.fermat_cht_plugin.layer.middleware.chat.version_1.database.ChatMiddlewareDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.

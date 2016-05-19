@@ -2,12 +2,14 @@ package com.bitdubai.fermat_api.layer.osa_android.broadcaster;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 
+import java.io.Serializable;
+
 
 /**
  * Created by Matias Furszfer on 2016.02.02
  * Updated by Nelson Ramirez on 2016.03.04
  */
-public interface Broadcaster extends FermatManager {
+public interface Broadcaster extends FermatManager, Serializable {
 
     public static final String PROGRESS_BAR = "progressBar";
     public static final String PROGRESS_BAR_TEXT = "progressBarText";

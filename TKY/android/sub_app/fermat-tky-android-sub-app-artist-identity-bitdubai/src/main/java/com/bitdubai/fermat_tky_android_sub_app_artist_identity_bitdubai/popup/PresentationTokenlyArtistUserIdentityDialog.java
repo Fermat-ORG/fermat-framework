@@ -97,7 +97,6 @@ public class PresentationTokenlyArtistUserIdentityDialog extends FermatDialog<Tk
                     settingsManager.persistSettings(getSession().getAppPublicKey(),tokenlyArtistPreferenceSettings);
 
                 }else{
-                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
                     TokenlyArtistPreferenceSettings tokenlyArtistPreferenceSettings = settingsManager.loadAndGetSettings("123456789");
                     tokenlyArtistPreferenceSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                     if (getSession().getAppPublicKey()!=null){
