@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
@@ -89,7 +88,6 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
 
         lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
-        lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
         getExecutor().execute(new Runnable() {
             @Override

@@ -18,9 +18,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestSendHistoryFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionHistoryFragment;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
 /**

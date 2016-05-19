@@ -626,7 +626,7 @@ public interface LossProtectedWallet  extends Serializable,ModuleManager<LossPro
      * @return
      * @throws CantGetCurrencyExchangeProviderException
      */
-    Collection<CurrencyExchangeRateProviderManager> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
+    List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException;
 
     /**
      * Through the method <code>getInstalledWallets</code> you can get the list of wallets installed on platform

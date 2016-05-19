@@ -121,6 +121,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedRequestPaymentInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedTransactionNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedActorTransactionSummary;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
@@ -157,6 +158,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2356,12 +2358,20 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
         }
 
         @Override
-    public  Collection<CurrencyExchangeRateProviderManager> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException {
-        Collection<CurrencyExchangeRateProviderManager> filteredProviders = null;
+    public  List<ExchangeRateProvider> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException {
+        List<ExchangeRateProvider> filteredProviders = new ArrayList<>();
         try {
             CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
 
-            filteredProviders = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
+            Collection<CurrencyExchangeRateProviderManager> providers = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
+
+            for (Iterator iterator = providers.iterator(); iterator.hasNext();) {
+                CurrencyExchangeRateProviderManager data = (CurrencyExchangeRateProviderManager) iterator.next();
+
+                filteredProviders.add(new LossProtectedExchangeRateProvider(data.getProviderId(), data.getProviderName()));
+
+            }
+
 
         } catch (CantGetProviderException e) {
             throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "Provider error.");

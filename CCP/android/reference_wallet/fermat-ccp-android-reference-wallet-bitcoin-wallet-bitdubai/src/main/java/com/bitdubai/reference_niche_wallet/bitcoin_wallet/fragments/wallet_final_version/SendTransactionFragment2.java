@@ -37,6 +37,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
@@ -63,7 +64,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
@@ -207,29 +207,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                     setUpPresentation(false);
                                 }
                                 setRunningDailyBalance();
-//get Blockchain Download Progress status
-                                try {
-                                    int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
-                                    final Toolbar toolBar = getToolbar();
-                                    int toolbarColor = 0;
-                                    if (pendingBlocks > 0) {
-//paint toolbar on red
-                                        toolbarColor = Color.RED;
-                                        if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
-                                            setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
-                                    } else {
-                                        toolbarColor = Color.parseColor("#12aca1");
-                                    }
-                                    final int finalToolbarColor = toolbarColor;
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            toolBar.setBackgroundColor(finalToolbarColor);
-                                        }
-                                    });
-                                }catch (Exception e){
-                                    e.printStackTrace();
-                                }
+
                             }
                         }, 500);
                     }catch (Exception e){
@@ -244,6 +222,46 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                 }
             });
+
+
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                //get Blockchain Download Progress status
+                                try {
+                                    int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
+                                    final Toolbar toolBar = getToolbar();
+                                    int toolbarColor = 0;
+                                    if (pendingBlocks > 0) {
+                                        //paint toolbar on red
+                                        toolbarColor = Color.RED;
+                                        if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                                            setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
+                                    } else {
+                                        toolbarColor = Color.parseColor("#12aca1");
+                                    }
+                                    final int finalToolbarColor = toolbarColor;
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            toolBar.setBackgroundColor(finalToolbarColor);
+                                                             }
+                                    });
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }, 1000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
 
         } catch (Exception ex) {
             ex.printStackTrace();

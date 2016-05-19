@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -30,14 +28,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-
-
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -50,8 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
-
-
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
@@ -186,22 +177,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             final LossProtectedWalletSettings lossProtectedWalletSettingstemp = lossProtectedWalletSettings;
 
-            //default Exchange rate Provider
-            try {
-                if(lossProtectedWalletmanager.getExchangeProvider()==null) {
-                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWalletmanager.getExchangeRateProviderManagers());
-
-                    exchangeProviderId = providers.get(0).getProviderId();
-                    lossProtectedWalletmanager.setExchangeProvider(exchangeProviderId);
-
-                }
-                else
-                {
-                    exchangeProviderId =lossProtectedWalletmanager.getExchangeProvider();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
@@ -209,6 +184,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     if(lossProtectedWalletSettingstemp.isPresentationHelpEnabled()){
                         setUpPresentation(false);
                     }
+
+
                 }}, 500);
 
         } catch (Exception ex) {
@@ -756,6 +733,22 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 ExchangeRate rate = null;
                 try{
+
+                    //default Exchange rate Provider
+
+                        if(lossProtectedWalletmanager.getExchangeProvider()==null) {
+                            List<ExchangeRateProvider> providers = new ArrayList(lossProtectedWalletmanager.getExchangeRateProviderManagers());
+
+                            exchangeProviderId = providers.get(0).getProviderId();
+                            lossProtectedWalletmanager.setExchangeProvider(exchangeProviderId);
+
+                        }
+                        else
+                        {
+                            exchangeProviderId =lossProtectedWalletmanager.getExchangeProvider();
+                        }
+
+
                      rate =  lossProtectedWalletmanager.getCurrencyExchange(exchangeProviderId);
                 }
                 catch (Exception e) {
