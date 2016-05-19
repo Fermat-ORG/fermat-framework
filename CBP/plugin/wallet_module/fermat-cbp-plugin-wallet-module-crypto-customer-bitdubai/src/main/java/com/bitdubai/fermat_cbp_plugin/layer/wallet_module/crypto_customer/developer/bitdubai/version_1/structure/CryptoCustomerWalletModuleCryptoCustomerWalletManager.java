@@ -972,22 +972,29 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             String bankAccountInfo = ba.getBankAccount();
             String bank, accountNumber;
-            BankAccountType bankAccountType = null;
+            BankAccountType accountType;
 
             bank = bankAccountInfo.substring(bankAccountInfo.indexOf("Bank: ")+6, bankAccountInfo.indexOf("\n"));
             bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n")+1);
 
-            try{
-                String accountType = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ")+14, bankAccountInfo.indexOf("\n"));
-                bankAccountType = BankAccountType.getByCode(accountType);
-            }catch (FermatException e){ }
-            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n")+1);
+            String accountTypeString = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ")+14, bankAccountInfo.indexOf("\n"));
 
+            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n")+1);
             accountNumber = bankAccountInfo.substring(bankAccountInfo.indexOf("Number: ")+8);
 
-            BankAccountData ban = new BankAccountData(ba.getCurrencyType(), bankAccountType, bank, accountNumber, "", "");
+            if( accountTypeString.equalsIgnoreCase("Checking") ){
+                accountTypeString = "CHC";
+            }else{
+                accountTypeString = "SAV";
+            }
 
-            bankAccounts.add(ban);
+            try {
+                accountType = BankAccountType.getByCode(accountTypeString);
+                BankAccountData ban = new BankAccountData(ba.getCurrencyType(), accountType, bank, accountNumber, "", "");
+                bankAccounts.add(ban);
+            } catch (InvalidParameterException e) {
+
+            }
 
         }
         return bankAccounts;
