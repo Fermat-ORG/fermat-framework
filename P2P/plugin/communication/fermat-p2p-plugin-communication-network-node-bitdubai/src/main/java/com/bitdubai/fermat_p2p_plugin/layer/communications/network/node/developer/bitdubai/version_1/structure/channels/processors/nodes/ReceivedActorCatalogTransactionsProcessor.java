@@ -286,7 +286,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      */
     private void insertActorsCatalogTransactionsPendingForPropagation(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        if (!getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().exists(actorsCatalogTransaction.getHashId())) {
+        if (!getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().exists(actorsCatalogTransaction.getId())) {
             LOG.info("Executing method insertActorsCatalogTransactionsPendingForPropagation");
 
             /*
