@@ -26,7 +26,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.NodesCatalogDao;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
 import org.apache.commons.lang.ClassUtils;
@@ -242,18 +241,12 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
      */
     private List<ActorsCatalogTransaction> getActorsCatalogTransactionPendingForPropagationBlock() throws CantReadRecordDataBaseException {
 
-        List<ActorsCatalogTransactionsPendingForPropagation> transactionsPendingForPropagation = actorsCatalogTransactionsPendingForPropagationDao.findAll();
-        List<ActorsCatalogTransaction> transactionList = new ArrayList<>();
+        List<ActorsCatalogTransaction> transactionsPendingForPropagation = actorsCatalogTransactionsPendingForPropagationDao.findAll();
 
-        if (transactionsPendingForPropagation != null && !transactionsPendingForPropagation.isEmpty()){
+        if (transactionsPendingForPropagation == null)
+            transactionsPendingForPropagation = new ArrayList<>();
 
-            for (ActorsCatalogTransactionsPendingForPropagation actorsCatalogTransactionsPendingForPropagation : transactionsPendingForPropagation) {
-                transactionList.add(actorsCatalogTransactionsPendingForPropagation.getActorsCatalogTransaction());
-            }
-
-        }
-
-        return  transactionList;
+        return transactionsPendingForPropagation;
 
     }
 }

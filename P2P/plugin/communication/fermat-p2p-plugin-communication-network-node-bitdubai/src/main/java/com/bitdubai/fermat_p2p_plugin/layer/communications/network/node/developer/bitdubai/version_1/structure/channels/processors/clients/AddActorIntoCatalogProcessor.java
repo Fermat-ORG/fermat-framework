@@ -18,7 +18,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -109,12 +108,12 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
                         /*
                          * Create the transaction
                          */
-                        insertActorsCatalogTransaction(actorProfile, ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE);
+                        ActorsCatalogTransaction actorsCatalogTransaction = insertActorsCatalogTransaction(actorProfile, ActorsCatalogTransaction.UPDATE_TRANSACTION_TYPE);
 
                         /*
                          * Create the transaction for propagation
                          */
-                        insertActorsCatalogTransactionsPendingForPropagation(actorProfile, ActorsCatalogTransactionsPendingForPropagation.UPDATE_TRANSACTION_TYPE);
+                        insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
 
                     }
 
@@ -130,12 +129,12 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
                     /*
                      * Create the transaction
                      */
-                    insertActorsCatalogTransaction(actorProfile, ActorsCatalogTransaction.ADD_TRANSACTION_TYPE);
+                    ActorsCatalogTransaction actorsCatalogTransaction = insertActorsCatalogTransaction(actorProfile, ActorsCatalogTransaction.ADD_TRANSACTION_TYPE);
 
                     /*
                      * Create the transaction for propagation
                      */
-                    insertActorsCatalogTransactionsPendingForPropagation(actorProfile, ActorsCatalogTransactionsPendingForPropagation.ADD_TRANSACTION_TYPE);
+                    insertActorsCatalogTransactionsPendingForPropagation(actorsCatalogTransaction);
                 }
             }
 
@@ -231,7 +230,7 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertActorsCatalogTransaction(ActorProfile actorProfile, String transactionType) throws CantInsertRecordDataBaseException {
+    private ActorsCatalogTransaction insertActorsCatalogTransaction(ActorProfile actorProfile, String transactionType) throws CantInsertRecordDataBaseException {
 
         /*
          * Create the transaction
@@ -261,39 +260,19 @@ public class AddActorIntoCatalogProcessor extends PackageProcessor {
          */
         getDaoFactory().getActorsCatalogTransactionDao().create(transaction);
 
+        return transaction;
+
     }
 
 
     /**
      * Create a new row into the data base
      *
-     * @param actorProfile
+     * @param transaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertActorsCatalogTransactionsPendingForPropagation(ActorProfile actorProfile, String transactionType) throws CantInsertRecordDataBaseException {
+    private void insertActorsCatalogTransactionsPendingForPropagation(ActorsCatalogTransaction transaction) throws CantInsertRecordDataBaseException {
 
-        /*
-         * Create the CheckedInActor
-         */
-        ActorsCatalogTransactionsPendingForPropagation transaction = new ActorsCatalogTransactionsPendingForPropagation();
-        transaction.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
-        transaction.setActorType(actorProfile.getActorType());
-        transaction.setAlias(actorProfile.getAlias());
-        transaction.setName(actorProfile.getName());
-        transaction.setPhoto(actorProfile.getPhoto());
-        transaction.setExtraData(actorProfile.getExtraData());
-        transaction.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
-        transaction.setTransactionType(transactionType);
-        transaction.setNodeIdentityPublicKey(nodeIdentity);
-
-        //Validate if location are available
-        if (actorProfile.getLocation() != null){
-            transaction.setLastLatitude(actorProfile.getLocation().getLatitude());
-            transaction.setLastLongitude(actorProfile.getLocation().getLongitude());
-        }else{
-            transaction.setLastLatitude(0.0);
-            transaction.setLastLongitude(0.0);
-        }
 
         /*
          * Save into the data base

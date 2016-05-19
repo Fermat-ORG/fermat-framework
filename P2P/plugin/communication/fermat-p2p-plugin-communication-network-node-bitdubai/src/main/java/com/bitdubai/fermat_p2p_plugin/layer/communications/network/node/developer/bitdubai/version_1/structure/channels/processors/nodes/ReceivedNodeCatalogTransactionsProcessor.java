@@ -17,7 +17,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.ReceivedNodeCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -55,7 +54,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
-    public void processingPackage(Session session, Package packageReceived) {
+    public synchronized void processingPackage(Session session, Package packageReceived) {
 
         LOG.info("Processing new package received");
 
@@ -277,29 +276,13 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      */
     private void insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        if (!getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().exists(nodesCatalogTransaction.getId())) {
-            LOG.info("Executing method insertNodesCatalogTransactionsPendingForPropagation");
+        LOG.info("Executing method insertNodesCatalogTransactionsPendingForPropagation");
 
-            /*
-             * Create the NodesCatalog
-             */
-            NodesCatalogTransactionsPendingForPropagation transaction = new NodesCatalogTransactionsPendingForPropagation();
-            transaction.setIp(nodesCatalogTransaction.getIp());
-            transaction.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
-            transaction.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
-            transaction.setName(nodesCatalogTransaction.getName());
-            transaction.setTransactionType(nodesCatalogTransaction.getTransactionType());
-            transaction.setHashId(transaction.getHashId());
-            transaction.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-            transaction.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
-            transaction.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
-            transaction.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
-
-            /*
-             * Save into the data base
-             */
-            getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
-        }
+        /*
+         * Save into the data base
+         */
+        if (!getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().exists(nodesCatalogTransaction.getId()))
+            getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(nodesCatalogTransaction);
     }
 
 }

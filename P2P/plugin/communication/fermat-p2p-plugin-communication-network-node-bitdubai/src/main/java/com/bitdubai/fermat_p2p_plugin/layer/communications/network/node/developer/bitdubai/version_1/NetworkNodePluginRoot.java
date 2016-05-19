@@ -47,7 +47,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkNodeIdentityException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
@@ -750,22 +749,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             daoFactory.getNodesCatalogTransactionDao().create(transaction);
 
             /*
-             * Create the NodesCatalogTransactionsPendingForPropagation entity
-             */
-            NodesCatalogTransactionsPendingForPropagation pendingForPropagation = new NodesCatalogTransactionsPendingForPropagation();
-            pendingForPropagation.setIp(nodeProfile.getIp());
-            pendingForPropagation.setDefaultPort(nodeProfile.getDefaultPort());
-            pendingForPropagation.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
-            pendingForPropagation.setName(nodeProfile.getName());
-            pendingForPropagation.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
-            pendingForPropagation.setHashId(transaction.getHashId());
-            pendingForPropagation.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            pendingForPropagation.setLocation(nodeProfile.getLocation());
-
-            /*
              * Save into the data base
              */
-            daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(pendingForPropagation);
+            daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
 
             ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
             ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
@@ -824,22 +810,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             daoFactory.getNodesCatalogTransactionDao().create(transaction);
 
             /*
-             * Create the NodesCatalogTransactionsPendingForPropagation entity
-             */
-            NodesCatalogTransactionsPendingForPropagation pendingForPropagation = new NodesCatalogTransactionsPendingForPropagation();
-            pendingForPropagation.setIp(nodeProfile.getIp());
-            pendingForPropagation.setDefaultPort(nodeProfile.getDefaultPort());
-            pendingForPropagation.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
-            pendingForPropagation.setName(nodeProfile.getName());
-            pendingForPropagation.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
-            pendingForPropagation.setHashId(transaction.getHashId());
-            pendingForPropagation.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
-            pendingForPropagation.setLocation(nodeProfile.getLocation());
-
-            /*
              * Save into the data base
              */
-            daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(pendingForPropagation);
+            daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
 
             ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
             ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));

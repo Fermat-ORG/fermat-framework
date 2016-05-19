@@ -27,7 +27,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.NodesCatalogTransactionsPendingForPropagationDao;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -242,18 +241,12 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
      */
     private List<NodesCatalogTransaction> getNodesCatalogTransactionsPendingForPropagationBlock() throws CantReadRecordDataBaseException {
 
-        List<NodesCatalogTransactionsPendingForPropagation> transactionsPendingForPropagation = nodesCatalogTransactionsPendingForPropagationDao.findAll();
-        List<NodesCatalogTransaction> transactionList = new ArrayList<>();
+        List<NodesCatalogTransaction> transactionsPendingForPropagation = nodesCatalogTransactionsPendingForPropagationDao.findAll();
 
-        if (transactionsPendingForPropagation != null && !transactionsPendingForPropagation.isEmpty()){
+        if (transactionsPendingForPropagation == null)
+            transactionsPendingForPropagation = new ArrayList<>();
 
-            for (NodesCatalogTransactionsPendingForPropagation nodesCatalogTransactionsPendingForPropagation : transactionsPendingForPropagation) {
-                transactionList.add(nodesCatalogTransactionsPendingForPropagation.getNodesCatalogTransactions());
-            }
-
-        }
-
-        return  transactionList;
+        return  transactionsPendingForPropagation;
 
     }
 

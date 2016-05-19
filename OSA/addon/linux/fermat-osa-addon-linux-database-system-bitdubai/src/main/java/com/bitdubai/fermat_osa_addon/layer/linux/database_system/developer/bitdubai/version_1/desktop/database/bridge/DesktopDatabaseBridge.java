@@ -27,7 +27,7 @@ public class DesktopDatabaseBridge {
     /**
      * Database member variables.
      */
-    private ConnectionPool connectionPool;
+    private final ConnectionPool connectionPool;
     private Connection connection = null;
     private boolean successfulTransaction = false;
     private String databasePath;
@@ -50,7 +50,7 @@ public class DesktopDatabaseBridge {
             p.setMinIdle(10);
             this.connectionPool = new ConnectionPool(p);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         this.databasePath = databasePath;
     }
@@ -99,17 +99,19 @@ public class DesktopDatabaseBridge {
 
         String SQL_QUERY = "select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'";
 
-        try (Connection connection = connectionPool.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
-            ResultSetMetaData rsmd = rs.getMetaData();
+                ResultSetMetaData rsmd = rs.getMetaData();
 
-            if (rsmd.getColumnCount() > 0)
-                return true;
+                if (rsmd.getColumnCount() > 0)
+                    return true;
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return false;
     }
@@ -124,10 +126,12 @@ public class DesktopDatabaseBridge {
      */
     public void execSQL(final String SQL_QUERY) throws SQLException {
 
-        try (Connection connection = connectionPool.getConnection();
-             Statement stmt = connection.createStatement()) {
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement()) {
 
-            stmt.executeUpdate(SQL_QUERY);
+                stmt.executeUpdate(SQL_QUERY);
+            }
         }
     }
 
@@ -243,17 +247,18 @@ public class DesktopDatabaseBridge {
         }
 
         String SQL_QUERY = "UPDATE " + tableName + " SET " + setVariables + whereClause;
-        System.out.println("UPDATE QUERY = " + SQL_QUERY);
 
-        try (Connection connection = connectionPool.getConnection();
-             Statement stmt = connection.createStatement()) {
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement()) {
 
-            stmt.executeUpdate(SQL_QUERY);
+                stmt.executeUpdate(SQL_QUERY);
 
-        } catch (SQLException ex) {
+            } catch (SQLException ex) {
 
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-            throw new RuntimeException(ex);
+                Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException(ex);
+            }
         }
     }
 

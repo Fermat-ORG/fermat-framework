@@ -50,7 +50,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
      */
     String tableName;
     DesktopDatabaseBridge database;
-    ConnectionPool connectionPool;
+    private final ConnectionPool connectionPool;
 
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
@@ -193,20 +193,20 @@ public class DesktopDatabaseTable implements DatabaseTable {
         }
 
         String SQL_QUERY = "INSERT INTO " + tableName + "(" + StringUtils.join(strRecords, ",") + ")" + " VALUES (" + StringUtils.join(strSigns, ",") + ")";
-        System.out.println("*** * *   *   *     *      * Im executing the query: " + SQL_QUERY);
 
-        try (Connection connection = connectionPool.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY)) {
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY)) {
 
-            for(int i = 0; i < strSigns.size() ; i++)
-                preparedStatement.setString(i + 1, strValues.get(i));
+                for (int i = 0; i < strSigns.size(); i++)
+                    preparedStatement.setString(i + 1, strValues.get(i));
 
-            preparedStatement.execute();
+                preparedStatement.execute();
 
-        } catch (Exception exception) {
-            System.out.println("*** * *  *    *      *          * INSERT RECORD EXCEPTION: "+exception.getMessage());
-            System.out.println(exception);
-            throw new CantInsertRecordException(exception);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                throw new CantInsertRecordException(exception);
+            }
         }
     }
 
@@ -215,18 +215,19 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         String SQL_QUERY = "SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter();
 
-        System.out.println("QUERY = " + SQL_QUERY);
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
-        try (Connection connection = connectionPool.getConnection();
-             Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
+                rs.next();
 
-            rs.next();
+                return rs.getLong("COUNT");
 
-            return rs.getLong("COUNT");
-
-        } catch (Exception e) {
-            throw new CantLoadTableToMemoryException(e);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new CantLoadTableToMemoryException(e);
+            }
         }
     }
 
@@ -246,39 +247,39 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
         String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
 
-        System.out.println("QUERY = " + SQL_QUERY);
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
-        try (Connection connection = connectionPool.getConnection();
-                Statement stmt = connection.createStatement();
-                ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
+                if (rs.next()) {
 
-            if(rs.next()) {
+                    List<String> columns = getColumns(rs);
 
-                List<String> columns = getColumns(rs);
+                    do {
 
-                do  {
+                        DesktopDatabaseRecord tableRecordConsult = new DesktopDatabaseRecord();
 
-                    DesktopDatabaseRecord tableRecordConsult = new DesktopDatabaseRecord();
+                        for (String nameColumn : columns) {
 
-                    for (String nameColumn : columns) {
+                            tableRecordConsult.addValue(
+                                    new DesktopRecord(
+                                            nameColumn,
+                                            rs.getString(nameColumn),
+                                            false
+                                    )
+                            );
+                        }
 
-                        tableRecordConsult.addValue(
-                                new DesktopRecord(
-                                        nameColumn,
-                                        rs.getString(nameColumn),
-                                        false
-                                )
-                        );
-                    }
+                        this.records.add(tableRecordConsult);
 
-                    this.records.add(tableRecordConsult);
-
-                } while (rs.next());
+                    } while (rs.next());
+                }
+            } catch (Exception e) {
+                System.out.println("an error loading to memory");
+                e.printStackTrace();
+                throw new CantLoadTableToMemoryException(e);
             }
-        } catch (Exception e) {
-            System.out.println("an error loading to memory");
-            e.printStackTrace();
-            throw new CantLoadTableToMemoryException(e);
         }
     }
 
@@ -495,10 +496,10 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
             String query = "DELETE FROM " + tableName + (queryWhereClause != null ? " WHERE " + queryWhereClause : "");
 
-            System.out.println("*** * *   *   *     *      * Im executing the query: "+query);
             database.execSQL(query);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new CantDeleteRecordException(e);
         }
     }

@@ -18,7 +18,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.ReceivedNodeCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -56,14 +55,14 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
-    public void processingPackage(Session session, Package packageReceived) {
+    public synchronized void processingPackage(Session session, Package packageReceived) {
 
         LOG.info("Processing new package received");
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
         ReceiveActorCatalogTransactionsMsjRespond receiveActorCatalogTransactionsMsjRespond = null;
-        Integer lateNotificationsCounter = new Integer(0);
+        Integer lateNotificationsCounter = 0;
 
         try {
 
@@ -287,31 +286,13 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      */
     private void insertActorsCatalogTransactionsPendingForPropagation(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        if (!getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().exists(actorsCatalogTransaction.getId())) {
+        if (!getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().exists(actorsCatalogTransaction.getHashId())) {
             LOG.info("Executing method insertActorsCatalogTransactionsPendingForPropagation");
-
-            /*
-             * Create the ActorsCatalogTransactionsPendingForPropagation
-             */
-            ActorsCatalogTransactionsPendingForPropagation transaction = new ActorsCatalogTransactionsPendingForPropagation();
-            transaction.setHashId(actorsCatalogTransaction.getHashId());
-            transaction.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
-            transaction.setActorType(actorsCatalogTransaction.getActorType());
-            transaction.setAlias(actorsCatalogTransaction.getAlias());
-            transaction.setExtraData(actorsCatalogTransaction.getExtraData());
-            transaction.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
-            transaction.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
-            transaction.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
-            transaction.setName(actorsCatalogTransaction.getName());
-            transaction.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
-            transaction.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
-            transaction.setPhoto(actorsCatalogTransaction.getPhoto());
-            transaction.setTransactionType(actorsCatalogTransaction.getTransactionType());
 
             /*
              * Save into the data base
              */
-            getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().create(transaction);
+            getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().create(actorsCatalogTransaction);
         }
     }
 

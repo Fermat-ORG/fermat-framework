@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.NodesCatalogTransactionsPendingForPropagationDao</code>
@@ -20,7 +20,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NodesCatalogTransactionsPendingForPropagationDao  extends AbstractBaseDao<NodesCatalogTransactionsPendingForPropagation> {
+public class NodesCatalogTransactionsPendingForPropagationDao  extends AbstractBaseDao<NodesCatalogTransaction> {
 
     /**
      * Constructor with parameter
@@ -28,7 +28,8 @@ public class NodesCatalogTransactionsPendingForPropagationDao  extends AbstractB
      * @param dataBase
      */
     public NodesCatalogTransactionsPendingForPropagationDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME,
+                CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
     }
 
     /**
@@ -36,9 +37,9 @@ public class NodesCatalogTransactionsPendingForPropagationDao  extends AbstractB
      * @see AbstractBaseDao#getEntityFromDatabaseTableRecord(DatabaseTableRecord)
      */
     @Override
-    protected NodesCatalogTransactionsPendingForPropagation getEntityFromDatabaseTableRecord(DatabaseTableRecord record) throws InvalidParameterException {
+    protected NodesCatalogTransaction getEntityFromDatabaseTableRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        NodesCatalogTransactionsPendingForPropagation entity = new NodesCatalogTransactionsPendingForPropagation();
+        NodesCatalogTransaction entity = new NodesCatalogTransaction();
 
         entity.setHashId(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME));
         entity.setLastConnectionTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_LAST_CONNECTION_TIMESTAMP_COLUMN_NAME)));
@@ -59,7 +60,7 @@ public class NodesCatalogTransactionsPendingForPropagationDao  extends AbstractB
      * @see AbstractBaseDao#getDatabaseTableRecordFromEntity
      */
     @Override
-    protected DatabaseTableRecord getDatabaseTableRecordFromEntity(NodesCatalogTransactionsPendingForPropagation entity) {
+    protected DatabaseTableRecord getDatabaseTableRecordFromEntity(NodesCatalogTransaction entity) {
 
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
