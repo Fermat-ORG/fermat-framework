@@ -80,7 +80,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
                  * set the ListConnectionActiveToNode with uriToNode and the
                  * NetworkClientCommunicationConnection respective
                  */
-                networkClientConnectionsManager.getListConnectionActiveToNode().put(
+                networkClientConnectionsManager.getActiveConnectionsToExternalNodes().put(
                         uriToNode,
                         getChannel().getNetworkClientCommunicationConnection()
                 );

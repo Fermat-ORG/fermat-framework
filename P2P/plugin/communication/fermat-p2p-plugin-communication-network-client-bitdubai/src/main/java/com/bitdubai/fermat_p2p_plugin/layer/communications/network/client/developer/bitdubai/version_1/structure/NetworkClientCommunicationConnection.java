@@ -11,7 +11,9 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.Cant
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientCall;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -34,16 +36,12 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -55,6 +53,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -77,6 +76,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private ECCKeyPair             clientIdentity        ;
     private Session                session               ;
 
+    private CopyOnWriteArrayList<NetworkClientCall> activeCalls;
+
     /**
      * Represent if it must reconnect to the server
      */
@@ -93,9 +94,9 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private String serverIdentity;
 
     /*
-     * Represent the networkClientCommunicationPluginRoot
+     * Represent the pluginRoot
      */
-    private NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot;
+    private NetworkClientCommunicationPluginRoot pluginRoot;
 
     /*
      * Represent the nodesListPosition
@@ -113,34 +114,36 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     private ClientProfile clientProfile;
 
    /*
-    * is used to validate if is connection to extern node
-    * when receive checkinclient then send register all profile
+    * is used to validate if it is connection to an external node
+    * when receive check-in-client then send register all profile
     */
-    private boolean isConnectingToExternalNode;
+    private boolean isExternalNode;
 
     /*
      * Constructor
      */
-    public NetworkClientCommunicationConnection(final URI                    uri                   ,
-                                                final EventManager           eventManager          ,
-                                                final LocationManager        locationManager       ,
-                                                final ECCKeyPair             clientIdentity        ,
-                                                NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
-                                                Integer nodesListPosition,
-                                                boolean isConnectingToExternalNode){
+    public NetworkClientCommunicationConnection(final URI                                  uri              ,
+                                                final EventManager                         eventManager     ,
+                                                final LocationManager                      locationManager  ,
+                                                final ECCKeyPair                           clientIdentity   ,
+                                                final NetworkClientCommunicationPluginRoot pluginRoot       ,
+                                                final Integer                              nodesListPosition,
+                                                final boolean                              isExternalNode   ){
 
-        this.uri                    = uri                   ;
-        this.eventManager           = eventManager          ;
-        this.locationManager        = locationManager       ;
-        this.clientIdentity         = clientIdentity        ;
-        this.networkClientCommunicationPluginRoot = networkClientCommunicationPluginRoot;
-        this.nodesListPosition = nodesListPosition;
-        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this);
+        this.uri                    = uri                         ;
+        this.eventManager           = eventManager                ;
+        this.locationManager        = locationManager             ;
+        this.clientIdentity         = clientIdentity              ;
+        this.isExternalNode         = isExternalNode              ;
+        this.pluginRoot             = pluginRoot                  ;
+        this.nodesListPosition      = nodesListPosition           ;
 
-        this.tryToReconnect         = Boolean.TRUE          ;
-        this.isConnectingToExternalNode = isConnectingToExternalNode;
+        this.tryToReconnect         = Boolean.TRUE                ;
 
+        this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
+
+        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this);
     }
 
     /*
@@ -166,7 +169,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
                     if(i > 4){
 
-                        networkClientCommunicationPluginRoot.intentToConnectToOtherNode(nodesListPosition);
+                        pluginRoot.intentToConnectToOtherNode(nodesListPosition);
                         return Boolean.FALSE;
 
                     }else{
@@ -188,7 +191,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
                     if(i > 4){
 
-                        networkClientCommunicationPluginRoot.intentToConnectToOtherNode(nodesListPosition);
+                        pluginRoot.intentToConnectToOtherNode(nodesListPosition);
                         return Boolean.FALSE;
 
                     }else{
@@ -264,8 +267,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      * is used to validate if is connection to extern
      * node when receive checkinclient then send register all profile
      */
-    public boolean isConnectingToExternalNode() {
-        return isConnectingToExternalNode;
+    public boolean isExternalNode() {
+        return isExternalNode;
     }
 
     /*
@@ -309,7 +312,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            networkClientCommunicationPluginRoot.reportError(
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -340,7 +343,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Unsupported profile type."
             );
 
-            networkClientCommunicationPluginRoot.reportError(
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -360,7 +363,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            networkClientCommunicationPluginRoot.reportError(
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -389,7 +392,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Unsupported profile type."
             );
 
-            networkClientCommunicationPluginRoot.reportError(
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -410,7 +413,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            networkClientCommunicationPluginRoot.reportError(
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -437,7 +440,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            networkClientCommunicationPluginRoot.reportError(
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -464,7 +467,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                     "Cant send package."
             );
 
-            networkClientCommunicationPluginRoot.reportError(
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     fermatException
             );
@@ -474,11 +477,15 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     @Override
-    public void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination) {
+    public void sendPackageMessage(final PackageContent     packageContent              ,
+                                   final NetworkServiceType networkServiceType          ,
+                                   final String             destinationIdentityPublicKey,
+                                   final String             clientDestination           ) throws CantSendMessageException {
 
         if (isConnected()){
 
             try {
+
                 communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
@@ -490,10 +497,22 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
                         )
                 );
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (EncodeException e) {
-                e.printStackTrace();
+
+            } catch (IOException | EncodeException exception){
+
+                throw new CantSendMessageException(
+                        exception,
+                        "packageContent:"+packageContent,
+                        "Error trying to send the message through the session."
+                );
+
+            } catch (Exception exception) {
+
+                throw new CantSendMessageException(
+                        exception,
+                        "packageContent:"+packageContent,
+                        "Unhandled error trying to send the message through the session."
+                );
             }
         }
 
@@ -505,6 +524,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         if (isConnected()){
 
             try {
+
                 communicationsNetworkClientChannel.getClientConnection().getBasicRemote().sendObject(
                         Package.createInstance(
                                 packageContent.toJson(),
@@ -514,8 +534,8 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                 serverIdentity
                         )
                 );
-            } catch (IOException | EncodeException exception){
 
+            } catch (IOException | EncodeException exception){
 
                 throw new CantSendPackageException(
                         exception,
@@ -616,10 +636,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return resultList;
     }
 
-
-
-
-
     /**
      * Notify when the network client connection is lost.
      */
@@ -664,5 +680,20 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
     public CommunicationsNetworkClientChannel getCommunicationsNetworkClientChannel() {
         return communicationsNetworkClientChannel;
+    }
+
+    public void addCall(NetworkClientCall networkClientCall) {
+
+        this.activeCalls.add(networkClientCall);
+    }
+
+    public void hangUp(NetworkClientCall networkClientCall) {
+
+        this.activeCalls.remove(networkClientCall);
+
+        if (this.activeCalls.isEmpty() && isExternalNode) {
+
+            // TODO if it is an external node and there is no active calls, then remove and close the connection.
+        }
     }
 }

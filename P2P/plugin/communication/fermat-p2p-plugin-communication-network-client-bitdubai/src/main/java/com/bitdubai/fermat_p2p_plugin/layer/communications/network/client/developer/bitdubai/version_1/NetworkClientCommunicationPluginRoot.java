@@ -488,8 +488,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
     @Override
     public NetworkClientConnection getConnection(String uriToNode) {
 
-        if(networkClientConnectionsManager.getListConnectionActiveToNode().containsKey(uriToNode))
-            return networkClientConnectionsManager.getListConnectionActiveToNode().get(uriToNode);
+        if(networkClientConnectionsManager.getActiveConnectionsToExternalNodes().containsKey(uriToNode))
+            return networkClientConnectionsManager.getActiveConnectionsToExternalNodes().get(uriToNode);
         else
             return null;
 

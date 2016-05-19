@@ -1,12 +1,15 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantRequestConnectionToExternalNodeException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,9 +29,9 @@ public class NetworkClientConnectionsManager {
     private Map<String, String> listActorConnectIntoNode;
 
     /*
-     * Represent the listConnectionActiveToNode
+     * Represent the activeConnectionsToExternalNodes
      */
-    private Map<String, NetworkClientCommunicationConnection> listConnectionActiveToNode;
+    private Map<String, NetworkClientCommunicationConnection> activeConnectionsToExternalNodes;
 
     /*
      * Represent the node identity
@@ -43,7 +46,7 @@ public class NetworkClientConnectionsManager {
 
     public NetworkClientConnectionsManager(ECCKeyPair identity, EventManager eventManager, LocationManager locationManager, NetworkClientCommunicationPluginRoot pluginRoot){
         this.listActorConnectIntoNode = new HashMap<>();
-        this.listConnectionActiveToNode = new HashMap<>();
+        this.activeConnectionsToExternalNodes = new HashMap<>();
         this.pluginRoot = pluginRoot;
         this.identity = identity;
         this.eventManager = eventManager;
@@ -58,12 +61,12 @@ public class NetworkClientConnectionsManager {
         this.listActorConnectIntoNode = listActorConnectIntoNode;
     }
 
-    public Map<String, NetworkClientCommunicationConnection> getListConnectionActiveToNode() {
-        return listConnectionActiveToNode;
+    public Map<String, NetworkClientCommunicationConnection> getActiveConnectionsToExternalNodes() {
+        return activeConnectionsToExternalNodes;
     }
 
-    public void setListConnectionActiveToNode(Map<String, NetworkClientCommunicationConnection> listConnectionActiveToNode) {
-        this.listConnectionActiveToNode = listConnectionActiveToNode;
+    public void setActiveConnectionsToExternalNodes(Map<String, NetworkClientCommunicationConnection> activeConnectionsToExternalNodes) {
+        this.activeConnectionsToExternalNodes = activeConnectionsToExternalNodes;
     }
 
     public synchronized void requestConnectionToExternalNode(String identityPublicKey, String hostPath){
@@ -83,7 +86,7 @@ public class NetworkClientConnectionsManager {
                     );
 
             listActorConnectIntoNode.put(identityPublicKey, hostPath);
-            listConnectionActiveToNode.put(hostPath, networkClientCommunicationConnection);
+            activeConnectionsToExternalNodes.put(hostPath, networkClientCommunicationConnection);
 
             new Thread(){
                 @Override
@@ -96,10 +99,56 @@ public class NetworkClientConnectionsManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
-
     }
 
+    public synchronized void requestConnectionToExternalNode(final String uriToNode) throws CantRequestConnectionToExternalNodeException {
+
+        try {
+
+            URI uri = new URI(HardcodeConstants.WS_PROTOCOL + uriToNode + "/fermat/ws/client-channel");
+
+            final NetworkClientCommunicationConnection networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                    uri,
+                    eventManager,
+                    locationManager,
+                    identity,
+                    pluginRoot,
+                    -1,
+                    Boolean.TRUE
+            );
+
+            activeConnectionsToExternalNodes.put(uriToNode, networkClientCommunicationConnection);
+
+            new Thread(){
+                @Override
+                public void run(){
+                    networkClientCommunicationConnection.initializeAndConnect();
+                }
+            }.start();
+
+
+        } catch (URISyntaxException URISyntaxException) {
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    URISyntaxException
+            );
+            throw new CantRequestConnectionToExternalNodeException(
+                    URISyntaxException,
+                    "",
+                    ""
+            );
+        } catch (Exception exception) {
+
+            pluginRoot.reportError(
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception
+            );
+            throw new CantRequestConnectionToExternalNodeException(
+                    exception,
+                    "",
+                    "Unhandled Error."
+            );
+        }
+    }
 }

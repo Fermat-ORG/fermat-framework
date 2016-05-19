@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorCallConnectedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionClosedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
@@ -174,6 +175,9 @@ public enum P2pEventType implements FermatEventEnum {
     },
     NETWORK_CLIENT_SENT_MESSAGE_DELIVERED("NCSENTMD"){
         public NetworkClientNewMessageDeliveredEvent getNewEvent() { return new NetworkClientNewMessageDeliveredEvent(this); }
+    },
+    NETWORK_CLIENT_ACTOR_CALL_CONNECTED("NCACC"){
+        public NetworkClientActorCallConnectedEvent getNewEvent() { return new NetworkClientActorCallConnectedEvent(this); }
     },
 
     /**

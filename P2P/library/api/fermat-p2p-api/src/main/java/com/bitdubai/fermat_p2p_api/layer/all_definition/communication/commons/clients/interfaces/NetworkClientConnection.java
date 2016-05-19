@@ -1,14 +1,13 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
@@ -70,8 +69,18 @@ public interface NetworkClientConnection {
      *
      * @param packageContent
      */
-    void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination);
+    void sendPackageMessage(PackageContent packageContent, NetworkServiceType networkServiceType, String destinationIdentityPublicKey, String clientDestination) throws CantSendMessageException;
 
+    /**
+     * Through the method <code>listRegisteredActorProfiles</code> we can get a list of registered actors
+     * filtering them with an instance of discovery query parameters.
+     *
+     * @param discoveryQueryParameters parameters to discover the actors.
+     *
+     * @return a list of actors profile that meets the parameters.
+     *
+     * @throws CantRequestProfileListException
+     */
     List<ActorProfile> listRegisteredActorProfiles(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
 
     /**
