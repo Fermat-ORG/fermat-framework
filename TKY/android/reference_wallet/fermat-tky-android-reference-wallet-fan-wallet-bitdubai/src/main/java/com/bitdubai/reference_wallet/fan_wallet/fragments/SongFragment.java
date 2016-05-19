@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.media.MediaMetadataRetriever;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -620,7 +621,7 @@ public class SongFragment extends AbstractFermatFragment  {
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-               /* Bitmap icon;
+                Bitmap icon;
                 if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 
                     View itemView = viewHolder.itemView;
@@ -628,24 +629,24 @@ public class SongFragment extends AbstractFermatFragment  {
                     float width = height / 3;
 
                     if(dX > 0){
-                        p.setColor(Color.parseColor("#D32F2F"));
+                        p.setColor(Color.TRANSPARENT);
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
+                 //       icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
                         //Start draw left-top to right-bottom     RectF (left,top,right,bottom)
-                        RectF icon_dest = new RectF((float) itemView.getLeft() + (width/4) ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getLeft()+ 2f*width,(float)itemView.getBottom() -0.75f*width);
-                        c.drawBitmap(icon,null,icon_dest,p);
+                //        RectF icon_dest = new RectF((float) itemView.getLeft() + (width/4) ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getLeft()+ 2f*width,(float)itemView.getBottom() -0.75f*width);
+                //        c.drawBitmap(icon,null,icon_dest,p);
                     } else {
-                        p.setColor(Color.parseColor("#388E3C"));
+                        p.setColor(Color.TRANSPARENT);
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
-                        c.drawBitmap(icon, null, icon_dest, p);
+                 //       icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
+                 //       RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
+                 //       c.drawBitmap(icon, null, icon_dest, p);
 
                     }
                 }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);*/
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
 

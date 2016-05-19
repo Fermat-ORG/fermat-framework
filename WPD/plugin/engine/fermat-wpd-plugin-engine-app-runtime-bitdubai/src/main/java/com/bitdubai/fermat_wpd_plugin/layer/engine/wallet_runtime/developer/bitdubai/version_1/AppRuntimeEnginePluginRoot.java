@@ -3792,7 +3792,6 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab = new Tab();
         runtimeTab.setLabel("Following");
         runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
-        runtimeTabStrip.setReduceTabHeight(true);
         runtimeTabStrip.addTab(runtimeTab);
 
 

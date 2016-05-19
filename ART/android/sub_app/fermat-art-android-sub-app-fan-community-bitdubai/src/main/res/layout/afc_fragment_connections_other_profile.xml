@@ -3,32 +3,44 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_other_profile"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:layout_height="7dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
 
-    <RelativeLayout
-        android:layout_width="120dp"
-        android:layout_height="120dp"
+        android:background="@drawable/line_coloured"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginTop="32dp"
-        android:background="@drawable/bg_circular_other_profile"
+
         android:gravity="center">
 
         <ImageView
             android:id="@+id/afc_img_user_avatar"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerInParent="true"
-            android:layout_centerVertical="true"
-            tools:ignore="ContentDescription" />
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:background="@drawable/bg_circular_other_profile"
+            android:layout_gravity="center_horizontal"
+            tools:ignore="ContentDescription"
+            android:layout_marginTop="73dp"/>
 
-    </RelativeLayout>
+        <View
+            android:id="@+id/circle_space"
+            android:layout_width="190dp"
+            android:layout_height="190dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="73dp"
+            android:background="@drawable/picture_circle" />
+
+
+    </FrameLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -64,7 +76,6 @@
             android:paddingRight="18dp"
             android:text="Disconnect"
             android:textColor="#0072bc"
-            android:visibility="gone"
             tools:ignore="HardcodedText" />
 
         <Button
@@ -110,30 +121,34 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginTop="32dp"
+
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:text="Name"
             android:textColor="#0072bc"
             android:textSize="12sp"
-            tools:ignore="HardcodedText" />
+            tools:ignore="HardcodedText"
+            android:visibility="gone"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/afc_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
             android:text="Janeth Williams"
             android:textColor="#292929"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+           android:layout_gravity="center_horizontal"
+            tools:ignore="HardcodedText"
+            android:textSize="25dp"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#b5b5b7" />
+            android:background="#b5b5b7"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
@@ -153,10 +168,11 @@
             android:layout_marginTop="32dp"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="External platform?"
-            android:textColor="#0072bc"
-            android:textSize="12sp"
-            tools:ignore="HardcodedText" />
+            android:text="External platform"
+            android:textColor="#A8DE7B"
+            android:textSize="15sp"
+            tools:ignore="HardcodedText"
+            android:layout_gravity="center_horizontal"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/afc_external_platform"
@@ -164,16 +180,18 @@
             android:layout_height="wrap_content"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text=""
+            android:text="TKY"
             android:textColor="#292929"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+            android:textSize="20dp"
+            tools:ignore="HardcodedText"
+            android:layout_gravity="center_horizontal"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#b5b5b7" />
+            android:background="#b5b5b7"
+            android:visibility="gone"/>
 
     </LinearLayout>
 </LinearLayout>

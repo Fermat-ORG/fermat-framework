@@ -1,6 +1,9 @@
 package com.bitdubai.sub_app.music_player.fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -301,23 +304,81 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
     void loadmysong(){
+        int i=0;
         List<WalletSong> mysong=new ArrayList<>();
         List<MusicPlayerItems> songview=new ArrayList<>();
+        List<MusicPlayerItems> newsongview=new ArrayList<>();
         try {
             mysong=musicPlayermoduleManager.getAvailableSongs();
             if(mysong.size()<1){
                 Toast.makeText(view.getContext(),"No song, dowload with the FanWallet",Toast.LENGTH_LONG).show();
             }else{
                 for(WalletSong walletSong:mysong){
-                    songview.add(new MusicPlayerItems(walletSong.getComposers(), walletSong.getName(),R.drawable.adam,walletSong.getSongBytes(),walletSong.getSongId()));
+                    songview.add(new MusicPlayerItems(walletSong.getComposers(),
+                            walletSong.getName(),
+                            BitmapFactory.decodeResource(view.getContext().getResources(),
+                                    R.drawable.adam),
+                            walletSong.getSongBytes(),
+                            walletSong.getSongId()));
+                    i=i+1;
                 }
                 adapter.setFilter(songview);
+                for (int x=0;x<mysong.size();x++){
+                    newsongview.add(new MusicPlayerItems(mysong.get(x).getComposers(),
+                            mysong.get(x).getName(),
+                            downloadBitmapAlbumArt(x),
+                            mysong.get(x).getSongBytes(),
+                            mysong.get(x).getSongId()));
+                }
+                adapter.setFilter(newsongview);
             }
         } catch (CantGetSongListException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.ART_MUSIC_PLAYER, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
     }
+
+
+    Bitmap downloadBitmapAlbumArt(int position){
+
+        try{
+        File tempMp3 = File.createTempFile("tempfermatmusic", "mp3", view.getContext().getCacheDir());
+        tempMp3.deleteOnExit();
+        FileOutputStream fos = new FileOutputStream(tempMp3);
+        fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
+        fos.close();
+
+
+        FileInputStream fis = new FileInputStream(tempMp3);
+
+
+        final MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+
+
+        metaRetriever.setDataSource(fis.getFD());
+
+
+            //    final AssetFileDescriptor afd=getResources().openRawResourceFd(R.raw.calido_y_frio);
+            //    metaRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+
+            //Other Scenarios
+            //    final String uriPath="android.resource://"+getPackageName()+"/raw/t";
+            //   final Uri uri=Uri.parse(uriPath);
+            //   mediaMetadataRetriever.setDataSource(getApplication(),uri);
+
+            //   final AssetFileDescriptor afd=getAssets().openFd("t.mp4");
+            //   mediaMetadataRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+
+      //      System.out.println("TKY_URL_SONG:"+url);
+            final byte[] art = metaRetriever.getEmbeddedPicture();
+            return BitmapFactory.decodeByteArray(art, 0, art.length);
+        } catch (Exception e) {
+            System.out.println("Couldn't create album art: " + e.getMessage());
+            return BitmapFactory.decodeResource(getResources(), R.drawable.no_found_art);
+        }
+
+    }
+
 
 
     private void clickplay(int position) {

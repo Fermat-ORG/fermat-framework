@@ -54,7 +54,7 @@ public class MusicPlayerAdapter extends RecyclerView.Adapter<MusicPlayerAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
-        holder.imagen.setImageResource(items.get(i).getImagen());
+        holder.imagen.setImageBitmap(items.get(i).getImagen());
         holder.texto.setText(items.get(i).getSong_name());
         holder.artistname.setText(items.get(i).getArtist_name());
     }

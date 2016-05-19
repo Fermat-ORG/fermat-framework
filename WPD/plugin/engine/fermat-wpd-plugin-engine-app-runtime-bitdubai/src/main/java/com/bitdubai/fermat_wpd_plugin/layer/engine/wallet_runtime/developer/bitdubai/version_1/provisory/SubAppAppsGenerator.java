@@ -741,8 +741,8 @@ public class SubAppAppsGenerator {
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Art Fan Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setColor("#FFFFFF");
+            runtimeTitleBar.setTitleColor("#000000");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
@@ -3917,6 +3917,12 @@ public class SubAppAppsGenerator {
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Your Identities");
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
         runtimeMenuItem.setLinkToActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
@@ -3937,15 +3943,15 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fan Users");
         runtimeTitleBar.setLabelSize(20);
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#6D6F71");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor("#E6E7E8");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
@@ -3956,6 +3962,38 @@ public class SubAppAppsGenerator {
         runtimeActivity.setSideMenu(runtimeSideMenu);
         subAppFanCommunity.addActivity(runtimeActivity);
 
+        //LOCAL IDENTITIES
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST);
+        runtimeActivity.setActivityType(Activities.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Your Identities");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppFanCommunity.addActivity(runtimeActivity);
 
         // Activity: CONNECTION_FRIEND_LIST
         runtimeActivity = new Activity();
@@ -3966,19 +4004,19 @@ public class SubAppAppsGenerator {
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Connections");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#6D6F71");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor("#E6E7E8");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
@@ -4004,14 +4042,14 @@ public class SubAppAppsGenerator {
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Notifications");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#6D6F71");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor("#E6E7E8");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#6D6F71");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
@@ -4038,14 +4076,14 @@ public class SubAppAppsGenerator {
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Profile");
         runtimeTitleBar.setIconName("Back");
-        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setTitleColor("#6D6F71");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setColor("#E6E7E8");
         runtimeTitleBar.setLabelSize(20);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0072bb");
+        statusBar.setColor("#E6E7E8");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
@@ -4080,6 +4118,13 @@ public class SubAppAppsGenerator {
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeMenuItem.setLinkToActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Your Identities");
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
@@ -4117,6 +4162,39 @@ public class SubAppAppsGenerator {
         runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey());
         runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppArtistCommunity.addActivity(runtimeActivity);
+
+        //LOCAL IDENTITIES
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST);
+        runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Your Identities");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST.getKey());
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
         subAppArtistCommunity.addActivity(runtimeActivity);
