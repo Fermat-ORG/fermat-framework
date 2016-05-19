@@ -289,7 +289,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 //WarningCircle.setVisibility(View.GONE);
                 CommonLogger.debug(TAG, "Entrando en fanImage.setOnClickListener");
                 getActivity().openContextMenu(fanImage);
-                buttonCam.setBackgroundResource(R.drawable.boton_editar);
+               // buttonCam.setBackgroundResource(R.drawable.boton_editar);
             }
         });
 
@@ -297,6 +297,21 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
 
 
+        mFanExternalUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserNameLabel.setTextColor(Color.parseColor(NormalColor));
+
+            }
+        });
+
+        mFanExternalPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PassWordLabel.setTextColor(Color.parseColor(NormalColor));
+
+            }
+        });
 
 
 
@@ -455,10 +470,12 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
 
         if (fanExternalName.isEmpty()){
+            UserNameLabel.setTextColor(Color.parseColor(WarningColor));
             mFanExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (fanPassWord.isEmpty()){
+            PassWordLabel.setTextColor(Color.parseColor(WarningColor));
             mFanExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
         }
 

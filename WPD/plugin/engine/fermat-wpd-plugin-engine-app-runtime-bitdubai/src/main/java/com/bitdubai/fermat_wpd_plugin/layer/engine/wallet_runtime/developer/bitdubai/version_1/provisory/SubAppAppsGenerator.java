@@ -723,6 +723,11 @@ public class SubAppAppsGenerator {
 
             runtimeSubApp = new AppNavigationStructure();
 
+         /*
+             *TKY ARTIST IDENTITY
+             */
+            //runtimeSubApp = new RuntimeSubApp();
+            //runtimeSubApp.setType(SubApps.ART_FAN_IDENTITY);
             String artFanUserIdentityPublicKey = SubAppsPublicKeys.ART_FAN_IDENTITY.getCode();
             runtimeSubApp.setPublicKey(artFanUserIdentityPublicKey);
             // Activity: Create New Identity
@@ -753,9 +758,7 @@ public class SubAppAppsGenerator {
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
-            /*
-             *TKY ARTIST IDENTITY
-             */
+
             //createTkyArtistIdentityNavigationStructure();
             /**
              * Start ART
@@ -4249,8 +4252,9 @@ public class SubAppAppsGenerator {
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fermat Music Player");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
-        runtimeTitleBar.setTitleColor("#000000");
-        runtimeTitleBar.setColor("#fafafa");
+        runtimeTitleBar.setTitleColor("#6D6F71");
+        runtimeTitleBar.setColor("#E6E7E8");
+        runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();

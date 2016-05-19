@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1;
+package com.bitdubai.fermat_android_api.constants;
 
 /**
  * Created by Matias Furszyfer on 2016.01.08..
