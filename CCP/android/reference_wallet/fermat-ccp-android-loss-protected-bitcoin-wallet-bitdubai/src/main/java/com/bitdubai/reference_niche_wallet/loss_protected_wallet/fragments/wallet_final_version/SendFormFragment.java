@@ -66,6 +66,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContact;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Confirm_send_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
@@ -103,7 +104,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
-    private TextView balance;
+    private TextView txt_balance;
 
 
     /**
@@ -155,7 +156,6 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                 lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
             }
-
 
 
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -250,23 +250,18 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        balance = (TextView) rootView.findViewById(R.id.balance);
+        txt_balance = (TextView) rootView.findViewById(R.id.balance);
 
-        try
-        {
-                long balance_a=0;
 
-           // if(BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE)) {
-                balance_a = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
-            balance.setText(WalletUtils.formatBalanceString(balance_a, lossProtectedWalletSession.getTypeAmount()) + " BTC");
-          //  }
-           // else
-                //balance.setText("0.00 BTC");
+        try {
+            long balance = 0;
+            balance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(),
+                      blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+                      txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
+        } catch (CantGetLossProtectedBalanceException e) {
+            e.printStackTrace();
+        }
 
-        }   catch (CantGetLossProtectedBalanceException e)
-            {
-                e.printStackTrace();
-            }
 
         List<String> list = new ArrayList<String>();
         list.add("BTC");
@@ -377,6 +372,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         /**
          * Listeners
          */
+
         imageView_contact.setOnClickListener(this);
         send_button.setOnClickListener(this);
         rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
@@ -473,7 +469,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     }
 
     private void setUpContactAddapter() {
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
+        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item, getWalletContactList());
 
         contactName.setAdapter(contactsAdapter);
         //autocompleteContacts.setTypeface(tf);
