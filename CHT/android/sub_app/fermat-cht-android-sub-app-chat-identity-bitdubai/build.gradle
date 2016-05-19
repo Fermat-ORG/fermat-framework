@@ -76,6 +76,7 @@ dependencies {
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
+    //compile 'com.theartofdev.edmodo:android-image-cropper:2.1.+'
     // RoboLectric y JUnit
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'junit:junit:4.12'

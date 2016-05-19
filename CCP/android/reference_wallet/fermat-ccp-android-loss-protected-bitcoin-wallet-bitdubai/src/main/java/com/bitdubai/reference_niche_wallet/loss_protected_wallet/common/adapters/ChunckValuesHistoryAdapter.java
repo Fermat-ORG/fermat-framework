@@ -113,7 +113,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         final int percentage = getSpendingPercentage(transaction);
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()) + "  Spend " + percentage+"%");
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()) + "  ("+percentage+"% Spend)" );
         holder.getTxt_amount().setTypeface(tf) ;
 
         if (lossProtectedWalletSession.getActualExchangeRate() >= data.getExchangeRate())

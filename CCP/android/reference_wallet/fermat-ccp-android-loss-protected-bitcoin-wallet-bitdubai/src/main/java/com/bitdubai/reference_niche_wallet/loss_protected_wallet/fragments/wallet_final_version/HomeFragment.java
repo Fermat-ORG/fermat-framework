@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -91,7 +92,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     LossProtectedWalletSession lossProtectedWalletSession;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
-    LayoutInflater inflater;
+
 
     /**
      * Manager
@@ -128,6 +129,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private UUID exchangeProviderId = null;
 
     private long exchangeRate = 0;
+
+    private LayoutInflater inflater;
 
     /**
      * Constants
@@ -208,6 +211,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 }}, 500);
 
         } catch (Exception ex) {
+
+            ex.printStackTrace();
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
@@ -217,40 +222,45 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     }
 
     private void setUpPresentation(boolean checkButton) {
-        PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
-                new PresentationBitcoinWalletDialog(
-                        getActivity(),
-                        lossProtectedWalletSession,
-                        null,
-                        (lossProtectedWalletmanager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                        checkButton);
+         try {
+                PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
+                        new PresentationBitcoinWalletDialog(
+                                getActivity(),
+                                lossProtectedWalletSession,
+                                null,
+                                (lossProtectedWalletmanager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                                checkButton);
 
-        presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                Object o = lossProtectedWalletSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                if (o != null) {
-                    if ((Boolean) (o)) {
-                        //invalidate();
-                        lossProtectedWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
-                    }
-                }
-                try {
-                    LossProtectedWalletIntraUserIdentity cryptoWalletIntraUserIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
-                    if (cryptoWalletIntraUserIdentity == null) {
-                        getActivity().onBackPressed();
-                    } else {
-                        invalidate();
-                    }
-                } catch (CantListCryptoWalletIntraUserIdentityException e) {
-                    e.printStackTrace();
-                } catch (CantGetCryptoLossProtectedWalletException e) {
-                    e.printStackTrace();
-                }
+                presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        Object o = lossProtectedWalletSession.getData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                        if (o != null) {
+                            if ((Boolean) (o)) {
+                                //invalidate();
+                                lossProtectedWalletSession.removeData(SessionConstant.PRESENTATION_IDENTITY_CREATED);
+                            }
+                        }
+                        try {
+                            LossProtectedWalletIntraUserIdentity cryptoWalletIntraUserIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
+                            if (cryptoWalletIntraUserIdentity == null) {
+                                getActivity().onBackPressed();
+                            } else {
+                                invalidate();
+                            }
+                        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+                            e.printStackTrace();
+                        } catch (CantGetCryptoLossProtectedWalletException e) {
+                            e.printStackTrace();
+                        }
 
-            }
-        });
+                    }
+                });
         presentationBitcoinWalletDialog.show();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -267,13 +277,20 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             this.inflater = inflater;
             rootView = inflater.inflate(R.layout.lossprotected_home, container, false);
-            setUp(inflater);
+
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
+                public void run() {
+                    setUp(inflater);
+                }
+            }, 500);
+
 
 
             return rootView;
@@ -292,7 +309,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         try {
             setUpHeader(inflater);
             setUpChart(inflater);
-            //setUpDonut(inflater);
 
         }catch (Exception e){
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,

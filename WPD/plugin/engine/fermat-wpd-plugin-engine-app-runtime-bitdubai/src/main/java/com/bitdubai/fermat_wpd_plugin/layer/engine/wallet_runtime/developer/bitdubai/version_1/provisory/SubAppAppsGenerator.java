@@ -829,7 +829,7 @@ public class SubAppAppsGenerator {
             runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Chat Identity");
+            runtimeTitleBar.setLabel("Chat Profile");
             runtimeTitleBar.setColor("#47BF73");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);
@@ -3761,14 +3761,14 @@ public class SubAppAppsGenerator {
         runtimeSideMenu.setBackgroundColor("#FFFFFF");
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Chat Community");
+        runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setIcon("cht_ic_home");
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLabel("Contacts");
         runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -3823,7 +3823,7 @@ public class SubAppAppsGenerator {
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Connections");
+        runtimeTitleBar.setLabel("Contacts");
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeTitleBar.setColor("#47BF73");

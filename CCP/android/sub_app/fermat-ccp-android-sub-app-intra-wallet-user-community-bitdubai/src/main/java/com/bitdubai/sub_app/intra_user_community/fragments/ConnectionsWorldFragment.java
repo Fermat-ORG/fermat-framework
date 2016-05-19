@@ -36,15 +36,17 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
@@ -213,10 +215,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-            userCacheList = getSuggestionCache();
-            if(userCacheList!=null) {
-                dataSet.addAll(userCacheList);
-            }
+        getSuggestionCache();
+
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
@@ -541,20 +541,62 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
 
-    private List<IntraUserInformation> getSuggestionCache() {
+    private void getSuggestionCache() {
 
-        List<IntraUserInformation> userCacheList = new ArrayList<>();
-        try {
 
-            userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-            return userCacheList;
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground()  {
+                List<IntraUserInformation> userCacheList = new ArrayList<>();
+                try{
 
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return userCacheList;
+                    userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                return userCacheList;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+                        dataSet.addAll((List<IntraUserInformation>) result[0]);
+                        if(dataSet!=null){
+                            if(!dataSet.isEmpty()){
+                                showEmpty(false, emptyView);
+                                adapter.changeDataSet(dataSet);
+                            }else{
+                                showEmpty(true, emptyView);
+                            }
+                        }else{
+                            showEmpty(true, emptyView);
+                        }
+
+                }
+                else {
+                    makeText(getActivity(), "Cant't Get suggestion cache list.", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+
+
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                else
+                    Log.e("Get Suggestion Contact", ex.getMessage(), ex);
+            }
+        });
+
+        fermatWorker.execute();
+
+
     }
 
     @Override

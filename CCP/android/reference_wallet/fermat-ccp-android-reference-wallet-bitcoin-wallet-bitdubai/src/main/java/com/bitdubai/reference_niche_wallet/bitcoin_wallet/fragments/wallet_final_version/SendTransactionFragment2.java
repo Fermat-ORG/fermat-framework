@@ -206,61 +206,50 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
                                     setUpPresentation(false);
                                 }
+                                setRunningDailyBalance();
+//get Blockchain Download Progress status
+                                try {
+                                    int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
+                                    final Toolbar toolBar = getToolbar();
+                                    int toolbarColor = 0;
+                                    if (pendingBlocks > 0) {
+//paint toolbar on red
+                                        toolbarColor = Color.RED;
+                                        if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
+                                            setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
+                                    } else {
+                                        toolbarColor = Color.parseColor("#12aca1");
+                                    }
+                                    final int finalToolbarColor = toolbarColor;
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            toolBar.setBackgroundColor(finalToolbarColor);
+                                        }
+                                    });
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
                             }
                         }, 500);
-
                     }catch (Exception e){
                         e.printStackTrace();
                     }
                 }
             });
 
-
-            _executor.submit(new Runnable() {
+            getExecutor().submit(new Runnable() {
                 @Override
                 public void run() {
-
-                    setRunningDailyBalance();
-
-                    //get Blockchain Download Progress status
-                    try {
-                        int pendingBlocks = moduleManager.getBlockchainDownloadProgress(blockchainNetworkType).getPendingBlocks();
-                        final Toolbar toolBar = getToolbar();
-                        int toolbarColor = 0;
-                        if (pendingBlocks > 0) {
-                            //paint toolbar on red
-                            toolbarColor = Color.RED;
-                            if (bitcoinWalletSettings.isBlockchainDownloadEnabled())
-                                setUpBlockchainProgress(bitcoinWalletSettings.isBlockchainDownloadEnabled());
-                        } else {
-                            toolbarColor = Color.parseColor("#12aca1");
-                        }
-                        final int finalToolbarColor = toolbarColor;
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                toolBar.setBackgroundColor(finalToolbarColor);
-                            }
-                        });
-
-
-
-                        //todo: Esto acá lo veo horrible, esto debe hacer despues fijate natalia porqué está aca.
-                        openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                    openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                 }
             });
-
-
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
-
     }
+
 
     private void setUpPresentation(boolean checkButton) {
         PresentationBitcoinWalletDialog presentationBitcoinWalletDialog =
@@ -299,22 +288,32 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         presentationBitcoinWalletDialog.show();
     }
 
-    private void setUpBlockchainProgress(boolean checkButton) {
-        BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
-                new BlockchainDownloadInfoDialog(
-                        getActivity(),
-                        referenceWalletSession,
-                        null,
-                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
-                        checkButton);
+    private void setUpBlockchainProgress(final boolean checkButton) {
+
+        final int type = (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES;
 
 
-        blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        getActivity().runOnUiThread(new Runnable() {
             @Override
-            public void onDismiss(DialogInterface dialog) {
+            public void run() {
+                BlockchainDownloadInfoDialog blockchainDownloadInfoDialog =
+                        new BlockchainDownloadInfoDialog(
+                                getActivity(),
+                                referenceWalletSession,
+                                null,
+                                type,
+                                checkButton);
+
+
+                blockchainDownloadInfoDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                    }
+                });
+                blockchainDownloadInfoDialog.show();
             }
         });
-        blockchainDownloadInfoDialog.show();
+
     }
 
     @Override
@@ -887,7 +886,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         long balance = 0;
         //noinspection TryWithIdenticalCatches
         try {
-            balance = referenceWalletSession.getModuleManager().getBalance(balanceType, referenceWalletSession.getAppPublicKey(),blockchainNetworkType);
+            balance = moduleManager.getBalance(balanceType, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
 
         } catch (CantGetBalanceException e) {
             e.printStackTrace();
@@ -912,12 +911,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         long balanceSum = 0;
         int average = 0;
         try {
-            for (Map.Entry<Long, Long> entry :  runningDailyBalance.entrySet())
-                balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
+            if(runningDailyBalance!=null) {
+                for (Map.Entry<Long, Long> entry : runningDailyBalance.entrySet())
+                    balanceSum += Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(entry.getValue(), ShowMoneyType.BITCOIN.getCode()));
 
-            if(balanceSum > 0 )
-                average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
+                if (balanceSum > 0)
+                    average = (int) ((Integer.valueOf(WalletUtils.formatBalanceStringNotDecimal(getBalanceValue(runningDailyBalance.size() - 1), ShowMoneyType.BITCOIN.getCode())) * 100) / balanceSum);
 
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

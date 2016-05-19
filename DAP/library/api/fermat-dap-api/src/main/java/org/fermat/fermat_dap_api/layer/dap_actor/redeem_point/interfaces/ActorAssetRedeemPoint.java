@@ -7,12 +7,13 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Nerio on 10/09/15.
  */
-public interface ActorAssetRedeemPoint extends DAPActor {
+public interface ActorAssetRedeemPoint extends DAPActor, Serializable {
 
     /**
      * The method <code>getRegistrationDate</code> gives us the date when both Redeem Points

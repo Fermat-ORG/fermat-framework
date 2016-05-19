@@ -154,7 +154,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
                 e.printStackTrace();
             }
         }
-        //Log.i(TAG,"SendMessage return from server");
+        Log.i(TAG,"SendMessage return from server");
 
 
         if(objectArrived!=null){

@@ -16,8 +16,8 @@
     android:title="@string/menu_switch_profile"
     android:icon="@drawable/cht_profile_icon"
     android:showAsAction="ifRoom"/>-->
-    <item
+    <!--item
         android:id="@+id/menu_error_report"
         android:title="Error Report"
-        app:showAsAction="collapseActionView"/>
+        app:showAsAction="collapseActionView"/-->
 </menu>
