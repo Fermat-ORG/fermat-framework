@@ -5,25 +5,41 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="1dp"
-    android:background="#d9d6d6"
-    android:orientation="horizontal">
+    android:background="#F1F2F2"
+    android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="120dp"
-        android:layout_height="120dp">
+        android:layout_width="match_parent"
+        android:layout_height="102dp">
 
-        <com.bitdubai.fermat_android_api.ui.Views.SquareImageView
+
+
+    <RelativeLayout
+        android:id="@+id/relative2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true"
+        >
+
+        <ImageView
             android:id="@+id/profile_image"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@drawable/afc_profile_image" />
+            tools:ignore="ContentDescription"
+            android:background="@drawable/circular_friend_list"
+
+            />
+    </RelativeLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/afc_community_name"
             android:layout_width="match_parent"
             android:layout_height="20dp"
-            android:background="#B3000000"
+
             android:ellipsize="end"
             android:gravity="start"
             android:paddingBottom="2dp"
@@ -31,12 +47,13 @@
             android:paddingRight="8dp"
             android:singleLine="true"
             android:text="Anna"
-            android:textColor="#FFFFFFFF"
+            android:textColor="#6D6F71"
             android:textSize="16sp"
             app:typeface="ROBOTO_REGULAR"
             tools:ignore="HardcodedText"
-            android:layout_above="@+id/view"
-            android:layout_alignParentStart="true" />
+
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/relative2" />
 
         <ImageView
             android:id="@+id/afc_connection_state"
@@ -51,18 +68,31 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="18dp"
-            android:background="#0072bb"
+            app:typeface="CAVIAR_DREAMS_ITALIC_BOLD"
             android:gravity="center_vertical"
             android:paddingLeft="8dp"
             android:paddingStart="8dp"
             android:text="Online"
-            android:textColor="#ffffff"
+            android:textColor="#6D6F71"
             android:textSize="10sp"
             tools:ignore="HardcodedText,RtlSymmetry,SmallSp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/view" />
+            android:id="@+id/view"
+            android:layout_below="@+id/afc_community_name"
+            android:layout_alignStart="@+id/afc_community_name" />
+
 
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@drawable/line_coloured"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+
+      />
+
 
 </LinearLayout>
