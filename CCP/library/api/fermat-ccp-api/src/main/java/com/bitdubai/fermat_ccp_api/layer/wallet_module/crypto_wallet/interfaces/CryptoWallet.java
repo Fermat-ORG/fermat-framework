@@ -586,12 +586,13 @@ public interface CryptoWallet  extends Serializable,ModuleManager,ModuleSettings
      * @param sendingWalletPublicKey
      * @param receivingWalletPublicKey
      * @param notes
-     * @param deliveredToActorType
+     * @param actortypeFrom
+     * @param actortypeTo
      * @param sendingWallet
      * @param receivingWallet
      * @param blockchainNetworkType
      * @throws CantSendLossProtectedCryptoException
      * @throws LossProtectedInsufficientFundsException
      */
-    void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+    void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes, Actors actortypeFrom, Actors actortypeTo, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 }
