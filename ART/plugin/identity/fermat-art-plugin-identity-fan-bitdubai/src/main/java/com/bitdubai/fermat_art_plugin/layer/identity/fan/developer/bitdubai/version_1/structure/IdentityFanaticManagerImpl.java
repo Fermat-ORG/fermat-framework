@@ -2,13 +2,9 @@ package com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
@@ -25,9 +21,6 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.database.FanaticIdentityDao;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -42,7 +35,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo 10/03/16.
  */
-public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,FanaticIdentityManager {
+public class IdentityFanaticManagerImpl implements FanaticIdentityManager {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */
@@ -51,7 +44,7 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
     /**
      * DealsWithErrors interface member variables
      */
-    ErrorManager errorManager;
+    //ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface mmeber variables
@@ -78,36 +71,23 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
 
     private TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
 
     /**
      * Constructor
      *
-     * @param errorManager
      * @param logManager
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityFanaticManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, FanManager fanManager, TokenlyFanIdentityManager tokenlyFanIdentityManager){
-        this.errorManager = errorManager;
+    public IdentityFanaticManagerImpl(
+            LogManager logManager,
+            PluginDatabaseSystem pluginDatabaseSystem,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            DeviceUserManager deviceUserManager,
+            FanManager fanManager,
+            TokenlyFanIdentityManager tokenlyFanIdentityManager){
+
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
@@ -194,13 +174,11 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                 }},"Artist Identity register ANS");
             registerToAns.start();
 
-            return new FanaticIdentityImp(
+            return new FanRecord(
                     alias,
                     publicKey,
                     profileImage,
                     externalIdentityID,
-                    pluginFileSystem,
-                    pluginId,
                     artExternalPlatform,
                     externalUsername);
         } catch (CantGetLoggedInDeviceUserException e) {
@@ -328,10 +306,10 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                         case TOKENLY:
                             final Fan tokenlyArtist = tokenlyFanIdentityManager.getFanIdentity(Fanatic.getExternalIdentityID());
                             if(tokenlyArtist != null){
-                                artIdentity = new FanaticIdentityImp(
+                                artIdentity = new FanRecord(
+                                        tokenlyArtist.getUsername(),
                                         tokenlyArtist.getPublicKey(),
                                         tokenlyArtist.getProfileImage(),
-                                        tokenlyArtist.getUsername(),
                                         tokenlyArtist.getId(),
                                         externalPlatform,
                                         tokenlyArtist.getUsername());
@@ -341,11 +319,14 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                 }
             }
         } catch (CantGetFanIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //TODO:TO report
+            //errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         } catch (com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //TODO:TO report
+            //errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         } catch (com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            //TODO:TO report
+            //errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return artIdentity;
     }

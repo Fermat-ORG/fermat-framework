@@ -35,6 +35,7 @@ import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.vers
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanRecord;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanaticIdentityImp;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
@@ -380,7 +381,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 String externalUsername = record.getStringValue(
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 list.add(
-                        new FanaticIdentityImp(
+                        new FanRecord(
                                 record.getStringValue(
                                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
                                 record.getStringValue(
@@ -388,8 +389,6 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                                 getFanaticProfileImagePrivateKey(
                                         record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                                 externalIdentityId,
-                                pluginFileSystem,
-                                pluginId,
                                 externalPlatform,
                                 externalUsername));
             }
@@ -556,7 +555,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 //External username
                 String externalUsername = record.getStringValue(
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
-                Fanatic = new FanaticIdentityImp(
+                Fanatic = new FanRecord(
                         record.getStringValue(
                                 FanaticIdentityDatabaseConstants
                                         .FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
@@ -565,8 +564,6 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         getFanaticProfileImagePrivateKey(
                                 record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         externalIdentityId,
-                        pluginFileSystem,
-                        pluginId,
                         externalPlatform,
                         externalUsername);
             }

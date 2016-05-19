@@ -38,6 +38,7 @@ import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.v
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistIdentityImp;
+import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistRecord;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -396,16 +397,15 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 } else{
                     artistAcceptConnectionsType = ArtistAcceptConnectionsType.getByCode(artistAcceptConnectionsTypeString);
                 }
-                list.add(new ArtistIdentityImp(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
+                list.add(new ArtistRecord(
+                        record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         externalIdentityId,
-                        pluginFileSystem,
-                        pluginId,
                         externalPlatform,
+                        externalUsername,
                         exposureLevel,
-                        artistAcceptConnectionsType,
-                        externalUsername));
+                        artistAcceptConnectionsType));
 
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -589,17 +589,15 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 } else{
                     artistAcceptConnectionsType = ArtistAcceptConnectionsType.getByCode(artistAcceptConnectionsTypeString);
                 }
-                artist = new ArtistIdentityImp(
+                artist = new ArtistRecord(
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         externalIdentityId,
-                        pluginFileSystem,
-                        pluginId,
                         externalPlatform,
+                        externalUsername,
                         exposureLevel,
-                        artistAcceptConnectionsType,
-                        externalUsername);
+                        artistAcceptConnectionsType);
 
             }
         } catch (CantLoadTableToMemoryException e) {

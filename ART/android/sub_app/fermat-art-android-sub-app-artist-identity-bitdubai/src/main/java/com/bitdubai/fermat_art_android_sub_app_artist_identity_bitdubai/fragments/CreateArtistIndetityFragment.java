@@ -101,7 +101,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private Spinner mArtistExternalName;
     private Spinner mArtistExposureLevel;
     private Spinner mArtistAcceptConnectionsType;
-    private SettingsManager<ArtistIdentitySettings> settingsManager;
+    //private SettingsManager<ArtistIdentitySettings> settingsManager;
     private ArtistIdentitySettings artArtistPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
@@ -131,15 +131,15 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             setHasOptionsMenu(false);
-            settingsManager = appSession.getModuleManager().
-                    getSettingsManager();
+            //settingsManager = appSession.getModuleManager().
+            //        getSettingsManager();
 
             try {
                 if (appSession.getAppPublicKey() != null) {
-                    artArtistPreferenceSettings = settingsManager.loadAndGetSettings(
+                    artArtistPreferenceSettings = moduleManager.loadAndGetSettings(
                             appSession.getAppPublicKey());
                 } else {
-                    artArtistPreferenceSettings = settingsManager.loadAndGetSettings("public_key_art_artist_identity");
+                    artArtistPreferenceSettings = moduleManager.loadAndGetSettings("public_key_art_artist_identity");
                 }
 
             } catch (Exception e) {
@@ -149,12 +149,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             if (artArtistPreferenceSettings == null) {
                 artArtistPreferenceSettings = new ArtistIdentitySettings();
                 artArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
-                if (settingsManager != null) {
+                if (moduleManager != null) {
                     if (appSession.getAppPublicKey() != null) {
-                        settingsManager.persistSettings(
+                        moduleManager.persistSettings(
                                 appSession.getAppPublicKey(), artArtistPreferenceSettings);
                     } else {
-                        settingsManager.persistSettings("public_key_art_artist_identity", artArtistPreferenceSettings);
+                        moduleManager.persistSettings("public_key_art_artist_identity", artArtistPreferenceSettings);
                     }
                 }
             }
@@ -187,7 +187,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 loadIdentity();
             } else {
                 List<Artist> lst = moduleManager.listIdentitiesFromCurrentDeviceUser();
-                if (!lst.isEmpty()) {
+                if (lst!=null&&!lst.isEmpty()) {
                     identitySelected = lst.get(0);
                 }
                 if (identitySelected != null) {
@@ -653,13 +653,18 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 
     private List<String> getArtistIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception {
-        HashMap<UUID, String> artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
         List<String> identityNameList = new ArrayList<>();
-        if (artistIdentityByPlatform != null) {
-            Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
-            while (entries2.hasNext()) {
-                Map.Entry<UUID, String> entry2 = entries2.next();
-                identityNameList.add(entry2.getValue());
+        HashMap<ArtExternalPlatform,HashMap<UUID,String>> artExternalPlatform =
+                moduleManager.listExternalIdentitiesFromCurrentDeviceUser();
+        if(artExternalPlatform!=null){
+            HashMap<UUID, String> artistIdentityByPlatform = artExternalPlatform.get(externalPlatform);
+            if (artistIdentityByPlatform != null) {
+                Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
+                while (entries2.hasNext()) {
+                    Map.Entry<UUID, String> entry2 = entries2.next();
+                    identityNameList.add(entry2.getValue());
+                }
+                return identityNameList;
             }
             return identityNameList;
         }
