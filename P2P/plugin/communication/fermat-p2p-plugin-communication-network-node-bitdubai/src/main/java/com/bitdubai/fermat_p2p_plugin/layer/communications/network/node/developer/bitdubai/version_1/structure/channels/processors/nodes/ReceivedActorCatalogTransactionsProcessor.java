@@ -19,7 +19,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
-import com.google.gson.Gson;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -182,7 +181,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
         LOG.info("Executing method insertActorsCatalog");
 
-        if (!getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())) {
+        if (!getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getId())) {
 
         /*
          * Create the ActorsCatalog
@@ -263,14 +262,15 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * @param actorsCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertActorsCatalogTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertActorsCatalogTransaction(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
         LOG.info("Executing method insertActorsCatalogTransaction");
 
         /*
          * Save into the data base
          */
-        getDaoFactory().getActorsCatalogTransactionDao().create(actorsCatalogTransaction);
+        if(!getDaoFactory().getActorsCatalogTransactionDao().exists(actorsCatalogTransaction.getId()))
+            getDaoFactory().getActorsCatalogTransactionDao().create(actorsCatalogTransaction);
     }
 
     /**
@@ -279,31 +279,34 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
      * @param actorsCatalogTransaction
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertActorsCatalogTransactionsPendingForPropagation(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException {
+    private void insertActorsCatalogTransactionsPendingForPropagation(ActorsCatalogTransaction actorsCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        LOG.info("Executing method insertActorsCatalogTransactionsPendingForPropagation");
+        if (!getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().exists(actorsCatalogTransaction.getId())) {
+            LOG.info("Executing method insertActorsCatalogTransactionsPendingForPropagation");
 
-        /*
-         * Create the ActorsCatalogTransactionsPendingForPropagation
-         */
-        ActorsCatalogTransactionsPendingForPropagation transaction = new ActorsCatalogTransactionsPendingForPropagation();
-        transaction.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
-        transaction.setActorType(actorsCatalogTransaction.getActorType());
-        transaction.setAlias(actorsCatalogTransaction.getAlias());
-        transaction.setExtraData(actorsCatalogTransaction.getExtraData());
-        transaction.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
-        transaction.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
-        transaction.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
-        transaction.setName(actorsCatalogTransaction.getName());
-        transaction.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
-        transaction.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
-        transaction.setPhoto(actorsCatalogTransaction.getPhoto());
-        transaction.setTransactionType(actorsCatalogTransaction.getTransactionType());
+            /*
+             * Create the ActorsCatalogTransactionsPendingForPropagation
+             */
+            ActorsCatalogTransactionsPendingForPropagation transaction = new ActorsCatalogTransactionsPendingForPropagation();
+            transaction.setHashId(actorsCatalogTransaction.getHashId());
+            transaction.setIdentityPublicKey(actorsCatalogTransaction.getIdentityPublicKey());
+            transaction.setActorType(actorsCatalogTransaction.getActorType());
+            transaction.setAlias(actorsCatalogTransaction.getAlias());
+            transaction.setExtraData(actorsCatalogTransaction.getExtraData());
+            transaction.setHostedTimestamp(actorsCatalogTransaction.getHostedTimestamp());
+            transaction.setLastLatitude(actorsCatalogTransaction.getLastLatitude());
+            transaction.setLastLongitude(actorsCatalogTransaction.getLastLongitude());
+            transaction.setName(actorsCatalogTransaction.getName());
+            transaction.setNodeIdentityPublicKey(actorsCatalogTransaction.getNodeIdentityPublicKey());
+            transaction.setClientIdentityPublicKey(actorsCatalogTransaction.getClientIdentityPublicKey());
+            transaction.setPhoto(actorsCatalogTransaction.getPhoto());
+            transaction.setTransactionType(actorsCatalogTransaction.getTransactionType());
 
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().create(transaction);
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getActorsCatalogTransactionsPendingForPropagationDao().create(transaction);
+        }
     }
 
 }
