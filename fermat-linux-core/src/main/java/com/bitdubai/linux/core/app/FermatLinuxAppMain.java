@@ -113,6 +113,7 @@ public class FermatLinuxAppMain {
                 }
             }
 */
+
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 
         } catch (Exception e) {

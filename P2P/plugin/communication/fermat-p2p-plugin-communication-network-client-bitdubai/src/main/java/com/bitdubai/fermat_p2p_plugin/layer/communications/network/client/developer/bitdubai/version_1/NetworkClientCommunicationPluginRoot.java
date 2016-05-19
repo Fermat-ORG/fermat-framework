@@ -557,7 +557,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
             }
 
         }catch (Exception e){
-            e.printStackTrace();
+            //e.printStackTrace();
             return null;
         }finally {
             if (conn != null)
