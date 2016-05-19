@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
@@ -56,6 +57,10 @@ public class transactionHolder extends ChildViewHolder {
                 txt_notes.setText((lossProtectedWalletTransaction.getMemo()==null) ? "No information" : lossProtectedWalletTransaction.getMemo() + "(Reversed)");
             else
                 txt_notes.setText((lossProtectedWalletTransaction.getMemo()==null) ? "No information" : lossProtectedWalletTransaction.getMemo());
+        }else if(lossProtectedWalletTransaction.getActorFromType() == Actors.BITCOIN_BASIC_USER) {
+            txt_from.setText("Bitcoin Wallet Transaction");
+        }else if(lossProtectedWalletTransaction.getActorFromType() == Actors.LOSS_PROTECTED_USER) {
+            txt_from.setText("Loss Protected Wallet Transaction");
         }else{
             container_sub_item.setVisibility(View.GONE);
         }
