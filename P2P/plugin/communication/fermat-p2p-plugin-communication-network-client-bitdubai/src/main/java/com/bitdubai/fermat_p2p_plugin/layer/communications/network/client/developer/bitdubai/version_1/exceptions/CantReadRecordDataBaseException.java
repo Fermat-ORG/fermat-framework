@@ -1,73 +1,23 @@
-/*
-* @#CantReadRecordDataBaseException.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>CantReadRecordDataBaseException</code>
- * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 13/11/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * The exception <code>com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_payment_request.developer.bitdubai.version_1.network_service.exceptions.CantReadRecordDataBaseException</code>
+ * is thrown when there is an error trying to read a record from database.
+ * <p>
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 06/10/2015.
  */
 public class CantReadRecordDataBaseException extends FermatException {
 
-    /**
-     * Represent the default message
-     */
-    public static final String DEFAULT_MESSAGE = "CAN'T READ RECORD ON DATABASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T READ RECORD DATABASE EXCEPTION";
 
-    /**
-     * Constructor with parameters
-     *
-     * @param message
-     * @param cause
-     * @param context
-     * @param possibleReason
-     */
-    public CantReadRecordDataBaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantReadRecordDataBaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor with parameters
-     *
-     * @param message
-     * @param cause
-     */
-    public CantReadRecordDataBaseException(final String message, final Exception cause) {
-        this(message, cause, "", "");
+    public CantReadRecordDataBaseException(Exception cause, String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor with parameter
-     *
-     * @param message
-     */
-    public CantReadRecordDataBaseException(final String message) {
-        this(message, null);
-    }
-
-    /**
-     * Constructor with parameter
-     *
-     * @param exception
-     */
-    public CantReadRecordDataBaseException(final Exception exception) {
-        this(exception.getMessage());
-        setStackTrace(exception.getStackTrace());
-    }
-
-    /**
-     * Constructor
-     */
-    public CantReadRecordDataBaseException() {
-        this(DEFAULT_MESSAGE);
-    }
 }

@@ -1,73 +1,27 @@
-/*
-* @#CantDeleteRecordDataBaseException.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The Class <code>CantDeleteRecordDataBaseException</code>
- * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 13/11/15.
- *
- * @version 1.0
- * @since Java JDK 1.7
+ * The exception <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantDeleteRecordDataBaseException</code>
+ * is thrown when there is an error trying to delete a record from database.
+ * <p>
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/11/2015.
  */
-public class CantDeleteRecordDataBaseException extends FermatException {
+public final class CantDeleteRecordDataBaseException extends FermatException {
 
-    /**
-     * Represent the default message
-     */
-    public static final String DEFAULT_MESSAGE = "CAN'T DELETE RECORD ON DATABASE";
+    public static final String DEFAULT_MESSAGE = "CAN'T DELETE RECORD IN DATABASE EXCEPTION";
 
-    /**
-     * Constructor with parameters
-     *
-     * @param message
-     * @param cause
-     * @param context
-     * @param possibleReason
-     */
-    public CantDeleteRecordDataBaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantDeleteRecordDataBaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor with parameters
-     *
-     * @param message
-     * @param cause
-     */
-    public CantDeleteRecordDataBaseException(final String message, final Exception cause) {
-        this(message, cause, "", "");
+    public CantDeleteRecordDataBaseException(Exception cause, String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor with parameter
-     *
-     * @param message
-     */
-    public CantDeleteRecordDataBaseException(final String message) {
-        this(message, null);
+    public CantDeleteRecordDataBaseException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
     }
 
-    /**
-     * Constructor with parameter
-     *
-     * @param exception
-     */
-    public CantDeleteRecordDataBaseException(final Exception exception) {
-        this(exception.getMessage());
-        setStackTrace(exception.getStackTrace());
-    }
-
-    /**
-     * Constructor
-     */
-    public CantDeleteRecordDataBaseException() {
-        this(DEFAULT_MESSAGE);
-    }
 }

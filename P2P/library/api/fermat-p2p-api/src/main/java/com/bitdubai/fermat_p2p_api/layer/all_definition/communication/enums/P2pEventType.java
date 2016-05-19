@@ -26,8 +26,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Fai
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureRequestedListNotAvailableNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureUpdateActorNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.RegisterServerRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
@@ -106,18 +104,6 @@ public enum P2pEventType implements FermatEventEnum {
     FAILURE_COMPONENT_CONNECTION_REQUEST_NOTIFICATION("F_CCCRN") {
         public FailureComponentConnectionRequestNotificationEvent getNewEvent() {
             return new FailureComponentConnectionRequestNotificationEvent(this);
-        }
-    },
-
-    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE_NOTIFICATION("NNSMRN") {
-        public NewNetworkServiceMessageReceivedNotificationEvent getNewEvent() {
-            return new NewNetworkServiceMessageReceivedNotificationEvent(this);
-        }
-    },
-
-    NEW_NETWORK_SERVICE_MESSAGE_SENT_NOTIFICATION("NNSMSN") {
-        public NewNetworkServiceMessageSentNotificationEvent getNewEvent() {
-            return new NewNetworkServiceMessageSentNotificationEvent(this);
         }
     },
 

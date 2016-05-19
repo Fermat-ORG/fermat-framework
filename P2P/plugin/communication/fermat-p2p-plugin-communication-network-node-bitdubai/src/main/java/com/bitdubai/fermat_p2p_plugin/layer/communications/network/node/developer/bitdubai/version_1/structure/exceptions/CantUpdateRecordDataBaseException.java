@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
