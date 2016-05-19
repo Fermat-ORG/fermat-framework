@@ -249,13 +249,11 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         txt_balance = (TextView) rootView.findViewById(R.id.balance);
 
-
         try {
             long balance = 0;
-            balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(),
+            balance = lossProtectedWalletManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+            txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
 
-                   blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
-                   txt_balance.setText(WalletUtils.formatBalanceString(balance,ShowMoneyType.BITCOIN.getCode())+ " BTC");
         } catch (CantGetLossProtectedBalanceException e) {
             e.printStackTrace();
         }

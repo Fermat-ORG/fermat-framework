@@ -535,6 +535,20 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                 }
                             }
                             if (wallet != null){
+                                Actors actor = null;
+
+                                switch (wallet.getWalletName()){
+
+                                    case "Bitcoin Wallet":
+                                        actor = Actors.BITCOIN_BASIC_USER;
+                                        break;
+                                    case "Loss Protected Wallet":
+                                        actor = Actors.LOSS_PROTECTED_USER;
+                                        break;
+
+                                    default:
+                                        actor = Actors.DEVICE_USER;
+                                }
 
                                 if (operator.compareTo(minSatoshis) == 1) {
                                     lossProtectedWalletManager.sendToWallet(
@@ -542,7 +556,8 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                             appSession.getAppPublicKey(),
                                             wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
                                             notes,
-                                            Actors.DEVICE_USER,
+                                            Actors.LOSS_PROTECTED_USER,
+                                            actor,
                                             ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                             blockchainNetworkType
