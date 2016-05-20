@@ -337,9 +337,11 @@ public class ConnectionsWorldFragment
             moduleManager.exposeIdentityInWat();
             List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
             for(ChatActorCommunityInformation chat: result){
-                if(chat.getConnectionState().equals(ConnectionState.CONNECTED.toString())){
-                    moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
-                    dataSet.add(chat);
+                if(chat.getConnectionState()!= null){
+                    if(chat.getConnectionState().equals(ConnectionState.CONNECTED.toString())){
+                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
+                        dataSet.add(chat);
+                    }
                 }
             }
             //dataSet.addAll(result);
