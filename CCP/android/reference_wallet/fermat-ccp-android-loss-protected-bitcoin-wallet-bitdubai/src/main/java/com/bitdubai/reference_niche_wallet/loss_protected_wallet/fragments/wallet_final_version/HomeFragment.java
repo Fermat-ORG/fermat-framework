@@ -544,6 +544,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         dataset.setDrawCircles(true);
         dataset.setCircleSize(3);
         dataset.setCircleColor(Color.parseColor("#E58617"));
+        dataset.setCircleColorHole(Color.parseColor("#E58617"));
         dataset.setValueFormatter(new LargeValueFormatter());
         dataset.setDrawHighlightIndicators(false);
 
