@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -238,9 +239,6 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             //stylize the progress bar
             info_into_progress.setText(chunckPercentageSpent + "%");
             progressBar_percent.setProgress(chunckPercentageSpent);
-            progressBar_percent.setBackgroundColor(Color.BLUE);
-            progressBar_percent.setSecondaryProgress(chunckPercentageSpent-MAX_PERCENTAGE);
-
             //set data in header
             txt_chunck_detail_balance.setText(chunckAmount);
             txt_chunck_detail_exchangeRate.setText("(1 BTC = USD " + chunckExchangeRate + ")");
