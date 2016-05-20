@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.Distribution
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.exceptions.CantSendChatMessageMetadataException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.NetworkServiceChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
@@ -95,6 +96,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     ChatActorConnectionManager chatActorConnectionManager;
 
+    ChatActorCommunitySubAppModuleManager chatActorCommunityManager;
+
     private final Broadcaster broadcaster;
     public final String BROADCAST_CODE="13";
 
@@ -106,7 +109,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             DeviceUserManager deviceUserManager,
             NetworkServiceChatManager chatNetworkServiceManager,
             Broadcaster broadcaster,
-            ChatActorConnectionManager chatActorConnectionManager
+            ChatActorConnectionManager chatActorConnectionManager,
+            ChatActorCommunitySubAppModuleManager chatActorCommunityManager
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
@@ -116,6 +120,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         this.chatNetworkServiceManager = chatNetworkServiceManager;
         this.broadcaster = broadcaster;
         this.chatActorConnectionManager = chatActorConnectionManager;
+        this.chatActorCommunityManager = chatActorCommunityManager;
     }
 
     /**
@@ -1005,4 +1010,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    @Override
+    public ChatActorCommunitySubAppModuleManager getChatActorCommunityManager() {
+        return chatActorCommunityManager;
+    }
 }
