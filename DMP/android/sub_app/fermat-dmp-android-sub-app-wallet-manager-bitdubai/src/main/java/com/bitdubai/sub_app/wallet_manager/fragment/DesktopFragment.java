@@ -158,6 +158,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
             mItemTouchHelper.attachToRecyclerView(recyclerView);
 
             //adapter.setFermatListEventListener(this);
+            onRefresh();
 
         } catch(Exception ex) {
 //            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
@@ -178,7 +179,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        onRefresh();
+//        onRefresh();
     }
 
     @Override

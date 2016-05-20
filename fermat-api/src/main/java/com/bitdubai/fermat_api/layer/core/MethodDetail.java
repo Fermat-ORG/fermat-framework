@@ -4,6 +4,7 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Matias furszyfer on 2016.05.14..
@@ -18,5 +19,14 @@ public @interface MethodDetail {
     }
 
     LoopType looType();
+
+    /**
+     *  if the method take much time to the timeout, the method will be stopped and return null
+     *
+     * @return
+     */
+    long timeout() default -1;
+
+    TimeUnit timeoutUnit() default TimeUnit.SECONDS;
 
 }
