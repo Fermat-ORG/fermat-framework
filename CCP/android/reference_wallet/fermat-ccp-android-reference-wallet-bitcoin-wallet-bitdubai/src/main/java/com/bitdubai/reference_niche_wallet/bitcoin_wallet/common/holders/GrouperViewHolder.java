@@ -82,10 +82,10 @@ public class GrouperViewHolder extends ParentViewHolder {
         if(cryptoWalletTransaction.getInvolvedActor() != null){
                 photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
                 contactName = cryptoWalletTransaction.getInvolvedActor().getName();
-            }else if (cryptoWalletTransaction.getActorFromType().equals(Actors.BITCOIN_BASIC_USER)){
-                contactName = "Bitcoin Wallet Transaction";
-            }else if (cryptoWalletTransaction.getActorFromType().equals(Actors.LOSS_PROTECTED_USER)){
-                    contactName = "Loss Protected Wallet Transaction";
+            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
+                contactName = "Bitcoin Wallet";
+            }else if (cryptoWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
+                    contactName = "Loss Protected Wallet";
 
             }
 
@@ -95,13 +95,13 @@ public class GrouperViewHolder extends ParentViewHolder {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon,res,true);
                 bitmapWorkerTask.execute(photo);
-            }else if(cryptoWalletTransaction.getActorFromType() == Actors.BITCOIN_BASIC_USER){
+            }else if(cryptoWalletTransaction.getActorToType() == Actors.BITCOIN_BASIC_USER){
 
                     Picasso.with(contactIcon.getContext()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(contactIcon);
 
-            }else if(cryptoWalletTransaction.getActorFromType() == Actors.LOSS_PROTECTED_USER){
+            }else if(cryptoWalletTransaction.getActorToType() == Actors.LOSS_PROTECTED_USER){
 
-                Picasso.with(contactIcon.getContext()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(contactIcon);
+                Picasso.with(contactIcon.getContext()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(contactIcon);
 
             } else
                 Picasso.with(contactIcon.getContext()).load(R.drawable.ic_profile_male).transform(new CircleTransform()).into(contactIcon);
