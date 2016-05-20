@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.squareup.picasso.Picasso;
 
+import java.lang.ref.WeakReference;
+
 /**
  * Created by Matias Furszyfer on 2015.11.12..
  */
@@ -32,19 +34,8 @@ public class FragmentsCommons {
             if (intraUserLoginIdentity != null) {
                 if (intraUserLoginIdentity.getImage() != null) {
                     if (intraUserLoginIdentity.getImage().length > 0) {
-                        //BitmapFactory.Options options = new BitmapFactory.Options();
-                        //options.inScaled = true;
-                        //options.inSampleSize = 2;
+                           imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(activity.getResources(),intraUserLoginIdentity.getImage()));
 
-                       // BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),false);
-                        //bitmapWorkerTask.execute(intraUserLoginIdentity.getImage());
-                        imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(activity.getResources(),intraUserLoginIdentity.getImage()));
-                        //Bitmap bitmap = BitmapFactory.decodeByteArray(intraUserLoginIdentity.getProfileImage(), 0, intraUserLoginIdentity.getProfileImage().length, options);
-                        //options.inBitmap = bitmap;
-                        //Bitmap convertedBitmap = convert(bitmap, Bitmap.Config.ARGB_8888);
-                        //         Bitmap converted = bitmap.copy(Bitmap.Config.RGB_565, true);
-                        //bitmap = Bitmap.createScaledBitmap(bitmap,imageView.getMaxWidth(),imageView.getMaxHeight(),true);
-                        //imageView.setImageBitmap(bitmap);
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_male_lossp).transform(new CircleTransform()).into(imageView); //default image by param
                 }
@@ -52,6 +43,14 @@ public class FragmentsCommons {
             }else{
                 fermatTextView.setText("");
             }
+
+            fermatTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                }
+            });
 
             return view;
         }catch (OutOfMemoryError outOfMemoryError){

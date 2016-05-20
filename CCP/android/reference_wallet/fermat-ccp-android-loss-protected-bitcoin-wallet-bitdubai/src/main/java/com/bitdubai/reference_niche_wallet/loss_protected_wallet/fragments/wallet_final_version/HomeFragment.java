@@ -468,6 +468,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         makeText(getActivity(), "Oooops! Error Exception : CantLoadWalletException",
                 Toast.LENGTH_SHORT).show();
         }catch (Exception e) {
+            e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error In Graphic",
                     Toast.LENGTH_SHORT).show();

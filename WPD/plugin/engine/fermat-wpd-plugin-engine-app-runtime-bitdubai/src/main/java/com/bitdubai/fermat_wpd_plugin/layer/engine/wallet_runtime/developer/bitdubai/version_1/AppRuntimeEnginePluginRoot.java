@@ -5704,11 +5704,11 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
     }
 
 
-    private WalletNavigationStructure startFermatWalletNavigationStructure() {
+    private AppNavigationStructure startFermatWalletNavigationStructure() {
 
         Activity runtimeActivity;
         Fragment runtimeFragment;
-        WalletNavigationStructure runtimeWalletNavigationStructure;
+        AppNavigationStructure runtimeWalletNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MainMenu runtimeMainMenu;
@@ -5722,13 +5722,12 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode();
 
-        runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
-        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeWalletNavigationStructure = new AppNavigationStructure();
+
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
-        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
-        lastWalletPublicKey = publicKey;
-        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
+
+        lastAppPublicKey = publicKey;
+        navigationStructureOpen.put(publicKey, runtimeWalletNavigationStructure);
 
         runtimeActivity = new Activity();
         runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());

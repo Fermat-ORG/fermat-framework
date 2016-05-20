@@ -96,9 +96,10 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             addressIsTouch = false;
         }
     };
-  //  SettingsManager<LossProtectedWalletSettings> settingsManager;
+
     private LossProtectedWalletSettings lossProtectedWalletSettings;
     BlockchainNetworkType blockchainNetworkType;
+
 
 
     public static ContactDetailFragment newInstance() {

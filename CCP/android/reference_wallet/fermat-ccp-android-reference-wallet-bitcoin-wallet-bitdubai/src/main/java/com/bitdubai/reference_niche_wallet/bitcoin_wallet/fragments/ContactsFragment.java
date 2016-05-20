@@ -78,6 +78,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -145,6 +147,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
 
+    private ExecutorService _executor;
+
     public static ContactsFragment newInstance() {
 
         ContactsFragment f = new ContactsFragment();
@@ -160,6 +164,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
+
+        _executor = Executors.newFixedThreadPool(2);
         try {
         cryptoWallet = (CryptoWallet) appSession.getModuleManager();
         } catch (Exception e) {
@@ -339,8 +345,15 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
 
     private void onRefresh() {
         try {
-            walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-        } catch (CantGetAllWalletContactsException e) {
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+
+                }
+            });
+
+            } catch (CantGetAllWalletContactsException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         } catch (Exception e) {
