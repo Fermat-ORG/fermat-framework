@@ -333,39 +333,29 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                         }
                     }
                     if (wallet != null){
-//                        Bitmap bitmap = null;
-//
-//                        switch (wallet.getWalletName()){
-//                            case "Loss Protected Wallet":
-//                                bitmap = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.bitcoin_wallet_2);
-//                                bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
-//                                break;
-//
-//                        }
-//
-//                        byte[] walletImage = toByteArray(bitmap);
-//
-//
-//                        CryptoAddress cryptoAddress = new CryptoAddress("", CryptoCurrency.BITCOIN);
-//                        walletContact =  cryptoWallet.createWalletContactWithPhoto(
-//                                cryptoAddress,
-//                                wallet.getWalletName(),
-//                                null,
-//                                null,
-//                                Actors.DEVICE_USER,
-//                                appSession.getAppPublicKey(),
-//                                walletImage,
-//                                blockchainNetworkType
-//                        );
+                        Actors actor = Actors.LOSS_PROTECTED_USER;
 
+                        switch (wallet.getWalletName()){
+
+                            case "Bitcoin Wallet":
+                                actor = Actors.BITCOIN_BASIC_USER;
+                                break;
+                            case "Loss Protected Wallet":
+                                actor = Actors.LOSS_PROTECTED_USER;
+                                break;
+
+                            default:
+                                actor = Actors.DEVICE_USER;
+                        }
 
                         if (operator.compareTo(minSatoshis) == 1) {
                             cryptoWallet.sendToWallet(
                                     operator.longValueExact(),
-                                    walletContact.getActorPublicKey(),
+                                    appSession.getAppPublicKey(),
                                     wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
                                     notes,
-                                    Actors.DEVICE_USER,
+                                    Actors.BITCOIN_BASIC_USER,
+                                    actor,
                                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                                     ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                     blockchainNetworkType
