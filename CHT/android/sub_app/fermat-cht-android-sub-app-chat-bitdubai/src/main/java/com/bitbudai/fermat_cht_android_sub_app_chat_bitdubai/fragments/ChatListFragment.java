@@ -122,8 +122,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                         noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                         contactId.add(chat.getRemoteActorPublicKey());
                         if(chatIdentity!= null) {
-                            for (ChatActorCommunityInformation cont : chatManager
-                                    .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
+                            List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
+                            for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
                                 String pk1 = cont.getPublicKey();
                                 String pk2 = chat.getRemoteActorPublicKey();
                                 if (pk2.equals(pk1)) {
@@ -240,7 +240,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;
         try {
-            chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }

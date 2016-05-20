@@ -74,7 +74,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
             try {
-                chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 chatSettings = null;
             }
