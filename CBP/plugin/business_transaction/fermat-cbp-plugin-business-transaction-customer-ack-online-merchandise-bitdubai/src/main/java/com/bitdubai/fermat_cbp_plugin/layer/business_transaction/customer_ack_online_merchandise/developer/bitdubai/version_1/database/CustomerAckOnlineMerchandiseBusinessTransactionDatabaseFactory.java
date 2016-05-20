@@ -117,6 +117,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory impl
             incomingMoneyTable.addColumn(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             incomingMoneyTable.addColumn(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
             incomingMoneyTable.addColumn(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            incomingMoneyTable.addColumn(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             incomingMoneyTable.addIndex(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TABLE_FIRST_KEY_COLUMN);
 
