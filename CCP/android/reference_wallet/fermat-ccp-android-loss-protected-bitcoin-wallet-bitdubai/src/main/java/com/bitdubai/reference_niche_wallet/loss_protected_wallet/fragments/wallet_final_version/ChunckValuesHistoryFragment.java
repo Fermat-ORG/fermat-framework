@@ -89,7 +89,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
      */
     private List<LossProtectedWalletTransaction> lstTransaction;
     private LossProtectedWalletTransaction selectedItem;
-    private LossProtectedWalletManager moduleManager;
+
     /**
      * Executor Service
      */
@@ -432,6 +432,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             }else if(id == LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION){
 
                 setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
+
+
+                setUpPresentation(lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
 
                 return true;
             }

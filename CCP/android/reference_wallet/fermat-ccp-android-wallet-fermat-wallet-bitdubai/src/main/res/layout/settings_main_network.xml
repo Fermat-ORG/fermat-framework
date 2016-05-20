@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Select Network"
+        android:textColor="#12aca1"
+        android:textSize="17sp"
+        app:typeface="ROBOTO_REGULAR"
+        tools:ignore="HardcodedText" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="170dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/spinner_bg"
+        android:gravity="start" />
+
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Ip Adress"
+        android:textColor="#12aca1"
+        android:textSize="17sp"
+        app:typeface="ROBOTO_REGULAR"
+        tools:ignore="HardcodedText" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+        android:id="@+id/edit_text_ip_adress"
+        android:layout_width="170dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:background="#e7f7f5" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Port"
+        android:textColor="#12aca1"
+        android:textSize="17sp"
+        app:typeface="ROBOTO_REGULAR"
+        tools:ignore="HardcodedText" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+        android:id="@+id/edit_text_port"
+        android:layout_width="170dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="16dp"
+        android:background="#e7f7f5" />
+
+</LinearLayout>

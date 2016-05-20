@@ -660,7 +660,19 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         new ArrayList<InstalledLanguage>(),
                         "loss_protected_wallet_icon",
                         "Loss Protected Wallet",
-                        WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
+                        WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
+                        "wallet_platform_identifier",
+                        new Version(1,0,0),
+                        AppsStatus.DEV);
+                break;
+            case "fermat_wallet":
+                installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "reference_wallet_icon",
+                        "Fermat Wallet",
+                        WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.ALPHA);
