@@ -11,12 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
-
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by Joaquin Carrasquero on 04/05/16.
