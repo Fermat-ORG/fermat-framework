@@ -36,7 +36,7 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public interface ChatManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
+public interface ChatManager<Z> extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
     //TODO: Implementar los metodos que necesiten manejar el module
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
@@ -64,8 +64,6 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
     Message getMessageByMessageId(UUID messageId) throws CantGetMessageException;
 
     Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;
-
-    ChatActorCommunitySubAppModuleManager getChatActorCommunityManager() throws CantListChatIdentityException;
 
     void saveMessage(Message message) throws CantSaveMessageException;
 
@@ -132,4 +130,7 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
      */
     @Override
     SettingsManager<ChatPreferenceSettings> getSettingsManager();
+
+    Z getChatActorCommunityManager();
+
 }
