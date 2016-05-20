@@ -174,7 +174,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
      */
     private void insertNodesCatalog(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        if (!getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getId())) {
+        if (!getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())) {
             LOG.info("Executing method insertNodesCatalog");
 
             /*

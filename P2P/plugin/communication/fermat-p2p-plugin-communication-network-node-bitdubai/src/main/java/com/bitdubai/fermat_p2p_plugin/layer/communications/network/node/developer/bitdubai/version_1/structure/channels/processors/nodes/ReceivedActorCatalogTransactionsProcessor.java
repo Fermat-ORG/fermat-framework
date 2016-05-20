@@ -180,7 +180,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
         LOG.info("Executing method insertActorsCatalog");
 
-        if (!getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getId())) {
+        if (!getDaoFactory().getActorsCatalogDao().exists(actorsCatalogTransaction.getIdentityPublicKey())) {
 
         /*
          * Create the ActorsCatalog
