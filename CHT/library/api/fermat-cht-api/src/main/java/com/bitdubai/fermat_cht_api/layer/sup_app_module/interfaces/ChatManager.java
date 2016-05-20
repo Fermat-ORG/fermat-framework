@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -129,4 +130,7 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
      */
     @Override
     SettingsManager<ChatPreferenceSettings> getSettingsManager();
+
+    ChatActorCommunityManager getChatActorCommunityManager();
+
 }

@@ -102,9 +102,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     Broadcaster broadcaster;
 
-    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CHAT_COMMUNITY_SUP_APP_MODULE)
-    ChatActorCommunitySubAppModuleManager chatActorCommunityManager;
-
     public static EventSource EVENT_SOURCE = EventSource.MIDDLEWARE_CHAT_MANAGER;
 
     public EventManager getEventManager() {
@@ -280,8 +277,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     this.deviceUserManager,
                     this.networkServiceChatManager,
                     this.broadcaster,
-                    chatActorConnectionManager,
-                    chatActorCommunityManager
+                    chatActorConnectionManager
             );
 
             /**
