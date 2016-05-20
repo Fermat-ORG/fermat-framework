@@ -15,6 +15,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -145,24 +146,26 @@ public class OnlineComponents implements RestFulServices {
     @Produces(MediaType.APPLICATION_JSON)
     public Response isActorOnline(@PathParam("id") String identityPublicKey){
 
-        LOG.info("Executing isOnlineNs");
+        LOG.info("Executing isActorOnline");
         LOG.info("identityPublicKey = "+identityPublicKey);
 
         try {
 
-            CheckedInActor checkedInActor = daoFactory.getCheckedInActorDao().findEntityByFilter(
-                    CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
-                    identityPublicKey);
-
-            Boolean online = Boolean.TRUE;
-            LOG.info("Is online = " + online);
+            daoFactory.getCheckedInActorDao().findById(identityPublicKey);
 
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("success", Boolean.TRUE);
-            jsonObject.addProperty("isOnline",online);
+            jsonObject.addProperty("isOnline",Boolean.TRUE);
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
+        } catch (RecordNotFoundException recordNotFoundException ) {
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", Boolean.TRUE);
+            jsonObject.addProperty("isOnline",Boolean.FALSE);
+
+            return Response.status(200).entity(gson.toJson(jsonObject)).build();
         } catch (Exception e) {
 
             e.printStackTrace();

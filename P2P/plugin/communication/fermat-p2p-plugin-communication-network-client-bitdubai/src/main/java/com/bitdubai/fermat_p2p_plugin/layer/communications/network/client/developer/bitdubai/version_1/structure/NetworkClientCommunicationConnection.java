@@ -19,6 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
@@ -149,7 +150,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
 
-        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this);
+        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this, isExternalNode);
     }
 
     /*
@@ -755,34 +756,24 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                 System.out.println("NetworkClientCommunication.callActor() - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
                 eventManager.raiseEvent(actorCallConnected);
             } else {
-                System.out.println("the actor is not in the same node");
+                System.out.println("***** ACTOR CALL METHOD: the actor is not in the same node");
 
-                DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters(
-                        null, // actorType
-                        null, // alias
-                        null, // distance
-                        null, // extraData
-                        actorProfile.getIdentityPublicKey(), // IdentityPublicKey
-                        null, // location
-                        0, // max
-                        null, // name
-                        NetworkServiceType.UNDEFINED, // this is filter in the Node if was a NetworkService or an Actor who realized the request discovery
-                        0, // offset
-                        networkServiceProfile.getNetworkServiceType() // this is the NetworkService Intermediate who handle the request
+                ActorCallMsgRequest actorCallMsgRequest = new ActorCallMsgRequest(
+                        networkServiceProfile.getNetworkServiceType(),
+                        actorProfile
                 );
 
-                CheckInProfileDiscoveryQueryMsgRequest checkInProfileDiscoveryQueryMsgRequest = new CheckInProfileDiscoveryQueryMsgRequest(discoveryQueryParameters);
-                checkInProfileDiscoveryQueryMsgRequest.setMessageContentType(MessageContentType.JSON);
+                System.out.println("***** ACTOR CALL METHOD:  SENDING ACTOR CALL REQUEST TO NODE");
 
                 try {
 
-                    sendPackage(checkInProfileDiscoveryQueryMsgRequest, PackageType.ACTOR_CALL_REQUEST);
+                    sendPackage(actorCallMsgRequest, PackageType.ACTOR_CALL_REQUEST);
 
                 } catch (CantSendPackageException cantSendPackageException) {
 
-                    CantRequestProfileListException fermatException = new CantRequestProfileListException(
+                    CantSendPackageException fermatException = new CantSendPackageException(
                             cantSendPackageException,
-                            "discoveryQueryParameters:" + discoveryQueryParameters,
+                            "actorCallMsgRequest:" + actorCallMsgRequest,
                             "Cant send package."
                     );
 

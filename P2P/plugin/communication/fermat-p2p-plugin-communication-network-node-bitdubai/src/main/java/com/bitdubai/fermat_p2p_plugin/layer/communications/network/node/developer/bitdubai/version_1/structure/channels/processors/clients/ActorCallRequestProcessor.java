@@ -1,10 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorCallMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
@@ -14,7 +13,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Mess
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
@@ -24,10 +22,6 @@ import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
@@ -65,76 +59,36 @@ public class ActorCallRequestProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        LOG.info("Processing new package received");
+        LOG.info("Processing new package received "+packageReceived.getPackageType());
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        List<ResultDiscoveryTraceActor> profileList = null;
-        NetworkServiceType networkServiceTypeIntermediate = null;
 
         try {
 
-            CheckInProfileDiscoveryQueryMsgRequest messageContent = CheckInProfileDiscoveryQueryMsgRequest.parseContent(packageReceived.getContent());
+            System.out.println("***** ACTOR CALL REQUEST PROCESSOR: ENTERING IN TRY");
+
+            ActorCallMsgRequest messageContent = ActorCallMsgRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
              */
-            methodCallsHistory(getGson().toJson(messageContent.getDiscoveryQueryParameters()), destinationIdentityPublicKey);
+            methodCallsHistory(getGson().toJson(messageContent.getActorTo())+getGson().toJson(messageContent.getNetworkServiceType()), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct
              */
             if (messageContent.getMessageContentType() == MessageContentType.JSON) {
 
-                /*
-                 * Get the parameters to filters
-                 */
-                DiscoveryQueryParameters discoveryQueryParameters = messageContent.getDiscoveryQueryParameters();
+                System.out.println("***** ACTOR CALL REQUEST PROCESSOR: MESSAGE IS JSON TYPE");
 
-                /*
-                 * get the NetworkServiceIntermediate
-                 */
-                networkServiceTypeIntermediate = discoveryQueryParameters.getNetworkServiceTypeIntermediate();
-
-                /*
-                 * Validate if a network service search
-                 */
-                if (discoveryQueryParameters.getNetworkServiceType() == null){
-
-                    /*
-                     * Find in the data base
-                     */
-                    profileList = filterActors(discoveryQueryParameters);
-
-                    if(profileList != null && profileList.size() == 0)
-                        throw new Exception("Not Found row in the Table");
-
-                }
-
-                /*
-                 * Apply pagination
-                 */
-                if ((discoveryQueryParameters.getMax() != 0) && (discoveryQueryParameters.getOffset() != 0)){
-
-                    /*
-                     * Apply pagination
-                     */
-                    if (profileList.size() > discoveryQueryParameters.getMax() &&
-                            profileList.size() > discoveryQueryParameters.getOffset()){
-                        profileList =  profileList.subList(discoveryQueryParameters.getOffset(), discoveryQueryParameters.getMax());
-                    }else if (profileList.size() > 100) {
-                        profileList = profileList.subList(discoveryQueryParameters.getOffset(), 100);
-                    }
-
-                }else if (profileList.size() > 100) {
-                    profileList = profileList.subList(0, 100);
-                }
+                ResultDiscoveryTraceActor traceActor = getActor(messageContent.getActorTo().getIdentityPublicKey());
 
                 /*
                  * If all ok, respond whit success message
                  */
-                ActorsProfileListMsgRespond actorsProfileListMsgRespond = new ActorsProfileListMsgRespond(ActorsProfileListMsgRespond.STATUS.SUCCESS, ActorsProfileListMsgRespond.STATUS.SUCCESS.toString(), profileList, networkServiceTypeIntermediate);
-                Package packageRespond = Package.createInstance(actorsProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(messageContent.getNetworkServiceType(), traceActor, ActorCallMsgRespond.STATUS.SUCCESS, ActorCallMsgRespond.STATUS.SUCCESS.toString());
+                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -152,8 +106,8 @@ public class ActorCallRequestProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                ActorsProfileListMsgRespond actorsProfileListMsgRespond = new ActorsProfileListMsgRespond(ActorsProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileList, networkServiceTypeIntermediate);
-                Package packageRespond = Package.createInstance(actorsProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                ActorCallMsgRespond actorCallMsgRespond = new ActorCallMsgRespond(null, null, ActorsProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage());
+                Package packageRespond = Package.createInstance(actorCallMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ACTOR_CALL_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -174,17 +128,12 @@ public class ActorCallRequestProcessor extends PackageProcessor {
      * Filter all network service from data base that mach
      * with the parameters
      *
-     * @param discoveryQueryParameters
-     * @return List<ActorProfile>
+     * @param publicKey
+     * @return ActorProfile
      */
-    private List<ResultDiscoveryTraceActor> filterActors(DiscoveryQueryParameters discoveryQueryParameters) throws CantReadRecordDataBaseException, InvalidParameterException {
+    private ResultDiscoveryTraceActor getActor(String publicKey) throws CantReadRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
-        List<ResultDiscoveryTraceActor> profileList = new ArrayList<>();
-
-        Map<String, Object> filters = constructFiltersActorTable(discoveryQueryParameters);
-        List<ActorsCatalog> actors = getDaoFactory().getActorsCatalogDao().findAll(filters);
-
-        for (ActorsCatalog actorsCatalog : actors) {
+        ActorsCatalog actorsCatalog = getDaoFactory().getActorsCatalogDao().findById(publicKey);
 
             ActorProfile actorProfile = new ActorProfile();
             actorProfile.setIdentityPublicKey(actorsCatalog.getIdentityPublicKey());
@@ -214,47 +163,10 @@ public class ActorCallRequestProcessor extends PackageProcessor {
                 nodeProfile.setIp(nodesCatalog.getIp());
                 nodeProfile.setDefaultPort(nodesCatalog.getDefaultPort());
 
-                ResultDiscoveryTraceActor resultDiscoveryTraceActor = new ResultDiscoveryTraceActor(nodeProfile, actorProfile);
-                profileList.add(resultDiscoveryTraceActor);
-
+                return new ResultDiscoveryTraceActor(nodeProfile, actorProfile);
             }
 
-        }
-
-        return profileList;
-    }
-
-    /**
-     * Construct data base filter from discovery query parameters
-     *
-     * @param discoveryQueryParameters
-     * @return Map<String, Object> filters
-     */
-    private Map<String, Object> constructFiltersActorTable(DiscoveryQueryParameters discoveryQueryParameters){
-
-        Map<String, Object> filters = new HashMap<>();
-
-        if (discoveryQueryParameters.getIdentityPublicKey() != null){
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME, discoveryQueryParameters.getIdentityPublicKey());
-        }
-
-        if (discoveryQueryParameters.getName() != null){
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME, discoveryQueryParameters.getName());
-        }
-
-        if (discoveryQueryParameters.getAlias() != null){
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME, discoveryQueryParameters.getAlias());
-        }
-
-        if (discoveryQueryParameters.getActorType() != null){
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ACTOR_TYPE_COLUMN_NAME, discoveryQueryParameters.getActorType());
-        }
-
-        if (discoveryQueryParameters.getExtraData() != null){
-            filters.put(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME, discoveryQueryParameters.getExtraData());
-        }
-
-        return filters;
+        return null;
     }
 
 }

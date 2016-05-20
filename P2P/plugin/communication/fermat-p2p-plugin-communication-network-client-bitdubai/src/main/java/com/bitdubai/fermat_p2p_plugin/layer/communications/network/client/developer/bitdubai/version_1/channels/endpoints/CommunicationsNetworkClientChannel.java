@@ -89,20 +89,8 @@ public class CommunicationsNetworkClientChannel {
 
     private EventManager eventManager  ;
 
-    public CommunicationsNetworkClientChannel(final NetworkClientCommunicationConnection connection) {
-
-        this.eventManager = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
-
-        this.connection        = connection     ;
-
-        this.packageProcessors = new HashMap<>();
-        this.isRegistered      = Boolean.FALSE  ;
-
-        initPackageProcessorsRegistration();
-    }
-
-    public CommunicationsNetworkClientChannel(final NetworkClientCommunicationConnection connection,
-                                              final Boolean                              isExternalNode         ) {
+    public CommunicationsNetworkClientChannel(final NetworkClientCommunicationConnection connection    ,
+                                              final Boolean                              isExternalNode) {
 
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
 
