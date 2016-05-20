@@ -45,6 +45,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -145,6 +146,11 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     @Override
     public Message newEmptyInstanceMessage() throws CantNewEmptyMessageException {
         return middlewareChatManager.newEmptyInstanceMessage();
+    }
+
+    @Override
+    public ChatActorCommunitySubAppModuleManager getChatActorCommunityManager() throws CantListChatIdentityException {
+        return middlewareChatManager.getChatActorCommunityManager();
     }
 
     @Override
