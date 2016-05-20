@@ -156,11 +156,6 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
     }
 
     @Override
-    public ChatActorCommunitySubAppModuleManager getChatActorCommunityManager() throws CantListChatIdentityException {
-        return middlewareChatManager.getChatActorCommunityManager();
-    }
-
-    @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
         System.out.println("*** 12345 case 2:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
         middlewareChatManager.saveMessage(message);
