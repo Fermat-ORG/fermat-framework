@@ -173,7 +173,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
-                .setIcon(R.drawable.help_icon)
+                .setIcon(R.drawable.ic_menu_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
