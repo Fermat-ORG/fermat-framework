@@ -2,11 +2,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
-
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededIndirectPluginReferences;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.moduleManagerInterfacea;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
@@ -14,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -30,14 +28,11 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.inte
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.TransferIntraWalletUsersManager;
-
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
-
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.structure.LossProtectedWalletModuleManager;
@@ -219,14 +214,14 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
     }
 
 
-    private SettingsManager<LossProtectedWalletSettings> settingsManager;
 
     LossProtectedWalletModuleManager walletModuleLossProtectedWallet = null;
     @Override
+    @moduleManagerInterfacea(moduleManager = LossProtectedWalletModuleManager.class)
     public ModuleManager<LossProtectedWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         try {
 
-            logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "LossProtectedWallet instantiation started...", null, null);
+           // logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "LossProtectedWallet instantiation started...", null, null);
 
             if(walletModuleLossProtectedWallet == null) {
                 walletModuleLossProtectedWallet = new LossProtectedWalletModuleManager(
@@ -253,7 +248,7 @@ public class LossProtectedWalletModulePluginRoot  extends AbstractModule<LossPro
 
             walletModuleLossProtectedWallet.initialize();
 
-            logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
+           // logManager.log(LossProtectedWalletModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
 
             return walletModuleLossProtectedWallet;
         } catch (final Exception e) {

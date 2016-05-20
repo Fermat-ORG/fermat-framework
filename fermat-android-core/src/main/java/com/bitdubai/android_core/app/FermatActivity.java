@@ -44,7 +44,7 @@ import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
 
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
@@ -427,18 +427,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                      * Set header
                      */
                     FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter,appConnections.getActiveIdentity());
-                    assert frameLayout != null;
-                    frameLayout.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (viewPainter.hasClickListener())
-                                try {
-                                    selectApp("public_key_ccp_intra_user_identity");
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                        }
-                    });
                     /**
                      * Set adapter
                      */
@@ -1327,7 +1315,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 if (bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)) {
                     String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
                     if (activityCode != null)
-                        ApplicationSession.getInstance().getAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
+                        try {
+                            ApplicationSession.getInstance().getAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
+                        } catch (IllegalArgumentException e) {
+                            Log.e(TAG,"Error: illegalArgumentException, Activity code: "+activityCode+" not founded in App: "+fermatApp.getAppName());
+                        }
                 }
             }
             return createOrOpenApp(fermatApp);

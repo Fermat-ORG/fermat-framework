@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.lang.ref.WeakReference;

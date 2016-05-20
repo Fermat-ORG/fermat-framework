@@ -99,7 +99,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         doNothing().when(dao).markEarningTransactionAsExtracted(any(UUID.class));
 
-        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
+        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager, dao);
         transaction.addEarningExtractor(new BankEarningExtractor(bankMoneyDestockManager));
         transaction.addEarningExtractor(new CashEarningExtractor(cashMoneyDestockManager));
         transaction.addEarningExtractor(new CryptoEarningExtractor(cryptoMoneyDestockManager));
@@ -593,7 +593,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 EarningPairState.ASSOCIATED,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
-        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
+        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager, dao);
 
         // exercise
         catchException(transaction).extractEarnings(earningsPair, earningTransactions);

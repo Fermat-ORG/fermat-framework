@@ -16,7 +16,7 @@ import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.
 public class AssetIssuerCommunityPluginSubsystem extends AbstractPluginSubsystem {
 
     public AssetIssuerCommunityPluginSubsystem() {
-        super(new PluginReference(Plugins.ASSET_ISSUER));
+        super(new PluginReference(Plugins.ASSET_ISSUER_COMMUNITY));
     }
 
     @Override

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArti
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ import java.util.UUID;
  */
 public interface ArtistIdentityManagerModule
         extends ModuleManager<ArtistIdentitySettings,ActiveActorIdentityInformation>,
-        ModuleSettingsImpl<ArtistIdentitySettings> {
+        ModuleSettingsImpl<ArtistIdentitySettings>, Serializable {
 
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist

@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.receivers.UpdateViewReceiver;
 import com.bitdubai.android_core.app.common.version_1.util.interfaces.BroadcasterInterface;
