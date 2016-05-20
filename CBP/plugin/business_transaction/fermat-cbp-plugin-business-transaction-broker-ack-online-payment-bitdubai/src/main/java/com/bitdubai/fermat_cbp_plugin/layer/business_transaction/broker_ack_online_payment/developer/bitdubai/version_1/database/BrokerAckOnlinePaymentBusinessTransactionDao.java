@@ -306,7 +306,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
+//            checkDatabaseRecords(records);
             String value = records
                     .get(0)
                     .getStringValue(
@@ -725,16 +725,18 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME),
                     record.getLongValue(
-                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME),
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME),
                     CryptoCurrency.getByCode(
                             record.getStringValue(
                                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME)),
                     record.getStringValue(
-                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME),
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME),
                     record.getLongValue(
-                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME)
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME)
             );
             return incomingMoneyEventWrapper;
         } catch (CantLoadTableToMemoryException e) {
@@ -1243,7 +1245,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
+//            checkDatabaseRecords(records);
             DatabaseTableRecord record = records.get(0);
             record.setStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
@@ -1318,15 +1320,20 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
-            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
-            long unixTime = System.currentTimeMillis();
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
-            eventRecord.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
-            databaseTable.insertRecord(eventRecord);
+
+            if(!eventExists(eventId)) {
+//                throw new UnexpectedResultReturnedFromDatabaseException("Cant Save New Event Broker Ack Payment Transaction, Event Id exists.");
+
+                DatabaseTable databaseTable = getDatabaseEventsTable();
+                DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+                long unixTime = System.currentTimeMillis();
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+                eventRecord.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+                databaseTable.insertRecord(eventRecord);
+            }
 
         } catch (CantInsertRecordException exception) {
             pluginRoot.reportError(
@@ -1374,6 +1381,25 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         }
     }
 
+
+    private boolean eventExists(String eventId) throws CantSaveEventException {
+
+        try {
+
+            DatabaseTable table = getDatabaseEventsTable();
+
+            table.addStringFilter(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantSaveEventException(em.getMessage(), em, "Broker Ack Online Payment Transaction Event Id Not Exists", "Cant load " + BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantSaveEventException(e.getMessage(), FermatException.wrapException(e), "Broker Ack Online Payment Transaction Event Id Not Exists", "unknown failure.");
+        }
+
+    }
+
     /**
      * This method save an incoming money event in database. You can set the event Id with this method
      *
@@ -1415,8 +1441,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 incomingMoneyEventWrapper.getCryptoAmount());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME,
-                incomingMoneyEventWrapper.getCryptoCurrency().getCode()
-        );
+                incomingMoneyEventWrapper.getCryptoCurrency().getCode());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME,
                 incomingMoneyEventWrapper.getSenderPublicKey());
@@ -1424,12 +1449,14 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
                 EventStatus.PENDING.getCode());
         record.setStringValue(
-                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                incomingMoneyEventWrapper.getWalletPublicKey()
-        );
-        record.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getWalletPublicKey());
+        record.setLongValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME,
                 incomingMoneyEventWrapper.getTimestamp());
-
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME,
+                incomingMoneyEventWrapper.getTransactionHash());
         return record;
 
     }
@@ -1458,7 +1485,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             if (records.isEmpty()) {
                 return 0;
             }
-            checkDatabaseRecords(records);
+//            checkDatabaseRecords(records);
             long completionDate = records
                     .get(0)
                     .getLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
