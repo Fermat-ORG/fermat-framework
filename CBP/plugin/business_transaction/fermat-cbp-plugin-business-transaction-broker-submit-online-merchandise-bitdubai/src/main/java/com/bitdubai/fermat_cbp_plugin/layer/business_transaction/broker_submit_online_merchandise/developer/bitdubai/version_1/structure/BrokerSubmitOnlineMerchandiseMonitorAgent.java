@@ -499,6 +499,8 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             event.setActorId(record.getCustomerPublicKey());
             event.setSource(EventSource.BROKER_SUBMIT_ONLINE_MERCHANDISE);
             event.setActorType(Actors.CBP_CRYPTO_CUSTOMER);
+            //TODO YORDIN: add of the contractHash in the setTransactionHash()
+            event.setTransactionHash(record.getContractHash());
             eventManager.raiseEvent(event);
         }
 
