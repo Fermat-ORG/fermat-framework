@@ -436,7 +436,8 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = this.loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode());
+            //appSettings = this.chatActorCommunitySubAppModuleManager.loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             appSettings = null;
