@@ -32,6 +32,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -248,11 +249,6 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
-        try{
-            moduleManager.exposeIdentityInWat();
-        }catch (Exception ex){
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
-        }
 
         if (!isRefreshing) {
             isRefreshing = true;
@@ -338,8 +334,13 @@ public class ConnectionsWorldFragment
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
+            moduleManager.exposeIdentityInWat();
             List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
-            dataSet.addAll(result);
+            for(ChatActorCommunityInformation chat: result){
+                if(chat.getConnectionState().equals(ConnectionState.CONNECTED.toString()))
+                    dataSet.add(chat);
+            }
+            //dataSet.addAll(result);
             offset = dataSet.size();
         } catch (Exception e) {
             //Toast.makeText(getActivity(), "No Chat Identity Created",
