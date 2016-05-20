@@ -46,7 +46,6 @@ public class ArtistIdentityPluginRoot extends AbstractModule<ArtistIdentitySetti
 
     private void initPluginManager(){
         this.moduleArtistIdentityManager = new ModuleArtistIdentityManager(
-                errorManager,
                 artistIdentityManager,
                 pluginFileSystem,
                 pluginId);

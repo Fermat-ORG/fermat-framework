@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -23,7 +21,6 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentitySettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -38,14 +35,12 @@ public class ModuleArtistIdentityManager
         implements ArtistIdentityManagerModule,Serializable {
 
     private final ArtistIdentityManager artistIdentityManager;
-    private final ErrorManager errorManager;
 
-    public ModuleArtistIdentityManager(ErrorManager errorManager,
+    public ModuleArtistIdentityManager(
                                        ArtistIdentityManager artistIdentityManager,
                                        PluginFileSystem pluginFileSystem,
                                        UUID pluginId) {
         super(pluginFileSystem, pluginId);
-        this.errorManager = errorManager;
         this.artistIdentityManager = artistIdentityManager;
 
     }
@@ -134,8 +129,27 @@ public class ModuleArtistIdentityManager
     }*/
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+    public ActiveActorIdentityInformation getSelectedActorIdentity()
+            throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try{
+            List<Artist> artistList = artistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Artist fanatic;
+            if(artistList!=null||!artistList.isEmpty()){
+                fanatic = artistList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(fanatic);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListArtistIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
     }
 
     @Override

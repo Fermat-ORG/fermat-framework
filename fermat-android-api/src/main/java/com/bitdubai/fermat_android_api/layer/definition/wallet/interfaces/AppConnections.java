@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces;
 
 import android.content.Context;
+
+import com.bitdubai.fermat_android_api.engine.ApplicationManager;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -67,5 +70,20 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
     public NotificationPainter getNotificationPainter(String code){
         return null;
+    }
+
+
+
+
+    protected void changeApp(String appPublicKey) throws Exception {
+        getApplicationManager().changeApp(appPublicKey);
+    }
+
+    protected void goHome(){
+        getApplicationManager().goHome();
+    }
+
+    private ApplicationManager getApplicationManager(){
+        return ((FermatApplicationSession)activity.get()).getApplicationManager();
     }
 }

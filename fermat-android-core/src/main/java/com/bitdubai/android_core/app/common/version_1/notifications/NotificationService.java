@@ -15,7 +15,7 @@ import android.widget.RemoteViews;
 
 import com.bitdubai.android_core.app.AppActivity;
 import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
@@ -91,8 +91,13 @@ public class NotificationService extends Service {
             if (notificationPainter != null) {
                 if(notificationPainter.showNotification()) {  //get if notification settings enabled view
                     RemoteViews remoteViews = notificationPainter.getNotificationView(code);
-                    Intent intent = new Intent(this,AppActivity.class);
+                    Intent intent = new Intent();
                     intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    intent.setAction("org.fermat.APP_LAUNCHER");
+                    //Intent intent = new Intent(this,AppActivity.class);
+                    //intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, publicKey);
                     intent.putExtra(ApplicationConstants.ACTIVITY_CODE_TO_OPEN,notificationPainter.getActivityCodeResult());
                     intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     PendingIntent pi = PendingIntent
