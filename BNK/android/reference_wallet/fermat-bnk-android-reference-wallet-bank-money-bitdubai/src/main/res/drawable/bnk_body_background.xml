@@ -11,7 +11,7 @@
                 android:type="linear" />
         </shape>
     </item>
-    <item>
+    <item android:top="-100dp">
         <bitmap android:src="@drawable/bw_reflex_image"></bitmap>
     </item>
 </layer-list>
