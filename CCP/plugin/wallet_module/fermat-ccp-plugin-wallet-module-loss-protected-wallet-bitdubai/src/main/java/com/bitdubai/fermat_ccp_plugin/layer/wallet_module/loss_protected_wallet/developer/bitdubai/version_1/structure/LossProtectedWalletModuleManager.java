@@ -2103,7 +2103,6 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        if(!bitcoinWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
                             if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER){
                                 involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
 
@@ -2116,48 +2115,16 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                                     walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
 
                                 }
-                            }else if(bitcoinWalletTransaction.getActorFromType() == Actors.LOSS_PROTECTED_USER){
+                            }else {
 
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                                involvedActor = null;
 
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                                walletContactRecord = null;
 
-                                if(involvedActor==null)
-                                {
-                                    involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                                    walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                                }
-                            }else if(bitcoinWalletTransaction.getActorFromType() == Actors.BITCOIN_BASIC_USER){
-
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
-                                if(involvedActor==null)
-                                {
-                                    involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                                    walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                                }
-
-                            }else{
-                            involvedActor = null;
-                            walletContactRecord = null;
                             }
 
 
-
-                        }else{
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
-                        }
-
-                         if (walletContactRecord != null)
+                        if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
                     } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
@@ -2172,8 +2139,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                     break;
                 case DEBIT:
                     try {
-                        if(!bitcoinWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)) {
-                            if (!bitcoinWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)) {
+                            if (bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
                                 involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
                                 walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
 
@@ -2183,43 +2149,13 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                                     walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
 
                                 }
-                            }else if(bitcoinWalletTransaction.getActorFromType() == Actors.LOSS_PROTECTED_USER){
+                            }else {
 
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                                if(involvedActor==null)
-                                {
-                                    involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                                    walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
-                                }
-                            }else if(bitcoinWalletTransaction.getActorFromType() == Actors.BITCOIN_BASIC_USER){
-
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                                if(involvedActor==null)
-                                {
-                                    involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                                    walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
-                                }
-
-                            }else{
                                 involvedActor = null;
+
                                 walletContactRecord = null;
+
                             }
-                        }else{
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
-                        }
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
 
@@ -2239,20 +2175,6 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
     private Actor getActorByActorPublicKeyAndType(String actorPublicKey, Actors actorType, String intraUserLoggedInPublicKey) throws CantGetLossProtectedActorException {
         Actor actor;
         switch (actorType) {
-            case BITCOIN_BASIC_USER:
-                try {
-                    actor = extraUserManager.getActorByPublicKey(actorPublicKey);
-                    return actor;
-                } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                    throw new CantGetLossProtectedActorException(CantGetLossProtectedActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
-                }
-            case LOSS_PROTECTED_USER:
-                try {
-                    actor = extraUserManager.getActorByPublicKey(actorPublicKey);
-                    return actor;
-                } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                    throw new CantGetLossProtectedActorException(CantGetLossProtectedActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
-                }
             case EXTRA_USER:
                 try {
                     actor = extraUserManager.getActorByPublicKey(actorPublicKey);

@@ -42,10 +42,6 @@ public class SpecialistSelector {
             switch (cryptoAddressBookRecord.getDeliveredToActorType()) {
                 case DEVICE_USER:
                     return Specialist.DEVICE_USER_SPECIALIST;
-                case LOSS_PROTECTED_USER:
-                    return Specialist.LOSS_PROTECTED_USER_SPECIALIST;
-                case BITCOIN_BASIC_USER:
-                    return Specialist.BITCOIN_WALLET_USER_SPECIALIST;
                 case INTRA_USER:
                     return Specialist.INTRA_USER_SPECIALIST;
                 case EXTRA_USER:
