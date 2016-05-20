@@ -147,7 +147,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(), 4, LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
-            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP);
+            adapter = new DesktopAdapter(getActivity(), lstItems,this,DesktopAdapter.DEKSTOP,getScreenSize());
             recyclerView.setAdapter(adapter);
             rootView.setBackgroundColor(Color.TRANSPARENT);
 
@@ -565,10 +565,10 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,Reso
                     }else {
                         FolderDialog folderDialog = null;
                         if(Build.VERSION.SDK_INT>Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus());
+                            folderDialog = new FolderDialog(getActivity(), R.style.AppThemeDialog, appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus(),getScreenSize());
                             folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                         }else{
-                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus());
+                            folderDialog = new FolderDialog(getActivity(), appSession, null, data.getName(), ((FermatFolder) data.getInterfaceObject()).getLstFolderItems(), this,((FermatActivityManager)getActivity()).getAppStatus(),getScreenSize());
 
                         }
                         folderDialog.show();
