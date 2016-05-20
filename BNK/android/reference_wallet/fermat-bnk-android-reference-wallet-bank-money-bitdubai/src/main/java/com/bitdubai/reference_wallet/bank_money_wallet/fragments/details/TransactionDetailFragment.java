@@ -119,7 +119,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         else
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
 
-        getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
+        //getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
 
