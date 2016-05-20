@@ -343,20 +343,30 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
         private void checkPendingMoneyEvents(String eventId) throws IncomingOnlineMerchandiseException, CantUpdateRecordException {
 
-            try {
-                final IncomingMoneyEventWrapper incomingMoneyEventWrapper = customerAckOnlineMerchandiseBusinessTransactionDao.
-                        getIncomingMoneyEventWrapper(eventId);
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper;
+            BusinessTransactionRecord businessTransactionRecord;
+            long contractCryptoAmount;
+            long incomingCryptoAmount;
+            String contractHash;
+            String receiverActorPublicKey;
+            String expectedActorPublicKey;
 
-                final String senderPublicKey = incomingMoneyEventWrapper.getSenderPublicKey();
-                final BusinessTransactionRecord businessTransactionRecord = customerAckOnlineMerchandiseBusinessTransactionDao.
-                        getBusinessTransactionRecordByBrokerPublicKey(senderPublicKey);
+            try {
+                incomingMoneyEventWrapper = customerAckOnlineMerchandiseBusinessTransactionDao.getIncomingMoneyEventWrapper(eventId);
+
+                contractHash = incomingMoneyEventWrapper.getTransactionHash();
+                businessTransactionRecord = customerAckOnlineMerchandiseBusinessTransactionDao.getBusinessTransactionRecordByContractHash(contractHash);
+
+//                final String senderPublicKey = incomingMoneyEventWrapper.getSenderPublicKey();
+//                final BusinessTransactionRecord businessTransactionRecord = customerAckOnlineMerchandiseBusinessTransactionDao.
+//                        getBusinessTransactionRecordByBrokerPublicKey(senderPublicKey);
 
                 if (businessTransactionRecord == null)
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.
 
-                final String contractHash = businessTransactionRecord.getContractHash();
-                long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
-                long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
+//                final String contractHash = businessTransactionRecord.getContractHash();
+                incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
+                contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
                 //TODO:fix this
                 incomingCryptoAmount = 0;
                 contractCryptoAmount = 0;
@@ -364,8 +374,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     throw new IncomingOnlineMerchandiseException("The incoming crypto amount received is " + incomingCryptoAmount +
                             "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
 
-                final String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
-                final String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
+                receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
+                expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
                 if (!receiverActorPublicKey.equals(expectedActorPublicKey))
                     throw new IncomingOnlineMerchandiseException("The actor public key that receive the money is " + receiverActorPublicKey +
                             "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);
