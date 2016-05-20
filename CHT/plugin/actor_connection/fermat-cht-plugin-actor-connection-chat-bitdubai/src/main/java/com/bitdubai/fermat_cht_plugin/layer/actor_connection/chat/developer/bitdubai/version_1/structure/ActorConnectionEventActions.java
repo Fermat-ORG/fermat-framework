@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -141,7 +142,16 @@ public class ActorConnectionEventActions {
                     request.getDestinationPublicKey(),
                     Actors.CHAT
             );
-            final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+
+//            ActorConnection actorConnectionCache = dao.chatActorConnectionExists(linkedIdentity,request.getSenderPublicKey());
+            ConnectionState connectionState = null;
+//            if(actorConnectionCache!=null)
+//                connectionState = actorConnectionCache.getConnectionState();
+//
+//            if(connectionState != null && connectionState.equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE))
+//                connectionState = ConnectionState.CONNECTED;
+//            else
+                connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
                     request.getRequestId(),
@@ -157,7 +167,8 @@ public class ActorConnectionEventActions {
             switch (request.getSenderActorType()) {
                 case CHAT:
 
-                    dao.registerChatActorConnection(actorConnection);
+                    ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, request.getSenderPublicKey());
+                    dao.registerChatActorConnection(actorConnection,oldActorConnection);
 
                     chatNetworkService.confirm(request.getRequestId());
                     break;

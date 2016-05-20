@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -82,7 +83,21 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
                     actorSending.getActorType()
             );
 
-            final ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+//            ActorConnection actorConnectionCache = dao.chatActorConnectionExists(linkedIdentity,actorReceiving.getPublicKey());
+            ConnectionState connectionState = null;
+//            if(actorConnectionCache!=null)
+//            connectionState = actorConnectionCache.getConnectionState();
+//
+//            if(connectionState != null && connectionState.equals(ConnectionState.PENDING_LOCALLY_ACCEPTANCE))
+//                connectionState = ConnectionState.CONNECTED;
+//            else
+
+            ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, actorReceiving.getPublicKey());
+            if(!oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED))
+                connectionState = ConnectionState.CONNECTED;
+            else connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+
+
             final long currentTime = System.currentTimeMillis();
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
@@ -99,7 +114,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             /**
              * I register the actor connection.
              */
-            dao.registerChatActorConnection(actorConnection);
+            if(!dao.registerChatActorConnection(actorConnection,oldActorConnection)) return;
 
             final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
                     newConnectionId,
