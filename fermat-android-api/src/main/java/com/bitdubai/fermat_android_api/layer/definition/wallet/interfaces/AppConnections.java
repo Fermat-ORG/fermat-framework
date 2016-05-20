@@ -75,11 +75,11 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
 
 
 
-    protected void changeApp(String appPublicKey) throws Exception {
+    public void changeApp(String appPublicKey) throws Exception {
         getApplicationManager().changeApp(appPublicKey);
     }
 
-    protected void goHome(){
+    public void goHome(){
         getApplicationManager().goHome();
     }
 
