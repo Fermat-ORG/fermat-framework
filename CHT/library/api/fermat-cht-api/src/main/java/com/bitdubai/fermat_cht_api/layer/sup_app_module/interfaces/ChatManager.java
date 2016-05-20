@@ -65,6 +65,8 @@ public interface ChatManager<Z> extends ModuleManager<ChatPreferenceSettings, Ac
 
     Message newEmptyInstanceMessage() throws CantNewEmptyMessageException;
 
+    ChatActorCommunitySubAppModuleManager getChatActorCommunityManager() throws CantListChatIdentityException;
+
     void saveMessage(Message message) throws CantSaveMessageException;
 
     void deleteMessage(Message message) throws CantDeleteMessageException;
