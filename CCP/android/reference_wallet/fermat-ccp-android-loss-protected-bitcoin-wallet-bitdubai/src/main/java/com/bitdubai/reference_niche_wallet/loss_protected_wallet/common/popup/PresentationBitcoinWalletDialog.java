@@ -37,6 +37,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
+    public static final int TYPE_CHUNCK_HELP=3;
 
     private final Activity activity;
     private final int type;
@@ -128,6 +129,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
                 return R.layout.loss_presentation_wallet;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                 return R.layout.loss_presentation_bitcoin_wallet_without_identities;
+            case TYPE_CHUNCK_HELP:
+                return R.layout.loss_chunk_help_dialog;
         }
         return 0;
     }
