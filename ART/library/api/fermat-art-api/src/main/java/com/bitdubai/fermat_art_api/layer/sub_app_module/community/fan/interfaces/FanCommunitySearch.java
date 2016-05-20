@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces;
 
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanSearchResult;
 
 import java.io.Serializable;
@@ -21,5 +22,5 @@ public interface FanCommunitySearch extends Serializable {
      * @return
      * @throws CantGetFanSearchResult
      */
-    List<FanCommunityInformation> getResult() throws CantGetFanSearchResult;
+    List<FanCommunityInformation> getResult(ActorSearch actorSearch) throws CantGetFanSearchResult;
 }

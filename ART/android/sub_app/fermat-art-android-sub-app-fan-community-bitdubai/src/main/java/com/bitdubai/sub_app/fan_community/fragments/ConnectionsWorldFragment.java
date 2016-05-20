@@ -64,7 +64,7 @@ public class ConnectionsWorldFragment extends
     //Managers
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<FanCommunitySettings> settingsManager;
+    //private SettingsManager<FanCommunitySettings> settingsManager;
 
     //Data
     private FanCommunitySettings appSettings;
@@ -102,7 +102,7 @@ public class ConnectionsWorldFragment extends
             //Get managers
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = moduleManager.getSettingsManager();
+            //settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
 
@@ -110,9 +110,9 @@ public class ConnectionsWorldFragment extends
             appSettings = null;
             try {
                 if (appSession.getAppPublicKey()!= null){
-                    appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                    appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = settingsManager.loadAndGetSettings("123456789");
+                    appSettings = moduleManager.loadAndGetSettings("123456789");
                 }
 
             } catch (Exception e) {
@@ -122,11 +122,11 @@ public class ConnectionsWorldFragment extends
             if (appSettings == null) {
                 appSettings = new FanCommunitySettings();
                 appSettings.setIsPresentationHelpEnabled(false);
-                if(settingsManager != null){
+                if(moduleManager != null){
                     if (appSession.getAppPublicKey()!=null){
-                        settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        settingsManager.persistSettings("123456789", appSettings);
+                        moduleManager.persistSettings("123456789", appSettings);
                     }
                 }
             }

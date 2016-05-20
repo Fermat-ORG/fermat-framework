@@ -63,6 +63,7 @@ public class ConnectionOtherProfileFragment extends
     private Button cancel;
     private Button accept;
     private List<FanActorConnection> actorConnectionList;
+    private UUID requestedActorConnectionId;
 
     /**
      * Create a new instance of this fragment
@@ -127,12 +128,12 @@ public class ConnectionOtherProfileFragment extends
             try{
                 FanCommunitySelectableIdentity selectedIdentity =
                         moduleManager.getSelectedActorIdentity();
-                 actorConnectionList = moduleManager.getRequestActorConnections(
+                 /*actorConnectionList = moduleManager.getRequestActorConnections(
                          selectedIdentity.getPublicKey(),
                          selectedIdentity.getActorType(),
                          fanCommunityInformation.getPublicKey());
-                boolean isActorConnectExists = !actorConnectionList.isEmpty();
-                if(isActorConnectExists){
+                boolean isActorConnectExists = actorConnectionList!=null&&!actorConnectionList.isEmpty();*/
+                /*if(isActorConnectExists){
                     FanActorConnection fanActorConnection = actorConnectionList.get(0);
                     ConnectionState actorConnectionState = fanActorConnection.getConnectionState();
                     switch (actorConnectionState){
@@ -145,6 +146,22 @@ public class ConnectionOtherProfileFragment extends
                     }
                 } else{
                     connect.setVisibility(View.VISIBLE);
+                }*/
+                ConnectionState actorConnectionState = moduleManager.getRequestActorConnectionState(
+                        selectedIdentity.getPublicKey(),
+                        selectedIdentity.getActorType(),
+                        fanCommunityInformation.getPublicKey());
+                switch (actorConnectionState){
+                    case PENDING_LOCALLY_ACCEPTANCE:
+                        accept.setVisibility(View.VISIBLE);
+                        requestedActorConnectionId = moduleManager.getConnectionId(
+                                selectedIdentity.getPublicKey(),
+                                selectedIdentity.getActorType(),
+                                fanCommunityInformation.getPublicKey());
+                        break;
+                    default:
+                        connect.setVisibility(View.VISIBLE);
+                        break;
                 }
             } catch (Exception e) {
                 //For now, not other action required
@@ -232,16 +249,17 @@ public class ConnectionOtherProfileFragment extends
             }
         } else if(i == R.id.afc_btn_accept) {
             try {
-                UUID connectionId=null;
-                String alias="";
-                for(FanActorConnection fanActorConnection : actorConnectionList){
+                UUID connectionId=requestedActorConnectionId;
+                String alias=fanCommunityInformation.getAlias();
+                /*for(FanActorConnection fanActorConnection : actorConnectionList){
                     switch (fanActorConnection.getConnectionState()){
                         case PENDING_LOCALLY_ACCEPTANCE:
                             connectionId = fanActorConnection.getConnectionId();
                             alias = fanActorConnection.getAlias();
                             break;
                     }
-                }
+                }*/
+
                 AcceptDialog acceptDialog = new AcceptDialog(
                         getActivity(),
                         appSession,
