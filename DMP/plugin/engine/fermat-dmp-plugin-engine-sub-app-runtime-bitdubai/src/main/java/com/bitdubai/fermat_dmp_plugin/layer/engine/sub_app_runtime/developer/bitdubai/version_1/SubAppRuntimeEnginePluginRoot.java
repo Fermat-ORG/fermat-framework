@@ -3999,7 +3999,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         //Side Menu definition
         runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeSideMenu.setBackgroundColor("#F1F2F2");
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Fan Users");
