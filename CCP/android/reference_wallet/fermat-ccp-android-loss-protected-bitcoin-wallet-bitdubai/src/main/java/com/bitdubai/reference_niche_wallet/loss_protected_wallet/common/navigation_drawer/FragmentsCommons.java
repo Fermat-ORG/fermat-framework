@@ -11,9 +11,12 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.ApplicationManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.squareup.picasso.Picasso;
@@ -26,7 +29,7 @@ import java.lang.ref.WeakReference;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ActiveActorIdentityInformation intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ActiveActorIdentityInformation intraUserLoginIdentity,final ApplicationManager applicationManager) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.loss_navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
@@ -48,7 +51,11 @@ public class FragmentsCommons {
                 @Override
                 public void onClick(View v) {
 
-
+                    try {
+                        applicationManager.changeApp(SubApps.CWP_INTRA_USER_IDENTITY.getCode());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.ApplicationManager;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -24,17 +25,20 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
 
     private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
+    ApplicationManager applicationManager;
 
-    public LossProtectedWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public LossProtectedWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity, ApplicationManager applicationManager) {
         this.activity = new WeakReference<Context>(activity);
         this.intraUserLoginIdentity = intraUserLoginIdentity;
+        this.applicationManager = applicationManager;
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
+
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity, applicationManager);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -93,5 +97,10 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     @Override
     public boolean hasClickListener() {
         return true;
+    }
+
+    @Override
+    public void changeApp(String appPublicKey) throws Exception {
+        activity.getApplicationManager().changeApp(appPublicKey);
     }
 }
