@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -43,6 +44,7 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	public NodesCatalogTransaction() {
         super();
+        this.hashId = UUID.randomUUID().toString();
         this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
         this.registeredTimestamp = new Timestamp(System.currentTimeMillis());
 	}
