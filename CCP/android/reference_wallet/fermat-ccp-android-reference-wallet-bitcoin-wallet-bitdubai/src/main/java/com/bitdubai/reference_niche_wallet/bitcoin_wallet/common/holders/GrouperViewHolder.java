@@ -95,11 +95,11 @@ public class GrouperViewHolder extends ParentViewHolder {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
                 BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(contactIcon,res,true);
                 bitmapWorkerTask.execute(photo);
-            }else if(cryptoWalletTransaction.getActorToType() == Actors.BITCOIN_BASIC_USER){
+            }else if(cryptoWalletTransaction.getActorToType().equals(Actors.BITCOIN_BASIC_USER)){
 
                     Picasso.with(contactIcon.getContext()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(contactIcon);
 
-            }else if(cryptoWalletTransaction.getActorToType() == Actors.LOSS_PROTECTED_USER){
+            }else if(cryptoWalletTransaction.getActorToType().equals(Actors.LOSS_PROTECTED_USER)){
 
                 Picasso.with(contactIcon.getContext()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(contactIcon);
 
