@@ -13,22 +13,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_restock.exceptions.CantCreateBankMoneyRestockException;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
-import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.exceptions.CantCreateCryptoMoneyRestockException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 import java.math.BigDecimal;
-import java.text.ParseException;
 
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
@@ -103,7 +97,6 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
 
     private void applyTransaction(String option) {
         try {
-
             String amountText = this.amountText.getText().toString();
 
             if (amountText.isEmpty()) {
@@ -121,37 +114,36 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
 
             final Platforms walletPlatform = setting.getPlatform();
             final CryptoBrokerWalletModuleManager moduleManager = (CryptoBrokerWalletModuleManager) session.getModuleManager();
-            final double availableBalance = getStockWalletBalance(walletPlatform, moduleManager);
 
-            if (amountAsDouble > availableBalance) {
-                Toast.makeText(activity.getApplicationContext(), "The amount is higher that the available balance", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
+            boolean transactionApplied = false;
             switch (option) {
                 case RESTOCK_OPTION:
-                    applyRestock(amount, walletPlatform, moduleManager);
+                    transactionApplied = applyRestock(amount, walletPlatform, moduleManager);
                     break;
 
                 case DESTOCK_OPTION:
-                    applyDestock(amount, walletPlatform, moduleManager);
+                    transactionApplied = applyDestock(amount, walletPlatform, moduleManager);
                     break;
             }
+
+            if (transactionApplied)
+                dismiss();
 
         } catch (Exception e) {
             Toast.makeText(activity.getApplicationContext(), "There's been an error, please try again" + e.getMessage(), Toast.LENGTH_SHORT).show();
 
             final ErrorManager errorManager = session.getErrorManager();
             errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, e);
-
-            return;
         }
-
-        dismiss();
     }
 
-    private void applyDestock(BigDecimal amount, Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager)
-            throws CantCreateBankMoneyDestockException, CantCreateCashMoneyDestockException, ParseException, CantCreateCryptoMoneyDestockException {
+    private boolean applyDestock(BigDecimal amount, Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager) throws Exception {
+
+        final float availableBalance = moduleManager.getAvailableBalance(setting.getMerchandise(), WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode());
+        if (amount.floatValue() > availableBalance) {
+            Toast.makeText(activity.getApplicationContext(), "The amount is higher that the available balance for the selected merchandise", Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         final String memo = "Unhold funds, destock from the Broker Wallet";
 
@@ -203,10 +195,18 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                         BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 break;
         }
+
+        return true;
     }
 
-    private void applyRestock(BigDecimal amount, Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager)
-            throws CantCreateBankMoneyRestockException, CantCreateCashMoneyRestockException, ParseException, CantCreateCryptoMoneyRestockException {
+    private boolean applyRestock(BigDecimal amount, Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager) throws Exception {
+
+        final double availableBalance = getStockWalletBalance(walletPlatform, moduleManager);
+        final double amountAsDouble = amount.doubleValue();
+        if (amountAsDouble > availableBalance) {
+            Toast.makeText(activity.getApplicationContext(), "The selected wallet don't have enough money to restock the amount", Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         final String memo = "Hold funds, used to restock the Broker Wallet";
 
@@ -260,6 +260,8 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
                         BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 break;
         }
+
+        return true;
     }
 
     private double getStockWalletBalance(Platforms walletPlatform, CryptoBrokerWalletModuleManager moduleManager) throws Exception {
