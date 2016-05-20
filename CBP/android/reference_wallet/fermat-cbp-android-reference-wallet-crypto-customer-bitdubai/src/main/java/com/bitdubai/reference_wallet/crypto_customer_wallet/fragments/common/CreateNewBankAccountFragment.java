@@ -120,7 +120,7 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
                 selectedAccountType,
                 bankNameEditText.getText().toString(),
                 accountNumberEditText.getText().toString(),
-                accountAliasEditText.getText().toString());
+                accountAliasEditText.getText().toString(), "");
 
         if (data.isAllDataFilled()) {
 

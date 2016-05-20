@@ -64,19 +64,19 @@ public class AccountListViewHolder extends FermatViewHolder {
         }else {
             balanceText.setTextColor(itemView.getResources().getColor(R.color.soft_purple));
         }
-        imageView.setImageResource(getResource(pos));
+        imageView.setImageResource(getResource(itemInfo.getAccountImageId()));
         imageView.setVisibility(View.VISIBLE);
     }
 
 
-    public static int getResource(int pos){
-        switch (pos){
-            case 0: return R.drawable.bw_bg_detail_number_01;
-            case 1: return R.drawable.bw_bg_detail_number_02;
-            case 2: return R.drawable.bw_bg_detail_number_03;
-            case 3: return R.drawable.bw_bg_detail_number_04;
-            case 4: return R.drawable.bw_bg_detail_number_05;
-            case 5: return R.drawable.bw_bg_detail_number_06;
+    public static int getResource(String imageId){
+        switch (imageId){
+            case "Cube": return R.drawable.bw_bg_detail_number_01;
+            case "Safe": return R.drawable.bw_bg_detail_number_02;
+            case "Money": return R.drawable.bw_bg_detail_number_03;
+            case "Coins": return R.drawable.bw_bg_detail_number_04;
+            case "Coins 2": return R.drawable.bw_bg_detail_number_05;
+            case "Money 2": return R.drawable.bw_bg_detail_number_06;
             default: return R.drawable.bw_bg_detail_number_01;
         }
     }

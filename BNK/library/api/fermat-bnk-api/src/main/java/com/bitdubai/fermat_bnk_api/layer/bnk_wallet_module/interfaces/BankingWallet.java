@@ -8,6 +8,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTra
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exceptions.CantMakeWithdrawTransactionException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantEditAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
@@ -20,7 +21,8 @@ import java.util.List;
  */
 public interface BankingWallet {
     List<BankAccountNumber> getAccounts()throws CantLoadBankMoneyWalletException;
-    void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency);
+    void addNewAccount(BankAccountType bankAccountType, String alias,String account,FiatCurrency fiatCurrency, String imageId);
+    void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException;
     List<BankMoneyTransactionRecord> getTransactions(String account)throws CantLoadBankMoneyWalletException;
     List<BankMoneyTransactionRecord> getPendingTransactions();
     void makeDeposit(BankTransactionParameters bankTransactionParameters) throws CantMakeDepositTransactionException;

@@ -49,7 +49,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_action_edit"
+        android:src="@drawable/bw_ic_action_edit"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:paddingLeft="7dp"

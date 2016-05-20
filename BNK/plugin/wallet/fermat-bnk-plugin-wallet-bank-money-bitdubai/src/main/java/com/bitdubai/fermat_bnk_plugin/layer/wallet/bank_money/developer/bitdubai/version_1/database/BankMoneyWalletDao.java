@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
@@ -321,7 +322,44 @@ public class BankMoneyWalletDao {
         record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ACCOUNT_TYPE_COLUMN_NAME, bankAccountNumber.getAccountType().getCode());
         record.setLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_AVAILABLE_BALANCE_COLUMN_NAME, 0);
         record.setLongValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_BOOK_BALANCE_COLUMN_NAME, 0);
+        record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME, bankAccountNumber.getAccountImageId());
         table.insertRecord(record);
+    }
+
+
+    public void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantUpdateRecordException {
+
+        DatabaseTable table;
+        try {
+
+            //Modify the accounts table
+            table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_TABLE_NAME);
+            table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, originalAccountNumber, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, newAccountNumber);
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME, newAlias);
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME, newImageId);
+                table.updateRecord(record);
+            }
+
+            //Modify the transactions table
+            table = this.database.getTable(BankMoneyWalletDatabaseConstants.BANK_MONEY_TRANSACTIONS_TABLE_NAME);
+            table.addStringFilter(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, originalAccountNumber, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            for (DatabaseTableRecord record : table.getRecords()) {
+                record.setStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME, newAccountNumber);
+                table.updateRecord(record);
+            }
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+
+
+
     }
 
     /**
@@ -448,6 +486,7 @@ public class BankMoneyWalletDao {
     private BankAccountNumber constructBankAccountNumber(DatabaseTableRecord record) {
         String alias = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_ALIAS_COLUMN_NAME);
         String account = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_BANK_ACCOUNT_NUMBER_COLUMN_NAME);
+        String imageId = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_ACCOUNTS_IMAGE_ID_COLUMN_NAME);
         System.out.println(" BNK-ACCOUNT   alias = " + alias + " account =" + account);
         BankAccountNumberImpl bankAccountNumber = null;
         try {
@@ -458,7 +497,7 @@ public class BankMoneyWalletDao {
             BankAccountType bankAccountType = BankAccountType.getByCode(accountType);
             FiatCurrency currency = FiatCurrency.getByCode(currencyType);
             System.out.println("BNK-ACCOUNT = [" + account + "] alias = [" + alias + "] account type = [" + bankAccountType.getCode() + "]");
-            bankAccountNumber = new BankAccountNumberImpl(alias, account, currency, bankAccountType,getBankName());
+            bankAccountNumber = new BankAccountNumberImpl(alias, account, currency, bankAccountType,getBankName(), imageId);
 
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

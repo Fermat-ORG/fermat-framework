@@ -118,7 +118,7 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
                 selectedAccountType,
                 bankNameEditText.getText().toString(),
                 accountNumberEditText.getText().toString(),
-                accountAliasEditText.getText().toString());
+                accountAliasEditText.getText().toString(), "");
 
         if (data.isAllDataFilled()) {
             List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);

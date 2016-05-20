@@ -122,7 +122,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
             //dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
             dialogTitle.setText(getTransactionTitleText());
-            amountText.setFilters(new InputFilter[]{new NumberInputFilter(9, 2)});
+            amountText.setFilters(new InputFilter[]{new NumberInputFilter(10, 2)});
 
             //cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);

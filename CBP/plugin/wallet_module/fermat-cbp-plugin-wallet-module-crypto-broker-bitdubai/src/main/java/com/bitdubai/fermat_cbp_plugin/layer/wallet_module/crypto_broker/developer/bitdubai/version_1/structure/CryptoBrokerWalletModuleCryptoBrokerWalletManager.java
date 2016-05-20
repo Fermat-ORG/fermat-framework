@@ -777,7 +777,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public BankAccountNumber newEmptyBankAccountNumber(String bankName, BankAccountType bankAccountType, String alias, String account, FiatCurrency currencyType) throws CantNewEmptyBankAccountException {
-        return new BankAccountNumberImpl(bankName, bankAccountType, alias, account, currencyType);
+        return new BankAccountNumberImpl(bankName, bankAccountType, alias, account, currencyType, "");
     }
 
     @Override

@@ -252,7 +252,9 @@ public enum Activities implements FermatEnum {
     BNK_BANK_MONEY_WALLET_SETUP("BNKBMWS"),
     BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS("BNKBMWAD"),
     BNK_BANK_MONEY_WALLET_ADD_ACCOUNT("BNKBMWAA"),
-    BNK_BANK_MONEY_WALLET_UPDATE_RECORD("BNKBMWU"),
+    BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT("BNKBMWEA"),
+    BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL("BNKBMWTD"),
+
 
     // Cash Money Wallet
     CSH_CASH_MONEY_WALLET_HOME("CSHCMWH"),
@@ -718,14 +720,20 @@ public enum Activities implements FermatEnum {
                 return BNK_BANK_MONEY_WALLET_HOME;
             case "BNKBMWS":
                 return BNK_BANK_MONEY_WALLET_SETUP;
+            case "BNKBMWAA":
+                return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
+            case "BNKBMWEA":
+                return BNK_BANK_MONEY_WALLET_EDIT_ACCOUNT;
+            case "BNKBMWTD":
+                return BNK_BANK_MONEY_WALLET_TRANSACTION_DETAIL;
+            case "BNKBMWAD":
+                return BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS;
             case "CSHCMWH":
                 return CSH_CASH_MONEY_WALLET_HOME;
             case "CSHCMWTD":
                 return CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL;
             case "CSHCMWS":
                 return CSH_CASH_MONEY_WALLET_SETUP;
-            case "BNKBMWAD":
-                return BNK_BANK_MONEY_WALLET_ACCOUNT_DETAILS;
             case "DWAIMA":
                 return DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY;
             case "DWAIMSA":
@@ -815,11 +823,6 @@ public enum Activities implements FermatEnum {
                 return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS;
             case "CHTSACCCS":
                 return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_SETTINGS;
-
-            case "BNKBMWAA":
-                return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
-            case "BNKBMWU":
-                return BNK_BANK_MONEY_WALLET_UPDATE_RECORD;
             case "DWAIUAL":
                 return DAP_WALLET_ASSET_ISSUER_USER_APPROPIATE_LIST;
 

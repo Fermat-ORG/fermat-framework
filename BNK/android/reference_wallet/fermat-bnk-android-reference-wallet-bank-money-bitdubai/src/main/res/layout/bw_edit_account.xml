@@ -26,21 +26,23 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="45dp"
                 android:gravity="center_horizontal"
-                android:text="ADD ACCOUNT"
+                android:text="EDIT ACCOUNT"
                 android:textColor="#fff"
                 android:textSize="@dimen/large_text_size"
                 android:textStyle="bold" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginTop="30dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:gravity="center_horizontal"
-                android:text="Please enter the following account information:"
+                android:text="You can edit the account number and its alias, as well as the account image"
                 android:textColor="#fff"
-                android:textSize="@dimen/text_size" />
+                android:textSize="@dimen/text_size"
+                />
 
             <EditText
                 android:id="@+id/account_number"
@@ -66,28 +68,7 @@
                 android:textColor="#fff"
                 android:textSize="@dimen/text_size" />
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:orientation="vertical"
-                android:paddingLeft="60dp"
-                android:paddingRight="60dp">
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Currency:"
-                    android:textColor="#fff"
-                    android:textSize="@dimen/text_size" />
-
-                <Spinner
-                    android:id="@+id/bnk_add_account_currency_spinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawSelectorOnTop="true" />
-
-            </LinearLayout>
+            android:textStyle="bold" />
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
@@ -105,7 +86,7 @@
                     android:textSize="@dimen/text_size" />
 
                 <Spinner
-                    android:id="@+id/bnk_add_account_image_id_spinner"
+                    android:id="@+id/bnk_edit_account_image_id_spinner"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawSelectorOnTop="true" />
