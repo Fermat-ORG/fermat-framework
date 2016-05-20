@@ -69,7 +69,7 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
 
 //            DiscoveryQueryParameters discoveryQueryParameters = new DiscoveryQueryParameters("CBPCRCU",null,0.0,null,"publicKey2",null,0,null,null,0, NetworkServiceType.CRYPTO_CUSTOMER);
 //            try {
-//                getChannel().getNetworkClientCommunicationConnection().registeredProfileDiscoveryQuery(discoveryQueryParameters);
+//                getChannel().getConnection().registeredProfileDiscoveryQuery(discoveryQueryParameters);
 //            } catch (CantRequestProfileListException e) {
 //                e.printStackTrace();
 //            }

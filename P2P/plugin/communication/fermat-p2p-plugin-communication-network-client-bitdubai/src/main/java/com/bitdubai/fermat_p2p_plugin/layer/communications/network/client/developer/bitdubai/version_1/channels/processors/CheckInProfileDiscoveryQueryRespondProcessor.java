@@ -63,18 +63,8 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
 
             if(checkInProfileListMsgRespond.getProfileList() != null && checkInProfileListMsgRespond.getProfileList().size() > 0){
 
-                String uriToNode = getChannel().getNetworkClientCommunicationConnection().getUri().getHost() + ":" +
-                                    getChannel().getNetworkClientCommunicationConnection().getUri().getPort();
-
-                /*
-                 * set the ListActorConnectIntoNode with IdentityPublicKey of Actor and
-                 * the uriToNode to can find the NetworkClientCommunicationConnection in the
-                 * ListConnectionActiveToNode
-                 */
-                networkClientConnectionsManager.getListActorConnectIntoNode().put(
-                        checkInProfileListMsgRespond.getProfileList().get(0).getIdentityPublicKey(),
-                        uriToNode
-                );
+                String uriToNode = getChannel().getConnection().getUri().getHost() + ":" +
+                                    getChannel().getConnection().getUri().getPort();
 
                 /*
                  * set the ListConnectionActiveToNode with uriToNode and the
@@ -82,7 +72,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
                  */
                 networkClientConnectionsManager.getActiveConnectionsToExternalNodes().put(
                         uriToNode,
-                        getChannel().getNetworkClientCommunicationConnection()
+                        getChannel().getConnection()
                 );
 
                 /*
@@ -147,7 +137,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
                      * we realize the actorTraceDiscoveryQuery because is an Actor that realized the call up
                      */
                     try {
-                        getChannel().getNetworkClientCommunicationConnection().actorTraceDiscoveryQuery(checkInProfileListMsgRespond.getDiscoveryQueryParameters());
+                        getChannel().getConnection().actorTraceDiscoveryQuery(checkInProfileListMsgRespond.getDiscoveryQueryParameters());
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

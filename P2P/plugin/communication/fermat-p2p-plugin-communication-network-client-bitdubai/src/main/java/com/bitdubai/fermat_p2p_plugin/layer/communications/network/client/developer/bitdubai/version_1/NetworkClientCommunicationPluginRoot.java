@@ -179,10 +179,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             if(nodesProfileList != null && nodesProfileList.size() > 0){
 
-                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort() + "/fermat/ws/client-channel");
-
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                        uri,
+                        nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort(),
                         eventManager,
                         locationManager,
                         identity,
@@ -193,10 +191,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
             }else {
 
-                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT + "/fermat/ws/client-channel");
-
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                        uri,
+                        NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT,
                         eventManager,
                         locationManager,
                         identity,
@@ -428,15 +424,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
          */
         if(nodesProfileList != null  && nodesProfileList.size() > 0 && i < (nodesProfileList.size() - 1)){
 
-            URI uri = null;
-            try {
-                uri = new URI(HardcodeConstants.WS_PROTOCOL + nodesProfileList.get(i+1).getIp() + ":" + nodesProfileList.get(i+1).getDefaultPort() + "/fermat/ws/client-channel");
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
             networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                    uri,
+                    nodesProfileList.get(i+1).getIp() + ":" + nodesProfileList.get(i+1).getDefaultPort(),
                     eventManager,
                     locationManager,
                     identity,
@@ -447,16 +436,8 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
         }else{
 
-
-            URI uri = null;
-            try {
-                uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 8080 + "/fermat/ws/client-channel");
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-
             networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                    uri,
+                    NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 8080,
                     eventManager,
                     locationManager,
                     identity,
@@ -495,33 +476,13 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin impleme
 
     }
 
-    /*
-     * Request connection to the Node extern in the networkClientConnectionsManager
-     */
-    @Override
-    public void requestConnectionToExternalNode(String identityPublicKey, String uriToNode) {
-
-        String uriActual = networkClientCommunicationConnection.getUri().getHost() + ":"  +
-                networkClientCommunicationConnection.getUri().getPort();
-
-        if(!uriActual.equals(uriToNode)) {
-
-            // request connection to the external Node in the networkClientConnectionsManager
-            networkClientConnectionsManager.requestConnectionToExternalNode(
-                    identityPublicKey,
-                    uriToNode);
-        }
-
-    }
-
-
     public NetworkClientCommunicationConnection getNetworkClientCommunicationConnection() {
         return networkClientCommunicationConnection;
     }
 
     /*
-         * get the NodesProfile List in the webService of the NetworkNode Harcoded
-         */
+     * get the NodesProfile List in the webService of the NetworkNode Harcoded
+     */
     private List<NodeProfile> getNodesProfileList(){
 
         HttpURLConnection conn = null;

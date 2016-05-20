@@ -1,9 +1,3 @@
-/*
-* @#NetworkClientSentMessageDeliveredEventHandler.java - 2016
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.event_handlers;
 
 import com.bitdubai.fermat_api.FermatException;
@@ -52,10 +46,8 @@ public class NetworkClientSentMessageDeliveredEventHandler implements FermatEven
         if (this.networkService.isStarted() &&
             this.networkService.getProfile().getNetworkServiceType().equals(fermatEvent.getNetworkServiceTypeSource())) {
 
-            NetworkServiceMessage networkServiceMessage = networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId());
-
-            if(networkServiceMessage != null)
-                networkService.onSentMessage(networkServiceMessage);
+            if(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().exists(fermatEvent.getId()))
+                networkService.onSentMessage(networkService.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findById(fermatEvent.getId()));
 
         }
 

@@ -50,7 +50,7 @@ public class ServerHandshakeRespondProcessor extends PackageProcessor{
             /*
              * Send the clienProfile
              */
-            getChannel().getNetworkClientCommunicationConnection().setCheckInClientRequestProcessor();
+            getChannel().getConnection().registerInNode();
 
         }else{
             //there is some wrong

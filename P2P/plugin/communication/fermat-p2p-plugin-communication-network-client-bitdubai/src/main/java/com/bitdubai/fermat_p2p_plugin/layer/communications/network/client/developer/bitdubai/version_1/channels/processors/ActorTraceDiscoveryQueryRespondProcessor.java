@@ -119,17 +119,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
                          * if exist conenction to node use the actual NetworkClientCommunicationConnection
                          * else then request a new NetworkClientCommunicationConnection to that Node
                          */
-                        if(networkClientConnectionsManager.getActiveConnectionsToExternalNodes().containsKey(uriToNode)){
-
-                            /*
-                             * set the ListActorConnectIntoNode with IdentityPublicKey of Actor and
-                             * the uriToNode to can find the NetworkClientCommunicationConnection in the
-                             * ListConnectionActiveToNode
-                             */
-                            networkClientConnectionsManager.getListActorConnectIntoNode().put(
-                                    result.getActorProfile().getIdentityPublicKey(),
-                                    uriToNode
-                            );
+                        if(networkClientConnectionsManager.getActiveConnectionsToExternalNodes().containsKey(uriToNode)) {
 
                             /*
                              * set the ListConnectionActiveToNode with uriToNode and the

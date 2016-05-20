@@ -3,8 +3,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientActorCallConnectedEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientCallConnectedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
@@ -13,7 +12,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.network_calls.NetworkClientCommunicationActorCall;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.network_calls.NetworkClientCommunicationCall;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
 import com.google.gson.JsonObject;
@@ -124,7 +123,7 @@ public class ActorCallRespondProcessor extends PackageProcessor {
 
                             NetworkClientCommunicationConnection connection = networkClientConnectionsManager.getActiveConnectionsToExternalNodes().get(uriToNode);
 
-                            NetworkClientCommunicationActorCall actorCall = new NetworkClientCommunicationActorCall(
+                            NetworkClientCommunicationCall actorCall = new NetworkClientCommunicationCall(
                                     networkServiceTypeIntermediate,
                                     result.getActorProfile(),
                                     connection
@@ -132,25 +131,30 @@ public class ActorCallRespondProcessor extends PackageProcessor {
 
                             connection.addCall(actorCall);
 
-                            /*
-                             * Create a raise a new event whit the NETWORK_CLIENT_CONNECTION_SUCCESS
-                             */
-                            FermatEvent actorCallConnected = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_CALL_CONNECTED);
-                            actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
+                            // if it is connected, then i raise the event with the call
+                            if (connection.isConnected()) {
+                                /*
+                                 * Create a raise a new event whit the NETWORK_CLIENT_CALL_CONNECTED
+                                 */
+                                FermatEvent actorCallConnected = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_CALL_CONNECTED);
+                                actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
 
-                            ((NetworkClientActorCallConnectedEvent) actorCallConnected).setNetworkClientCall(actorCall);
+                                ((NetworkClientCallConnectedEvent) actorCallConnected).setNetworkClientCall(actorCall);
 
-                            /*
-                             * Raise the event
-                             */
-                            System.out.println("ActorCallRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_CALL_CONNECTED");
-                            getEventManager().raiseEvent(actorCallConnected);
+                                /*
+                                 * Raise the event
+                                 */
+                                System.out.println("ActorCallRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
+                                getEventManager().raiseEvent(actorCallConnected);
+                            }
 
                         } else {
 
-                            networkClientConnectionsManager.requestConnectionToExternalNode(uriToNode);
-
-                            // TODO see how to do to check this type of connection maybe a different check in
+                            networkClientConnectionsManager.requestConnectionToExternalNode(
+                                    uriToNode,
+                                    networkServiceTypeIntermediate,
+                                    result.getActorProfile()
+                            );
 
                         }
 

@@ -40,6 +40,8 @@ public enum PackageType {
 
     MESSAGE_TRANSMIT,
 
+    ACTOR_CALL_REQUEST,
+
     /*
      * Respond packet types
      */
