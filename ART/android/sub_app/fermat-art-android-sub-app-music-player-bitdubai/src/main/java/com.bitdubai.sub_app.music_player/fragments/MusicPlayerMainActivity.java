@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -185,6 +186,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             song = (TextView) view.findViewById(R.id.songname);
 
 
+
             /*final TextView titlebar=((TextView)getToolbar().getRootView().findViewById(R.id.txt_title));
 
 
@@ -250,10 +252,14 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                     })
             );
 
+            TextView noMusicFound=(TextView) view.findViewById(R.id.no_music_found);
+
             if(items.isEmpty()){
-                recyclerView.setBackgroundResource(R.drawable.nomusic);
+            //    recyclerView.setBackgroundResource(R.drawable.nomusic);
+                noMusicFound.setVisibility(View.VISIBLE);
                 view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
             }else{
+                noMusicFound.setVisibility(View.GONE);
                 recyclerView.setBackgroundResource(R.drawable.musicplayer_background_viewpager);
                 view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
             }

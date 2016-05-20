@@ -146,4 +146,25 @@
                     android:maxHeight="6dp" />
             </RelativeLayout>
         </RelativeLayout>
-    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No music Found"
+        android:id="@+id/no_music_found"
+        android:layout_above="@+id/rv"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:textColor="#6D6F71"
+        android:textSize="30sp"
+        android:fontFamily="sans-serif"
+        android:elegantTextHeight="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_centerInParent="true"
+        android:paddingBottom="150dp" />
+</RelativeLayout>
