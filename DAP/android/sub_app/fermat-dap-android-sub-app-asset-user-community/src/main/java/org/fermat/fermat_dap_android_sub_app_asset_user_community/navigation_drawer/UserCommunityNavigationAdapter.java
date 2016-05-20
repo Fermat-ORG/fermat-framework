@@ -95,9 +95,9 @@ public class UserCommunityNavigationAdapter extends FermatAdapter<MenuItem, User
                 case 3:
                     holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
                     break;
-                case 4:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
-                    break;
+//                case 4:
+//                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
+//                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

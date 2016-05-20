@@ -40,7 +40,6 @@ public class AssetFactoryNavigationViewAdapter extends FermatAdapter<MenuItem, A
     @Override
     protected void bindHolder(AssetFactoryNavigationItemMenuViewHolder holder, MenuItem data, int position) {
         try {
-
             holder.getLabel().setText(data.getLabel());
 
             if (data.isSelected())
@@ -48,10 +47,10 @@ public class AssetFactoryNavigationViewAdapter extends FermatAdapter<MenuItem, A
 
                 switch (position) {
                     case 0:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_home_active : R.drawable.ic_nav_home_normal).into(holder.getIcon());
+                        holder.getIcon().setImageResource(R.drawable.ic_nav_home_active);
                         break;
                     case 1:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.ic_nav_settings_active : R.drawable.ic_nav_settings_normal).into(holder.getIcon());
+                        holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
                         break;
 
 //                    case 2:
