@@ -1,9 +1,11 @@
 package com.bitdubai.android_core.app;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,11 +20,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.fermat.BuildConfig;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -353,7 +358,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             }else{
-                Log.e(TAG, "nextActivity null, activity code: "+ activityName+ "fermat structure: "+fermatStructure.getPublicKey());
+                Log.e(TAG, "nextActivity null, activity code: " + activityName + "fermat structure: " + fermatStructure.getPublicKey());
             }
         } catch (Exception e) {
             if(activityName.equals("develop_mode"))
@@ -362,7 +367,40 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
-                handleExceptionAndRestart();
+                if(BuildConfig.DEBUG) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setTitle("Error");
+                    builder.setMessage("An error occur, do you want to report this issue?");
+                    final EditText input = new EditText(AppActivity.this);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.MATCH_PARENT);
+                    input.setLayoutParams(lp);
+                    builder.setView(input);
+                    builder.setIcon(R.drawable.help_icon);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            try {
+                                reportError(input.getText().toString());
+                            } catch (Exception e1) {
+                                e1.printStackTrace();
+                                Toast.makeText(AppActivity.this,"Error sendind the report, please try again",Toast.LENGTH_SHORT).show();
+                            }
+                            handleExceptionAndRestart();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            handleExceptionAndRestart();
+                        }
+                    });
+                    builder.show();
+                }else{
+                    handleExceptionAndRestart();
+                }
+
             }
         } catch (Throwable throwable) {
             Toast.makeText(getApplicationContext(), "Recovering from system error. Throwable", Toast.LENGTH_LONG).show();
