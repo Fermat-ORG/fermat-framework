@@ -69,8 +69,7 @@ public class FermatLinuxAppMain {
 
             fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE  , Developers.BITDUBAI, new Version()));
 
-            /*
-            CryptoBrokerIdentityModuleManager cryptoBrokerIdentity = (CryptoBrokerIdentityModuleManager) fermatSystem.getModuleManager(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_IDENTITY, Developers.BITDUBAI, new Version()));
+           /* CryptoBrokerIdentityModuleManager cryptoBrokerIdentity = (CryptoBrokerIdentityModuleManager) fermatSystem.getModuleManager(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_IDENTITY, Developers.BITDUBAI, new Version()));
             CryptoBrokerCommunitySubAppModuleManager cryptoBrokerCommunity = (CryptoBrokerCommunitySubAppModuleManager) fermatSystem.getModuleManager(new PluginVersionReference(Platforms.CRYPTO_BROKER_PLATFORM, Layers.SUB_APP_MODULE, Plugins.CRYPTO_BROKER_COMMUNITY, Developers.BITDUBAI, new Version()));
 
             List<CryptoBrokerCommunitySelectableIdentity> listSelectableIdentities = cryptoBrokerCommunity.listSelectableIdentities();
@@ -113,8 +112,7 @@ public class FermatLinuxAppMain {
                     }
                 }
             }
-            */
-
+*/
             System.out.println("FERMAT - Linux Core - started satisfactory...");
 
         } catch (Exception e) {

@@ -5,7 +5,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
 import com.bitdubai.fermat_p2p_core.layer.communication.network.client.NetworkClientPluginSubsystem;
-import com.bitdubai.fermat_p2p_core.layer.communication.network.node.NetworkNodePluginSubsystem;
+import com.bitdubai.fermat_p2p_core.layer.communication.ws_cloud_client.WsCloudClientPluginSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/11/2015.
@@ -23,9 +23,9 @@ public class CommunicationsLayer extends AbstractLayer {
 
         try {
 
-//            registerPlugin(new WsCloudClientPluginSubsystem());
+            registerPlugin(new WsCloudClientPluginSubsystem());
             registerPlugin(new NetworkClientPluginSubsystem());
-       //     registerPlugin(new NetworkNodePluginSubsystem());
+         //   registerPlugin(new NetworkNodePluginSubsystem());
 
         } catch(CantRegisterPluginException e) {
 
