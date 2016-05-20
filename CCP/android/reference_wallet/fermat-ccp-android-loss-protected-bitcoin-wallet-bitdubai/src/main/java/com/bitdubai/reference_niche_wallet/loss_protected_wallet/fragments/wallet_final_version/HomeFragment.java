@@ -57,6 +57,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.custom_view.CustomChartMarkerdView;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
@@ -446,7 +447,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
 
-
+            CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),R.layout.loss_custom_marker_view);
+            chart.setMarkerView(mv);
 
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setEnabled(false);
@@ -539,9 +541,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         dataset.setColor(Color.WHITE); //
         dataset.setDrawCubic(false);
         dataset.setDrawValues(false);
-        dataset.setDrawCircles(false);
+        dataset.setDrawCircles(true);
+        dataset.setCircleSize(3);
+        dataset.setCircleColor(Color.parseColor("#E58617"));
+        dataset.setCircleColorHole(Color.parseColor("#E58617"));
         dataset.setValueFormatter(new LargeValueFormatter());
-        dataset.setDrawHighlightIndicators(true);
+        dataset.setDrawHighlightIndicators(false);
 
         return new LineData(xValues, dataset);
 
