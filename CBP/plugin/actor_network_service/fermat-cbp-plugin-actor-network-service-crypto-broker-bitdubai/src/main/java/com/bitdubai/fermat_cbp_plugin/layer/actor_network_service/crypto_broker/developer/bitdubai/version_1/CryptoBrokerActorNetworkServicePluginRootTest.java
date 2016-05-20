@@ -169,9 +169,6 @@ public class CryptoBrokerActorNetworkServicePluginRootTest extends AbstractActor
 
                     receiveConnectionInformation(informationMessage);
 
-                    String destinationPublicKey = cryptoBrokerActorNetworkServiceDao.getDestinationPublicKey(informationMessage.getRequestId());
-
-                    getNetworkServiceConnectionManager().closeConnection(destinationPublicKey);
                     break;
 
                 case CONNECTION_REQUEST:
@@ -183,7 +180,6 @@ public class CryptoBrokerActorNetworkServicePluginRootTest extends AbstractActor
 
                     receiveRequest(requestMessage);
 
-                    getNetworkServiceConnectionManager().closeConnection(requestMessage.getSenderPublicKey());
                     break;
 
                 case QUOTES_REQUEST:
@@ -194,7 +190,6 @@ public class CryptoBrokerActorNetworkServicePluginRootTest extends AbstractActor
 
                     receiveQuotesRequest(quotesRequestMessage);
 
-                    getNetworkServiceConnectionManager().closeConnection(quotesRequestMessage.getRequesterPublicKey());
                     break;
 
                 default:

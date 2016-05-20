@@ -26,12 +26,7 @@ import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.com
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME;
-import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ACTOR_TYPE_COLUMN_NAME;
-import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_CLIENT_PUBLIC_KEY_COLUMN_NAME;
-import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME;
-import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ACTOR_TYPE_COLUMN_NAME;
-import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_CLIENT_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME;
 import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.constants.NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME;
@@ -121,19 +116,14 @@ public class NetworkServiceDatabaseFactory {
 
             table.addColumn(OUTGOING_MESSAGES_ID_COLUMN_NAME                        , DatabaseDataType.STRING ,  36, Boolean.TRUE );
             table.addColumn(OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME         , DatabaseDataType.STRING , 130, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_SENDER_ACTOR_TYPE_COLUMN_NAME         , DatabaseDataType.STRING ,  10, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_SENDER_CLIENT_PUBLIC_KEY_COLUMN_NAME  , DatabaseDataType.STRING , 130, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME       , DatabaseDataType.STRING , 130, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_RECEIVER_ACTOR_TYPE_COLUMN_NAME       , DatabaseDataType.STRING ,  10, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_RECEIVER_CLIENT_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING , 130, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_RECEIVER_NS_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING , 130, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME        , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME        , DatabaseDataType.STRING , 255, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_CONTENT_COLUMN_NAME                   , DatabaseDataType.STRING , 255, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_CONTENT_TYPE_COLUMN_NAME              , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_STATUS_COLUMN_NAME                    , DatabaseDataType.STRING , 100, Boolean.FALSE);
             table.addColumn(OUTGOING_MESSAGES_IS_BETWEEN_ACTORS_COLUMN_NAME         , DatabaseDataType.INTEGER,   0, Boolean.FALSE);
-            table.addColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME                , DatabaseDataType.INTEGER,   10, Boolean.FALSE);
+            table.addColumn(OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME                , DatabaseDataType.INTEGER,  10, Boolean.FALSE);
 
             try {
                 //Create the table

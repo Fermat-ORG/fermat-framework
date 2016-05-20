@@ -64,7 +64,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatM
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -563,34 +562,7 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
 
     }
 
-    public final void handleActorFoundEvent(String uriToNode, ActorProfile actorProfile){
-
-        listActorConnectIntoNode.put(actorProfile.getIdentityPublicKey(), uriToNode);
-
-        if (listActorProfileConnectedInNode.get(uriToNode) != null)
-            listActorProfileConnectedInNode.get(uriToNode).add(actorProfile);
-        else {
-            try {
-                List<NetworkServiceMessage> messages = getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(NetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME, actorProfile.getIdentityPublicKey());
-
-                for (NetworkServiceMessage message : messages) {
-                    message.setReceiverClientPublicKey(actorProfile.getClientIdentityPublicKey());
-                    getNetworkServiceConnectionManager().getOutgoingMessagesDao().update(message);
-                }
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            List<ActorProfile> actorList = new ArrayList<>();
-            actorList.add(actorProfile);
-            listActorProfileConnectedInNode.put(uriToNode, actorList);
-        }
-
-        // request connection to the Node external in the clientsConnectionsManager
-        networkClientManager.requestConnectionToExternalNode(
-                actorProfile.getIdentityPublicKey(),
-                uriToNode
-        );
+    public void handleActorFoundEvent(String uriToNode, ActorProfile actorProfile){
 
     }
 
