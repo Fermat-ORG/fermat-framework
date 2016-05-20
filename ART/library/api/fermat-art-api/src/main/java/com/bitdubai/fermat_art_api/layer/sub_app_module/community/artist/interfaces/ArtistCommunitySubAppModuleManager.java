@@ -224,4 +224,31 @@ public interface ArtistCommunitySubAppModuleManager extends
             Actors linkedIdentityActorType,
             String actorPublicKey) throws CantGetActorConnectionException;
 
+    /**
+     * This method returns the ConnectionState from an actor connection.
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    ConnectionState getRequestActorConnectionState(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException;
+
+    /**
+     * This method returns the connection Id
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    UUID getConnectionId(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException;
+
+
 }

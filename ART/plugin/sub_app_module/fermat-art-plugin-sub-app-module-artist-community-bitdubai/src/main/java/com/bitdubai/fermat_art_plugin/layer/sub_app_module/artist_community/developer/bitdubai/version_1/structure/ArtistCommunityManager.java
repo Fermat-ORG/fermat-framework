@@ -841,4 +841,38 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             return ArtExternalPlatform.UNDEFINED;
         }
     }
+
+    public ConnectionState getRequestActorConnectionState(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        List<ArtistActorConnection> fanActorConnectionList = getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
+        boolean isActorConnectExists = fanActorConnectionList!=null&&!fanActorConnectionList.isEmpty();
+        if(isActorConnectExists){
+            return fanActorConnectionList.get(0).getConnectionState();
+        }else{
+            return ConnectionState.INTRA_USER_NOT_FOUND;
+        }
+    }
+
+    public UUID getConnectionId(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        List<ArtistActorConnection> fanActorConnectionList = getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
+        boolean isActorConnectExists = fanActorConnectionList!=null&&!fanActorConnectionList.isEmpty();
+        if(isActorConnectExists){
+            return fanActorConnectionList.get(0).getConnectionId();
+        }else{
+            throw new CantGetActorConnectionException(
+                    "Cannot find the connection ID",
+                    "The actor connection doesn't exist");
+        }
+    }
 }
