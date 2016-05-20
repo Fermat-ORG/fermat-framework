@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
@@ -63,22 +64,33 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
     @Override
     protected void bindHolder(TransactionListItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
 
+        //set Amount transaction
         holder.getTransaction_amount().setText(WalletUtils.formatBalanceString(data.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");
 
+        //formatter for date transaction
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy hh:ss a", Locale.US);
         holder.getTransaction_date().setText("Date: " + sdf.format(data.getTimestamp()) + ".");
 
+        //Validate Involved Actor for contact name
         String contactName = "";
-        if (data.getInvolvedActor() != null) {
-            contactName = data.getInvolvedActor().getName();
-        }
+        if (data.getInvolvedActor() != null)
 
+            if (data.getInvolvedActor().getType()== Actors.BITCOIN_BASIC_USER)
+                contactName = "Bitcoin Wallet";
+            else
+                contactName = data.getInvolvedActor().getName();
+
+        else
+            contactName = "Unknown";
+
+        //Validate if the transaction is credit or debit
         if (data.getTransactionType() == TransactionType.CREDIT)
             holder.getTransaction_user().setText("From: " + contactName + ".");
         else
             holder.getTransaction_user().setText("To: " + contactName + ".");
 
-        holder.getTransaction_note().setText("Note: "+data.getMemo()+".");
+        //Set transaction note
+        holder.getTransaction_note().setText("Note: " + data.getMemo() + ".");
 
 
     }
