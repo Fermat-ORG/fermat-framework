@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.ActorCallRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ServerHandshakeRespond;
@@ -97,17 +98,18 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
          * Register all messages processor for this
          * channel
          */
+        registerMessageProcessor(new ActorCallRequestProcessor(this));
         registerMessageProcessor(new ActorTraceDiscoveryQueryRequestProcessor(this));
-        registerMessageProcessor(new CheckInClientRequestProcessor(this));
         registerMessageProcessor(new AddActorIntoCatalogProcessor(this));
-        registerMessageProcessor(new CheckInNetworkServiceRequestProcessor(this));
         registerMessageProcessor(new CheckInActorRequestProcessor(this));
+        registerMessageProcessor(new CheckInClientRequestProcessor(this));
+        registerMessageProcessor(new CheckInNetworkServiceRequestProcessor(this));
         registerMessageProcessor(new CheckInProfileDiscoveryQueryRequestProcessor(this));
         registerMessageProcessor(new CheckOutActorRequestProcessor(this));
         registerMessageProcessor(new CheckOutClientRequestProcessor(this));
         registerMessageProcessor(new CheckOutNetworkServiceRequestProcessor(this));
-        registerMessageProcessor(new NearNodeListRequestProcessor(this));
         registerMessageProcessor(new MessageTransmitProcessor(this));
+        registerMessageProcessor(new NearNodeListRequestProcessor(this));
 
     }
 

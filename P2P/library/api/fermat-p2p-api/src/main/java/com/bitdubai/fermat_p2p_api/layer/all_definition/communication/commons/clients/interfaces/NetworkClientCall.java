@@ -16,7 +16,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public interface NetworkClientCall<T extends Profile> {
+public interface NetworkClientCall {
 
     /**
      * Through the method <code>sendPackageMessage</code> we can send messages to other Client.
@@ -44,6 +44,8 @@ public interface NetworkClientCall<T extends Profile> {
      *
      * @return an instance of a profile.
      */
-    T getProfile();
+    Profile getProfile();
+
+    boolean isConnected();
 
 }

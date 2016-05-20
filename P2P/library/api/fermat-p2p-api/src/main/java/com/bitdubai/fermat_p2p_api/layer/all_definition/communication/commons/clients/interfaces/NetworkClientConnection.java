@@ -8,6 +8,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
@@ -90,6 +91,8 @@ public interface NetworkClientConnection {
      * @return a CommunicationChannels enum element.
      */
     CommunicationChannels getCommunicationChannelType();
+
+    void callActor(NetworkServiceProfile networkServiceProfile, ActorProfile actorProfile);
 
     /**
      * Through the method <code>isConnected</code> we can verify if the connection object is

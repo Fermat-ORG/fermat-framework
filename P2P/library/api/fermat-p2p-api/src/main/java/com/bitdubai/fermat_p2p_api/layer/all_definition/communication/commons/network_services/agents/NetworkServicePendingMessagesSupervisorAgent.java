@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.abstract_classes.AbstractNetworkService;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.network_services.database.entities.NetworkServiceMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
@@ -103,9 +102,11 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
             /*
              * Read all pending message from database
              */
-            List<NetworkServiceMessage> messages = networkServiceRoot.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findByFailCount(countFail, countFailMax);
+            Map<String, Object> filters = new HashMap<>();
+            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.PENDING_TO_SEND.getCode());
+            List<NetworkServiceMessage> messages = networkServiceRoot.getNetworkServiceConnectionManager().getOutgoingMessagesDao().findAll(filters);
 
-           // System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getNetworkServiceProfile().getName()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
+            System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getProfile().getNetworkServiceType()+") - processPendingOutgoingMessage messages.size() = "+ (messages != null ? messages.size() : 0));
 
             if(messages != null) {
 
@@ -116,28 +117,13 @@ public class NetworkServicePendingMessagesSupervisorAgent extends FermatAgent {
 
                     if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiverPublicKey())) {
 
-                        if (fermatMessage.isBetweenActors()) {
+                        ActorProfile remoteParticipant = new ActorProfile();
+                        remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
 
-                            ActorProfile remoteParticipant = new ActorProfile();
-                            remoteParticipant.setClientIdentityPublicKey(fermatMessage.getReceiverClientPublicKey());
-                            remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
-                            remoteParticipant.setActorType(fermatMessage.getReceiverActorType());
+                        networkServiceRoot.getConnection().callActor(networkServiceRoot.getProfile(), remoteParticipant);
 
-                            networkServiceRoot.getNetworkServiceConnectionManager().connectTo(remoteParticipant);
+                        poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
 
-                            poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
-
-                        } else {
-
-                            NetworkServiceProfile remoteParticipant = new NetworkServiceProfile();
-
-                            remoteParticipant.setIdentityPublicKey(fermatMessage.getReceiverPublicKey());
-                            remoteParticipant.setNetworkServiceType(networkServiceRoot.getProfile().getNetworkServiceType());
-
-                            networkServiceRoot.getNetworkServiceConnectionManager().connectTo(remoteParticipant);
-
-                            poolConnectionsWaitingForResponse.put(fermatMessage.getReceiverPublicKey(), remoteParticipant);
-                        }
                     }
                 }
 

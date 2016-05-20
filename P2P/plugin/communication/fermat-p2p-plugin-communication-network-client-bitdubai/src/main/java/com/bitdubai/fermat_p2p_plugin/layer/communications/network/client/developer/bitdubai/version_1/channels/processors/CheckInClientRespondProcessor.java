@@ -53,7 +53,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
             /*
              * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
              */
-            getChannel().getNetworkClientCommunicationConnection().setNodesListPosition();
+            getChannel().getConnection().setNodesListPosition();
 
             /*
              * set registered
@@ -64,10 +64,10 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
              * if is connection to other node extern then
              * send profile of the Network Service
              */
-            if(getChannel().getNetworkClientCommunicationConnection().isExternalNode()) {
+            if(getChannel().getConnection().isExternalNode()) {
 
-                String uriToNode = getChannel().getNetworkClientCommunicationConnection().getUri().getHost() + ":" +
-                        getChannel().getNetworkClientCommunicationConnection().getUri().getPort();
+                String uriToNode = getChannel().getConnection().getUri().getHost() + ":" +
+                        getChannel().getConnection().getUri().getPort();
 
                  /*
                  * Create a raise a new event whit the NETWORK_CLIENT_CONNECTION_SUCCESS

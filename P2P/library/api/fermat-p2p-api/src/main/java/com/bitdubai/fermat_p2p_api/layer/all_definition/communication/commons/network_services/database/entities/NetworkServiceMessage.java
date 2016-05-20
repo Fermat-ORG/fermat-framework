@@ -29,12 +29,7 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
     private           String                   content                ;
     private transient NetworkServiceType       networkServiceType     ;
     private           String                   senderPublicKey        ;
-    private transient String                   senderClientPublicKey  ;
-    private transient String                   senderActorType        ;
     private           String                   receiverPublicKey      ;
-    private           String                   receiverNsPublicKey    ;
-    private transient String                   receiverClientPublicKey;
-    private transient String                   receiverActorType      ;
 
     private           Timestamp                shippingTimestamp      ;
     private           Timestamp                deliveryTimestamp      ;
@@ -85,44 +80,12 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
         this.senderPublicKey = senderPublicKey;
     }
 
-    public String getSenderClientPublicKey() {
-        return senderClientPublicKey;
-    }
-
-    public void setSenderClientPublicKey(String senderClientPublicKey) {
-        this.senderClientPublicKey = senderClientPublicKey;
-    }
-
-    public String getSenderActorType() {
-        return senderActorType;
-    }
-
-    public void setSenderActorType(String senderActorType) {
-        this.senderActorType = senderActorType;
-    }
-
     public String getReceiverPublicKey() {
         return receiverPublicKey;
     }
 
     public void setReceiverPublicKey(String receiverPublicKey) {
         this.receiverPublicKey = receiverPublicKey;
-    }
-
-    public String getReceiverClientPublicKey() {
-        return receiverClientPublicKey;
-    }
-
-    public void setReceiverClientPublicKey(String receiverClientPublicKey) {
-        this.receiverClientPublicKey = receiverClientPublicKey;
-    }
-
-    public String getReceiverActorType() {
-        return receiverActorType;
-    }
-
-    public void setReceiverActorType(String receiverActorType) {
-        this.receiverActorType = receiverActorType;
     }
 
     public Timestamp getShippingTimestamp() {
@@ -165,14 +128,6 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
         this.failCount = failCount;
     }
 
-    public String getReceiverNsPublicKey() {
-        return receiverNsPublicKey;
-    }
-
-    public void setReceiverNsPublicKey(String receiverNsPublicKey) {
-        this.receiverNsPublicKey = receiverNsPublicKey;
-    }
-
     public Boolean isBetweenActors() {
         return isBetweenActors;
     }
@@ -211,12 +166,7 @@ public class NetworkServiceMessage extends PackageContent implements Serializabl
                 ", content='" + content + '\'' +
                 ", networkServiceType=" + networkServiceType +
                 ", senderPublicKey='" + senderPublicKey + '\'' +
-                ", senderClientPublicKey='" + senderClientPublicKey + '\'' +
-                ", senderActorType='" + senderActorType + '\'' +
                 ", receiverPublicKey='" + receiverPublicKey + '\'' +
-                ", receiverNsPublicKey='" + receiverNsPublicKey + '\'' +
-                ", receiverClientPublicKey='" + receiverClientPublicKey + '\'' +
-                ", receiverActorType='" + receiverActorType + '\'' +
                 ", shippingTimestamp=" + shippingTimestamp +
                 ", deliveryTimestamp=" + deliveryTimestamp +
                 ", isBetweenActors=" + isBetweenActors +

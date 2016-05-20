@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientCallConnectedEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionLostEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
@@ -33,7 +35,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.network_calls.NetworkClientCommunicationCall;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.gson.JsonObject;
@@ -49,6 +54,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -57,7 +63,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
-import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection</code>
@@ -70,11 +75,11 @@ import javax.websocket.Session;
  */
 public class NetworkClientCommunicationConnection implements NetworkClientConnection {
 
+    private String                 nodeUrl               ;
     private URI                    uri                   ;
     private EventManager           eventManager          ;
     private LocationManager        locationManager       ;
     private ECCKeyPair             clientIdentity        ;
-    private Session                session               ;
 
     private CopyOnWriteArrayList<NetworkClientCall> activeCalls;
 
@@ -108,11 +113,6 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
      */
     private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
 
-    /*
-     * Represent the clientProfile
-     */
-    private ClientProfile clientProfile;
-
    /*
     * is used to validate if it is connection to an external node
     * when receive check-in-client then send register all profile
@@ -122,7 +122,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     /*
      * Constructor
      */
-    public NetworkClientCommunicationConnection(final URI                                  uri              ,
+    public NetworkClientCommunicationConnection(final String                               nodeUrl          ,
                                                 final EventManager                         eventManager     ,
                                                 final LocationManager                      locationManager  ,
                                                 final ECCKeyPair                           clientIdentity   ,
@@ -130,6 +130,13 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
                                                 final Integer                              nodesListPosition,
                                                 final boolean                              isExternalNode   ){
 
+        URI uri = null;
+        try {
+            uri = new URI(HardcodeConstants.WS_PROTOCOL + nodeUrl + "/fermat/ws/client-channel");
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        this.nodeUrl                = nodeUrl                     ;
         this.uri                    = uri                         ;
         this.eventManager           = eventManager                ;
         this.locationManager        = locationManager             ;
@@ -143,7 +150,7 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         this.activeCalls            = new CopyOnWriteArrayList<>();
         this.container              = ClientManager.createClient();
 
-        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this);
+        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this, isExternalNode);
     }
 
     /*
@@ -236,9 +243,34 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
 
         try {
 
-            // es malo usar la session de una vez ya que es asincrono la conexion
-            // y da exception
-            session = container.connectToServer(communicationsNetworkClientChannel, uri);
+            container.connectToServer(communicationsNetworkClientChannel, uri);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+    * initialize And Connect to Network Node
+    */
+    public void initializeAndConnectToExternalNode(final NetworkServiceType networkServiceType,
+                                                   final ActorProfile       actorProfile      ) {
+
+        NetworkClientCommunicationCall actorCall = new NetworkClientCommunicationCall(
+                networkServiceType,
+                actorProfile,
+                this
+        );
+
+        this.addCall(actorCall);
+
+        System.out.println("*****************************************************************");
+        System.out.println("Connecting To Server: " + uri);
+        System.out.println("*****************************************************************");
+
+        try {
+
+            container.connectToServer(communicationsNetworkClientChannel, uri);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,34 +296,54 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     /*
-     * is used to validate if is connection to extern
-     * node when receive checkinclient then send register all profile
+     * is used to validate if it is a connection to an external node
      */
     public boolean isExternalNode() {
         return isExternalNode;
     }
 
     /*
-         * CheckIn Client Request to Network Node
-         */
-    public void setCheckInClientRequestProcessor(){
+     * Register the client in the Network Node
+     */
+    public synchronized void registerInNode(){
 
-        clientProfile = new ClientProfile();
-        clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
-        clientProfile.setDeviceType("");
+        // if it is not an external node, then i register it
+        if (!isExternalNode) {
+            ClientProfile clientProfile = new ClientProfile();
+            clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
+            clientProfile.setDeviceType("");
 
-        try {
-            if(locationManager.getLocation() != null){
-              clientProfile.setLocation(locationManager.getLocation());
+            try {
+                if (locationManager.getLocation() != null) {
+                    clientProfile.setLocation(locationManager.getLocation());
+                }
+            } catch (CantGetDeviceLocationException e) {
+                e.printStackTrace();
             }
-        } catch (CantGetDeviceLocationException e) {
-            e.printStackTrace();
-        }
 
-        try {
-            registerProfile(clientProfile);
-        }catch (Exception e){
-            e.printStackTrace();
+            try {
+                registerProfile(clientProfile);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else { // if it is an external node, i will raise the event for all the calls done to this connection.
+
+            for (NetworkClientCall networkClientCall : activeCalls) {
+
+                /*
+                 * Create a raise a new event whit the NETWORK_CLIENT_CALL_CONNECTED
+                 */
+                FermatEvent actorCallConnected = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CALL_CONNECTED);
+                actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
+
+                ((NetworkClientCallConnectedEvent) actorCallConnected).setNetworkClientCall(networkClientCall);
+
+                /*
+                 * Raise the event
+                 */
+                System.out.println("NetworkClientCommunicationConnection - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
+                eventManager.raiseEvent(actorCallConnected);
+            }
         }
     }
 
@@ -649,6 +701,95 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         System.out.println("CommunicationsNetworkClientConnection - Raised Event = P2pEventType.NETWORK_CLIENT_CONNECTION_LOST");
     }
 
+    private boolean isActorOnline(final ActorProfile actorProfile) {
+
+        try {
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + actorProfile.getIdentityPublicKey());
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                return respondJsonObject.get("isOnline").getAsBoolean();
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public void callActor(final NetworkServiceProfile networkServiceProfile, final ActorProfile actorProfile) {
+
+        try {
+
+            if (isActorOnline(actorProfile)) {
+
+                NetworkClientCommunicationCall actorCall = new NetworkClientCommunicationCall(
+                        networkServiceProfile.getNetworkServiceType(),
+                        actorProfile,
+                        this
+                );
+
+                this.addCall(actorCall);
+
+                /*
+                 * Create and raise a new event with the NETWORK_CLIENT_CALL_CONNECTED
+                 */
+                FermatEvent actorCallConnected = eventManager.getNewEvent(P2pEventType.NETWORK_CLIENT_CALL_CONNECTED);
+                actorCallConnected.setSource(EventSource.NETWORK_CLIENT);
+
+                ((NetworkClientCallConnectedEvent) actorCallConnected).setNetworkClientCall(actorCall);
+
+                /*
+                 * Raise the event
+                 */
+                System.out.println("NetworkClientCommunication.callActor() - Raised a event = P2pEventType.NETWORK_CLIENT_CALL_CONNECTED");
+                eventManager.raiseEvent(actorCallConnected);
+            } else {
+                System.out.println("***** ACTOR CALL METHOD: the actor is not in the same node");
+
+                ActorCallMsgRequest actorCallMsgRequest = new ActorCallMsgRequest(
+                        networkServiceProfile.getNetworkServiceType(),
+                        actorProfile
+                );
+
+                System.out.println("***** ACTOR CALL METHOD:  SENDING ACTOR CALL REQUEST TO NODE");
+
+                try {
+
+                    sendPackage(actorCallMsgRequest, PackageType.ACTOR_CALL_REQUEST);
+
+                } catch (CantSendPackageException cantSendPackageException) {
+
+                    CantSendPackageException fermatException = new CantSendPackageException(
+                            cantSendPackageException,
+                            "actorCallMsgRequest:" + actorCallMsgRequest,
+                            "Cant send package."
+                    );
+
+                    pluginRoot.reportError(
+                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                            fermatException
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public CommunicationChannels getCommunicationChannelType() {
 
@@ -656,22 +797,14 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
     }
 
     /*
-         * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
-         */
+     * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
+     */
     public void setNodesListPosition() {
         this.nodesListPosition = -1;
     }
 
     public void setServerIdentity(String serverIdentity) {
         this.serverIdentity = serverIdentity;
-    }
-
-    public String getServerIdentity() {
-        return serverIdentity;
-    }
-
-    public ClientProfile getClientProfile() {
-        return clientProfile;
     }
 
     public URI getUri() {
@@ -682,18 +815,30 @@ public class NetworkClientCommunicationConnection implements NetworkClientConnec
         return communicationsNetworkClientChannel;
     }
 
-    public void addCall(NetworkClientCall networkClientCall) {
+    public synchronized void addCall(NetworkClientCall networkClientCall) {
 
         this.activeCalls.add(networkClientCall);
     }
 
-    public void hangUp(NetworkClientCall networkClientCall) {
+    public synchronized void hangUp(NetworkClientCall networkClientCall) {
 
         this.activeCalls.remove(networkClientCall);
 
         if (this.activeCalls.isEmpty() && isExternalNode) {
 
-            // TODO if it is an external node and there is no active calls, then remove and close the connection.
+            NetworkClientConnectionsManager networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
+
+            try {
+                // if I can, i will close the session of the connection.
+                this.communicationsNetworkClientChannel.getClientConnection().close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            networkClientConnectionsManager.getActiveConnectionsToExternalNodes().remove(this.nodeUrl);
         }
+    }
+
+    public String getNodeUrl() {
+        return nodeUrl;
     }
 }

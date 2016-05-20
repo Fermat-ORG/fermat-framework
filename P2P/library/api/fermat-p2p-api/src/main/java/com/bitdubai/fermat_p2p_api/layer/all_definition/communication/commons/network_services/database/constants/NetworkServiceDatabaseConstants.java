@@ -35,12 +35,7 @@ public final class NetworkServiceDatabaseConstants {
 
     public static final String OUTGOING_MESSAGES_ID_COLUMN_NAME                         = "id"                        ;
     public static final String OUTGOING_MESSAGES_SENDER_PUBLIC_KEY_COLUMN_NAME          = "sender_public_key"         ;
-    public static final String OUTGOING_MESSAGES_SENDER_ACTOR_TYPE_COLUMN_NAME          = "sender_actor_type"         ;
-    public static final String OUTGOING_MESSAGES_SENDER_CLIENT_PUBLIC_KEY_COLUMN_NAME   = "sender_client_public_key"  ;
     public static final String OUTGOING_MESSAGES_RECEIVER_PUBLIC_KEY_COLUMN_NAME        = "receiver_public_key"       ;
-    public static final String OUTGOING_MESSAGES_RECEIVER_ACTOR_TYPE_COLUMN_NAME        = "receiver_actor_type"       ;
-    public static final String OUTGOING_MESSAGES_RECEIVER_CLIENT_PUBLIC_KEY_COLUMN_NAME = "receiver_client_public_key";
-    public static final String OUTGOING_MESSAGES_RECEIVER_NS_PUBLIC_KEY_COLUMN_NAME     = "receiver_ns_public_key"    ;
     public static final String OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME         = "shipping_timestamp"        ;
     public static final String OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME         = "delivery_timestamp"        ;
     public static final String OUTGOING_MESSAGES_CONTENT_COLUMN_NAME                    = "content"                   ;

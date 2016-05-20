@@ -11,6 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pE
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ActorCallRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.ActorTraceDiscoveryQueryRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckInActorRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors.CheckInClientRespondProcessor;
@@ -28,6 +29,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.io.IOException;
@@ -68,12 +70,17 @@ public class CommunicationsNetworkClientChannel {
      */
     private Map<PackageType, List<PackageProcessor>> packageProcessors;
 
-    private NetworkClientCommunicationConnection networkClientCommunicationConnection;
+    private NetworkClientCommunicationConnection connection;
 
     /**
      * Represent if the client is register with the server
      */
     private boolean isRegistered;
+
+    /**
+     * Represent if the client is connected to external node through this channel
+     */
+    private Boolean isExternalNode;
 
     /**
      * Represent the clientConnection
@@ -82,14 +89,15 @@ public class CommunicationsNetworkClientChannel {
 
     private EventManager eventManager  ;
 
-    public CommunicationsNetworkClientChannel(NetworkClientCommunicationConnection networkClientCommunicationConnection) {
+    public CommunicationsNetworkClientChannel(final NetworkClientCommunicationConnection connection    ,
+                                              final Boolean                              isExternalNode) {
 
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
 
-        this.networkClientCommunicationConnection = networkClientCommunicationConnection;
-
-        this.packageProcessors         = new HashMap<>();
-        this.isRegistered = Boolean.FALSE;
+        this.connection        = connection     ;
+        this.isExternalNode    = isExternalNode ;
+        this.isRegistered      = Boolean.FALSE  ;
+        this.packageProcessors = new HashMap<>();
 
         initPackageProcessorsRegistration();
     }
@@ -99,18 +107,19 @@ public class CommunicationsNetworkClientChannel {
         /*
          * Register all messages processor for this channel
          */
+        registerMessageProcessor(new ActorCallRespondProcessor(this));
         registerMessageProcessor(new ActorTraceDiscoveryQueryRespondProcessor(this));
         registerMessageProcessor(new CheckInActorRespondProcessor(this));
         registerMessageProcessor(new CheckInClientRespondProcessor(this));
         registerMessageProcessor(new CheckInNetworkServiceRespondProcessor(this));
         registerMessageProcessor(new CheckInProfileDiscoveryQueryRespondProcessor(this));
-        registerMessageProcessor(new NearNodeListRespondProcessor(this));
-        registerMessageProcessor(new ServerHandshakeRespondProcessor(this));
+        registerMessageProcessor(new CheckOutActorRespondProcessor(this));
         registerMessageProcessor(new CheckOutClientRespondProcessor(this));
         registerMessageProcessor(new CheckOutNetworkServiceRespondProcessor(this));
-        registerMessageProcessor(new CheckOutActorRespondProcessor(this));
         registerMessageProcessor(new MessageTransmitProcessor(this));
         registerMessageProcessor(new MessageTransmitRespondProcessor(this));
+        registerMessageProcessor(new NearNodeListRespondProcessor(this));
+        registerMessageProcessor(new ServerHandshakeRespondProcessor(this));
 
     }
 
@@ -125,7 +134,7 @@ public class CommunicationsNetworkClientChannel {
         /*
          * set ServerIdentity
          */
-        networkClientCommunicationConnection.setServerIdentity((String) session.getUserProperties().get(""));
+        connection.setServerIdentity((String) session.getUserProperties().get(""));
 
     }
 
@@ -156,32 +165,39 @@ public class CommunicationsNetworkClientChannel {
         System.out.println("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
 
         System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" CommunicationsNetworkClientChannel - Starting method onClose");
+        System.out.println(" CommunicationsNetworkClientChannel - Starting method onClose "+(isExternalNode ? "external node ---" : ""));
 
-        isRegistered = Boolean.FALSE;
+        // if it is not an external node i raise the event.
+        if (!isExternalNode) {
+            isRegistered = Boolean.FALSE;
 
-        try {
-            switch (closeReason.getCloseCode().getCode()) {
+            try {
+                switch (closeReason.getCloseCode().getCode()) {
 
-                case 1002:
-                case 1006:
-                    raiseClientConnectionLostNotificationEvent();
-                    break;
-
-                default:
-
-                    if (closeReason.getReasonPhrase().contains("Connection failed")){
+                    case 1002:
+                    case 1006:
                         raiseClientConnectionLostNotificationEvent();
-                    } else {
-                        raiseClientConnectionClosedNotificationEvent();
-                        setIsRegistered(Boolean.FALSE);
-                    }
+                        break;
 
-                    break;
+                    default:
+
+                        if (closeReason.getReasonPhrase().contains("Connection failed")) {
+                            raiseClientConnectionLostNotificationEvent();
+                        } else {
+                            raiseClientConnectionClosedNotificationEvent();
+                            setIsRegistered(Boolean.FALSE);
+                        }
+
+                        break;
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e){
-            e.printStackTrace();
+        } else {
+            NetworkClientConnectionsManager networkClientConnectionsManager = (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
+            if (networkClientConnectionsManager.getActiveConnectionsToExternalNodes().containsKey(this.connection.getNodeUrl()))
+                networkClientConnectionsManager.getActiveConnectionsToExternalNodes().remove(this.connection.getNodeUrl());
         }
     }
 
@@ -249,8 +265,8 @@ public class CommunicationsNetworkClientChannel {
         return packageProcessors.containsKey(packageType);
     }
 
-    public NetworkClientCommunicationConnection getNetworkClientCommunicationConnection() {
-        return networkClientCommunicationConnection;
+    public NetworkClientCommunicationConnection getConnection() {
+        return connection;
     }
 
     /**

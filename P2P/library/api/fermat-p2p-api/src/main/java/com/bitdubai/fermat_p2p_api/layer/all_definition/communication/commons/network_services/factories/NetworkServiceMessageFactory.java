@@ -44,9 +44,7 @@ public class NetworkServiceMessageFactory {
         message.setContent(content);
         message.setNetworkServiceType(senderProfile.getNetworkServiceType());
         message.setSenderPublicKey(senderProfile.getIdentityPublicKey());
-        message.setSenderClientPublicKey(senderProfile.getClientIdentityPublicKey());
         message.setReceiverPublicKey(receiverProfile.getIdentityPublicKey());
-        message.setReceiverClientPublicKey(receiverProfile.getClientIdentityPublicKey());
         message.setShippingTimestamp(new Timestamp(System.currentTimeMillis()));
         message.setIsBetweenActors(Boolean.FALSE);
         message.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);
@@ -79,12 +77,7 @@ public class NetworkServiceMessageFactory {
         message.setContent(content);
         message.setNetworkServiceType(networkServiceProfile.getNetworkServiceType());
         message.setSenderPublicKey(senderActorProfile.getIdentityPublicKey());
-        message.setSenderClientPublicKey(senderActorProfile.getClientIdentityPublicKey());
-        message.setSenderActorType(senderActorProfile.getActorType());
         message.setReceiverPublicKey(receiverActorProfile.getIdentityPublicKey());
-        message.setReceiverClientPublicKey(receiverActorProfile.getClientIdentityPublicKey());
-        message.setReceiverActorType(receiverActorProfile.getActorType());
-        message.setReceiverNsPublicKey(receiverActorProfile.getNsIdentityPublicKey());
         message.setShippingTimestamp(new Timestamp(System.currentTimeMillis()));
         message.setIsBetweenActors(Boolean.TRUE);
         message.setFermatMessagesStatus(FermatMessagesStatus.PENDING_TO_SEND);

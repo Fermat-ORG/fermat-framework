@@ -12,6 +12,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -68,12 +72,10 @@ public class MessageTransmitProcessor extends PackageProcessor {
 
         try {
 
-            //PackageMessage packageMessage = (PackageMessage) packageReceived;
-
             /*
              * Get the content
              */
-            messageContent = GsonProvider.getGson().fromJson(packageReceived.getContent(), NetworkServiceMessage.class);
+            messageContent = NetworkServiceMessage.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -89,6 +91,17 @@ public class MessageTransmitProcessor extends PackageProcessor {
              * Get the connection to the destination
              */
             Session clientDestination =  clientsSessionMemoryCache.get(destinationIdentityPublicKey);
+
+
+            if (clientDestination == null) {
+                try {
+                    CheckedInActor checkedInActor = getDaoFactory().getCheckedInActorDao().findById(destinationIdentityPublicKey);
+                    clientDestination = clientsSessionMemoryCache.get(checkedInActor.getClientIdentityPublicKey());
+                } catch (CantReadRecordDataBaseException| RecordNotFoundException e) {
+                    System.out.println("i suppose that the actor is no longer connected");
+                    e.printStackTrace();
+                }
+            }
 
             if (clientDestination != null){
 

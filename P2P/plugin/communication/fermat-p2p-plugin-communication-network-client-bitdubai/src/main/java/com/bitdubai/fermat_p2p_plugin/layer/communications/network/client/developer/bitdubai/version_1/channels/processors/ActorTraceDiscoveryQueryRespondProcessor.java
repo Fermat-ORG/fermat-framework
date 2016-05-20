@@ -4,15 +4,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.ActorFoundEvent;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.events.NetworkClientConnectionSuccessEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ActorsProfileListMsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ResultDiscoveryTraceActor;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientConnectionsManager;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -36,22 +34,16 @@ import javax.websocket.Session;
  */
 public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
 
-    /*
-     * Represent the networkClientConnectionsManager
-     */
-    private NetworkClientConnectionsManager networkClientConnectionsManager;
-
     /**
      * Constructor whit parameter
      *
      * @param communicationsNetworkClientChannel register
      */
-    public ActorTraceDiscoveryQueryRespondProcessor(final com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
+    public ActorTraceDiscoveryQueryRespondProcessor(final CommunicationsNetworkClientChannel communicationsNetworkClientChannel) {
         super(
                 communicationsNetworkClientChannel,
                 PackageType.ACTOR_TRACE_DISCOVERY_QUERY_RESPOND
         );
-        this.networkClientConnectionsManager =  (NetworkClientConnectionsManager) ClientContext.get(ClientContextItem.CLIENTS_CONNECTIONS_MANAGER);
     }
 
     /**
@@ -78,6 +70,7 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
 
     }
 
+
     /*
      * we go through ResultDiscoveryTraceActor list when get the Actor
      * then raise event notification
@@ -86,150 +79,79 @@ public class ActorTraceDiscoveryQueryRespondProcessor extends PackageProcessor {
 
         Boolean isOnline = Boolean.FALSE;
 
-        for(ResultDiscoveryTraceActor result : resultList){
+        for(ResultDiscoveryTraceActor result : resultList) {
 
-            try {
+            isOnline = isActorOnline(result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort(), result.getActorProfile());
 
-                URL url = new URL("http://" + result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort() +
-                        "/fermat/rest/api/v1/online/component/actor/" + result.getActorProfile().getIdentityPublicKey());
+            if (isOnline) {
 
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Accept", "application/json");
+                System.out.print("Actor Found in the NODE: " + result.getNodeProfile().toJson());
 
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                String respond = reader.readLine();
+                String uriToNode = result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort();
 
-                if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
-                    /*
-                    * Decode into a json Object
-                    */
-                    JsonParser parser = new JsonParser();
-                    JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+                /*
+                 * Create a raise a new event whit the platformComponentProfile registered
+                 */
+                FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_FOUND);
+                event.setSource(EventSource.NETWORK_CLIENT);
 
-                    isOnline = respondJsonObject.get("isOnline").getAsBoolean();
+                /*
+                 * this is to filter the networkservice intermediate
+                 */
+                ((ActorFoundEvent) event).setNetworkServiceTypeIntermediate(networkServiceTypeIntermediate);
 
-                    if(isOnline){
+                /*
+                 * this is to know who is the nodeprofile to send message
+                 */
+                ((ActorFoundEvent) event).setActorProfile(result.getActorProfile());
 
-                        System.out.print("Actor Found in the NODE: " + result.getNodeProfile().toJson());
+                /*
+                 * this is to filter when the client is checkin in other node
+                 */
+                ((ActorFoundEvent) event).setUriToNode(uriToNode);
 
-                        String uriToNode =  result.getNodeProfile().getIp() + ":" + result.getNodeProfile().getDefaultPort();
+                 /*
+                 * Raise the event
+                 */
+                System.out.println("ActorTraceDiscoveryQueryRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_FOUND");
+                getEventManager().raiseEvent(event);
 
-                        /*
-                         * if exist conenction to node use the actual NetworkClientCommunicationConnection
-                         * else then request a new NetworkClientCommunicationConnection to that Node
-                         */
-                        if(networkClientConnectionsManager.getActiveConnectionsToExternalNodes().containsKey(uriToNode)){
+                break;
 
-                            /*
-                             * set the ListActorConnectIntoNode with IdentityPublicKey of Actor and
-                             * the uriToNode to can find the NetworkClientCommunicationConnection in the
-                             * ListConnectionActiveToNode
-                             */
-                            networkClientConnectionsManager.getListActorConnectIntoNode().put(
-                                    result.getActorProfile().getIdentityPublicKey(),
-                                    uriToNode
-                            );
-
-                            /*
-                             * set the ListConnectionActiveToNode with uriToNode and the
-                             * NetworkClientCommunicationConnection respective
-                             */
-                            networkClientConnectionsManager.getActiveConnectionsToExternalNodes().put(
-                                    uriToNode,
-                                    networkClientConnectionsManager.getActiveConnectionsToExternalNodes().get(uriToNode)
-                            );
-
-                                                         /*
-                             * Create a raise a new event whit the platformComponentProfile registered
-                             */
-                            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_FOUND);
-                            event.setSource(EventSource.NETWORK_CLIENT);
-
-                            /*
-                             * this is to filter the networkservice intermediate
-                             */
-                            ((ActorFoundEvent) event).setNetworkServiceTypeIntermediate(networkServiceTypeIntermediate);
-
-                            /*
-                             * this is to know who is the nodeprofile to send message
-                             */
-                            ((ActorFoundEvent) event).setActorProfile(result.getActorProfile());
-
-                            /*
-                             * this is to filter when the client is checkin in other node
-                             */
-                            ((ActorFoundEvent) event).setUriToNode(uriToNode);
-
-                             /*
-                             * Raise the event
-                             */
-                            System.out.println("ActorTraceDiscoveryQueryRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_FOUND");
-                            getEventManager().raiseEvent(event);
-
-                            /*
-                             * Create a raise a new event whit the NETWORK_CLIENT_CONNECTION_SUCCESS
-                             */
-                            FermatEvent eventConnectionSuccess = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS);
-                            event.setSource(EventSource.NETWORK_CLIENT);
-
-                            ((NetworkClientConnectionSuccessEvent) eventConnectionSuccess).setUriToNode(uriToNode);
-
-                            /*
-                             * Raise the event
-                             */
-                            System.out.println("ActorTraceDiscoveryQueryRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_CONNECTION_SUCCESS");
-                            getEventManager().raiseEvent(eventConnectionSuccess);
-
-                        }else{
-
-                             /*
-                             * Create a raise a new event whit the platformComponentProfile registered
-                             */
-                            FermatEvent event = getEventManager().getNewEvent(P2pEventType.NETWORK_CLIENT_ACTOR_FOUND);
-                            event.setSource(EventSource.NETWORK_CLIENT);
-
-                            /*
-                             * this is to filter the networkservice intermediate
-                             */
-                            ((ActorFoundEvent) event).setNetworkServiceTypeIntermediate(networkServiceTypeIntermediate);
-
-                            /*
-                             * this is to know who is the nodeprofile to send message
-                             */
-                            ((ActorFoundEvent) event).setActorProfile(result.getActorProfile());
-
-                            /*
-                             * this is to filter when the client is checkin in other node
-                             */
-                            ((ActorFoundEvent) event).setUriToNode(uriToNode);
-
-                             /*
-                             * Raise the event
-                             */
-                            System.out.println("ActorTraceDiscoveryQueryRespondProcessor - Raised a event = P2pEventType.NETWORK_CLIENT_ACTOR_FOUND");
-                            getEventManager().raiseEvent(event);
-
-                        }
-
-                        //raise event success found actor
-
-                        break;
-                    }
-
-                }
-
-            } catch (Exception e) {
-               // e.printStackTrace();
             }
-
         }
 
-        if(!isOnline) {
+        if (!isOnline) {
             System.out.print("Actor NOT Found in the list of NODES");
             //raise event not success found actor
         }
+    }
 
+    private boolean isActorOnline(final String  nodeUrl     ,
+                                  final Profile actorProfile) {
+
+        try {
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + actorProfile.getIdentityPublicKey());
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                return respondJsonObject.get("isOnline").getAsBoolean();
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 }
