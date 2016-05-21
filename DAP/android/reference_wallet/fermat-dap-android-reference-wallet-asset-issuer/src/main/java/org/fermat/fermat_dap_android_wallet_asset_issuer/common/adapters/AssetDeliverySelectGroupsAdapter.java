@@ -5,9 +5,9 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_issuer.holders.AssetDeliverySelectGroupsHolder;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Group;
-
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 import java.util.List;

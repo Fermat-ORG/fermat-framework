@@ -1,17 +1,18 @@
 package org.fermat.fermat_dap_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+
 import org.fermat.fermat_dap_core.layer.actor.ActorLayer;
 import org.fermat.fermat_dap_core.layer.actor_network_service.ActorNetworkServiceLayer;
+import org.fermat.fermat_dap_core.layer.digital_asset_transaction.DigitalAssetTransactionLayer;
 import org.fermat.fermat_dap_core.layer.funds_transaction.FundsTransactionLayer;
 import org.fermat.fermat_dap_core.layer.identity.IdentityLayer;
 import org.fermat.fermat_dap_core.layer.middleware.MiddlewareLayer;
 import org.fermat.fermat_dap_core.layer.network_service.NetworkServiceLayer;
-import org.fermat.fermat_dap_core.layer.digital_asset_transaction.DigitalAssetTransactionLayer;
 import org.fermat.fermat_dap_core.layer.sub_app_module.SubAppModuleLayer;
 import org.fermat.fermat_dap_core.layer.wallet.WalletLayer;
 import org.fermat.fermat_dap_core.layer.wallet_module.WalletModuleLayer;

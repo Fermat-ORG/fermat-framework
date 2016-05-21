@@ -7,13 +7,14 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.UUID;
 
 /**
  * Created by nelson on 11/11/15.
  */
-public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation {
+public class CryptoBrokerWalletModuleContractBasicInformation implements ContractBasicInformation, Serializable {
 
     private static Calendar instance = Calendar.getInstance();
 

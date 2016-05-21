@@ -5,7 +5,6 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -186,7 +185,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
                 clauseViewHolder.setViewResources(R.string.ccw_cash_place_to_delivery_broker, clauseNumberImageRes, R.string.selected_location);
                 break;
             case CUSTOMER_DATE_TIME_TO_DELIVER:
-                clauseViewHolder.setViewResources(R.string.delivery_date_title, clauseNumberImageRes, R.string.delivery_date_text);
+                clauseViewHolder.setViewResources(R.string.ccw_delivery_date_title, clauseNumberImageRes, R.string.delivery_date_text);
                 break;
             case BROKER_DATE_TIME_TO_DELIVER:
                 clauseViewHolder.setViewResources(R.string.payment_date_title, clauseNumberImageRes, R.string.payment_date_text);

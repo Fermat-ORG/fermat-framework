@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="20dp"
+    android:background="@drawable/chip_backg">
+
+    <TextView
+        android:id="@+id/marker_element"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="USD 34.255"
+        android:textSize="10dp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>

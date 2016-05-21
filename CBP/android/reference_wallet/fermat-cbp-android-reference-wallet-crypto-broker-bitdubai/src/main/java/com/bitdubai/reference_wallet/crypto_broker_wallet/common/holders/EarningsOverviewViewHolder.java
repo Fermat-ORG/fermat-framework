@@ -6,7 +6,10 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
@@ -35,14 +38,19 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
 
     public void bind(EarningsDetailData data, TimeFrequency frequency, Currency earningCurrency) {
         final NumberFormat numberFormat = DecimalFormat.getInstance();
-
-        final String diff = numberFormat.format(data.getAmount());
         final String currencyCode = earningCurrency.getCode();
 
-        if (data.getAmount() > 0) {
+        double amount = data.getAmount();
+
+        if(earningCurrency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+            amount = BitcoinConverter.convert(amount, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
+
+        final String diff = numberFormat.format(amount);
+
+        if (amount > 0) {
             differenceTextView.setText(String.format("+ %s %s", diff, currencyCode));
             differenceTextView.setTextColor(Color.parseColor("#39ab89"));
-        } else if (data.getAmount() < 0) {
+        } else if (amount < 0) {
             differenceTextView.setText(String.format("%s %s", diff, currencyCode));
             differenceTextView.setTextColor(Color.parseColor("#d14846"));
         } else {

@@ -2,11 +2,14 @@ package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develop
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantMakeHoldTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
@@ -17,22 +20,20 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develope
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by memo on 25/11/15.
  */
-public class HoldBankMoneyTransactionManager implements HoldManager {
+public class HoldBankMoneyTransactionManager implements HoldManager, Serializable {
 
-    private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID pluginId;
     private final ErrorManager errorManager;
     HoldBankMoneyTransactionDao holdBankMoneyTransactionDao;
 
     public HoldBankMoneyTransactionManager(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) throws CantStartPluginException  {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
         this.errorManager = errorManager;
         holdBankMoneyTransactionDao = new HoldBankMoneyTransactionDao(pluginDatabaseSystem,pluginId,errorManager);
         try{
@@ -50,12 +51,15 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
     public List<BankTransaction> getAcknowledgedTransactionList() throws CantGetHoldTransactionException{
         return holdBankMoneyTransactionDao.getAcknowledgedTransactionList();
     }
+
     public void setTransactionStatusToPending(UUID transactionId) throws CantUpdateHoldTransactionException {
         holdBankMoneyTransactionDao.updateHoldTransactionStatus(transactionId, BankTransactionStatus.PENDING);
     }
+
     public void setTransactionStatusToConfirmed(UUID transactionId) throws CantUpdateHoldTransactionException {
         holdBankMoneyTransactionDao.updateHoldTransactionStatus(transactionId, BankTransactionStatus.CONFIRMED);
     }
+
     public void setTransactionStatusToRejected(UUID transactionId) throws CantUpdateHoldTransactionException {
         holdBankMoneyTransactionDao.updateHoldTransactionStatus(transactionId, BankTransactionStatus.REJECTED);
     }
@@ -79,12 +83,71 @@ public class HoldBankMoneyTransactionManager implements HoldManager {
 
     @Override
     public boolean isTransactionRegistered(UUID transactionId) {
-        BankTransactionStatus status= null;
+        BankTransactionStatus status;
         try {
             status = holdBankMoneyTransactionDao.getHoldTransaction(transactionId).getBankTransactionStatus();
             return status != null;
         }catch (FermatException e){
             return false;
+        }
+    }
+
+    private void test(){
+        final UUID id=UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+
+        BankTransactionParameters t = new BankTransactionParameters() {
+
+            @Override
+            public UUID getTransactionId() {
+                return UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
+            }
+
+            @Override
+            public String getPublicKeyPlugin() {
+                return "foo";
+            }
+
+            @Override
+            public String getPublicKeyWallet() {
+                return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
+            }
+
+            @Override
+            public String getPublicKeyActor() {
+                return "bar";
+            }
+
+            @Override
+            public BigDecimal getAmount() {
+                return new BigDecimal("30.0");
+            }
+
+            @Override
+            public String getAccount() {
+                return "1234123412341";
+            }
+
+            @Override
+            public FiatCurrency getCurrency() {
+                return FiatCurrency.ARGENTINE_PESO;
+            }
+
+            @Override
+            public String getMemo() {
+                return "test";
+            }
+
+            @Override
+            public TransactionType getTransactionType() {
+                return TransactionType.HOLD;
+            }
+        };
+        try {
+            hold(t);
+            BankTransactionStatus status=getHoldTransactionsStatus(id);
+            System.out.println("( bank testing getHoldTransactionsStatus) =" + status.getCode());
+        }catch (FermatException e){
+            System.out.println("(bank hold) exception "+e.getMessage());
         }
     }
 }

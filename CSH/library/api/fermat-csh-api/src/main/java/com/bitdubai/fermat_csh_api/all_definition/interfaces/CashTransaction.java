@@ -2,13 +2,14 @@ package com.bitdubai.fermat_csh_api.all_definition.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 11/17/2015.
  */
-public interface CashTransaction {
+public interface CashTransaction extends Serializable {
 
     /**
      * Returns the transaction's UUID

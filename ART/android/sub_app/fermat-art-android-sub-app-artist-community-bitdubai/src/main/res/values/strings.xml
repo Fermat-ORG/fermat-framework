@@ -13,9 +13,6 @@
     <string name="wallet_status_open">UPGRADE</string>
     <string name="wallet_more_details_button">READ MORE</string>
     <string name="no_preview_images">No Preview Images</string>
-    <string name="art_afc_launch_action_creation_name_left">John Doe</string>
-    <string name="art_afc_launch_action_creation_name_right">Jane Doe</string>
-    <string name="art_afc_launch_action_creation_dialog_sub_title">This app let\'s you find Crypto Customers in the Fermat Network. \nIt\'s main features are:</string>
-    <string name="art_afc_launch_action_creation_dialog_body">* Browse for Customers around you.\n* See their profiles.\n* Connect with them.</string>
-    <string name="art_afc_launch_action_creation_dialog_footer">To begin, choose an avatar below.\nYou may change it later.</string>
+    <string name="art_aac_launch_action_creation_dialog_sub_title">This app let\'s you find Artist in the Fermat Network. \nIt\'s main features are:</string>
+    <string name="art_aac_launch_action_creation_dialog_body">* Browse for Artist around you.\n* See their profiles.\n* Connect with them.</string>
 </resources>

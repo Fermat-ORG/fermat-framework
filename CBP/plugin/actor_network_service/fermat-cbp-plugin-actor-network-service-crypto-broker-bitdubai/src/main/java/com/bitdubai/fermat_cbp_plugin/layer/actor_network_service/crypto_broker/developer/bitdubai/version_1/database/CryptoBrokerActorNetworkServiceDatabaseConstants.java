@@ -61,6 +61,7 @@ public final class CryptoBrokerActorNetworkServiceDatabaseConstants {
     public static final String QUOTES_PAYMENT_CURRENCY_COLUMN_NAME                 = "payment_currency"        ;
     public static final String QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME            = "payment_currency_type"   ;
     public static final String QUOTES_PRICE_COLUMN_NAME                            = "price"                   ;
+    public static final String QUOTES_SUPPORTED_PLATFORMS_COLUMN_NAME              = "supported_platforms"     ;
 
     public static final String QUOTES_FIRST_KEY_COLUMN                             = "request_id"              ;
 

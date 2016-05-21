@@ -123,6 +123,7 @@ public final class CryptoBrokerActorNetworkServiceDatabaseFactory {
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                , DatabaseDataType.MONEY ,   0, Boolean.FALSE);
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_SUPPORTED_PLATFORMS_COLUMN_NAME  , DatabaseDataType.MONEY ,  20, Boolean.FALSE);
 
             table.addIndex (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_FIRST_KEY_COLUMN);
 

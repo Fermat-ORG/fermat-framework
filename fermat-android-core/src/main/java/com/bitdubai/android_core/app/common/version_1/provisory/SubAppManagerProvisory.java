@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.AppManagerSettings;
+import com.bitdubai.fermat_api.layer.dmp_module.DesktopManagerSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.CantGetUserSubAppException;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
@@ -73,8 +73,47 @@ public class SubAppManagerProvisory implements SubAppManager {
         installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.TKY_ARTIST_IDENTITY_SUB_APP, null, null, "sub_app_tky_artist_identity", "Tonkenly", SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(), "sub_app_tky_artist_identity", new Version(1, 0, 0),Platforms.TOKENLY, AppsStatus.DEV);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - ART Platform
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.ART_FAN_COMMUNITY, null, null, "sub_app_art_fan_community", "Tonkenly", SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(), "sub_app_art_fan_community", new Version(1, 0, 0),Platforms.ART_PLATFORM, AppsStatus.DEV);
+
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
+                SubApps.ART_ARTIST_IDENTITY,
+                null,
+                null,
+                "sub_app_art_artist_identity",
+                "Artist Identity",
+                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                "sub_app_art_artist_identity", new Version(1, 0, 0),
+                Platforms.ART_PLATFORM,
+                AppsStatus.DEV);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
+                SubApps.ART_FAN_COMMUNITY,
+                null,
+                null,
+                "sub_app_art_fan_community",
+                "Tonkenly",
+                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
+                "sub_app_art_fan_community",
+                new Version(1, 0, 0),
+                Platforms.ART_PLATFORM,
+                AppsStatus.DEV);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
+                SubApps.ART_FAN_COMMUNITY, null, null, "sub_app_art_fan_community", "Tonkenly", SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(), "sub_app_art_fan_community", new Version(1, 0, 0),Platforms.ART_PLATFORM,
+                AppsStatus.DEV);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
+                SubApps.ART_MUSIC_PLAYER,
+                null,
+                null,
+                "music_player_sub_app",
+                "Music Player",
+                SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(),
+                "music_player_sub_app", new Version(1, 0, 0),
+                Platforms.ART_PLATFORM,
+                AppsStatus.DEV);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+
         //TODO - Add Others SubApps
 
 
@@ -97,7 +136,7 @@ public class SubAppManagerProvisory implements SubAppManager {
     }
 
     @Override
-    public SettingsManager<AppManagerSettings> getSettingsManager() {
+    public SettingsManager<DesktopManagerSettings> getSettingsManager() {
         return null;
     }
 

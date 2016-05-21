@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_api.layer.actor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
+import java.io.Serializable;
+
 /**
  * *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.identity.User</code> is a interface
  *     that define the methods for management the Users settings.
@@ -11,7 +13,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExt
  *
  */
 
-public interface Actor {
+public interface Actor extends Serializable {
 
     String getActorPublicKey();
 

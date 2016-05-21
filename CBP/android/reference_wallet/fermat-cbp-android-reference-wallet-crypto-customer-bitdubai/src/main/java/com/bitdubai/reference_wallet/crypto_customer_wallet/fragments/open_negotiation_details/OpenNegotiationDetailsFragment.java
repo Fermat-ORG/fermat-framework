@@ -24,8 +24,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -35,14 +38,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.exceptions.CantCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CouldNotCancelNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotUpdateNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleClauseInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.OpenNegotiationDetailsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.dialogs.ClauseDateTimeDialog;
@@ -57,10 +60,14 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.ACCEPTED;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.CHANGED;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.DRAFT;
 
 
 /**
@@ -193,22 +200,22 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onConfirmCLicked(final ClauseInformation clause) {
         if (clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && bankAccountList.size() == 0) {
-            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add Your Bank Account in the Settings Wallet.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add a Bank Account in the Wallet Settings.", Toast.LENGTH_LONG).show();
         } else {
             if (clause.getType().equals(ClauseType.CUSTOMER_PLACE_TO_DELIVER) && locationList.size() == 0) {
-                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add Your Locations in the Settings Wallet.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add a Location in the Wallet Settings.", Toast.LENGTH_LONG).show();
             } else {
 
                 if (clausesTemp.get(clause.getType()) != null) {
 
 
                     if (clausesTemp.get(clause.getType()).getValue().equals(clause.getValue()))
-                        putClause(clause, ClauseStatus.ACCEPTED);
+                        putClause(clause, ACCEPTED);
                     else
-                        putClause(clause, ClauseStatus.CHANGED);
+                        putClause(clause, CHANGED);
 
                 } else {
-                    putClause(clause, ClauseStatus.ACCEPTED);
+                    putClause(clause, ACCEPTED);
                 }
 
                 adapter.changeDataSet(negotiationInfo);
@@ -277,11 +284,11 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 try {
                     moduleManager.updateNegotiation(negotiationInfo);
 
-                    Toast.makeText(getActivity(), "Send Negotiation. ", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Negotiation sent", Toast.LENGTH_LONG).show();
                     changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
 
                 } catch (CouldNotUpdateNegotiationException e) {
-                    Toast.makeText(getActivity(), "Error sending the negotiation.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Error sending the negotiation", Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -356,19 +363,19 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         }
 
         //VALUE STATUS ACCEPTED IN CLAUSE CUSTOMER CURRENCY
-        putClause(clauses.get(ClauseType.CUSTOMER_CURRENCY), ClauseStatus.ACCEPTED);
+        putClause(clauses.get(ClauseType.CUSTOMER_CURRENCY), ACCEPTED);
 
         //VALUE STATUS ACCEPTED IN CLAUSE CUSTOMER CURRENCY
-        putClause(clauses.get(ClauseType.BROKER_CURRENCY), ClauseStatus.ACCEPTED);
+        putClause(clauses.get(ClauseType.BROKER_CURRENCY), ACCEPTED);
 
         //VALUE STATUS ACCEPTED IN CLAUSE BROKER CRYPTO ADDRESS
         if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) != null) {
-            putClause(clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS), ClauseStatus.ACCEPTED);
+            putClause(clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS), ACCEPTED);
         }
 
         //VALUE STATUS ACCEPTED IN CLAUSE CUSTOMER CRYPTO ADDRESS
         if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) != null) {
-            putClause(clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS), ClauseStatus.ACCEPTED);
+            putClause(clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS), ACCEPTED);
         }
 
         //VALUE DEFAULT INFO PAYMENT
@@ -730,7 +737,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         for (ClauseInformation item : clauses.values()) {
             if (validateClauseUsed(item, customerPaymentMethod, brokerPaymentMethod)) {
-                if ((item.getStatus() != ClauseStatus.CHANGED) && (item.getStatus() != ClauseStatus.ACCEPTED))
+                if ((item.getStatus() != CHANGED) && (item.getStatus() != ACCEPTED))
                     return false;
             }
         }
@@ -805,6 +812,45 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
         ArrayList<MoneyType> paymentMethods = new ArrayList<>();
 
+        negotiationInfo.getCustomer().getPublicKey();
+        negotiationInfo.getBroker().getPublicKey();
+
+        try {
+            Collection<Platforms> platforms = moduleManager.getPlatformsSupported(negotiationInfo.getCustomer().getPublicKey(), negotiationInfo.getBroker().getPublicKey(), currency);
+
+            for (Platforms p : platforms) {
+                ArrayList<MoneyType> temp = getMoneyType(p);
+                for (MoneyType m : temp) {
+                    paymentMethods.add(m);
+                }
+            }
+
+        } catch (CantGetListActorExtraDataException e) {
+            // TODO: revisar el manejo de excepciones
+        }
+
+        /*
+
+        //ADD FIAT CURRENCY IF IS FIAT
+        if (FiatCurrency.codeExists(currency)) {
+            paymentMethods.add(MoneyType.BANK);
+            paymentMethods.add(MoneyType.CASH_DELIVERY);
+            paymentMethods.add(MoneyType.CASH_ON_HAND);
+        }
+
+        //ADD CRYPTO CURRENCY IF IS CRYPTO
+        if (CryptoCurrency.codeExists(currency)) {
+            paymentMethods.add(MoneyType.CRYPTO);
+        }
+        */
+
+        return paymentMethods;
+    }
+
+    private ArrayList<MoneyType> getPaymentMethod2(String currency) {
+
+        ArrayList<MoneyType> paymentMethods = new ArrayList<>();
+
         //ADD FIAT CURRENCY IF IS FIAT
         if (FiatCurrency.codeExists(currency)) {
             paymentMethods.add(MoneyType.BANK);
@@ -820,6 +866,31 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
         return paymentMethods;
     }
 
+    private ArrayList<MoneyType> getMoneyType(Platforms p) {
+
+        ArrayList<MoneyType> moneys = new ArrayList<>();
+
+        switch (p) {
+
+            case BANKING_PLATFORM:
+                moneys.add(MoneyType.BANK);
+                break;
+
+            case CASH_PLATFORM:
+                moneys.add(MoneyType.CASH_DELIVERY);
+                moneys.add(MoneyType.CASH_ON_HAND);
+                break;
+
+            case CRYPTO_CURRENCY_PLATFORM:
+                moneys.add(MoneyType.CRYPTO);
+                break;
+
+        }
+
+        return moneys;
+
+    }
+
     /**
      * GET CLAUSE OF INFO OF RECEIVED
      *
@@ -832,7 +903,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             if (currencyType.equals(MoneyType.CRYPTO.getCode())) {
                 if (clauses.get(ClauseType.BROKER_CRYPTO_ADDRESS) == null) {
 //                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
-                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, ClauseStatus.ACCEPTED);
+                    putClause(ClauseType.BROKER_CRYPTO_ADDRESS, ACCEPTED);
                     clauses.remove(ClauseType.BROKER_BANK_ACCOUNT);
                     clauses.remove(ClauseType.BROKER_PLACE_TO_DELIVER);
 
@@ -868,14 +939,14 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
             if (currencyType.equals(MoneyType.CRYPTO.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_CRYPTO_ADDRESS) == null) {
 //                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, "Crypto Address is Generate Automatic");
-                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, ClauseStatus.ACCEPTED);
+                    putClause(ClauseType.CUSTOMER_CRYPTO_ADDRESS, ACCEPTED);
                     clauses.remove(ClauseType.CUSTOMER_BANK_ACCOUNT);
                     clauses.remove(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
                 }
 
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
-                    String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
+                    String bankAccount = "INSERT BANK ACCOUNT IN WALLET SETTINGS.";
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
 //                    bankAccount = bankAccountList.get(0).getAccount();
@@ -887,7 +958,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
-                    String infoDelivery = "INSERT LOCATION IN SETTINGS WALLET.";
+                    String infoDelivery = "INSERT LOCATION IN WALLET SETTINGS.";
                     if (locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);
@@ -907,30 +978,12 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
      */
     public void putClause(final ClauseInformation clause, final String value) {
 
-        final ClauseType type = clause.getType();
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
+        CryptoCustomerWalletModuleClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clause);
+        clauseInformation.setValue(value);
+        clauseInformation.setStatus(getStatusClauseChange(clause, value));
 
-            @Override
-            public ClauseType getType() {
-                return type;
-            }
 
-            @Override
-            public String getValue() {
-                return value;
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return getStatusClauseChange(clause, value);
-            }
-        };
-
-        negotiationInfo.getClauses().put(type, clauseInformation);
+        negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
     }
 
     /**
@@ -940,131 +993,48 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
      * @param value      the value
      */
     public void putClause(final ClauseType clauseType, final String value) {
-
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return clauseType;
-            }
-
-            @Override
-            public String getValue() {
-                return (value != null) ? value : "";
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return ClauseStatus.DRAFT;
-            }
-        };
+        final String clauseValue = (value != null) ? value : "";
+        final ClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
 
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
     /**
      * PUT IN CLAUSE THE CLAUSE TYPE AND THE VALUE
+     *
      * @param clauseType the clause type
-     * @param status the clasue status
+     * @param status     the clasue status
      */
     public void putClause(final ClauseType clauseType, final ClauseStatus status) {
-
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return clauseType;
-            }
-
-            @Override
-            public String getValue() {
-                return "";
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return status;
-            }
-        };
-
+        final ClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clauseType, "", status);
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
     //PUT CLAUSE CLAUSE AND STATUS
     public void putClause(final ClauseInformation clause, final ClauseStatus status) {
+        final CryptoCustomerWalletModuleClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clause);
+        clauseInformation.setStatus(status);
 
-        final ClauseType type = clause.getType();
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return type;
-            }
-
-            @Override
-            public String getValue() {
-                return clause.getValue();
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return status;
-            }
-        };
-
-        negotiationInfo.getClauses().put(type, clauseInformation);
+        negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
     }
 
     //PUT CLAUSE CLAUSE TYPE, VALUE
     public void putClauseTemp(final ClauseType clauseType, final String value) {
 
         if (clausesTemp.get(clauseType) == null) {
-
-            ClauseInformation clauseInformation = new ClauseInformation() {
-                @Override
-                public UUID getClauseID() {
-                    return UUID.randomUUID();
-                }
-
-                @Override
-                public ClauseType getType() {
-                    return clauseType;
-                }
-
-                @Override
-                public String getValue() {
-                    return (value != null) ? value : "";
-                }
-
-                @Override
-                public ClauseStatus getStatus() {
-                    return ClauseStatus.DRAFT;
-                }
-            };
+            final String clauseValue = (value != null) ? value : "";
+            final ClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
 
             clausesTemp.put(clauseType, clauseInformation);
         }
-
     }
 
     private ClauseStatus getStatusClauseChange(ClauseInformation clause, String newValue) {
 
         ClauseStatus statusClause = clause.getStatus();
         if (clausesTemp.get(clause.getType()) != null) {
-            if (!clausesTemp.get(clause.getType()).getValue().equals(newValue) && clause.getStatus() == ClauseStatus.ACCEPTED) {
-                statusClause = ClauseStatus.CHANGED;
+            if (!clausesTemp.get(clause.getType()).getValue().equals(newValue) && clause.getStatus() == ACCEPTED) {
+                statusClause = CHANGED;
             }
         }
 

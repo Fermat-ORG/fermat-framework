@@ -3,8 +3,11 @@
     package="com.bitdubai.reference_wallet.fan_wallet" >
 
     <application
+
         android:allowBackup="true" android:label="@string/app_name"
         >
+
+
     </application>
 
 </manifest>

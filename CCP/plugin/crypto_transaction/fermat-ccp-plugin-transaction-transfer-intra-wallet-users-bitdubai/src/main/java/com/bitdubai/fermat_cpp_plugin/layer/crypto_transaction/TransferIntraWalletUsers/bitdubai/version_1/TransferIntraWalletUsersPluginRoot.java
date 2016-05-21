@@ -54,7 +54,7 @@ import java.util.List;
  * Created by Joaquin Carrasquero on 18/03/16.
  */
 
-@PluginInfo(createdBy = "Joaquin Carrasquero", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Joaquin Carrasquero", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.TRANSFER_INTRA_WALLET)
 
 public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
         implements TransferIntraWalletUsersManager,DatabaseManagerForDevelopers {

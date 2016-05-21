@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
@@ -24,6 +26,7 @@ public class FragmentsCommons {
 
     public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ActiveActorIdentityInformation intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
+        FermatAnimationsUtils.showEmpty(activity, true, view.findViewById(R.id.progressBar));
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
@@ -50,7 +53,7 @@ public class FragmentsCommons {
             }else{
                 fermatTextView.setText("");
             }
-
+            FermatAnimationsUtils.showEmpty(activity, false, view.findViewById(R.id.progressBar));
             return view;
         }catch (OutOfMemoryError outOfMemoryError){
             Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();

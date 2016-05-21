@@ -92,9 +92,9 @@ public class IssuerCommunityNavigationAdapter extends FermatAdapter<MenuItem, Is
                                 .build());
                     }
                     break;
-                case 3:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
-                    break;
+//                case 3:
+//                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings_active);
+//                    break;
             }
         }catch (Exception e){
             e.printStackTrace();

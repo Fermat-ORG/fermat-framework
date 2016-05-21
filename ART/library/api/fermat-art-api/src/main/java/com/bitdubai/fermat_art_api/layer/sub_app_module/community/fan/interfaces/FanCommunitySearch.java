@@ -2,12 +2,13 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interface
 
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanSearchResult;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
-public interface FanCommunitySearch {
+public interface FanCommunitySearch extends Serializable {
 
     /**
      * This method add the alias.

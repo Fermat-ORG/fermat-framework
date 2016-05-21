@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
  */
 public enum ArtistCommunityFragmentEnumType implements FermatFragmentsEnumType<ArtistCommunityFragmentEnumType> {
-    ART_ARTIST_WALLET_STORE_ALL_FRAGMENT("AAWSAF"),
+    //ART_ARTIST_WALLET_STORE_ALL_FRAGMENT("AAWSAF"),
 
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTIONS("ARTSAACC"),
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_DETAIL("ARTSAACCD"),
