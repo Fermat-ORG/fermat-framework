@@ -61,7 +61,17 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
 
         try {
 
-//            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
+            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
+
+            fermatManager  = new ChatActorCommunityManager(
+                    chatIdentityManager,
+                    chatActorConnectionManager,
+                    chatActorNetworkServiceManager,
+                    errorManager,
+                    pluginFileSystem,
+                    pluginId,
+                    getPluginVersionReference()
+            );
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
