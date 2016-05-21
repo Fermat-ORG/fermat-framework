@@ -21,17 +21,17 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,8 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
     // Fermat Managers
     private AssetIssuerWalletSupAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    SettingsManager<AssetIssuerSettings> settingsManager;
+    AssetIssuerSession assetIssuerSession;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
     AssetIssuerSettings settings = null;
 
     public static SettingsAssetIssuerNetworkFragment newInstance() {
@@ -62,10 +63,10 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+        assetIssuerSession = ((AssetIssuerSession) appSession);
 //        try {
         errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetIssuerSession.getModuleManager();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
 //        } catch (CantGetCryptoWalletException e) {
 //            referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -81,7 +82,7 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
             rootView = inflater.inflate(R.layout.dap_wallet_asset_issuer_settings_main_network, container, false);
 
             try {
-                settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 settings = null;
             }
@@ -117,7 +118,7 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_SETTINGS_NETWORK) {
-                setUpSettings(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpSettings(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -182,8 +183,10 @@ public class SettingsAssetIssuerNetworkFragment extends AbstractFermatFragment i
         try {
             settings.setBlockchainNetworkPosition(position);
 
-            settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
-            moduleManager.changeNetworkType(dataSet);
+            if (moduleManager != null) {
+                moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                moduleManager.changeNetworkType(dataSet);
+            }
         } catch (CantPersistSettingsException e) {
             e.printStackTrace();
         }

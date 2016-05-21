@@ -2,7 +2,6 @@ package com.bitdubai.fermat.dap_plugin.layer.digital_asset_transaction.asset_dis
 
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
-
 import org.junit.Test;
 
 import java.sql.Timestamp;

@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai;
 
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * To work on unit tests, switch the Test Artifact in the Build Variants view.

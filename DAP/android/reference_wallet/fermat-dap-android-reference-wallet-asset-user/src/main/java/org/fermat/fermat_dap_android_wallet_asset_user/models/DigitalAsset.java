@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_wallet_asset_user.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+
 import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 

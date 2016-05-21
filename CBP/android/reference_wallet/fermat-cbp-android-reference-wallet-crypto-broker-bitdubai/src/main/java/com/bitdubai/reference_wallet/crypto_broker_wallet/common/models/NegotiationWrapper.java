@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -9,8 +11,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocatio
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleClauseInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.google.common.collect.Lists;
 
@@ -22,14 +23,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
 
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.ACCEPTED;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.CHANGED;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.DRAFT;
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_BANK_ACCOUNT;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CRYPTO_ADDRESS;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_CURRENCY;
-import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.*;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_DATE_TIME_TO_DELIVER;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.BROKER_PLACE_TO_DELIVER;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CRYPTO_ADDRESS;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_CURRENCY;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType.CUSTOMER_PAYMENT_METHOD;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.BANK;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.CASH_DELIVERY;
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType.CASH_ON_HAND;
 import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType.SALE;
 
 
@@ -81,7 +90,7 @@ final public class NegotiationWrapper {
                 } else if (paymentMethod == CASH_ON_HAND || paymentMethod == CASH_DELIVERY) {
                     ArrayList<NegotiationLocations> locations = Lists.newArrayList(moduleManager.getAllLocations(SALE));
                     addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
-                }else {
+                } else {
                     addClause(BROKER_CRYPTO_ADDRESS, "");
                     changeClauseValue(clauses.get(BROKER_CRYPTO_ADDRESS), "");
                 }
@@ -160,29 +169,8 @@ final public class NegotiationWrapper {
      * @param value      the value of the new clause
      */
     public void addClause(final ClauseType clauseType, final String value) {
-
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return clauseType;
-            }
-
-            @Override
-            public String getValue() {
-                return (value != null) ? value : "";
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return DRAFT;
-            }
-        };
-
+        final String clauseValue = (value != null) ? value : "";
+        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clauseType, clauseValue, DRAFT);
         negotiationInfo.getClauses().put(clauseType, clauseInformation);
     }
 
@@ -193,37 +181,12 @@ final public class NegotiationWrapper {
      * @param value  the new value (change the state to {@link ClauseStatus#CHANGED}) or the same (change the state to {@link ClauseStatus#ACCEPTED})
      */
     public void changeClauseValue(final ClauseInformation clause, final String value) {
+        final ClauseStatus clauseStatus = clause.getValue().equals(value) && clause.getStatus() == DRAFT ? ACCEPTED : CHANGED;
 
-        final ClauseType type = clause.getType();
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
+        final CryptoBrokerWalletModuleClauseInformation clauseInformation = new CryptoBrokerWalletModuleClauseInformation(clause);
+        clauseInformation.setStatus(clauseStatus);
+        clauseInformation.setValue(value);
 
-            @Override
-            public ClauseType getType() {
-                return type;
-            }
-
-            @Override
-            public String getValue() {
-                return value;
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                final boolean equalValues = value.equals(clause.getValue());
-
-                if (equalValues && clause.getStatus() == DRAFT)
-                    return ACCEPTED;
-                if (!equalValues)
-                    return CHANGED;
-
-                return clause.getStatus();
-            }
-        };
-
-        negotiationInfo.getClauses().put(type, clauseInformation);
+        negotiationInfo.getClauses().put(clause.getType(), clauseInformation);
     }
 }

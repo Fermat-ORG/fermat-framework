@@ -21,8 +21,11 @@
             android:background="#1271A7"
             android:text="@string/ccw_broker_information"
             android:textColor="@color/white"
-            android:textSize="24sp"
-            android:padding="12dp" />
+            android:textSize="16sp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,9 +34,9 @@
             <ImageView
                 android:id="@+id/ccw_customer_image"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
+                android:layout_height="200dp"
                 android:layout_gravity="center_horizontal"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 tools:ignore="contentDescription"
                 tools:src="@drawable/person" />
 
@@ -42,13 +45,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 tools:text="Amanda Hood"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentStart="true"
                 android:background="#7f2d2e82"
-                android:gravity="left"
-                android:padding="12dp" />
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"/>
 
         </RelativeLayout>
 

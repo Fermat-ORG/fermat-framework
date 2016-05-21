@@ -4,8 +4,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.develop
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 
+import java.io.Serializable;
 
-public class CryptoBrokerWalletActorIdentity implements ActorIdentity {
+
+public class CryptoBrokerWalletActorIdentity implements ActorIdentity, Serializable {
 
     private String alias;
     private byte[] img;

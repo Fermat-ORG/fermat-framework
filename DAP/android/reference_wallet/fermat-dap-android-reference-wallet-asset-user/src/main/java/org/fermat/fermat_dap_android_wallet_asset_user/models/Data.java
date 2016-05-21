@@ -1,6 +1,8 @@
 package org.fermat.fermat_dap_android_wallet_asset_user.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
@@ -15,7 +17,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

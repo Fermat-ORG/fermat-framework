@@ -28,4 +28,5 @@ public interface PaintActivityFeatures {
 
     @Deprecated
     void setActivityBackgroundColor(Drawable drawable);
+
 }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.all_definition.negotiation;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -10,7 +11,7 @@ import java.util.UUID;
  * Update by Angel on 29/11/2015
  */
 
-public interface Clause {
+public interface Clause extends Serializable {
     UUID getClauseId();
 
     ClauseType getType();

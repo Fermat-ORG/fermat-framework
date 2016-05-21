@@ -4,6 +4,7 @@ import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.except
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSaveSubAppSettings;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -12,7 +13,7 @@ import java.util.UUID;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 30/12/15.
  * @version 1.0
  */
-public class ChatIdentitySettings implements SubAppSettings {
+public class ChatIdentitySettings implements SubAppSettings, Serializable {
     /**
      * This method let us know the default language of a wallet
      *

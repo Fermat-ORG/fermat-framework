@@ -18,13 +18,12 @@
 
         <ImageView
             android:id="@+id/ccw_clause_number"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="bottom|start"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="9dp"
             android:scaleType="fitXY"
-            android:src="@drawable/bg_detail_number_02"
+            android:src="@drawable/bg_detail_number_01"
             tools:ignore="contentDescription"/>
 
         <LinearLayout
@@ -36,24 +35,22 @@
                 android:id="@+id/ccw_card_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:gravity="center"
-                android:text="@string/ccw_amount_to_buy"
                 android:textAllCaps="true"
-                android:textColor="@color/card_title_color_status_confirm"/>
+                android:textColor="#1271A7"
+                android:textSize="14sp"
+                android:text="@string/ccw_amount_to_buy"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#2e2e2e2e"/>
+                android:background="#1271A7"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_margin="14dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -63,6 +60,7 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
+                    android:textSize="14sp"
                     android:text="@string/buying_text"
                     android:textColor="@color/description_text_status_confirm"/>
 
@@ -72,7 +70,7 @@
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@color/option_button_background"
+                    android:background="#DDD"
                     android:inputType="numberDecimal"
                     android:maxWidth="150dp"
                     android:minWidth="50dp"
@@ -81,7 +79,7 @@
                     android:paddingRight="8dp"
                     android:paddingStart="8dp"
                     android:textAllCaps="false"
-                    android:textColor="#fff"
+                    android:textColor="#222"
                     android:textSize="14sp"
                     tools:text="556.4"/>
 
@@ -89,6 +87,7 @@
                     android:id="@+id/ccw_currency_to_buy"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:textSize="14sp"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
 
@@ -98,11 +97,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:minHeight="34dp">
+                android:minHeight="34dp"
+                android:visibility="visible">
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#2e2e2e2e"/>
+                    android:background="#1271A7"/>
 
                 <Button
                     android:id="@+id/ccw_confirm_button"

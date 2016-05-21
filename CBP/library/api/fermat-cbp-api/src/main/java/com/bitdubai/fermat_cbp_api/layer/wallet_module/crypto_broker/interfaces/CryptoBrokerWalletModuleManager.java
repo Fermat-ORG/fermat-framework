@@ -31,9 +31,11 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningTransactionsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
@@ -75,13 +77,15 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNew
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CBPWalletsModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletBalanceException;
@@ -89,6 +93,7 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyW
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantLoadCashMoneyWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collection;
@@ -101,8 +106,9 @@ import java.util.UUID;
  * Created by Nelson Ramirez
  * on 22/09/15.
  */
-public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> {
-    //TODO: Documentar
+public interface CryptoBrokerWalletModuleManager
+        extends CBPWalletsModuleManager<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation>,
+        Serializable {
 
     /**
      * associate an Identity to this wallet
@@ -340,7 +346,8 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      * @throws CantGetCryptoBrokerWalletSettingException
      */
     boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall)
-            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException;
+            throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, EarningsSettingsNotRegisteredException,
+            CantListEarningsPairsException, CantLoadEarningSettingsException;
 
     /**
      * @param location
@@ -628,8 +635,8 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      *
      * @return a Collection of provider reference pairs
      */
-    Collection<CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
-            throws CantGetProviderException;
+    Collection<CurrencyPairAndProvider> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
+            throws CantGetProviderException, CantGetProviderInfoException;
 
     /**
      * This method save the instance CryptoBrokerWalletProviderSetting
@@ -744,6 +751,13 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
             throws CantSubmitMerchandiseException;
 
     /**
+     * This method send a merchandise according the contract elements.
+     *
+     * @param contractHash
+     */
+    boolean stockInTheWallet(String contractHash)
+            throws CantSubmitMerchandiseException;
+    /**
      * This method execute a Broker Ack payment Business Transaction
      *
      * @param contractHash
@@ -806,4 +820,8 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      * @throws CantExtractEarningsException
      */
     boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException;
+
+    List<EarningTransaction> searchEarnings(EarningsPair earningsPair, EarningTransactionState state) throws CantListEarningTransactionsException;
+
+    List<EarningTransaction> searchEarnings(EarningsPair earningsPair) throws CantListEarningTransactionsException;
 }

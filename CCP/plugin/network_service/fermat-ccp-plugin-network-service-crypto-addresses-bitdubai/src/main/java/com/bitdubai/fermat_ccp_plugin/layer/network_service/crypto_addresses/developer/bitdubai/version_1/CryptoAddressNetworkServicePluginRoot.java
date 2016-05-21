@@ -69,7 +69,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Joaquin Carrasquero on 12/02/16, email: jc.juaco@gmail.com.
  */
-@PluginInfo(createdBy = "Joaquin Carrasquero", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Joaquin Carrasquero", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CRYPTO_ADDRESSES)
 
 public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServiceBase implements
         CryptoAddressesManager,

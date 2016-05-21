@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.music_player;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
@@ -15,13 +16,16 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDe
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/29/16.
  */
-public interface MusicPlayerModuleManager extends ModuleManager<MusicPlayerPreferenceSettings,ActiveActorIdentityInformation> {
+public interface MusicPlayerModuleManager
+        extends ModuleManager<MusicPlayerPreferenceSettings,ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<MusicPlayerPreferenceSettings>, Serializable {
     /**
      * This method returns a songs list by SongStatus enum
      * @param songStatus

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateCustomerIdentityException;
@@ -7,6 +8,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.IdentityCustomerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -18,7 +20,8 @@ import java.util.List;
  * provides the methods for the Crypto Customer Identity sub app.
  */
 
-public interface CryptoCustomerIdentityModuleManager extends ModuleManager<IdentityCustomerPreferenceSettings, ActiveActorIdentityInformation> {
+public interface CryptoCustomerIdentityModuleManager extends ModuleManager<IdentityCustomerPreferenceSettings, ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<IdentityCustomerPreferenceSettings>, Serializable {
 
     /**
      * The method <code>createCryptoCustomerIdentity</code> is used to create a new crypto Customer identity
