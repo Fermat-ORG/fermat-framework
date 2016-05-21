@@ -941,6 +941,8 @@ public enum Activities implements FermatEnum {
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST;
             case "ASAFCCN":
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS;
+            case "ASAFCLIL":
+                return ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST;
             case "ASAACCFL":
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST;
             case "ASAACCN":
