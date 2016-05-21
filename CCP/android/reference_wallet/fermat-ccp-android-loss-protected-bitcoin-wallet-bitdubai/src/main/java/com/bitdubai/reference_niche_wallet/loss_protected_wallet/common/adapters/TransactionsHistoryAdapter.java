@@ -74,14 +74,12 @@ public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalle
         //Validate Involved Actor for contact name
         String contactName = "";
         if (data.getInvolvedActor() != null)
-
+                contactName = data.getInvolvedActor().getName();
+        else
             if (data.getInvolvedActor().getType()== Actors.BITCOIN_BASIC_USER)
                 contactName = "Bitcoin Wallet";
             else
-                contactName = data.getInvolvedActor().getName();
-
-        else
-            contactName = "Unknown";
+                contactName = "Unknown";
 
         //Validate if the transaction is credit or debit
         if (data.getTransactionType() == TransactionType.CREDIT)
