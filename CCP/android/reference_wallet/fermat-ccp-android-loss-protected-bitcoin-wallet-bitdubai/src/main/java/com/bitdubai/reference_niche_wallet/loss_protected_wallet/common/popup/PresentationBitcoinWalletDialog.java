@@ -19,10 +19,8 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -37,6 +35,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
+    public static final int TYPE_CHUNCK_HELP=3;
 
     private final Activity activity;
     private final int type;
@@ -128,6 +127,8 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<LossProtectedW
                 return R.layout.loss_presentation_wallet;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                 return R.layout.loss_presentation_bitcoin_wallet_without_identities;
+            case TYPE_CHUNCK_HELP:
+                return R.layout.loss_chunk_help_dialog;
         }
         return 0;
     }

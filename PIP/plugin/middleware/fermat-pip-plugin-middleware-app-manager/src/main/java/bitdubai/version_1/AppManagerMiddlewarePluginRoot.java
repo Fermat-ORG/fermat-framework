@@ -304,7 +304,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 new ArrayList<InstalledLanguage>(),
                 "loss_protected_wallet_icon", // ICOIN
                 "Loss Protected Wallet", // WALLET NAME
-                WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(), // PUBLIC KEY
+                WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(), // PUBLIC KEY
                 ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET.getCode(), //  WALLET PLATFORM IDENTIFIER
                 new Version(1,0,0), //VERSION
                 WalletType.REFERENCE, // WALLET TYPE

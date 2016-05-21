@@ -83,7 +83,7 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
         getApplicationManager().goHome();
     }
 
-    private ApplicationManager getApplicationManager(){
+    public ApplicationManager getApplicationManager(){
         return ((FermatApplicationSession)activity.get()).getApplicationManager();
     }
 }

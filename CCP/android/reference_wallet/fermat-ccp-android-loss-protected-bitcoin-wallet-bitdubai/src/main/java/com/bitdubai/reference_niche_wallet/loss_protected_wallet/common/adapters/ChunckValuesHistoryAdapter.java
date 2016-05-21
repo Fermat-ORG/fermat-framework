@@ -20,7 +20,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.Wa
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 

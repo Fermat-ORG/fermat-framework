@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments;
 
 
-
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -12,30 +11,26 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRequestLossProtectedAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
@@ -105,8 +100,9 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
 
+        final UUID exchangeProviderId2 ;
         UUID exchangeProviderId = null;
-        List<PreferenceSettingsItem> list = new ArrayList<>();
+        final List<PreferenceSettingsItem> list = new ArrayList<>();
         try{
 
 
@@ -145,25 +141,44 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
             // Exchange Rate Provider
-           if (lossProtectedWalletManager.getExchangeProvider() != null)
+
+            if (lossProtectedWalletManager.getExchangeProvider() != null)
                 exchangeProviderId =  lossProtectedWalletManager.getExchangeProvider();
 
-            List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
-            String itemsProviders[] = new String[providers.size()];
-            for (int i=0; i<providers.size(); i++) {
-                CurrencyExchangeRateProviderManager provider = providers.get(i);
-                itemsProviders[i] = provider.getProviderName();
-                if(provider.getProviderId().equals(exchangeProviderId))
-                    previousSelectedItemExchange = provider.getProviderName();
-            }
-            final Bundle providerDialog = new Bundle();
-            providerDialog.putStringArray("items_array", itemsProviders);
-            providerDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
-            providerDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
-            providerDialog.putString("title", getResources().getString(R.string.exchange_title_label));
-            providerDialog.putString("mode", "single_option");
-            providerDialog.putString("previous_selected_item", previousSelectedItemExchange);
-            list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+            exchangeProviderId2 = exchangeProviderId;
+
+            getExecutor().submit(new Runnable() {
+                @Override
+                public void run() {
+
+                    try {
+
+                        List<ExchangeRateProvider> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
+                        String itemsProviders[] = new String[providers.size()];
+                        for (int i=0; i<providers.size(); i++) {
+                            ExchangeRateProvider provider = providers.get(i);
+
+                                itemsProviders[i] = provider.getProviderName();
+
+                            if(provider.getProviderId().equals(exchangeProviderId2))
+                                previousSelectedItemExchange = provider.getProviderName();
+                        }
+
+                        final Bundle providerDialog = new Bundle();
+                        providerDialog.putStringArray("items_array", itemsProviders);
+                        providerDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+                        providerDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+                        providerDialog.putString("title", getResources().getString(R.string.exchange_title_label));
+                        providerDialog.putString("mode", "single_option");
+                        providerDialog.putString("previous_selected_item", previousSelectedItemExchange);
+                        list.add(new PreferenceSettingsOpenDialogText(10, "Exchange Rate Providers", providerDialog));
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                     }
+                }
+            });
+
 
 
             list.add(new PreferenceSettingsLinkText(11, "Received Regtest Bitcoins", "", 15, Color.GRAY));
@@ -304,10 +319,10 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 // Exchange Rate Provider
                 try {
                     UUID exchangeProviderId = null;
-                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
+                    List<ExchangeRateProvider> providers = new ArrayList<>(lossProtectedWalletManager.getExchangeRateProviderManagers());
 
                     for (int i=0; i<providers.size(); i++) {
-                        CurrencyExchangeRateProviderManager provider = providers.get(i);
+                        ExchangeRateProvider provider = providers.get(i);
 
                         if(provider.getProviderName().equals(item))
 
@@ -316,8 +331,6 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                     }
 
                     lossProtectedWalletManager.setExchangeProvider(exchangeProviderId);
-                } catch (CantGetProviderInfoException e) {
-                    e.printStackTrace();
                 }
                 catch (Exception e) {
                     e.printStackTrace();
