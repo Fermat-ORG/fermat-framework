@@ -364,7 +364,7 @@ We are a team with diverse tastes and full of color making it an explosive integ
 
 ### Team Yayo:
 -----------------------------------
-### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/YAYO_1.jpg "Logo Yayo Team")
+### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/YAYO_1.jpg "Logo Yayo Team")
 On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
 We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
 
@@ -400,6 +400,7 @@ We don't mean to make fun of everything, just about the serious things.
 
 ### Code Butchers Team:
 -----------------------------------
+### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/c07467a01e3de3093890fd26cf4f1d1fd3df5c6f/MediaKit/Logotype/Fermat%20Teams/logo_purple_haze_team.jpg "Logo Purple Haze")
 We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
 
 * In the Fermat Core we are responsible for the enhancements and maintenance.
@@ -430,7 +431,9 @@ We love music and we do music, we love movies (fanatics), we are also amateur ph
 <br/>
 ### DBZ Team:
 -----------------------------------
-### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/logo_dbz_team.jpg "Logo DBZ Team")
+
+### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/logo_dbz_team.jpg "Logo DBZ")
+
 We are a developer team with different experience levels; we give our best to deliver products of the highest quality. Our team is responsible for the design and development of both the CSH and BNK Platform as well as several plug-ins, Reference Wallets and Sub Apps for the CBP Platform
 
 #### Team Members:
