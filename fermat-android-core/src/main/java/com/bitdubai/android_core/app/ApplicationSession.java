@@ -16,7 +16,8 @@ import com.bitdubai.android_core.app.common.version_1.receivers.NotificationRece
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_android_api.engine.ApplicationManager;
+import com.bitdubai.android_core.app.common.version_1.helpers.ApplicationsHelper;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_core.FermatSystem;
 
@@ -105,8 +106,8 @@ public class ApplicationSession extends MultiDexApplication implements FermatApp
     }
 
     @Override
-    public ApplicationManager getApplicationManager() {
-        return new ApplicationManager(this);
+    public FermatApplicationCaller getApplicationManager() {
+        return new ApplicationsHelper(this);
     }
 
     /**

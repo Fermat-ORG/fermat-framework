@@ -71,7 +71,7 @@ import java.util.List;
  * * * * * * * 
  * * * 
  */
-@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.INCOMING_EXTRA_USER)
 
 public class IncomingExtraUserTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,

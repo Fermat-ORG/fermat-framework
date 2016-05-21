@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -61,6 +62,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by mati on 2016.04.21..
@@ -293,6 +295,7 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     }
 
     @Override
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     public List<IntraUserInformation> getCacheSuggestionsToContact(int max, int offset) throws CantGetIntraUsersListException {
         try {
 

@@ -90,7 +90,7 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setUpUI() { //throws CantGetActiveLoginIdentityException {
         networkAction = (FermatTextView) rootView.findViewById(R.id.dap_wallet_asset_issuer_network_action);
-        notificationAction = (FermatTextView) rootView.findViewById(R.id.dap_wallet_asset_issuer_notification_action);
+//        notificationAction = (FermatTextView) rootView.findViewById(R.id.dap_wallet_asset_issuer_notification_action);
     }
 
     private void setUpActions() {
@@ -100,12 +100,12 @@ public class SettingsFactoryFragment extends AbstractFermatFragment implements V
                 changeActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NETWORK_MAIN, appSession.getAppPublicKey());
             }
         });
-        notificationAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                changeActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS, appSession.getAppPublicKey());
-            }
-        });
+//        notificationAction.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                changeActivity(Activities.DAP_SUB_APP_ASSET_FACTORY_SETTINGS_NOTIFICATIONS, appSession.getAppPublicKey());
+//            }
+//        });
     }
 
     private void setUpUIData() {

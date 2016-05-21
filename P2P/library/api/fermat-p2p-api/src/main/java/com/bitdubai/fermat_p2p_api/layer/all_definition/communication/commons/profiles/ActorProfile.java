@@ -1,12 +1,6 @@
-/*
- * @#ActorProfile.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>ActorProfile</code>
@@ -47,6 +41,11 @@ public class ActorProfile extends Profile {
      * Represent the nsIdentityPublicKey
      */
     private String nsIdentityPublicKey;
+
+    /**
+     * Represent the clientIdentityPublicKey
+     */
+    private String clientIdentityPublicKey;
 
     /**
      * Constructor
@@ -164,22 +163,53 @@ public class ActorProfile extends Profile {
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#toJson()
+     * Get the ClientIdentityPublicKey
+     *
+     * @return String
      */
-    @Override
-    public String toJson() {
-      Gson gson = new Gson();
-      return gson.toJson(this);
+    public String getClientIdentityPublicKey() {
+        return clientIdentityPublicKey;
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#fromJson(String)
+     * Sets the clientIdentityPublicKey
+     *
+     * @param clientIdentityPublicKey to set
      */
+    public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
+        this.clientIdentityPublicKey = clientIdentityPublicKey;
+    }
+
+    /**
+     * Return this object in json string
+     *
+     * @return json string
+     */
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, ActorProfile.class);
+    }
+
+    /**
+     * Get the object
+     *
+     * @param jsonString
+     * @return ClientProfile
+     */
+    public static ActorProfile fromJson(String jsonString) {
+        return GsonProvider.getGson().fromJson(jsonString, ActorProfile.class);
+    }
+
     @Override
-    public ActorProfile fromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, this.getClass());
+    public String toString() {
+        return "ActorProfile{" +
+                "actorType='" + actorType + '\'' +
+                ", identityPublicKey='" + getIdentityPublicKey() + '\'' +
+                ", alias='" + alias + '\'' +
+                ", extraData='" + extraData + '\'' +
+                ", name='" + name + '\'' +
+                ", photo=" + (photo != null ? "true" : "false") +
+                ", nsIdentityPublicKey ='" + nsIdentityPublicKey + '\'' +
+                ", clientIdentityPublicKey ='" + clientIdentityPublicKey + '\'' +
+                '}';
     }
 }

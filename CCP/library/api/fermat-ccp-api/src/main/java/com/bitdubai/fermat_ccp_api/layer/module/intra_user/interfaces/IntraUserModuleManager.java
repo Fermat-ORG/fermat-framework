@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces;
 
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.core.MethodDetail;
 import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetInt
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The interface <code>IntraUserModuleManager</code>
@@ -76,6 +78,7 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      * @return a list with information of intra users
      * @throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException
      */
+    @MethodDetail(looType = MethodDetail.LoopType.BACKGROUND, timeout = 30,timeoutUnit = TimeUnit.SECONDS)
     List<IntraUserInformation> getCacheSuggestionsToContact(int max,int offset) throws com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 
 

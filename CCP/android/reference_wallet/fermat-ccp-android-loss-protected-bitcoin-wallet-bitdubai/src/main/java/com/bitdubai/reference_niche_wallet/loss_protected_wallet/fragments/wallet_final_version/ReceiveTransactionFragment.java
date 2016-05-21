@@ -12,35 +12,26 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
-
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
-
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-
-
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.provisionalAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
-
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
@@ -224,9 +215,9 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
     @SuppressWarnings("unchecked")
     public ExpandableRecyclerAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new provisionalAdapter(getActivity(), openNegotiationList,getResources());
+           // adapter = new provisionalAdapter(getActivity(), openNegotiationList,getResources());
             // setting up event listeners
-            adapter.setChildItemFermatEventListeners(this);
+           // adapter.setChildItemFermatEventListeners(this);
         }
         return adapter;
     }
@@ -261,7 +252,6 @@ public class ReceiveTransactionFragment extends FermatWalletExpandableListFragme
                         listChild.add(cryptoWalletTransaction);
                       GrouperItem<LossProtectedWalletTransaction,LossProtectedWalletTransaction> grouperItem = new GrouperItem<>(listChild,false,cryptoWalletTransaction);
                         data.add(grouperItem);
-                        listChild.clear();
 
                     }
 

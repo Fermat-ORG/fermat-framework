@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.ReceivedNodeCatalogTransactionsMsjRespond</code>
@@ -38,8 +38,22 @@ public class ReceivedNodeCatalogTransactionsMsjRespond  extends MsgRespond {
         return lateNotificationsCounter;
     }
 
-    public static ReceivedNodeCatalogTransactionsMsjRespond parseContent(String content) {
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
 
-        return new Gson().fromJson(content, ReceivedNodeCatalogTransactionsMsjRespond.class);
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static ReceivedNodeCatalogTransactionsMsjRespond parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, ReceivedNodeCatalogTransactionsMsjRespond.class);
     }
 }

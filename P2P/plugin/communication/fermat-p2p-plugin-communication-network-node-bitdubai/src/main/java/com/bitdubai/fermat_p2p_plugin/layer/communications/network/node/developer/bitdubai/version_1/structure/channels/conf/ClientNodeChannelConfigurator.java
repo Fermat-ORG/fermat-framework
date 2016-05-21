@@ -7,8 +7,13 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.google.gson.JsonObject;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
+
+import org.apache.commons.lang.ClassUtils;
+import org.jboss.logging.Logger;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,24 +33,24 @@ import javax.websocket.HandshakeResponse;
  */
 public class ClientNodeChannelConfigurator extends ClientEndpointConfig.Configurator {
 
-    /*
-     * Create a new temporal identity
+    /**
+     * Represent the LOG
      */
-    public final static ECCKeyPair tempIdentity = new ECCKeyPair();
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ClientNodeChannelConfigurator.class));
 
     @Override
     public void beforeRequest(Map<String, List<String>> headers) {
 
-         /*
-         * Get json representation
-         */
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, tempIdentity.getPublicKey());
+        /* for (String key : headers.keySet()) {
+            LOG.info(key + " : "+headers.get(key));
+        } */
 
         /*
          * Add the att to the header
          */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, Arrays.asList(jsonObject.toString()));
+        //headers.put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, Arrays.asList(new ECCKeyPair().getPublicKey()));
+
+        headers.put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, Arrays.asList(((NetworkNodePluginRoot) NodeContext.get(NodeContextItem.PLUGIN_ROOT)).getIdentity().getPublicKey()));
     }
 
     @Override

@@ -97,7 +97,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Luis", maintainerMail = "nattyco@gmail.com", platform = Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 
 public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManagerSettings,ActiveActorIdentityInformation> implements
         LogManagerForDevelopers,
@@ -660,7 +660,19 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
                         new ArrayList<InstalledLanguage>(),
                         "loss_protected_wallet_icon",
                         "Loss Protected Wallet",
-                        WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
+                        WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
+                        "wallet_platform_identifier",
+                        new Version(1,0,0),
+                        AppsStatus.DEV);
+                break;
+            case "fermat_wallet":
+                installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "reference_wallet_icon",
+                        "Fermat Wallet",
+                        WalletsPublicKeys.CCP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.ALPHA);

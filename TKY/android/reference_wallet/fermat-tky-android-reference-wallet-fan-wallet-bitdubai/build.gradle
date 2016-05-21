@@ -1,4 +1,4 @@
-buildscript {
+/*buildscript {
     repositories {
         maven {
             url 'http://52.34.0.33:8081/artifactory/plugins-release'
@@ -12,10 +12,10 @@ buildscript {
     dependencies {
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4.0.1"
     }
-}
+}*/
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.artifactory'
+//apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
 apply plugin: 'jacoco'
 android {
@@ -136,7 +136,7 @@ publishing {
     }
 }
 
-artifactory {
+/*artifactory {
     contextUrl = 'http://52.34.0.33:8081/artifactory'
     publish {
         repository {
@@ -153,5 +153,5 @@ artifactory {
             publishPom = true
         }
     }
-}
+}*/
 

@@ -57,7 +57,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     protected ViewInflater viewInflater;
     private WizardConfiguration context;
 
-    enum ScreenSize{
+    public enum ScreenSize{
         LARGE,NORMAL, UNDEFINED, SMALL
     }
 
@@ -346,7 +346,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    private ScreenSize getScreenSize(){
+    public ScreenSize getScreenSize(){
         int screenSize = getResources().getConfiguration().screenLayout &
                 Configuration.SCREENLAYOUT_SIZE_MASK;
         ScreenSize screenSizeType = null;

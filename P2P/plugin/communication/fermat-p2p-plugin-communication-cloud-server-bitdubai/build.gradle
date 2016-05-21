@@ -3,7 +3,6 @@ apply plugin: 'maven'
 apply plugin: 'application'
 apply plugin: 'gradle-one-jar'
 
-
 group = "com.bitdubai.fermat.p2p"
 sourceCompatibility = 1.7
 version = '1.6.1'

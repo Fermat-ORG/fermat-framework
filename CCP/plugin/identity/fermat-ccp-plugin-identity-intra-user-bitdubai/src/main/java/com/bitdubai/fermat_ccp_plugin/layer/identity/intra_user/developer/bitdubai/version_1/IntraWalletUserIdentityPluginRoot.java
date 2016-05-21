@@ -66,7 +66,7 @@ import java.util.Map;
  * @since Java JDK 1.7
  */
 
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
 
 public class IntraWalletUserIdentityPluginRoot extends AbstractPlugin
         implements DatabaseManagerForDevelopers,

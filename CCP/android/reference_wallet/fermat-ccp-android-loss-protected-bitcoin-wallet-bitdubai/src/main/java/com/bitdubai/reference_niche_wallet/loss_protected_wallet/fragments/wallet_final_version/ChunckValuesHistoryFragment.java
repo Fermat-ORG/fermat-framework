@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -34,7 +35,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -43,20 +43,17 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-
-
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
@@ -92,7 +89,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
      */
     private List<LossProtectedWalletTransaction> lstTransaction;
     private LossProtectedWalletTransaction selectedItem;
-    private LossProtectedWalletManager moduleManager;
+
     /**
      * Executor Service
      */
@@ -179,22 +176,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         }
 
 
-        //default Exchange rate Provider
-        try {
-            if(lossProtectedWalletManager.getExchangeProvider()==null) {
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWalletManager.getExchangeRateProviderManagers());
-
-                exchangeProviderId = providers.get(0).getProviderId();
-                lossProtectedWalletManager.setExchangeProvider(exchangeProviderId);
-
-            }
-            else
-            {
-                exchangeProviderId =lossProtectedWalletManager.getExchangeProvider();
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
     }
 
     @Nullable
@@ -437,7 +418,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         menu.add(1, LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.loos_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        //inflater.inflate(R.menu.home_menu, menu);
     }
 
     @Override
@@ -450,7 +430,12 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                 changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
                 return true;
             }else if(id == LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION){
+
                 setUpPresentation(lossProtectedWalletSettings.isPresentationHelpEnabled());
+
+
+                setUpPresentation(lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
+
                 return true;
             }
 
@@ -576,6 +561,19 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             @Override
             protected Object doInBackground() throws Exception {
 
+                //default Exchange rate Provider
+
+                if(lossProtectedWalletManager.getExchangeProvider()==null) {
+                    List<ExchangeRateProvider> providers = new ArrayList(lossProtectedWalletManager.getExchangeRateProviderManagers());
+
+                    exchangeProviderId = providers.get(0).getProviderId();
+                    lossProtectedWalletManager.setExchangeProvider(exchangeProviderId);
+
+                }
+                else
+                {
+                    exchangeProviderId =lossProtectedWalletManager.getExchangeProvider();
+                }
                 ExchangeRate rate =  lossProtectedWalletManager.getCurrencyExchange(exchangeProviderId);
                 return rate;
             }
@@ -595,8 +593,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                     lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
 
                     updateBalances();
-
                     onRefresh();
+
+                }else{
+                    ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                    dialog_error.show();
 
                 }
             }
@@ -613,6 +614,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 else
                     Log.e("Exchange Rate", ex.getMessage(), ex);
+
+                ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                dialog_error.show();
             }
         });
 

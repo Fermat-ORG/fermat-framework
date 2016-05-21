@@ -76,14 +76,14 @@ import java.util.UUID;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_USER)
-public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<AssetUserSettings> implements AssetUserCommunitySubAppModuleManager, Serializable {
+public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<AssetUserSettings> implements AssetUserCommunitySubAppModuleManager {
 
-    private final PluginFileSystem pluginFileSystem;
+//    private final PluginFileSystem pluginFileSystem;
+//    private final UUID pluginId;
     private final LogManager logManager;
     private final ErrorManager errorManager;
     private final EventManager eventManager;
     private final Broadcaster broadcaster;
-    private final UUID pluginId;
     private final IdentityAssetUserManager identityAssetUserManager;
     private final ActorAssetIssuerManager actorAssetIssuerManager;
     private final ActorAssetUserManager actorAssetUserManager;
@@ -112,12 +112,12 @@ public class AssetUserCommunitySupAppModuleManager extends ModuleManagerImpl<Ass
 
         super(pluginFileSystem, pluginId);
 
-        this.pluginFileSystem = pluginFileSystem;
+//        this.pluginFileSystem = pluginFileSystem;
+//        this.pluginId = pluginId;
         this.logManager = logManager;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
         this.broadcaster = broadcaster;
-        this.pluginId = pluginId;
         this.identityAssetUserManager = identityAssetUserManager;
         this.actorAssetIssuerManager = actorAssetIssuerManager;
         this.actorAssetUserManager = actorAssetUserManager;

@@ -1,9 +1,11 @@
 package com.bitdubai.android_core.app;
 
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,11 +20,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.fermat.BuildConfig;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -353,7 +358,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     loadUI(ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
                 }
             }else{
-                Log.e(TAG, "nextActivity null, activity code: "+ activityName+ "fermat structure: "+fermatStructure.getPublicKey());
+                Log.e(TAG, "nextActivity null, activity code: " + activityName + "fermat structure: " + fermatStructure.getPublicKey());
             }
         } catch (Exception e) {
             if(activityName.equals("develop_mode"))
@@ -363,6 +368,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
                 handleExceptionAndRestart();
+
             }
         } catch (Throwable throwable) {
             Toast.makeText(getApplicationContext(), "Recovering from system error. Throwable", Toast.LENGTH_LONG).show();

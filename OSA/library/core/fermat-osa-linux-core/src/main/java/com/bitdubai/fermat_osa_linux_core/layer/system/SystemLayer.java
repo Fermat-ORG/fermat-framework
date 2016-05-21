@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
+import com.bitdubai.fermat_osa_linux_core.layer.system.broadcaster.plugin_broadcaster.PluginBroadcasterSystemAddonSubsystem;
 import com.bitdubai.fermat_osa_linux_core.layer.system.device_location.DeviceLocationAddonSubsystem;
 import com.bitdubai.fermat_osa_linux_core.layer.system.platform_database_system.PlatformDatabaseSystemAddonSubsystem;
 import com.bitdubai.fermat_osa_linux_core.layer.system.platform_file_system.PlatformFileSystemAddonSubsystem;
@@ -30,6 +31,7 @@ public class SystemLayer extends AbstractLayer {
 
         try {
 
+            registerAddon(new PluginBroadcasterSystemAddonSubsystem());
             registerAddon(new DeviceLocationAddonSubsystem());
             registerAddon(new PlatformDatabaseSystemAddonSubsystem());
             registerAddon(new PluginDatabaseSystemAddonSubsystem());

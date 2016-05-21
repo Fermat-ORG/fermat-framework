@@ -33,8 +33,11 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Created by Matias Furszyfer on 2016.03.31..
@@ -64,7 +67,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         this.proxyFactory = new ProxyFactory();
     }
 
-    public Object sendMessage(PluginVersionReference pluginVersionReference,String responseStr, Object proxy, Method method, Object[] args) throws Exception {
+    public Object sendMessage(final PluginVersionReference pluginVersionReference,String responseStr, final Object proxy, final Method method, Object[] args) throws Exception {
         //Log.i(TAG,"SendMessage start");
         ModuleObjectParameterWrapper[] parameters = null;
         Class<?>[] parametersTypes = method.getParameterTypes();
@@ -86,78 +89,54 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         }else{
             parameters = new ModuleObjectParameterWrapper[0];
         }
-
-
-        String dataId = UUID.randomUUID().toString();
+        /**
+         * Data id
+         */
+        final String dataId = UUID.randomUUID().toString();
+//        Log.e(TAG,"data id: "+dataId+" from method "+method);
         boolean isDataChuncked = false;
         FermatModuleObjectWrapper objectArrived = null;
-        MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
-        if(methodDetail!=null){
-            if(methodDetail.looType() == MethodDetail.LoopType.BACKGROUND){
-                Log.i(TAG,"Sending background request");
+        /**
+         * Method detail if the developer want something specific
+         */
+        final MethodDetail methodDetail = method.getAnnotation(MethodDetail.class);
+        final ModuleObjectParameterWrapper[] parametersTemp = parameters;
+        if(methodDetail!=null) {
+            long methdTimeout = methodDetail.timeout();
+            if (methdTimeout != -1) {
+                final Callable<FermatModuleObjectWrapper> callable = new Callable<FermatModuleObjectWrapper>() {
+                    @Override
+                    public FermatModuleObjectWrapper call() throws Exception {
+                        return requestModuleObjetc(dataId,proxy,method,parametersTemp,pluginVersionReference,methodDetail.looType());
+                    }
+                };
+                Future<FermatModuleObjectWrapper>  objectFuture =poolExecutor.submit(callable);
                 try {
-                    objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
-                            serverIdentificationKey,
-                            dataId,
-                            pluginVersionReference.getPlatform().getCode(),
-                            pluginVersionReference.getLayers().getCode(),
-                            pluginVersionReference.getPlugins().getCode(),
-                            pluginVersionReference.getDeveloper().getCode(),
-                            pluginVersionReference.getVersion().toString(),
-                            method.getName(),
-                            parameters);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (RuntimeException e) {
-                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    objectArrived = objectFuture.get(methdTimeout, methodDetail.timeoutUnit());
+                }catch (TimeoutException e){
+                    objectFuture.cancel(true);
+                    Log.i(TAG,"Timeout lauched wainting for method: "+method.getName()+ "in module: "+ pluginVersionReference.toString3());
+                    objectArrived = null;
                 }
-                Log.i(TAG,"Sending background return");
+            }else{
+                /**
+                 * Normal data request
+                 * todo: capaz tengo que dividir esto, dividir el background del main, que el segundo canal sea bidireccional...
+                 */
+                MethodDetail.LoopType loopType = (Looper.myLooper() == Looper.getMainLooper())? MethodDetail.LoopType.MAIN: MethodDetail.LoopType.BACKGROUND;
+                objectArrived = requestModuleObjetc(dataId,proxy,method,parametersTemp,pluginVersionReference,loopType);
             }
-        }else {
-            try {
-                objectArrived = iServerBrokerService.invoqueModuleMethod(
-                        serverIdentificationKey,
-                        dataId,
-                        pluginVersionReference.getPlatform().getCode(),
-                        pluginVersionReference.getLayers().getCode(),
-                        pluginVersionReference.getPlugins().getCode(),
-                        pluginVersionReference.getDeveloper().getCode(),
-                        pluginVersionReference.getVersion().toString(),
-                        method.getName(),
-                        parameters);
-            } catch (TransactionTooLargeException t) {
-                try {
-                    objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
-                            serverIdentificationKey,
-                            dataId,
-                            pluginVersionReference.getPlatform().getCode(),
-                            pluginVersionReference.getLayers().getCode(),
-                            pluginVersionReference.getPlugins().getCode(),
-                            pluginVersionReference.getDeveloper().getCode(),
-                            pluginVersionReference.getVersion().toString(),
-                            method.getName(),
-                            parameters);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (RuntimeException e) {
-                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
-                    e.printStackTrace();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        }else{
+            /**
+             * Normal data request
+             * todo: capaz tengo que dividir esto, dividir el background del main, que el segundo canal sea bidireccional...
+             */
+            //MethodDetail.LoopType loopType = (Looper.myLooper() == Looper.getMainLooper())? MethodDetail.LoopType.MAIN: MethodDetail.LoopType.BACKGROUND;
+            objectArrived = requestModuleObjetc(dataId,proxy,method,parametersTemp,pluginVersionReference,null);
         }
         Log.i(TAG,"SendMessage return from server");
-
-
         if(objectArrived!=null){
+            Log.i(TAG,"Object: "+objectArrived.getObject());
             if(objectArrived.getE()!=null) return objectArrived.getE();
             isDataChuncked = objectArrived.isLargeData();
         }else{
@@ -180,6 +159,80 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             //Log.i(TAG, o1 != null ? o1.toString() : "");
             return o1;
         }
+    }
+
+    private FermatModuleObjectWrapper requestModuleObjetc(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference,MethodDetail.LoopType loopType){
+        FermatModuleObjectWrapper objectArrived = null;
+        if(loopType!=null) {
+            if (loopType == MethodDetail.LoopType.BACKGROUND) {
+                Log.i(TAG, "Sending background request");
+                try {
+                    objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(
+                            serverIdentificationKey,
+                            dataId,
+                            pluginVersionReference.getPlatform().getCode(),
+                            pluginVersionReference.getLayers().getCode(),
+                            pluginVersionReference.getPlugins().getCode(),
+                            pluginVersionReference.getDeveloper().getCode(),
+                            pluginVersionReference.getVersion().toString(),
+                            method.getName(),
+                            parameters);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (RuntimeException e) {
+                    Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                Log.i(TAG, "Sending background return");
+            }else{
+                objectArrived = fastModuleObjectRequest(dataId,proxy,method,parameters,pluginVersionReference);
+            }
+        } else {
+            objectArrived = fastModuleObjectRequest(dataId,proxy,method,parameters,pluginVersionReference);
+        }
+        return objectArrived;
+    }
+
+    private FermatModuleObjectWrapper fastModuleObjectRequest(String dataId,Object proxy,Method method,ModuleObjectParameterWrapper[] parameters,PluginVersionReference pluginVersionReference){
+        try {
+            return iServerBrokerService.invoqueModuleMethod(
+                    serverIdentificationKey,
+                    dataId,
+                    pluginVersionReference.getPlatform().getCode(),
+                    pluginVersionReference.getLayers().getCode(),
+                    pluginVersionReference.getPlugins().getCode(),
+                    pluginVersionReference.getDeveloper().getCode(),
+                    pluginVersionReference.getVersion().toString(),
+                    method.getName(),
+                    parameters);
+        } catch (TransactionTooLargeException t) {
+            try {
+                return iServerBrokerService.invoqueModuleLargeDataMethod(
+                        serverIdentificationKey,
+                        dataId,
+                        pluginVersionReference.getPlatform().getCode(),
+                        pluginVersionReference.getLayers().getCode(),
+                        pluginVersionReference.getPlugins().getCode(),
+                        pluginVersionReference.getDeveloper().getCode(),
+                        pluginVersionReference.getVersion().toString(),
+                        method.getName(),
+                        parameters);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            } catch (RuntimeException e) {
+                Log.e(TAG, "ERROR: Some of the parameters not implement Serializable interface in interface " + proxy.getClass().getInterfaces()[0] + " in method:" + method.getName());
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
