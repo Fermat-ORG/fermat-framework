@@ -114,8 +114,6 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrok
     public void onClick(View view) {
         StringBuilder location = new StringBuilder();
 
-        if (selectedCountry != null)
-            location.append(selectedCountry.getCountry()).append(", ");
 
         if (cityTextView.getText().toString().length() > 0)
             location.append(cityTextView.getText().toString()).append(", ");
@@ -132,6 +130,8 @@ public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrok
         if (addressLineTwoEditText.getText().toString().length() > 0)
             location.append(addressLineTwoEditText.getText().toString()).append(", ");
 
+        if (selectedCountry != null)
+            location.append(selectedCountry.getCountry()).append(".");
 
         if (location.length() > 0) {
             try {
