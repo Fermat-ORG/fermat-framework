@@ -344,7 +344,7 @@ public class ConnectionsWorldFragment
                     }
                 }
             }
-            //dataSet.addAll(result);
+            dataSet.addAll(result);
             offset = dataSet.size();
         } catch (Exception e) {
             //Toast.makeText(getActivity(), "No Chat Identity Created",
