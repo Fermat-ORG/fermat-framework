@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -73,7 +74,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     MediaPlayer mp = new MediaPlayer();
     private final String TAG="art_mplayer";
     ThreadSong songPlayerThread;
-    boolean pause=false;
+    boolean pause;
     int songposition=0;
 
     Map<String,Integer> rela=new HashMap<String,Integer>();
@@ -111,6 +112,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                 view=musicPlayerSession.getView();
 
                 firstTime=false;
+
+                pause=musicPlayerSession.getPause();
 
                 System.out.println("ART_ I CAN LISTEN");
             }
@@ -161,6 +164,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         musicPlayerSession.setView(view);
 
+        musicPlayerSession.setPause(pause);
+
     }
 
     public static MusicPlayerMainActivity newInstance() {
@@ -183,6 +188,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             tiempo = (TextView) view.findViewById((R.id.tiempo));
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
             song = (TextView) view.findViewById(R.id.songname);
+            pause=true;
 
 
             /*final TextView titlebar=((TextView)getToolbar().getRootView().findViewById(R.id.txt_title));
@@ -250,13 +256,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                     })
             );
 
-            if(items.isEmpty()){
-                recyclerView.setBackgroundResource(R.drawable.nomusic);
-                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
-            }else{
-                recyclerView.setBackgroundResource(R.drawable.musicplayer_background_viewpager);
-                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
-            }
+
 
 
             bplay.setOnClickListener(new View.OnClickListener() {
@@ -304,12 +304,23 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         List<WalletSong> mysong=new ArrayList<>();
         List<MusicPlayerItems> songview=new ArrayList<>();
         List<MusicPlayerItems> newsongview=new ArrayList<>();
+        TextView noMusicFound=(TextView) view.findViewById(R.id.no_music_found);
+        boolean songErase=true;
         try {
             mysong=musicPlayermoduleManager.getAvailableSongs();
             if(mysong.size()<1){
-                Toast.makeText(view.getContext(),"No song, dowload with the FanWallet",Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(),"Dowload Songs with the FanWallet",Toast.LENGTH_LONG).show();
+                adapter.setFilter(null);
+                //       recyclerView.setBackgroundResource(R.drawable.nomusic);
+                noMusicFound.setVisibility(View.VISIBLE);
+                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
+
             }else{
-                for(WalletSong walletSong:mysong){
+                noMusicFound.setVisibility(View.GONE);
+                recyclerView.setBackgroundResource(R.drawable.musicplayer_background_viewpager);
+                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
+
+               /* for(WalletSong walletSong:mysong){
                     songview.add(new MusicPlayerItems(walletSong.getComposers(),
                             walletSong.getName(),
                             BitmapFactory.decodeResource(view.getContext().getResources(),
@@ -318,14 +329,28 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                             walletSong.getSongId()));
                     i=i+1;
                 }
-                adapter.setFilter(songview);
+                adapter.setFilter(songview);*/
                 for (int x=0;x<mysong.size();x++){
                     newsongview.add(new MusicPlayerItems(mysong.get(x).getComposers(),
                             mysong.get(x).getName(),
                             downloadBitmapAlbumArt(x),
                             mysong.get(x).getSongBytes(),
                             mysong.get(x).getSongId()));
+                    System.out.println("TKY_:"+song.getText()+"="+mysong.get(x).getName());
+                    if(song.getText().equals(mysong.get(x).getName())){
+                        songErase=false;
+                    }
                 }
+                System.out.println("TKY_ERASE:"+songErase);
+                if(songErase){
+                    System.out.println("TKY_playin:"+mp.isPlaying()+" PAUSE:"+pause);
+                    if (mp.isPlaying() || pause) {
+                        stop();
+                        mp.reset();
+                        song.setText("");
+                    }
+                }
+
                 adapter.setFilter(newsongview);
             }
         } catch (CantGetSongListException e) {
@@ -412,8 +437,15 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
                 pb.setMax((int) (mp.getDuration() / 1000));
 
+
                 songPlayerThread = new ThreadSong(false);
                 songPlayerThread.execute();
+
+
+
+                pause=false;
+                bplay.setBackgroundResource(R.drawable.button_pause);
+
 
 
             }
@@ -435,11 +467,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             if(mp.isPlaying()){
                 mp.pause();
                 pause=true;
-                bplay.setBackgroundResource(R.drawable.button_pause);
+                bplay.setBackgroundResource(R.drawable.button_play);
             }else if(pause){
                 mp.start();
                 pause=false;
-                bplay.setBackgroundResource(R.drawable.button_play);
+                bplay.setBackgroundResource(R.drawable.button_pause);
             }
 
         } catch (IllegalArgumentException e) {

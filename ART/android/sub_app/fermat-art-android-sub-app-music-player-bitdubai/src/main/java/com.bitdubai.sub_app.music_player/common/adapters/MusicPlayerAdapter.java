@@ -59,11 +59,15 @@ public class MusicPlayerAdapter extends RecyclerView.Adapter<MusicPlayerAdapter.
         holder.artistname.setText(items.get(i).getArtist_name());
     }
 
+
     public void setFilter(List<MusicPlayerItems> newitems) {
-
-            items.clear();
-            items.addAll(newitems);
-            notifyDataSetChanged();
-
+            if(newitems==null){
+                items.clear();
+                notifyDataSetChanged();
+            }else {
+                items.clear();
+                items.addAll(newitems);
+                notifyDataSetChanged();
+            }
     }
 }
