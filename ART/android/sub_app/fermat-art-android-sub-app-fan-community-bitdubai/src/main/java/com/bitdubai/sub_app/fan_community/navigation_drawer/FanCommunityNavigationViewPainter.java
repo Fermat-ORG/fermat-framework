@@ -44,43 +44,13 @@ public class FanCommunityNavigationViewPainter implements NavigationViewPainter 
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation actorIdentityInformation) {
-        View headerView = null;
         try {
-            //If the actor is not set yet, I'll try to find it.
-            if(actorIdentityInformation==null&&moduleManager!=null){
-                try{
-                    //I'll set the app public cas just in case.
-                    String subAppPublicKey = subAppSession.getAppPublicKey();
-                    if(subAppPublicKey!=null&&!subAppPublicKey.isEmpty()){
-                        moduleManager.setAppPublicKey(subAppPublicKey);
-                    }
-                    actorIdentityInformation = moduleManager.getSelectedActorIdentity();
-                } catch (Exception e) {
-                    //Cannot find the selected identity in any form... I'll let the identity in null
-                }
-            }
-            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentityInformation);
-            headerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity.get(), subAppSession, null);
-                        listIdentitiesDialog.setTitle("Connection Request");
-                        listIdentitiesDialog.show();
-                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                            }
-                        });
-                        listIdentitiesDialog.show();
-                    }catch(Exception e){ }
-                }
-            });
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
-        return headerView;
+        return null;
     }
 
     @Override

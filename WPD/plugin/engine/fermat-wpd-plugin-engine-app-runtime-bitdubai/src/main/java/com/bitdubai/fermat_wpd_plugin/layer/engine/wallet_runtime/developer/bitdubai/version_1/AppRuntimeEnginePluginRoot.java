@@ -3780,7 +3780,7 @@ public class AppRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeTab = new Tab();
-        runtimeTab.setLabel("Song");
+        runtimeTab.setLabel("Songs");
         runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT);
         runtimeTabStrip.addTab(runtimeTab);
 

@@ -237,12 +237,14 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
             final ProtocolState state  = ProtocolState          .PROCESSING_SEND;
             final RequestType type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
+            final int sentCount = 1;
 
             artistActorNetworkServiceDao.createConnectionRequest(
                     artistConnectionInformation,
                     state,
                     type,
-                    action
+                    action,
+                    sentCount
             );
 
             sendMessage(
@@ -679,5 +681,17 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
         return artistActorNetworkServiceDao.listAllRequest();
     }
 
-
+    /**
+     *
+     * @param artistConnectionInformation
+     */
+    public final void sendFailedMessage(ArtistConnectionInformation artistConnectionInformation){
+        sendMessage(
+                buildJsonRequestMessage(artistConnectionInformation),
+                artistConnectionInformation.getSenderPublicKey(),
+                artistConnectionInformation.getSenderActorType(),
+                artistConnectionInformation.getDestinationPublicKey(),
+                artistConnectionInformation.getDestinationActorType()
+        );
+    }
 }
