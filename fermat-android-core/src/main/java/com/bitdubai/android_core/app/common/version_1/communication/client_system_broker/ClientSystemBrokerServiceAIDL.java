@@ -18,6 +18,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.InvalidMethodExecutionException;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.LargeWorkOnMainThreadException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.structure.LocalClientSocketSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
@@ -165,6 +167,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         FermatModuleObjectWrapper objectArrived = null;
         if(loopType!=null) {
             if (loopType == MethodDetail.LoopType.BACKGROUND) {
+                if(Looper.myLooper() == Looper.getMainLooper()) return new FermatModuleObjectWrapper(dataId,null,true,new InvalidMethodExecutionException(proxy,method,"The MethodDetail annotation have background thread value and this method is invoqued in the main thread."));
                 Log.i(TAG, "Sending background request");
                 try {
                     objectArrived = iServerBrokerService.invoqueModuleLargeDataMethod(

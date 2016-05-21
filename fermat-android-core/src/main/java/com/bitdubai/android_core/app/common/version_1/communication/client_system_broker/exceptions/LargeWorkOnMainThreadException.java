@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.communication.client_system_broker;
+package com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions;
 
 import java.lang.reflect.Method;
 
