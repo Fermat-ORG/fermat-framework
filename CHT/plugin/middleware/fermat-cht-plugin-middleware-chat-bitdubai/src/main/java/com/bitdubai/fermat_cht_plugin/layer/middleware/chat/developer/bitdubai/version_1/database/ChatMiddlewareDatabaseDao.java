@@ -973,6 +973,7 @@ public class ChatMiddlewareDatabaseDao {
                 transaction.addRecordToInsert(table, record);
             }
             else {
+                message.setCount(getMessageByMessageId(message.getMessageId()).getCount());
                 record = getMessageRecord(message);
                 table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, record);
