@@ -56,6 +56,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -81,6 +83,8 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
     private long bitcoinWalletBalanceSatoshis;
 
+    private ExecutorService _executor;
+
     public static HomeCardFragment newInstance() {
         return new HomeCardFragment();
     }
@@ -88,9 +92,11 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
         try {
+            setHasOptionsMenu(true);
+
+            _executor = Executors.newFixedThreadPool(3);
+
             appSession.setData("redeem_points", null);
 
             assetUserSession = ((AssetUserSession) appSession);
@@ -119,11 +125,25 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_v3_wallet_asset_user_home_no_assets);
 
-        assets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        showOrHideNoAssetsView(assets.isEmpty());
         try {
-            bitcoinWalletBalanceSatoshis = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    assets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                    showOrHideNoAssetsView(assets.isEmpty());
+                }
+            });
+
+            try {
+                bitcoinWalletBalanceSatoshis = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_USER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
             // bitcoinBalanceText.setText(getResources().getString(R.string.dap_user_wallet_buy_no_available));
         }
 

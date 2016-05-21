@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -62,12 +61,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.version_1.AssetIssuerWalletModulePluginRoot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -79,7 +75,7 @@ import java.util.UUID;
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_ISSUER)
-public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerWalletSupAppModuleManager, Serializable {
+public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerWalletSupAppModuleManager {
 
 
     private final AssetIssuerWalletManager          assetIssuerWalletManager;
@@ -90,8 +86,8 @@ public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssue
     private final AssetFactoryManager               assetFactoryManager;
     private final WalletManagerManager              walletMiddlewareManager;
     private final ErrorManager                      errorManager;
-    private final PluginFileSystem                  pluginFileSystem;
-    private final UUID                              pluginId;
+//    private final PluginFileSystem                  pluginFileSystem;
+//    private final UUID                              pluginId;
     private final EventManager                      eventManager;
     private final Broadcaster                       broadcaster;
     private final AssetIssuerWalletModulePluginRoot assetIssuerWalletModulePluginRoot;
@@ -137,8 +133,8 @@ public class AssetIssuerWalletModuleManager extends ModuleManagerImpl<AssetIssue
         this.identityAssetIssuerManager         = identityAssetIssuerManager;
         this.assetFactoryManager                = assetFactoryManager;
         this.walletMiddlewareManager            = walletMiddlewareManager;
-        this.pluginId                           = pluginId;
-        this.pluginFileSystem                   = pluginFileSystem;
+//        this.pluginId                           = pluginId;
+//        this.pluginFileSystem                   = pluginFileSystem;
         this.broadcaster                        = broadcaster;
         this.errorManager                       = errorManager;
         this.eventManager                       = eventManager;

@@ -30,7 +30,7 @@ public class Data {
 
     public static List<DigitalAsset> getAllDigitalAssets(AssetIssuerWalletSupAppModuleManager moduleManager) throws Exception {
         List<DigitalAsset> digitalAssets = new ArrayList<>();
-
+        try {
             List<AssetIssuerWalletList> balances = moduleManager.getAssetIssuerWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
             DigitalAsset digitalAsset;
             if (balances != null) {
@@ -52,6 +52,9 @@ public class Data {
                     digitalAssets.add(digitalAsset);
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return digitalAssets;
     }
 

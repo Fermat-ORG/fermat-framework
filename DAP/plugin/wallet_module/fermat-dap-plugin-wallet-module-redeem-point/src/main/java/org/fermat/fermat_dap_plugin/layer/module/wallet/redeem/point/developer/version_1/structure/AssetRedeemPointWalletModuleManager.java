@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -33,10 +32,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWa
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.module.wallet.redeem.point.developer.version_1.AssetRedeemPointWalletModulePluginRoot;
 
-import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -48,15 +44,15 @@ import java.util.UUID;
         layer = Layers.WALLET_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.REDEEM_POINT)
-public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements AssetRedeemPointWalletSubAppModule, Serializable {
+public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements AssetRedeemPointWalletSubAppModule {
 
     private final AssetRedeemPointWalletManager             assetRedeemPointWalletManager;
     private final RedeemPointIdentityManager                redeemPointIdentityManager;
     private final ErrorManager                              errorManager;
     private final EventManager                              eventManager;
     private final Broadcaster                               broadcaster;
-    private final UUID                                      pluginId;
-    private final PluginFileSystem                          pluginFileSystem;
+//    private final UUID                                      pluginId;
+//    private final PluginFileSystem                          pluginFileSystem;
     private final AssetRedeemPointWalletModulePluginRoot    assetRedeemPointWalletModulePluginRoot;
 
     private SettingsManager<RedeemPointSettings> settingsManager;
@@ -77,8 +73,8 @@ public class AssetRedeemPointWalletModuleManager extends ModuleManagerImpl<Redee
 
         this.assetRedeemPointWalletManager          = assetRedeemPointWalletManager;
         this.redeemPointIdentityManager             = redeemPointIdentityManager;
-        this.pluginId                               = pluginId;
-        this.pluginFileSystem                       = pluginFileSystem;
+//        this.pluginId                               = pluginId;
+//        this.pluginFileSystem                       = pluginFileSystem;
         this.errorManager                           = errorManager;
         this.eventManager                           = eventManager;
         this.broadcaster                            = broadcaster;

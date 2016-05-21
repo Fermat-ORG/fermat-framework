@@ -38,7 +38,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.A
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -46,7 +45,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings>, Serializable {
+public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation>, ModuleSettingsImpl<AssetUserSettings> {
     /**
      * (non-Javadoc)
      *
