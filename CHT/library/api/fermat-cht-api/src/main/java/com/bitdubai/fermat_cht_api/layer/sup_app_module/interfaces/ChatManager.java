@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +36,7 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public interface ChatManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
+public interface ChatManager<Z> extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
     //TODO: Implementar los metodos que necesiten manejar el module
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
@@ -129,4 +130,7 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
      */
     @Override
     SettingsManager<ChatPreferenceSettings> getSettingsManager();
+
+    Z getChatActorCommunityManager();
+
 }

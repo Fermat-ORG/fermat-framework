@@ -96,8 +96,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     ChatActorConnectionManager chatActorConnectionManager;
 
-    ChatActorCommunitySubAppModuleManager chatActorCommunityManager;
-
     private final Broadcaster broadcaster;
     public final String BROADCAST_CODE="13";
 
@@ -109,8 +107,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             DeviceUserManager deviceUserManager,
             NetworkServiceChatManager chatNetworkServiceManager,
             Broadcaster broadcaster,
-            ChatActorConnectionManager chatActorConnectionManager,
-            ChatActorCommunitySubAppModuleManager chatActorCommunityManager
+            ChatActorConnectionManager chatActorConnectionManager
     ) {
         this.chatMiddlewareDatabaseDao = chatMiddlewareDatabaseDao;
         this.chatMiddlewareContactFactory = chatMiddlewareContactFactory;
@@ -120,7 +117,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         this.chatNetworkServiceManager = chatNetworkServiceManager;
         this.broadcaster = broadcaster;
         this.chatActorConnectionManager = chatActorConnectionManager;
-        this.chatActorCommunityManager = chatActorCommunityManager;
     }
 
     /**
@@ -1008,10 +1004,5 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 return "Method: getSourceString - Invalid value in Source String";
 
         }
-    }
-
-    @Override
-    public ChatActorCommunitySubAppModuleManager getChatActorCommunityManager() {
-        return chatActorCommunityManager;
     }
 }
