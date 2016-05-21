@@ -3,13 +3,16 @@ package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
@@ -33,6 +36,9 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
@@ -44,12 +50,12 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorComm
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatTypeNotSupportedException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetChtActorSearchResult;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
-import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunityManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -62,32 +68,33 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityManager>, Serializable {
+public class ChatSupAppModuleManager implements ChatManager, Serializable {
 
     private final MiddlewareChatManager middlewareChatManager;
     private final ChatIdentityManager chatIdentityManager;
     private SettingsManager<ChatPreferenceSettings> settingsManager;
+    private SettingsManager<ChatActorCommunitySettings>    settingsManagerCommunity                       ;
     private final ChatActorConnectionManager chatActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
     private ChatSupAppModulePluginRoot chatSupAppModulePluginRoot;
-    ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot;
+    private final com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager;
+    private String                                         subAppPublicKey                       ;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
-                                   ChatActorConnectionManager chatActorConnectionManager ,
+                                   ChatActorConnectionManager chatActorConnectionManager,
                                    UUID pluginId,
                                    ChatSupAppModulePluginRoot chatSupAppModulePluginRoot,
-                                   ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot)
-    {
-        this.middlewareChatManager          = middlewareChatManager         ;
-        this.chatIdentityManager            = chatIdentityManager           ;
-        this.pluginFileSystem               = pluginFileSystem              ;
-        this.chatActorConnectionManager     = chatActorConnectionManager    ;
-        this.pluginId                       = pluginId                      ;
-        this.chatSupAppModulePluginRoot     = chatSupAppModulePluginRoot    ;
-        this.chatActorCommunitySubAppModulePluginRoot      = chatActorCommunitySubAppModulePluginRoot     ;
+                                   com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager) {
+        this.middlewareChatManager = middlewareChatManager;
+        this.chatIdentityManager = chatIdentityManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.chatActorConnectionManager = chatActorConnectionManager;
+        this.pluginId = pluginId;
+        this.chatSupAppModulePluginRoot = chatSupAppModulePluginRoot;
+        this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
     @Override
@@ -162,7 +169,7 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
     }
 
     @Override
-    public void deleteMessage(Message message) throws  CantDeleteMessageException {
+    public void deleteMessage(Message message) throws CantDeleteMessageException {
         middlewareChatManager.deleteMessage(message);
     }
 
@@ -179,6 +186,7 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
 
     /**
      * This method returns the Network Service public key
+     *
      * @return
      * @throws CantGetNetworkServicePublicKeyException
      */
@@ -189,8 +197,8 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
 
 
     @Override
-    public boolean isIdentityDevice() throws  CantListChatIdentityException {
-        if(chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().isEmpty())
+    public boolean isIdentityDevice() throws CantListChatIdentityException {
+        if (chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().isEmpty())
             return false;
         else return true;
     }
@@ -210,7 +218,7 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
     @Override
     public List<ChatActorCommunityInformation> listAllConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
-        try{
+        try {
             final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType()
@@ -228,7 +236,7 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
 
         } catch (CantListActorConnectionsException e) {
-           chatSupAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatSupAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return chatActorCommunityInformationList;
     }
@@ -261,12 +269,12 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
 
     @Override
     public String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus {
-       return middlewareChatManager.checkLastConnection(contactPublicKey);
+        return middlewareChatManager.checkLastConnection(contactPublicKey);
     }
 
     @Override
     public void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
-         middlewareChatManager.activeOnlineStatus(contactPublicKey);
+        middlewareChatManager.activeOnlineStatus(contactPublicKey);
     }
 
     @Override
@@ -289,8 +297,7 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
     public void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException {
         List<Message> messages = middlewareChatManager.getMessagesByChatId(chatId);
 
-        for (Message message : messages)
-        {
+        for (Message message : messages) {
             middlewareChatManager.deleteMessage(message);
         }
     }
@@ -326,10 +333,6 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
      * @throws CantGetSelectedActorIdentityException if something goes wrong.
      * @throws ActorIdentityNotSelectedException     if there's no actor identity selected.
      */
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
-    }
 
     /**
      * Create identity
@@ -344,17 +347,170 @@ public class ChatSupAppModuleManager implements ChatManager<ChatActorCommunityMa
     }
 
     @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
     public int[] getMenuNotifications() {
         return new int[0];
     }
 
+    //COMMUNITY
+
     @Override
-    public ChatActorCommunityManager getChatActorCommunityManager() {
-            return chatActorCommunitySubAppModulePluginRoot.getChatActorCommunityManager();
+    public List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
+        List<ChatActorCommunityInformation> worldActorList = null;
+        List<ChatActorConnection> actorConnections = null;
+
+        worldActorList = getResult();
+
+        try {
+            if (selectableIdentity != null) {
+                final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
+                final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
+
+                actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            }//else linkedChatActorIdentity=null;
+        } catch (CantListActorConnectionsException exception) {
+            exception.printStackTrace();
+        }
+
+        ChatActorCommunityInformation worldActor;
+        if (actorConnections != null && worldActorList != null) {
+            if (actorConnections.size() > 0 && worldActorList.size() > 0) {
+                for (int i = 0; i < worldActorList.size(); i++) {
+
+                    worldActor = worldActorList.get(i);
+                    for (ChatActorConnection connectedActor : actorConnections) {
+                        if (worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
+                            worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
+                    }
+                }
+            }
+        }
+
+        return worldActorList;
     }
+
+    public List<ChatActorCommunityInformation> getResult() {
+        try {
+            ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
+
+            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResult();
+
+            final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
+
+            for (ChatExposingData ced : chatActorConnections)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
+
+            return chatActorLocalCommunityInformationList;
+        } catch (CantListChatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public void requestConnectionToChatActor(final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity selectedIdentity,
+                                             final com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation chatActorToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException {
+        try {
+
+            final ActorIdentityInformation actorSending = new ActorIdentityInformation(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType(),
+                    selectedIdentity.getAlias(),
+                    selectedIdentity.getImage()
+            );
+
+            final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
+                    chatActorToContact.getPublicKey(),
+                    Actors.CHAT,
+                    chatActorToContact.getAlias(),
+                    chatActorToContact.getImage()
+            );
+
+            chatActorConnectionManager.requestConnection(
+                    actorSending,
+                    actorReceiving
+            );
+        } catch (ConnectionAlreadyRequestedException e) {
+            e.printStackTrace();
+        } catch (com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException e) {
+            e.printStackTrace();
+        } catch (UnsupportedActorTypeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        //Try to get appSettings
+        ChatActorCommunitySettings appSettings = null;
+        try {
+            appSettings = this.getSettingsManagerCommmunity().loadAndGetSettings(this.subAppPublicKey);//SubAppsPublicKeys.CHT_COMMUNITY.getCode() //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+        } catch (Exception e) {
+            try {
+                appSettings = new ChatActorCommunitySettings();
+                this.getSettingsManagerCommmunity().persistSettings(this.subAppPublicKey, appSettings);
+            } catch (CantPersistSettingsException e1) {
+                //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                //e1.printStackTrace();
+            }
+            //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return null;
+        }
+
+        List<ChatIdentity> IdentitiesInDevice = new ArrayList<>();
+        try{
+            IdentitiesInDevice = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
+            //TODO:Revisar como asignar estos valores deben ser seteados al entrar a la comunidad setear los settings necesario
+            if(IdentitiesInDevice != null && IdentitiesInDevice.size() > 0) {
+                appSettings.setLastSelectedIdentityPublicKey(IdentitiesInDevice.get(0).getPublicKey());
+                appSettings.setLastSelectedActorType(IdentitiesInDevice.get(0).getActorType());
+            }
+        } catch(CantListChatIdentityException e) {
+            e.printStackTrace();
+            /*Do nothing*/
+        }
+
+
+        //If appSettings exists, get its selectedActorIdentityPublicKey property
+        if(appSettings != null)
+        {
+            String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
+            Actors lastSelectedActorType = appSettings.getLastSelectedActorType();
+
+            if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null) {
+
+                ChatActorCommunitySelectableIdentityImpl selectedIdentity = null;
+
+                if(lastSelectedActorType == Actors.CHAT)
+                {
+                    for(ChatIdentity i : IdentitiesInDevice) {
+                        if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage());
+                    }
+                }
+//                if(selectedIdentity == null)
+//                    throw new ActorIdentityNotSelectedException("", null, "", "");
+
+                return selectedIdentity;
+            }
+//            else
+//                throw new ActorIdentityNotSelectedException("", null, "", "");
+        }
+
+        return null;
+    }
+
+    public SettingsManager<ChatActorCommunitySettings> getSettingsManagerCommmunity() {
+        if (this.settingsManagerCommunity != null)
+            return this.settingsManagerCommunity;
+
+        this.settingsManagerCommunity = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManagerCommunity;
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}
 }
