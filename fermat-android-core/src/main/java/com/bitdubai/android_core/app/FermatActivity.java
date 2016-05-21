@@ -966,7 +966,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
                         if(mDrawerLayout!=null)mDrawerLayout.setFitsSystemWindows(true);
                         if(appBarLayout!=null)appBarLayout.setFitsSystemWindows(true);
 
-
+                        //todo: ponernni siista n in ile
+                        View v = getToolbar();
+                        v.getLayoutParams().height = v.getLayoutParams().height+30;
+                        v.setPadding(v.getPaddingLeft(),v.getPaddingTop()+30,v.getPaddingRight(),v.getPaddingBottom());
                     } catch (Exception e) {
                         getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.NOT_IMPORTANT, FermatException.wrapException(e));
                         Log.d("WalletActivity", "Sdk version not compatible with status bar color");
