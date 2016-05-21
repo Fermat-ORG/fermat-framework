@@ -93,6 +93,7 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
          * Data id
          */
         final String dataId = UUID.randomUUID().toString();
+//        Log.e(TAG,"data id: "+dataId+" from method "+method);
         boolean isDataChuncked = false;
         FermatModuleObjectWrapper objectArrived = null;
         /**

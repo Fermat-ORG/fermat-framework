@@ -49,5 +49,6 @@ public class BitmapWorkerTask extends AsyncTask<byte[], Void, Bitmap> {
             else
                 Picasso.with(imageView.getContext()).load(R.drawable.ic_profile_male).into(imageView);
         }
+        imageViewReference.clear();
     }
 }
