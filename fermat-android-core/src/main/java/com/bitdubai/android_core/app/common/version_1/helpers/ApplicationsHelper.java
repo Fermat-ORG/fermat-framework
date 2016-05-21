@@ -1,25 +1,29 @@
-package com.bitdubai.fermat_android_api.engine;
+package com.bitdubai.android_core.app.common.version_1.helpers;
 
 import android.content.Context;
 import android.content.Intent;
 
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.recents.RecentsActivity;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 
 import java.lang.ref.WeakReference;
 
 /**
- * Created by mati on 2016.05.19..
+ * Created by Matias Furszyfer on 2016.05.19..
  */
-public class ApplicationManager {
+public class ApplicationsHelper implements FermatApplicationCaller {
 
+    public static final int TASK_MANAGER_STACK = 100;
 
     private WeakReference<Context> context;
 
-    public ApplicationManager(Context context) {
+    public ApplicationsHelper(Context context) {
         this.context = new WeakReference<Context>(context);
     }
 
-    public void goHome(){
+    public void openFermatHome(){
         try {
             Intent intent;
             intent = new Intent();
@@ -32,7 +36,7 @@ public class ApplicationManager {
         }
     }
 
-    public void changeApp(String appPublicKey) throws Exception {
+    public void openFermatApp(String appPublicKey) throws Exception {
         try{
             Intent intent;
             intent = new Intent();
@@ -44,6 +48,13 @@ public class ApplicationManager {
         }catch (Exception e){
             throw new Exception("App public key not exist");
         }
+    }
+
+    public void openRecentsScreen(){
+        Intent resultIntent = new Intent(context.get(),RecentsActivity.class);
+        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, ApplicationSession.getInstance().getAppManager().getRecentsAppsStack().toArray());
+        context.get().startActivity(resultIntent);
     }
 
 }

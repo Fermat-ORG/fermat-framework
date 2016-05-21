@@ -2,8 +2,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection
 
 import android.content.Context;
 
-import com.bitdubai.fermat_android_api.engine.ApplicationManager;
-import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
