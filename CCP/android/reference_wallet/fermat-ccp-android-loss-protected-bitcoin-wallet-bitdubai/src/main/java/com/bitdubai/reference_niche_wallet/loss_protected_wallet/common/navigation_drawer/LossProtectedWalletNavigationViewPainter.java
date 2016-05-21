@@ -99,8 +99,5 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
         return true;
     }
 
-    @Override
-    public void changeApp(String appPublicKey) throws Exception {
-        activity.getApplicationManager().changeApp(appPublicKey);
-    }
+
 }

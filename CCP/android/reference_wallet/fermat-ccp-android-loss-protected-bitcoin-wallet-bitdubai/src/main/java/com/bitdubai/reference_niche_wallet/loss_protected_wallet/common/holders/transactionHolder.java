@@ -33,8 +33,7 @@ public class transactionHolder extends ChildViewHolder {
     public transactionHolder(View itemView) {
         super(itemView);
 
-        this.itemView = itemView;
-        res = itemView.getResources();
+        Resources res = itemView.getResources();
         container_sub_item = (LinearLayout) itemView.findViewById(R.id.container_sub_item3);
 
         txt_from = (TextView) itemView.findViewById(R.id.from);

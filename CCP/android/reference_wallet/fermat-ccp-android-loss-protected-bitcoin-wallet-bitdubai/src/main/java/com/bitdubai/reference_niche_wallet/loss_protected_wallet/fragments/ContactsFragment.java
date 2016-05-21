@@ -34,7 +34,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -76,8 +75,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -138,10 +135,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     private WalletContact walletContact;
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
-
+    //private SettingsManager<LossProtectedWalletSettings> settingsManager;
     LossProtectedWalletSettings lossProtectedWalletSettings;
     private boolean isScrolled = false;
-    private ExecutorService _executor;
 
     public static ContactsFragment newInstance() {
 
@@ -163,8 +159,6 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             lossProtectedWalletManager = lossWalletSession.getModuleManager();
 
             lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
-
-            _executor = Executors.newFixedThreadPool(2);
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -343,19 +337,13 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     private void onRefresh() {
         try {
-            _executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
-
-                }
-            });
-      } catch (CantGetCryptoLossProtectedWalletException e) {
+            walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
+        } catch (CantGetCryptoLossProtectedWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             WalletUtils.showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "unknown error- " + e.getMessage());
+            WalletUtils.showMessage(getActivity(), "ulnknown error- " + e.getMessage());
         }
 
         if (walletContactRecords.isEmpty()) {

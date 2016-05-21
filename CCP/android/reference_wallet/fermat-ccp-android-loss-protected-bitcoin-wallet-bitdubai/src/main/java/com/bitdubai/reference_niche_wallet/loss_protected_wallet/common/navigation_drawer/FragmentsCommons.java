@@ -51,11 +51,11 @@ public class FragmentsCommons {
                 @Override
                 public void onClick(View v) {
 
-                    try {
+                   /* try {
                         applicationManager.changeApp(SubApps.CWP_INTRA_USER_IDENTITY.getCode());
                     } catch (Exception e) {
                         e.printStackTrace();
-                    }
+                    }*/
                 }
             });
 
