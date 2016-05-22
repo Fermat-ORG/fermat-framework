@@ -330,22 +330,28 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     }
                     try{
                         if(cryptoBrokerBitmap != null){
-                            cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
-                            final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
-                            dialogCropImage.show();
-                            dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-                                    if (dialogCropImage.getCroppedImage() != null) {
-                                        cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
-                                        Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
-                                    }else{
-                                        cryptoBrokerBitmap = null;
+                            if(cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
+                                cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                                final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
+                                dialogCropImage.show();
+                                dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        if (dialogCropImage.getCroppedImage() != null) {
+                                            cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
+                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                                        } else {
+                                            cryptoBrokerBitmap = null;
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }else{
+                                Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                cryptoBrokerBitmap = null;
+                                //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                            }
                         }else{
-                            Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
                             cryptoBrokerBitmap = null;
                             //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                         }
@@ -360,7 +366,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-
                             //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                             if(cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
                                 cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
