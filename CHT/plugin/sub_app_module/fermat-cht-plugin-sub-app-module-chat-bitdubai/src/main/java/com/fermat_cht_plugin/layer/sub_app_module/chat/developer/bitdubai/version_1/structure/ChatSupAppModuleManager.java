@@ -439,19 +439,20 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
-        try {
-            appSettings = this.getSettingsManagerCommmunity().loadAndGetSettings(this.subAppPublicKey);//SubAppsPublicKeys.CHT_COMMUNITY.getCode() //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        } catch (Exception e) {
-            try {
-                appSettings = new ChatActorCommunitySettings();
-                this.getSettingsManagerCommmunity().persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e1) {
-                //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                //e1.printStackTrace();
-            }
-            //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            return null;
-        }
+        //TODO: Revisar este caso
+//        try {
+//            appSettings = this.getSettingsManagerCommmunity().loadAndGetSettings(this.subAppPublicKey);//SubAppsPublicKeys.CHT_COMMUNITY.getCode() //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+//        } catch (Exception e) {
+//            try {
+//                appSettings = new ChatActorCommunitySettings();
+//                this.getSettingsManagerCommmunity().persistSettings(this.subAppPublicKey, appSettings);
+//            } catch (CantPersistSettingsException e1) {
+//                //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//                //e1.printStackTrace();
+//            }
+//            //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            return null;
+//        }
 
         List<ChatIdentity> IdentitiesInDevice = new ArrayList<>();
         try{
@@ -496,17 +497,17 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
         return null;
     }
 
-    public SettingsManager<ChatActorCommunitySettings> getSettingsManagerCommmunity() {
-        if (this.settingsManagerCommunity != null)
-            return this.settingsManagerCommunity;
-
-        this.settingsManagerCommunity = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManagerCommunity;
-    }
+//    public SettingsManager<ChatActorCommunitySettings> getSettingsManagerCommmunity() {
+//        if (this.settingsManagerCommunity != null)
+//            return this.settingsManagerCommunity;
+//
+//        this.settingsManagerCommunity = new SettingsManager<>(
+//                pluginFileSystem,
+//                pluginId
+//        );
+//
+//        return this.settingsManagerCommunity;
+//    }
 
     @Override
     public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}

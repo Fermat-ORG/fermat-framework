@@ -53,6 +53,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
+import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class ChatActorCommunityManager extends ModuleManagerImpl<ChatActorCommun
     //private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
     private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
-    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ErrorManager errorManager, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
+    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
         super(pluginFileSystem, pluginId);
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
