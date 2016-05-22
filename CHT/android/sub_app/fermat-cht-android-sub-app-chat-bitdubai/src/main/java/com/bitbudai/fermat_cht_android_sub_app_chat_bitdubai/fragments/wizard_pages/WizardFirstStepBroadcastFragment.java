@@ -68,6 +68,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Err
      chatSettings = null;
      try {
          chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+         //chatSettings = (ChatPreferenceSettings) moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
      } catch (Exception e) {
          chatSettings = null;
      }

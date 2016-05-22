@@ -78,7 +78,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
         executor = Executors.newSingleThreadExecutor();
     }
 
-    private List<FermatEventListener> listenersAdded;
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     @Override
     public FermatManager getManager() {

@@ -99,6 +99,10 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
         return fermatManager;
     }
 
+    public ChatActorCommunityManager getChatActorCommunityManager(){
+        return fermatManager;
+    }
+
     public ChatActorCommunitySettings getChatActorCommunitySettings() {
         return chatActorCommunitySettings;
     }

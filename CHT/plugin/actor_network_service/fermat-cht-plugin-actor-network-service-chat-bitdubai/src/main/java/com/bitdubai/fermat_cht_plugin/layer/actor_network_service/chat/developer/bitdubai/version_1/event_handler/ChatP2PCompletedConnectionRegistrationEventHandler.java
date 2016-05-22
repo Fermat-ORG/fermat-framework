@@ -30,15 +30,7 @@ public class ChatP2PCompletedConnectionRegistrationEventHandler  implements Ferm
 
                 if(completeComponentRegistrationNotificationEvent != null){
 
-                    if(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT && completeComponentRegistrationNotificationEvent.getSource() == EventSource.WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN){
-
                         chatActorNetworkServicePluginRoot.runExposeIdentityThread();
-
-                    }
-
-                }else{
-
-                    System.out.println("######################\nwrong event");
 
                 }
 

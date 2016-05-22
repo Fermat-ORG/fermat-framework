@@ -116,7 +116,7 @@ public class ContactFragment extends AbstractFermatFragment {
             Contact con= chatSession.getSelectedContact();
             contactname.add(con.getAlias());
             contactid.add(con.getRemoteActorPublicKey());
-            contactalias.add(con.getAlias());
+            contactalias.add(con.getContactStatus().toString());
             ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             contacticon.add(bmd.getBitmap());

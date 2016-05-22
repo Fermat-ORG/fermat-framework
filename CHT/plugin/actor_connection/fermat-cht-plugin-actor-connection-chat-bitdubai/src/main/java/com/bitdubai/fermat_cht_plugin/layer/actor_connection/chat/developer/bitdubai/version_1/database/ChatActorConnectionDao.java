@@ -87,20 +87,12 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         }
     }
 
-    public final ChatActorConnection registerChatActorConnection(final ChatActorConnection actorConnection) throws CantRegisterActorConnectionException,
+    public final boolean registerChatActorConnection(final ChatActorConnection actorConnection, ChatActorConnection oldActorConnection) throws CantRegisterActorConnectionException,
             ActorConnectionAlreadyExistsException {
 
+        boolean isNew = true;
+
         try {
-
-            ChatActorConnection oldActorConnection = chatActorConnectionExists(actorConnection.getLinkedIdentity(), actorConnection.getPublicKey());
-
-            if (oldActorConnection != null && oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED)) {
-
-                throw new ActorConnectionAlreadyExistsException(
-                        "actorConnection: " + actorConnection,
-                        "The connection already exists..."
-                );
-            }
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
@@ -117,20 +109,22 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                         oldActorConnection
                 );
                 actorConnectionsTable.deleteRecord(entityRecordOld);
+                isNew = false;
             }
+
+
             actorConnectionsTable.insertRecord(entityRecord);
 
-            return buildActorConnectionNewRecord(entityRecord);
+//            return buildActorConnectionNewRecord(entityRecord);
+            return isNew;
+
 
         } catch (final CantInsertRecordException e) {
 
             throw new CantRegisterActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (final InvalidParameterException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to build an instance of the actor connection.");
-        } catch (final CantGetActorConnectionException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
+//        } catch (final CantGetActorConnectionException e) {
+//
+//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
 //        } catch (CantUpdateRecordException e) {
 //
 //            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");

@@ -75,6 +75,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
         chatSettings = null;
         try {
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = (ChatPreferenceSettings) moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
