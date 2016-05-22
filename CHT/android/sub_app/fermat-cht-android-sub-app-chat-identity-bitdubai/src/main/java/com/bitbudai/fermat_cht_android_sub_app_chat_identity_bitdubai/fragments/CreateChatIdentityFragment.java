@@ -17,6 +17,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -67,6 +68,9 @@ import com.squareup.picasso.Picasso;
 //import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -98,7 +102,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     TextView statusView;
     ImageView placeholdImg;
     Button btnRotate;
+    Bitmap cryptoBrokerBitmapp;
     int ROTATE_VALUE = 0;
+    private Uri imageToUploadUri;
     private SettingsManager<ChatIdentitySettings> settingsManager;
     private ChatIdentityPreferenceSettings chatIdentitySettings;
     public static CreateChatIdentityFragment newInstance() {
@@ -293,18 +299,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
             int id = item.getItemId();
-
            switch (id){
                case MENU_HELP_ACTION:
                 setUpDialog();
                 break;
-
                case MENU_ADD_ACTION:
-
                    break;
             }
-
-        } catch (Exception e) {
+        }catch(Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error",
                     LENGTH_LONG).show();
@@ -317,34 +319,45 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
-                    Bundle extras = data.getExtras();
-                    cryptoBrokerBitmap = (Bitmap) extras.get("data");
-                    try {
-                        if (cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
-                            cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
-                            final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
-                            dialogCropImage.show();
-                            dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                @Override
-                                public void onDismiss(DialogInterface dialog) {
-                                    if (dialogCropImage.getCroppedImage() != null) {
-                                        cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
-                                        Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
-                                    } else {
-                                        cryptoBrokerBitmap = null;
+
+                    if(imageToUploadUri != null){
+                        Uri selectedImage = imageToUploadUri;
+                        getActivity().getContentResolver().notifyChange(selectedImage, null);
+                        Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
+                        if(reducedSizeBitmap != null){
+                                cryptoBrokerBitmap = reducedSizeBitmap;
+                        }
+                    }
+                    try{
+                        if(cryptoBrokerBitmap != null){
+                            if(cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
+                                cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                                final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
+                                dialogCropImage.show();
+                                dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+                                        if (dialogCropImage.getCroppedImage() != null) {
+                                            cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
+                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                                        } else {
+                                            cryptoBrokerBitmap = null;
+                                        }
                                     }
-                                }
-                            });
-                        } else {
-                            Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                });
+                            }else{
+                                Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                cryptoBrokerBitmap = null;
+                                //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                            }
+                        }else{
+                            Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
                             cryptoBrokerBitmap = null;
                             //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                         }
                     }catch(Exception e){
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
                     }
-
                     break;
                 case REQUEST_LOAD_IMAGE:
                      Uri selectedImage = data.getData();
@@ -353,7 +366,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (isAttached) {
                             ContentResolver contentResolver = getActivity().getContentResolver();
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
-
                             //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                             if(cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
                                 cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
@@ -501,10 +513,70 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
 
     private void dispatchTakePictureIntent() {
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+        chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+        imageToUploadUri = Uri.fromFile(f);
+        startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
+    }
+
+    private Bitmap getBitmap(String path) {
+        Uri uri = Uri.fromFile(new File(path));
+        InputStream in = null;
+        try {
+            final int IMAGE_MAX_SIZE = 3000000; // 1.2MP
+            in = getActivity().getContentResolver().openInputStream(uri);
+
+            // Decode image size
+            BitmapFactory.Options o = new BitmapFactory.Options();
+            o.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(in, null, o);
+            in.close();
+
+
+            int scale = 1;
+            while ((o.outWidth * o.outHeight) * (1 / Math.pow(scale, 2)) >
+                    IMAGE_MAX_SIZE) {
+                scale++;
+            }
+            Log.d("", "scale = " + scale + ", orig-width: " + o.outWidth + ", orig-height: " + o.outHeight);
+
+            Bitmap b = null;
+            in = getActivity().getContentResolver().openInputStream(uri);
+            if (scale > 1) {
+                scale--;
+                // scale to max possible inSampleSize that still yields an image
+                // larger than target
+                o = new BitmapFactory.Options();
+                o.inSampleSize = scale;
+                b = BitmapFactory.decodeStream(in, null, o);
+
+                // resize to desired dimensions
+                int height = b.getHeight();
+                int width = b.getWidth();
+                Log.d("", "1th scale operation dimenions - width: " + width + ", height: " + height);
+
+                double y = Math.sqrt(IMAGE_MAX_SIZE
+                        / (((double) width) / height));
+                double x = (y / height) * width;
+
+                Bitmap scaledBitmap = Bitmap.createScaledBitmap(b, (int) x,
+                        (int) y, true);
+                b.recycle();
+                b = scaledBitmap;
+
+                System.gc();
+            } else {
+                b = BitmapFactory.decodeStream(in);
+            }
+            in.close();
+
+            Log.d("", "bitmap size - width: " + b.getWidth() + ", height: " +
+                    b.getHeight());
+            return b;
+        } catch (IOException e) {
+            Log.e("", e.getMessage(), e);
+            return null;
         }
     }
 
@@ -516,8 +588,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     private void rotateImage() throws CHTException {
         Bitmap thissbitmap = null;
-
-
        if(ExistIdentity() == true || cryptoBrokerBitmap != null) {
         if(cryptoBrokerBitmap != null){
             thissbitmap = cryptoBrokerBitmap;
@@ -549,6 +619,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
         }
     }
+
     public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
         int targetWidth = 200;
         int targetHeight = 200;
