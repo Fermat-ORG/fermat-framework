@@ -77,7 +77,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             /**
              * Here I generate the needed information to register the new actor connection record.
              */
-            final UUID newConnectionId = UUID.randomUUID();
+            UUID newConnectionId = UUID.randomUUID();
             final ChatLinkedActorIdentity linkedIdentity = new ChatLinkedActorIdentity(
                     actorSending.getPublicKey(),
                     actorSending.getActorType()
@@ -94,9 +94,11 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
             ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, actorReceiving.getPublicKey());
             if(oldActorConnection != null) {
-                if (!oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED))
-                    connectionState = ConnectionState.CONNECTED;
-                else connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+                //if (!oldActorConnection.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode()))
+                connectionState = oldActorConnection.getConnectionState();//ConnectionState.CONNECTED;
+                newConnectionId = oldActorConnection.getConnectionId();
+                //else
+                //    connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
 
             }else connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
             final long currentTime = System.currentTimeMillis();

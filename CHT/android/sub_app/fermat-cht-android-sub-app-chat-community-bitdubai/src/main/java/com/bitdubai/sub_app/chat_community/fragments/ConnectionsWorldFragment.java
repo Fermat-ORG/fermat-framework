@@ -338,13 +338,15 @@ public class ConnectionsWorldFragment
             List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
             for(ChatActorCommunityInformation chat: result){
                 if(chat.getConnectionState()!= null){
-                    if(chat.getConnectionState().equals(ConnectionState.CONNECTED.toString())){
+                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
                         moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
                         dataSet.add(chat);
-                    }
+                    }else dataSet.add(chat);
                 }
+                else dataSet.add(chat);
+
             }
-            dataSet.addAll(result);
+            //dataSet.addAll(result);
             offset = dataSet.size();
         } catch (Exception e) {
             //Toast.makeText(getActivity(), "No Chat Identity Created",
