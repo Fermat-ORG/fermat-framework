@@ -297,6 +297,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             lstIntraUserInformations = (ArrayList<IntraUserInformation>) result[0];
                             adapter.changeDataSet(lstIntraUserInformations);
                             if (lstIntraUserInformations.isEmpty()) {
+                                //todo: no se lo que haces acá, esto tiene que ir en background y no deberia estar acá...
                                 try {
                                     List list = moduleManager.getCacheSuggestionsToContact(MAX, offset);
                                     if(list!=null) {

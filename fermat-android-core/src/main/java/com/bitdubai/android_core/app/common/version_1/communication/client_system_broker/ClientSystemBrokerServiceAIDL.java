@@ -149,16 +149,15 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         Object o = null;
         //Log.i(TAG,"SendMessage almost end");
         if(isDataChuncked){
+            // Check if the data is on main thread or in background.
             if(Looper.myLooper() == Looper.getMainLooper()) return new LargeWorkOnMainThreadException(proxy,method);
             //test reason
             mReceiverSocketSession.addWaitingMessage(dataId);
 
             o = bufferChannelAIDL.getBufferObject(dataId);
-            //Log.i(TAG, o != null ? o.toString() : "");
             return (o instanceof EmptyObject)?null:o;
         }else{
             Object o1 = objectArrived.getObject();;
-            //Log.i(TAG, o1 != null ? o1.toString() : "");
             return o1;
         }
     }
