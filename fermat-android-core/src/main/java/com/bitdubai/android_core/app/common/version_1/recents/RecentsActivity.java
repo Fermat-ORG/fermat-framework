@@ -24,8 +24,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
@@ -219,11 +220,17 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 
     @Override
     public void onItemClick(RecentApp item) {
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,item.getPublicKey());
-        resultIntent.putExtra(ApplicationConstants.INTENT_APP_TYPE, item.getFermatApp().getAppType());
-        // TODO Add extras or a data URI to this intent as appropriate.
-        setResult(Activity.RESULT_OK, resultIntent);
+//        Intent resultIntent = new Intent();
+//        resultIntent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,item.getPublicKey());
+//        resultIntent.putExtra(ApplicationConstants.INTENT_APP_TYPE, item.getFermatApp().getAppType());
+//        // TODO Add extras or a data URI to this intent as appropriate.
+//        setResult(Activity.RESULT_OK, resultIntent);
+//
+        try {
+            ApplicationSession.getInstance().getApplicationManager().openFermatApp(item.getPublicKey());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         finish();
     }
 

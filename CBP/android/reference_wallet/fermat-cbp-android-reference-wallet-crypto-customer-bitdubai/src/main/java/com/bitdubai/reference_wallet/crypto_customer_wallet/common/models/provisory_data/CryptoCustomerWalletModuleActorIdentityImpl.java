@@ -4,10 +4,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSi
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 
+import java.io.Serializable;
+
+
 /**
  * Created by nelson on 24/11/15.
  */
-public class CryptoCustomerWalletModuleActorIdentityImpl implements ActorIdentity {
+public class CryptoCustomerWalletModuleActorIdentityImpl implements ActorIdentity, Serializable {
 
     private String alias;
     private byte[] img;

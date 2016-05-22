@@ -24,9 +24,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityNotificationAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.popup.AcceptDialog;
@@ -38,8 +40,6 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,8 +62,9 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     private View rootView;
     private UserCommunityNotificationAdapter adapter;
     private LinearLayout emptyView;
-    private static AssetUserCommunitySubAppModuleManager manager;
+    private AssetUserCommunitySubAppModuleManager moduleManager;
     private AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    AssetUserSettings settings = null;
     private ErrorManager errorManager;
     private int offset = 0;
     private Actor actorInformation;
@@ -71,7 +72,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     //    private IntraUserLoginIdentity identity;
     private ProgressDialog dialog;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     /**
      * Create a new instance of this fragment
@@ -86,11 +87,10 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
-
-        manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
-
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetUserCommunitySubAppSession.getModuleManager();
+        errorManager = appSession.getErrorManager();
 
         actorInformation = (Actor) appSession.getData(USER_SELECTED);
 
@@ -140,11 +140,11 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
         List<ActorAssetUser> result;
 
         try {
-            if (manager == null)
+            if (moduleManager == null)
                 throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
 
-            if (manager.getActiveAssetUserIdentity() != null) {
-                result = manager.getWaitingYourConnectionActorAssetUser(manager.getActiveAssetUserIdentity().getPublicKey(), MAX, offset);
+            if (moduleManager.getActiveAssetUserIdentity() != null) {
+                result = moduleManager.getWaitingYourConnectionActorAssetUser(moduleManager.getActiveAssetUserIdentity().getPublicKey(), MAX, offset);
                 if (result != null && result.size() > 0) {
                     for (ActorAssetUser record : result) {
                         dataSet.add((new Actor((AssetUserActorRecord) record)));
@@ -262,7 +262,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
 
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_NOTIFICATIONS) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -288,7 +288,7 @@ public class UserCommunityNotificationsFragment extends AbstractFermatFragment i
                     assetUserCommunitySubAppSession,
                     null,
                     data,
-                    manager.getActiveAssetUserIdentity());
+                    moduleManager.getActiveAssetUserIdentity());
 
             notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override

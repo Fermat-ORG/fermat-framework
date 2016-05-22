@@ -12,17 +12,20 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.TokenlyArtistIdentityPluginRoot;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 10/03/16.
  */
-public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPluginIdentity, Artist {
+public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPluginIdentity, Artist, Serializable {
 
     private UUID id;
     private String tokenlyID;
@@ -192,13 +195,30 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
 
     @Override
     public MusicUser getMusicUser() {
-        //TODO: Gabriel implement this. I put this only for compilation
-        return null;
+        //We're going to check if all Music parameters are set
+        Object[] objects = new Object[]{this.tokenlyID,
+                this.externalUserName,
+                this.email,
+                this.externalAccessToken,
+                this.apiSecretKey};
+        try{
+            ObjectChecker.checkArguments(objects);
+        } catch (ObjectNotSetException e) {
+            //In theory, this cannot be to happen, I'll return null
+            return null;
+        }
+        MusicUser musicUser = new TokenlyUserImp(
+                this.tokenlyID,
+                this.externalUserName,
+                this.email,
+                this.externalAccessToken,
+                this.apiSecretKey);
+        return musicUser;
     }
 
     @Override
     public String getUserPassword() {
-        return null;
+        return this.externalPassword;
     }
 
     public void setExternalPlatform(ExternalPlatform externalPlatform) {

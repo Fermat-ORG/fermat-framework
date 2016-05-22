@@ -16,16 +16,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantCreateCashMoneyWalletException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
@@ -40,7 +39,6 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
     // Fermat Managers
     private CashMoneyWalletSession walletSession;
     private CashMoneyWalletModuleManager moduleManager;
-    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
 
     //Data
@@ -69,7 +67,6 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         try {
             walletSession = ((CashMoneyWalletSession) appSession);
             moduleManager = walletSession.getModuleManager();
-            settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception e) {
@@ -80,14 +77,14 @@ public class SetupFragment extends AbstractFermatFragment implements View.OnClic
         //Obtain walletSettings or create new wallet settings if first time opening wallet
         walletSettings = null;
         try {
-            walletSettings = this.settingsManager.loadAndGetSettings(walletSession.getAppPublicKey());
+            walletSettings = this.moduleManager.loadAndGetSettings(walletSession.getAppPublicKey());
         }catch (Exception e){ walletSettings = null; }
 
         if(walletSettings == null){
             walletSettings = new CashMoneyWalletPreferenceSettings();
             walletSettings.setIsHomeTutorialDialogEnabled(true);
             try {
-                settingsManager.persistSettings(walletSession.getAppPublicKey(),walletSettings);
+                moduleManager.persistSettings(walletSession.getAppPublicKey(),walletSettings);
             }catch (Exception e){
                 e.printStackTrace();
             }

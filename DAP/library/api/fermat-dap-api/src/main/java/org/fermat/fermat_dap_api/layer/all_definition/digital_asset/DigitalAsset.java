@@ -3,9 +3,10 @@ package org.fermat.fermat_dap_api.layer.all_definition.digital_asset;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
-
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
+import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -66,11 +67,11 @@ public class DigitalAsset implements Serializable {
         this.publicKey = publicKey;
     }
 
-    public org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer getIdentityAssetIssuer() {
+    public IdentityAssetIssuer getIdentityAssetIssuer() {
         return identityAssetIssuer;
     }
 
-    public void setIdentityAssetIssuer(org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer identityAssetIssuer) {
+    public void setIdentityAssetIssuer(IdentityAssetIssuer identityAssetIssuer) {
         this.identityAssetIssuer = identityAssetIssuer;
     }
 

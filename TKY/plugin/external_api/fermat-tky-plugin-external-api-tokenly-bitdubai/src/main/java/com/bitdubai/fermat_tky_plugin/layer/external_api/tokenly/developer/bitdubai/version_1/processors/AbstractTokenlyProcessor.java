@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,7 +12,7 @@ import java.text.SimpleDateFormat;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 07/03/16.
  */
-public abstract class AbstractTokenlyProcessor {
+public abstract class AbstractTokenlyProcessor implements Serializable {
 
     /**
      * This method returns a String from a JsonObject by a given field.

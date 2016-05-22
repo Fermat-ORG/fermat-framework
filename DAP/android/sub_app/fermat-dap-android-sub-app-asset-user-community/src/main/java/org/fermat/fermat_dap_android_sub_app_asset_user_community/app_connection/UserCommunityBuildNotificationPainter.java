@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_sub_app_asset_user_community.app_connection;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 

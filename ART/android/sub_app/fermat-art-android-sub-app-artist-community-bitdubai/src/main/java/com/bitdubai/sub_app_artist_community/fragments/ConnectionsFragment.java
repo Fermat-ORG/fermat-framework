@@ -25,6 +25,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySearch;
@@ -309,8 +310,8 @@ Updates the count of notifications in the ActionBar.
     }
 
 
-    private synchronized List<ArtistCommunityInformation> getMoreData() {
-        List<ArtistCommunityInformation> dataSet = new ArrayList<>();
+    private synchronized List<ArtCommunityInformation> getMoreData() {
+        List<ArtCommunityInformation> dataSet = new ArrayList<>();
 
         try {
 

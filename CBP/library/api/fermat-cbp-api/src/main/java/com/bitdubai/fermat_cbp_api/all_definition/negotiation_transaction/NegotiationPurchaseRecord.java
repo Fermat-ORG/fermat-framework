@@ -6,13 +6,14 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 10.12.15.
  */
-public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiation {
+public class NegotiationPurchaseRecord implements CustomerBrokerPurchaseNegotiation, Serializable {
 
     UUID                negotiationId;
     String              customerPublicKey;

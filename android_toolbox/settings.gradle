@@ -61,3 +61,6 @@ project(':flip_card').projectDir = new File('android_toolbox/flip_card')
 
 include ':fermat_statistics'
 project(':fermat_statistics').projectDir = new File('android_toolbox/fermat_statistics')
+
+include ':loading-animation-dialog'
+project(':loading-animation-dialog').projectDir = new File('android_toolbox/loading-animation-dialog')

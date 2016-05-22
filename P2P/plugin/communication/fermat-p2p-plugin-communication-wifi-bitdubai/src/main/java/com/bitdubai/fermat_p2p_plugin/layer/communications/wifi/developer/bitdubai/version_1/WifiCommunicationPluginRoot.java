@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.wifi.developer.bitdubai.version_1;
 
 
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -19,7 +18,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.wifi.exceptions.WifiC
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -28,7 +26,11 @@ import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 

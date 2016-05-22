@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
@@ -16,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -68,15 +71,25 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
 //                System.out.println("************** I'm a ART Artist searched: "+platformComponentProfile);
 //                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
 
-                byte[] imageByte;
+                String extraDataString;
 
                 if (platformComponentProfile.getExtraData() != null)
-                    imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                else
-                    imageByte = null;
+                    extraDataString = new String(
+                            Base64.decode(
+                                    platformComponentProfile.getExtraData(),
+                                    Base64.DEFAULT));
+                else{
+                    List dataList = new ArrayList();
+                    dataList.add(new byte[0]);
+                    dataList.add(new HashMap<ArtExternalPlatform,String>());
+                    extraDataString = XMLParser.parseObject(dataList);
+                }
 
-
-                fanExposingDatas.add(new FanExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                fanExposingDatas.add(
+                        new FanExposingData(
+                                platformComponentProfile.getIdentityPublicKey(),
+                                platformComponentProfile.getAlias(),
+                                extraDataString));
             }
 
             return fanExposingDatas;
@@ -118,15 +131,25 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
 
             for (final PlatformComponentProfile platformComponentProfile : list) {
 
-                byte[] imageByte;
+                String extraDataString;
 
                 if (platformComponentProfile.getExtraData() != null)
-                    imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
-                else
-                    imageByte = null;
+                    extraDataString = new String(
+                            Base64.decode(
+                                    platformComponentProfile.getExtraData(),
+                                    Base64.DEFAULT));
+                else{
+                    List dataList = new ArrayList();
+                    dataList.add(new byte[0]);
+                    dataList.add(new HashMap<ArtExternalPlatform,String>());
+                    extraDataString = XMLParser.parseObject(dataList);
+                }
 
-
-                artistExposingDatas.add(new FanExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                artistExposingDatas.add(
+                        new FanExposingData(
+                                platformComponentProfile.getIdentityPublicKey(),
+                                platformComponentProfile.getAlias(),
+                                extraDataString));
             }
 
             return artistExposingDatas;

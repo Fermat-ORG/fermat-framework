@@ -652,10 +652,18 @@ public abstract class ExpandableRecyclerAdapter<PVH extends ParentViewHolder, CV
      * @param parentItemList the list of parent items (with children) to be replace with
      */
     public void changeDataSet(@NonNull List<? extends ParentListItem> parentItemList) {
+        onChangeDataSet();
         mParentItemList = parentItemList;
         mItemList = ExpandableRecyclerAdapterHelper.generateParentChildItemList(parentItemList);
 
         notifyDataSetChanged();
+    }
+
+    /**
+     * Notify subClass when dataset is change to stop work if is running
+     */
+    protected void onChangeDataSet(){
+
     }
 
     /**

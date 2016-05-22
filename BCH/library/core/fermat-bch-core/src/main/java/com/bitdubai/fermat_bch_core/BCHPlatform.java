@@ -13,7 +13,7 @@ import com.bitdubai.fermat_bch_core.layer.middleware.MiddlewareLayer;
 
 /**
  * The class <code>com.bitdubai.fermat_bch_core.BCHPlatform</code>
- * haves all the necessary business logic to start the BCH platform.
+ * contains all the necessary business logic to start the BCH platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 30/10/2015.
  */

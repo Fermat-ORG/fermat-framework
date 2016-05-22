@@ -4,6 +4,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
  *  Created by angel on 19/10/15.
  */
 
-public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBrokerPurchaseNegotiation {
+public class CustomerBrokerPurchaseNegotiationInformation implements CustomerBrokerPurchaseNegotiation, Serializable {
 
     private final UUID   negotiationId;
     private final String publicKeyCustomer;

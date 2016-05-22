@@ -25,7 +25,7 @@ public class CantDeleteRecordException extends DatabaseSystemException {
 	}
 
 	public CantDeleteRecordException(final Exception exception) {
-		this(exception.getMessage());
+		this(DEFAULT_MESSAGE, exception);
 		setStackTrace(exception.getStackTrace());
 	}
 

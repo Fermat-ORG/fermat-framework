@@ -241,10 +241,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             /**
              * Init monitor Agent
              */
-        //TODO: the following three lines are only for testing, please, comment them when the test is finish
-            customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
-            customerBrokerContractSaleManager=new CustomerBrokerContractSaleManagerMock();
-            customerBrokerPurchaseNegotiationManager= new PurchaseNegotiationManagerMock();
+
             CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent=new CustomerAckOnlineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,

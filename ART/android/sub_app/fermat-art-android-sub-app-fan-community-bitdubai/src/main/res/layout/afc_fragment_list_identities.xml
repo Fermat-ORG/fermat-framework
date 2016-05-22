@@ -26,12 +26,12 @@
 
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
+            android:id="@+id/afcswipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+                android:id="@+id/afcrecycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 tools:listitem="@layout/afc_row_connection_list" />
@@ -39,7 +39,7 @@
 
         <!--Empty view-->
         <LinearLayout
-            android:id="@+id/empty_view"
+            android:id="@+id/afcempty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

@@ -6,12 +6,15 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantCreateMessageSi
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 
+import java.io.Serializable;
+
+
 /**
  * Created by jorge on 28-09-2015.
  * Modified by Yordin Alayn 10.09.15
  * Updated by lnacosta (laion.cj91@gmail.com) on 25/11/2015.
  */
-public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity {
+public class CryptoBrokerIdentityImpl implements CryptoBrokerIdentity, Serializable {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 7681;
     private static final int HASH_PRIME_NUMBER_ADD = 3581;
