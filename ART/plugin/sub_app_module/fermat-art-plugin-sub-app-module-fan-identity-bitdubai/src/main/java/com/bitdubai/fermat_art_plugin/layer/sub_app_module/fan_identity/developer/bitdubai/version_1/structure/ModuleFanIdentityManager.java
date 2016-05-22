@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_identity.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -18,7 +16,6 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanId
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
 
@@ -33,16 +30,13 @@ import java.util.UUID;
 public class ModuleFanIdentityManager
         extends ModuleManagerImpl<FanIdentitySettings>
         implements FanIdentityManagerModule,Serializable {
-    private final ErrorManager errorManager;
     private final FanaticIdentityManager fanaticIdentityManager;
 
     public ModuleFanIdentityManager(
             PluginFileSystem pluginFileSystem,
             UUID pluginId,
-            ErrorManager errorManager,
             FanaticIdentityManager fanaticIdentityManager) {
         super(pluginFileSystem, pluginId);
-        this.errorManager = errorManager;
         this.fanaticIdentityManager = fanaticIdentityManager;
     }
 
@@ -110,8 +104,27 @@ public class ModuleFanIdentityManager
     }*/
 
     @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+    public ActiveActorIdentityInformation getSelectedActorIdentity()
+            throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        try{
+            List<Fanatic> fanaticList = fanaticIdentityManager.listIdentitiesFromCurrentDeviceUser();
+            ActiveActorIdentityInformation activeActorIdentityInformation;
+            Fanatic fanatic;
+            if(fanaticList!=null||!fanaticList.isEmpty()){
+                fanatic = fanaticList.get(0);
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(fanatic);
+                return activeActorIdentityInformation;
+            } else {
+                //If there's no Identity created, in this version, I'll return an empty activeActorIdentityInformation
+                activeActorIdentityInformation = new ActiveActorIdentityInformationRecord(null);
+                return activeActorIdentityInformation;
+            }
+        } catch (CantListFanIdentitiesException e) {
+            throw new CantGetSelectedActorIdentityException(
+                    e,
+                    "Getting the ActiveActorIdentityInformation",
+                    "Cannot get the selected identity");
+        }
     }
 
     @Override

@@ -15,7 +15,7 @@ import android.view.animation.Animation;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat.R;
 
 

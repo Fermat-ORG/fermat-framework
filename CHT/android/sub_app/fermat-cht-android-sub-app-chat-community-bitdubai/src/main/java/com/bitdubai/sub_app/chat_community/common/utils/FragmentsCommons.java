@@ -33,7 +33,7 @@ public class FragmentsCommons {
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 400);
         View view = inflater.inflate(R.layout.cht_comm_navigation_drawer_header_item, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
-        ImageView imageViewCircle = (ImageView) view.findViewById(R.id.image_view_circle);
+        //ImageView imageViewCircle = (ImageView) view.findViewById(R.id.image_view_circle);
         if (identity != null) {
             if (identity.getImage() != null) {
                 if (identity.getImage().length > 0) {
@@ -41,15 +41,15 @@ public class FragmentsCommons {
                     ByteArrayInputStream bytes = new ByteArrayInputStream(identity.getImage());
                     BitmapDrawable bmd = new BitmapDrawable(bytes);
                     imageView.setImageBitmap(Utils.getCircleBitmap(bmd.getBitmap()));
-                    imageViewCircle.setVisibility(View.VISIBLE);
+                    //imageViewCircle.setVisibility(View.VISIBLE);
 //                    BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),0,false);
 //                    bitmapWorkerTask.execute(identity.getImage());
                 } else {
-                    imageViewCircle.setVisibility(View.GONE);
+                    //imageViewCircle.setVisibility(View.GONE);
                     imageView.setImageResource(R.drawable.cht_comm_icon_user); //Picasso.with(activity).load(R.drawable.cht_comm_btn_conect_background);//profile_image).into(imageView);
                 }
             } else {
-                imageViewCircle.setVisibility(View.GONE);
+                //imageViewCircle.setVisibility(View.GONE);
                 imageView.setImageResource(R.drawable.cht_comm_icon_user); //Picasso.with(activity).load(R.drawable.cht_comm_btn_conect_background);//profile_image).into(imageView);
             }
 //            } else

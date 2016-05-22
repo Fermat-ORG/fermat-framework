@@ -3,6 +3,8 @@ package com.bitdubai.fermat_bch_api.layer.crypto_vault.classes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.VaultSeedGenerator;
@@ -14,7 +16,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransac
 import org.bitcoinj.core.Address;
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.Coin;
-import org.bitcoinj.core.Context;
+import org.bitcoinj.core.DownloadProgressTracker;
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
@@ -29,13 +31,14 @@ import org.bitcoinj.core.Wallet;
 import org.bitcoinj.crypto.MnemonicException;
 import org.bitcoinj.crypto.TransactionSignature;
 import org.bitcoinj.net.discovery.DnsDiscovery;
+import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.script.Script;
 import org.bitcoinj.script.ScriptBuilder;
-import org.bitcoinj.store.BlockStore;
 import org.bitcoinj.store.BlockStoreException;
-import org.bitcoinj.store.MemoryBlockStore;
+import org.bitcoinj.store.SPVBlockStore;
 import org.bitcoinj.wallet.DeterministicSeed;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -275,17 +278,41 @@ public abstract class CryptoVault {
 //    }
 
     public void importCryptoFromSeed(NetworkParameters networkParameters,List<String> mnemonicCode,long creationTimeSeconds,@Nullable String userPhrase){
-        DeterministicSeed deterministicSeed = new DeterministicSeed(mnemonicCode,null,userPhrase,creationTimeSeconds);
+        //todo, la frase no deberia ser null
+        DeterministicSeed deterministicSeed = new DeterministicSeed(mnemonicCode,null,"",creationTimeSeconds);
         Wallet wallet = Wallet.fromSeed(networkParameters,deterministicSeed);
-        BlockStore blockStore = new MemoryBlockStore(networkParameters);
-        BlockChain chain = null;
         try {
-            chain = new BlockChain(new Context(networkParameters), wallet, blockStore);
-            PeerGroup peerGroup = new PeerGroup(networkParameters, chain);
-            peerGroup.addPeerDiscovery(new DnsDiscovery(networkParameters));
-            peerGroup.addWallet(wallet);
-            peerGroup.start();
-            peerGroup.downloadBlockChain();
+            wallet.clearTransactions(0);
+            File chainFile = new File(pluginFileSystem.getAppPath()+"/restore-from-seed.spvchain");
+            if (chainFile.exists()) {
+                chainFile.delete();
+            }
+            // Setting up the BlochChain, the BlocksStore and connecting to the network.
+            SPVBlockStore chainStore = new SPVBlockStore(networkParameters, chainFile);
+            BlockChain chain = new BlockChain(networkParameters, chainStore);
+            PeerGroup peers = new PeerGroup(networkParameters, chain);
+            if (networkParameters == RegTestParams.get()){
+                FermatTestNetwork fermatTestNetwork = new FermatTestNetwork();
+                for (FermatTestNetworkNode node : fermatTestNetwork.getNetworkNodes()){
+                    peers.addAddress(node.getPeerAddress());
+                }
+            } else
+                peers.addPeerDiscovery(new DnsDiscovery(networkParameters));
+            // Now we need to hook the wallet up to the blockchain and the peers. This registers event listeners that notify our wallet about new transactions.
+            chain.addWallet(wallet);
+            peers.addWallet(wallet);
+            DownloadProgressTracker bListener = new DownloadProgressTracker() {
+                @Override
+                public void doneDownload() {
+                    System.out.println("blockchain downloaded");
+                }
+            };
+            // Now we re-download the blockchain. This replays the chain into the wallet. Once this is completed our wallet should know of all its transactions and print the correct balance.
+            peers.start();
+            peers.startBlockChainDownload(bListener);
+            bListener.await();
+            // Print a debug message with the details about the wallet. The correct balance should now be displayed.
+            System.out.println(wallet.toString());
             Coin balance = wallet.getBalance();
             System.out.println("Wallet balance: " + balance);
             /**
@@ -301,7 +328,7 @@ public abstract class CryptoVault {
             Wallet.SendRequest req = Wallet.SendRequest.to(
                     destinationAddress, balance.subtract(fee));
             req.fee = fee;
-            Wallet.SendResult result = wallet.sendCoins(peerGroup, req);
+            Wallet.SendResult result = wallet.sendCoins(peers, req);
             if(result != null) {
                 result.broadcastComplete.get();
                 System.out.println("The money was sent!");
@@ -318,7 +345,6 @@ public abstract class CryptoVault {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-
 
     }
 

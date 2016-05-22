@@ -127,5 +127,9 @@ public abstract class AbstractFermatSession<A extends FermatApp,M extends Module
         data.remove(string);
     }
 
+    public void reportError(){
+//        errorManager.reportUnexpectedUIException();
+    }
+
 
 }

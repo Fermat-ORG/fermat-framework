@@ -111,6 +111,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
     //private View WarningCircle;
     //private TextView WarningLabel;
     private String WarningColor = "#DF0101";
+    private String NormalColor = "#23056A";
     private View buttonCam;
     private TextView UserNameLabel;
     private TextView PassWordLabel;
@@ -225,8 +226,21 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
         PassWordLabel = (TextView) layout.findViewById(R.id.tokenly_acces_password_label);
 
+        mArtistExternalUserName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserNameLabel.setTextColor(Color.parseColor(NormalColor));
 
+            }
+        });
 
+        mArtistExternalPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PassWordLabel.setTextColor(Color.parseColor(NormalColor));
+
+            }
+        });
 
         //WarningCircle.setVisibility(View.GONE);
 
@@ -556,10 +570,12 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
 
         if (ArtistExternalName.isEmpty()){
+            UserNameLabel.setTextColor(Color.parseColor(WarningColor));
             mArtistExternalUserName.setHintTextColor(Color.parseColor(WarningColor));
         }
 
         if (ArtistPassWord.isEmpty()){
+            PassWordLabel.setTextColor(Color.parseColor(WarningColor));
             mArtistExternalPassword.setHintTextColor(Color.parseColor(WarningColor));
         }
 

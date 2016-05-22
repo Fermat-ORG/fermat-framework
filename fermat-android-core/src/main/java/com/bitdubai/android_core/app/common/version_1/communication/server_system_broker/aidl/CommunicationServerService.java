@@ -194,8 +194,10 @@ public class CommunicationServerService extends Service implements FermatWorkerC
             if (data instanceof SettingsManager) {
                 Log.e(TAG, "ERROR: NO USAR getSettingsManager DEL MODULE");
             } else {
-                Log.e(TAG, "ERROR: Class is not implementing Serializable, class name: " + data.getClass().getName());
+                Log.e(TAG, "ERROR: Class or fields of the class are not implementing Serializable, class name: " + data.getClass().getName());
                 if (data instanceof ArrayList || data instanceof List) {
+                    //todo: this is not working
+                    Log.e(TAG,"This error is caused by a Collection Class, please check the element the collection");
                     Log.e(TAG, String.valueOf(data.getClass().getComponentType()));
                 }
             }

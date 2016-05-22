@@ -3,32 +3,32 @@ package com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
+import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.database.ArtistIdentityDao;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantInitializeArtistIdentityDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo 10/03/16.
  */
-public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class IdentityArtistManagerImpl implements ArtistIdentityManager {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */
@@ -47,7 +47,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
     /**
      * DealsWithErrors interface member variables
      */
-    ErrorManager errorManager;
+    //ErrorManager errorManager;
 
     /**
      * DealsWithLogger interface mmeber variables
@@ -72,49 +72,50 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
 
     private ArtistManager artistManager;
 
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
+    private TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
 
-    @Override
-    public void setLogManager(LogManager logManager) {
-        this.logManager = logManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
 
     /**
      * Constructor
      *
-     * @param errorManager
      * @param logManager
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityArtistManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ArtistManager artistManager){
-        this.errorManager = errorManager;
+    public IdentityArtistManagerImpl(
+            LogManager logManager,
+            PluginDatabaseSystem pluginDatabaseSystem,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            DeviceUserManager deviceUserManager,
+            ArtistManager artistManager,
+            TokenlyArtistIdentityManager tokenlyArtistIdentityManager){
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.deviceUserManager = deviceUserManager;
         this.artistManager = artistManager;
+        this.tokenlyArtistIdentityManager = tokenlyArtistIdentityManager;
     }
 
     private ArtistIdentityDao getArtistIdentityDao() throws CantInitializeArtistIdentityDatabaseException {
         return new ArtistIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
     }
 
-    public List<Artist> getIdentityArtistFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+    public Artist getIdentityArtist() throws CantGetArtistIdentityException {
+        Artist artist = null;
+        try {
+            artist = getArtistIdentityDao().getIdentityArtist();
+        } catch (CantInitializeArtistIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+        return artist;
+    }
+
+
+    @Override
+    public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
 
         try {
 
@@ -134,34 +135,86 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
     }
 
-    public Artist getIdentityArtist() throws CantGetArtistIdentityException {
-        Artist artist = null;
-        try {
-            artist = getArtistIdentityDao().getIdentityArtist();
-        } catch (CantInitializeArtistIdentityDatabaseException e) {
-            e.printStackTrace();
+    @Override
+    public HashMap<ArtExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+        /*
+            We'll return a HashMap based on the external platform containing another hashmap with the user and the id to that platform
+         */
+        HashMap<ArtExternalPlatform, HashMap<UUID,String>> externalArtistIdentities = new HashMap<>();
+        HashMap<UUID,String> externalArtist = new HashMap<>();
+        for (ArtExternalPlatform externalPlatform:
+                ArtExternalPlatform.values()) {
+            //Future platform will need to be added manually to the switch
+            switch (externalPlatform){
+                case TOKENLY:
+                    try {
+                        final List<com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist> tokenlyArtists = tokenlyArtistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+
+                        for (com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist artist:
+                                tokenlyArtists) {
+                            externalArtist.put(artist.getId(),artist.getUsername());
+                        }
+                        if(externalArtist.size()>0)
+                            externalArtistIdentities.put(externalPlatform,externalArtist);
+                    } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException e) {
+                        e.printStackTrace();
+                        //errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
-        return artist;
+        return externalArtistIdentities;
     }
 
-    public Artist getIdentityArtist(String publicKey) throws CantGetArtistIdentityException {
-        Artist artist = null;
+    @Override
+    public ArtIdentity getLinkedIdentity(String publicKey) {
+        ArtIdentity artIdentity = null;
         try {
-            artist = getArtistIdentityDao().getIdentityArtist(publicKey);
-        } catch (CantInitializeArtistIdentityDatabaseException e) {
-            e.printStackTrace();
+            Artist artist = getIdentityArtist(publicKey);
+            if(artist != null){
+                for (ArtExternalPlatform externalPlatform:
+                        ArtExternalPlatform.values()) {
+                    //Future platform will need to be added manually to the switch
+                    switch (externalPlatform){
+                        case TOKENLY:
+                            final com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist tokenlyArtist = tokenlyArtistIdentityManager.getArtistIdentity(artist.getExternalIdentityID());
+                            if(tokenlyArtist != null){
+                                artIdentity = new ArtistIdentityImp(
+                                        tokenlyArtist.getPublicKey(),
+                                        tokenlyArtist.getProfileImage(),
+                                        tokenlyArtist.getUsername(),
+                                        tokenlyArtist.getId(),
+                                        externalPlatform,
+                                        tokenlyArtist.getUsername());
+                            }
+                            break;
+                    }
+                }
+            }
+        } catch (CantGetArtistIdentityException e) {
+            //TODO: report error
+            //errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException e) {
+            //TODO: report error
+            //errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException e) {
+            //TODO: report error
+            //errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
-        return artist;
+        return artIdentity;
     }
 
-    public Artist createNewIdentityArtist(
+    @Override
+    public Artist createArtistIdentity(
             String alias,
-            byte[] profileImage,
-            UUID externalIdentityID,
+            byte[] imageBytes,
             String externalUsername,
-            ArtExternalPlatform artExternalPlatform,
             ExposureLevel exposureLevel,
-            ArtistAcceptConnectionsType acceptConnectionsType) throws CantCreateArtistIdentityException {
+            ArtistAcceptConnectionsType acceptConnectionsType,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -174,7 +227,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     publicKey,
                     privateKey,
                     loggedUser,
-                    profileImage,
+                    imageBytes,
                     exposureLevel,
                     acceptConnectionsType,
                     externalIdentityID,
@@ -192,17 +245,15 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     }
                 }},"Artist Identity register ANS");
             registerToAns.start();
-            return new ArtistIdentityImp(
+            return new ArtistRecord(
                     alias,
                     publicKey,
-                    profileImage,
+                    imageBytes,
                     externalIdentityID,
-                    pluginFileSystem,
-                    pluginId,
                     artExternalPlatform,
+                    externalUsername,
                     exposureLevel ,
-                    acceptConnectionsType,
-                    externalUsername);
+                    acceptConnectionsType);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -210,16 +261,16 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
     }
 
-    public void updateIdentityArtist(
+    @Override
+    public void updateArtistIdentity(
             String alias,
             String publicKey,
             byte[] profileImage,
-            UUID externalIdentityID,
-            String externalUsername,
-            ArtExternalPlatform artExternalPlatform,
             ExposureLevel exposureLevel,
-            ArtistAcceptConnectionsType acceptConnectionsType) throws CantUpdateArtistIdentityException {
-
+            ArtistAcceptConnectionsType acceptConnectionsType,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUserName) throws CantUpdateArtistIdentityException {
         try {
             getArtistIdentityDao().updateIdentityArtistUser(
                     publicKey,
@@ -229,9 +280,9 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     acceptConnectionsType,
                     externalIdentityID,
                     artExternalPlatform,
-                    externalUsername);
+                    externalUserName);
             HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
-            externalInformation.put(artExternalPlatform,externalUsername);
+            externalInformation.put(artExternalPlatform,externalUserName);
             List data = new ArrayList();
             data.add(profileImage);
             data.add(externalInformation);
@@ -256,6 +307,41 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
     }
 
+    @Override
+    public Artist getArtistIdentity(String publicKey) throws CantGetArtistIdentityException, IdentityNotFoundException {
+        Artist artist = null;
+        try {
+            artist = getArtistIdentityDao().getIdentityArtist(publicKey);
+        } catch (CantInitializeArtistIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+        return artist;
+    }
+
+    @Override
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+        try {
+            Artist artist = getIdentityArtist(publicKey);
+            HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
+            externalInformation.put(artist.getExternalPlatform(),artist.getExternalUsername());
+            List data = new ArrayList();
+            data.add(artist.getProfileImage());
+            data.add(externalInformation);
+            ArtistExposingData artistExposingData = new ArtistExposingData(
+                    artist.getPublicKey(),
+                    artist.getAlias(),
+                    XMLParser.parseObject(data));
+            artistManager.exposeIdentity(artistExposingData);
+        } catch (CantGetArtistIdentityException | CantExposeIdentityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void hideIdentity(String publicKey) throws CantHideIdentityException, IdentityNotFoundException {
+        //TODO: to implement
+    }
+
     public void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             Artist artist = getIdentityArtist(publicKey);
@@ -274,5 +360,14 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
     }
 
+    public Artist getIdentityArtist(String publicKey) throws CantGetArtistIdentityException {
+        Artist artist = null;
+        try {
+            artist = getArtistIdentityDao().getIdentityArtist(publicKey);
+        } catch (CantInitializeArtistIdentityDatabaseException e) {
+            e.printStackTrace();
+        }
+        return artist;
+    }
 
 }

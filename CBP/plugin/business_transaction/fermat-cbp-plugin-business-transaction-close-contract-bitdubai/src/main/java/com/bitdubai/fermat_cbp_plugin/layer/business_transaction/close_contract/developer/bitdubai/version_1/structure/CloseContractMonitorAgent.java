@@ -299,16 +299,16 @@ public class CloseContractMonitorAgent implements
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
 
-                        try{
+                        try {
                             contractType = closeContractBusinessTransactionDao.getContractType(contractHash);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractType NOT FOUND. Maybe the contract is not yet in Database");
                             return;
                         }
 
-                        try{
+                        try {
                             contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus NOT FOUND. Maybe the contract is not yet in Database");
                             return;
                         }
@@ -352,9 +352,9 @@ public class CloseContractMonitorAgent implements
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
 
-                        try{
+                        try {
                             contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
-                        }catch (Exception e){
+                        } catch (Exception e) {
                             System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus NOT FOUND. Maybe the contract is not yet in Database");
                             return;
                         }

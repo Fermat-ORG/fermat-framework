@@ -51,6 +51,7 @@ import org.bitcoinj.script.ScriptOpCodes;
 import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -440,8 +441,9 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
         try {
             DeterministicSeed deterministicSeed = getVaultSeed();
             List<String> mnemonicCode = deterministicSeed.getMnemonicCode();
-            mnemonicCode.add(String.valueOf(deterministicSeed.getCreationTimeSeconds()));
-            return mnemonicCode;
+            ArrayList<String> mnemonicPlusDate = new ArrayList<>(mnemonicCode);
+            mnemonicPlusDate.add(String.valueOf(deterministicSeed.getCreationTimeSeconds()));
+            return mnemonicPlusDate;
         } catch (InvalidSeedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");
