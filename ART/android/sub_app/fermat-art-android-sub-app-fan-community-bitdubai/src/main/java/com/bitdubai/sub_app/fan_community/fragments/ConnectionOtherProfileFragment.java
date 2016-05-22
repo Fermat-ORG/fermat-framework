@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
@@ -263,8 +264,9 @@ public class ConnectionOtherProfileFragment extends
     @Override
     public void onDismiss(DialogInterface dialog) {
         //Get connectionresult flag, and hide/show connect/disconnect buttons
+        int connectionresult = 0;
         try {
-            int connectionresult = (int) appSession.getData("connectionresult");
+             connectionresult = (int) appSession.getData("connectionresult");
             appSession.removeData("connectionresult");
 
             if(connectionresult == 1) {
@@ -283,7 +285,12 @@ public class ConnectionOtherProfileFragment extends
                 cancel.setVisibility(View.GONE);
                 accept.setVisibility(View.GONE);
             }
-        }catch (Exception e) {}
+        }catch (Exception e) {
+
+        } finally {
+            if(connectionresult > 0)
+                changeActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getCode(), appSession.getAppPublicKey());
+        }
 
     }
 }

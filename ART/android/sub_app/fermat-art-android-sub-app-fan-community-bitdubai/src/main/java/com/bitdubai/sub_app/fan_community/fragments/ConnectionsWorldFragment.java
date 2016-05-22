@@ -81,7 +81,7 @@ public class ConnectionsWorldFragment extends
     private View rootView;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -155,7 +155,7 @@ public class ConnectionsWorldFragment extends
             rootView = inflater.inflate(R.layout.afc_fragment_connections_world, container, false);
 
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            layoutManager  = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             adapter = new AppListAdapter(getActivity(), fanCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_gridView);
@@ -168,7 +168,7 @@ public class ConnectionsWorldFragment extends
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#F1F2F2"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.afc_empty_view);
 
             if(launchActorCreationDialog) {
