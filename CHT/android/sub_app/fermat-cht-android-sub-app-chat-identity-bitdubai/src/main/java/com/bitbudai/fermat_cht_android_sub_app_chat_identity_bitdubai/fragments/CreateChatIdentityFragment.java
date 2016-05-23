@@ -339,14 +339,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
                         if (Build.VERSION.SDK_INT >= 23) {
-                        getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                            getActivity().requestPermissions(
-                                    new String[]{Manifest.permission.CAMERA},
-                                    REQUEST_IMAGE_CAPTURE);
+                            if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                                getActivity().requestPermissions(
+                                        new String[]{Manifest.permission.CAMERA},
+                                        REQUEST_IMAGE_CAPTURE);
+                            }
                         }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
                         Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
@@ -405,7 +408,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                             if (cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
-                                cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                               // cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                                 final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
                                 dialogCropImagee.show();
                                 dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -435,17 +438,20 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     Uri selectedImagee = data.getData();
                     // Check for the freshest data.
                     if(Build.VERSION.SDK_INT >= 23) {
-                        String provider = "com.android.providers.media.MediaProvider";
-                        getActivity().getContentResolver().takePersistableUriPermission(selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        getActivity().getContentResolver().takePersistableUriPermission(selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION
-                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                        getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-                        getActivity().requestPermissions(
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                REQUEST_LOAD_IMAGE);
+                        if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            String provider = "com.android.providers.media.MediaProvider";
+                            getActivity().getContentResolver().takePersistableUriPermission(selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            getActivity().getContentResolver().takePersistableUriPermission(selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                            getActivity().requestPermissions(
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    REQUEST_LOAD_IMAGE);
+                        }
                     }
                     try {
                         if (isAttached) {
@@ -460,7 +466,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
                                             cryptoBrokerBitmap = dialogCropImagee.getCroppedImage();
-                                            cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                                            //cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImagee.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
                                         } else {
                                             cryptoBrokerBitmap = null;
