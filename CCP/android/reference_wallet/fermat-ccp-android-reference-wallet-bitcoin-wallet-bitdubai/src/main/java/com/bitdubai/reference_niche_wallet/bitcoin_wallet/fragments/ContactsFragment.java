@@ -185,7 +185,15 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
-            onRefresh();
+
+            _executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+
+                }
+            });
+
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable() {
                 public void run() {

@@ -124,7 +124,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     /**
      * Resources
      */
-    WalletResourcesProviderManager walletResourcesProviderManager;
+
     List<LossProtectedWalletContact> walletContactRecords;
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
@@ -133,11 +133,11 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     private ErrorManager errorManager;
     private Bitmap contactImageBitmap;
     private WalletContact walletContact;
-    private FrameLayout contacts_container;
-    private boolean connectionDialogIsShow = false;
-    //private SettingsManager<LossProtectedWalletSettings> settingsManager;
+
     LossProtectedWalletSettings lossProtectedWalletSettings;
     private boolean isScrolled = false;
+    private FrameLayout contacts_container;
+    private boolean connectionDialogIsShow = false;
 
     public static ContactsFragment newInstance() {
 
