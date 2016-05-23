@@ -32,8 +32,8 @@ public abstract class FermatNavigationViewPainter implements com.bitdubai.fermat
 
     }
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
-
+    public View addNavigationViewHeader() {
+            //todo: a menos que lo cargues el intraUserLoginIdentity va a ser siempre null
             return this.setUpHeaderScreen(activity.getLayoutInflater(), activity, intraUserLoginIdentity);
     }
 

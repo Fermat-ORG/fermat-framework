@@ -42,6 +42,7 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation chatUserLoginIdentity) {
         View headerView = null;
+   // public View addNavigationViewHeader() {
         try {
             headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), chatUserLoginIdentity);
