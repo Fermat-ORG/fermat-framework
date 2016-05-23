@@ -109,7 +109,10 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                         oldActorConnection
                 );
                 actorConnectionsTable.deleteRecord(entityRecordOld);
-                isNew = false;
+
+                if(actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
+                        && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
+                    isNew = false;
             }
 
 
