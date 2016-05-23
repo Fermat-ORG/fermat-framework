@@ -89,7 +89,7 @@ public class GrouperViewHolder extends ParentViewHolder {
 
             }
 
-        //TODO Ver porque se cae cuando el contacto tiene algunos bytes
+
         try {
             if (photo != null) {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));

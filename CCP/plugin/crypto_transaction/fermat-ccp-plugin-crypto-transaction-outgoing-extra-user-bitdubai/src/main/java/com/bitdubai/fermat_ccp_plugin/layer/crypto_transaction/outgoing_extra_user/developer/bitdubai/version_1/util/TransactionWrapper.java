@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
 
 import java.util.UUID;
@@ -13,7 +13,7 @@ import java.util.UUID;
  * Created by eze on 2015.06.25..
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 29/09/2015.
  */
-public class TransactionWrapper implements BitcoinWalletTransactionRecord {
+public class TransactionWrapper implements CryptoWalletTransactionRecord {
 
     private final UUID             transactionId     ;
     private final String           actorFromPublicKey;

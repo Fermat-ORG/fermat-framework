@@ -61,7 +61,8 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
     public NavigationViewPainter getNavigationViewPainter() {
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
        // return new LossProtectedWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new LossProtectedWalletNavigationViewPainter(getContext(),null, null); //
+
+        return new LossProtectedWalletNavigationViewPainter(getContext(),null, null); //getApplicationManager()
     }
 
     @Override

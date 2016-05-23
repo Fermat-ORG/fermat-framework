@@ -8,9 +8,9 @@
 //import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 //import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 //>>>>>>> 193a4ce563d3916b505332563ad81fe262f074f2:CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/wallet_module/crypto_wallet/developer/bitdubai/version_1/structure/WalletModuleCryptoWallet/GetAvailableBalanceTest.java
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+//import CryptoWalletBalance;
+//import CryptoWalletWallet;
+//import CryptoWalletManager;
 //import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 //<<<<<<< HEAD:CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/wallet_module/crypto_wallet/developer/bitdubai/version_1/structure/WalletModuleCryptoWallet/GetAvailableBalanceTest.java
 //import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
@@ -60,14 +60,14 @@
 //     * DealsWithBitcoinWallet interface Mocked
 //     */
 //    @Mock
-//    BitcoinWalletManager bitcoinWalletManager;
+//    CryptoWalletManager bitcoinWalletManager;
 //
 //
 //    @Mock
-//    BitcoinWalletWallet bitcoinWalletWallet;
+//    CryptoWalletWallet bitcoinWalletWallet;
 //
 //    @Mock
-//    BitcoinWalletBalance mockBitcoinWalletBalance;
+//    CryptoWalletBalance mockBitcoinWalletBalance;
 //
 //    String walletPublicKey;
 //

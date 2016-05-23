@@ -6,8 +6,8 @@
 //=======
 //import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 //>>>>>>> 193a4ce563d3916b505332563ad81fe262f074f2:DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/business_transaction/crypto_money_stock_replenishment/developer/bitdubai/version_1/util/TransactionExecutorFactory/NewTransactionExecutorTest.java
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+//import CryptoWalletManager;
+//import CryptoWalletWallet;
 //import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 //import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 //import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
@@ -30,9 +30,9 @@
 //    @Mock
 //    private ActorAddressBookManager mockActorAddressBookManager;
 //    @Mock
-//    private BitcoinWalletManager mockBitcoinWalletManager;
+//    private CryptoWalletManager mockBitcoinWalletManager;
 //    @Mock
-//    private BitcoinWalletWallet mockBitcoinWallet;
+//    private CryptoWalletWallet mockBitcoinWallet;
 //
 //    private TransactionExecutorFactory testExecutorFactory;
 //    private TransactionExecutor testExecutor;
