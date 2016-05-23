@@ -262,38 +262,43 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
                 return requiredExchangeRates;
         }catch(CantGetExchangeRateException e) {/*Cant get them, continue*/}
 
-        //IF ExchangeRate not in database
+        //IF ExchangeRates not in database
+        String url, currPairParam, dateStartParam, dateEndParam;
+        JSONObject json;
+        double purchase, sale = 0;
 
-        //Determine cryptoCurrency base
-        Currency currencyFrom, currencyTo;
-        boolean invertExchange;
+        currPairParam = currencyPair.getFrom().getCode() + "_" + currencyPair.getTo().getCode();
+        dateStartParam = DateHelper.getDateStringFromTimestamp(stdStartTimestamp);
+        dateEndParam = DateHelper.getDateStringFromTimestamp(stdEndTimestamp);
+        url = "http://api.fermatexchange.com/historical/daily/?pairs=" + currPairParam + "&from=" + dateStartParam + "&to=" + dateEndParam;
 
-        if (CryptoCurrency.codeExists(currencyPair.getFrom().getCode())) {
-            currencyFrom = currencyPair.getFrom();
-            currencyTo = currencyPair.getTo();
-            invertExchange = true;
-        } else {
-            currencyFrom = currencyPair.getTo();
-            currencyTo = currencyPair.getFrom();
-            invertExchange = false;
+        try{
+
+            json =  new JSONObject(HttpReader.getHTTPContent(url));
+            json = json.getJSONObject(currPairParam);
+
+            Iterator<?> keys = json.keys();
+            while( keys.hasNext() ) {
+                String key = (String)keys.next();                   //The date
+                JSONObject obj = new JSONObject(json.get(key));     //Purchase and sale internal object
+                purchase = obj.getDouble("purchase");
+                sale = obj.getDouble("sale");
+
+                try{
+                    long time = DateHelper.getTimestampFromDateString(key);
+                    requiredExchangeRates.add(new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), sale, purchase, time));
+                } catch(ParseException ex) {}
+            }
+
+        }catch (JSONException ex) {
+            errorManager.reportUnexpectedPluginException(Plugins.FERMATEXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "FermatExchange CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
-        //Query API
-        List<ExchangeRate> exchangeRates = new ArrayList<>();
-        List<ExchangeRate> inverseExchangeRates = new ArrayList<>();
-        queryFermatExchangeExchangeRateHistoryAPI(exchangeRates, inverseExchangeRates, currencyFrom, currencyTo);
-
-        //Find requiredExchangeRate
-        List<ExchangeRate> aux = (invertExchange ? inverseExchangeRates : exchangeRates);
-        for(ExchangeRate er : aux) {
-            if (er.getTimestamp() >= stdStartTimestamp && er.getTimestamp() <= stdEndTimestamp)
-                requiredExchangeRates.add(er);
-        }
 
         //Update database
         try {
-            dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyFrom, currencyTo), exchangeRates);
-            dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyTo, currencyFrom), inverseExchangeRates);
+            dao.updateDailyExchangeRateTable(new CurrencyPairImpl(currencyPair.getFrom(), currencyPair.getTo()), requiredExchangeRates);
         } catch (CantSaveExchangeRateException eex) {
             errorManager.reportUnexpectedPluginException(Plugins.FERMATEXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, eex);
         }
@@ -310,44 +315,6 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
-
-
-
-
-
-
-
-    /* INTERNAL FUNCTIONS */
-    private void queryFermatExchangeExchangeRateHistoryAPI(List<ExchangeRate> exchangeRates, List<ExchangeRate> inverseExchangeRates,
-                                                             Currency currencyFrom, Currency currencyTo) {
-
-        JSONObject json;
-
-        try {
-            json = new JSONObject(HttpReader.getHTTPContent("http://api.fermatexchange.com/historical/?pair=" + currencyFrom.getCode() + currencyTo.getCode()));
-            json = json.getJSONObject(currencyTo.getCode() + "_" + currencyFrom.getCode());
-
-            Iterator<?> keys = json.keys();
-            while( keys.hasNext() ) {
-                String key = (String)keys.next();
-                double value = Double.parseDouble(json.get(key).toString());
-
-                try{
-                    long time = DateHelper.getTimestampFromDateString(key);
-                    exchangeRates.add(new ExchangeRateImpl(currencyFrom, currencyTo, value, value, time));
-                    inverseExchangeRates.add(new ExchangeRateImpl(currencyTo, currencyFrom, 1/value, 1/value, time));      //Add inverse as well
-                } catch(ParseException ex) {}
-            }
-        } catch (JSONException ex) {
-            errorManager.reportUnexpectedPluginException(Plugins.FERMATEXCHANGE, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, ex);
-        }
-    }
-
-
-
-
-
-
 
 
 
