@@ -133,13 +133,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             e.printStackTrace();
         }
 
-
-        getExecutor().submit(new Runnable() {
-            @Override
-            public void run() {
-                openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            }
-        });
+        onRefresh();
 
 
     }
@@ -180,7 +174,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help")
-                .setIcon(R.drawable.ic_menu_help)
+                .setIcon(R.drawable.bit_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 

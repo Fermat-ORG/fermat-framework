@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -186,24 +187,18 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
 
-            _executor.execute(new Runnable() {
+            _executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    onRefresh();
+                    walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
 
-                }
-            });
-
-            Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable() {
-                public void run() {
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
                             boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
 
                             if(isHelpEnabled)
-                              setUpTutorial(true);
+                                setUpTutorial(true);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -212,8 +207,10 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                     } else {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
-                }
-            }, 300);
+                  }
+            });
+
+
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();

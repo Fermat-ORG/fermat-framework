@@ -215,7 +215,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-        getSuggestionCache();
+        //getSuggestionCache();
 
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
