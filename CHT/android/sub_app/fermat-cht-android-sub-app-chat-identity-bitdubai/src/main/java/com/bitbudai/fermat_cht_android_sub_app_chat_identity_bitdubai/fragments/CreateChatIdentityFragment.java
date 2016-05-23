@@ -130,8 +130,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
             chatIdentitySettings = null;
             try {
-                chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
+                chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                //chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            }catch(Exception e){
                 chatIdentitySettings = null;
             }
             if (chatIdentitySettings == null) {

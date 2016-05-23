@@ -67,7 +67,7 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
                     chatIdentityManager,
                     chatActorConnectionManager,
                     chatActorNetworkServiceManager,
-                    errorManager,
+                    this,
                     pluginFileSystem,
                     pluginId,
                     getPluginVersionReference()
@@ -90,7 +90,7 @@ private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCom
                     chatIdentityManager,
                     chatActorConnectionManager,
                     chatActorNetworkServiceManager,
-                    errorManager,
+                    this,
                     pluginFileSystem,
                     pluginId,
                     getPluginVersionReference()
