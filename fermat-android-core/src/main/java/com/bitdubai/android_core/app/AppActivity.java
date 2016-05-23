@@ -1,11 +1,9 @@
 package com.bitdubai.android_core.app;
 
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,12 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
-import com.bitdubai.fermat.BuildConfig;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
@@ -46,6 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 
@@ -260,8 +256,12 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     @Override
                     public void run() {
                         try {
-                            fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
-                            //refreshSideMenu(fermatAppConnection);
+                            ActiveActorIdentityInformation activeActorIdentityInformation = fermatSession.getModuleManager().getSelectedActorIdentity();
+                            fermatAppConnection.setActiveIdentity(activeActorIdentityInformation);
+                            if (activeActorIdentityInformation==null){
+                                Log.e(TAG,"activeActorIdentityInformation null, please report this if you have an identity created");
+                            }
+                            refreshSideMenu(fermatAppConnection);
                         } catch (CantGetSelectedActorIdentityException e) {
                             e.printStackTrace();
                         } catch (ActorIdentityNotSelectedException e) {

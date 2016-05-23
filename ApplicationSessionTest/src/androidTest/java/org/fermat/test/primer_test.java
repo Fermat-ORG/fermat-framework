@@ -66,10 +66,19 @@ public class primer_test extends ActivityInstrumentationTestCase2 {
         //Wait for activity: 'com.bitdubai.android_core.app.AppActivity'
 		assertTrue("AppActivity is not found!", solo.waitForActivity("AppActivity"));
         //Wait for dialog
-		solo.waitForDialogToOpen(5000);
         //Click on Be John Doe
-		solo.clickOnView(solo.getView("btn_left"));
-        //Click on ImageView
+		try {
+			//assertTrue("DesktopActivity is not found!", solo.waitForDialogToOpen(5000));
+			solo.clickOnView(solo.getView("btn_left"));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		try {
+			solo.wait(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		//Click on ImageView
 		solo.clickOnView(solo.getView(android.widget.ImageButton.class, 0));
 	}
 }

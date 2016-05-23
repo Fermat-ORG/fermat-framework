@@ -213,7 +213,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     UpdateViewReceiver updateViewReceiver;
 
-
+    /**
+     * Flag used when an object not arrived yet and the activity want to paint something with it.
+     * For example: when a profile in other thread take long that the activity paint the navigation view.
+     */
+    private boolean refreshWhenObjectsArrive;
 
 
     /**
@@ -421,6 +425,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     /**
                      * Set header
                      */
+                    if (appConnections.getActiveIdentity()==null) refreshWhenObjectsArrive = true;
                     FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter,appConnections.getActiveIdentity());
                     /**
                      * Set adapter
@@ -1064,6 +1069,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mRevealView.setVisibility(View.GONE);
             }
 
+            refreshWhenObjectsArrive = false;
 
             removecallbacks();
             onRestart();
@@ -1444,6 +1450,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            Log.e(TAG,"Llamando desde el invalidate");
                             paintSideMenu(activity, activity.getSideMenu(), appsConnections);
                             paintFooter(activity.getFooter(), appsConnections.getFooterViewPainter());
                         }
@@ -1458,41 +1465,45 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     }
 
-    protected void refreshSideMenu(AppConnections appConnections){
+    protected void refreshSideMenu(final AppConnections appConnections){
         try {
-            if (!(this instanceof DesktopActivity)) {
-                final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                if(viewPainter!=null) {
-                    final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-                    Activity activity = fermatStructure.getLastActivity();
-                    if(activity!=null) {
-                        SideMenu sideMenu = activity.getSideMenu();
-                        List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
-                        if (sideMenu != null) lstItems = sideMenu.getMenuItems();
-                        final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems != null) ? lstItems : new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    SideMenuBuilder.setAdapter(
-                                            navigation_recycler_view,
-                                            mAdapter,
-                                            viewPainter.addItemDecoration(),
-                                            finalLstItems,
-                                            FermatActivity.this,
-                                            fermatStructure.getLastActivity().getActivityType()
-                                    );
-                                } catch (InvalidParameterException e) {
-                                    e.printStackTrace();
+            if(refreshWhenObjectsArrive) {
+                if (!(this instanceof DesktopActivity)) {
+                    final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+                    final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                    if (viewPainter != null) {
+                        final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+                        Activity activity = fermatStructure.getLastActivity();
+                        if (activity != null) {
+                            SideMenu sideMenu = activity.getSideMenu();
+                            List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
+                            if (sideMenu != null) lstItems = sideMenu.getMenuItems();
+                            final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems != null) ? lstItems : new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter,appConnections.getActiveIdentity());
+                                    try {
+                                        SideMenuBuilder.setAdapter(
+                                                navigation_recycler_view,
+                                                mAdapter,
+                                                viewPainter.addItemDecoration(),
+                                                finalLstItems,
+                                                FermatActivity.this,
+                                                fermatStructure.getLastActivity().getActivityType()
+                                        );
+                                    } catch (InvalidParameterException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
-                        });
-                    }else{
-                        Log.e(TAG,"ActivityObject null, line:"+new Throwable().getStackTrace()[0].getLineNumber());
+                            });
+                            refreshWhenObjectsArrive = false;
+                        } else {
+                            Log.e(TAG, "ActivityObject null, line:" + new Throwable().getStackTrace()[0].getLineNumber());
+                        }
                     }
-                }
 
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
