@@ -9,5 +9,5 @@
     </application>
 
     <!--activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"/-->
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
 </manifest>
