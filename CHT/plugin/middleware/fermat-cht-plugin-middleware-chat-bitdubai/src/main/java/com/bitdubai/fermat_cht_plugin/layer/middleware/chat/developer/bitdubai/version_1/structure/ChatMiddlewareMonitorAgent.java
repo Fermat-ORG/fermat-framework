@@ -452,21 +452,21 @@ public class ChatMiddlewareMonitorAgent implements
 //                    if (!checkChatMetadata(chatMetadata)) return;
 
             //Check if metadata exists in database
-            Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
-            if(chat!=null){
-                Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(chatMetadata.getMessageId());
-                if(message !=null){
+//            Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
+//            if(chat!=null){
+//                Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(chatMetadata.getMessageId());
+//                if(message !=null){
                     updateMessageStatus(chatMetadata);
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
-                }
-            }
+//                }
+//            }
 
-        } catch (CantGetChatException e) {
-            throw new CantGetPendingTransactionException(
-                    e,
-                    "Checking the incoming status pending transactions",
-                    "Cannot get the chat from database"
-            );
+//        } catch (CantGetChatException e) {
+//            throw new CantGetPendingTransactionException(
+//                    e,
+//                    "Checking the incoming status pending transactions",
+//                    "Cannot get the chat from database"
+//            );
         } catch (DatabaseOperationException e) {
             throw new CantGetPendingTransactionException(
                     e,
