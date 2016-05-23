@@ -3,33 +3,24 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 import android.content.ClipData;
 import android.content.Context;
 import android.os.Build;
-import android.view.ContextMenu;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatFilter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 
 import java.util.ArrayList;
-import java.util.List;
-
-//import android.support.v4.content.ContextCompat;
-//import android.support.v7.widget.RecyclerView;
-//import com.bitdubai.fermat_cht_api.layer.cht_middleware.cht_chat_factory.interfaces.ChatFactory; //data del middleware
 
 /**
  * ChatAdapter
@@ -39,21 +30,21 @@ import java.util.List;
  */
 
 public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
-        /*implements Filterable*/ {
+        implements Filterable {
 
-    List<ChatMessage> chatMessages = new ArrayList<>();
-    ArrayList<String> messagesData = new ArrayList<>();
+    ArrayList<ChatMessage> chatMessages = new ArrayList<>();
 
     ArrayList<ChatMessage> filteredData;
-    ArrayList<String> originalData;
     private String filterString;
+    private int filterSet =0;
 
     public ChatAdapter(Context context) {
         super(context);
     }
 
-    public ChatAdapter(Context context, List<ChatMessage> chatMessages) {//ChatFactory
+    public ChatAdapter(Context context, ArrayList<ChatMessage> chatMessages) {//ChatFactory
         super(context, chatMessages);
+        this.chatMessages = chatMessages;
     }
 
     @Override
@@ -64,27 +55,31 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
     @Override
     protected int getCardViewResource() {return R.layout.chat_list_item;  }
 
+    public void setFilterSetted(int filterSet) { this.filterSet=filterSet;  }
+
+    public int getFilterSetted() {return this.filterSet;  }
+
     @Override
     protected void bindHolder(ChatHolder holder, ChatMessage data, int position) {
         if (data != null) {
             boolean myMsg = data.getIsme();
             setAlignment(holder, myMsg, data);
-//            final String copiedMessage = holder.txtMessage.getText().toString();
-//            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View v) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-//                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
-//                        clipboard.setPrimaryClip(clip);}
-//                    else{
-//                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-//                        clipboard.setText(copiedMessage);
-//                    }
-//                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
-//                    return true;
-//                }
-//            });
+            final String copiedMessage = holder.txtMessage.getText().toString();
+            holder.txtMessage.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        android.content.ClipboardManager clipboard = (android.content.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText("simple text",copiedMessage);
+                        clipboard.setPrimaryClip(clip);}
+                    else{
+                        android.text.ClipboardManager clipboard = (android.text.ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard.setText(copiedMessage);
+                    }
+                    Toast.makeText(context, "Copied: "+copiedMessage, Toast.LENGTH_SHORT).show();
+                    return true;
+                }
+            });
         }
     }
 
@@ -109,7 +104,7 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
 
     private void setAlignment(ChatHolder holder, boolean isMe, ChatMessage data) {
         holder.tickstatusimage.setImageResource(0);
-        holder.txtMessage.setText(data.getMessage());
+        holder.txtMessage.setText(Utils.avoidingScientificNot(data.getMessage().toString()));
         holder.txtInfo.setText(data.getDate());
         if (isMe) {
             holder.contentWithBG.setBackgroundResource(R.drawable.burble_green_shadow);
@@ -162,77 +157,43 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         }
     }
 
-//    public int getCount() {
-//        if (chatMessages != null) {
-//            if (filteredData != null) {
-//                if (filteredData.size() <= chatMessages.size()) {
-//                    return filteredData.size();
-//                } else {
-//                    return chatMessages.size();
-//                }
-//            }else  return chatMessages.size();
-//        } else {
-//            return 0;
-//        }
-//    }
-//
-//    @Override
-//    public ChatMessage getItem(int position) {
-//        ChatMessage dataM;
-//        if (chatMessages != null) {
-//            if (filteredData != null) {
-//                if (filteredData.size() <= chatMessages.size()) {
-//                    dataM= filteredData.get(position);
-//                } else {
-//                    dataM= chatMessages.get(position);
-//                }
-//            }else dataM=chatMessages.get(position);
-//        } else {
-//            dataM=chatMessages.get(position);
-//        }
-//        return dataM;
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    public void setData(ArrayList<ChatMessage> data) {
-//        this.filteredData = data;
-//    }
-//
-//    public Filter getFilter() {
-//        messagesData=null;
-//        for(ChatMessage data:chatMessages){
-//            messagesData.add(data.getMessage());
-//        }
-//        return new ChatFilter(messagesData, this);
-//    }
-//
-//    public void setFilterString(String filterString) {
-//        this.filterString = filterString;
-//    }
-//
-//    public String getFilterString() {
-//        return filterString;
-//    }
+    @Override
+    public int getItemCount() {
+        if(filterString!=null)
+            return filteredData == null ? 0 : filteredData.size();
+        else
+            return chatMessages == null ? 0 : chatMessages.size();
+    }
 
+    @Override
+    public ChatMessage getItem(int position) {
+        if(filterString!=null)
+            return filteredData != null ? (!filteredData.isEmpty()
+                        && position < filteredData.size()) ? filteredData.get(position) : null : null;
+        else
+            return chatMessages != null ? (!chatMessages.isEmpty()
+                    && position < chatMessages.size()) ? chatMessages.get(position) : null : null;
+    }
 
-//
-//    @Override
-//    public ChatMessage getItem(int position) {
-//        if (chatMessages != null) {
-//            return chatMessages.get(position);
-//        } else {
-//            return null;
-//        }
-//    }
-//
-//
-//    public long getItemId(int position) {
-//        return position;
-//    }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 
+    public void changeDataSet(ArrayList<ChatMessage> data) {
+        this.filteredData = data;
+    }
+
+    public Filter getFilter() {
+        return new ChatFilter(chatMessages, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
 
 }

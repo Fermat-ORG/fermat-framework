@@ -109,4 +109,72 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
     public List<ChatExposingData> getResult(final Integer max) throws CantListChatException {
         return null;
     }
+
+    @Override
+    public ChatExposingData getResult(String publicKey) throws CantListChatException {
+
+        try {
+
+            DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
+                    PlatformComponentType.ACTOR_CHAT, // PlatformComponentType you want to find
+                    NetworkServiceType.UNDEFINED,           // NetworkServiceType you want to find
+                    null,                                      // alias
+                    publicKey,                                 // identityPublicKey
+                    null,                                      // location
+                    null,                                      // distance
+                    null,                                      // name
+                    null,                                      // extraData
+                    null,                                      // offset
+                    null,                                      // max
+                    null,                                      // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
+                    null                                       // fromOtherNetworkServiceType, when use this filter apply the NetworkServiceType
+            );
+
+            final List<PlatformComponentProfile> list = communicationsClientConnection.requestListComponentRegistered(discoveryQueryParameters);
+
+            PlatformComponentProfile platformComponentProfile;
+            System.out.println("12345 CHECKING ONLINE STATUS SO FAR SO GOOD");
+            if(list !=null && !list.isEmpty()) {
+                platformComponentProfile = list.get(0);
+            }
+            else return null;
+            System.out.println("12345 CHECKING ONLINE STATUS SO FAR SO GOOD IS OK");
+                System.out.println("************** I'm a chat searched: "+platformComponentProfile);
+//                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
+
+                byte[] imageByte;
+
+                JsonParser parser = new JsonParser();
+
+                Gson gson = new Gson();
+
+                JsonObject extraData = parser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+
+                String country = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.COUNTRY), String.class);
+
+                String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
+
+                String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
+
+                String imageString = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.IMG), String.class);
+
+                if(imageString != null && !imageString.equals(""))
+                    imageByte = Base64.decode(imageString, Base64.DEFAULT);
+                else
+                    imageByte = null;
+
+            ChatExposingData chatExposingData = new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, country, state, city);
+
+            return chatExposingData;
+
+        } catch (final CantRequestListException e) {
+
+            return null;
+
+        } catch (final Exception e) {
+
+            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatException(e, "", "Unhandled error.");
+        }
+    }
 }

@@ -46,6 +46,7 @@
                 <li class="active"><a href="../index.html">Home</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#configurationModal" >Configuration</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#platformcloudserverModal" >New Platform Cloud Server</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#deletecloudserver">Delete Cloud Server Running</a></li>
                 <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank">Contact</a></li>
                 <li ng-controller="UserCtrl" ><a href="#" ng-click="logout();">Logout</a></li>
             </ul>
@@ -280,12 +281,12 @@
 
 </div>
 
-<div class="modal fade" id="platformcloudserverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="MonitCtrl" >
+<div class="modal fade" id="platformcloudserverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel2" ng-controller="MonitCtrl" >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Configuration PlatformCloudServer</h4>
+                <h4 class="modal-title" id="myModalLabel2">Configuration PlatformCloudServer</h4>
             </div>
 
             <form ng-submit="saveplatformcloudserver()" >
@@ -321,6 +322,44 @@
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="deletecloudserver" tabindex="-1" role="dialog" aria-labelledby="myModalLabel3" ng-controller="MonitCtrl" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel3">Delete CloudServer Active</h4>
+            </div>
+
+            <form ng-submit="deletecloudserver()" >
+
+                <div class="modal-body">
+
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="networkservicetype">Server Platform</label>
+                            <select class="form-control"  name="idserver" ng-model="idserver" required >
+                                <option ng-repeat="server in listplatforms" value="{{server.ns}}">{{server.platform}}</option>
+                            </select>
+
+                        </div>
+
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <p class="bg-success" ><span ng-bind="message"></span></p>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Save</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

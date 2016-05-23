@@ -123,6 +123,117 @@ angular.module("serverApp").controller("MonitCtrl", ['$scope', '$http', '$interv
 
        };
 
+
+   $scope.deletecloudserver = function() {
+
+          if ($scope.idserver) {
+
+               $http({
+                        method: 'POST',
+                        url: '/fermat/api/serverplatform/deleteserver',
+                        data: { idserver:$scope.idserver},
+                        transformRequest: function(obj) {
+                            var str = [];
+                            for(var p in obj)
+                            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                            return str.join("&");
+                        },
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+                  }).then(function successCallback(response) {
+                      var respond = angular.fromJson(response.data);
+                      var success = respond.success;
+
+                      if(success === true){
+                          alert(respond.data);
+			  window.location="monitoring.html";	
+                      }
+
+                  }, function errorCallback(response) {
+                      console.log(response);
+
+                  });
+             
+              $scope.networkservicetype = '';
+              $scope.ipserver = '';
+          }
+
+       };
+
+      
+       $http({
+             method: 'GET',
+             url: '/fermat/api/serverplatform/listplatforms'
+            }).then(function successCallback(response) {
+
+            var Aux =   angular.fromJson(response.data);
+	        var dataAux =  angular.fromJson(Aux.data);
+     	    var arraydata = [];
+	        var vectorplatform = [];
+     	    var i;
+       		  
+     	    for(i = 0; i < dataAux.length; i++){
+
+     	        var platform;
+                       
+                if(dataAux[i] == "ARTIST_ACTOR")
+                    platform = "ARTIST";
+                         
+                if(dataAux[i] == "CRYPTO_BROKER")
+                    platform = "CBP";
+                        
+                if(dataAux[i] == "INTRA_USER")
+                    platform = "CCP";
+                          
+                if(dataAux[i] == "CHAT")
+                    platform = "CHAT";
+                         
+                if(dataAux[i] == "ASSET_USER_ACTOR")
+                    platform = "DAP";
+                         
+                if(dataAux[i] == "FERMAT_MONITOR")
+                    platform = "FERMAT-MONITOR";
+                         
+			    vectorplatform[i] = platform;
+     	         
+     	    }
+
+            vectorplatform.sort();
+
+            for(i = 0; i < vectorplatform.length; i++){
+
+                var ns;
+
+                if(vectorplatform[i] == "ARTIST")
+                   ns = "ARTIST_ACTOR";
+
+                if(vectorplatform[i] == "CBP")
+                   ns = "CRYPTO_BROKER";
+
+                if(vectorplatform[i] == "CCP")
+                   ns = "INTRA_USER";
+
+                if(vectorplatform[i] == "CHAT")
+                   ns = "CHAT";
+
+                if(vectorplatform[i] == "DAP")
+                   ns = "ASSET_USER_ACTOR";
+
+                if(vectorplatform[i] == "FERMAT-MONITOR")
+                   ns = "FERMAT_MONITOR";
+
+                arraydata.push({ns:ns,platform:vectorplatform[i]});
+
+            }
+		  
+     		$scope.listplatforms  = arraydata;
+
+           }, function errorCallback(response) {
+                   console.log(response);
+        });
+
+
+        
+
         if(isAuthenticate() === false){
              alert("Service error: You must authenticate again");
              $location.url('../index.html');

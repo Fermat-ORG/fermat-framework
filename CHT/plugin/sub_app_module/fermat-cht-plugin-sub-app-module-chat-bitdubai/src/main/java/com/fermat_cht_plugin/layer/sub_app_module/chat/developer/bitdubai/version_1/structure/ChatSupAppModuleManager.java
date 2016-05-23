@@ -15,6 +15,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
@@ -44,6 +45,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenc
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -63,21 +65,21 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     private final ChatActorConnectionManager chatActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private ChatSupAppModulePluginRoot chatSupAppModulePluginRoot;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
                                    ChatActorConnectionManager chatActorConnectionManager ,
                                    UUID pluginId,
-                                   ErrorManager errorManager)
+                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot)
     {
         this.middlewareChatManager          = middlewareChatManager         ;
         this.chatIdentityManager            = chatIdentityManager           ;
         this.pluginFileSystem               = pluginFileSystem              ;
         this.chatActorConnectionManager     = chatActorConnectionManager    ;
         this.pluginId                       = pluginId                      ;
-        this.errorManager                   = errorManager                  ;
+        this.chatSupAppModulePluginRoot     = chatSupAppModulePluginRoot    ;
     }
 
     @Override
@@ -218,7 +220,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
 
         } catch (CantListActorConnectionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+           chatSupAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return chatActorCommunityInformationList;
     }
@@ -245,8 +247,18 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     }
 
     @Override
-    public void sendOnlineStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException {
+    public boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
+        return middlewareChatManager.checkOnlineStatus(contactPublicKey);
+    }
 
+    @Override
+    public String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus {
+       return middlewareChatManager.checkLastConnection(contactPublicKey);
+    }
+
+    @Override
+    public void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
+         middlewareChatManager.activeOnlineStatus(contactPublicKey);
     }
 
     @Override

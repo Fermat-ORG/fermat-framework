@@ -158,7 +158,7 @@ public class ConnectionNotificationsFragment
             recyclerView.setHasFixedSize(true);
             adapter = new NotificationAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
-            //rootView.setBackgroundResource(R.drawable.fondo);
+            //rootView.setBackgroundResource(R.drawable.cht_comm_background_empty_screen);
 
             recyclerView.setAdapter(adapter);
             noData = (ImageView) rootView.findViewById(R.id.nodata);
@@ -281,16 +281,16 @@ public class ConnectionNotificationsFragment
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show /*&&
+        if (show/* &&
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)*/) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
             noData.setAnimation(anim);
-            emptyView.setBackgroundResource(R.drawable.fondo);
+            emptyView.setBackgroundResource(R.drawable.cht_comm_background);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
             noDatalabel.setVisibility(View.VISIBLE);
-            rootView.setBackgroundResource(R.drawable.fondo);
+            rootView.setBackgroundResource(R.drawable.cht_comm_background);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show /*&& emptyView.getVisibility() == View.VISIBLE*/) {

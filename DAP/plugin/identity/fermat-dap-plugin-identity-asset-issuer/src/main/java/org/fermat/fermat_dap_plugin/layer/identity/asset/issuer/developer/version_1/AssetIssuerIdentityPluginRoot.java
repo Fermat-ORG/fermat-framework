@@ -61,9 +61,6 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
         LogManagerForDevelopers,
         IdentityAssetIssuerManager {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -130,8 +127,8 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
                 }
             }
 
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -140,22 +137,22 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
         try {
             this.serviceStatus = ServiceStatus.STARTED;
             identityAssetIssuerManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.structure.IdentityAssetIssuerManagerImpl(
-                    this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.pluginId,
                     this.deviceUserManager,
-                    this.actorAssetIssuerManager);
+                    this.actorAssetIssuerManager,
+                    this);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY);
         }
 
         try {
             registerIdentitiesANS();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -203,7 +200,7 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeAssetIssuerIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
@@ -232,6 +229,7 @@ public class AssetIssuerIdentityPluginRoot extends AbstractPlugin implements
             List<IdentityAssetIssuer> identities = identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
             return (identities == null || identities.isEmpty()) ? null : identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
             return null;
         }

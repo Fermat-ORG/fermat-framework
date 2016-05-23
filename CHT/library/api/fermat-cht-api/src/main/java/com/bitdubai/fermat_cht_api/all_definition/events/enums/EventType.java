@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnec
 import com.bitdubai.fermat_cht_api.layer.middleware.event.IncomingChatMessageNotificationEvent;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 
@@ -46,6 +47,9 @@ public enum EventType implements FermatEventEnum {
     INCOMING_STATUS("INSTS"){
         public final FermatEvent getNewEvent()  { return new IncomingNewChatStatusUpdate(this);}
         },
+    INCOMING_ONLINE_STATUS("INOSTS"){
+        public final FermatEvent getNewEvent()  { return new IncomingNewOnlineStatusUpdate(this);}
+    },
     INCOMING_WRITING_STATUS("INWSTS"){
         public final FermatEvent getNewEvent()  { return new IncomingNewWritingStatusUpdate(this);}
     },
