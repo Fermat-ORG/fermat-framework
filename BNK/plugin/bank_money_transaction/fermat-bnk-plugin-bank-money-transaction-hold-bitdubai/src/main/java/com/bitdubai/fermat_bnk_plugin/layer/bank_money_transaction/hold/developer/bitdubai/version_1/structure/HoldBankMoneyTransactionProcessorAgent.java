@@ -104,14 +104,10 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
         BigDecimal availableBalance;
         for(BankTransaction transaction : transactionList) {
 
-
-            availableBalance = new BigDecimal(0);
-
             try {
                 availableBalance = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getAvailableBalance().getBalance(transaction.getAccountNumber());
                 if(availableBalance.compareTo(transaction.getAmount()) >= 0) {
-                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),new BigDecimal(0), new BigDecimal(0),transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
-                    //bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), transaction.getMemo(), null);
+                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(pluginRoot, transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),new BigDecimal(0), new BigDecimal(0),transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
                     bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).hold(bankMoneyTransactionRecord);
                     holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 } else {

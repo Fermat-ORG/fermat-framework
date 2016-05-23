@@ -20,8 +20,6 @@ import java.util.UUID;
 public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord {
 
     UUID bankTransactionId;
-    String publicKeyBroker;
-    String publicKeyCustomer;
     String balanceType;
     String transactionType;
     BigDecimal amount;
@@ -38,7 +36,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     String status;
     WalletBankMoneyPluginRoot pluginRoot;
 
-    public BankMoneyTransactionRecordImpl(WalletBankMoneyPluginRoot pluginRoot, UUID bankTransactionId, String balanceType, String transactionType, float amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
+    public BankMoneyTransactionRecordImpl(WalletBankMoneyPluginRoot pluginRoot, UUID bankTransactionId, String balanceType, String transactionType, BigDecimal amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, BigDecimal runningBookBalance, BigDecimal runningAvailableBalance, long timeStamp, String memo, String status) {
         this.bankTransactionId = bankTransactionId;
         this.balanceType = balanceType;
         this.transactionType = transactionType;

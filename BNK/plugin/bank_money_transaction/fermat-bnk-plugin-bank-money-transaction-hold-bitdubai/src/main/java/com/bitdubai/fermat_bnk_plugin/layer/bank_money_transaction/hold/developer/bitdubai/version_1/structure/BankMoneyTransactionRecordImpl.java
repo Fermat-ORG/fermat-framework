@@ -37,7 +37,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     String status;
     HoldBankMoneyTransactionPluginRoot pluginRoot;
 
-    public BankMoneyTransactionRecordImpl(HoldBankMoneyTransactionPluginRoot pluginRoot,UUID bankTransactionId, String balanceType, String transactionType, float amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, long runningBookBalance, long runningAvailableBalance, long timeStamp, String memo, String status) {
+    public BankMoneyTransactionRecordImpl(HoldBankMoneyTransactionPluginRoot pluginRoot,UUID bankTransactionId, String balanceType, String transactionType, BigDecimal amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, BigDecimal runningBookBalance, BigDecimal runningAvailableBalance, long timeStamp, String memo, String status) {
         this.bankTransactionId = bankTransactionId;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
