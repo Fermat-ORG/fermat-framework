@@ -1442,7 +1442,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e(TAG,"Llamando desde el invalidate");
                             paintSideMenu(activity, activity.getSideMenu(), appsConnections);
                             paintFooter(activity.getFooter(), appsConnections.getFooterViewPainter());
                         }
