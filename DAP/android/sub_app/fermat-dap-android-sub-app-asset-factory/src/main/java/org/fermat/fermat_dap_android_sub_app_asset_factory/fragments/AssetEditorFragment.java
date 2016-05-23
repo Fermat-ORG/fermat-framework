@@ -212,7 +212,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                 getActivity(), android.R.layout.simple_spinner_item,
                 data);
         bitcoinsSpinner.setAdapter(spinnerAdapter);
-        bitcoinsSpinner.setSelection(3);
+        bitcoinsSpinner.setSelection(0);
         bitcoinsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -251,7 +251,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         nameView.setText(isEdit ? asset.getName() != null ? asset.getName() : "" : "");
         descriptionView.setText(isEdit ? asset.getDescription() != null ? asset.getDescription() : "" : "");
         quantityView.setText(isEdit ? String.valueOf(asset.getQuantity()) : "");
-        bitcoinsView.setText(isEdit ? String.valueOf(asset.getAmount()) : "");
+        bitcoinsView.setText(isEdit ? String.valueOf(BitcoinConverter.convert(asset.getAmount(), SATOSHI, BITCOIN)) : "");
 
         if (isEdit)
             isRedeemableView.setChecked(asset.getIsRedeemable());

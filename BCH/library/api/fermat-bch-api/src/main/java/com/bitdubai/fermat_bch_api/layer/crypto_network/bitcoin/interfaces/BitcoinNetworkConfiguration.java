@@ -32,7 +32,7 @@ public interface BitcoinNetworkConfiguration {
     /**
      * Amount of Timeout minutes for broadcasting transactions
      */
-    int TRANSACTION_BROADCAST_TIMEOUT = 5;
+    int TRANSACTION_BROADCAST_TIMEOUT = 15;
 
     /**
      * The minimun of Satoshis that we can send, to avoid dusty sends.

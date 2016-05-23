@@ -173,15 +173,17 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
-            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
-            long unixTime = System.currentTimeMillis();
-            eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
-            eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
-            eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
-            eventRecord.setLongValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
-            databaseTable.insertRecord(eventRecord);
+            if(!eventExists(eventId)) {
+                DatabaseTable databaseTable = getDatabaseEventsTable();
+                DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+                long unixTime = System.currentTimeMillis();
+                eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
+                eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+                eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+                eventRecord.setStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+                eventRecord.setLongValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+                databaseTable.insertRecord(eventRecord);
+            }
 
         } catch (CantInsertRecordException exception) {
             pluginRoot.reportError(
@@ -224,6 +226,24 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
                     "Saving new event.",
                     "Unexpected exception");
         }
+    }
+
+    private boolean eventExists(String eventId) throws CantSaveEventException {
+
+        try {
+
+            DatabaseTable table = getDatabaseEventsTable();
+
+            table.addStringFilter(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantSaveEventException(em.getMessage(), em, "Customer Ack Online Merchandise Transaction Event Id Not Exists", "Cant load " + CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantSaveEventException(e.getMessage(), FermatException.wrapException(e), "Customer Ack Online Merchandise Transaction Event Id Not Exists", "unknown failure.");
+        }
+
     }
 
     /**
@@ -284,7 +304,13 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_STATUS_COLUMN_NAME,
                 EventStatus.PENDING.getCode());
-        record.setLongValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_TIMESTAMP_COLUMN_NAME, incomingMoneyEventWrapper.getTimestamp());
+        record.setLongValue(
+                CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME,
+                incomingMoneyEventWrapper.getTimestamp());
+        record.setStringValue(
+                CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME,
+                incomingMoneyEventWrapper.getTransactionHash());
+
 
         return record;
 
@@ -856,7 +882,9 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
                     record.getStringValue(
                             CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME),
                     record.getLongValue(
-                            CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME)
+                            CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME),
+                    record.getStringValue(
+                            CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME)
             );
             return incomingMoneyEventWrapper;
         } catch (CantLoadTableToMemoryException e) {

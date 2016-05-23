@@ -345,6 +345,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
         }
 
         private void checkPendingMoneyEvents(String eventId) throws IncomingOnlinePaymentException, CantUpdateRecordException {
+
             String customerPublickey;
             IncomingMoneyEventWrapper incomingMoneyEventWrapper;
             BusinessTransactionRecord businessTransactionRecord;
@@ -356,14 +357,15 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
             try {
                 incomingMoneyEventWrapper = brokerAckOnlinePaymentBusinessTransactionDao.getIncomingMoneyEventWrapper(eventId);
-                customerPublickey = incomingMoneyEventWrapper.getReceiverPublicKey();
-
-                businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByCustomerPublicKey(customerPublickey);
+//                customerPublickey = incomingMoneyEventWrapper.getReceiverPublicKey();
+//                businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByCustomerPublicKey(customerPublickey);
+                contractHash = incomingMoneyEventWrapper.getTransactionHash();
+                businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByContractHash(contractHash);
 
                 if (businessTransactionRecord == null)
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.
 
-                contractHash = businessTransactionRecord.getContractHash();
+//                contractHash = businessTransactionRecord.getContractHash();
                 incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
                 contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
                 //TODO: VER como obtener los montos del contrato y de lo que llega.
@@ -453,6 +455,8 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 }
 
                 if (eventTypeCode.equals(EventType.NEW_CONTRACT_OPENED.getCode())) {
+
+                    System.out.println("\n CBP - BROKER ACK ONLINE PAYMENT - NEW CONTRACT OPENED");
                     //the eventId from this event is the contractId - Broker side
                     CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.
                             getCustomerBrokerContractSaleForContractId(eventId);

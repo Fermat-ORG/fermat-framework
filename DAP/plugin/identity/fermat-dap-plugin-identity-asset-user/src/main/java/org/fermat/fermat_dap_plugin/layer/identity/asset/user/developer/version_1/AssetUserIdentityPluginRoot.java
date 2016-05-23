@@ -59,9 +59,6 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
         IdentityAssetUserManager,
         LogManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -123,7 +120,8 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
                 }
             }
 
-        } catch (Exception exception) {
+        } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             //FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + ActorIssuerPluginRoot.newLoggingLevel, "Check the cause");
             // this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
         }
@@ -134,22 +132,22 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
         try {
             this.serviceStatus = ServiceStatus.STARTED;
             identityAssetUserManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUserManagerImpl(
-                    this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.pluginId,
                     this.deviceUserManager,
-                    this.actorAssetUserManager);
+                    this.actorAssetUserManager,
+                    this);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY);
         }
 
         try {
             registerIdentitiesANS();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 
@@ -172,7 +170,7 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
         return new ArrayList<>();
@@ -226,6 +224,7 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
             List<IdentityAssetUser> identities = identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser();
             return (identities == null || identities.isEmpty()) ? null : identityAssetUserManager.getIdentityAssetUsersFromCurrentDeviceUser().get(0);
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
             return null;
         }

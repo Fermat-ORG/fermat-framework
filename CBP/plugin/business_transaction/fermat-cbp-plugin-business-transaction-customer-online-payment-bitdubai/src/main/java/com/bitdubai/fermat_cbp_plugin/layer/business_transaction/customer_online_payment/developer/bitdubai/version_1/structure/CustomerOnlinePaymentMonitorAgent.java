@@ -514,6 +514,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
             event.setActorId(record.getCustomerPublicKey());
             event.setSource(EventSource.CUSTOMER_ONLINE_PAYMENT);
             event.setActorType(Actors.CBP_CRYPTO_BROKER);
+            //TODO YORDIN: add of the contractHash in the setTransactionHash()
+            event.setTransactionHash(record.getContractHash());
             eventManager.raiseEvent(event);
         }
 

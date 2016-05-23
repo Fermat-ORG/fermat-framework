@@ -70,4 +70,5 @@ public interface ErrorManager extends FermatManager {
     void reportUnexpectedEventException(final FermatEvent exceptionSource,
                                         final Exception   exception      );
 
+    void enabledErrorReport(boolean isErrorReportEnabled);
 }

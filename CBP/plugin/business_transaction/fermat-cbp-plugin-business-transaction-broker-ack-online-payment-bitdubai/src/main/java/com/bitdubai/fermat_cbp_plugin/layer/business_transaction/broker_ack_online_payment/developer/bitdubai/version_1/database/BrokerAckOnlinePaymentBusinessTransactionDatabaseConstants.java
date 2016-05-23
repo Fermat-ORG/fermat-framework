@@ -32,6 +32,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
     public static final String ACK_ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 
+
     public static final String ACK_ONLINE_PAYMENT_FIRST_KEY_COLUMN = "transaction_id";
 
     /**
@@ -60,6 +61,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME = "sender_public_key";
     public static final String ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME = "status";
     public static final String ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String ACK_ONLINE_PAYMENT_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME = "transactionHash";
 
     public static final String ACK_ONLINE_PAYMENT_INCOMING_MONEY_TABLE_FIRST_KEY_COLUMN = "event_id";
 

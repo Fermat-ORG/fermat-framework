@@ -17,7 +17,6 @@ public class ChunckValuesHistoryItemViewHolder extends FermatViewHolder {
     private ImageView btn_image_event;
     private TextView txt_amount;
     private TextView txt_exchange_rate;
-    private TextView txt_spend_percentage;
     private LinearLayout linear_layout_event_button;
 
     public ChunckValuesHistoryItemViewHolder (View itemView) {
@@ -26,8 +25,6 @@ public class ChunckValuesHistoryItemViewHolder extends FermatViewHolder {
         linear_layout_event_button = (LinearLayout) itemView.findViewById(R.id.linearLayout_event_button);
         txt_exchange_rate = (TextView) itemView.findViewById(R.id.txt_exchange_rate);
         txt_amount = (TextView) itemView.findViewById(R.id.txt_amount);
-        txt_spend_percentage = (TextView) itemView.findViewById(R.id.txt_spend_percentage);
-
     }
 
     public ImageView getBtn_image_event() {
@@ -42,11 +39,6 @@ public class ChunckValuesHistoryItemViewHolder extends FermatViewHolder {
         return linear_layout_event_button;
     }
 
-    public TextView getTxt_exchange_rate(){
-        return txt_exchange_rate;
-    }
-
-    public TextView getTxt_spend_percentage(){return txt_spend_percentage;};
-
+    public TextView getTxt_exchange_rate(){return txt_exchange_rate;}
 
 }

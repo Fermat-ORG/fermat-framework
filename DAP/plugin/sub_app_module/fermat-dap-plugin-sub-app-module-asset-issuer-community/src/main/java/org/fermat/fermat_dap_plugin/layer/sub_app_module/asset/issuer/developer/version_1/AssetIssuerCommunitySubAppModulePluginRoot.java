@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededIndirectPluginReferences;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -19,6 +21,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
@@ -37,10 +40,10 @@ import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAs
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.interfaces.AssetIssuerActorNetworkServiceManager;
+import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantCancelConnectionActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetWaitingException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
@@ -50,8 +53,6 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.Iden
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,7 @@ import java.util.Objects;
  * Created by Nerio on 13/10/15.
  */
 @PluginInfo(difficulty = PluginInfo.Dificulty.LOW,
-        maintainerMail = "nerioindriago@gmail.com",
+        maintainerMail = "marsvicam@gmail.com",
         createdBy = "nindriago",
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
