@@ -83,8 +83,6 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
     
         final View rootView = inflater.inflate(R.layout.ccw_fragment_close_negotiation_details_activity, container, false);
 
-        rootView.findViewById(R.id.ccw_expiration_date).setVisibility(View.GONE);
-
         final ImageView brokerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);
         final FermatTextView brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_broker_name);
         final FermatTextView sellingDetails = (FermatTextView) rootView.findViewById(R.id.ccw_selling_summary);

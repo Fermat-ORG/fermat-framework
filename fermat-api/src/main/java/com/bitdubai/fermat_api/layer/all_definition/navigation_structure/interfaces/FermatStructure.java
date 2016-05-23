@@ -23,4 +23,6 @@ public interface FermatStructure extends Serializable{
     Activity getStartActivity() throws IllegalAccessException, InvalidParameterException;
     Activity getLastActivity() throws InvalidParameterException;
     void changeActualStartActivity(String activityCode) throws IllegalArgumentException, InvalidParameterException;
+
+    void clear();
 }

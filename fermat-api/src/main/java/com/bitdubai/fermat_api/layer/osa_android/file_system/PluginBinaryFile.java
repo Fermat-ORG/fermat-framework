@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import java.io.Serializable;
+
 /**
  *
  *  <p>The abstract class <code>PluginBinaryFile</code> is a interface
@@ -14,7 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
  *  @version 1.0.0
  *  @since   11/02/15.
  * */
-public interface PluginBinaryFile {
+public interface PluginBinaryFile extends Serializable {
     
     byte[] getContent();
 

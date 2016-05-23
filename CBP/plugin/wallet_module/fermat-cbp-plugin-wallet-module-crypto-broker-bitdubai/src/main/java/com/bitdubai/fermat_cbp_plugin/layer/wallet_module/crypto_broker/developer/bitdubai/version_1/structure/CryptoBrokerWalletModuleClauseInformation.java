@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 
@@ -12,7 +13,7 @@ import java.util.UUID;
  * Created by Nelson Ramirez
  * @since 05/11/15.
  */
-public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformation {
+public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformation, Serializable {
     private ClauseType clauseType;
     private String value;
     private ClauseStatus status;
@@ -33,6 +34,13 @@ public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformat
         this.clauseId = clause.getClauseId();
     }
 
+    public CryptoBrokerWalletModuleClauseInformation(ClauseInformation clauseInformation){
+        this.clauseType = clauseInformation.getType();
+        this.value = clauseInformation.getValue();
+        this.status = clauseInformation.getStatus();
+        this.clauseId = clauseInformation.getClauseID();
+    }
+
     @Override
     public UUID getClauseID() {
         return clauseId;
@@ -51,5 +59,21 @@ public class CryptoBrokerWalletModuleClauseInformation implements ClauseInformat
     @Override
     public ClauseStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(ClauseStatus status){
+        this.status = status;
+    }
+
+    public void setClauseType(ClauseType clauseType) {
+        this.clauseType = clauseType;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setClauseId(UUID clauseId) {
+        this.clauseId = clauseId;
     }
 }

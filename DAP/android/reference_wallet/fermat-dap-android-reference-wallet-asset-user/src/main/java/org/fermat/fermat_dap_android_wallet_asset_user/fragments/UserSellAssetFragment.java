@@ -38,14 +38,17 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.CryptoVault;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.BitcoinsSpinnerAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.UserSelectorAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
@@ -56,14 +59,9 @@ import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstants
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.common.data.DataManager;
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.models.Asset;
-
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -86,6 +84,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
 
     private AssetUserWalletSubAppModuleManager moduleManager;
+    AssetUserSession assetUserSession;
     //private UserSelectorAdapter adapter;
 
     private Asset assetToSell;
@@ -95,7 +94,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     private Resources res;
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
     List<User> users;
     private User user;
     String digitalAssetPublicKey;
@@ -124,10 +123,9 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
         try {
 
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
             activity = getActivity();
 

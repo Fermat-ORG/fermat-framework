@@ -600,13 +600,13 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
          * I'm gonna set this number in 1 for now, because I want to check the records object has
          * one only result.
          */
-        int VALID_RESULTS_NUMBER = 1;
+        int VALID_RESULTS_NUMBER = 0;
         int recordsSize;
         if (records.isEmpty()) {
             return;
         }
         recordsSize = records.size();
-        if (recordsSize > VALID_RESULTS_NUMBER) {
+        if (recordsSize < VALID_RESULTS_NUMBER) {
             throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }

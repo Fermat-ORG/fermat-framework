@@ -48,8 +48,10 @@ import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.script.ScriptBuilder;
 import org.bitcoinj.script.ScriptOpCodes;
+import org.bitcoinj.wallet.DeterministicSeed;
 import org.bitcoinj.wallet.WalletTransaction;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -373,6 +375,12 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
             sendRequest.tx.addOutput(Coin.ZERO, new ScriptBuilder().op(ScriptOpCodes.OP_RETURN).data(op_Return.getBytes()).build());
         }
 
+        //trying to solve an issue
+        try {
+            sendRequest.changeAddress =  getBitcoinAddress(networkParameters, getAddress(blockchainNetworkType));
+        } catch (AddressFormatException e) {
+            e.printStackTrace();
+        }
 
         try {
             wallet.completeTx(sendRequest);
@@ -431,7 +439,11 @@ public class BitcoinCurrencyCryptoVaultManager  extends CryptoVault{
      */
     public List<String> getMnemonicCode() throws CantLoadExistingVaultSeed {
         try {
-            return this.getVaultSeed().getMnemonicCode();
+            DeterministicSeed deterministicSeed = getVaultSeed();
+            List<String> mnemonicCode = deterministicSeed.getMnemonicCode();
+            ArrayList<String> mnemonicPlusDate = new ArrayList<>(mnemonicCode);
+            mnemonicPlusDate.add(String.valueOf(deterministicSeed.getCreationTimeSeconds()));
+            return mnemonicPlusDate;
         } catch (InvalidSeedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadExistingVaultSeed(CantLoadExistingVaultSeed.DEFAULT_MESSAGE, e, "error loading Seed", "seed generator");

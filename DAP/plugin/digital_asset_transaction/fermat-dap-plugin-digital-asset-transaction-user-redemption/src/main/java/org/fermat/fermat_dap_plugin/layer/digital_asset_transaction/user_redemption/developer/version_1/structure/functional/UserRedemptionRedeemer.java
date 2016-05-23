@@ -1,5 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -13,13 +16,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
@@ -45,8 +48,8 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao;
 
 import java.util.List;
 import java.util.Map;
@@ -59,18 +62,23 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
 
     private ActorAssetUser actorAssetUser;
     private String digitalAssetFileStoragePath;
-    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao userRedemptionDao;
+    private UserRedemptionDao userRedemptionDao;
     private DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
     private ActorAssetUserManager actorAssetUserManager;
+    UserRedemptionDigitalAssetTransactionPluginRoot userRedemptionDigitalAssetTransactionPluginRoot;
 
-    public UserRedemptionRedeemer(ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem,
+    public UserRedemptionRedeemer(UserRedemptionDigitalAssetTransactionPluginRoot userRedemptionDigitalAssetTransactionPluginRoot,
+                                  UUID pluginId,
+                                  PluginFileSystem pluginFileSystem,
                                   AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
-                                  org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao userRedemptionDao,
+                                  UserRedemptionDao userRedemptionDao,
                                   DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault,
                                   BitcoinNetworkManager bitcoinNetworkManager,
                                   ActorAssetUserManager actorAssetUserManager,
                                   AssetVaultManager assetVaultManager) throws CantExecuteDatabaseOperationException, CantGetAssetUserActorsException, CantSetObjectException {
+
         super(pluginId, pluginFileSystem);
+        this.userRedemptionDigitalAssetTransactionPluginRoot = userRedemptionDigitalAssetTransactionPluginRoot;
         setAssetVaultManager(assetVaultManager);
         setAssetTransmissionNetworkServiceManager(assetTransmissionNetworkServiceManager);
         setUserRedemptionDao(userRedemptionDao);
@@ -79,7 +87,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
         setActorAssetUserManager(actorAssetUserManager);
     }
 
-    public void setUserRedemptionDao(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao userRedemptionDao) throws CantSetObjectException {
+    public void setUserRedemptionDao(UserRedemptionDao userRedemptionDao) throws CantSetObjectException {
         this.userRedemptionDao = userRedemptionDao;
     }
 
@@ -116,16 +124,19 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                         "digitalAssetMetadata:" + digitalAssetMetadata);
             }
             this.userRedemptionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransactionFromDigitalAssetMetadata);
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new CantRedeemDigitalAssetException(exception,
+        } catch (CantGetCryptoTransactionException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
-        } catch (CantExecuteQueryException exception) {
-            throw new CantRedeemDigitalAssetException(exception,
+        } catch (CantExecuteQueryException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot execute a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantRedeemDigitalAssetException(exception,
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Unexpected result in database");
         }
@@ -187,26 +198,36 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
                 System.out.println("ASSET USER REDEMPTION Begins the deliver to an remote actor");
                 deliverToRemoteActor(digitalAssetMetadata, actorAssetRedeemPoint, cryptoTransaction.getBlockchainNetworkType());
             }
-        } catch (CantPersistDigitalAssetException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
-        } catch (CantCreateDigitalAssetFileException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into local storage");
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
-        } catch (CantExecuteQueryException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot execute a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Unexpected result in database");
-        } catch (CantSendDigitalAssetMetadataException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
-        } catch (DAPException | CantUpdateRecordException | CantLoadTableToMemoryException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Generic DAP Exception");
-        } catch (CantGetTransactionsException | CantCreateBitcoinTransactionException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesis transaction from crypto network");
-        } catch (CantLoadWalletException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot load Asset issuer wallet");
-        } catch (CantRegisterDebitException | CantRegisterCreditException exception) {
-            throw new CantRedeemDigitalAssetException(exception, "Delivering digital assets", "Cannot register a debit in Asset Issuer Wallet");
+        } catch (CantPersistDigitalAssetException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Cannot persist digital asset into database");
+        } catch (CantCreateDigitalAssetFileException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Cannot persist digital asset into local storage");
+        } catch (CantGetCryptoTransactionException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
+        } catch (CantExecuteQueryException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Cannot execute a database operation");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Unexpected result in database");
+        } catch (CantSendDigitalAssetMetadataException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
+        } catch (DAPException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Generic DAP Exception");
+        } catch (CantGetTransactionsException | CantCreateBitcoinTransactionException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Cannot get the genesis transaction from crypto network");
+        } catch (CantLoadWalletException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Cannot load Asset issuer wallet");
+        } catch (CantRegisterDebitException | CantRegisterCreditException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantRedeemDigitalAssetException(e, "Delivering digital assets", "Cannot register a debit in Asset Issuer Wallet");
         }
     }
 
@@ -222,10 +243,12 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
             System.out.println("ASSET USER REDEMPTION Before deliver - remote asset user ");
             userRedemptionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), actorAssetRedeemPoint.getActorPublicKey(), networkType);
             assetTransmissionNetworkServiceManager.sendMessage(new DAPMessage(UUID.randomUUID(), new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetUser, actorAssetRedeemPoint, DAPMessageSubject.REDEEM_POINT_REDEMPTION));
-        } catch (CantExecuteQueryException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
-        } catch (UnexpectedResultReturnedFromDatabaseException | CantSetObjectException | CantStartDeliveringException | CantSendMessageException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
+        } catch (CantExecuteQueryException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
+        } catch (UnexpectedResultReturnedFromDatabaseException | CantSetObjectException | CantStartDeliveringException | CantSendMessageException e) {
+            userRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
         }
     }
 

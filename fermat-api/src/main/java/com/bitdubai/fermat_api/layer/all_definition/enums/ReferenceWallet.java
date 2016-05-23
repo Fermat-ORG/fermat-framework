@@ -18,8 +18,16 @@ public enum ReferenceWallet implements FermatWalletEnum {
     BASIC_WALLET_DISCOUNT_WALLET("BWDW"),
     BASIC_WALLET_FIAT_WALLET("BWFW"),
     BASIC_WALLET_LOSS_PROTECTED_WALLET("BWLP"),
-    COMPOSITE_WALLET_MULTI_ACCOUNT("CWMA");
+    BNK_BANKING_WALLET("BNKW"),
+    CASH_MONEY_WALLET("CASH"),
+    COMPOSITE_WALLET_MULTI_ACCOUNT("CWMA"),
+    CBP_CRYPTO_BROKER_WALLET("CBPB"),
+    CBP_CRYPTO_CUSTOMER_WALLET("CBPC"),
+    DAP_ASSET_ISSUER_WALLET("DAIW"),
+    DAP_ASSET_USER_WALLET("DAUW"),
+    DAP_REDEEM_POINT_WALLET("DARW"),
 
+    ;
     private String code;
 
     ReferenceWallet(String code) {
@@ -32,7 +40,14 @@ public enum ReferenceWallet implements FermatWalletEnum {
             case "BWDW": return BASIC_WALLET_DISCOUNT_WALLET;
             case "BWFW": return BASIC_WALLET_FIAT_WALLET;
             case "BWLP": return BASIC_WALLET_LOSS_PROTECTED_WALLET;
+            case "BNKW": return BNK_BANKING_WALLET;
+            case "CASH": return CASH_MONEY_WALLET;
             case "CWMA": return COMPOSITE_WALLET_MULTI_ACCOUNT;
+            case "CBPB": return CBP_CRYPTO_BROKER_WALLET;
+            case "CBPC": return CBP_CRYPTO_CUSTOMER_WALLET;
+            case "DAIW": return DAP_ASSET_ISSUER_WALLET;
+            case "DAUW": return DAP_ASSET_USER_WALLET;
+            case "DARW": return DAP_REDEEM_POINT_WALLET;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the ReferenceWallet enum");
         }

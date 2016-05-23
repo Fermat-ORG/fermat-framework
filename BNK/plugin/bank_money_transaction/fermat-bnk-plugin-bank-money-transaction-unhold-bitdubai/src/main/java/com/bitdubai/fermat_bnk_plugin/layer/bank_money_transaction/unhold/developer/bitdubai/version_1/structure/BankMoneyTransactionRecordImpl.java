@@ -7,12 +7,13 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by memo on 23/11/15.
  */
-public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord {
+public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord, Serializable {
 
     UUID bankTransactionId;
     String publicKeyBroker;

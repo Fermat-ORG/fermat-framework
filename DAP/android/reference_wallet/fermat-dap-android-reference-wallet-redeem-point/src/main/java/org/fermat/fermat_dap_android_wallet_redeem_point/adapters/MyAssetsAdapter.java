@@ -7,6 +7,7 @@ import android.widget.Filterable;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_redeem_point.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.holders.MyAssetsViewHolder;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;

@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>ClientProfile</code>
@@ -43,24 +43,22 @@ public class ClientProfile extends Profile {
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#toJson()
+     * Return this object in json string
+     *
+     * @return json string
      */
-    @Override
-    public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, ClientProfile.class);
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#fromJson(String)
+     * Get the object
+     *
+     * @param jsonString
+     * @return ClientProfile
      */
-    @Override
-    public ClientProfile fromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, this.getClass());
+    public static ClientProfile fromJson(String jsonString) {
+        return GsonProvider.getGson().fromJson(jsonString, ClientProfile.class);
     }
-
 
 }

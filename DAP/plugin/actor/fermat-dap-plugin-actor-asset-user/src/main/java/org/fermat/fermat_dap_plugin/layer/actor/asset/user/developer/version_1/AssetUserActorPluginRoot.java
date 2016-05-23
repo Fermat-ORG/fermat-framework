@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -41,6 +44,9 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressesManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
@@ -94,10 +100,6 @@ import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.e
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantInitializeAssetUserActorDatabaseException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantUpdateAssetUserConnectionException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.structure.AssetUserActorDao;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,7 +114,7 @@ import java.util.Random;
         createdBy = "nindriago",
         layer = Layers.ACTOR,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
-        plugin = Plugins.ASSET_USER)
+        plugin = Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR)
 public class AssetUserActorPluginRoot extends AbstractPlugin implements
         ActorAssetUserManager,
         ActorNetworkServiceAssetUser,
@@ -123,9 +125,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -171,7 +170,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             this.serviceStatus = ServiceStatus.STARTED;
             //groupTest ();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR);
         }
     }
@@ -193,6 +192,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey);
             }
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
 
@@ -210,6 +210,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 return this.assetUserActorDao.getActorAssetUserRegisteredByPublicKey(actorPublicKey, blockchainNetworkType);
             }
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset User from Data Base", null);
         }
 
@@ -285,10 +286,13 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 System.out.println("**********************************************************");
             }
         } catch (CantAddPendingActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", e, "", "");
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateAssetUserActorException("CAN'T GET ACTOR ASSET USER", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ASSET USER ACTOR", FermatException.wrapException(e), "", "");
         }
     }
@@ -298,6 +302,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(actorAssetUsers);
         } catch (CantAddPendingActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ACTOR ASSET USER REGISTERED", e, "", "");
         }
     }
@@ -308,11 +313,12 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             assetUserActorDao.updateOfflineUserRegisterInNetworkService(actorAssetUsers);
         } catch (CantGetAssetUsersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("CAN'T GET LIST ASSET USER REGISTERED", e, "", "");
         } catch (CantUpdateAssetUserConnectionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("CAN'T UPDATE ACTOR ASSET USER REGISTERED", e, "", "");
         }
-
     }
 
     @Override
@@ -322,6 +328,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             assetUsers.add(actorAssetUsers);
             assetUserActorDao.createNewAssetUserRegisterInNetworkServiceByList(assetUsers);
         } catch (CantAddPendingActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateAssetUserActorException("CAN'T ADD NEW ACTOR ASSET USER REGISTERED", e, "", "");
         }
     }
@@ -333,6 +340,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             actorAssetUser = this.assetUserActorDao.getActorAssetUser();
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
 
@@ -345,6 +353,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.assetUserActorDao.getAllAssetUserActorRegistered();
         } catch (CantGetAssetUsersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER REGISTERED ACTOR", e, "", "");
         }
 
@@ -357,6 +366,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.assetUserActorDao.getAllAssetUserActorRegistered(blockchainNetworkType);
         } catch (CantGetAssetUsersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER REGISTERED ACTOR", e, "", "");
         }
 
@@ -377,6 +387,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.assetUserActorDao.getAllAssetUserActorConnected(blockchainNetworkType);
         } catch (CantGetAssetUsersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
 
@@ -418,7 +429,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 //            for (ActorAssetUser actorAssetUser : actorAssetUsers) {
 //                try {
             cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
-                    null,
+                    WalletsPublicKeys.DAP_USER_WALLET.getCode(),
                     CryptoCurrency.BITCOIN,
                     senderActorType,
                     destinationActorType,
@@ -433,6 +444,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 //                }
 //            }
         } catch (CantSendAddressExchangeRequestException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -443,7 +455,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
 //                try {
                 cryptoAddressesNetworkServiceManager.sendAddressExchangeRequest(
-                        null,
+                        WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
                         CryptoCurrency.BITCOIN,
                         Actors.DAP_ASSET_USER,
                         Actors.DAP_ASSET_REDEEM_POINT,
@@ -460,10 +472,13 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 //                }
             }
         } catch (CantSendAddressExchangeRequestException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantUpdateRedeemPointException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (RedeemPointNotFoundException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -473,6 +488,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             return this.assetUserActorDao.createAssetUserGroup(groupName);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantCreateAssetUserGroupException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateAssetUserGroupException("You can not create the group", e, "Error", "");
         }
     }
@@ -482,6 +498,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetUserActorDao.updateAssetUserGroup(assetUserGroup);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantUpdateAssetUserGroupException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantUpdateAssetUserGroupException("You can not update the group", e, "Error", "");
         }
 
@@ -492,6 +509,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetUserActorDao.deleteAssetUserGroup(assetUserGroupId);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantDeleteAssetUserGroupException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDeleteAssetUserGroupException("You can not delete the group", e, "Error", "");
         }
     }
@@ -501,6 +519,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetUserActorDao.createAssetUserGroupMember(actorAssetUserGroupMember);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantCreateAssetUserGroupException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateAssetUserGroupException("You can not add user to group", e, "Error", "");
         }
     }
@@ -510,6 +529,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetUserActorDao.deleteAssetUserGroupMember(assetUserGroupMember);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.exceptions.CantCreateAssetUserGroupException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDeleteAssetUserGroupException("You can not remove user from group", e, "Error", "");
         }
     }
@@ -519,8 +539,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         List<ActorAssetUserGroup> list = null;
         try {
             list = this.assetUserActorDao.getAssetUserGroupsList();
-        } catch (CantGetAssetUserGroupExcepcion cantGetAssetUserGroupExcepcion) {
-            throw new CantGetAssetUserGroupException("You can not get groups list", cantGetAssetUserGroupExcepcion, "Error", "");
+        } catch (CantGetAssetUserGroupExcepcion e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetAssetUserGroupException("You can not get groups list", e, "Error", "");
         }
         return list;
     }
@@ -529,8 +550,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public List<ActorAssetUser> getListActorAssetUserByGroups(String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
         try {
             return this.assetUserActorDao.getListActorAssetUserByGroups(groupId, blockchainNetworkType);
-        } catch (CantGetAssetUsersListException ex) {
-            throw new CantGetAssetUserActorsException("You can not get users by group", ex, "Error", "");
+        } catch (CantGetAssetUsersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetAssetUserActorsException("You can not get users by group", e, "Error", "");
         }
     }
 
@@ -538,8 +560,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public List<ActorAssetUserGroup> getListAssetUserGroupsByActorAssetUser(String actorAssetUserPublicKey) throws CantGetAssetUserGroupException {
         try {
             return this.assetUserActorDao.getListAssetUserGroupsByActorAssetUser(actorAssetUserPublicKey);
-        } catch (CantGetAssetUserGroupExcepcion ex) {
-            throw new CantGetAssetUserGroupException("You can not get groups by users", ex, "Error", "");
+        } catch (CantGetAssetUserGroupExcepcion e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetAssetUserGroupException("You can not get groups by users", e, "Error", "");
         }
     }
 
@@ -547,8 +570,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
     public ActorAssetUserGroup getAssetUserGroup(String groupId) throws CantGetAssetUserGroupException {
         try {
             return this.assetUserActorDao.getAssetUserGroup(groupId);
-        } catch (CantGetAssetUserGroupExcepcion ex) {
-            throw new CantGetAssetUserGroupException("You can not get the group", ex, "Error", "");
+        } catch (CantGetAssetUserGroupExcepcion e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetAssetUserGroupException("You can not get the group", e, "Error", "");
         }
     }
 
@@ -565,8 +589,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             else
                 return DAPConnectionState.ERROR_UNKNOWN;
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("CAN'T GET ACTOR ASSET USER STATE", e, "Error get database info", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetUserActorsException("CAN'T GET ACTOR ASSET USER STATE", FermatException.wrapException(e), "", "");
         }
     }
@@ -595,8 +621,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                         blockchainNetworkType);
             }
         } catch (CantRequestAlreadySendActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRequestAlreadySendActorAssetException("CAN'T ADD NEW ACTOR ASSET USER CONNECTION", e, "", "The request already send.");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAskConnectionActorAssetException("CAN'T ADD NEW ACTOR ASSET USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -607,8 +635,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {//TODO Probar el estado REGISTERED_LOCALLY
             this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserInPublicKey, actorAssetUserToAddPublicKey, DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateAssetUserConnectionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -619,8 +649,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetUserActorDao.updateRegisteredConnectionState(actorAssetUserLoggedInPublicKey, actorAssetUserToRejectPublicKey, DAPConnectionState.DENIED_LOCALLY);
         } catch (CantUpdateAssetUserConnectionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -634,11 +666,14 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             this.assetUserActorDao.updateRegisteredConnectionState(actorAssetToDisconnect, actorAssetToDisconnect, DAPConnectionState.REGISTERED_ONLINE);
 
         } catch (CantDeleteRecordException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDeleteRecordException("Can't delte crypto for this user", e, "Error", "");
         } catch (CantGetAssetUserCryptoAddressTableExcepcion e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
             throw new CantDeleteRecordException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (CantUpdateAssetUserConnectionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
             throw new CantDisconnectAssetActorException("CAN'T CANCEL ACTOR ASSET USER CONNECTION", e, "", "");
         }
@@ -686,8 +721,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 
             }
         } catch (CantUpdateAssetUserConnectionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET USER REQUEST CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET USER REQUEST CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -710,8 +747,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             return this.assetUserActorDao.getAllWaitingActorAssetUser(actorAssetUserPublicKey, DAPConnectionState.PENDING_LOCALLY, max, offset);
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
@@ -722,8 +761,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             return this.assetUserActorDao.getAllWaitingActorAssetUser(actorAssetUserPublicKey, DAPConnectionState.PENDING_REMOTELY, max, offset);
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
@@ -734,8 +775,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
         try {
             return assetUserActorDao.getLastNotification(actorAssetUserConnectedPublicKey);
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", e, "Error get database info", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET USER LAST NOTIFICATION", FermatException.wrapException(e), "", "");
         }
     }
@@ -751,8 +794,10 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 assetUserActorNetworkServiceManager.registerActorAssetUser(actorAssetUser);
 
         } catch (CantRegisterActorAssetUserException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetUserException("CAN'T Register Actor Asset User in Actor Network Service", e, "", "");
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetUserException("CAN'T GET ACTOR ASSET USER", e, "", "");
         }
     }
@@ -768,6 +813,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                     DAPConnectionState.REGISTERED_ONLINE,
                     actorAssetUser.getCryptoAddress());
         } catch (CantUpdateAssetUserConnectionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         System.out.println("***************************************************************");
@@ -796,12 +842,11 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
 //                    this.handleCryptoAddressDeniedEvent(request);
                 }
             }
-        } catch (CantListPendingCryptoAddressRequestsException |
-//                CantHandleCryptoAddressDeniedActionException |
-                CantHandleCryptoAddressReceivedActionException e) {
-
+        } catch (CantListPendingCryptoAddressRequestsException | CantHandleCryptoAddressReceivedActionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantHandleCryptoAddressesNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
         } catch (CantConfirmAddressExchangeRequestException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -841,12 +886,16 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 cryptoAddressesNetworkServiceManager.confirmAddressExchangeRequest(request.getRequestId());
             }
         } catch (CantUpdateAssetUserConnectionException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantGetAssetUsersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (PendingRequestNotFoundException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantConfirmAddressExchangeRequestException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -882,7 +931,7 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                     break;
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -909,9 +958,9 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return Collections.EMPTY_LIST;
@@ -926,7 +975,6 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
             this.assetUserActorMonitorAgent = new AssetUserActorMonitorAgent(
                     this.eventManager,
                     this.pluginDatabaseSystem,
-                    this.errorManager,
                     this.pluginId,
                     this.assetUserActorNetworkServiceManager,
                     this.assetUserActorDao,
@@ -1073,12 +1121,16 @@ public class AssetUserActorPluginRoot extends AbstractPlugin implements
                 assetUserActorNetworkServiceManager.confirmActorAssetNotification(notification.getId());
             }
         } catch (CantAcceptActorAssetUserException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Accepted");
         } catch (CantDisconnectAssetActorException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Disconnected");
         } catch (CantDenyConnectionActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Denied");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
         }
     }

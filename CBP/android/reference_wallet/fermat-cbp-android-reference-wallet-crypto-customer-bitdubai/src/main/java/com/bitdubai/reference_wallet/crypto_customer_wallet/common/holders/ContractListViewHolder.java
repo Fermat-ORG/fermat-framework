@@ -25,8 +25,8 @@ public class ContractListViewHolder extends FermatViewHolder {
     private Resources res;
     private View itemView;
 
-    public ImageView customerImage;
-    public FermatTextView customerName;
+    public ImageView brokerImage;
+    public FermatTextView brokerName;
     public FermatTextView soldQuantityAndCurrency;
     public FermatTextView exchangeRateAmountAndCurrency;
     public FermatTextView lastUpdateDate;
@@ -43,8 +43,8 @@ public class ContractListViewHolder extends FermatViewHolder {
         this.itemView = itemView;
         res = itemView.getResources();
 
-        customerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
-        customerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
+        brokerImage = (ImageView) itemView.findViewById(R.id.ccw_customer_image);
+        brokerName = (FermatTextView) itemView.findViewById(R.id.ccw_customer_name);
         soldQuantityAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_sold_quantity_and_currency);
         exchangeRateAmountAndCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_exchange_rate_amount_and_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_last_update_date);
@@ -54,8 +54,8 @@ public class ContractListViewHolder extends FermatViewHolder {
         ContractStatus contractStatus = itemInfo.getStatus();
 
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        customerName.setText(itemInfo.getCryptoCustomerAlias());
-        customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
+        brokerName.setText(itemInfo.getCryptoBrokerAlias());
+        brokerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoBrokerImage()));
 
         String soldQuantityAndCurrencyText = getSoldQuantityAndCurrencyText(itemInfo, contractStatus);
         soldQuantityAndCurrency.setText(soldQuantityAndCurrencyText);

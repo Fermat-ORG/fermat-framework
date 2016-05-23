@@ -96,10 +96,10 @@ public class AmountToBuyStepViewHolder extends StepViewHolder
         switch (clauseStatus) {
             case ACCEPTED:
                 buyingText.setTextColor(getColor(R.color.description_text_status_accepted));
-                buyingValue.setTextColor(getColor(R.color.text_value_status_accepted));
-                currencyToBuyTextValue.setTextColor(getColor(R.color.text_value_status_accepted));
+                buyingValue.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
+                currencyToBuyTextValue.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 youWillPayText.setTextColor(getColor(R.color.description_text_status_accepted));
-                youWillPayTextValue.setTextColor(getColor(R.color.text_value_status_accepted));
+                youWillPayTextValue.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 break;
             case CHANGED:
                 buyingText.setTextColor(getColor(R.color.description_text_status_changed));

@@ -20,7 +20,7 @@
             android:layout_height="20dp"
             android:layout_gravity="center"
             android:background="#0072bb"
-            android:src="@drawable/afc_ic_nav_connections"
+            android:src="@drawable/aac_ic_nav_connections"
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView

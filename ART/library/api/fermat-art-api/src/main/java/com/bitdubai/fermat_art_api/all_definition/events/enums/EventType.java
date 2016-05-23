@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.events.ArtistActorConnectionNewConnectionEvent;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.events.ArtistConnectionRequestAcceptedEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.events.ArtistConnectionRequestNewsEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.events.ArtistConnectionRequestUpdatesEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.events.FanConnectionRequestNewsEvent;
@@ -22,6 +23,9 @@ public enum EventType implements FermatEventEnum {
      */
     ARTIST_ACTOR_CONNECTION_NEW_CONNECTION_EVENT("AACNCE"){
         public final FermatEvent getNewEvent() {return new ArtistActorConnectionNewConnectionEvent(this);}
+    },
+    ARTIST_CONNECTION_REQUEST_ACCEPTED_EVENT("ACRAE"){
+      public final FermatEvent getNewEvent() {return new ArtistConnectionRequestAcceptedEvent(this);}
     },
     ARTIST_CONNECTION_REQUEST_NEWS("ARCRN"){
         public final FermatEvent getNewEvent() { return new ArtistConnectionRequestNewsEvent(this); }

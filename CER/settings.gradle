@@ -27,8 +27,12 @@ include ':fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai'
 project(':fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai')
 include ':fermat-cer-plugin-provider-bitfinex-bitdubai'
 project(':fermat-cer-plugin-provider-bitfinex-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-bitfinex-bitdubai')
+include ':fermat-cer-plugin-provider-btce-bitdubai'
+project(':fermat-cer-plugin-provider-btce-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-btce-bitdubai')
 include ':fermat-cer-plugin-provider-bter-bitdubai'
 project(':fermat-cer-plugin-provider-bter-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-bter-bitdubai')
+include ':fermat-cer-plugin-provider-ccex-bitdubai'
+project(':fermat-cer-plugin-provider-ccex-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-ccex-bitdubai')
 include ':fermat-cer-plugin-provider-dolartoday-bitdubai'
 project(':fermat-cer-plugin-provider-dolartoday-bitdubai').projectDir = new File('CER/plugin/provider/fermat-cer-plugin-provider-dolartoday-bitdubai')
 include ':fermat-cer-plugin-provider-elcronista-bitdubai'

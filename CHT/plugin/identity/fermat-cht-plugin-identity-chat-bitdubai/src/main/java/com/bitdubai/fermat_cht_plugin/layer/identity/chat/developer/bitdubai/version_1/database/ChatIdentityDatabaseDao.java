@@ -280,8 +280,8 @@ public class ChatIdentityDatabaseDao {
 
 
         // Setup method.
-        List<ChatIdentity> list = new ArrayList<ChatIdentity>(); // Issuer list.
-        DatabaseTable table; // Intra User table.
+        List<ChatIdentity> list = new ArrayList<ChatIdentity>(); // Chat list.
+        DatabaseTable table; // Chat User table.
 
         // Get Chat identities list.
         try {

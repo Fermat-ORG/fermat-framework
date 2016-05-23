@@ -3,7 +3,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.middleware.wallet_factory.developer
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -169,7 +169,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
     }
 
     private void saveWalletFactoryProjectNavigationStructureXML(WalletFactoryProject walletFactoryProject) throws CantCreateFileException, CantPersistFileException {
-        WalletNavigationStructure navigationStructure = walletFactoryProject.getNavigationStructure();
+        AppNavigationStructure navigationStructure = walletFactoryProject.getNavigationStructure();
         if (navigationStructure != null){
             PluginTextFile navigationStructureFile;
             try{
@@ -226,7 +226,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 List<Skin> skins;
                 Language language;
                 List<Language> languages;
-                WalletNavigationStructure navigationStructure;
+                AppNavigationStructure navigationStructure;
                 int size;
                 WalletCategory walletCategory;
                 FactoryProjectType factoryProjectType;
@@ -333,12 +333,12 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
                 }
 
                 @Override
-                public WalletNavigationStructure getNavigationStructure() {
+                public AppNavigationStructure getNavigationStructure() {
                     return navigationStructure;
                 }
 
                 @Override
-                public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+                public void setNavigationStructure(AppNavigationStructure navigationStructure) {
                     this.navigationStructure = navigationStructure;
                 }
 
@@ -427,11 +427,11 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
 
     }
 
-    private WalletNavigationStructure loadNavigationStructureFromXML(String projectPublicKey, String publicKey) throws FileNotFoundException, CantCreateFileException {
-        WalletNavigationStructure navigationStructure = new WalletNavigationStructure();
+    private AppNavigationStructure loadNavigationStructureFromXML(String projectPublicKey, String publicKey) throws FileNotFoundException, CantCreateFileException {
+        AppNavigationStructure navigationStructure = new AppNavigationStructure();
 
         PluginTextFile navigationStructureFile = pluginFileSystem.getTextFile(this.pluginId, projectPublicKey, publicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-        navigationStructure = (WalletNavigationStructure) XMLParser.parseXML(navigationStructureFile.getContent(), navigationStructure);
+        navigationStructure = (AppNavigationStructure) XMLParser.parseXML(navigationStructureFile.getContent(), navigationStructure);
         return navigationStructure;
 
     }
@@ -670,7 +670,7 @@ public class WalletFactoryProjectMiddlewareManager implements DealsWithPluginDat
             /**
              * Lastly, I'm assigning the navigation structure
              */
-            WalletNavigationStructure navigationStructure = walletResourcesProviderManager.getNavigationStructure(wallet.getWalletPublicKey(), clonedWalletFactoryProject.getDefaultSkin().getId());
+            AppNavigationStructure navigationStructure = walletResourcesProviderManager.getNavigationStructure(wallet.getWalletPublicKey(), clonedWalletFactoryProject.getDefaultSkin().getId());
             clonedWalletFactoryProject.setNavigationStructure(navigationStructure);
 
             /**

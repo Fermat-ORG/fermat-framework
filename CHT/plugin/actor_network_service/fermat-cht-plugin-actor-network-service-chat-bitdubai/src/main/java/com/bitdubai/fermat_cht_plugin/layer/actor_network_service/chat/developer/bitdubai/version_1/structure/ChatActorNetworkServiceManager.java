@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType;
@@ -54,8 +55,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     private final CommunicationsClientConnection communicationsClientConnection;
     private final ChatActorNetworkServiceDao chatActorNetworkServiceDao;
     private final ChatActorNetworkServicePluginRoot pluginRoot;
-
-    private final ErrorManager errorManager;
     private final PluginVersionReference pluginVersionReference;
 
     /**
@@ -68,15 +67,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     public ChatActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
                                           final ChatActorNetworkServiceDao chatActorNetworkServiceDao,
                                           final ChatActorNetworkServicePluginRoot pluginRoot,
-
-                                          final ErrorManager errorManager,
                                           final PluginVersionReference pluginVersionReference) {
 
         this.communicationsClientConnection = communicationsClientConnection;
         this.chatActorNetworkServiceDao = chatActorNetworkServiceDao;
         this.pluginRoot = pluginRoot;
-
-        this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
         this.executorService = Executors.newFixedThreadPool(3);
     }
@@ -105,18 +100,17 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
 
-                if (chatToExpose != null && chatToExpose.containsKey(chatExposingData.getPublicKey()))
-                    chatToExpose.remove(chatExposingData.getPublicKey());
+                addChatToExpose(chatExposingData);
             }
 
         } catch (final CantRegisterComponentException e) {
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Problem trying to register an identity component.");
 
         } catch (final Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
         }
     }
@@ -125,8 +119,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     public void updateIdentity(ChatExposingData chatExposingData) throws CantExposeIdentityException {
         try {
             if (isRegistered()) {
-
-                final String imageString = Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT);
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
@@ -152,7 +144,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
             }
         } catch (Exception e) {
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentityException(e, null, "Unhandled Exception.");
         }
     }
@@ -167,18 +159,18 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final CantExposeIdentityException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Problem trying to expose an identity.");
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExposeIdentitiesException(e, null, "Unhandled Exception.");
         }
     }
 
     @Override
     public ChatSearch getSearch() {
-        return new ChatActorNetworkServiceSearch(communicationsClientConnection, errorManager, pluginVersionReference);
+        return new ChatActorNetworkServiceSearch(communicationsClientConnection, pluginRoot.getErrorManager(), pluginVersionReference);
     }
 
 
@@ -210,11 +202,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final CantRequestConnectionException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestConnectionException(e, null, "Unhandled Exception.");
         }
     }
@@ -253,11 +245,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final CantDisconnectException | ConnectionRequestNotFoundException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDisconnectException(e, null, "Unhandled Exception.");
         }
     }
@@ -285,11 +277,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final CantDenyConnectionRequestException | ConnectionRequestNotFoundException e){
             // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantDenyConnectionRequestException(e, null, "Unhandled Exception.");
         }
     }
@@ -323,11 +315,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final CantAcceptConnectionRequestException | ConnectionRequestNotFoundException e){
             // ConnectionRequestNotFoundException - THIS SHOULD NOT HAPPEN.
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptConnectionRequestException(e, null, "Unhandled Exception.");
         }
     }
@@ -340,11 +332,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final CantListPendingConnectionRequestsException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
         }
     }
@@ -358,11 +350,11 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final CantListPendingConnectionRequestsException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListPendingConnectionRequestsException(e, null, "Unhandled Exception.");
         }
     }
@@ -376,15 +368,15 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
         } catch (final ConnectionRequestNotFoundException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
         } catch (final CantConfirmConnectionRequestException e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmException(e, "", "Error in DAO, trying to confirm the request.");
         } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmException(e, null, "Unhandled Exception.");
         }
     }
@@ -419,7 +411,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                             jsonMessage
                     );
                 } catch (CantSendMessageException | InvalidParameterException e) {
-                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
         });
@@ -437,7 +429,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
             } catch (final CantExposeIdentitiesException e){
 
-                errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
@@ -465,6 +457,20 @@ public class ChatActorNetworkServiceManager implements ChatManager {
             chatToExpose = new ConcurrentHashMap<>();
 
         chatToExpose.putIfAbsent(chatExposingData.getPublicKey(), chatExposingData);
+    }
+
+    public final void exposeIdentitiesInWait() throws CantExposeIdentityException {
+        if(!Validate.isObjectNull(chatToExpose) && chatToExpose.size() > 0){
+            for (ChatExposingData chatExposingData :
+                    chatToExpose.values()) {
+                exposeIdentity(chatExposingData);
+
+            }
+        }
+    }
+
+    public final boolean areIdentitiesToExpose(){
+        return (!Validate.isObjectNull(chatToExpose) && chatToExpose.size() > 0);
     }
 
     private String buildJsonInformationMessage(final ChatConnectionRequest aer) {

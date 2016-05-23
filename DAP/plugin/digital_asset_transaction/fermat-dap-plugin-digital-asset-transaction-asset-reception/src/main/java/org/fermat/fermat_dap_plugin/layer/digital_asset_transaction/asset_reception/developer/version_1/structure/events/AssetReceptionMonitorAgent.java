@@ -2,6 +2,8 @@ package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_recep
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
@@ -20,12 +22,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
-
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
@@ -56,12 +59,11 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.AssetReceptionDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.exceptions.CantCheckAssetReceptionProgressException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.DigitalAssetReceptionVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.DigitalAssetReceptor;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.database.AssetReceptionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -73,7 +75,7 @@ public class AssetReceptionMonitorAgent implements Agent {
 
     private Thread agentThread;
     private final LogManager logManager;
-    private final ErrorManager errorManager;
+    AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private final DigitalAssetReceptionVault digitalAssetReceptionVault;
@@ -87,7 +89,7 @@ public class AssetReceptionMonitorAgent implements Agent {
     private final TransactionProtocolManager<CryptoTransaction> protocolManager;
 
     public AssetReceptionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
-                                      ErrorManager errorManager,
+                                      AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot,
                                       UUID pluginId,
                                       LogManager logManager,
                                       BitcoinNetworkManager bitcoinNetworkManager,
@@ -95,11 +97,12 @@ public class AssetReceptionMonitorAgent implements Agent {
                                       ActorAssetUserManager actorAssetUserManager,
                                       ActorAssetIssuerManager issuerManager,
                                       ActorAssetRedeemPointManager redeemPointManager,
-                                      org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.DigitalAssetReceptor digitalAssetReceptor,
+                                      DigitalAssetReceptor digitalAssetReceptor,
                                       DigitalAssetReceptionVault digitalAssetReceptionVault,
                                       IncomingCryptoManager incomingCryptoManager) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.assetReceptionDigitalAssetTransactionPluginRoot = assetReceptionDigitalAssetTransactionPluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
@@ -117,9 +120,8 @@ public class AssetReceptionMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         try {
-            MonitorAgent monitorAgent = new MonitorAgent();
+            MonitorAgent monitorAgent = new MonitorAgent(assetReceptionDigitalAssetTransactionPluginRoot);
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-            monitorAgent.setErrorManager(this.errorManager);
             this.agentThread = new Thread(monitorAgent, "Asset Reception MonitorAgent");
             this.agentThread.start();
         } catch (Exception e) {
@@ -133,17 +135,16 @@ public class AssetReceptionMonitorAgent implements Agent {
     }
 
 
-    private class MonitorAgent implements AssetIssuingTransactionNotificationAgent, DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgent implements AssetIssuingTransactionNotificationAgent, DealsWithPluginDatabaseSystem, Runnable {
 
-        ErrorManager errorManager;
+        AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = AssetIssuingTransactionNotificationAgent.AGENT_SLEEP_TIME;
         int iterationNumber = 0;
         AssetReceptionDao assetReceptionDao;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public MonitorAgent(AssetReceptionDigitalAssetTransactionPluginRoot assetReceptionDigitalAssetTransactionPluginRoot) {
+            this.assetReceptionDigitalAssetTransactionPluginRoot = assetReceptionDigitalAssetTransactionPluginRoot;
         }
 
         @Override
@@ -154,7 +155,7 @@ public class AssetReceptionMonitorAgent implements Agent {
         @Override
         public void run() {
 
-            logManager.log(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.AssetReceptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Reception Protocol Notification Agent: running...", null, null);
+            logManager.log(AssetReceptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Reception Protocol Notification Agent: running...", null, null);
             while (true) {
                 /**
                  * Increase the iteration counter
@@ -171,14 +172,12 @@ public class AssetReceptionMonitorAgent implements Agent {
                  */
                 try {
 
-                    logManager.log(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.AssetReceptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(AssetReceptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
-                } catch (CantCheckAssetReceptionProgressException | CantExecuteQueryException exception) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_RECEPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                } catch (CantCheckAssetReceptionProgressException | CantExecuteQueryException e) {
+                    assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
-
             }
-
         }
 
         private void doTheMainTask() throws CantExecuteQueryException, CantCheckAssetReceptionProgressException {
@@ -231,25 +230,35 @@ public class AssetReceptionMonitorAgent implements Agent {
                     System.out.println("ASSET RECEPTION is " + pendingEventsList.size() + " events");
                 }
 
-            } catch (CantExecuteDatabaseOperationException exception) {
-                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, exception, "Exception in asset distribution monitor agent", "Cannot execute database operation");
-            } catch (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.exceptions.CantReceiveDigitalAssetException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot receive digital asset");
-            } catch (CantAssetUserActorNotFoundException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot find Asset user actor");
-            } catch (CantSendTransactionNewStatusNotificationException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot send new status to asset issuer");
-            } catch (CantGetAssetUserActorsException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get asset actor user");
-            } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Unexpected results in database query");
-            } catch (CantGetAssetIssuerActorsException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get asset actor issuer");
-            } catch (CantDeliverDigitalAssetToAssetWalletException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot deliver the digital asset metadata to asset user wallet");
-            } catch (CantGetCryptoTransactionException exception) {
-                throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get the genesis transaction from Crypto Network");
+            } catch (CantExecuteDatabaseOperationException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantExecuteQueryException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, "Exception in asset distribution monitor agent", "Cannot execute database operation");
+            } catch (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.exceptions.CantReceiveDigitalAssetException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Cannot receive digital asset");
+            } catch (CantAssetUserActorNotFoundException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Cannot find Asset user actor");
+            } catch (CantSendTransactionNewStatusNotificationException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Cannot send new status to asset issuer");
+            } catch (CantGetAssetUserActorsException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Cannot get asset actor user");
+            } catch (UnexpectedResultReturnedFromDatabaseException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Unexpected results in database query");
+            } catch (CantGetAssetIssuerActorsException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Cannot get asset actor issuer");
+            } catch (CantDeliverDigitalAssetToAssetWalletException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Cannot deliver the digital asset metadata to asset user wallet");
+            } catch (CantGetCryptoTransactionException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCheckAssetReceptionProgressException(e, "Exception in asset reception monitor agent", "Cannot get the genesis transaction from Crypto Network");
             } catch (DAPException | CantRegisterCreditException | CantRegisterDebitException | CantLoadWalletException | CantGetTransactionsException | CantDeliverPendingTransactionsException | CantConfirmTransactionException | CantSetObjectException e) {
+                assetReceptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }

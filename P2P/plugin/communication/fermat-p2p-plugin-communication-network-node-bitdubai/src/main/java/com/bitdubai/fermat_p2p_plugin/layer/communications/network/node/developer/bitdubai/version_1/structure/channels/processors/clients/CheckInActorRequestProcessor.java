@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(CheckInActorRequestProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(CheckInActorRequestProcessor.class));
 
     /**
      * Constructor whit parameter
@@ -92,7 +94,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), actorProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -105,18 +107,20 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
 
             try {
 
-                LOG.error(exception.getMessage());
+                LOG.error(exception.getCause());
 
                 /*
                  * Respond whit fail message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
                  */
                 session.getBasicRemote().sendObject(packageRespond);
+
+                exception.printStackTrace();
 
             } catch (IOException iOException) {
                 LOG.error(iOException.getMessage());
@@ -134,31 +138,37 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
      * @param actorProfile
      * @throws CantInsertRecordDataBaseException
      */
-    private void insertCheckedInActor(ActorProfile actorProfile) throws CantInsertRecordDataBaseException {
+    private void insertCheckedInActor(final ActorProfile actorProfile) throws CantInsertRecordDataBaseException, CantReadRecordDataBaseException {
 
-        /*
-         * Create the CheckedInActor
-         */
-        CheckedInActor checkedInActor = new CheckedInActor();
-        checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
-        checkedInActor.setActorType(actorProfile.getActorType());
-        checkedInActor.setAlias(actorProfile.getAlias());
-        checkedInActor.setName(actorProfile.getName());
-        checkedInActor.setPhoto(actorProfile.getPhoto());
-        checkedInActor.setExtraData(actorProfile.getExtraData());
-        checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
+        if (!getDaoFactory().getCheckedInActorDao().exists(actorProfile.getIdentityPublicKey())) {
 
-        //Validate if location are available
-        if (actorProfile.getLocation() != null){
-            checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
-            checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
+            /*
+             * Create the CheckedInActor
+             */
+            CheckedInActor checkedInActor = new CheckedInActor();
+            checkedInActor.setIdentityPublicKey(actorProfile.getIdentityPublicKey());
+            checkedInActor.setActorType(actorProfile.getActorType());
+            checkedInActor.setAlias(actorProfile.getAlias());
+            checkedInActor.setName(actorProfile.getName());
+            checkedInActor.setPhoto(actorProfile.getPhoto());
+            checkedInActor.setExtraData(actorProfile.getExtraData());
+            checkedInActor.setNsIdentityPublicKey(actorProfile.getNsIdentityPublicKey());
+            checkedInActor.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
+
+            //Validate if location are available
+            if (actorProfile.getLocation() != null){
+                checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
+                checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
+            }else{
+                checkedInActor.setLatitude(0.0);
+                checkedInActor.setLongitude(0.0);
+            }
+
+            /*
+             * Save into the data base
+             */
+            getDaoFactory().getCheckedInActorDao().create(checkedInActor);
         }
-
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getCheckedInActorDao().create(checkedInActor);
-
     }
 
     /**
@@ -180,11 +190,15 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         checkedActorsHistory.setPhoto(actorProfile.getPhoto());
         checkedActorsHistory.setExtraData(actorProfile.getExtraData());
         checkedActorsHistory.setCheckType(CheckedActorsHistory.CHECK_TYPE_IN);
+        checkedActorsHistory.setClientIdentityPublicKey(actorProfile.getClientIdentityPublicKey());
 
         //Validate if location are available
         if (actorProfile.getLocation() != null){
             checkedActorsHistory.setLastLatitude(actorProfile.getLocation().getLatitude());
             checkedActorsHistory.setLastLongitude(actorProfile.getLocation().getLongitude());
+        }else{
+            checkedActorsHistory.setLastLatitude(0.0);
+            checkedActorsHistory.setLastLongitude(0.0);
         }
 
         /*

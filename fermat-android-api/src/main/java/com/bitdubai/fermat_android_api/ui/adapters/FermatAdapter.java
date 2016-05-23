@@ -91,8 +91,16 @@ public abstract class FermatAdapter<M, H extends FermatViewHolder> extends Recyc
      * @param dataSet new ArrayList of model to change
      */
     public void changeDataSet(List<M> dataSet) {
+        onChangeDataSet();
         this.dataSet = dataSet;
         notifyDataSetChanged();
+    }
+
+    /**
+     * Notify subClass when dataset is change to stop work if is running
+     */
+    protected void onChangeDataSet(){
+
     }
 
     /**

@@ -6,19 +6,19 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.os.Build;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.AdapterChangeListener;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.desktop.Item;
+import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.ItemTouchHelperAdapter;
-import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
-import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.sub_app.wallet_manager.holder.FermatAppHolder;
-import com.bitdubai.fermat_api.layer.desktop.Item;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +28,7 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
     public static final int DEKSTOP = 1;
     public static final int FOLDER = 2;
     public static final int DESKTOP_FOLDER = 3;
+    private AbstractFermatFragment.ScreenSize screenSize;
     private Typeface tf;
     private Item parentItem;
 
@@ -36,23 +37,22 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
     private DesktopHolderClickCallback desktopHolderClickCallback;
     private AdapterChangeListener adapterChangeListener;
 
-    public DesktopAdapter(Context context) {
-            super(context);
-        }
 
-        public DesktopAdapter(Context context, List<Item> dataSet,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter) {
-            super(context, dataSet);
-            this.desktopHolderClickCallback = desktopHolderClickCallback;
-            this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
-        }
+    public DesktopAdapter(Context context, List<Item> dataSet,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter,AbstractFermatFragment.ScreenSize screenSize) {
+        super(context, dataSet);
+        this.desktopHolderClickCallback = desktopHolderClickCallback;
+        this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
+        this.screenSize = screenSize;
+    }
 
-    public DesktopAdapter(Context context, List<Item> dataSet,Item parent,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter,boolean isChild) {
+    public DesktopAdapter(Context context, List<Item> dataSet,Item parent,DesktopHolderClickCallback desktopHolderClickCallback,int fragmentWhoUseThisAdapter,boolean isChild,AbstractFermatFragment.ScreenSize screenSize) {
         super(context, dataSet);
         this.desktopHolderClickCallback = desktopHolderClickCallback;
         this.fragmentWhoUseThisAdapter = fragmentWhoUseThisAdapter;
         this.isChild=isChild;
         this.parentItem = parent;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/CaviarDreams.ttf");
+        this.screenSize = screenSize;
     }
 
 
@@ -124,12 +124,15 @@ public class DesktopAdapter extends FermatAdapter<Item, FermatAppHolder> impleme
                             adapterChangeListener.onDataSetChanged(dataSet);
                     }
                 });
-                holder.folder.setAdapter(new DesktopAdapter(context,((FermatFolder) data.getInterfaceObject()).getLstFolderItems(),data,desktopHolderClickCallback,DESKTOP_FOLDER,true));
+                holder.folder.setAdapter(new DesktopAdapter(context,((FermatFolder) data.getInterfaceObject()).getLstFolderItems(),data,desktopHolderClickCallback,DESKTOP_FOLDER,true,screenSize));
 
             }else {
 
                 if(!isChild) {
                     holder.name.setText(data.getName());
+                    if(screenSize== AbstractFermatFragment.ScreenSize.SMALL){
+                        holder.name.setTextSize(holder.name.getTextSize()-9);
+                    }
                     //holder.name.setTypeface(tf);
 //                    holder.thumbnail.setOnClickListener(new View.OnClickListener() {
 //                        @Override

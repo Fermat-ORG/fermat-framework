@@ -11,6 +11,7 @@ import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 /**
  * Created by mati on 2015.11.23
  */
+
 public class AnimationManager implements ElementsWithAnimation {
 
     View rootView;
@@ -71,6 +72,7 @@ public class AnimationManager implements ElementsWithAnimation {
             }
         }
     }
+
 
     public void setEmptyOriginalPos(int[] emptyOriginalPos) {
         this.emptyOriginalPos = emptyOriginalPos;

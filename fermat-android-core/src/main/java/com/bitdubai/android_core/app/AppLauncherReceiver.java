@@ -4,8 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 
 /**
  * Created by Matias Furszyfer on 2016.03.05..
@@ -18,7 +19,14 @@ public class AppLauncherReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         String appPublicKey = intent.getStringExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
-        FermatAppType fermatAppType = (FermatAppType) intent.getSerializableExtra(ApplicationConstants.INTENT_APP_TYPE);
+        FermatApp fermatApp = null;
+        try {
+             fermatApp = ApplicationSession.getInstance().getAppManager().getApp(appPublicKey);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (fermatApp==null) throw new RuntimeException("Error, app is not available. Please remove data in your app if your are testing or you are a developer. Report this issue to furszy");
+        FermatAppType fermatAppType = fermatApp.getAppType(); //(FermatAppType) intent.getSerializableExtra(ApplicationConstants.INTENT_APP_TYPE);
         Class<?> clazz = null;
         switch (fermatAppType){
             case WALLET:

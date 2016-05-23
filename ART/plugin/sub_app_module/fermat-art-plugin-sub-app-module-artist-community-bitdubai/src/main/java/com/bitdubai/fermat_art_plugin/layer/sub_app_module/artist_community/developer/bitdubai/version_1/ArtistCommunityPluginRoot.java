@@ -16,7 +16,9 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
@@ -49,6 +51,12 @@ public class ArtistCommunityPluginRoot extends AbstractModule<ArtistCommunitySet
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API,   layer = Layers.SYSTEM,                  addon  = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.ACTOR_CONNECTION,        plugin = Plugins.FAN_ACTOR_CONNECTION)
+    private FanActorConnectionManager fanActorConnectionManager;
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.ACTOR_NETWORK_SERVICE,   plugin = Plugins.FAN   )
+    private FanManager fanNetworkServiceManager;
+
     private ArtistCommunityManager artistCommunityManager;
     /**
      * Default constructor
@@ -66,7 +74,9 @@ public class ArtistCommunityPluginRoot extends AbstractModule<ArtistCommunitySet
                 errorManager,
                 pluginFileSystem,
                 pluginId,
-                this.getPluginVersionReference());
+                this.getPluginVersionReference(),
+                fanNetworkServiceManager,
+                fanActorConnectionManager);
     }
 
     @Override

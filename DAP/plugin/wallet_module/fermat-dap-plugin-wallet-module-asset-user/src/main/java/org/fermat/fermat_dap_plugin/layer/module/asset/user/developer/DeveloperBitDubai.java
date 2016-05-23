@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
+
 import org.fermat.fermat_dap_plugin.layer.module.asset.user.developer.version_1.AssetUserWalletModulePluginRoot;
 
 

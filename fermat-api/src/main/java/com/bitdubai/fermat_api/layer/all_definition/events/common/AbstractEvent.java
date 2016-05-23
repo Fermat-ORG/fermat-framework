@@ -13,18 +13,18 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class AbstractEvent implements FermatEvent {
+public abstract class AbstractEvent<T extends FermatEventEnum> implements FermatEvent {
 
-    private final FermatEventEnum eventType;
+    private final T eventType;
 
     private EventSource eventSource;
 
-    public AbstractEvent(final FermatEventEnum eventType) {
+    public AbstractEvent(final T eventType) {
         this.eventType = eventType;
     }
 
     @Override
-    public final FermatEventEnum getEventType() {
+    public final T getEventType() {
         return eventType;
     }
 

@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_cl
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -52,6 +52,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -62,15 +63,15 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 21/12/2015.
  */
-public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubAppModuleManager {
+public class CryptoBrokerCommunityManager
+        extends ModuleManagerImpl<CryptoBrokerCommunitySettings>
+        implements CryptoBrokerCommunitySubAppModuleManager, Serializable {
 
     private final CryptoBrokerIdentityManager        cryptoBrokerIdentityManager           ;
     private final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager    ;
     private final CryptoBrokerManager                cryptoBrokerActorNetworkServiceManager;
     private final CryptoCustomerIdentityManager      cryptoCustomerIdentityManager         ;
     private final ErrorManager                       errorManager                          ;
-    private final PluginFileSystem                   pluginFileSystem                      ;
-    private final UUID                               pluginId                              ;
     private final PluginVersionReference             pluginVersionReference                ;
 
     private       String                             subAppPublicKey                       ;
@@ -84,13 +85,13 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                                         final UUID                               pluginId                              ,
                                         final PluginVersionReference             pluginVersionReference                ) {
 
+        super(pluginFileSystem, pluginId);
+
         this.cryptoBrokerIdentityManager            = cryptoBrokerIdentityManager           ;
         this.cryptoBrokerActorConnectionManager     = cryptoBrokerActorConnectionManager    ;
         this.cryptoBrokerActorNetworkServiceManager = cryptoBrokerActorNetworkServiceManager;
         this.cryptoCustomerIdentityManager          = cryptoCustomerIdentityManager         ;
         this.errorManager                           = errorManager                          ;
-        this.pluginFileSystem                       = pluginFileSystem                      ;
-        this.pluginId                               = pluginId                              ;
         this.pluginVersionReference                 = pluginVersionReference                ;
     }
 
@@ -174,9 +175,9 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
     public void setSelectedActorIdentity(CryptoBrokerCommunitySelectableIdentity identity) {
 
         //Try to get appSettings
-        CryptoBrokerCommunitySettings appSettings = null;
+        CryptoBrokerCommunitySettings appSettings;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
         //If appSettings exist, save identity
@@ -186,7 +187,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
             if(identity.getActorType() != null)
                 appSettings.setLastSelectedActorType(identity.getActorType());
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
@@ -477,29 +478,16 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
         return ConnectionState.DISCONNECTED_LOCALLY;
     }
 
-    private SettingsManager<CryptoBrokerCommunitySettings> settingsManager;
 
-    @Override
-    public SettingsManager<CryptoBrokerCommunitySettings> getSettingsManager() {
 
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
 
     @Override
     public CryptoBrokerCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
 
         //Try to get appSettings
-        CryptoBrokerCommunitySettings appSettings = null;
+        CryptoBrokerCommunitySettings appSettings;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ return null; }
 
 
@@ -610,9 +598,9 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
 
 
         //Try to get appSettings
-        CryptoBrokerCommunitySettings appSettings = null;
+        CryptoBrokerCommunitySettings appSettings;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
 
@@ -626,7 +614,7 @@ public class CryptoBrokerCommunityManager implements CryptoBrokerCommunitySubApp
                 appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_BROKER);
 
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
                 this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }

@@ -1,5 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -14,13 +16,13 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantCreateBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
-
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
@@ -44,10 +46,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.AssetTransferDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantCheckTransferProgressException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDAO;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -62,16 +63,21 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
     final String LOCAL_STORAGE_PATH = "digital-asset-transfer/";
     ActorAssetUserManager actorAssetUserManager;
     AssetVaultManager assetVaultManager;
-    ErrorManager errorManager;
+    AssetTransferDigitalAssetTransactionPluginRoot assetTransferDigitalAssetTransactionPluginRoot;
     String digitalAssetFileStoragePath;
     //String digitalAssetMetadataFileStoragePath;
     AssetTransferDAO assetDistributionDao;
     DigitalAssetTransferVault digitalAssetTransferVault;
 
-    public DigitalAssetTransferer(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) {
+    public DigitalAssetTransferer(AssetVaultManager assetVaultManager,
+                                  AssetTransferDigitalAssetTransactionPluginRoot assetTransferDigitalAssetTransactionPluginRoot,
+                                  UUID pluginId, 
+                                  PluginFileSystem pluginFileSystem, 
+                                  BitcoinNetworkManager bitcoinNetworkManager) {
+        
         super(pluginId, pluginFileSystem);
         this.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
-        this.errorManager = errorManager;
+        this.assetTransferDigitalAssetTransactionPluginRoot = assetTransferDigitalAssetTransactionPluginRoot;
         this.assetVaultManager = assetVaultManager;
     }
 
@@ -118,16 +124,19 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
                         "digitalAssetMetadata:" + digitalAssetMetadata);
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransactionFromDigitalAssetMetadata);
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception,
+        } catch (CantGetCryptoTransactionException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
-        } catch (CantExecuteQueryException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception,
+        } catch (CantExecuteQueryException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot execute a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception,
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Unexpected result in database");
         }
@@ -171,26 +180,36 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
             digitalAssetTransferVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.RECEPTION, actorAssetUser.getActorPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
             System.out.println("ASSET TRANSFER Begins the deliver to an remote actor");
             deliverToRemoteActor(digitalAssetMetadata, actorAssetUser, cryptoTransaction.getBlockchainNetworkType());
-        } catch (CantPersistDigitalAssetException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
-        } catch (CantCreateDigitalAssetFileException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into local storage");
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
-        } catch (CantExecuteQueryException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot execute a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Unexpected result in database");
-        } catch (CantSendDigitalAssetMetadataException | CantCreateBitcoinTransactionException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
-        } catch (DAPException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Generic DAP Exception");
-        } catch (CantGetTransactionsException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesis transaction from crypto network");
-        } catch (CantLoadWalletException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot load Asset issuer wallet");
-        } catch (CantRegisterDebitException | CantRegisterCreditException exception) {
-            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot register a debit in Asset Issuer Wallet");
+        } catch (CantPersistDigitalAssetException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot persist digital asset into database");
+        } catch (CantCreateDigitalAssetFileException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot persist digital asset into local storage");
+        } catch (CantGetCryptoTransactionException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
+        } catch (CantExecuteQueryException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot execute a database operation");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Unexpected result in database");
+        } catch (CantSendDigitalAssetMetadataException | CantCreateBitcoinTransactionException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
+        } catch (DAPException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Generic DAP Exception");
+        } catch (CantGetTransactionsException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot get the genesis transaction from crypto network");
+        } catch (CantLoadWalletException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot load Asset issuer wallet");
+        } catch (CantRegisterDebitException | CantRegisterCreditException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot register a debit in Asset Issuer Wallet");
         }
     }
 
@@ -206,11 +225,14 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
             System.out.println("ASSET TRANSFER Before deliver - remote asset user ");
             assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey(), networkType);
             assetTransmissionNetworkServiceManager.sendMessage(new DAPMessage(new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetUserManager.getActorAssetUser(), remoteActorAssetUser, DAPMessageSubject.ASSET_RECEPTION));
-        } catch (CantExecuteQueryException | CantStartDeliveringException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
+        } catch (CantExecuteQueryException | CantStartDeliveringException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
         } catch (CantGetAssetUserActorsException | CantSetObjectException | CantSendMessageException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -265,7 +287,7 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
                         assetDistributionDao.updateActorAssetUser(actorAssetUser, digitalAssetMetadata.getGenesisTransaction());
                     }
                 } catch (TransactionAlreadyDeliveringException | CantPersistDigitalAssetException | CantCreateDigitalAssetFileException | CantCheckTransferProgressException | RecordsNotFoundException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
-                    this.errorManager.reportUnexpectedPluginException(Plugins.ASSET_TRANSFER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     throw new CantTransferDigitalAssetsException(e, context, "Something bad happen.");
                 }
                 //Deliver one DigitalAsset
@@ -274,9 +296,9 @@ public class DigitalAssetTransferer extends AbstractDigitalAssetSwap {
                 System.out.println("ASSET TRANSFER ActorAssetUser - Name:" + actorAssetUser.getName());
                 deliverDigitalAssetToRemoteDevice(digitalAssetMetadata, actorAssetUser);
             }
-        } catch (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.ASSET_TRANSFER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantTransferDigitalAssetsException(exception, context, "Something bad happen.");
+        } catch (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantDeliverDigitalAssetException e) {
+            assetTransferDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantTransferDigitalAssetsException(e, context, "Something bad happen.");
         }
 
     }

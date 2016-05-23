@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_redeem_point.adapters.DigitalAssetAdapter;
 import org.fermat.fermat_dap_android_wallet_redeem_point.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_redeem_point.util.CommonLogger;

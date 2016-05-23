@@ -40,7 +40,7 @@
             android:paddingRight="8dp"
             android:singleLine="true"
             android:text="UserName"
-            android:textColor="#000000"
+            android:textColor="#212121"
             android:textSize="16sp"
             tools:ignore="HardcodedText,RtlHardcoded" />
 

@@ -4,10 +4,11 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.fragments.CreateIssuerIdentityFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.fragments.IdentityListFragment;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_identity.session.IssuerIdentitySubAppSession;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
  * Created by Matias Furszyfer on 2015.19.22..

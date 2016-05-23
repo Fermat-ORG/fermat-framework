@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
+
 import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
@@ -16,8 +17,6 @@ import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
-
-
 
 import java.sql.Timestamp;
 import java.util.List;
