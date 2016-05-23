@@ -639,8 +639,6 @@ public class ChatMiddlewareDatabaseDao {
             for(Chat chat : chats){
                 chat.setStatus(ChatStatus.INVISSIBLE);
                 DatabaseTableRecord record = getChatRecord(chat);
-                table.updateRecord(record);
-                deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
             }
 
 //            List<DatabaseTableRecord> records=getChatData(filter);
@@ -840,7 +838,12 @@ public class ChatMiddlewareDatabaseDao {
 
             // I will add the message information from the database
 
-                final Message message = getMessageTransaction(getMessageDataDesceding(filter).get(0));
+
+            List<DatabaseTableRecord> records = getMessageDataDesceding(filter);
+            if(records == null || records.isEmpty())
+                return null;
+
+                final Message message = getMessageTransaction(records.get(0));
 
             database.closeDatabase();
 
