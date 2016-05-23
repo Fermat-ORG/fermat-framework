@@ -216,9 +216,9 @@ public class ProviderFermatExchangePluginRoot extends AbstractPlugin implements 
                 purchase = json.getJSONObject(currPairParam).getJSONObject(dateParam).getDouble("purchase");
                 sale = json.getJSONObject(currPairParam).getJSONObject(dateParam).getDouble("sale");
 
-            }catch (JSONException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.FERMATEXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "FermatExchange CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+            }catch (JSONException ex) {
+                errorManager.reportUnexpectedPluginException(Plugins.FERMATEXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
+                throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, ex, "FermatExchange CER Provider", "Cant Get exchange rate for " + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
             }
 
             //Create exchange rate
