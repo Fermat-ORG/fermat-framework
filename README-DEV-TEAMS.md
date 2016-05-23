@@ -400,7 +400,7 @@ We don't mean to make fun of everything, just about the serious things.
 
 ### Code Butchers Team:
 -----------------------------------
-### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/c07467a01e3de3093890fd26cf4f1d1fd3df5c6f/MediaKit/Logotype/Fermat%20Teams/logo_purple_haze_team.jpg "Logo Purple Haze")
+### ![alt text](https://github.com/Fermat-ORG/media-kit/blob/c07467a01e3de3093890fd26cf4f1d1fd3df5c6f/MediaKit/Logotype/Fermat%20Teams/logo_purple_haze_team.jpg "Logo Purple Haze Team")
 We are a team of developers of diverse nature, interested on the basis and structure of the Fermat Framework, and always looking for a better way of perfecting the system, with an innovative spirit and full of perspicacy. We work across the entire platform, trying to keep the things ordered and paying attention to collaborate with other teams.
 
 * In the Fermat Core we are responsible for the enhancements and maintenance.
@@ -473,7 +473,7 @@ We can talk about any topic outside of work, as movies, video games (!), politic
 
 ### Navi Charlie:
 -----------------------------------
-### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/62517a1ca7bf08166140453e64a5f6982f1aa2fe/MediaKit/Logotype/Fermat%20Teams/logo_charlie_team.jpg)
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/62517a1ca7bf08166140453e64a5f6982f1aa2fe/MediaKit/Logotype/Fermat%20Teams/logo_charlie_team.jpg "logo Charlie team")
 
 Developers of dev.fermat.org on the client-side. We are responsible to show to the public and to the developers the current state and structure of this big project the best we can in a 3D graphic environment. We are a team of passionate developers with different levels of skills, from JavaScript developers through web testers to 3D graphics experts, we enjoy a lot what we do and work side-by-side with other teams like the Server-side, graphic designers and Fermat internal developers.
 
@@ -538,6 +538,8 @@ About the group: We like anime, TV shows, movies and videogames. We always find 
 
 ### Navi Sierra:
 -----------------------------------
+### ![alt text]( https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Logotype/Fermat%20Teams/logo_sierra_team.jpg "logo Sierra team")
+
 In the Navi Sierra Team we look for the excellence in coding, following the best practices for our tools and using the optimum way to solve a problem. We are responsible to provide all the repository data and network data to the client-side so they can show to the public and the developers, the current state and structure of this big project. We are a small team of developers with different levels of expertise in JavaScript (Node.js), NoSQL database (MongoDB), RESTful API design, in train to give solutions to our developers and general public.
 
 #### Team Members:
