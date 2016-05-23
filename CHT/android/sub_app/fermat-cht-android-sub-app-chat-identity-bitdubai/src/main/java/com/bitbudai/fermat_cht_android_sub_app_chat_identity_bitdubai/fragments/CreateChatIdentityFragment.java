@@ -333,6 +333,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
                     if (imageToUploadUri != null) {
                         Uri selectedImage = imageToUploadUri;
+                        getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
                         Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
                         if (reducedSizeBitmap != null) {
