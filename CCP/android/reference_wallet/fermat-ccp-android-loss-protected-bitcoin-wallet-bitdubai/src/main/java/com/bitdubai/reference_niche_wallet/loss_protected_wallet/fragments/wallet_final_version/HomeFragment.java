@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
@@ -30,14 +28,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-
-
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-
-
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
@@ -50,8 +42,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
-
-
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.ExchangeRateProvider;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
@@ -59,7 +50,9 @@ import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.animation.AnimationManager;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.custom_view.CustomChartMarkerdView;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorExchangeRateConnectionDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -185,22 +178,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             final LossProtectedWalletSettings lossProtectedWalletSettingstemp = lossProtectedWalletSettings;
 
-            //default Exchange rate Provider
-            try {
-                if(lossProtectedWalletmanager.getExchangeProvider()==null) {
-                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWalletmanager.getExchangeRateProviderManagers());
-
-                    exchangeProviderId = providers.get(0).getProviderId();
-                    lossProtectedWalletmanager.setExchangeProvider(exchangeProviderId);
-
-                }
-                else
-                {
-                    exchangeProviderId =lossProtectedWalletmanager.getExchangeProvider();
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
@@ -208,6 +185,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     if(lossProtectedWalletSettingstemp.isPresentationHelpEnabled()){
                         setUpPresentation(false);
                     }
+
+
                 }}, 500);
 
         } catch (Exception ex) {
@@ -458,7 +437,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
 
-
+            CustomChartMarkerdView mv = new CustomChartMarkerdView(getActivity(),R.layout.loss_custom_marker_view);
+            chart.setMarkerView(mv);
 
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setEnabled(false);
@@ -488,6 +468,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         makeText(getActivity(), "Oooops! Error Exception : CantLoadWalletException",
                 Toast.LENGTH_SHORT).show();
         }catch (Exception e) {
+            e.printStackTrace();
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error In Graphic",
                     Toast.LENGTH_SHORT).show();
@@ -551,9 +532,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         dataset.setColor(Color.WHITE); //
         dataset.setDrawCubic(false);
         dataset.setDrawValues(false);
-        dataset.setDrawCircles(false);
+        dataset.setDrawCircles(true);
+        dataset.setCircleSize(3);
+        dataset.setCircleColor(Color.parseColor("#E58617"));
+        dataset.setCircleColorHole(Color.parseColor("#E58617"));
         dataset.setValueFormatter(new LargeValueFormatter());
-        dataset.setDrawHighlightIndicators(true);
+        dataset.setDrawHighlightIndicators(false);
 
         return new LineData(xValues, dataset);
 
@@ -755,6 +739,22 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 ExchangeRate rate = null;
                 try{
+
+                    //default Exchange rate Provider
+
+                        if(lossProtectedWalletmanager.getExchangeProvider()==null) {
+                            List<ExchangeRateProvider> providers = new ArrayList(lossProtectedWalletmanager.getExchangeRateProviderManagers());
+
+                            exchangeProviderId = providers.get(0).getProviderId();
+                            lossProtectedWalletmanager.setExchangeProvider(exchangeProviderId);
+
+                        }
+                        else
+                        {
+                            exchangeProviderId =lossProtectedWalletmanager.getExchangeProvider();
+                        }
+
+
                      rate =  lossProtectedWalletmanager.getCurrencyExchange(exchangeProviderId);
                 }
                 catch (Exception e) {
@@ -782,7 +782,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 }
                 else {
-                    makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
+                    ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                    dialog_error.show();
+                    //makeText(getActivity(), "Cant't Get Exhange Rate Info, check your internet connection.", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -798,6 +800,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                             UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 else
                     Log.e("Exchange Rate", ex.getMessage(), ex);
+
+                ErrorExchangeRateConnectionDialog dialog_error = new ErrorExchangeRateConnectionDialog(getActivity());
+                dialog_error.show();
             }
         });
 

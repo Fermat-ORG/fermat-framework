@@ -367,39 +367,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
-                if(BuildConfig.DEBUG) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Error");
-                    builder.setMessage("An error occur, do you want to report this issue?");
-                    final EditText input = new EditText(AppActivity.this);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT);
-                    input.setLayoutParams(lp);
-                    builder.setView(input);
-                    builder.setIcon(R.drawable.help_icon);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                reportError(input.getText().toString());
-                            } catch (Exception e1) {
-                                e1.printStackTrace();
-                                Toast.makeText(AppActivity.this,"Error sendind the report, please try again",Toast.LENGTH_SHORT).show();
-                            }
-                            handleExceptionAndRestart();
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            handleExceptionAndRestart();
-                        }
-                    });
-                    builder.show();
-                }else{
-                    handleExceptionAndRestart();
-                }
+                handleExceptionAndRestart();
 
             }
         } catch (Throwable throwable) {

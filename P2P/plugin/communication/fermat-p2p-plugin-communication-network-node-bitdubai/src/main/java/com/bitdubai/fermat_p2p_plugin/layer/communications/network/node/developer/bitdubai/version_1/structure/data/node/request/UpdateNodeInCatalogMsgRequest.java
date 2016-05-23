@@ -2,7 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.node.request.UpdateNodeInCatalogMsgRequest</code>
@@ -20,6 +20,13 @@ public class UpdateNodeInCatalogMsgRequest extends PackageContent {
     private NodeProfile nodeProfile;
 
     /**
+     * Constructor
+     */
+    public UpdateNodeInCatalogMsgRequest(){
+        super();
+    }
+
+    /**
      * Constructor whit parameters
      * @param nodeProfile
      */
@@ -35,8 +42,22 @@ public class UpdateNodeInCatalogMsgRequest extends PackageContent {
         return nodeProfile;
     }
 
-    public static UpdateNodeInCatalogMsgRequest parseContent(String content) {
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
 
-        return new Gson().fromJson(content, UpdateNodeInCatalogMsgRequest.class);
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static UpdateNodeInCatalogMsgRequest parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, UpdateNodeInCatalogMsgRequest.class);
     }
 }

@@ -69,8 +69,8 @@ import java.util.UUID;
         plugin = Plugins.REDEEM_POINT)
 public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<RedeemPointSettings> implements RedeemPointCommunitySubAppModuleManager, Serializable {
 
-    private final UUID                          pluginId;
-    private PluginFileSystem                    pluginFileSystem;
+//    private final UUID                          pluginId;
+//    private PluginFileSystem                    pluginFileSystem;
     private LogManager                          logManager;
     ErrorManager                                errorManager;
     private EventManager                        eventManager;
@@ -82,9 +82,8 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
     private Broadcaster                         broadcaster;
     RedeemPointCommunitySubAppModulePluginRoot  redeemPointCommunitySubAppModulePluginRoot;
 
-    private SettingsManager<RedeemPointSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
-    private String appPublicKey;
+    String appPublicKey;
 
     public RedeemPointCommunitySupAppModuleManager(UUID pluginId,
                                                    PluginFileSystem pluginFileSystem,
@@ -101,8 +100,8 @@ public class RedeemPointCommunitySupAppModuleManager extends ModuleManagerImpl<R
 
         super(pluginFileSystem, pluginId);
 
-        this.pluginId                                   = pluginId;
-        this.pluginFileSystem                           = pluginFileSystem;
+//        this.pluginId                                   = pluginId;
+//        this.pluginFileSystem                           = pluginFileSystem;
         this.logManager                                 = logManager;
         this.errorManager                               = errorManager;
         this.eventManager                               = eventManager;

@@ -700,7 +700,7 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
 
     private synchronized List<ActorIssuer> getMoreData() throws Exception {
         List<ActorIssuer> dataSet = new ArrayList<>();
-        List<AssetIssuerActorRecord> result = null;
+        List<AssetIssuerActorRecord> result;
         if (moduleManager == null)
             throw new NullPointerException("AssetIssuerCommunitySubAppModuleManager is null");
 

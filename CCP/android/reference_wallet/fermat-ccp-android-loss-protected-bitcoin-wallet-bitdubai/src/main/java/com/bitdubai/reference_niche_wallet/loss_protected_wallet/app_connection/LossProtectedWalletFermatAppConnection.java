@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
@@ -61,9 +60,8 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
 
-
        // return new LossProtectedWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new LossProtectedWalletNavigationViewPainter(getContext(),getActiveIdentity());
+        return new LossProtectedWalletNavigationViewPainter(getContext(),getActiveIdentity(), null); //
     }
 
     @Override
@@ -112,4 +110,6 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
         }
         return null;
     }
+
+
 }

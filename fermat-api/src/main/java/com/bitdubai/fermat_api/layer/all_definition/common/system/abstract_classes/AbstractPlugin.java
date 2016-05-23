@@ -113,9 +113,11 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
     }
 
     public synchronized final void startPlugin() throws CantStartPluginException {
-        this.start();
-        this.serviceStatus = ServiceStatus.STARTED;
 
+        if (!this.isStarted()) {
+            this.start();
+            this.serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
     @Override
@@ -266,7 +268,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
                         this.addonNeededReferences.put(avr, f);
                     }
 
-                    if (a instanceof NeededPluginReference) {
+                    else if (a instanceof NeededPluginReference) {
                         NeededPluginReference pluginReference = (NeededPluginReference) a;
 
                         PluginVersionReference pvr = new PluginVersionReference(
@@ -280,7 +282,7 @@ public abstract class AbstractPlugin implements FermatManager, Plugin, Service {
                         this.pluginNeededReferences.put(pvr, f);
                     }
 
-                    if (a instanceof NeededLayerReference) {
+                    else if (a instanceof NeededLayerReference) {
                         NeededLayerReference layerReference = (NeededLayerReference) a;
 
                         LayerReference lr = new LayerReference(

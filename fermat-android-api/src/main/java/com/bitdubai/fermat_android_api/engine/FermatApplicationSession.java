@@ -9,6 +9,6 @@ public interface FermatApplicationSession {
 
     FermatSystem getFermatSystem();
 
-    ApplicationManager getApplicationManager();
+    FermatApplicationCaller getApplicationManager();
 
 }

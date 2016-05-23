@@ -7,9 +7,11 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.ns;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageType;
+import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -278,6 +280,11 @@ public class Message extends PackageContent implements Serializable{
      */
     public void setMessageType(MessageType messageType) {
         this.messageType = messageType;
+    }
+
+    @Override
+    public String toJson() {
+       return GsonProvider.getGson().toJson(this);
     }
 
     /**

@@ -48,12 +48,10 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.issuer.developer.version_1.AssetIssuerCommunitySubAppModulePluginRoot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -68,14 +66,14 @@ import java.util.UUID;
         layer = Layers.SUB_APP_MODULE,
         platform = Platforms.DIGITAL_ASSET_PLATFORM,
         plugin = Plugins.ASSET_ISSUER)
-public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager, Serializable {
+public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<AssetIssuerSettings> implements AssetIssuerCommunitySubAppModuleManager {
 
-    private final PluginFileSystem                              pluginFileSystem;
+//    private final PluginFileSystem                              pluginFileSystem;
+//    private final UUID                                          pluginId;
     private final LogManager                                    logManager;
     private final ErrorManager                                  errorManager;
     private final EventManager                                  eventManager;
     private final Broadcaster                                   broadcaster;
-    private final UUID                                          pluginId;
     private final AssetIssuerCommunitySubAppModulePluginRoot    assetIssuerCommunitySubAppModulePluginRoot;
     private final IdentityAssetIssuerManager                    identityAssetIssuerManager;
     private final ActorAssetIssuerManager                       actorAssetIssuerManager;
@@ -83,9 +81,8 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
     private final AssetRedeemPointWalletManager                 assetRedeemPointWalletManager;
     private final AssetIssuerActorNetworkServiceManager         assetIssuerActorNetworkServiceManager;
 
-    private SettingsManager<AssetIssuerSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
-    private String appPublicKey;
+    String appPublicKey;
 
     public AssetIssuerCommunitySupAppModuleManager(IdentityAssetIssuerManager identityAssetIssuerManager,
                                                    ActorAssetIssuerManager actorAssetIssuerManager,
@@ -111,8 +108,8 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
         this.eventManager = eventManager;
         this.broadcaster = broadcaster;
         this.logManager = logManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
+//        this.pluginFileSystem = pluginFileSystem;
+//        this.pluginId = pluginId;
         this.assetIssuerCommunitySubAppModulePluginRoot = assetIssuerCommunitySubAppModulePluginRoot;
     }
 
@@ -461,11 +458,12 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         try {
             List<IdentityAssetIssuer> identities = identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser().get(0);
+            return (identities == null || identities.isEmpty()) ? null : identities.get(0);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        }    }
+        }
+    }
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
@@ -496,14 +494,4 @@ public class AssetIssuerCommunitySupAppModuleManager extends ModuleManagerImpl<A
         }
         return notifications;
     }
-
-//    ActorAssetIssuerManager actorAssetIssuerManager;
-//
-//    public AssetIssuerCommunitySupAppModuleManager(ActorAssetIssuerManager actorAssetIssuerManager) {
-//        this.actorAssetIssuerManager = actorAssetIssuerManager;
-//    }
-//
-//    public List<ActorAssetIssuer> getAllAssetIssuerActorRegistered() throws CantGetAssetIssuerActorsException, CantAssetIssuerActorNotFoundException {
-//        return actorAssetIssuerManager.getAllAssetIssuerActorInTableRegistered();
-//    }
 }

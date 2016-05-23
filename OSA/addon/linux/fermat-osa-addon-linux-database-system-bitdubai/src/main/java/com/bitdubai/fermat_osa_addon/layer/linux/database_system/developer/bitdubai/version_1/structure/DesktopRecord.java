@@ -64,7 +64,7 @@ public class DesktopRecord  implements DatabaseRecord {
 
     @Override
     public boolean isChange() {
-        return false;
+        return recordChange;
     }
 
     @Override

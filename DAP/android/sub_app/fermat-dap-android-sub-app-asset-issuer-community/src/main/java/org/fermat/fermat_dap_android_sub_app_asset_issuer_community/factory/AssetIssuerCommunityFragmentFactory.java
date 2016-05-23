@@ -29,8 +29,8 @@ public class AssetIssuerCommunityFragmentFactory extends FermatFragmentFactory<A
                 return IssuerCommunityConnectionsListFragment.newInstance();
             case DAP_ASSET_ISSUER_COMMUNITY_NOTIFICATIONS_FRAGMENT:
                 return IssuerCommunityNotificationsFragment.newInstance();
-            case DAP_ASSET_ISSUER_COMMUNITY_SETTINGS:
-                return IssuerCommunitySettingsFragment.newInstance();
+//            case DAP_ASSET_ISSUER_COMMUNITY_SETTINGS:
+//                return IssuerCommunitySettingsFragment.newInstance();
 
             default:
                 throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),

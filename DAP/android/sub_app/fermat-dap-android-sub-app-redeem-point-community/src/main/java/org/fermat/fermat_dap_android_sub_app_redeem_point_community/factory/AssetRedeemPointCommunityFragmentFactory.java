@@ -28,8 +28,8 @@ public class AssetRedeemPointCommunityFragmentFactory extends FermatFragmentFact
                 return RedeemPointCommunityConnectionsListFragment.newInstance();
             case DAP_ASSET_REDEEM_POINT_COMMUNITY_NOTIFICATION_FRAGMENT:
                 return RedeemPointCommunityNotificationsFragment.newInstance();
-            case DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT:
-                return RedeemPointCommunitySettingsNotificationsFragment.newInstance();
+//            case DAP_ASSET_REDEEM_POINT_COMMUNITY_SETTINGS_FRAGMENT:
+//                return RedeemPointCommunitySettingsNotificationsFragment.newInstance();
             default:
                 throw new FragmentNotFoundException(String.format("Fragment: %s not found", fragments.getKey()),
                         new Exception(), "fermat-dap-android-sub-app-asset-redeem-point", "fragment not found");
