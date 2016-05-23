@@ -31,6 +31,7 @@ import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTran
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 /**
@@ -43,6 +44,8 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     private CashMoneyWalletModuleManager moduleManager;
     private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
 
     //Data
     private CashMoneyWalletPreferenceSettings walletSettings;
@@ -57,8 +60,6 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     FermatTextView date;
     FermatTextView transactionType;
     CreateTransactionFragmentDialog transactionFragmentDialog;
-    Button deleteButton;
-    Button updateButton;
 
 
     public TransactionDetailFragment() {}
@@ -106,7 +107,7 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     @Override
     public void onBackPressed() {
 
-        //If transaction is editable, was stopped before completing and user presses the device's back button
+        //If transaction is editable, was stopped before completing and user pressed the device's back button
         //Create and apply the same transaction again.
         if(transactionIsEditable)
             reapplyTransaction();
@@ -125,14 +126,14 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         date = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_date);
         transactionType = (FermatTextView) layout.findViewById(R.id.csh_transaction_details_transaction_type);
 
-
         if(transactionIsEditable)
             buttonContainer.setVisibility(View.VISIBLE);
 
-        amount.setText(transaction.getAmount().toPlainString());
+        amount.setText(moneyFormat.format(transaction.getAmount()));
         memo.setText(transaction.getMemo());
         date.setText(DateHelper.getDateStringFromTimestamp(transaction.getTimestamp()) + " - " + getPrettyTime(transaction.getTimestamp()));
         transactionType.setText(getTransactionTypeText(transaction.getTransactionType()));
+
         layout.findViewById(R.id.csh_transaction_detail_back_btn).setOnClickListener(this);
         layout.findViewById(R.id.csh_transaction_detail_delete_btn).setOnClickListener(this);
         layout.findViewById(R.id.csh_transaction_detail_update_btn).setOnClickListener(this);

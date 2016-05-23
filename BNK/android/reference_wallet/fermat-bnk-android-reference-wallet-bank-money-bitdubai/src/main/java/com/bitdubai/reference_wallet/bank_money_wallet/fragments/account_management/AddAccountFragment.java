@@ -2,6 +2,9 @@ package com.bitdubai.reference_wallet.bank_money_wallet.fragments.account_manage
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.text.method.DigitsKeyListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -42,6 +46,8 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     List<String> accountImages = new ArrayList<>();
     List<BankAccountNumber> bankAccounts = new ArrayList<>();
 
+    private static int MAX_LENGHT_ALIAS = 10;
+    private static int MAX_LENGHT_ACCOUNT = 25;
 
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
@@ -54,6 +60,29 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     String selectedImageId;
     EditText accountNumberText;
     EditText accountAliasText;
+    FermatTextView accountNumberCount;
+    FermatTextView accountAliasCount;
+
+
+
+    private final TextWatcher accountNumberTextWatcher = new TextWatcher() {
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountNumberCount.setText(String.valueOf(MAX_LENGHT_ACCOUNT - s.length()));
+        }
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    };
+    private final TextWatcher accountAliasTextWatcher = new TextWatcher() {
+
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            accountAliasCount.setText(String.valueOf(MAX_LENGHT_ALIAS - s.length()));
+        }
+        public void afterTextChanged(Editable s) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+    };
 
     public static AddAccountFragment newInstance() {
         return new AddAccountFragment();
@@ -94,13 +123,17 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.bw_add_account, container, false);
         accountNumberText = (EditText) layout.findViewById(R.id.account_number);
+        accountNumberCount = (FermatTextView) layout.findViewById(R.id.account_number_count);
         accountAliasText = (EditText) layout.findViewById(R.id.account_alias);
+        accountAliasCount = (FermatTextView) layout.findViewById(R.id.account_alias_count);
+
         currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
         currencySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currencySpinnerAdapter.notifyDataSetChanged();
         currencySpinner = (Spinner) layout.findViewById(R.id.bnk_add_account_currency_spinner);
         currencySpinner.setAdapter(currencySpinnerAdapter);
         currencySpinner.setOnItemSelectedListener(this);
+
 
 
         imagesSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, accountImages);
@@ -110,8 +143,18 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         accountImageSpinner.setAdapter(imagesSpinnerAdapter);
         accountImageSpinner.setOnItemSelectedListener(this);
 
-        //Allow only numbers and dashes
+
+        //Allow only numbers and dashes, limit max length, add textWatchers
         accountNumberText.setKeyListener(DigitsKeyListener.getInstance("0123456789-"));
+        accountNumberText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_ACCOUNT)});
+        accountNumberText.addTextChangedListener(accountNumberTextWatcher);
+
+        accountAliasText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_LENGHT_ALIAS)});
+        accountAliasText.addTextChangedListener(accountAliasTextWatcher);
+
+        accountNumberCount.setText(String.valueOf(MAX_LENGHT_ACCOUNT));
+        accountAliasCount.setText(String.valueOf(MAX_LENGHT_ALIAS));
+
 
 
         configureToolbar();
@@ -123,7 +166,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background,null));
         else
             getToolbar().setBackground(getResources().getDrawable(R.drawable.bw_header_gradient_background));
-        getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
+        //getToolbar().setNavigationIcon(R.drawable.bw_back_icon_action_bar);
     }
 
     @Override
@@ -211,4 +254,5 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         menu.add(0, ReferenceWalletConstants.SAVE_ACTION, 0, "Save")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
+
 }

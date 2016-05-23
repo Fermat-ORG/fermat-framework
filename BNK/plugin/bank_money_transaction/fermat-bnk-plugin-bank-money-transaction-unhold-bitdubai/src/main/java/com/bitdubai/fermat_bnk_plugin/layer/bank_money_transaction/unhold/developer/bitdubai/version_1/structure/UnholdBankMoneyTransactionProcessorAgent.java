@@ -10,6 +10,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -94,15 +95,15 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
           * If not: Changes transaction status to Rejected.
          */
 
-        double heldfunds;
+        BigDecimal heldfunds;
         for(BankTransaction transaction : transactionList) {
 
             //TODO: tomar los heldfunds de la wallet y compararlos contra el transaction amount para despues ejecutar el unhold
-            heldfunds = 0;
+            heldfunds = new BigDecimal(0);
             try {
                 heldfunds = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getBookBalance().getBalance(transaction.getAccountNumber());
-                if(heldfunds >= transaction.getAmount()) {
-                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).unhold(new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.UNHOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.UNHOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode()));
+                if(heldfunds.compareTo(transaction.getAmount()) >= 0) {
+                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).unhold(new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.UNHOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.UNHOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(), new BigDecimal(0), new BigDecimal(0), transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode()));
                     unholdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 }
                 else {

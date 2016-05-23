@@ -52,6 +52,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     private BankMoneyWalletSession bankMoneyWalletSession;
     private Resources resources;
     private TransactionType transactionType;
+    BigDecimal optionalAmount;
+    String optionalMemo;
 
     /**
      *  Contact member
@@ -66,8 +68,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     LinearLayout dialogTitleLayout;
     EditText amountText;
     AutoCompleteTextView memoText;
-    Button applyBtn;
-    Button cancelBtn;
+    FermatTextView applyBtn;
+    FermatTextView cancelBtn;
     String account;
     FiatCurrency fiatCurrency;
     ErrorManager errorManager;
@@ -86,7 +88,8 @@ public class CreateTransactionFragmentDialog extends Dialog implements
      */
 
 
-    public CreateTransactionFragmentDialog(ErrorManager errorManager,Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources, TransactionType transactionType,String account,FiatCurrency fiatCurrency) {
+    public CreateTransactionFragmentDialog(ErrorManager errorManager,Activity a, BankMoneyWalletSession bankMoneyWalletSession, Resources resources,
+                                           TransactionType transactionType,String account,FiatCurrency fiatCurrency, BigDecimal optionalAmount, String optionalMemo) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
@@ -96,6 +99,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
         this.account=account;
         this.fiatCurrency =fiatCurrency;
         this.errorManager = errorManager;
+
+        this.optionalAmount = (optionalAmount == null || optionalAmount == new BigDecimal(0) ? null : optionalAmount);
+        this.optionalMemo = (optionalMemo == null || optionalMemo == "" ? null : optionalMemo);
     }
 
 
@@ -117,15 +123,23 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dialogTitle = (FermatTextView) findViewById(R.id.bnk_ctd_title);
             amountText = (EditText) findViewById(R.id.bnk_ctd_amount);
             memoText = (AutoCompleteTextView) findViewById(R.id.bnk_ctd_memo);
-            applyBtn = (Button) findViewById(R.id.bnk_ctd_apply_transaction_btn);
-            //cancelBtn = (Button) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
+            applyBtn = (FermatTextView) findViewById(R.id.bnk_ctd_apply_transaction_btn);
+            cancelBtn = (FermatTextView) findViewById(R.id.bnk_ctd_cancel_transaction_btn);
 
-            //dialogTitleLayout.setBackgroundColor(getTransactionTitleColor());
             dialogTitle.setText(getTransactionTitleText());
-            amountText.setFilters(new InputFilter[]{new NumberInputFilter(10, 2)});
+            applyBtn.setText(getTransactionButtonText());
+            applyBtn.setTextColor(getTransactionTitleColor());
+            cancelBtn.setTextColor(getTransactionTitleColor());
 
-            //cancelBtn.setOnClickListener(this);
+            amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
+
+            cancelBtn.setOnClickListener(this);
             applyBtn.setOnClickListener(this);
+
+            if(optionalAmount != null)
+                amountText.append(optionalAmount.toPlainString());  //append places cursor at the end!
+            if(optionalMemo != null)
+                memoText.setText(optionalMemo);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -142,6 +156,14 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             return resources.getString(R.string.bw_deposit_transaction_text);
     }
 
+    private String getTransactionButtonText()
+    {
+        if (transactionType == TransactionType.DEBIT)
+            return resources.getString(R.string.bw_withdrawal_transaction_text_btn);
+        else
+            return resources.getString(R.string.bw_deposit_transaction_text_btn);
+    }
+
     private int getTransactionTitleColor()
     {
         if (transactionType == TransactionType.DEBIT)
@@ -155,9 +177,9 @@ public class CreateTransactionFragmentDialog extends Dialog implements
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        /*if (i == R.id.bnk_ctd_cancel_transaction_btn) {
+        if (i == R.id.bnk_ctd_cancel_transaction_btn) {
             dismiss();
-        }*/
+        }
         if( i == R.id.bnk_ctd_apply_transaction_btn){
             applyTransaction();
         }
@@ -181,51 +203,61 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             }
 
             if (transactionType == TransactionType.DEBIT) {
-                System.out.println("DIALOG = "+TransactionType.DEBIT.getCode());
-                BankTransactionParameters t = new BankTransactionParameters() {
 
-                    @Override
-                    public UUID getTransactionId() {
-                        return UUID.randomUUID();
-                    }
+                //Check available balance
+                BigDecimal availableBalance = bankMoneyWalletSession.getModuleManager().getBankingWallet().getAvailableBalance(account);
 
-                    @Override
-                    public String getPublicKeyPlugin() {
-                        return null;
-                    }
+                if(availableBalance.compareTo(new BigDecimal(amount)) >= 0) {
 
-                    @Override
-                    public String getPublicKeyWallet() {
-                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
-                    }
+                    BankTransactionParameters t = new BankTransactionParameters() {
 
-                    @Override
-                    public String getPublicKeyActor() {
-                        return "pkeyActorRefWallet";
-                    }
+                        @Override
+                        public UUID getTransactionId() {
+                            return UUID.randomUUID();
+                        }
 
-                    @Override
-                    public BigDecimal getAmount() {
-                        BigDecimal bAmount=new BigDecimal(amountText.getText().toString());
-                        return bAmount;
-                    }
+                        @Override
+                        public String getPublicKeyPlugin() {
+                            return null;
+                        }
 
-                    @Override
-                    public String getAccount() {
-                        return account;
-                    }
+                        @Override
+                        public String getPublicKeyWallet() {
+                            return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
+                        }
 
-                    @Override
-                    public FiatCurrency getCurrency() {
-                        return fiatCurrency;
-                    }
+                        @Override
+                        public String getPublicKeyActor() {
+                            return "pkeyActorRefWallet";
+                        }
 
-                    @Override
-                    public String getMemo() {
-                        return  memoText.getText().toString();
-                    }
-                };
-                bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncWithdraw(t);
+                        @Override
+                        public BigDecimal getAmount() {
+                            BigDecimal bAmount = new BigDecimal(amountText.getText().toString());
+                            return bAmount;
+                        }
+
+                        @Override
+                        public String getAccount() {
+                            return account;
+                        }
+
+                        @Override
+                        public FiatCurrency getCurrency() {
+                            return fiatCurrency;
+                        }
+
+                        @Override
+                        public String getMemo() {
+                            return memoText.getText().toString();
+                        }
+                    };
+                    bankMoneyWalletSession.getModuleManager().getBankingWallet().makeAsyncWithdraw(t);
+                }
+                else{
+                    Toast.makeText(activity.getApplicationContext(), "Amount is larger than available funds", Toast.LENGTH_SHORT).show();
+                    return;
+                }
             }
             if (transactionType == TransactionType.CREDIT) {
                 System.out.println("DIALOG = "+TransactionType.CREDIT.getCode());
