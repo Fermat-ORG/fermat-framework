@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_ccp_core.layer.basic_wallet.bitcoin_wallet;
+package com.bitdubai.fermat_ccp_core.layer.basic_wallet.crypto_wallet;
 
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/10/2015.
@@ -12,9 +12,9 @@ import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.bitcoin_wallet.develope
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class BitcoinWalletPluginSubsystem extends AbstractPluginSubsystem {
+public class CryptoWalletPluginSubsystem extends AbstractPluginSubsystem {
 
-    public BitcoinWalletPluginSubsystem() {
+    public CryptoWalletPluginSubsystem() {
         super(new PluginReference(Plugins.BITCOIN_WALLET));
     }
 
