@@ -79,6 +79,9 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.EUROPEAN_CENTRAL_BANK)
     private CurrencyExchangeRateProviderManager europeanCentralBankProvider;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.FERMAT_EXCHANGE)
+    private CurrencyExchangeRateProviderManager fermatExchangeProvider;
+
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.LANACION)
     private CurrencyExchangeRateProviderManager laNacionProvider;
 
@@ -114,6 +117,7 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
             providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
             providerMap.put(elCronistaProvider.getProviderId(), elCronistaProvider);
             providerMap.put(europeanCentralBankProvider.getProviderId(), europeanCentralBankProvider);
+            providerMap.put(fermatExchangeProvider.getProviderId(), fermatExchangeProvider);
             providerMap.put(laNacionProvider.getProviderId(), laNacionProvider);
             providerMap.put(yahooProvider.getProviderId(), yahooProvider);
             // ... add the rest

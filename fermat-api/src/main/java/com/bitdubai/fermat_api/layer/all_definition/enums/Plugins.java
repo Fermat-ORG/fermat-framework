@@ -176,7 +176,7 @@ public enum Plugins implements FermatPluginsEnum {
     DOLARTODAY("BCERPDT")               ,
     ELCRONISTA("BCERPEC")               ,
     EUROPEAN_CENTRAL_BANK("BCERPECB")   ,
-    FERMATEXCHANGE("BCERPFE")           ,
+    FERMAT_EXCHANGE("BCERPFE")           ,
     LANACION("BCERPLN")                 ,
     YAHOO("BCERPYH")                    ,
     // End CER Plugins

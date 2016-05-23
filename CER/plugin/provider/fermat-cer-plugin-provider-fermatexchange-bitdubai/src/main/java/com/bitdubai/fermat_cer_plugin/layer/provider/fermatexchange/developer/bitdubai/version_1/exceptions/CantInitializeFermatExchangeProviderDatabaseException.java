@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantInitializeFermatExchangeProviderDatabaseException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE FERMATEXCHANGE PROVIDER DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "CAN'T INTIALIZE FERMAT_EXCHANGE PROVIDER DATABASE EXCEPTION";
 
     public CantInitializeFermatExchangeProviderDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
