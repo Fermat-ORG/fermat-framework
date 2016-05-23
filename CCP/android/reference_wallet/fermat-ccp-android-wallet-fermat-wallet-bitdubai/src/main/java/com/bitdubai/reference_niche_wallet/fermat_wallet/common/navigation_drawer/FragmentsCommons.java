@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -49,6 +50,8 @@ public class FragmentsCommons {
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
             }else{
                 fermatTextView.setText("Loading..");
+                fermatTextView.setTextColor(Color.WHITE);
+                fermatTextView.setBackgroundColor(Color.RED);
             }
 
             view.setOnClickListener(new View.OnClickListener() {
