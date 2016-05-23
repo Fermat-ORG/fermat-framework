@@ -74,6 +74,6 @@ public abstract class AppConnections<S extends FermatSession> implements FermatA
     }
 
     public FermatApplicationCaller getApplicationManager(){
-        return ((FermatApplicationSession)activity.get()).getApplicationManager();
+        return ((FermatApplicationSession)(activity.get()).getApplicationContext()).getApplicationManager();
     }
 }
