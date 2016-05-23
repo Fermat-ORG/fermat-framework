@@ -178,7 +178,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
         placeholdImg = (ImageView) layout.findViewById(R.id.placeholdImg);
         Bitmap bitmap = null;
-
         if (chatIdentitySettings.isHomeTutorialDialogEnabled()) {
             setUpDialog();
         }
