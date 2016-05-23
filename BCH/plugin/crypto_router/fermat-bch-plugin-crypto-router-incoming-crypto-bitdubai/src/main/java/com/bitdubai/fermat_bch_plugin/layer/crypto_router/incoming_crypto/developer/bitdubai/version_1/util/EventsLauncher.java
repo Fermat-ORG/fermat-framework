@@ -39,7 +39,7 @@ public class EventsLauncher implements DealsWithEvents {
             CryptoStatus cryptoStatus = specialistAndCryptoStatus.getCryptoStatus();
             decideTheEventToRaiseAndRaiseIt(specialist, cryptoStatus);
         }
-        System.out.println("TTF - INCOMING CRYPTO RELAY: EVENTSLAUNCHER - EVENTS RAISED");
+        //System.out.println("TTF - INCOMING CRYPTO RELAY: EVENTSLAUNCHER - EVENTS RAISED");
     }
 
     private void decideTheEventToRaiseAndRaiseIt(Specialist specialist, CryptoStatus cryptoStatus) throws CryptoStatusNotHandledException, SpecialistNotRegisteredException {

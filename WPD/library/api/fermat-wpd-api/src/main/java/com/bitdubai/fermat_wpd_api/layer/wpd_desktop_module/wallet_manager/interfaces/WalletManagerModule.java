@@ -21,7 +21,7 @@ import java.util.UUID;
  *
  * @author Ezequiel Postan (ezequiel.postan@gmail.com)
  */
-@PluginInfo(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "", maintainerMail = "", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 public interface WalletManagerModule extends FermatManager {
 
     /**
@@ -36,7 +36,7 @@ public interface WalletManagerModule extends FermatManager {
     /**
      * This method returns the list of installed wallets in the device
      *
-     * @return A list with the installed wallets information
+     * @return A list with the installed wallets informationt
      * @throws WalletsListFailedToLoadException
      */
     List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException;

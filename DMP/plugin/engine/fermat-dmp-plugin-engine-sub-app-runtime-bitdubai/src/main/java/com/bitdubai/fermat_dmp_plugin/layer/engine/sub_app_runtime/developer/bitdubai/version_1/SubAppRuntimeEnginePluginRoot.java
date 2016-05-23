@@ -36,6 +36,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeMan
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException;
 import com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
@@ -141,6 +142,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
     @Override
     public Set<String> getListOfAppsPublicKey() {
+        try {
+            factoryReset();
+        } catch (CantFactoryResetException e) {
+            e.printStackTrace();
+        }
         return listSubApp.keySet();
     }
 

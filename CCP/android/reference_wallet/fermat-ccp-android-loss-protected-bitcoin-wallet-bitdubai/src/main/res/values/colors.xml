@@ -18,4 +18,9 @@
     <color name="primary_text">#212121</color>
     <color name="black">#000000</color>
     <color name="background_activity">#F9F9F9</color>
+
+    <color name="color_spent_progressBar">#1D85B8</color>
+    <color name="color_noSpent_progressBar">#073487</color>
+
+    <color name="navigation_divider_color">#073487</color>
 </resources>

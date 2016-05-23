@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +32,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -42,8 +42,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
@@ -249,6 +249,7 @@ public class ConnectionsWorldFragment
 
     @Override
     public void onRefresh() {
+
         if (!isRefreshing) {
             isRefreshing = true;
             final ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -294,7 +295,6 @@ public class ConnectionsWorldFragment
                     if (getActivity() != null)
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(ex));
                     //Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
                 }
             });
             worker.execute();
@@ -334,10 +334,23 @@ public class ConnectionsWorldFragment
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
         try {
+            moduleManager.exposeIdentityInWat();
             List<ChatActorCommunityInformation> result = moduleManager.listWorldChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset);
-            dataSet.addAll(result);
+            for(ChatActorCommunityInformation chat: result){
+                if(chat.getConnectionState()!= null){
+                    if(chat.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode())){
+                        moduleManager.requestConnectionToChatActor(moduleManager.getSelectedActorIdentity(),chat);
+                        dataSet.add(chat);
+                    }else dataSet.add(chat);
+                }
+                else dataSet.add(chat);
+
+            }
+            //dataSet.addAll(result);
             offset = dataSet.size();
         } catch (Exception e) {
+            //Toast.makeText(getActivity(), "No Chat Identity Created",
+            //        Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         return dataSet;

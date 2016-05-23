@@ -24,13 +24,12 @@
             android:orientation="vertical"
             >
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/txt_amount"
                 tools:text="1.4 BTC"
                 android:textSize="16sp"
-                android:textColor="#7FBA00"
                 android:fontFamily="roboto"
                 />
 
@@ -40,8 +39,7 @@
                 android:id="@+id/txt_exchange_rate"
                 tools:text="Exchange rate: 1 BTC = 422 US$"
                 android:textSize="16sp"
-                android:textColor="#666666"
-
+                android:textColor="#333333"
                 android:fontFamily="roboto medium"/>
         </LinearLayout>
 

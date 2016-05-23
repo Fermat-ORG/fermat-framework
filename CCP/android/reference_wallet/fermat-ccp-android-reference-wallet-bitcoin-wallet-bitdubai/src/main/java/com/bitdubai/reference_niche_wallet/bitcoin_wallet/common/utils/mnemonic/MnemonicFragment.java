@@ -11,13 +11,18 @@ import android.widget.Toast;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils;
+
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 
 
 /**
@@ -86,13 +91,32 @@ public class MnemonicFragment extends AbstractFermatFragment {
             public void onClick(View v) {
                //send mail
                 //encript mnemonic text to send by mail
-                try {
-                    sendMail(mail.getText().toString(), txt_mnemonic.getText().toString());
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                final String emailTo= mail.getText().toString();
+                if (TextUtils.isEmpty(emailTo)) {
+                    return;
+                }else {
+                    try {
 
+                        Thread thread = new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    sendMail(emailTo, WalletUtils.encrypt(txt_mnemonic.getText().toString(), encriptKey.getText().toString()));
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        thread.start();
+
+                        Toast.makeText(getActivity(), "Private Key Sent", Toast.LENGTH_SHORT).show();
+                        mail.getText().clear();
+                    } catch (Exception e) {
+                        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, e);
+                    }
+                }
             }
+
         });
         return view;
     }

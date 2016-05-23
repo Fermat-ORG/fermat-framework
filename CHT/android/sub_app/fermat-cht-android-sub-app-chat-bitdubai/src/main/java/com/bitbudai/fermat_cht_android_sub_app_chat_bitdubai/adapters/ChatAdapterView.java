@@ -49,6 +49,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatu
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendWritingStatusMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
@@ -57,8 +58,10 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 
 import java.io.ByteArrayInputStream;
@@ -237,9 +240,9 @@ public class ChatAdapterView extends LinearLayout {
                         Date dated = new java.util.Date(milliseconds);
                         DateFormat formatter = DateFormat.getDateTimeInstance();
                         if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
-                        } else {
                             formatter = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+                        } else {
+                            formatter= new SimpleDateFormat("MM/dd/yyyy hh:mm aa");
                         }
                         if (Validate.isDateToday(dated)) {
                             if (android.text.format.DateFormat.is24HourFormat(getContext())) {
@@ -587,16 +590,17 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
                         //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
                         //Asigno pk del usuario y no uso la del NS
+                        List<ChatIdentity> chatIdentities = chatManager.getIdentityChatUsersFromCurrentDeviceUser();
                         try {
                             String pKey = chatSettings.getLocalPublicKey();
                             if (pKey != null) {
                                 chat.setLocalActorPublicKey(pKey);
                             } else {
-                                chat.setLocalActorPublicKey(chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
+                                chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
                             }
                             chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         } catch (Exception e) {
-                            chat.setLocalActorPublicKey(chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
+                            chat.setLocalActorPublicKey(chatIdentities.get(0).getPublicKey());
                             chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
                         }
                         chatManager.saveChat(chat);

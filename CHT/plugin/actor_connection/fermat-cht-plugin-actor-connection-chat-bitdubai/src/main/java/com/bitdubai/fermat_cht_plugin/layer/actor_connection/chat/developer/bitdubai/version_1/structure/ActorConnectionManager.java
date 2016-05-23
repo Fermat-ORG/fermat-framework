@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -29,9 +30,10 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantRe
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionInformation;
+import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.ChatActorConnectionPluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.database.ChatActorConnectionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.UUID;
 
@@ -42,17 +44,17 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
     private final ChatManager chatNetworkService;
     private final ChatActorConnectionDao dao;
-    private final ErrorManager errorManager;
+    private ChatActorConnectionPluginRoot chatActorConnectionPluginRoot;
     private final PluginVersionReference pluginVersionReference;
 
     public ActorConnectionManager(final ChatManager chatNetworkService,
                                   final ChatActorConnectionDao dao,
-                                  final ErrorManager errorManager,
+                                  final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot,
                                   final PluginVersionReference pluginVersionReference) {
 
         this.chatNetworkService = chatNetworkService;
         this.dao = dao;
-        this.errorManager = errorManager;
+        this.chatActorConnectionPluginRoot = chatActorConnectionPluginRoot;
         this.pluginVersionReference = pluginVersionReference;
     }
 
@@ -75,13 +77,37 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             /**
              * Here I generate the needed information to register the new actor connection record.
              */
-            final UUID newConnectionId = UUID.randomUUID();
+            UUID newConnectionId = UUID.randomUUID();
             final ChatLinkedActorIdentity linkedIdentity = new ChatLinkedActorIdentity(
                     actorSending.getPublicKey(),
                     actorSending.getActorType()
             );
 
-            final ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+//            ActorConnection actorConnectionCache = dao.chatActorConnectionExists(linkedIdentity,actorReceiving.getPublicKey());
+            ConnectionState connectionState = null;
+//            if(actorConnectionCache!=null)
+//            connectionState = actorConnectionCache.getConnectionState();
+//
+//            if(connectionState != null && connectionState.equals(ConnectionState.PENDING_LOCALLY_ACCEPTANCE))
+//                connectionState = ConnectionState.CONNECTED;
+//            else
+
+            ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, actorReceiving.getPublicKey());
+            if(oldActorConnection != null) {
+                //if (!oldActorConnection.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode()))
+                connectionState = oldActorConnection.getConnectionState();//ConnectionState.CONNECTED;
+
+                //TODO: Vilchez esto debemos de analizar todo lo que estaba no funcionaba, pero de esta forma quedo estable
+                if(connectionState.getCode().equals(ConnectionState.DISCONNECTED_LOCALLY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+                if(connectionState.getCode().equals(ConnectionState.DISCONNECTED_REMOTELY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+                if(connectionState.getCode().equals(ConnectionState.DENIED_LOCALLY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+                if(connectionState.getCode().equals(ConnectionState.DENIED_REMOTELY.getCode())) connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+                //TODO: Esto lo coloque porque cada vez que llegaba aca se creaba un nuevo ID y entonces cuando tratabas desconectar explotaba porque no lo conseguia
+                newConnectionId = oldActorConnection.getConnectionId();
+                //else
+                //    connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+
+            }else connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
             final long currentTime = System.currentTimeMillis();
 
             final ChatActorConnection actorConnection = new ChatActorConnection(
@@ -98,7 +124,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             /**
              * I register the actor connection.
              */
-            dao.registerChatActorConnection(actorConnection);
+            if(!dao.registerChatActorConnection(actorConnection,oldActorConnection)) return;
 
             final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
                     newConnectionId,
@@ -117,26 +143,26 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, unsupportedActorTypeException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, unsupportedActorTypeException);
             throw unsupportedActorTypeException;
 
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, actorConnectionAlreadyExistsException);
             throw new ConnectionAlreadyRequestedException(actorConnectionAlreadyExistsException, "actorSending: " + actorSending + " - actorReceiving: " + actorReceiving, "The connection was already requested or exists.");
         } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorConnectionException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRegisterActorConnectionException);
             throw new CantRequestActorConnectionException(cantRegisterActorConnectionException, "actorSending: " + actorSending + " - actorReceiving: " + actorReceiving, "Problem registering the actor connection in DAO.");
         } catch (final CantRequestConnectionException cantRequestConnectionException) {
 
             // TODO if there is an error in the actor network service we should delete the generated actor connection record.+++
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRequestConnectionException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantRequestConnectionException);
             throw new CantRequestActorConnectionException(cantRequestConnectionException, "actorSending: " + actorSending + " - actorReceiving: " + actorReceiving, "Error trying to request the connection through the network service.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantRequestActorConnectionException(exception, "actorSending: " + actorSending + " - actorReceiving: " + actorReceiving, "Unhandled error.");
         }
     }
@@ -173,23 +199,23 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
             throw innerException;
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
             throw new CantDisconnectFromActorException(cantGetConnectionStateException, "connectionId: " + connectionId, "Error trying to get the connection state.");
         } catch (final CantDisconnectException | ConnectionRequestNotFoundException networkServiceException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
             throw new CantDisconnectFromActorException(networkServiceException, "connectionId: " + connectionId, "Error trying to disconnect from an actor through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
             throw new CantDisconnectFromActorException(cantChangeActorConnectionStateException, "connectionId: " + connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantDisconnectFromActorException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
     }
@@ -225,23 +251,23 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, innerException);
             throw innerException;
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
             throw new CantDenyActorConnectionRequestException(cantGetConnectionStateException, "connectionId: " + connectionId, "Error trying to get the connection state.");
         } catch (final CantDenyConnectionRequestException | ConnectionRequestNotFoundException networkServiceException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
             throw new CantDenyActorConnectionRequestException(networkServiceException, "connectionId: " + connectionId, "Error trying to deny the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
             throw new CantDenyActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: " + connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantDenyActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
 
@@ -281,27 +307,25 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     innerException
             );
             throw innerException;
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
             throw new CantCancelActorConnectionRequestException(cantGetConnectionStateException, "connectionId: " + connectionId, "Error trying to get the connection state.");
         } catch (final CantCancelConnectionRequestException | ConnectionRequestNotFoundException networkServiceException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
             throw new CantCancelActorConnectionRequestException(networkServiceException, "connectionId: " + connectionId, "Error trying to cancel the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
             throw new CantCancelActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: " + connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantCancelActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
     }
@@ -356,27 +380,25 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
 
-            errorManager.reportUnexpectedPluginException(
-                    pluginVersionReference,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     innerException
             );
             throw innerException;
         } catch (final CantGetConnectionStateException cantGetConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantGetConnectionStateException);
             throw new CantAcceptActorConnectionRequestException(cantGetConnectionStateException, "connectionId: " + connectionId, "Error trying to get the connection state.");
         } catch (final CantAcceptConnectionRequestException | ConnectionRequestNotFoundException networkServiceException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, networkServiceException);
             throw new CantAcceptActorConnectionRequestException(networkServiceException, "connectionId: " + connectionId, "Error trying to accept the connection through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantChangeActorConnectionStateException);
             throw new CantAcceptActorConnectionRequestException(cantChangeActorConnectionStateException, "connectionId: " + connectionId, "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            chatActorConnectionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantAcceptActorConnectionRequestException(exception, "connectionId: " + connectionId, "Unhandled error.");
         }
     }

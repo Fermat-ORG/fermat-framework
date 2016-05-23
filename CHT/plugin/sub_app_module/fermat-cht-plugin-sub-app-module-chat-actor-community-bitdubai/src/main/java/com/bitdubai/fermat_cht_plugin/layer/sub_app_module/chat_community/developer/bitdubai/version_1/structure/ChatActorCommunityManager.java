@@ -30,6 +30,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
@@ -54,8 +55,9 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,24 +70,24 @@ import java.util.UUID;
  */
 public class ChatActorCommunityManager implements ChatActorCommunitySubAppModuleManager, Serializable {
 
-    private final ChatIdentityManager                   chatIdentityManager;
-    private ChatActorCommunityInformation               chatActorCommunityManager             ;
-    private final ChatActorConnectionManager            chatActorConnectionManager            ;
-    private final ChatManager                           chatActorNetworkServiceManager        ;
-    private String                                      subAppPublicKey                       ;
-    private final ErrorManager                          errorManager                          ;
-    private final PluginFileSystem                      pluginFileSystem                      ;
-    private final UUID                                  pluginId                              ;
-    private final PluginVersionReference                pluginVersionReference                ;
-    private SettingsManager<ChatActorCommunitySettings> settingsManager                       ;
+    private final ChatIdentityManager                      chatIdentityManager;
+    private ChatActorCommunityInformation                  chatActorCommunityManager             ;
+    private final ChatActorConnectionManager               chatActorConnectionManager            ;
+    private final ChatManager                              chatActorNetworkServiceManager        ;
+    private String                                         subAppPublicKey                       ;
+    private final ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot;
+    private final PluginFileSystem                         pluginFileSystem                      ;
+    private final UUID                                     pluginId                              ;
+    private final PluginVersionReference                   pluginVersionReference                ;
+    private SettingsManager<ChatActorCommunitySettings>    settingsManager                       ;
     private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
-    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ErrorManager errorManager, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
+    public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ChatActorCommunitySubAppModulePluginRoot chatActorCommunitySubAppModulePluginRoot, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
         this.chatIdentityManager= chatIdentityManager;
         this.chatActorConnectionManager=chatActorConnectionManager;
         this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
         this.chatActorCommunityManager = chatActorCommunityManager;
-        this.errorManager = errorManager;
+        this.chatActorCommunitySubAppModulePluginRoot = chatActorCommunitySubAppModulePluginRoot;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.pluginVersionReference= pluginVersionReference;
@@ -99,7 +101,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try{
             worldActorList = getChatActorSearch().getResult();
         } catch (CantGetChtActorSearchResult exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         try{
@@ -110,7 +112,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                 actorConnections = search.getResult(Integer.MAX_VALUE, 0);
             }//else linkedChatActorIdentity=null;
         } catch (CantListActorConnectionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         ChatActorCommunityInformation worldActor;
@@ -144,7 +146,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
 
         } catch (CantListChatIdentityException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
         return selectableIdentities;
@@ -158,7 +160,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try {
             appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (CantGetSettingsException | SettingsNotFoundException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             appSettings = null;
         }
 
@@ -171,7 +173,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             try {
                 this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
@@ -212,11 +214,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                     actorReceiving
             );
         } catch (ConnectionAlreadyRequestedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         } catch (com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (UnsupportedActorTypeException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 
@@ -224,11 +226,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try {
             chatActorConnectionManager.acceptConnection(requestId);
         } catch (CantAcceptActorConnectionRequestException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (ActorConnectionNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (UnexpectedConnectionStateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 
@@ -241,11 +243,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             chatActorConnectionManager.denyConnection(requestId);
 
         } catch (CantDenyActorConnectionRequestException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (ActorConnectionNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (UnexpectedConnectionStateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
 
     }
@@ -259,11 +261,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             chatActorConnectionManager.disconnect(requestId);
 
         } catch (CantDisconnectFromActorException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (ActorConnectionNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (UnexpectedConnectionStateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
 
     }
@@ -277,11 +279,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             chatActorConnectionManager.cancelConnection(requestId);
 
         } catch (CantCancelActorConnectionRequestException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (ActorConnectionNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (UnexpectedConnectionStateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 
@@ -307,7 +309,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                     chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
             }
         } catch (CantListActorConnectionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return chatActorCommunityInformationList;
 
@@ -339,7 +341,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             }
         }
         catch(CantListActorConnectionsException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
 
         return chatActorCommunityInformationList;
@@ -373,7 +375,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                     chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
             }
         } catch(CantListActorConnectionsException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
 
 
@@ -400,7 +402,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
 
         } catch (CantGetChatActorWaitingException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_COMMUNITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             try {
                 throw new CantGetChatActorWaitingException("CAN'T GET CHAT ACTOR WAITING THEIR ACCEPTANCE", e, "", "Error on CHAT ACTOR MANAGER");
             } catch (CantGetChatActorWaitingException e1) {
@@ -427,10 +429,10 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             }
 
         } catch (final CantListActorConnectionsException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantValidateActorConnectionStateException(e, "", "Error trying to list actor connections.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
 
         return ConnectionState.DISCONNECTED_REMOTELY;
@@ -476,8 +478,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                 appSettings.setLastSelectedActorType(IdentitiesInDevice.get(0).getActorType());
             }
         } catch(CantListChatIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             /*Do nothing*/
         }
 
@@ -530,7 +531,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             try {
                 this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
@@ -550,12 +551,20 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             else
                 notifications[2] = 0;
         } catch (CantGetSelectedActorIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (ActorIdentityNotSelectedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetChatActorWaitingException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return notifications;
+    }
+
+    public void exposeIdentityInWat(){
+        try {
+            chatActorNetworkServiceManager.exposeIdentitiesInWait();
+        } catch (CantExposeIdentityException e) {
+            e.printStackTrace();
+        }
     }
 }

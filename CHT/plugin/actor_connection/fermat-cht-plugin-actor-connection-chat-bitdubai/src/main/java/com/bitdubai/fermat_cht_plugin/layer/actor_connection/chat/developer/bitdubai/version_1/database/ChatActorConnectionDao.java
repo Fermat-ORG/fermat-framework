@@ -20,14 +20,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -88,20 +87,12 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         }
     }
 
-    public final ChatActorConnection registerChatActorConnection(final ChatActorConnection actorConnection) throws CantRegisterActorConnectionException,
+    public final boolean registerChatActorConnection(final ChatActorConnection actorConnection, ChatActorConnection oldActorConnection) throws CantRegisterActorConnectionException,
             ActorConnectionAlreadyExistsException {
 
+        boolean isNew = true;
+
         try {
-
-            ChatActorConnection oldActorConnection = chatActorConnectionExists(actorConnection.getLinkedIdentity(), actorConnection.getPublicKey());
-
-            if (oldActorConnection != null && oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED)) {
-
-                throw new ActorConnectionAlreadyExistsException(
-                        "actorConnection: " + actorConnection,
-                        "The connection already exists..."
-                );
-            }
 
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
@@ -118,20 +109,25 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
                         oldActorConnection
                 );
                 actorConnectionsTable.deleteRecord(entityRecordOld);
+
+                if(actorConnection.getConnectionState().equals(oldActorConnection.getConnectionState())
+                        && (!actorConnection.getConnectionState().equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE)))
+                    isNew = false;
             }
+
+
             actorConnectionsTable.insertRecord(entityRecord);
 
-            return buildActorConnectionNewRecord(entityRecord);
+//            return buildActorConnectionNewRecord(entityRecord);
+            return isNew;
+
 
         } catch (final CantInsertRecordException e) {
 
             throw new CantRegisterActorConnectionException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-        } catch (final InvalidParameterException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to build an instance of the actor connection.");
-        } catch (final CantGetActorConnectionException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
+//        } catch (final CantGetActorConnectionException e) {
+//
+//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
 //        } catch (CantUpdateRecordException e) {
 //
 //            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");

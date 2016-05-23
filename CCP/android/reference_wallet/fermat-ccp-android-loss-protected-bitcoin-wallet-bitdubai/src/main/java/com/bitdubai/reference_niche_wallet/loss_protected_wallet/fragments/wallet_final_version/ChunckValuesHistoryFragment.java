@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,23 +14,32 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+
 import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
@@ -41,9 +51,12 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+
+
+
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
@@ -55,6 +68,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.Session
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.makeText;
@@ -62,7 +76,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossProtectedWalletTransaction> implements FermatListItemListeners<LossProtectedWalletTransaction>,onRefreshList {
+public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossProtectedWalletTransaction>implements FermatListItemListeners<LossProtectedWalletTransaction>,onRefreshList {
 
     /**
      * Session
@@ -91,9 +105,21 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     private View rootView;
     private LinearLayout empty;
     private TextView chunk_balance_TextView;
-    private  TextView exchange_rate;
+    private TextView exchange_rate_view;
+    private TextView txt_balance_amount;
+    private TextView txt_balance_amount_type;
+    private TextView txt_type_balance;
+    private TextView txt_touch_to_change;
+    private TextView txt_exchange_rate;
+
+    private UUID exchangeProviderId = null;
+
+    private long exchangeRate = 0;
 
     private ErrorManager errorManager;
+
+    private long balanceAvailable;
+    private long realBalance;
 
     SettingsManager<LossProtectedWalletSettings> settingsManager;
 
@@ -158,6 +184,24 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
+
+
+        //default Exchange rate Provider
+        try {
+            if(cryptoWallet.getExchangeProvider()==null) {
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
+
+                exchangeProviderId = providers.get(0).getProviderId();
+                cryptoWallet.setExchangeProvider(exchangeProviderId);
+
+            }
+            else
+            {
+                exchangeProviderId =cryptoWallet.getExchangeProvider();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Nullable
@@ -178,32 +222,71 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         return rootView;
     }
 
+
+
     private void  setUpHeader(LayoutInflater inflater) {
         try {
-            final RelativeLayout container_header_balance = getToolbarHeader();
-            try {
-                container_header_balance.removeAllViews();
-            } catch (Exception e) {
 
-            }
+            //Select all header Element
+            txt_balance_amount      = (TextView) rootView.findViewById(R.id.txt_balance_amount);
+            txt_balance_amount_type = (TextView) rootView.findViewById(R.id.txt_balance_amount_type);
+            txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
+            txt_touch_to_change     = (TextView) rootView.findViewById(R.id.txt_touch_to_change);
+            txt_exchange_rate       = (TextView) rootView.findViewById(R.id.txt_exchange_rate);
 
-            final View chunk_balance_header = inflater.inflate(R.layout.chunck_header, container_header_balance, true);
+            //show Exchange Market Rate
+            getAndShowMarketExchangeRateData(rootView);
 
-            container_header_balance.setVisibility(View.VISIBLE);
+            //Event Click For change the balance type
+            txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
 
-            final String realBalance = WalletUtils.formatBalanceStringNotDecimal(cryptoWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
+                @Override
+                public void onClick(View v) {
+                    changeBalanceType(txt_type_balance, txt_balance_amount);
+                }
+            });
 
-            final double actualExchangeRate = lossProtectedWalletSession.getActualExchangeRate();
+            //Event Click For change the balance type
+            txt_type_balance.setOnClickListener(new View.OnClickListener(){
 
-            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_balance_amount);
-            exchange_rate = (TextView) chunk_balance_header.findViewById(R.id.txt_exchange_rate);
+                @Override
+                public void onClick(View v) {
+                    changeBalanceType(txt_type_balance,txt_balance_amount);
+                }
+            });
 
-            chunk_balance_TextView.setText(realBalance);
-            exchange_rate.setText("Exchange Rate: 1 BTC = " + actualExchangeRate);
+            //Event for change the balance amount
+            txt_balance_amount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
 
-        } catch (CantGetLossProtectedBalanceException e) {
-            e.printStackTrace();
+                    changeAmountType();
+                }
+            });
+            //Event for change the balance amount type
+            txt_balance_amount_type.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    changeAmountType();
+                }
+            });
+
+            long balance = 0;
+            if (BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE))
+                balance = cryptoWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
+            else
+                balance = cryptoWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+
+            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
+
+
+        }catch (Exception e){
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error: setUpHeader Exception",
+                    Toast.LENGTH_SHORT).show();
         }
+
     }
 
 
@@ -252,7 +335,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         if (adapter == null) {
             adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransaction,cryptoWallet,lossProtectedWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
-
         }
         return adapter;
     }
@@ -281,9 +363,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
 
-            lstTransaction = cryptoWallet.listLastActorTransactionsByTransactionType(
+            lstTransaction = cryptoWallet.listAllActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
-                    TransactionType.DEBIT,
+                    TransactionType.CREDIT,
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk,
                     blockchainNetworkType,
@@ -424,5 +506,125 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         });
         presentationBitcoinWalletDialog.show();
     }
+    private long loadBalance(BalanceType balanceType){
+        long balance = 0;
+        try {
+
+            if(balanceType.equals(BalanceType.REAL))
+                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+
+            if(balanceType.equals(BalanceType.AVAILABLE))
+                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
+
+
+        } catch (CantGetLossProtectedBalanceException e) {
+            e.printStackTrace();
+        } catch (CantGetCryptoLossProtectedWalletException e) {
+            e.printStackTrace();
+        }
+        return balance;
+    }
+
+    private void updateBalances(){
+        realBalance = loadBalance(BalanceType.REAL);
+        balanceAvailable = loadBalance(BalanceType.AVAILABLE);
+        txt_balance_amount.setText(
+                WalletUtils.formatBalanceString(
+                        (lossProtectedWalletSession.getBalanceTypeSelected() == BalanceType.AVAILABLE.getCode())
+                                ? balanceAvailable : realBalance,
+                        lossProtectedWalletSession.getTypeAmount())
+        );
+    }
+
+    private void changeAmountType(){
+
+        ShowMoneyType showMoneyType = (lossProtectedWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN;
+        lossProtectedWalletSession.setTypeAmount(showMoneyType);
+        String moneyTpe = "";
+        switch (showMoneyType){
+            case BITCOIN:
+                moneyTpe = "BTC";
+                txt_balance_amount.setTextSize(24);
+                break;
+            case BITS:
+                moneyTpe = "BITS";
+                txt_balance_amount.setTextSize(24);
+                break;
+        }
+
+        txt_balance_amount_type.setText(moneyTpe);
+        updateBalances();
+    }
+
+    /**
+     * Method to change the balance type
+     */
+    private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
+        updateBalances();
+        try {
+            if (lossProtectedWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+                realBalance = loadBalance(BalanceType.REAL);
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, lossProtectedWalletSession.getTypeAmount()));
+                txt_type_balance.setText(R.string.real_balance_text);
+                lossProtectedWalletSession.setBalanceTypeSelected(BalanceType.REAL);
+            } else if (lossProtectedWalletSession.getBalanceTypeSelected().equals(BalanceType.REAL.getCode())) {
+                balanceAvailable = loadBalance(BalanceType.AVAILABLE);
+                txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, lossProtectedWalletSession.getTypeAmount()));
+                txt_type_balance.setText(R.string.available_balance_text);
+                lossProtectedWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+            }
+        } catch (Exception e) {
+            lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+    private void getAndShowMarketExchangeRateData(final View container) {
+
+        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
+            @Override
+            protected Object doInBackground() throws Exception {
+
+                ExchangeRate rate =  cryptoWallet.getCurrencyExchange(exchangeProviderId);
+                return rate;
+            }
+        };
+
+        fermatWorker.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                if (result != null && result.length > 0) {
+
+                    ExchangeRate rate = (ExchangeRate) result[0];
+                    // progressBar.setVisibility(View.GONE);
+                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(rate.getPurchasePrice()) + " USD");
+
+                    //get available balance to actual exchange rate
+
+                    lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
+
+                    updateBalances();
+
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                //  progressBar.setVisibility(View.GONE);
+
+                txt_exchange_rate.setVisibility(View.GONE);
+
+                ErrorManager errorManager = lossProtectedWalletSession.getErrorManager();
+                if (errorManager != null)
+                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                else
+                    Log.e("Exchange Rate", ex.getMessage(), ex);
+            }
+        });
+
+        fermatWorker.execute();
+    }
+
 
 }

@@ -64,9 +64,11 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTrans
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.AssetAppropriationDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.exceptions.CantLoadAssetAppropriationEventListException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -84,7 +86,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         this.status = ServiceStatus.CREATED;
     }
 
-    private final ErrorManager errorManager;
+    AssetAppropriationDigitalAssetTransactionPluginRoot assetAppropriationDigitalAssetTransactionPluginRoot;
     private final LogManager logManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault assetVault;
@@ -109,10 +111,10 @@ public class AssetAppropriationMonitorAgent implements Agent {
     //CONSTRUCTORS
 
 
-    public AssetAppropriationMonitorAgent(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault assetVault,
+    public AssetAppropriationMonitorAgent(AssetAppropriationVault assetVault,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           LogManager logManager,
-                                          ErrorManager errorManager,
+                                          AssetAppropriationDigitalAssetTransactionPluginRoot assetAppropriationDigitalAssetTransactionPluginRoot,
                                           UUID pluginId,
                                           AssetVaultManager assetVaultManager,
                                           AssetUserWalletManager assetUserWalletManager,
@@ -124,10 +126,11 @@ public class AssetAppropriationMonitorAgent implements Agent {
                                           AssetIssuerWalletManager assetIssuerWalletManager,
                                           ActorAssetUserManager actorAssetUserManager,
                                           ExtraUserManager extraUserManager) throws CantSetObjectException {
+
         this.assetVault = assetVault;
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
-        this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
+        this.assetAppropriationDigitalAssetTransactionPluginRoot = Validate.verifySetter(assetAppropriationDigitalAssetTransactionPluginRoot, "errorManager is null");
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.assetVaultManager = Validate.verifySetter(assetVaultManager, "assetVaultManager is null");
         this.assetUserWalletManager = Validate.verifySetter(assetUserWalletManager, "assetUserWalletManager is null");
@@ -153,6 +156,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             Thread eventThread = new Thread(appropriationAgent, "Asset Appropriation MonitorAgent");
             eventThread.start();
         } catch (Exception e) {
+            assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartAgentException();
         }
         this.status = ServiceStatus.STARTED;
@@ -166,7 +170,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         try {
             latch.await(); //WAIT UNTIL THE LAST RUN FINISH
         } catch (InterruptedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
         }
         appropriationAgent = null; //RELEASE RESOURCES.
         logManager.log(AssetAppropriationDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Asset Appropriation Protocol Notification Agent: successfully stopped...", null, null);
@@ -200,10 +204,10 @@ public class AssetAppropriationMonitorAgent implements Agent {
                     /*If this happen there's a chance that the information remains
                     in a corrupt state. That probably would be fixed in a next run.
                     */
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                    assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                 } catch (Exception e) {
+                    assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     e.printStackTrace();
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
 
@@ -211,19 +215,19 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void doTheMainTask() {
-            try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+            try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
 
                 messageMonitoring();
                 statusMonitoring(dao);
 
             } catch (InvalidParameterException | CantRegisterDebitException | CantLoadWalletException | CantGetCryptoTransactionException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantLoadAssetAppropriationEventListException | CantGetTransactionsException | CantLoadAssetAppropriationTransactionListException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             } catch (RecordsNotFoundException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_APPROPRIATION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
 
@@ -238,7 +242,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             }
         }
 
-        private void statusMonitoring(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao) throws Exception {
+        private void statusMonitoring(AssetAppropriationDAO dao) throws Exception {
             for (AppropriationTransactionRecord record : dao.getUnsendedTransactions()) {
                 AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation(dao.getUnsendedTransactions().size() + " unsended transactions were found.");
                 switch (record.status()) {
@@ -354,6 +358,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             try {
                 return extraUserManager.getActorByPublicKey(digitalAssetMetadata.getDigitalAsset().getPublicKey());
             } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
+                assetAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 byte[] image = digitalAssetMetadata.getDigitalAsset().getResources().isEmpty() ? new byte[0] : digitalAssetMetadata.getDigitalAsset().getResources().get(0).getResourceBinayData();
                 return extraUserManager.createActor(digitalAssetMetadata.getDigitalAsset().getName(), image);
             }

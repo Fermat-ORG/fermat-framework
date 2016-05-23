@@ -4,9 +4,9 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -33,7 +33,6 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessage
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
@@ -61,9 +60,6 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingActionListException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -84,7 +80,6 @@ public class ChatMiddlewareMonitorAgent implements
         CHTTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
@@ -93,7 +88,6 @@ public class ChatMiddlewareMonitorAgent implements
     Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     NetworkServiceChatManager chatNetworkServiceManager;
@@ -103,12 +97,12 @@ public class ChatMiddlewareMonitorAgent implements
     ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     public final String BROADCAST_CODE = "13";
     ChatActorConnectionManager chatActorConnectionManager;
+    ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
     ChatManager chatActorNetworkServiceManager;
-
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                       LogManager logManager,
-                                      ErrorManager errorManager,
+                                      ChatMiddlewarePluginRoot chatMiddlewarePluginRoot,
                                       EventManager eventManager,
                                       UUID pluginId,
                                       NetworkServiceChatManager chatNetworkServiceManager,
@@ -118,7 +112,7 @@ public class ChatMiddlewareMonitorAgent implements
                                       ChatManager chatActorNetworkServiceManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.chatNetworkServiceManager = chatNetworkServiceManager;
@@ -137,7 +131,7 @@ public class ChatMiddlewareMonitorAgent implements
         monitorAgent = new MonitorAgent();
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
+        this.monitorAgent.setChatMiddlewarePluginRoot(chatMiddlewarePluginRoot);
 
         /**
          * Init the plugin database dao
@@ -146,9 +140,7 @@ public class ChatMiddlewareMonitorAgent implements
         try {
             this.monitorAgent.Initialize();
         } catch (CantInitializeCHTAgent exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
         }
 
@@ -160,11 +152,6 @@ public class ChatMiddlewareMonitorAgent implements
     @Override
     public void stop() {
         this.agentThread.interrupt();
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -191,19 +178,17 @@ public class ChatMiddlewareMonitorAgent implements
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
-
-        ErrorManager errorManager;
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable {
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000; //2000;
         public final int DISCOVER_ITERATION_LIMIT = 2;
         int discoverIteration = 0;
         int iterationNumber = 0;
         boolean threadWorking;
+        ChatMiddlewarePluginRoot chatMiddlewarePluginRoot;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public void setChatMiddlewarePluginRoot(ChatMiddlewarePluginRoot chatMiddlewarePluginRoot) {
+            this.chatMiddlewarePluginRoot = chatMiddlewarePluginRoot;
         }
 
         @Override
@@ -238,9 +223,7 @@ public class ChatMiddlewareMonitorAgent implements
                             "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CHAT_MIDDLEWARE,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                             e);
                 }
 
@@ -263,26 +246,20 @@ public class ChatMiddlewareMonitorAgent implements
                     database = chatMiddlewareDatabaseFactory.createDatabase(pluginId,
                             ChatMiddlewareDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CHAT_MIDDLEWARE,
-                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                             cantCreateDatabaseException);
                     throw new CantInitializeCHTAgent(cantCreateDatabaseException,
                             "Initialize Monitor Agent - trying to create the plugin database",
                             "Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         exception);
                 throw new CantInitializeCHTAgent(exception,
                         "Initialize Monitor Agent - trying to open the plugin database",
                         "Please, check the cause");
             } catch (Exception exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         FermatException.wrapException(exception));
                 throw new CantInitializeCHTAgent(
                         FermatException.wrapException(exception),
@@ -312,9 +289,7 @@ public class ChatMiddlewareMonitorAgent implements
                 }
 
             } catch (Exception exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                chatMiddlewarePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         FermatException.wrapException(exception));
                 throw new DatabaseOperationException(
                         DatabaseOperationException.DEFAULT_MESSAGE,
@@ -335,7 +310,7 @@ public class ChatMiddlewareMonitorAgent implements
                 pluginDatabaseSystem,
                 pluginId,
                 database,
-                errorManager,
+                chatMiddlewarePluginRoot,
                 pluginFileSystem);
 
         try {
@@ -407,7 +382,7 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    errorManager,
+                    chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
             System.out.println("12345 CHECKING INCOMING CHAT");
@@ -469,7 +444,7 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    errorManager,
+                    chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
                     System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == "+chatMetadata.getMessage() + " MESSAGE STATUS == "+chatMetadata.getMessageStatus());
@@ -514,7 +489,7 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    errorManager,
+                    chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
             List<ActionOnline> onlineActions = chatMiddlewareDatabaseDao.getOnlineActionsByActiveState();
@@ -567,7 +542,7 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    errorManager,
+                    chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
             boolean changes=false;
@@ -619,7 +594,7 @@ public class ChatMiddlewareMonitorAgent implements
                 pluginDatabaseSystem,
                 pluginId,
                 database,
-                errorManager,
+                chatMiddlewarePluginRoot,
                 pluginFileSystem);
 
         boolean changes=false;
@@ -688,7 +663,7 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginDatabaseSystem,
                     pluginId,
                     database,
-                    errorManager,
+                    chatMiddlewarePluginRoot,
                     pluginFileSystem);
 
             Chat chat = chatMiddlewareDatabaseDao.getChatByChatId(chatId);

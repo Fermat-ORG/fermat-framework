@@ -25,8 +25,10 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.version_1.AssetIssuerWalletModulePluginRoot;
+
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,13 +38,14 @@ import java.util.UUID;
  * Created by franklin on 06/10/15.
  */
 public class AssetIssuerWalletModuleManager {
+
     AssetIssuerWalletManager assetIssuerWalletManager;
     ActorAssetUserManager actorAssetUserManager;
     IdentityAssetIssuerManager identityAssetIssuerManager;
     AssetDistributionManager assetDistributionManager;
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
-    ErrorManager errorManager;
+    AssetIssuerWalletModulePluginRoot assetIssuerWalletModulePluginRoot;
     IssuerAppropriationManager issuerAppropriationManager;
 
     /**
@@ -57,23 +60,24 @@ public class AssetIssuerWalletModuleManager {
                                           IdentityAssetIssuerManager identityAssetIssuerManager,
                                           UUID pluginId,
                                           PluginFileSystem pluginFileSystem,
-                                          ErrorManager errorManager) {
+                                          AssetIssuerWalletModulePluginRoot assetIssuerWalletModulePluginRoot) {
+        
         this.assetIssuerWalletManager = assetIssuerWalletManager;
         this.actorAssetUserManager = actorAssetUserManager;
         this.assetDistributionManager = assetDistributionManager;
         this.identityAssetIssuerManager = identityAssetIssuerManager;
         this.pluginId = pluginId;
         this.pluginFileSystem = pluginFileSystem;
-        this.errorManager = errorManager;
+        this.assetIssuerWalletModulePluginRoot = assetIssuerWalletModulePluginRoot;
         this.issuerAppropriationManager = issuerAppropriationManager;
     }
 
     public List<AssetIssuerWalletList> getAssetIssuerWalletBalances(String publicKey, BlockchainNetworkType networkType) throws CantLoadWalletException {
         try {
             return assetIssuerWalletManager.loadAssetIssuerWallet(publicKey, networkType).getBalance().getAssetIssuerWalletBalances();
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantLoadWalletException("Error load Wallet Balances Book", exception, "Method: getAssetIssuerWalletBalancesBook", "Class: AssetIssuerWalletModuleManager");
+        } catch (Exception e) {
+            assetIssuerWalletModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantLoadWalletException("Error load Wallet Balances Book", e, "Method: getAssetIssuerWalletBalancesBook", "Class: AssetIssuerWalletModuleManager");
         }
     }
 
@@ -87,9 +91,9 @@ public class AssetIssuerWalletModuleManager {
             HashMap<DigitalAssetMetadata, ActorAssetUser> hashMap = createMapDistribution(walletPublicKey, assetPublicKey, actorAssetUsers, assetsAmount, networkType);
             assetDistributionManager.distributeAssets(hashMap, walletPublicKey);
 
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantLoadWalletException("Error distribution Assets", exception, "Method: distributionAssets", "Class: AssetIssuerWalletModuleManager");
+        } catch (Exception e) {
+            assetIssuerWalletModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantLoadWalletException("Error distribution Assets", e, "Method: distributionAssets", "Class: AssetIssuerWalletModuleManager");
         }
     }
 
@@ -104,27 +108,27 @@ public class AssetIssuerWalletModuleManager {
                 DigitalAssetMetadata assetMetadata = wallet.getDigitalAssetMetadata(transaction.getTransactionHash());
                 issuerAppropriationManager.appropriateAsset(assetMetadata, WalletUtilities.WALLET_PUBLIC_KEY, bitcoinWalletPublicKey, networkType);
             }
-        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantExecuteAppropriationTransactionException(exception, context, null);
+        } catch (CantGetDigitalAssetFromLocalStorageException | CantLoadWalletException | CantGetTransactionsException e) {
+            assetIssuerWalletModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantExecuteAppropriationTransactionException(e, context, null);
         }
     }
 
     public List<ActorAssetUser> getAllAssetUserActorConnected(BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException {
         try {
             return actorAssetUserManager.getAllAssetUserActorConnected(blockchainNetworkType);
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantGetAssetUserActorsException("Error Get Actor Connected", exception, "Method: getAllAssetUserActorConnected", "Class: AssetIssuerWalletModuleManager");
+        } catch (Exception e) {
+            assetIssuerWalletModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetAssetUserActorsException("Error Get Actor Connected", e, "Method: getAllAssetUserActorConnected", "Class: AssetIssuerWalletModuleManager");
         }
     }
 
     public List<AssetIssuerWalletTransaction> getTransactionsAssetAll(String walletPublicKey, String assetPublicKey, BlockchainNetworkType networkType) throws CantGetTransactionsException {
         try {
             return assetIssuerWalletManager.loadAssetIssuerWallet(walletPublicKey, networkType).getTransactionsAssetAll(assetPublicKey);
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantGetTransactionsException("Error Error load Wallet Asset Transaction", exception, "Method: getTransactionsAssetAll", "Class: AssetIssuerWalletModuleManager");
+        } catch (Exception e) {
+            assetIssuerWalletModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantGetTransactionsException("Error Error load Wallet Asset Transaction", e, "Method: getTransactionsAssetAll", "Class: AssetIssuerWalletModuleManager");
         }
     }
 
@@ -148,9 +152,9 @@ public class AssetIssuerWalletModuleManager {
 
         try {
             return identityAssetIssuerManager.getIdentityAssetIssuersFromCurrentDeviceUser();
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_WALLET_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            exception.printStackTrace();
+        } catch (Exception e) {
+            assetIssuerWalletModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            e.printStackTrace();
         }
         return null;
     }
