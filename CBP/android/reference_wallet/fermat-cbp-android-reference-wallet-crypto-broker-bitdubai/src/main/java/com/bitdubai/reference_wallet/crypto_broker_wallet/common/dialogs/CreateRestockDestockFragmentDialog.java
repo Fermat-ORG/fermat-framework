@@ -268,7 +268,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements View.O
         double balance = 0;
 
         if (walletPlatform == Platforms.BANKING_PLATFORM) {
-            balance = moduleManager.getBalanceBankWallet(setting.getWalletPublicKey(), setting.getBankAccount());
+            balance = moduleManager.getBalanceBankWallet(setting.getWalletPublicKey(), setting.getBankAccount()).doubleValue();
         }
         if (walletPlatform == Platforms.CASH_PLATFORM) {
             balance = moduleManager.getBalanceCashWallet(setting.getWalletPublicKey()).doubleValue();
