@@ -448,11 +448,18 @@ public class ChatMiddlewareMonitorAgent implements
                     pluginFileSystem);
 
                     System.out.println("12345 CHECKING INCOMING STATUS INSIDE IF MESSAGE == "+chatMetadata.getMessage() + " MESSAGE STATUS == "+chatMetadata.getMessageStatus());
-                    //Check if metadata exists in database
-                    if (!checkChatMetadata(chatMetadata)) return;
-                    updateMessageStatus(chatMetadata);
 
+//                    if (!checkChatMetadata(chatMetadata)) return;
+
+            //Check if metadata exists in database
+            Chat chat = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
+            if(chat!=null){
+                Message message = chatMiddlewareDatabaseDao.getMessageByMessageId(chatMetadata.getMessageId());
+                if(message !=null){
+                    updateMessageStatus(chatMetadata);
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
+                }
+            }
 
         } catch (CantGetChatException e) {
             throw new CantGetPendingTransactionException(
