@@ -41,6 +41,7 @@ public class ApplicationsHelper implements FermatApplicationCaller {
             Intent intent;
             intent = new Intent();
             intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
+
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             intent.setAction("org.fermat.APP_LAUNCHER");

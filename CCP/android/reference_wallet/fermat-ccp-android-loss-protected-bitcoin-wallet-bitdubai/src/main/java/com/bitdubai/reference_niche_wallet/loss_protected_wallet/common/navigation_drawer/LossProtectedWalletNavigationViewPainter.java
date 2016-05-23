@@ -35,7 +35,7 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader() {
         try {
 
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
