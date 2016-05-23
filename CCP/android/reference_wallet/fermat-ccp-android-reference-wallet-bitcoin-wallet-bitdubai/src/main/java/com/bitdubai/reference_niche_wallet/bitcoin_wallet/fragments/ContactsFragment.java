@@ -47,6 +47,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -190,14 +192,22 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             _executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                    try {
+                        walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                    } catch (CantGetAllWalletContactsException e) {
+                        e.printStackTrace();
+                    } catch (CantListCryptoWalletIntraUserIdentityException e) {
+                        e.printStackTrace();
+                    } catch (CantGetCryptoWalletException e) {
+                        e.printStackTrace();
+                    }
 
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
                             boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
 
-                            if(isHelpEnabled)
+                            if (isHelpEnabled)
                                 setUpTutorial(true);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
@@ -207,7 +217,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                     } else {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
-                  }
+                }
             });
 
 

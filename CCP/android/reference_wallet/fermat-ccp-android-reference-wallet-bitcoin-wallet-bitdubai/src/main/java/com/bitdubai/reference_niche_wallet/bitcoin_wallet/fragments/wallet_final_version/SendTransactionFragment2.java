@@ -216,7 +216,12 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
-            onRefresh();
+            getExecutor().submit(new Runnable() {
+                @Override
+                public void run() {
+                    openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                }
+            });
 
             //check blockchain progress
 

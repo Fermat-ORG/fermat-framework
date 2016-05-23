@@ -61,7 +61,7 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
     public NavigationViewPainter getNavigationViewPainter() {
 
        // return new LossProtectedWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new LossProtectedWalletNavigationViewPainter(getContext(),getActiveIdentity(), null); //
+        return new LossProtectedWalletNavigationViewPainter(getContext(),getActiveIdentity(), null); //getApplicationManager()
     }
 
     @Override

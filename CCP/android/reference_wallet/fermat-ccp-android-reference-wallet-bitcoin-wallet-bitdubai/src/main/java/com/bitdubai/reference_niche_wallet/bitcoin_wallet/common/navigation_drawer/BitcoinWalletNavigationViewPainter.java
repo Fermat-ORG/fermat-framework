@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -22,17 +23,19 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
 
     private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    public BitcoinWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public BitcoinWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity, FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference<Context>(activity);
         this.intraUserLoginIdentity = intraUserLoginIdentity;
+        this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),intraUserLoginIdentity,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
