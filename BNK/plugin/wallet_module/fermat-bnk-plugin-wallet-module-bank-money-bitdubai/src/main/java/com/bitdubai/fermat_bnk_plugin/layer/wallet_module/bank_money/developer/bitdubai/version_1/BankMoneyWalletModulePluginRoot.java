@@ -1,19 +1,16 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -28,9 +25,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.int
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWallet;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure.BankMoneyWalletModuleManagerImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -74,37 +69,22 @@ public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWal
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    BankingWallet bankingWallet;
-
-    private SettingsManager<BankMoneyWalletPreferenceSettings> settingsManager;
-
 
     public BankMoneyWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
 
     @Override
-    public void start() throws CantStartPluginException {
-        try {
+    public BankMoneyWalletModuleManager getModuleManager() throws CantGetModuleManagerException {
+        if(moduleManager == null)
             moduleManager = new BankMoneyWalletModuleManagerImpl(
                     bankMoneyWalletManager,
                     depositManager,
                     withdrawManager,
-                    holdManager,
-                    unholdManager,
                     pluginFileSystem,
                     pluginId,
                     broadcaster);
 
-            this.serviceStatus = ServiceStatus.STARTED;
-
-        } catch (Exception exception) {
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-    @Override
-    public BankMoneyWalletModuleManager getModuleManager() throws CantGetModuleManagerException {
         return moduleManager;
     }
 

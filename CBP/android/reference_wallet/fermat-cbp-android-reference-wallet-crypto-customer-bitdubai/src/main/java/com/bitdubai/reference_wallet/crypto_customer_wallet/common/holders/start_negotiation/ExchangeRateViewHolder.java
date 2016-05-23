@@ -53,9 +53,10 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final String currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         final String currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
-        String marketRate = getMarketRateValue(clauses);
+        //String marketRate = getMarketRateValue(clauses);
+        //markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, marketRate, currencyToPay));
 
-        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, marketRate, currencyToPay));
+        markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, clause.getValue(), currencyToPay));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy));
         yourExchangeRateValue.setText(clause.getValue());
         yourExchangeRateValueRightSide.setText(String.format("%1$s", currencyToPay));

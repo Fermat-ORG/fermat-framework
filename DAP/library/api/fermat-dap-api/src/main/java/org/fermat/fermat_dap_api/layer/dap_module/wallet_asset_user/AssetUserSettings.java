@@ -8,6 +8,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
  * @author Francisco Vásquez on 15/09/15.
  * @version 1.0
  */
-public class AssetUserSettings implements WalletSettings {
+public class AssetUserSettings implements WalletSettings, Serializable {
 
     private boolean isPresentationHelpEnabled;
     private boolean isContactsHelpEnabled;

@@ -296,7 +296,7 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
             case DATE_TIME_TO_DELIVER:
                 viewHolder.bind(
                         stepNumber,
-                        R.string.delivery_date_title,
+                        R.string.ccw_delivery_date_title,
                         R.string.delivery_date_text,
                         step.getValue());
                 break;

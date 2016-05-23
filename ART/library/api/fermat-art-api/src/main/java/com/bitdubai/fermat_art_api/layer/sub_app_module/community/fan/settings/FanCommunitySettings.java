@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantLoadSubAppSettings;
@@ -8,14 +9,16 @@ import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.except
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
-public class FanCommunitySettings implements SubAppSettings {
+public class FanCommunitySettings implements SubAppSettings, Serializable {
 
     private String lastSelectedIdentityPublicKey;
+    private Actors lastSelectedActorType;
     private boolean presentationHelpEnabled;
 
     /**
@@ -30,6 +33,18 @@ public class FanCommunitySettings implements SubAppSettings {
     public void setLastSelectedIdentityPublicKey(
             String identityPublicKey) {
         this.lastSelectedIdentityPublicKey = identityPublicKey;
+    }
+
+    public Actors getLastSelectedActorType() {
+        return lastSelectedActorType;
+    }
+
+    public void setLastSelectedActorType(Actors lastSelectedActorType) {
+        this.lastSelectedActorType = lastSelectedActorType;
+    }
+
+    public void setPresentationHelpEnabled(boolean presentationHelpEnabled) {
+        this.presentationHelpEnabled = presentationHelpEnabled;
     }
 
     @Override

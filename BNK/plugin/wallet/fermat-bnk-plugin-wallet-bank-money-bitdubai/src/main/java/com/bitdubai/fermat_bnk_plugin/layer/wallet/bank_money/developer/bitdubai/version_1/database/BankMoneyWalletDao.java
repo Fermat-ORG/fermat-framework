@@ -418,7 +418,7 @@ public class BankMoneyWalletDao {
         String status = record.getStringValue(BankMoneyWalletDatabaseConstants.BANK_MONEY_STATUS_COLUMN_NAME);
 
 
-        return new BankMoneyTransactionRecordImpl(errorManager,
+        return new BankMoneyTransactionRecordImpl(
                 bankTransactionId,
                 balanceType,
                 transactionType,

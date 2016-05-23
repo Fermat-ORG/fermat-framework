@@ -14,9 +14,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
@@ -129,7 +126,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develope
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantGetActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
-
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
@@ -1351,13 +1347,6 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     private String createActor(String actorName, Actors actorType, byte[] photo) throws CantCreateOrRegisterActorException {
         switch (actorType){
-            case DEVICE_USER:
-                try {
-                    Actor actor = extraUserManager.createActor(actorName, photo);
-                    return actor.getActorPublicKey();
-                } catch (CantCreateExtraUserException e) {
-                    throw new CantCreateOrRegisterActorException(CantCreateOrRegisterActorException.DEFAULT_MESSAGE, e, "", "Check if all the params are sended.");
-                }
             case EXTRA_USER:
                 try {
                     Actor actor = extraUserManager.createActor(actorName, photo);
@@ -1401,82 +1390,56 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         try {
             Actor involvedActor = null;
             UUID contactId = null;
-            WalletContactRecord walletContactRecord =  null;
-
+            WalletContactRecord walletContactRecord = null;
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                            if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER){
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
-                                if(involvedActor==null)
-                                {
-                                    involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                                    walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                                }
-                            }else {
-
-                                involvedActor = null;
-
-                                walletContactRecord = null;
-
+                        if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER){
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                            if(involvedActor==null)
+                            {
+                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                             }
-
-
+                        }else {
+                            involvedActor = null;
+                            walletContactRecord = null;
+                        }
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
-
                     } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
                         throw new CantEnrichTransactionException(CantEnrichTransactionException.DEFAULT_MESSAGE, e, "Cant get Contact Information", "");
                     } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
                         contactId = null;
-
                     } catch ( CantGetActorException e) {
                         try{
                             involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-
                             walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
                             if (walletContactRecord != null)
                                 contactId = walletContactRecord.getContactId();
-
                         }catch (CantGetActorException exe){
                             contactId = null;
                         }catch (Exception ex){
                             contactId = null;
                         }
-
                     }
-
                     break;
                 case DEBIT:
                     try {
-                            if (bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
-                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                                if (involvedActor == null) {
-                                    involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
-                                    walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
-                                }
-                            }else {
-
-                                involvedActor = null;
-
-                                walletContactRecord = null;
-
+                        if (bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                            if (involvedActor == null) {
+                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
                             }
-
-
+                        }else {
+                            involvedActor = null;
+                            walletContactRecord = null;
+                        }
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
-
                     } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactException e) {
                         throw new CantEnrichTransactionException(CantEnrichTransactionException.DEFAULT_MESSAGE, e, "Cant get Contact Information", "");
                     } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
@@ -1490,30 +1453,10 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         }
     }
 
+
     private Actor getActorByActorPublicKeyAndType(String actorPublicKey, Actors actorType, String intraUserLoggedInPublicKey) throws CantGetActorException {
         Actor actor;
         switch (actorType) {
-            case BITCOIN_BASIC_USER:
-                try {
-                    actor = extraUserManager.getActorByPublicKey(actorPublicKey);
-                    return actor;
-                } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
-                }
-            case LOSS_PROTECTED_USER:
-                try {
-                    actor = extraUserManager.getActorByPublicKey(actorPublicKey);
-                    return actor;
-                } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
-                }
-            case DEVICE_USER:
-                try {
-                    actor = extraUserManager.getActorByPublicKey(actorPublicKey);
-                    return actor;
-                } catch (CantGetExtraUserException | ExtraUserNotFoundException e) {
-                    throw new CantGetActorException(CantGetActorException.DEFAULT_MESSAGE, e, null, "Cant get Extra User on DataBase");
-                }
             case EXTRA_USER:
                 try {
                     actor = extraUserManager.getActorByPublicKey(actorPublicKey);
@@ -1637,6 +1580,11 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
+    public void importMnemonicCode(List<String> mnemonicCode, long date, BlockchainNetworkType defaultBlockchainNetworkType) throws CantLoadExistingVaultSeed {
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,defaultBlockchainNetworkType);
+    }
+
+    @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
         createIntraUser(name, phrase, profile_img);
     }
@@ -1651,11 +1599,5 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         return new int[0];
     }
 
-    public final void persistSettings(String publicKey,final BitcoinWalletSettings settings) throws CantPersistSettingsException {
-        getSettingsManager().persistSettings(publicKey, settings);
-    }
 
-    public final BitcoinWalletSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
-        return getSettingsManager().loadAndGetSettings(publicKey);
-    }
 }

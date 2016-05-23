@@ -26,7 +26,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantL
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -65,7 +65,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         //Obtain walletSettings or create new wallet settings if first time opening wallet
         walletSettings = null;
         try {
-            walletSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            walletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             walletSettings = null;
         }
@@ -74,7 +74,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             walletSettings = new CryptoBrokerWalletPreferenceSettings();
             walletSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
+                moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
             } catch (Exception e) {
                 Log.e(TAG, e.getMessage(), e);
             }
@@ -159,7 +159,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                     boolean showDialog;
                     try {
                         CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-                        showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+                        showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
                         if (showDialog) {
                             presentationDialog.show();
                         }
@@ -219,7 +219,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
                 boolean showDialog;
                 try {
                     CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-                    showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+                    showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
                     if (showDialog) {
                         presentationDialog.show();
                     }

@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.provi
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
@@ -11,12 +12,13 @@ import java.util.UUID;
 /**
  * Created by nelson on 11/11/15.
  */
-public class ContractBasicInformationImpl implements ContractBasicInformation {
+public class ContractBasicInformationImpl implements ContractBasicInformation, Serializable {
     private static Random random = new Random(321515131);
     private static Calendar instance = Calendar.getInstance();
 
     private String customerAlias;
-    private byte[] imageBytes;
+    private byte[] customerImage;
+    private byte[] brokerImage;
     private UUID negotiationId;
     private String contractId;
     private float amount;
@@ -28,9 +30,13 @@ public class ContractBasicInformationImpl implements ContractBasicInformation {
     private ContractStatus status;
     private String cancellationReason;
     private Boolean nearExpirationDatetime;
+    private String brokerAlias;
 
-    public ContractBasicInformationImpl(String customerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, boolean nearExpirationDatetime) {
-        this.customerAlias = customerAlias;
+
+    public ContractBasicInformationImpl(String brokerAlias, String merchandise, String typeOfPayment, String paymentCurrency, ContractStatus status, boolean nearExpirationDatetime) {
+        this.customerAlias = "Customer 1";
+
+        this.brokerAlias = brokerAlias;
         this.merchandise = merchandise;
         this.typeOfPayment = typeOfPayment;
         this.paymentCurrency = paymentCurrency;
@@ -43,7 +49,8 @@ public class ContractBasicInformationImpl implements ContractBasicInformation {
         negotiationId = UUID.randomUUID(); //Negociacion
         contractId = ""; //Contrato
 
-        imageBytes = new byte[0]; //Actor customer
+        customerImage = new byte[0]; //Actor customer
+        brokerImage = new byte[0];
         this.status = status;
     }
 
@@ -55,17 +62,17 @@ public class ContractBasicInformationImpl implements ContractBasicInformation {
     @Override
     public byte[] getCryptoCustomerImage() {
 
-        return imageBytes;
+        return customerImage;
     }
 
     @Override
     public String getCryptoBrokerAlias() {
-        return null;
+        return brokerAlias;
     }
 
     @Override
     public byte[] getCryptoBrokerImage() {
-        return new byte[0];
+        return brokerImage;
     }
 
     @Override

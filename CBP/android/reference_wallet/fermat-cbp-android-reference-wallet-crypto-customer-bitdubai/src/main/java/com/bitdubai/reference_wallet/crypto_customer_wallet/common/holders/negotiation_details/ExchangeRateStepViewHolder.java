@@ -80,11 +80,11 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
         switch (clauseStatus) {
             case ACCEPTED:
                 markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
-                markerRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
+                markerRateReference.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
-                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_accepted));
-                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_accepted));
-                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_accepted));
+                yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
+                yourExchangeRateValueRightSide.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
+                yourExchangeRateValue.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 break;
             case CHANGED:
                 markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));

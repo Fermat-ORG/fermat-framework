@@ -48,8 +48,15 @@ public class FragmentsCommons {
                 }
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
             }else{
-                fermatTextView.setText("");
+                fermatTextView.setText("Loading..");
             }
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
             return view;
         }catch (OutOfMemoryError outOfMemoryError){

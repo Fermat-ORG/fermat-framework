@@ -26,23 +26,22 @@ import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.R;
+import com.software.shell.fab.ActionButton;
+
 import org.fermat.fermat_dap_android_sub_app_asset_factory.adapters.AssetFactoryAdapter;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.SessionConstantsAssetFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.util.CommonLogger;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
-import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySettings;
 import org.fermat.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.software.shell.fab.ActionButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +63,8 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
      */
     private final String TAG = "DapPublish";
     private ArrayList<AssetFactory> dataSet;
-    private AssetFactoryModuleManager manager;
+    private AssetFactoryModuleManager moduleManager;
+    AssetFactorySession assetFactorySession;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -76,7 +76,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
 
     private boolean isRefreshing = false;
 
-    SettingsManager<AssetFactorySettings> settingsManager;
+//    SettingsManager<AssetFactorySettings> settingsManager;
 
     public static PublishedAssetsFragment newInstance() {
         return new PublishedAssetsFragment();
@@ -88,10 +88,8 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
         setHasOptionsMenu(true);
 
         try {
-            manager = ((AssetFactorySession) appSession).getModuleManager();
-
-            settingsManager = appSession.getModuleManager().getSettingsManager();
-
+            assetFactorySession = ((AssetFactorySession) appSession);
+            moduleManager = assetFactorySession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //viewInflater = new ViewInflater(getActivity(), appResourcesProviderManager);
@@ -134,7 +132,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
 //                            appSession.removeData(SessionConstantsAssetFactory.PRESENTATION_IDENTITY_CREATED);
 //                        }
 //                    }
-//                    IdentityAssetIssuer identityAssetIssuer = manager.getLoggedIdentityAssetIssuer();
+//                    IdentityAssetIssuer identityAssetIssuer = moduleManager.getLoggedIdentityAssetIssuer();
 //                    if (identityAssetIssuer == null) {
 //                        getActivity().onBackPressed();
 //                    } else {
@@ -163,7 +161,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetFactory.IC_ACTION_EDITOR_PUBLISHED) {
-                setUpHelpPublished(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpPublished(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -238,7 +236,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
                     MenuInflater inflater = popupMenu.getMenuInflater();
                     inflater.inflate(R.menu.asset_factory_main, popupMenu.getMenu());
                     try {
-                        if (!manager.isReadyToPublish(selectedAsset.getPublicKey())) {
+                        if (!moduleManager.isReadyToPublish(selectedAsset.getPublicKey())) {
                             popupMenu.getMenu().findItem(R.id.action_publish).setVisible(false);
                         }
                     } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
@@ -304,12 +302,12 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
     }
 
     public List<AssetFactory> getMoreDataAsync() throws CantGetAssetFactoryException, CantCreateFileException, FileNotFoundException {
-        List<AssetFactory> assets = manager.getAssetFactoryByState(FINAL);
+        List<AssetFactory> assets = moduleManager.getAssetFactoryByState(FINAL);
         List<Resource> resources;
         for(AssetFactory item : assets) {
             resources = item.getResources();
             for(Resource resource : resources) {
-                resource.setResourceBinayData(manager.getAssetFactoryResource(resource).getContent());
+                resource.setResourceBinayData(moduleManager.getAssetFactoryResource(resource).getContent());
             }
         }
         return assets;
@@ -340,7 +338,7 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
                 selectedAsset = null;*/
         } else if (menuItem.getItemId() == R.id.action_publish) {
             /*try {
-                if (manager.isReadyToPublish(selectedAsset.getPublicKey())) {
+                if (moduleManager.isReadyToPublish(selectedAsset.getPublicKey())) {
                     final ProgressDialog dialog = new ProgressDialog(getActivity());
                     dialog.setTitle("Asset Factory");
                     dialog.setMessage("Publishing asset, please wait...");
@@ -350,11 +348,11 @@ public class PublishedAssetsFragment extends AbstractFermatFragment implements
                         @Override
                         protected Object doInBackground() throws Exception {
                             // for test
-                            for (InstalledWallet wallet : manager.getInstallWallets()) {
+                            for (InstalledWallet wallet : moduleManager.getInstallWallets()) {
                                 selectedAsset.setWalletPublicKey(wallet.getWalletPublicKey());
                                 break;
                             }
-                            manager.publishAsset(getAssetForEdit(), BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            moduleManager.publishAsset(getAssetForEdit(), BlockchainNetworkType.getDefaultBlockchainNetworkType());
                             selectedAsset = null;
                             return true;
                         }

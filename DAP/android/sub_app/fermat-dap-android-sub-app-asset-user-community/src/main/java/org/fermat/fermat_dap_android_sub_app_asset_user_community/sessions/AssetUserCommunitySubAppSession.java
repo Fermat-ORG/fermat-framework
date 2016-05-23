@@ -1,10 +1,14 @@
 package org.fermat.fermat_dap_android_sub_app_asset_user_community.sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
-import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
-import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by francisco on 14/10/15.
@@ -15,17 +19,15 @@ public class AssetUserCommunitySubAppSession extends AbstractFermatSession<Insta
     public static final String PREVIEW_IMGS = "preview_images_user";
     public static final String DEVELOPER_NAME = "developer_name_user";
 
-    public AssetUserCommunitySubAppSession() {
+    private Map<String, Object> data;
 
+    public AssetUserCommunitySubAppSession() {
+        data = new HashMap<String, Object>();
     }
 
-    public AssetUserCommunitySubAppSession(String publicKey,
-                                           InstalledSubApp fermatApp,
-                                           ErrorManager errorManager,
-                                           AssetUserCommunitySubAppModuleManager moduleManager,
-                                           SubAppResourcesProviderManager resourceProviderManager) {
-
-        super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
+    public AssetUserCommunitySubAppSession(String publicKey, InstalledSubApp installedSubApp, ErrorManager errorManager, AssetUserCommunitySubAppModuleManager manager, SubAppResourcesProviderManager subAppResourcesProviderManager) {
+        super(publicKey, installedSubApp, errorManager, manager, subAppResourcesProviderManager);
+        data = new HashMap<String, Object>();
     }
 
 //    private AssetUserCommunitySubAppModuleManager manager;

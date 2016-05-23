@@ -38,7 +38,7 @@ public class FanCommunitySearchImpl implements FanCommunitySearch {
             final List<FanCommunityInformation> fanCommunityInformationList = new ArrayList<>();
 
             for(FanExposingData fed : fanExposingDataList)
-                fanCommunityInformationList.add(new FanCommunityInformationImpl(fed));
+                fanCommunityInformationList.add(new com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils.FanCommunityInformationImpl(fed));
 
             return fanCommunityInformationList;
 
