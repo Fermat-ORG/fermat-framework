@@ -112,8 +112,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.sub_app.manager.fragment.DesktopSubAppFragment;
@@ -425,8 +423,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     /**
                      * Set header
                      */
-                    if (appConnections.getActiveIdentity()==null) refreshWhenObjectsArrive = true;
-                    FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter,appConnections.getActiveIdentity());
+                    FrameLayout frameLayout = SideMenuBuilder.setHeader(this, viewPainter);
                     /**
                      * Set adapter
                      */
@@ -1442,11 +1439,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     final Activity activity = fermatStructure.getLastActivity();
                     FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
                     final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), fermatSession);
-                    try {
-                        appsConnections.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
-                    } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-                        e.printStackTrace();
-                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -1482,7 +1474,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter,appConnections.getActiveIdentity());
+                                    FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter);
                                     try {
                                         SideMenuBuilder.setAdapter(
                                                 navigation_recycler_view,
