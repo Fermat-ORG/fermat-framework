@@ -3,6 +3,10 @@ package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
@@ -55,6 +59,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetChtActorSearchResult;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
+
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
@@ -68,12 +73,13 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class ChatSupAppModuleManager implements ChatManager, Serializable {
+public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSettings> implements ChatManager, Serializable {
+//public class ChatSupAppModuleManager ModuleManagerImpl<ChatPreferenceSettings> implements ChatManager, Serializable {
 
     private final MiddlewareChatManager middlewareChatManager;
     private final ChatIdentityManager chatIdentityManager;
-    private SettingsManager<ChatPreferenceSettings> settingsManager;
-    private SettingsManager<ChatActorCommunitySettings>    settingsManagerCommunity                       ;
+    //private SettingsManager<ChatPreferenceSettings> settingsManager;
+    //private SettingsManager<ChatActorCommunitySettings>    settingsManagerCommunity                       ;
     private final ChatActorConnectionManager chatActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
@@ -86,14 +92,15 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
                                    PluginFileSystem pluginFileSystem,
                                    ChatActorConnectionManager chatActorConnectionManager,
                                    UUID pluginId,
-                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot,
-                                   com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager) {
-        this.middlewareChatManager = middlewareChatManager;
-        this.chatIdentityManager = chatIdentityManager;
-        this.pluginFileSystem = pluginFileSystem;
-        this.chatActorConnectionManager = chatActorConnectionManager;
-        this.pluginId = pluginId;
-        this.chatSupAppModulePluginRoot = chatSupAppModulePluginRoot;
+                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot, com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager)
+    {
+        super(pluginFileSystem, pluginId);
+        this.middlewareChatManager          = middlewareChatManager         ;
+        this.chatIdentityManager            = chatIdentityManager           ;
+        this.pluginFileSystem               = pluginFileSystem              ;
+        this.chatActorConnectionManager     = chatActorConnectionManager    ;
+        this.pluginId                       = pluginId                      ;
+        this.chatSupAppModulePluginRoot     = chatSupAppModulePluginRoot    ;
         this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
     }
 
@@ -313,18 +320,6 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-    @Override
-    public SettingsManager<ChatPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
 
     /**
      * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
@@ -438,23 +433,26 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
         }
     }
 
+
+
     @Override
     public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
-        try {
-            appSettings = this.getSettingsManagerCommmunity().loadAndGetSettings(this.subAppPublicKey);//SubAppsPublicKeys.CHT_COMMUNITY.getCode() //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        } catch (Exception e) {
-            try {
-                appSettings = new ChatActorCommunitySettings();
-                this.getSettingsManagerCommmunity().persistSettings(this.subAppPublicKey, appSettings);
-            } catch (CantPersistSettingsException e1) {
-                //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                //e1.printStackTrace();
-            }
-            //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            return null;
-        }
+        //TODO: Revisar este caso
+//        try {
+//            appSettings = this.getSettingsManagerCommmunity().loadAndGetSettings(this.subAppPublicKey);//SubAppsPublicKeys.CHT_COMMUNITY.getCode() //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+//        } catch (Exception e) {
+//            try {
+//                appSettings = new ChatActorCommunitySettings();
+//                this.getSettingsManagerCommmunity().persistSettings(this.subAppPublicKey, appSettings);
+//            } catch (CantPersistSettingsException e1) {
+//                //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//                //e1.printStackTrace();
+//            }
+//            //chatActorCommunitySubAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+//            return null;
+//        }
 
         List<ChatIdentity> IdentitiesInDevice = new ArrayList<>();
         try{
@@ -499,17 +497,17 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
         return null;
     }
 
-    public SettingsManager<ChatActorCommunitySettings> getSettingsManagerCommmunity() {
-        if (this.settingsManagerCommunity != null)
-            return this.settingsManagerCommunity;
-
-        this.settingsManagerCommunity = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManagerCommunity;
-    }
+//    public SettingsManager<ChatActorCommunitySettings> getSettingsManagerCommmunity() {
+//        if (this.settingsManagerCommunity != null)
+//            return this.settingsManagerCommunity;
+//
+//        this.settingsManagerCommunity = new SettingsManager<>(
+//                pluginFileSystem,
+//                pluginId
+//        );
+//
+//        return this.settingsManagerCommunity;
+//    }
 
     @Override
     public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}

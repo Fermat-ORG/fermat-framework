@@ -377,13 +377,13 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
          * I'm gonna set this number in 1 for now, because I want to check the records object has
          * one only result.
          */
-        int VALID_RESULTS_NUMBER=1;
+        int VALID_RESULTS_NUMBER=0;
         int recordsSize;
         if(records.isEmpty()){
             return;
         }
         recordsSize=records.size();
-        if(recordsSize>VALID_RESULTS_NUMBER){
+        if(recordsSize<VALID_RESULTS_NUMBER){
             throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
         }
     }
@@ -637,7 +637,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setTransactionHash(
                     record.getStringValue(
                             CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                                    ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+                                    ACK_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME
                     ));
             businessTransactionRecord.setTransactionId(
                     record.getStringValue(
@@ -725,7 +725,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             CantUpdateRecordException {
         try{
             updateRecordStatus(contractHash,
-                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         } catch (CantUpdateRecordException exception) {
             errorManager.reportUnexpectedPluginException(
@@ -1134,6 +1134,42 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             DatabaseTableRecord record=records.get(0);
             record.setStringValue(
                     CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    eventStatus.getCode());
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter "+ CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
+        }
+    }
+
+    public void updateIncomingEventStatus(
+            String eventId,
+            EventStatus eventStatus) throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
+            databaseTable.addStringFilter(
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_INCOMING_MONEY_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {

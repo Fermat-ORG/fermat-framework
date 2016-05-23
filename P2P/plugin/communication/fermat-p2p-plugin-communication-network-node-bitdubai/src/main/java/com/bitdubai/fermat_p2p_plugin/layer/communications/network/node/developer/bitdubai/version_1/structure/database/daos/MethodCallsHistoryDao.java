@@ -12,8 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.MethodCallsHistory;
 
-import java.sql.Timestamp;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.MethodCallsHistoryDao</code>
  * <p/>
@@ -30,7 +28,7 @@ public class MethodCallsHistoryDao extends AbstractBaseDao<MethodCallsHistory> {
      * @param dataBase
      */
     public MethodCallsHistoryDao(Database dataBase) {
-        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_FIRST_KEY_COLUMN);
+        super(dataBase, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_TABLE_NAME, CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME);
     }
 
     /**
@@ -43,7 +41,7 @@ public class MethodCallsHistoryDao extends AbstractBaseDao<MethodCallsHistory> {
         MethodCallsHistory entity = new MethodCallsHistory();
 
         entity.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME));
-        entity.setCreateTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME)));
+        entity.setCreateTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME)));
         entity.setMethodName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME));
         entity.setParameters(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME));
         entity.setProfileIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
@@ -61,7 +59,7 @@ public class MethodCallsHistoryDao extends AbstractBaseDao<MethodCallsHistory> {
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
         databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME, entity.getUuid());
-        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME , entity.getCreateTimestamp().getTime());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CREATE_TIMESTAMP_COLUMN_NAME , getLongValueFromTimestamp(entity.getCreateTimestamp()));
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME, entity.getMethodName());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_PARAMETERS_COLUMN_NAME, entity.getParameters());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getProfileIdentityPublicKey());

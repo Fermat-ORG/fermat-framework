@@ -10,32 +10,30 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exc
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.developer.bitdubai.version_1.database.WithdrawBankMoneyTransactionDao;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.developer.bitdubai.version_1.exceptions.CantInitializeWithdrawBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by memo on 19/11/15.
  */
-public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
+public class WithdrawBankMoneyTransactionManager implements WithdrawManager, Serializable {
 
 
-    private UUID pluginId;
-    private PluginDatabaseSystem pluginDatabaseSystem;
     private ErrorManager errorManager;
     private WithdrawBankMoneyTransactionDao withdrawBankMoneyTransactionDao;
-    private BankMoneyWallet bankMoneyWallet;
-    private BankMoneyTransactionRecordImpl bankMoneyTransactionRecord;
+    private BankMoneyWalletManager bankMoneyWalletManager;
 
-    public WithdrawBankMoneyTransactionManager(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager) throws CantStartPluginException {
-        this.pluginId = pluginId;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    public WithdrawBankMoneyTransactionManager(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, BankMoneyWalletManager bankMoneyWalletManager) throws CantStartPluginException {
         this.errorManager=errorManager;
+        this.bankMoneyWalletManager = bankMoneyWalletManager;
+
         withdrawBankMoneyTransactionDao = new WithdrawBankMoneyTransactionDao(pluginId,pluginDatabaseSystem,errorManager);
         try {
             withdrawBankMoneyTransactionDao.initialize();
@@ -57,9 +55,9 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
         withdrawBankMoneyTransactionDao.registerWithdrawTransaction(bankTransactionParameters);
         try{
             //TODO: Revisar Guillermo BigDecimal
-            if(bankTransactionParameters.getAmount().floatValue()<bankMoneyWallet.getAvailableBalance().getBalance(bankTransactionParameters.getAccount())&& bankTransactionParameters.getAmount().floatValue()<bankMoneyWallet.getBookBalance().getBalance(bankTransactionParameters.getAccount())){
-                bankMoneyWallet.getAvailableBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
-                bankMoneyWallet.getBookBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
+            if(bankTransactionParameters.getAmount().floatValue()< bankMoneyWalletManager.getAvailableBalance().getBalance(bankTransactionParameters.getAccount())&& bankTransactionParameters.getAmount().floatValue()< bankMoneyWalletManager.getBookBalance().getBalance(bankTransactionParameters.getAccount())){
+                bankMoneyWalletManager.getAvailableBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
+                bankMoneyWalletManager.getBookBalance().debit(new BankMoneyTransactionRecordImpl(errorManager,UUID.randomUUID(), BalanceType.BOOK.getCode(), TransactionType.DEBIT.getCode(), bankTransactionParameters.getAmount().floatValue(), bankTransactionParameters.getCurrency().getCode(), BankOperationType.WITHDRAW.getCode(), "test_reference", null, bankTransactionParameters.getAccount(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), bankTransactionParameters.getMemo(), null));
             }
             else{
                 throw new CantMakeWithdrawTransactionException(CantMakeWithdrawTransactionException.DEFAULT_MESSAGE + " no posee suficiente fondos para realizar esta transaccion",null,"no posee suficiente fondos para realizar esta transaccion",null);
@@ -71,8 +69,5 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
         //TODO: Revisar Guillermo BigDecimal
         return new BankTransactionImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),
                 bankTransactionParameters.getAmount().floatValue(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.WITHDRAW, TransactionType.DEBIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
-    }
-    public void setBankMoneyWallet(BankMoneyWallet bankMoneyWallet) {
-        this.bankMoneyWallet = bankMoneyWallet;
     }
 }

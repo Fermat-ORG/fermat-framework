@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Compatibility;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -18,7 +19,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface LossProtectedWalletContact {
+public interface LossProtectedWalletContact extends Serializable {
 
     /**
      * Return the contactId

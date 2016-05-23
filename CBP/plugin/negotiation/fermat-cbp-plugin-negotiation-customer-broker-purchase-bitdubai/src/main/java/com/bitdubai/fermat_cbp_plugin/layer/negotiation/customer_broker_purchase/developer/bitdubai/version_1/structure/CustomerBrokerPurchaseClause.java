@@ -4,13 +4,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by angel on 21/10/15.
  */
 
-public class CustomerBrokerPurchaseClause implements Clause{
+public class CustomerBrokerPurchaseClause implements Clause, Serializable{
     private final UUID clauseId;
     private final ClauseType type;
     private final String value;

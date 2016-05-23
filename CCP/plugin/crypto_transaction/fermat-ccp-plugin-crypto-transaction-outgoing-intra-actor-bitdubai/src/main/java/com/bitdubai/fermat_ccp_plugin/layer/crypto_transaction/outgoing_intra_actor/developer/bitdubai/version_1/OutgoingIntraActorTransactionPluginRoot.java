@@ -45,7 +45,7 @@ import java.util.List;
  * Created by loui on 20/02/15.
  */
 
-@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Natalia Cortez", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.OUTGOING_INTRA_ACTOR)
 
 public class OutgoingIntraActorTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,

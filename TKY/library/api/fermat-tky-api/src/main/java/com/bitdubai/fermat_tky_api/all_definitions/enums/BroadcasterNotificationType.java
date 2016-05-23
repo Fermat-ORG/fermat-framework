@@ -11,6 +11,7 @@ public enum BroadcasterNotificationType implements FermatEnum {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
+    FAN_WALLET_BROADCAST_NOTIFICATION("FAN_WBN"),
     DOWNLOAD_EXCEPTION("DWE"),
     DOWNLOAD_PERCENTAGE("DWP"),
     SONG_ID("SID"),

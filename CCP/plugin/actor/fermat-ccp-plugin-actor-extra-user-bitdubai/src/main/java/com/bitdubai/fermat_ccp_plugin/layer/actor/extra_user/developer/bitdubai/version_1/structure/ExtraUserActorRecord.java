@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>ExtraUserActorRecord</code>
  * Implements the functionality of the actor Interface with all his methods.
@@ -14,7 +16,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExt
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ExtraUserActorRecord implements Actor {
+public class ExtraUserActorRecord implements Actor,Serializable {
 
 
     private String actorPublicKey;

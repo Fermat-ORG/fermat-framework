@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
@@ -16,6 +15,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.NodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.AddNodeToCatalogProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.GetActorCatalogTransactionsProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.GetNodeCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.GetNodeCatalogTransactionsProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedActorCatalogTransactionsProcessor;
@@ -24,6 +24,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodeConnectionHistory;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -55,7 +56,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(FermatWebSocketNodeChannelServerEndpoint.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(FermatWebSocketNodeChannelServerEndpoint.class));
 
     /**
      * Represent the nodeSessionMemoryCache
@@ -85,6 +86,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
         registerMessageProcessor(new AddNodeToCatalogProcessor(this));
         registerMessageProcessor(new GetNodeCatalogProcessor(this));
         registerMessageProcessor(new GetNodeCatalogTransactionsProcessor(this));
+        registerMessageProcessor(new GetActorCatalogTransactionsProcessor(this));
         registerMessageProcessor(new ReceivedActorCatalogTransactionsProcessor(this));
         registerMessageProcessor(new ReceivedNodeCatalogTransactionsProcessor(this));
         registerMessageProcessor(new UpdateNodeInCatalogProcessor(this));
@@ -102,29 +104,36 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
     public void onConnect(Session session, EndpointConfig endpointConfig) throws IOException {
 
         LOG.info(" New connection stablished: " + session.getId());
+        LOG.info(" RNPKI: " + endpointConfig.getUserProperties().get(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME));
 
-        /*
-         * Get the node identity
-         */
-        setChannelIdentity((ECCKeyPair) endpointConfig.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
-        endpointConfig.getUserProperties().remove(HeadersAttName.NPKI_ATT_HEADER_NAME);
+        if (endpointConfig.getUserProperties().containsKey(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME)){
 
-        /*
-         * Get the node public key identity
-         */
-        String npki = (String) endpointConfig.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
+            /*
+             * Get the node public key identity
+             */
+            String npki = (String) endpointConfig.getUserProperties().remove(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME);
+            session.getUserProperties().put(HeadersAttName.CPKI_ATT_HEADER_NAME,npki);
+            session.setMaxIdleTimeout(FermatWebSocketChannelEndpoint.MAX_IDLE_TIMEOUT);
+            session.setMaxTextMessageBufferSize(FermatWebSocketChannelEndpoint.MAX_MESSAGE_SIZE);
 
-        /*
-         * Mach the session whit the node public key identity
-         */
-        nodeSessionMemoryCache.add(npki, session);
+            /*
+             * Mach the session whit the node public key identity
+             */
+            nodeSessionMemoryCache.add(npki, session);
 
-        /*
-         * Create a new NodeConnectionHistory
-         */
-        NodeConnectionHistory nodeConnectionHistory = new NodeConnectionHistory();
-        nodeConnectionHistory.setIdentityPublicKey(npki);
-        nodeConnectionHistory.setStatus(ClientsConnectionHistory.STATUS_SUCCESS);
+            /*
+             * Create a new NodeConnectionHistory
+             */
+            NodeConnectionHistory nodeConnectionHistory = new NodeConnectionHistory();
+            nodeConnectionHistory.setIdentityPublicKey(npki);
+            nodeConnectionHistory.setStatus(ClientsConnectionHistory.STATUS_SUCCESS);
+
+        } else {
+
+            LOG.warn("Temporal Node identity public key identity no provide ...");
+            session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Temporal Remote Node identity public key identity no provide "));
+        }
+
     }
 
     /**
@@ -133,10 +142,10 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
      * @param session
      */
     @OnMessage
-    public void newPackageReceived(Package packageReceived, Session session)  {
+    public void newPackageReceived(Package packageReceived, Session session) throws IOException {
 
-        LOG.info("New message Received");
-        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
+        LOG.info("New package received ("+packageReceived.getPackageType().name()+")");
+        LOG.info("Session: " + session.getId());
 
         try {
 
@@ -147,6 +156,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
 
         }catch (PackageTypeNotSupportedException p){
             LOG.warn(p.getMessage());
+            session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, p.getMessage()));
         }
     }
 
@@ -159,7 +169,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
     @OnClose
     public void onClose(CloseReason closeReason, Session session) {
 
-        LOG.info("Closed connection: " + session.getId() + "(" + closeReason.getReasonPhrase() + ")");
+        LOG.info("Closed connection: " + session.getId() + " -- (" + closeReason.getReasonPhrase() + ")");
 
     }
 

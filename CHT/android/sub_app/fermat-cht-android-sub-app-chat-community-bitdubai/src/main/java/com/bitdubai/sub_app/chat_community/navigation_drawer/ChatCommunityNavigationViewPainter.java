@@ -10,8 +10,11 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.adapters.NavigationAdapter;
 import com.bitdubai.sub_app.chat_community.common.utils.FragmentsCommons;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 import java.lang.ref.WeakReference;
 
@@ -25,23 +28,28 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
 
     private WeakReference<Context> activity;
     private final ActiveActorIdentityInformation chatUserLoginIdentity;
+    ChatUserSubAppSession subAppSession;
+    private ChatActorCommunitySubAppModuleManager moduleManager;
 
     public ChatCommunityNavigationViewPainter(Context activity,
-                                              ActiveActorIdentityInformation chatUserLoginIdentity) {
+                                              ActiveActorIdentityInformation chatUserLoginIdentity, ChatUserSubAppSession subAppSession) {
         this.activity = new WeakReference(activity);
         this.chatUserLoginIdentity = chatUserLoginIdentity;
+        this.subAppSession = subAppSession;
+        this.moduleManager = subAppSession.getModuleManager();
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation chatUserLoginIdentity) {
+        View headerView = null;
         try {
-            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),
-                    chatUserLoginIdentity);
+            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), chatUserLoginIdentity);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
+        return headerView;
     }
 
     @Override

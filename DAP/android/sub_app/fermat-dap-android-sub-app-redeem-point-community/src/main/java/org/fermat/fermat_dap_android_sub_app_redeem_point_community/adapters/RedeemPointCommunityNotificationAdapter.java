@@ -8,6 +8,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.holders.RedeemPointCommunityNotificationsHolder;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
 

@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -9,6 +10,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -128,15 +130,16 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
             chatIdentitySettings = null;
             try {
-                chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
-            } catch (Exception e) {
+                chatIdentitySettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
+                //chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            }catch(Exception e){
                 chatIdentitySettings = null;
             }
             if (chatIdentitySettings == null) {
                 chatIdentitySettings = new ChatIdentityPreferenceSettings();
                 chatIdentitySettings.setIsPresentationHelpEnabled(true);
                 try {
-                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -324,15 +327,31 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
+
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
+                    // grant all three uri permissions!
 
                     if (imageToUploadUri != null) {
+                        String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                                    != PackageManager.PERMISSION_GRANTED) {
+                                getActivity().getContentResolver().takePersistableUriPermission(selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                                getActivity().grantUriPermission(provider, selectedImage, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                                getActivity().requestPermissions(
+                                        new String[]{Manifest.permission.CAMERA},
+                                        REQUEST_IMAGE_CAPTURE);
+                            }
+                        }
                         getActivity().getContentResolver().notifyChange(selectedImage, null);
                         Bitmap reducedSizeBitmap = getBitmap(imageToUploadUri.getPath());
                         if (reducedSizeBitmap != null) {
@@ -340,30 +359,42 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         }
                     }
                     try {
-                        if (cryptoBrokerBitmap != null) {
-                            if (cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
-                                cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
-                                final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
-                                dialogCropImage.show();
-                                dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                    @Override
-                                    public void onDismiss(DialogInterface dialog) {
-                                        if (dialogCropImage.getCroppedImage() != null) {
-                                            cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
-                                            Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
-                                        } else {
-                                            cryptoBrokerBitmap = null;
-                                        }
+                        if(checkCameraPermission()) {
+                            if(checkWriteExternalPermission()) {
+                                if (cryptoBrokerBitmap != null) {
+                                    if (cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
+                                        cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                                        final DialogCropImage dialogCropImage = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
+                                        dialogCropImage.show();
+                                        dialogCropImage.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                            @Override
+                                            public void onDismiss(DialogInterface dialog) {
+                                                if (dialogCropImage.getCroppedImage() != null) {
+                                                    cryptoBrokerBitmap = dialogCropImage.getCroppedImage();
+                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImage.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
+                                                } else {
+                                                    cryptoBrokerBitmap = null;
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
+                                       // cryptoBrokerBitmap = null;
+                                        //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                                     }
-                                });
-                            } else {
-                                Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                cryptoBrokerBitmap = null;
+                                } else {
+                                    Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
+                                  //  cryptoBrokerBitmap = null;
+                                    //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                                }
+                            }else {
+                                Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                               // cryptoBrokerBitmap = null;
                                 //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(getActivity(), "Error on upload image", Toast.LENGTH_LONG).show();
-                            cryptoBrokerBitmap = null;
+                            Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                          //  cryptoBrokerBitmap = null;
                             //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
                         }
                     } catch (Exception e) {
@@ -378,7 +409,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             //cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                             if (cryptoBrokerBitmap.getWidth() >= 192 && cryptoBrokerBitmap.getHeight() >= 192) {
-                                cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                               // cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                                 final DialogCropImage dialogCropImagee = new DialogCropImage(getActivity(), appSession, null, cryptoBrokerBitmap);
                                 dialogCropImagee.show();
                                 dialogCropImagee.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -394,7 +425,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                 });
                             } else {
                                 Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                cryptoBrokerBitmap = null;
+                               // cryptoBrokerBitmap = null;
                                 // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
 
@@ -407,8 +438,22 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 case GALLERY_KITKAT_INTENT_CALLED:
                     Uri selectedImagee = data.getData();
                     // Check for the freshest data.
-                    getActivity().getContentResolver().takePersistableUriPermission(selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION
-                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    if(Build.VERSION.SDK_INT >= 23) {
+                        if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+                            String provider = "com.android.providers.media.MediaProvider";
+                            getActivity().getContentResolver().takePersistableUriPermission(selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            getActivity().getContentResolver().takePersistableUriPermission(selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                            getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                            getActivity().grantUriPermission(provider, selectedImagee, Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+                            getActivity().requestPermissions(
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    REQUEST_LOAD_IMAGE);
+                        }
+                    }
                     try {
                         if (isAttached) {
                             cryptoBrokerBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImagee);
@@ -422,7 +467,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
                                             cryptoBrokerBitmap = dialogCropImagee.getCroppedImage();
-                                            cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
+                                            //cryptoBrokerBitmap = ImagesUtils.cropImage(cryptoBrokerBitmap);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), dialogCropImagee.getCroppedImage())).transform(new CircleTransform()).into(mBrokerImage);
                                         } else {
                                             cryptoBrokerBitmap = null;
@@ -431,7 +476,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                 });
                             } else {
                                 Toast.makeText(getActivity(), "The image selected is too small. Please select \n a photo with height and width of at least 192x192", Toast.LENGTH_LONG).show();
-                                cryptoBrokerBitmap = null;
+                                //cryptoBrokerBitmap = null;
                                 // Toast.makeText(getActivity(), "The image selected is too small", Toast.LENGTH_SHORT).show();
                             }
 
@@ -564,13 +609,42 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         return false;
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void dispatchTakePictureIntent() {
-        Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
-        chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-        imageToUploadUri = Uri.fromFile(f);
-        startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
-    }
+        // Check permission for CAMERA
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getActivity().checkSelfPermission(Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED){
+                if( getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) !=  PackageManager.PERMISSION_GRANTED ){
+                    getActivity().requestPermissions(
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            REQUEST_IMAGE_CAPTURE);
+                }else {
+                    getActivity().requestPermissions(
+                            new String[]{Manifest.permission.CAMERA},
+                            REQUEST_IMAGE_CAPTURE);
+                }
+            } else {
+                if (checkWriteExternalPermission()) {
+                    Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                    chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                    imageToUploadUri = Uri.fromFile(f);
+                    startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
+                } else {
+                    Toast.makeText(getActivity(), "An error occurred", Toast.LENGTH_LONG).show();
+                }
+            }
+        }else{
+
+                Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
+                chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+                imageToUploadUri = Uri.fromFile(f);
+                startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
+            }
+        }
+
 
     private Bitmap getBitmap(String path) {
         Uri uri = Uri.fromFile(new File(path));
@@ -632,12 +706,20 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     private void loadImageFromGallery() {
-        if (Build.VERSION.SDK_INT <19){
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (getActivity().checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                getActivity().requestPermissions(
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        GALLERY_KITKAT_INTENT_CALLED);
+            }
+        }
+        if (Build.VERSION.SDK_INT < 19) {
             Intent intent = new Intent();
             intent.setType("image/jpeg");
             intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Choose picture"),REQUEST_LOAD_IMAGE);
+            startActivityForResult(Intent.createChooser(intent, "Choose picture"), REQUEST_LOAD_IMAGE);
         } else {
             Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
             intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -648,10 +730,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     private void rotateImage() throws CHTException {
         Bitmap thissbitmap = null;
-       if(ExistIdentity() == true || cryptoBrokerBitmap != null) {
         if(cryptoBrokerBitmap != null){
             thissbitmap = cryptoBrokerBitmap;
-        }else {
+        }else if(ExistIdentity() == true){
             try {
                 thissbitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
             } catch (CantGetChatIdentityException e) {
@@ -675,9 +756,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             }else{
                 Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
             }
-        }else{
-            Toast.makeText(getActivity(), "Select a image to rotate", Toast.LENGTH_SHORT).show();
-        }
     }
 
     public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
@@ -713,5 +791,17 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
+    }
+    private boolean checkWriteExternalPermission()
+    {
+        String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
+    }
+    private boolean checkCameraPermission()
+    {
+        String permission = "android.permission.CAMERA";
+        int res = getActivity().checkCallingOrSelfPermission(permission);
+        return (res == PackageManager.PERMISSION_GRANTED);
     }
 }

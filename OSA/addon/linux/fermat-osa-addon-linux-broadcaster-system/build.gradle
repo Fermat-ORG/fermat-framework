@@ -1,0 +1,8 @@
+apply plugin: 'java'
+
+dependencies {
+
+    compile project(':fermat-api')
+
+    compile ('org.xerial:sqlite-jdbc:3.8.11.2')
+}

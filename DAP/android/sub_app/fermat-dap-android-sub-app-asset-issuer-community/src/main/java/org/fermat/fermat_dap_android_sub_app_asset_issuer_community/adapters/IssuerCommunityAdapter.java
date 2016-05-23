@@ -7,11 +7,12 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+import com.squareup.picasso.Picasso;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.holders.IssuerViewHolder;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 

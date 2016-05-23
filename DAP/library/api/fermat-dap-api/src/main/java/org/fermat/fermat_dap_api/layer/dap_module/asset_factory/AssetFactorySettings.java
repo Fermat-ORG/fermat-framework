@@ -8,18 +8,20 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 1/20/16.
  */
-public class AssetFactorySettings implements WalletSettings {
+public class AssetFactorySettings implements WalletSettings, Serializable {
 
     private boolean isPresentationHelpEnabled;
     private boolean isContactsHelpEnabled;
     private List<BlockchainNetworkType> blockchainNetwork;
     private int blockchainNetworkPosition;
+    private boolean notificationEnabled;
 
     public int getBlockchainNetworkPosition() {
         return blockchainNetworkPosition;
@@ -44,6 +46,7 @@ public class AssetFactorySettings implements WalletSettings {
     public boolean isPresentationHelpEnabled() {
         return isPresentationHelpEnabled;
     }
+
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException, CantLoadWalletSettings {
         return null;
@@ -71,5 +74,13 @@ public class AssetFactorySettings implements WalletSettings {
     @Override
     public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
+    }
+
+    public boolean getNotificationEnabled() {
+        return this.notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 }

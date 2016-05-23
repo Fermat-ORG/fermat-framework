@@ -55,8 +55,8 @@ public class AccountListViewHolder extends FermatViewHolder {
         //currency.setText(itemInfo.getMoneyType().getCode());
         DecimalFormat df = new DecimalFormat("#");
         df.setMaximumFractionDigits(8);
-        availableBalance.setText(df.format(moduleManager.getBankingWallet().getAvailableBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
-        bookBalance.setText(df.format(moduleManager.getBankingWallet().getBookBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
+        availableBalance.setText(df.format(moduleManager.getAvailableBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
+        bookBalance.setText(df.format(moduleManager.getBookBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
         if(availableBalance.getText().equals(bookBalance.getText())){
             bookBalance.setVisibility(View.GONE);
             bookText.setVisibility(View.GONE);
