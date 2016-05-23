@@ -61,7 +61,8 @@ public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemP
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new RedeemPointWalletNavigationViewPainter(getContext() ,getActiveIdentity());
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+        return new RedeemPointWalletNavigationViewPainter(getContext() ,null);
     }
 
     @Override
