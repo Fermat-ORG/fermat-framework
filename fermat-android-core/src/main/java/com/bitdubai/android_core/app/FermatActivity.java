@@ -211,12 +211,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     UpdateViewReceiver updateViewReceiver;
 
-    /**
-     * Flag used when an object not arrived yet and the activity want to paint something with it.
-     * For example: when a profile in other thread take long that the activity paint the navigation view.
-     */
-    private boolean refreshWhenObjectsArrive;
-
 
     /**
      * Called when the activity is first created
@@ -241,8 +235,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
 
-//        broadcastManager = new BroadcastManager(this);
-//        AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         if(!AndroidCoreUtils.getInstance().isStarted())
             AndroidCoreUtils.getInstance().setStarted(true);
         runtimeStructureManager = new RuntimeStructureManager(this);
@@ -301,12 +293,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void onStop() {
         try {
             super.onStop();
-//            try{
-//                AndroidCoreUtils.getInstance().clear();
-//            }catch (Exception e){
-//                e.printStackTrace();
-//            }
-//
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -825,26 +811,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
     }
 
-    /**
-     * Dispatch onResume() to fragments.  Note that for better inter-operation
-     * with older versions of the platform, at the point of this call the
-     * fragments attached to the activity are <em>not</em> resumed.  This means
-     * that in some cases the previous state may still be saved, not allowing
-     * fragment transactions that modify the state.  To correctly interact
-     * with fragments in their proper state, you should instead override
-     * {@link #onResumeFragments()}.
-     */
+
     @Override
     protected void onResume() {
         super.onResume();
-//        try {
-//            if(broadcastManager!=null)broadcastManager.resume(this);
-//            else broadcastManager = new BroadcastManager(this);
-//            AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+
     }
 
 
@@ -1065,9 +1036,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 mRevealView.removeAllViews();
                 mRevealView.setVisibility(View.GONE);
             }
-
-            refreshWhenObjectsArrive = false;
-
             removecallbacks();
             onRestart();
         } catch (Exception e) {
@@ -1458,43 +1426,40 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     protected void refreshSideMenu(final AppConnections appConnections){
         try {
-            if(refreshWhenObjectsArrive) {
-                if (!(this instanceof DesktopActivity)) {
-                    final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-                    final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                    if (viewPainter != null) {
-                        final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-                        Activity activity = fermatStructure.getLastActivity();
-                        if (activity != null) {
-                            SideMenu sideMenu = activity.getSideMenu();
-                            List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
-                            if (sideMenu != null) lstItems = sideMenu.getMenuItems();
-                            final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems != null) ? lstItems : new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter);
-                                    try {
-                                        SideMenuBuilder.setAdapter(
-                                                navigation_recycler_view,
-                                                mAdapter,
-                                                viewPainter.addItemDecoration(),
-                                                finalLstItems,
-                                                FermatActivity.this,
-                                                fermatStructure.getLastActivity().getActivityType()
-                                        );
-                                    } catch (InvalidParameterException e) {
-                                        e.printStackTrace();
-                                    }
+            if (!(this instanceof DesktopActivity)) {
+                final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+                if (viewPainter != null) {
+                    final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+                    Activity activity = fermatStructure.getLastActivity();
+                    if (activity != null) {
+                        SideMenu sideMenu = activity.getSideMenu();
+                        List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
+                        if (sideMenu != null) lstItems = sideMenu.getMenuItems();
+                        final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems != null) ? lstItems : new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                FrameLayout frameLayout = SideMenuBuilder.setHeader(FermatActivity.this, viewPainter);
+                                try {
+                                    SideMenuBuilder.setAdapter(
+                                            navigation_recycler_view,
+                                            mAdapter,
+                                            viewPainter.addItemDecoration(),
+                                            finalLstItems,
+                                            FermatActivity.this,
+                                            fermatStructure.getLastActivity().getActivityType()
+                                    );
+                                } catch (InvalidParameterException e) {
+                                    e.printStackTrace();
                                 }
-                            });
-                            refreshWhenObjectsArrive = false;
-                        } else {
-                            Log.e(TAG, "ActivityObject null, line:" + new Throwable().getStackTrace()[0].getLineNumber());
-                        }
+                            }
+                        });
+                    } else {
+                        Log.e(TAG, "ActivityObject null, line:" + new Throwable().getStackTrace()[0].getLineNumber());
                     }
-
                 }
+
             }
         }catch (Exception e){
             e.printStackTrace();
