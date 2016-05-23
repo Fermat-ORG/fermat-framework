@@ -4,6 +4,7 @@ package com.bitdubai.android_core.app;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 import android.widget.Toast;
@@ -11,9 +12,12 @@ import android.widget.Toast;
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
 import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
+import com.bitdubai.android_core.app.common.version_1.receivers.NotificationReceiver;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
+import com.bitdubai.android_core.app.common.version_1.helpers.ApplicationsHelper;
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_core.FermatSystem;
 
@@ -22,7 +26,6 @@ import org.acra.ReportField;
 import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -36,7 +39,7 @@ import java.util.List;
         mode = ReportingInteractionMode.TOAST,
         resToastText = R.string.crash_toast_text)
 
-public class ApplicationSession extends MultiDexApplication implements Serializable,FermatApplicationSession {
+public class ApplicationSession extends MultiDexApplication implements FermatApplicationSession {
 
     private final String TAG = "ApplicationSession";
 
@@ -69,6 +72,11 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
 
     /**
+     *  NotificationReceiver
+     */
+    private NotificationReceiver notificationReceiver;
+
+    /**
      * Services helpers
      */
     private ServicesHelpers servicesHelpers;
@@ -97,6 +105,11 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return fermatSystem;
     }
 
+    @Override
+    public FermatApplicationCaller getApplicationManager() {
+        return new ApplicationsHelper(this);
+    }
+
     /**
      *  Method to change the application state from services or activities
      *
@@ -121,6 +134,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     @Override
     public void onTerminate(){
         servicesHelpers.unbindServices();
+        unregisterReceiver(notificationReceiver);
         super.onTerminate();
     }
 
@@ -137,21 +151,18 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
                 handleUncaughtException(thread, e);
 //                ACRA.getErrorReporter().handleSilentException(e);
                 ACRA.getErrorReporter().handleException(e);
+                ACRA.getErrorReporter().uncaughtException(thread,e);
             }
         });
 
 //        loadProcessInfo();
 
-        if(!isFermatOpen()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext());
-                    servicesHelpers.bindServices();
-
-
-                }
-            }).start();
+        boolean isThisProcessFermatFrontApp = isThisProcessFermatFrontApp();
+        runServiceHelpers(isThisProcessFermatFrontApp);
+        if(!isThisProcessFermatFrontApp){
+            notificationReceiver = new NotificationReceiver(this);
+            IntentFilter intentFilter = new IntentFilter(NotificationReceiver.INTENT_NAME);
+            registerReceiver(notificationReceiver, intentFilter);
         }
 
 //        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
@@ -159,7 +170,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 //        intentFilter.addAction("org.fermat.SYSTEM_RUNNING");
 //        bManager.registerReceiver(new FermatSystemRunningReceiver(this), intentFilter);
 
-//        new ANRWatchDog().start();
+        //new ANRWatchDog().start();
 
         super.onCreate();
     }
@@ -200,13 +211,9 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         String myProcessName =getApplicationContext().getPackageName();
         Log.i(TAG,"context:"+myProcessName);
 
-
-
-
-
     }
 
-    public boolean isFermatOpen() {
+    public boolean isThisProcessFermatFrontApp() {
         int pId = android.os.Process.myPid();
         ActivityManager activityManager = (ActivityManager) this
                 .getSystemService(ACTIVITY_SERVICE);
@@ -222,6 +229,21 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             }
         }
         return false;
+    }
+
+    private void runServiceHelpers(final boolean isFermatOpen){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext(), isFermatOpen);
+                    servicesHelpers.bindServices();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
     }
 
     public void setFermatRunning(boolean fermatRunning) {

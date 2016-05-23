@@ -134,7 +134,13 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         }
 
 
-        openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+            }
+        });
+
     }
 
     @Nullable

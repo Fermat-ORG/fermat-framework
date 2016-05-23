@@ -10,9 +10,10 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.FermatWebSocketNodeChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
-import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
 import org.jboss.resteasy.spi.ResteasyDeployment;
 import org.xnio.BufferAllocator;
@@ -46,7 +47,7 @@ public class FermatEmbeddedNodeServer {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(FermatEmbeddedNodeServer.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(FermatEmbeddedNodeServer.class));
 
     /**
      * Represent the APP_NAME
@@ -66,7 +67,7 @@ public class FermatEmbeddedNodeServer {
     /**
      * Represent the DEFAULT_IP number
      */
-    public static final String DEFAULT_IP = "192.168.1.22";
+    public static final String DEFAULT_IP = "0.0.0.0";
 
     /**
      * Represent the serverBuilder instance
@@ -88,9 +89,12 @@ public class FermatEmbeddedNodeServer {
      */
     public FermatEmbeddedNodeServer(){
        super();
-       this.serverBuilder = Undertow.builder().addHttpListener(DEFAULT_PORT, DEFAULT_IP);
-       this.servletContainer = Servlets.defaultContainer();
 
+        LOG.info("Configure IP  : " + ConfigurationManager.getValue(ConfigurationManager.IP));
+        LOG.info("Configure PORT: " + ConfigurationManager.getValue(ConfigurationManager.PORT));
+
+       this.serverBuilder = Undertow.builder().addHttpListener(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)), ConfigurationManager.getValue(ConfigurationManager.IP));
+       this.servletContainer = Servlets.defaultContainer();
     }
 
     /**
@@ -139,8 +143,8 @@ public class FermatEmbeddedNodeServer {
                         .setContextPath(APP_NAME)
                         .setDeploymentName(WAR_APP_NAME)
                         .addServletContextAttribute(WebSocketDeploymentInfo.ATTRIBUTE_NAME, appWebSocketDeploymentInfo)
-                        .addServlets(Servlets.servlet("HomeServlet", HomeServlet.class).addMapping("/home"))
-                        .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
+                        .addServlets(Servlets.servlet("HomeServlet", HomeServlet.class).addMapping("/home"));
+                        //.addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 
 
         /*
@@ -168,7 +172,7 @@ public class FermatEmbeddedNodeServer {
          */
         ResteasyDeployment restEasyDeploymentInfo = new ResteasyDeployment();
         restEasyDeploymentInfo.setApplicationClass(JaxRsActivator.class.getName());
-        restEasyDeploymentInfo.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
+        //restEasyDeploymentInfo.setInjectorFactoryClass(CdiInjectorFactory.class.getName());
 
         /*
          * Create the restAppDeploymentInfo and configure
@@ -176,8 +180,8 @@ public class FermatEmbeddedNodeServer {
         DeploymentInfo restAppDeploymentInfo = undertowJaxrsServer.undertowDeployment(restEasyDeploymentInfo, "/rest/api/v1");
         restAppDeploymentInfo.setClassLoader(FermatEmbeddedNodeServer.class.getClassLoader())
                              .setContextPath(APP_NAME)
-                             .setDeploymentName("FermatRestApi.war")
-                             .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
+                             .setDeploymentName("FermatRestApi.war");
+                           //  .addListeners(Servlets.listener(org.jboss.weld.environment.servlet.Listener.class));
 
         /*
          * Deploy the app
@@ -213,5 +217,10 @@ public class FermatEmbeddedNodeServer {
 
         configure();
         server.start();
+
+        LOG.info("***********************************************************");
+        LOG.info("NODE SERVER LISTENING   : " + ConfigurationManager.getValue(ConfigurationManager.IP) + " : " + ConfigurationManager.getValue(ConfigurationManager.PORT));
+        LOG.info("***********************************************************");
+
     }
 }

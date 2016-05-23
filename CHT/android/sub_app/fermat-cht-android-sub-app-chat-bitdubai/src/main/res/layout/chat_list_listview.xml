@@ -42,7 +42,7 @@
         android:layout_below="@+id/tvtitle"
         android:layout_toRightOf="@+id/imagetick"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="1"
         android:text="desc"
         android:textColor="#757575"
         android:textSize="12dip" />

@@ -65,9 +65,6 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
@@ -81,7 +78,7 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public void start() throws CantStartPluginException {
-        chatIdentityManager = new ChatIdentityManagerImpl(pluginDatabaseSystem, pluginId, errorManager, deviceUserManager, pluginFileSystem, chatManager);
+        chatIdentityManager = new ChatIdentityManagerImpl(pluginDatabaseSystem, pluginId, this, deviceUserManager, pluginFileSystem, chatManager);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
             System.out.println("******* Init Chat Identity ******");
@@ -97,21 +94,24 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                 databaseFactory.createDatabase(this.pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
                 //chatIdentityManager.createNewIdentityChat("Franklin Marcano", new byte[0]);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
             }
           } catch (CantExposeActorIdentitiesException e) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant expose Actor Identities.", FermatException.wrapException(e), null, null);
         } catch (CantListChatIdentityException e) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant List Chat Identity.", FermatException.wrapException(e), null, null);
         } catch (CantExposeIdentitiesException e) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException("Cant Expose Identity.", FermatException.wrapException(e), null, null);
+        } catch (CantExposeIdentityException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Cant Update Expose Identity.", FermatException.wrapException(e), null, null);
         }
     }
 
@@ -141,15 +141,15 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
             developerFactory.initializeDatabase();
             developerDatabaseTableRecordList = developerFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeChatIdentityDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
     }
 
-    private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException {
+    private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException, CantExposeIdentityException {
         List<ChatExposingData> chatExposingDatas = new ArrayList<>();
 
-        for (ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
+        for (final ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
         {
             chatExposingDatas.add(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity()));
             try {

@@ -1,26 +1,38 @@
 package com.bitdubai.sub_app.music_player.common.models;
 
+import java.util.UUID;
+
 /**
  * Created by Miguel Payarez on 16/03/16.
  */
 public class MusicPlayerItems {
-   // private String artist_url;
-   // private int imagen;
-   // private String artist_name;
 
-    public MusicPlayerItems(int imagen, String artist_url, String artist_name){
+    private String song_name;
+    private String artist_name;
+    private int imagen;
+    private byte[] song;
+    private UUID song_id;
 
-  //      this.imagen = imagen;
-  //      this.artist_url = artist_url;
-  //      this.artist_name=artist_name;
-
+    public MusicPlayerItems(String artist_name,String song_name,int imagen,byte[] song,UUID song_id){
+        this.artist_name=artist_name;
+        this.song_name = song_name;
+        this.imagen = imagen;
+        this.song=song;
+        this.song_id=song_id;
     }
 
-//    public int getImagen(){return imagen;}
+    // getters & setters
 
-//    public String getArtist_url(){return artist_url;}
 
-//    public String getArtist_name(){return artist_name;}
+    public String getArtist_name() {        return artist_name; }
 
+    public String getSong_name(){return song_name;}
+
+
+    public int getImagen(){return imagen;}
+
+    public byte[] getSong(){return song;}
+
+    public UUID getSong_id() {return song_id;}
 
 }

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClaus
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +24,7 @@ import java.util.UUID;
  * @version 1.0
  * @since 05/11/15.
  */
-public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation {
+public class CryptoBrokerWalletModuleCustomerBrokerNegotiationInformation implements CustomerBrokerNegotiationInformation, Serializable {
 
     private ActorIdentity customerIdentity;
     private ActorIdentity brokerIdentity;

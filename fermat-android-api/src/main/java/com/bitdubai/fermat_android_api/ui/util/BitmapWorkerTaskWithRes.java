@@ -51,7 +51,9 @@ public class BitmapWorkerTaskWithRes extends AsyncTask<Integer, Void, Drawable> 
         if (bitmap != null) {
             //if (imageView != null) {
             //imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(res,bitmap));
-            imageView.setImageDrawable((isCircle) ? ImagesUtils.getRoundedBitmap(res, ((BitmapDrawable)bitmap).getBitmap()) : bitmap);
+            if(imageView!=null) {
+                imageView.setImageDrawable((isCircle) ? ImagesUtils.getRoundedBitmap(res, ((BitmapDrawable) bitmap).getBitmap()) : bitmap);
+            }
             //}
         } else {
             if (isCircle)

@@ -9,22 +9,16 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatBalanceString;
 
 /**
  * Created by Joaquin Carrasquero on 04/05/16.
  */
 public class transactionHolder extends ChildViewHolder {
     private final LinearLayout container_sub_item;
-    private Resources res;
-    private View itemView;
+
 
     private TextView txt_from;
     private TextView txt_notes;
@@ -39,8 +33,7 @@ public class transactionHolder extends ChildViewHolder {
     public transactionHolder(View itemView) {
         super(itemView);
 
-        this.itemView = itemView;
-        res = itemView.getResources();
+        Resources res = itemView.getResources();
         container_sub_item = (LinearLayout) itemView.findViewById(R.id.container_sub_item3);
 
         txt_from = (TextView) itemView.findViewById(R.id.from);

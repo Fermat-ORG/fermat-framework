@@ -4,6 +4,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import org.apache.commons.lang.Validate;
 
+import java.io.Serializable;
+
+
 /**
  * The abstract class <code>LinkedActorIdentity</code>
  * represents an actor identity.
@@ -17,7 +20,7 @@ import org.apache.commons.lang.Validate;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class LinkedActorIdentity {
+public abstract class LinkedActorIdentity implements Serializable{
 
     private final String publicKey;
     private final Actors actorType;

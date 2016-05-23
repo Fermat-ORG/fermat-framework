@@ -3,7 +3,7 @@ package unit.com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.NavigationStructureFactory;
 
@@ -20,7 +20,7 @@ public class NavigationStructureFactoryTest {
 
     @Test
     public void testCreateNavigationStructure() throws Exception {
-        WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
+        AppNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
         assertThat(navigationStructure).isNotNull();
 
         int expectedActivities = 4;
@@ -36,7 +36,7 @@ public class NavigationStructureFactoryTest {
 
     @Test
     public void testHomeActivityIsWellConfigured() {
-        WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
+        AppNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
 
         Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_HOME;
         Activity activity = navigationStructure.getActivity(activityType);
@@ -55,7 +55,7 @@ public class NavigationStructureFactoryTest {
 
     @Test
     public void testDealsActivityIsWellConfigured() {
-        WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
+        AppNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
 
         Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACTS_HISTORY;
         Activity activity = navigationStructure.getActivity(activityType);
@@ -69,7 +69,7 @@ public class NavigationStructureFactoryTest {
 
     @Test
     public void testStockPreferenceActivityIsWellConfigured() {
-        WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
+        AppNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
 
         Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_EARNINGS;
         Activity activity = navigationStructure.getActivity(activityType);
@@ -83,7 +83,7 @@ public class NavigationStructureFactoryTest {
 
     @Test
     public void testSettingsActivityIsWellConfigured() {
-        WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
+        AppNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
 
         Activities activityType = Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS;
         Activity activity = navigationStructure.getActivity(activityType);
@@ -97,7 +97,7 @@ public class NavigationStructureFactoryTest {
 
     @Test
     public void testSideBarMenuIsWellConfigured(){
-        WalletNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
+        AppNavigationStructure navigationStructure = NavigationStructureFactory.createNavigationStructure();
         Activity startActivity = navigationStructure.getStartActivity();
         List<MenuItem> menuItems = startActivity.getSideMenu().getMenuItems();
 

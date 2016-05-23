@@ -3,8 +3,10 @@ package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.versi
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -15,6 +17,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOnlineStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
@@ -42,8 +45,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorComm
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -55,29 +58,29 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class ChatSupAppModuleManager implements ChatManager, Serializable {
+public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSettings> implements ChatManager, Serializable {
 
     private final MiddlewareChatManager middlewareChatManager;
     private final ChatIdentityManager chatIdentityManager;
-    private SettingsManager<ChatPreferenceSettings> settingsManager;
     private final ChatActorConnectionManager chatActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private ChatSupAppModulePluginRoot chatSupAppModulePluginRoot;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
                                    ChatActorConnectionManager chatActorConnectionManager ,
                                    UUID pluginId,
-                                   ErrorManager errorManager)
+                                   ChatSupAppModulePluginRoot chatSupAppModulePluginRoot)
     {
+        super(pluginFileSystem, pluginId);
         this.middlewareChatManager          = middlewareChatManager         ;
         this.chatIdentityManager            = chatIdentityManager           ;
         this.pluginFileSystem               = pluginFileSystem              ;
         this.chatActorConnectionManager     = chatActorConnectionManager    ;
         this.pluginId                       = pluginId                      ;
-        this.errorManager                   = errorManager                  ;
+        this.chatSupAppModulePluginRoot     = chatSupAppModulePluginRoot    ;
     }
 
     @Override
@@ -218,7 +221,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
 
         } catch (CantListActorConnectionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+           chatSupAppModulePluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return chatActorCommunityInformationList;
     }
@@ -245,8 +248,18 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     }
 
     @Override
-    public void sendOnlineStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException {
+    public boolean checkOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
+        return middlewareChatManager.checkOnlineStatus(contactPublicKey);
+    }
 
+    @Override
+    public String checkLastConnection(String contactPublicKey) throws CantGetOnlineStatus {
+       return middlewareChatManager.checkLastConnection(contactPublicKey);
+    }
+
+    @Override
+    public void activeOnlineStatus(String contactPublicKey) throws CantGetOnlineStatus {
+         middlewareChatManager.activeOnlineStatus(contactPublicKey);
     }
 
     @Override
@@ -286,18 +299,6 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      *
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
-    @Override
-    public SettingsManager<ChatPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
 
     /**
      * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
@@ -332,4 +333,6 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     public int[] getMenuNotifications() {
         return new int[0];
     }
+
+
 }

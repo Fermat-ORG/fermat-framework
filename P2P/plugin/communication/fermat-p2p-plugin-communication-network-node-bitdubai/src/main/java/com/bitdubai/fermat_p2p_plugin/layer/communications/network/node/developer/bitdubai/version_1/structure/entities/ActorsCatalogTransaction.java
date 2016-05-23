@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -39,12 +40,15 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	private String nodeIdentityPublicKey;
 
+	private String clientIdentityPublicKey;
+
 	private byte[] photo;
 
 	private String transactionType;
 
 	public ActorsCatalogTransaction() {
 		super();
+		this.hashId = UUID.randomUUID().toString();
 		this.hostedTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
@@ -134,6 +138,14 @@ public class ActorsCatalogTransaction extends AbstractBaseEntity implements Seri
 
 	public void setNodeIdentityPublicKey(String nodeIdentityPublicKey) {
 		this.nodeIdentityPublicKey = nodeIdentityPublicKey;
+	}
+
+	public String getClientIdentityPublicKey() {
+		return clientIdentityPublicKey;
+	}
+
+	public void setClientIdentityPublicKey(String clientIdentityPublicKey) {
+		this.clientIdentityPublicKey = clientIdentityPublicKey;
 	}
 
 	public byte[] getPhoto() {

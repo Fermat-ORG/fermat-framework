@@ -71,7 +71,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     @Override
     public Integer getIntegerValue(String columnName) {
 
-        if (values.get(columnName) != null)
+        if (values.get(columnName) != null && !values.get(columnName).getValue().equals("null"))
             return Integer.valueOf(values.get(columnName).getValue());
         else
             return 0;

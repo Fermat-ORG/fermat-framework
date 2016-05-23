@@ -3,9 +3,9 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CurrencyPairAndProvider;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.CurrencyPairAndProvider;
+
 
 /**
  * Created by nelson on 31/12/15.
@@ -25,12 +25,9 @@ public class ProviderViewHolder extends SingleDeletableItemViewHolder<CurrencyPa
 
     @Override
     public void bind(CurrencyPairAndProvider data) {
-        try {
-            title.setText(String.format("%s / %s", data.getCurrencyFrom().getCode(), data.getCurrencyTo().getCode()));
-            subTitle.setText(data.getProvider().getProviderName());
+        title.setText(String.format("%s / %s", data.getCurrencyFrom().getCode(), data.getCurrencyTo().getCode()));
+        subTitle.setText(data.getProviderName());
 
-        } catch (CantGetProviderInfoException ignored) {
-        }
     }
 
     @Override

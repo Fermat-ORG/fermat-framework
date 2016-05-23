@@ -28,12 +28,16 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.adapters.MyAssetsAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_user.filters.MyAssetsAdapterFilter;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.Data;
@@ -47,13 +51,12 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentity
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static android.widget.Toast.makeText;
 
@@ -73,7 +76,9 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     // Fermat Managers
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    SettingsManager<AssetUserSettings> settingsManager;
+    AssetUserSettings settings = null;
+    AssetUserSession assetUserSession;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     // Data
     private List<DigitalAsset> digitalAssets;
@@ -94,9 +99,9 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         try {
             appSession.setData("redeem_points", null);
 
-            moduleManager = ((AssetUserSession) appSession).getModuleManager();
+            assetUserSession = ((AssetUserSession) appSession);
+            moduleManager = assetUserSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -111,29 +116,43 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         super.initViews(layout);
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetUserSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
 
         if (settings == null) {
+            int position = 0;
             settings = new AssetUserSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
+
+            settings.setBlockchainNetwork(Arrays.asList(BlockchainNetworkType.values()));
+            for (BlockchainNetworkType networkType : Arrays.asList(BlockchainNetworkType.values())) {
+                if (Objects.equals(networkType.getCode(), BlockchainNetworkType.getDefaultBlockchainNetworkType().getCode())) {
+                    settings.setBlockchainNetworkPosition(position);
+                    break;
+                } else {
+                    position++;
+                }
+            }
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
-                moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                    moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
         } else {
-            moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+            if (moduleManager != null) {
+                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
+            }
         }
 
         final AssetUserSettings assetUserSettingsTemp = settings;
@@ -233,7 +252,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 

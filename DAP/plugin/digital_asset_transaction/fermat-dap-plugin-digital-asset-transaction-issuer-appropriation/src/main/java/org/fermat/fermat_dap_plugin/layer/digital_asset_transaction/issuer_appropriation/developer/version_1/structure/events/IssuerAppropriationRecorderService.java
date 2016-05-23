@@ -1,22 +1,23 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.IssuerAppropriationDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.database.IssuerAppropriationDAO;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.functional.IssuerAppropriationVault;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class IssuerAppropriationRecorderService implements AssetTransactionServi
     }
 
     private final EventManager eventManager;
-    private ErrorManager errorManager;
+    IssuerAppropriationDigitalAssetTransactionPluginRoot issuerAppropriationDigitalAssetTransactionPluginRoot;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private List<FermatEventListener> listenersAdded;
@@ -47,11 +48,17 @@ public class IssuerAppropriationRecorderService implements AssetTransactionServi
     private final IssuerAppropriationVault assetVault;
     //CONSTRUCTORS
 
-    public IssuerAppropriationRecorderService(UUID pluginId, EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, IssuerAppropriationVault assetVault) throws CantSetObjectException {
+    public IssuerAppropriationRecorderService(UUID pluginId,
+                                              EventManager eventManager,
+                                              PluginDatabaseSystem pluginDatabaseSystem,
+                                              IssuerAppropriationVault assetVault,
+                                              IssuerAppropriationDigitalAssetTransactionPluginRoot issuerAppropriationDigitalAssetTransactionPluginRoot) throws CantSetObjectException {
+
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.eventManager = Validate.verifySetter(eventManager, "eventManager is null");
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
         this.assetVault = Validate.verifySetter(assetVault, "assetVault is null");
+        this.issuerAppropriationDigitalAssetTransactionPluginRoot = issuerAppropriationDigitalAssetTransactionPluginRoot;
     }
 
 
@@ -64,8 +71,10 @@ public class IssuerAppropriationRecorderService implements AssetTransactionServi
             IssuerAppropriationDAO dao = new IssuerAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault);
             dao.saveNewEvent(event);
         } catch (DatabaseNotFoundException | CantOpenDatabaseException e) {
+            issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantSaveEventException(e, context, CantSaveEventException.DEFAULT_MESSAGE);
         } catch (Exception e) {
+            issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantSaveEventException(FermatException.wrapException(e), context, CantSaveEventException.DEFAULT_MESSAGE);
         }
     }
@@ -76,6 +85,7 @@ public class IssuerAppropriationRecorderService implements AssetTransactionServi
 
         try {
         } catch (Exception e) {
+            issuerAppropriationDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartServiceException(e, context, "An unexpected exception happened while trying to start the AssetAppropriationRecordeService.");
         }
         serviceStatus = ServiceStatus.STARTED;

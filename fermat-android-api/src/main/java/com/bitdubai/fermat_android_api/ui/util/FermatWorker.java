@@ -67,7 +67,7 @@ public abstract class FermatWorker extends Thread {
                         try {
                             callBack.onPostExecute(result);
                         } catch (Exception ex) {
-                            Log.i(TAG, "Cannot call onPostExecute method...", ex);
+                            Log.e(TAG, "Cannot call onPostExecute method...", ex);
                         }
                     }
                 });
@@ -80,7 +80,7 @@ public abstract class FermatWorker extends Thread {
                         try {
                             callBack.onErrorOccurred(ex);
                         } catch (Exception ex) {
-                            Log.i(TAG, "Cannot call onErrorOccurred...", ex);
+                            Log.e(TAG, "Cannot call onErrorOccurred...", ex);
                         }
                     }
                 });

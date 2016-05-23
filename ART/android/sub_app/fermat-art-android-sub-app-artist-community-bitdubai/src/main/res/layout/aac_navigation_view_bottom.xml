@@ -9,7 +9,7 @@
     >
 
     <ImageView
-        android:id="@+id/aac_wallet_logo"
+        android:id="@+id/aac_supapp_logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"

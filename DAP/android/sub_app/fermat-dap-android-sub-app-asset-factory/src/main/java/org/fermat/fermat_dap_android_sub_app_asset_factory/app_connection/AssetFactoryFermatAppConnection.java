@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_android_sub_app_asset_factory.app_connection;
 
 import android.content.Context;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+
 import org.fermat.fermat_dap_android_sub_app_asset_factory.factory.AssetFactoryFragmentFactory;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.navigation_drawer.AssetFactoryNavigationViewPainter;
 import org.fermat.fermat_dap_android_sub_app_asset_factory.sessions.AssetFactorySession;

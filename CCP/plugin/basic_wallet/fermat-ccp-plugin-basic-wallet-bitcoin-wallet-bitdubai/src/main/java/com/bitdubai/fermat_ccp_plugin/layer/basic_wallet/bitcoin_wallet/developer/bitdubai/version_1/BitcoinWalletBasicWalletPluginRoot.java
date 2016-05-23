@@ -54,7 +54,7 @@ import java.util.UUID;
  * Created by loui on 30/04/15.
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
  */
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
 
 public class BitcoinWalletBasicWalletPluginRoot extends AbstractPlugin implements
         BitcoinWalletManager,

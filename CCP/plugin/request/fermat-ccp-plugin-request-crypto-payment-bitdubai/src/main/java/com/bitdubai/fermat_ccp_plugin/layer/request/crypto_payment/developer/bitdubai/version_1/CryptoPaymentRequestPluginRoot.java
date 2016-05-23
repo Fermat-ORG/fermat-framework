@@ -55,7 +55,7 @@ import java.util.List;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/10/2015.
  */
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.REQUEST, plugin = Plugins.CRYPTO_PAYMENT_REQUEST)
 
 public class CryptoPaymentRequestPluginRoot extends AbstractPlugin implements
         CryptoPaymentManager,

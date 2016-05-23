@@ -1,17 +1,24 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanListException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListFansException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantLoginFanException;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.FanCancellingFailedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.FanDisconnectingFailedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
@@ -25,7 +32,7 @@ import java.util.UUID;
 public interface FanCommunityModuleManager extends
         ModuleManager<
                 FanCommunitySettings,
-                ActiveActorIdentityInformation> {
+                FanCommunitySelectableIdentity>, ModuleSettingsImpl<FanCommunitySettings> {
 
     /**
      * The method <code>listWorldFanatics</code> returns the list of all fans in the world,
@@ -65,12 +72,22 @@ public interface FanCommunityModuleManager extends
             final int offset) throws CantGetFanListException;
 
     /**
+     * The method <code>listFanPendingLocalAction</code> returns the list of fans waiting
+     * to be accepted or rejected by the logged user
+     * @return the list of fans waiting to be accepted or rejected by the logged in user.
+     * @throws CantGetFanListException if something goes wrong.
+     */
+    List<LinkedFanIdentity> listFansPendingRemoteAction(
+            final FanCommunitySelectableIdentity selectedIdentity,
+            final int max,
+            final int offset) throws CantGetFanListException;
+    /**
      * The method <code>listAllConnectedFans</code> returns the list of all fan
      * registered by the logged in user
      * @return the list of fans connected to the logged in user
      * @throws CantGetFanListException if something goes wrong.
      */
-    List<FanCommunityInformation> listAllConnectedFans(
+    List<ArtCommunityInformation> listAllConnectedFans(
             final FanCommunitySelectableIdentity selectedIdentity,
             final int max,
             final int offset) throws
@@ -111,18 +128,22 @@ public interface FanCommunityModuleManager extends
     FanCommunitySearch getFanaticSearch();
 
     /**
-     * The method <code>askFanForAcceptance</code> initialize the request of contact between
-     * a fanatic and a other fan.
+     * The method <code>requestConnectionToArtist</code> initialises a contact request between
+     * two Artists.
      *
-     * @param fanToAddName      The name of the fanatic to add
-     * @param fanToAddPublicKey The public key of the fanatic to add
-     * @param profileImage            The profile image that the fanatic has
-     * @throws CantStartRequestException
+     * @param selectedIdentity       The selected local artist identity.
+     * @param artistToContact  The information of the remote artist to connect to.
+     *
+     * @throws CantRequestConnectionException           if something goes wrong.
+     * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
+     * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void askFanForAcceptance(
-            String fanToAddName,
-            String fanToAddPublicKey,
-            byte[] profileImage) throws CantStartRequestException;
+    void requestConnectionToFan(
+            FanCommunitySelectableIdentity selectedIdentity,
+            FanCommunityInformation artistToContact) throws
+            CantRequestConnectionException,
+            ActorConnectionAlreadyRequestedException,
+            ActorTypeNotSupportedException;
 
     /**
      * The method <code>disconnectFan</code> disconnect a fan from the list managed by this
@@ -179,6 +200,18 @@ public interface FanCommunityModuleManager extends
      */
     void login(String fanPublicKey) throws CantLoginFanException;
 
+    /**
+     * This method checks if an actor connection exists.
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    List<FanActorConnection> getRequestActorConnections(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException;
 
     @Override
     SettingsManager<FanCommunitySettings> getSettingsManager();
@@ -188,10 +221,9 @@ public interface FanCommunityModuleManager extends
             CantGetSelectedActorIdentityException,
             ActorIdentityNotSelectedException;
 
+
     @Override
     void createIdentity(String name, String phrase, byte[] profile_img) throws Exception;
-
-    void createFanaticIdentity(String name, String phrase, byte[] profile_img,UUID externalIdentityID) throws Exception;
 
 
     @Override

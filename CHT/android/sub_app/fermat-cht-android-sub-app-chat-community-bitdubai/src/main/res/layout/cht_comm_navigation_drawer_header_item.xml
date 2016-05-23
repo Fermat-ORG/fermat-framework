@@ -4,24 +4,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff">
+    android:background="#90ffffff"
+    android:clickable="false">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:paddingBottom="20dp">
+        android:layout_height="350dp"
+        android:paddingBottom="0dp"
+        android:clickable="false"
+        android:background="@drawable/cht_comm_background_drawer">
+
+        <ImageView
+            android:id="@+id/image_view_circle"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:layout_gravity="center"
+            android:padding="30dp"
+            android:background="#33ffffff"
+            android:scaleType="fitCenter"
+            tools:ignore="ContentDescription"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/relativeLayout"
+            android:src="@drawable/cht_comm_circular_shape_green"
+            android:clickable="false"
+            android:visibility="gone"
+            android:longClickable="false" />
 
         <ImageView
             android:id="@+id/image_view_profile"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="350dp"
             android:layout_gravity="center"
+            android:clickable="false"
             android:background="#33ffffff"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             tools:ignore="ContentDescription"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_above="@+id/relativeLayout" />
+            android:layout_above="@+id/relativeLayout"
+            android:longClickable="false"
+            android:padding="5dp"
+            android:src="@drawable/cht_comm_icon_user"/>
         <!--   android:src="@drawable/profile_image"-->
 
         <RelativeLayout
@@ -29,16 +53,18 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:id="@+id/relativeLayout">
+            android:id="@+id/relativeLayout"
+            android:clickable="false">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/txt_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#99000000"
+                android:background="#47BF73"
                 android:paddingBottom="12dp"
                 android:paddingLeft="25dp"
                 android:paddingRight="8dp"
+                android:clickable="false"
                 android:paddingTop="12dp"
                 android:text="Unknown"
                 android:textColor="#FFFFFF"
@@ -46,7 +72,8 @@
                 app:typeface="ROBOTO_REGULAR"
                 tools:ignore="HardcodedText"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true" />
+                android:layout_alignParentStart="true"
+                android:longClickable="false" />
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>

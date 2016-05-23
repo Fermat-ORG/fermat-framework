@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
-import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -22,19 +21,16 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.TransactionsHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +53,7 @@ public class SendTransactionHistoryFragment
     /**
      * MANAGERS
      */
-    private LossProtectedWallet lossProtectedWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * DATA
      */
@@ -72,7 +68,7 @@ public class SendTransactionHistoryFragment
     private View rootView;
     private LinearLayout empty;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -93,26 +89,22 @@ public class SendTransactionHistoryFragment
 
         lossProtectedWalletSession = (LossProtectedWalletSession) appSession;
 
-        lstWalletTransaction = new ArrayList<LossProtectedWalletTransaction>();
+        lstWalletTransaction = new ArrayList<>();
         try {
-            lossProtectedWallet = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
-
-            lstWalletTransaction = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
 
 
-            settingsManager = lossProtectedWalletSession.getModuleManager().getSettingsManager();
-
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+
             } catch (CantGetSettingsException e) {
                 makeText(getActivity(), "Oooops! recovering from system error: CantGetSettingsException", Toast.LENGTH_SHORT).show();
                 lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
             }
 
             onRefresh();
+
         } catch (Exception ex) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, ex);
@@ -178,7 +170,7 @@ public class SendTransactionHistoryFragment
             adapter = new TransactionsHistoryAdapter(
                     getActivity(),
                     lstWalletTransaction,
-                    lossProtectedWallet,
+                    lossProtectedWalletManager,
                     lossProtectedWalletSession,this);
             adapter.setFermatListEventListener(this);
         }
@@ -211,7 +203,7 @@ public class SendTransactionHistoryFragment
                     intraUserPk = intraUserLoginIdentity.getPublicKey();
                 }
 
-                lstTransaction = lossProtectedWallet.listAllActorTransactionsByTransactionType(
+                lstTransaction = lossProtectedWalletManager.listAllActorTransactionsByTransactionType(
                         BalanceType.AVAILABLE,
                         TransactionType.DEBIT,
                         lossProtectedWalletSession.getAppPublicKey(),

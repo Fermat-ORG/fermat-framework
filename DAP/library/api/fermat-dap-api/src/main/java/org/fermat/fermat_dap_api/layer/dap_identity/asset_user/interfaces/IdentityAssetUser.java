@@ -1,13 +1,16 @@
 package org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantSingMessageException;
+
+import java.io.Serializable;
 
 /**
  * Created by Nerio on 07/09/15.
  * Modified by Franklin on 03/11/2015
  */
-public interface IdentityAssetUser extends ActiveActorIdentityInformation {
+public interface IdentityAssetUser extends ActiveActorIdentityInformation, Serializable {
 
     /**
      * The method <code>setNewProfileImage</code> let the user set a new profile image

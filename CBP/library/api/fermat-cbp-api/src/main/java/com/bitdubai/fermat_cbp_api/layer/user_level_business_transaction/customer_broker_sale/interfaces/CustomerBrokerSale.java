@@ -55,6 +55,8 @@ public interface CustomerBrokerSale {
      */
     String getContractStatus();
 
+    void setContractStatus(String contractStatus);
+
     /**
      * The method <code>getTransactionStatus</code> returns the transaction status of the customer broker sale
      *

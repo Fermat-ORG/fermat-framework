@@ -2,7 +2,7 @@ package com.bitdubai.sub_app.wallet_factory.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_factory.enums.FactoryProjectType;
@@ -34,7 +34,7 @@ public class WalletFactoryProject implements com.bitdubai.fermat_wpd_api.layer.w
     private Language defaultLanguage;
     private ArrayList<Language> languages;
 
-    private WalletNavigationStructure navStructure;
+    private AppNavigationStructure navStructure;
 
 
     @Override
@@ -178,12 +178,12 @@ public class WalletFactoryProject implements com.bitdubai.fermat_wpd_api.layer.w
     }
 
     @Override
-    public WalletNavigationStructure getNavigationStructure() {
+    public AppNavigationStructure getNavigationStructure() {
         return navStructure;
     }
 
     @Override
-    public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+    public void setNavigationStructure(AppNavigationStructure navigationStructure) {
         this.navStructure = navigationStructure;
     }
 }

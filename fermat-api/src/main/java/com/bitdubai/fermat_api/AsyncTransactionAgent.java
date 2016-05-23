@@ -2,6 +2,7 @@ package com.bitdubai.fermat_api;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,7 +12,7 @@ import java.util.Map;
 /**
  * Created by Alejandro Bicelis on 21/1/2016.
  */
-public abstract class AsyncTransactionAgent<T> extends FermatAgent {
+public abstract class AsyncTransactionAgent<T> extends FermatAgent  implements Serializable {
 
     private int SLEEP = 1000;
     private int TRANSACTION_DELAY = 15000;

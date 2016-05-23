@@ -6,6 +6,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.sub_app_artist_community.fragment_factory.ArtistCommunityFragmentFactory;
 import com.bitdubai.sub_app_artist_community.navigation_drawer.ArtistCommunityNavigationViewPainter;
+import com.bitdubai.sub_app_artist_community.notifications.CommunityNotificationPainterBuilder;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
 
 /**
@@ -51,11 +53,23 @@ public class ArtistCommunityFermatAppConnection extends AppConnections<ArtistSub
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new ArtistCommunityNavigationViewPainter(getContext(), getActiveIdentity(), getFullyLoadedSession());
+        return new ArtistCommunityNavigationViewPainter(
+                getContext(),
+                getActiveIdentity(),
+                getFullyLoadedSession());
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code) {
+        return CommunityNotificationPainterBuilder.getNotification(
+                code,
+                getFullyLoadedSession()
+        );
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
+        //return new ArtistCommunityNavigationViewPainter(getContext(), getActiveIdentity(), getFullyLoadedSession());
         return null;
     }
 

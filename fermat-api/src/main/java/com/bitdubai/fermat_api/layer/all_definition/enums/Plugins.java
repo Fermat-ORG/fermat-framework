@@ -167,16 +167,17 @@ public enum Plugins implements FermatPluginsEnum {
     // End CSH Plugins
 
     //Init CER Plugins
-    FILTER("BCERPF"  ),
-    BITCOINVENEZUELA("BCERPBV"  ),
-    BITFINEX("BCERPBF"  ),
-    BTER("BCERPBT"  ),
-    DOLARTODAY("BCERPDT"  ),
-    ELCRONISTA("BCERPEC"  ),
-    EUROPEAN_CENTRAL_BANK("BCERPECB" ),
-    LANACION("BCERPLN"  ),
-    YAHOO("BCERPYH"  ),
-
+    FILTER("BCERPF")                    ,
+    BITCOINVENEZUELA("BCERPBV")         ,
+    BITFINEX("BCERPBF")                 ,
+    BTCE("BCERPBC")                     ,
+    BTER("BCERPBT")                     ,
+    CCEX("BCERPCC")                     ,
+    DOLARTODAY("BCERPDT")               ,
+    ELCRONISTA("BCERPEC")               ,
+    EUROPEAN_CENTRAL_BANK("BCERPECB")   ,
+    LANACION("BCERPLN")                 ,
+    YAHOO("BCERPYH")                    ,
     // End CER Plugins
 
     // Init new Plugins

@@ -23,7 +23,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.models.ActorIssuer;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.CancelDialog;
 import org.fermat.fermat_dap_android_sub_app_asset_issuer_community.popup.ConnectDialog;
@@ -35,7 +37,6 @@ import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAss
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.Date;
 
@@ -57,7 +58,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
     private FermatTextView issuerRegistrationDate;
     private FermatTextView issuerLastConnectionDate;
 
-    private static AssetIssuerCommunitySubAppModuleManager manager;
+    private AssetIssuerCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private ActorIssuer actorIssuer;
     private ActorAssetIssuer actorAssetIssuer;
@@ -87,9 +88,10 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
         actorIssuer = (ActorIssuer) appSession.getData(ISSUER_SELECTED);
-        manager = assetIssuerCommunitySubAppSession.getModuleManager();
+
+        assetIssuerCommunitySubAppSession = ((AssetIssuerCommunitySubAppSession) appSession);
+        moduleManager = assetIssuerCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
     }
@@ -198,7 +200,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
             //CommonLogger.info(TAG, "User connection state " + actorIssuer.getConnectionState());
             final DisconectDialog disconectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null, actorIssuer, manager.getActiveAssetIssuerIdentity());
+                disconectDialog = new DisconectDialog(getActivity(), (AssetIssuerCommunitySubAppSession) appSession, null, actorIssuer, moduleManager.getActiveAssetIssuerIdentity());
                 disconectDialog.setTitle("Disconnect");
                 disconectDialog.setDescription("Want to disconnect from");
                 disconectDialog.setUsername(actorIssuer.getRecord().getName());
@@ -222,7 +224,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 //                        null,
 //                        actorIssuer,
 //                        null);
-////                        manager.getActiveAssetIssuerIdentity());
+////                        moduleManager.getActiveAssetIssuerIdentity());
 //                notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 //                    @Override
 //                    public void onDismiss(DialogInterface dialog) {
@@ -269,7 +271,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 
     private void updateButton() {
         try {
-            connectionState = manager.getActorIssuerRegisteredDAPConnectionState(this.actorIssuer.getRecord().getActorPublicKey());
+            connectionState = moduleManager.getActorIssuerRegisteredDAPConnectionState(this.actorIssuer.getRecord().getActorPublicKey());
         } catch (CantGetAssetIssuerActorsException e) {
             e.printStackTrace();
         }
@@ -380,7 +382,7 @@ public class IssuerCommunityConnectionOtherProfileFragment extends AbstractFerma
 
     private synchronized ActorAssetIssuer getProfileData() {
         try {
-            actorAssetIssuer = manager.getActorIssuer(actorIssuer.getRecord().getActorPublicKey());
+            actorAssetIssuer = moduleManager.getActorIssuer(actorIssuer.getRecord().getActorPublicKey());
 
         } catch (CantGetAssetIssuerActorsException e) {
             e.printStackTrace();

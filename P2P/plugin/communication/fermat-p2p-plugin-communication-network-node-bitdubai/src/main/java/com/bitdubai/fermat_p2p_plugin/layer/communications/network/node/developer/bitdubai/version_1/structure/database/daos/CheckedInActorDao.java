@@ -14,8 +14,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.apache.commons.codec.binary.Base64;
 
-import java.sql.Timestamp;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.CheckedInActorDao</code>
  * <p/>
@@ -34,7 +32,7 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
     public CheckedInActorDao(Database dataBase) {
         super(dataBase,
                 CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_TABLE_NAME,
-                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_FIRST_KEY_COLUMN);
+                CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
     }
 
     /**
@@ -48,7 +46,6 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
 
         try{
 
-            checkedInActor.setUuid(record.getUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_UUID_COLUMN_NAME));
             checkedInActor.setIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
             checkedInActor.setName(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME));
             checkedInActor.setAlias(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME));
@@ -57,8 +54,10 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
             checkedInActor.setLatitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LATITUDE_COLUMN_NAME));
             checkedInActor.setLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LONGITUDE_COLUMN_NAME));
             checkedInActor.setExtraData(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME));
-            checkedInActor.setCheckedInTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME)));
+            checkedInActor.setCheckedInTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME)));
             checkedInActor.setNsIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+            checkedInActor.setClientIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME));
+
 
         }catch (Exception e){
             return null;
@@ -81,7 +80,6 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
          */
         DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
 
-        databaseTableRecord.setUUIDValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_UUID_COLUMN_NAME, entity.getUuid());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getIdentityPublicKey());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NAME_COLUMN_NAME,entity.getName());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_ALIAS_COLUMN_NAME,entity.getAlias());
@@ -89,9 +87,10 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_PHOTO_COLUMN_NAME, Base64.encodeBase64String(entity.getPhoto()));
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LATITUDE_COLUMN_NAME, entity.getLatitude());
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_LONGITUDE_COLUMN_NAME, entity.getLongitude());
-        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME,entity.getExtraData());
-        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME, entity.getCheckedInTimestamp().getTime());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_EXTRA_DATA_COLUMN_NAME, entity.getExtraData());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CHECKED_IN_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getCheckedInTimestamp()));
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getNsIdentityPublicKey());
+        databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getClientIdentityPublicKey());
 
         return databaseTableRecord;
     }
