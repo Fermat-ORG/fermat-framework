@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
@@ -36,7 +36,7 @@ public class BitcoinWalletSender {
 
 
     //Wallet Managers
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
     public BitcoinWalletSender(long cryptoAmount, String sendingWalletPublicKey, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, String notes, BlockchainNetworkType blockchainNetworkType, Actors actorType) {
@@ -54,7 +54,7 @@ public class BitcoinWalletSender {
         Long balanceBeforeCredit = null;
         Long balanceAfterCredit = null;
 
-        BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord =  buildBitcoinWalletRecord();
+        CryptoWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord =  buildBitcoinWalletRecord();
         BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionWalletRecord =  buildLossWalletRecord();
 
 
@@ -67,7 +67,7 @@ public class BitcoinWalletSender {
 
 
                try {
-                   balanceBeforeCredit =   this.bitcoinWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                   balanceBeforeCredit =   this.cryptoWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                } catch (CantCalculateBalanceException e) {
                    e.printStackTrace();
                } catch (CantLoadWalletsException e) {
@@ -76,8 +76,8 @@ public class BitcoinWalletSender {
 
                if (balanceBeforeCredit!=null){
                    try {
-                       this.bitcoinWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord);
-                       this.bitcoinWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord);
+                       this.cryptoWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord);
+                       this.cryptoWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord);
                    } catch (CantRegisterCreditException e) {
                        e.printStackTrace();
                    } catch (CantLoadWalletsException e) {
@@ -87,7 +87,7 @@ public class BitcoinWalletSender {
 
 
                try {
-                   balanceAfterCredit =   this.bitcoinWalletManager.loadWallet(sendingWalletPublicKey).getTransactionById(bitcoinWalletTransactionWalletRecord.getTransactionId()).getAmount();
+                   balanceAfterCredit =   this.cryptoWalletManager.loadWallet(sendingWalletPublicKey).getTransactionById(bitcoinWalletTransactionWalletRecord.getTransactionId()).getAmount();
                } catch (CantFindTransactionException e) {
                    e.printStackTrace();
                } catch (CantLoadWalletsException e) {
@@ -169,8 +169,8 @@ public class BitcoinWalletSender {
                            try {
 
                                try {
-                                   this.bitcoinWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord);
-                                   this.bitcoinWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.BOOK).debit(bitcoinWalletTransactionWalletRecord);
+                                   this.cryptoWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord);
+                                   this.cryptoWalletManager.loadWallet(sendingWalletPublicKey).getBalance(BalanceType.BOOK).debit(bitcoinWalletTransactionWalletRecord);
                                } catch (CantRegisterDebitException e) {
                                    e.printStackTrace();
                                }
@@ -215,12 +215,12 @@ public BitcoinLossProtectedWalletTransactionWalletRecord buildLossWalletRecord()
     }
 
 
-    public BitcoinWalletTransactionWalletRecord buildBitcoinWalletRecord(){
+    public CryptoWalletTransactionWalletRecord buildBitcoinWalletRecord(){
 
 
         UUID pluginId = UUID.randomUUID();
 
-        BitcoinWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinWalletTransactionWalletRecord(pluginId,
+        CryptoWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new CryptoWalletTransactionWalletRecord(pluginId,
                 null,
                 null,
                 cryptoAmount,
