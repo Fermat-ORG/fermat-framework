@@ -8,6 +8,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +18,7 @@ import java.util.UUID;
  * @author Francisco Vásquez on 15/09/15.
  * @version 1.0
  */
-public class RedeemPointSettings implements WalletSettings {
+public class RedeemPointSettings implements WalletSettings, Serializable {
 
     private UUID languageId;
     private UUID skinId;
@@ -25,6 +26,7 @@ public class RedeemPointSettings implements WalletSettings {
     private boolean isContactsHelpEnabled;
     private List<BlockchainNetworkType> blockchainNetwork;
     private int blockchainNetworkPosition;
+    private boolean notificationEnabled;
 
     public int getBlockchainNetworkPosition() {
         return blockchainNetworkPosition;
@@ -77,5 +79,13 @@ public class RedeemPointSettings implements WalletSettings {
     @Override
     public void setIsPresentationHelpEnabled(boolean isPresentationHelpEnabled) {
         this.isPresentationHelpEnabled = isPresentationHelpEnabled;
+    }
+
+    public boolean getNotificationEnabled() {
+        return this.notificationEnabled;
+    }
+
+    public void setNotificationEnabled(boolean notificationEnabled) {
+        this.notificationEnabled = notificationEnabled;
     }
 }

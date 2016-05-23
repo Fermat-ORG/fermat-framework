@@ -3,10 +3,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet
 
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 
+import java.io.Serializable;
+
 /**
  * Created Natalia Cortez on 07/03/2016.
  */
-public class LossProtectedWalletIntraUserIdentityWallet  implements LossProtectedWalletIntraUserIdentity {
+public class LossProtectedWalletIntraUserIdentityWallet  implements LossProtectedWalletIntraUserIdentity,Serializable {
 
     String publicKey;
     String alias;

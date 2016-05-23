@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -11,6 +11,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetNodeCatalogMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(GetNodeCatalogProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(GetNodeCatalogProcessor.class));
 
     /**
      * Constructor with parameter
@@ -67,7 +68,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
             /*
              * Validate if content type is the correct
              */
-            if (messageContent.getMessageContentType() == MessageContentType.JSON){
+            if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
 
                 nodesCatalogList = loadData(messageContent.getOffset(), messageContent.getMax());

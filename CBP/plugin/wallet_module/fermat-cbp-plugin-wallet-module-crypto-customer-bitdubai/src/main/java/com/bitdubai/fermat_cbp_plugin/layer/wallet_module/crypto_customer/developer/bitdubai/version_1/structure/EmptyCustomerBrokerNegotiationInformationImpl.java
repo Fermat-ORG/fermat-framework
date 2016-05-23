@@ -1,20 +1,23 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus.DRAFT;
+
+
 /**
  * Created by nelson on 10/01/16.
  */
-public class EmptyCustomerBrokerNegotiationInformationImpl implements CustomerBrokerNegotiationInformation {
+public class EmptyCustomerBrokerNegotiationInformationImpl implements CustomerBrokerNegotiationInformation, Serializable {
     private Long lastNegotiationUpdateDate;
     private ActorIdentity customer;
     private ActorIdentity broker;
@@ -33,59 +36,17 @@ public class EmptyCustomerBrokerNegotiationInformationImpl implements CustomerBr
     }
 
     public ClauseInformation putClause(final ClauseType clauseType, final String value) {
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return UUID.randomUUID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return clauseType;
-            }
-
-            @Override
-            public String getValue() {
-                return (value != null) ? value : "";
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return ClauseStatus.DRAFT;
-            }
-        };
-
+        final ClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clauseType, value, DRAFT);
         clauses.put(clauseType, clauseInformation);
 
         return clauseInformation;
     }
 
     public ClauseInformation putClause(final ClauseInformation clause, final String value) {
-        final ClauseType type = clause.getType();
+        final CryptoCustomerWalletModuleClauseInformation clauseInformation = new CryptoCustomerWalletModuleClauseInformation(clause);
+        clauseInformation.setValue(value);
 
-        ClauseInformation clauseInformation = new ClauseInformation() {
-            @Override
-            public UUID getClauseID() {
-                return clause.getClauseID();
-            }
-
-            @Override
-            public ClauseType getType() {
-                return type;
-            }
-
-            @Override
-            public String getValue() {
-                return value;
-            }
-
-            @Override
-            public ClauseStatus getStatus() {
-                return clause.getStatus();
-            }
-        };
-
-        clauses.put(type, clauseInformation);
+        clauses.put(clause.getType(), clauseInformation);
 
         return clauseInformation;
     }

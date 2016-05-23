@@ -3,6 +3,7 @@ package com.bitdubai.sub_app_artist_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,9 +26,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -109,7 +112,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
                     appSettings = settingsManager.loadAndGetSettings("123456789");
                 }
 
@@ -140,11 +142,24 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 launchListIdentitiesDialog = true;
             }
 
-            //Get notification requests count
-            //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
-            //mNotificationsCount = 4;
-            //new FetchCountTask().execute();
-
+            if(moduleManager!=null){
+                //Get notification requests count
+                ArtistCommunitySelectableIdentity artistCommunitySelectableIdentity=
+                        moduleManager.getSelectedActorIdentity();
+                if(artistCommunitySelectableIdentity!=null){
+                    List<ArtistCommunityInformation> artistCommunityInformation =
+                            moduleManager.listArtistsPendingLocalAction(
+                                    artistCommunitySelectableIdentity,
+                                    MAX,
+                                    offset);
+                    if(artistCommunityInformation!=null){
+                        mNotificationsCount = artistCommunityInformation
+                                .size();
+                        //mNotificationsCount = 4;
+                        new FetchCountTask().execute();
+                    }
+                }
+            }
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
@@ -179,15 +194,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setBannerRes(R.drawable.banner_artist_community)
                         .setIconRes(R.drawable.artist)
-                        .setSubTitle(R.string.art_afc_launch_action_creation_dialog_sub_title)
-                        .setBody(R.string.art_afc_launch_action_creation_dialog_body)
-                        .setTextFooter(R.string.art_afc_launch_action_creation_dialog_footer)
-                        .setTextNameLeft(R.string.art_afc_launch_action_creation_name_left)
-                        .setTextNameRight(R.string.art_afc_launch_action_creation_name_right)
-                        .setImageRight(R.drawable.ic_profile_male)
+                        .setSubTitle(R.string.art_aac_launch_action_creation_dialog_sub_title)
+                        .setBody(R.string.art_aac_launch_action_creation_dialog_body)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -299,11 +310,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
         List<ArtistCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            List<ArtistCommunityInformation> result = moduleManager.listWorldArtists(moduleManager.getSelectedActorIdentity(), MAX, offset);
-            dataSet.addAll(result);
-            offset = dataSet.size();
+            ArtistCommunitySelectableIdentity artistCommunitySelectableIdentity = moduleManager.getSelectedActorIdentity();
+            if(!Validate.isObjectNull(artistCommunitySelectableIdentity)){
+                List<ArtistCommunityInformation> result = moduleManager.listWorldArtists(artistCommunitySelectableIdentity, MAX, offset);
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
+        }catch (CantGetSelectedActorIdentityException e){
+            //There are no identities in device
+            //Nothing to do here.
         } catch (Exception e) {
             e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
         }
 
         return dataSet;
@@ -317,6 +335,29 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
 
     @Override
     public void onLongItemClickListener(ArtistCommunityInformation data, int position) {}
+
+    /*
+    Sample AsyncTask to fetch the notifications count
+    */
+    class FetchCountTask extends AsyncTask<Void, Void, Integer> {
+
+        @Override
+        protected Integer doInBackground(Void... params) {
+            // example count. This is where you'd
+            // query your data store for the actual count.
+            return mNotificationsCount;
+        }
+
+        @Override
+        public void onPostExecute(Integer count) {
+            updateNotificationsBadge(count);
+        }
+    }
+
+    private void updateNotificationsBadge(int count) {
+        mNotificationsCount = count;
+        getActivity().invalidateOptionsMenu();
+    }
 
 }
 

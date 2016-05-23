@@ -112,22 +112,22 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
 
         subappSettings = null;
         try {
-            subappSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            subappSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e){ subappSettings = null; }
 
         if(subappSettings == null){
             subappSettings = new IdentityBrokerPreferenceSettings();
             subappSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),subappSettings);
-            }catch (Exception e){
+                moduleManager.persistSettings(appSession.getAppPublicKey(),subappSettings);
+            }catch (Exception ignore){
 
             }
         }
 
         boolean showDialog;
         try{
-            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
             if(showDialog){
                 presentationDialog.show();
             }

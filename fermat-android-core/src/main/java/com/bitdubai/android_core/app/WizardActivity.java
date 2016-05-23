@@ -24,12 +24,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardPageListener;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 
@@ -370,16 +368,11 @@ public class WizardActivity extends FermatActivity
 
     }
 
-
     @Override
-    public void onCallbackViewObserver(FermatCallback fermatCallback) {
+    public void connectWithOtherApp(String fermatAppPublicKey, Object[] objectses) {
 
     }
 
-    @Override
-    public void connectWithOtherApp(Engine engine, String fermatAppPublicKey, Object[] objectses) {
-
-    }
 
     @Override
     public void onControlledActivityBack(String activityCodeBack) {

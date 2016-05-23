@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -39,12 +40,10 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     /**
      * Database Interface member variables.
      */
-
     private String databaseName;
     private UUID ownerId;
     private String query;
     private DesktopDatabaseBridge Database;
-    private DatabaseTable databaseTable;
 
     // Public constructor declarations.
     public DesktopDatabase(UUID ownerId, String databaseName) {
@@ -99,8 +98,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     @Override
     public DatabaseTable getTable(String tableName) {
 
-        databaseTable = new DesktopDatabaseTable(this.Database, tableName);
-        return databaseTable;
+        return new DesktopDatabaseTable(this.Database, tableName);
     }
 
     /**
@@ -154,33 +152,29 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     @Override
     public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
 
-        String databasePath = "";
-        /**
-         * if owner id if null
-         * because it comes from platformdatabase
-         */
-        if (ownerId != null)
-            //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-            databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
-        else
-            //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
-            databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+        String databasePath = buildDatabasePath();
 
-        File storagePath = new File(databasePath);
-        if (!storagePath.exists()) {
-            //storagePath.mkdirs();
-            throw new DatabaseNotFoundException();
-        } else {
-
-            databasePath += "/" + databaseName.replace("-", "") + ".db";
-
-
-            this.Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
+        if (!(new File(databasePath)).exists()) {
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check if the constructed path is valid";
+            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
         }
 
-        databasePath += "/" + this.databaseName.replace("-", "") + ".db";
+        try {
+            Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
+        } catch (Exception exception) {
 
-        Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
+            /**
+             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
+             * We will assume that if it didn't open it was because it didn't exist.
+             * * *
+             */
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(exception);
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check the cause for this error as we have already checked that the database exists";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
+        }
 
     }
 
@@ -189,35 +183,19 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
     }
 
+
     public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
 
-        /**
-         * First I try to open the database.
-         */
+        String databasePath = buildDatabasePath(databaseName);
+
+        if (!(new File(databasePath)).exists()) {
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check if the constructed path is valid";
+            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, null, context, possibleReason);
+        }
+
         try {
-            String databasePath = "";
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
-            if (ownerId != null)
-                //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-                databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
-            else
-                databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
-
-            File storagePath = new File(databasePath);
-            if (!storagePath.exists()) {
-                //storagePath.mkdirs();
-                throw new DatabaseNotFoundException();
-            } else {
-
-                databasePath += "/" + databaseName.replace("-", "") + ".db";
-
-
-                this.Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
-            }
-
+            Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
         } catch (Exception exception) {
 
             /**
@@ -225,11 +203,12 @@ public class DesktopDatabase implements Database, DatabaseFactory {
              * We will assume that if it didn't open it was because it didn't exist.
              * * *
              */
-
-            throw new DatabaseNotFoundException();
-            //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(exception);
+            String context = "database Constructed Path: " + databasePath;
+            String possibleReason = "Check the cause for this error as we have already checked that the database exists";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
         }
-
     }
 
     /**
@@ -247,19 +226,8 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
         try {
             // determine directry path name
-            String databasePath = "";
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
-            if (ownerId != null)
-                databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
-                //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-            else
-                databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
-            //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+            String databasePath = buildDatabasePath(databaseName);
 
-            databasePath += "/" + databaseName.replace("-", "") + ".db";
             File databaseFile = new File(databasePath);
 
             DesktopDatabaseBridge.deleteDatabase(databaseFile);
@@ -287,33 +255,15 @@ public class DesktopDatabase implements Database, DatabaseFactory {
          */
         try {
 
-
-            String databasePath = "";
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
-
-            //preguntar si conviene más centralizar la carpeta de base de datos o hacer un contexto individual
-
-            if (ownerId != null)
-                databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
-                //databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
-            else
-                databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
-            //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
+            String databasePath = buildStoragePath();
 
             File storagePath = new File(databasePath);
             if (!storagePath.exists()) {
                 storagePath.mkdirs();
             }
 
-            /**
-             * Hash data base name
-             */
 
-            databasePath += "/" + databaseName.replace("-", "") + ".db";
-            File databaseFile = new File(databasePath);
+            File databaseFile = new File(buildDatabasePath(databaseName));
             this.Database = DesktopDatabaseBridge.openOrCreateDatabase(databaseFile, null);
 
 
@@ -491,5 +441,52 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     public DatabaseTableFactory newTableFactory(String tableName) {
 
         return new DesktopDatabaseTableFactory(tableName);
+    }
+
+
+    private String buildStoragePath() {
+        String databasePath;
+        /**
+         * if owner id if null
+         * because it comes from platformdatabase
+         */
+        if (ownerId != null)
+            databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
+        else
+            databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+
+        return databasePath;
+    }
+
+    private String buildDatabasePath() {
+        String databasePath;
+        /**
+         * if owner id if null
+         * because it comes from platformdatabase
+         */
+        if (ownerId != null)
+            databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
+        else
+            databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+
+        databasePath += "/" + databaseName.replace("-", "") + ".db";
+
+        return databasePath;
+    }
+
+    private String buildDatabasePath(String databaseName) {
+        String databasePath;
+        /**
+         * if owner id if null
+         * because it comes from platformdatabase
+         */
+        if (ownerId != null)
+            databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
+        else
+            databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+
+        databasePath += "/" + databaseName.replace("-", "") + ".db";
+
+        return databasePath;
     }
 }

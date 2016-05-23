@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages;
 
-import android.util.Base64;
-
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.enums.MessageTypes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,7 +15,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
-import java.util.UUID;
 
 /**
  * The interface <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.messages.NetworkServiceMessage</code>

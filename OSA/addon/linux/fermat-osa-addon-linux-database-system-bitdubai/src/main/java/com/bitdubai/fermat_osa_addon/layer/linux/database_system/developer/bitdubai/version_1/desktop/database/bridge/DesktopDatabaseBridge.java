@@ -1,15 +1,13 @@
-/*
-* @#DesktopDatabaseBridge.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge;
+
+import org.apache.tomcat.jdbc.pool.ConnectionPool;
+import org.apache.tomcat.jdbc.pool.PoolProperties;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
@@ -29,105 +27,112 @@ public class DesktopDatabaseBridge {
     /**
      * Database member variables.
      */
-    private Connection c = null;
-    private Statement stmt = null;
-    private boolean transaccionSatisfactoria=false;
+    private final ConnectionPool connectionPool;
+    private Connection connection = null;
+    private boolean successfulTransaction = false;
     private String databasePath;
 
     /**
      * Constructor
      */
-    public DesktopDatabaseBridge(String databasePath){
-        this.databasePath=databasePath;
+    public DesktopDatabaseBridge(String databasePath) {
+
+        try {
+            PoolProperties p = new PoolProperties();
+            p.setUrl("jdbc:sqlite:" + databasePath);
+            p.setDriverClassName("org.sqlite.JDBC");
+            p.setMaxActive(10);
+            p.setMaxIdle(10);
+            p.setInitialSize(2);
+            p.setMaxWait(10000);
+            p.setRemoveAbandonedTimeout(60);
+            p.setMinEvictableIdleTimeMillis(30000);
+            p.setMinIdle(10);
+            this.connectionPool = new ConnectionPool(p);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        this.databasePath = databasePath;
     }
 
     /**
      * Method who open the database connection
      * if the database not exist the method create a new one
-     * @exception SQLException    //if the Driver is not available
+     *
+     * @throws SQLException //if the Driver is not available
      **/
-    public void connect(){
+    public void connect() {
         try {
             //SQLite Driver
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
-            c.setAutoCommit(false);
+            connection = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+            connection.setAutoCommit(false);
 
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            if (c != null)
+            if (connection != null)
                 close();
-
+            throw new RuntimeException(e);
         }
     }
 
     /**
      * Method who close the database connection
-     * @exception SQLException	//if the database is not open
+     *
+     * @throws SQLException //if the database is not open
      **/
-    private void close(){
+    private void close() {
         try {
 
-            if (c != null){
-                c.close();
-            }
-
-            if (stmt != null){
-                stmt.close();
+            if (connection != null) {
+                connection.close();
             }
 
         } catch (SQLException ex) {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
+            throw new RuntimeException(ex);
         }
 
     }
 
-    /**
-     *
-     * @param sql   //the SQL query
-     * @param selectionArgs  //The values will be bound as Strings.
-     * @exception SQLException	//if the SQL string is invalid
-     * @return  //A Cursor object, which is positioned before the first entry.
-     */
+    public boolean isTableExists(String tableName) throws SQLException {
 
-    public ResultSet rawQuery(String sql,String[] selectionArgs) {
-        if (c == null)
-            connect();
+        String SQL_QUERY = "select DISTINCT tbl_name from sqlite_master where tbl_name = '" + tableName + "'";
 
-        ResultSet rs=null;
-        try {
-            stmt = c.createStatement();
-            rs = stmt.executeQuery(sql);
-            c.commit();
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
-        }catch(SQLException ex){
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
+                ResultSetMetaData rsmd = rs.getMetaData();
 
+                if (rsmd.getColumnCount() > 0)
+                    return true;
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
-
-
-        return rs;
+        return false;
     }
-
 
     /**
      * Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
-     * @param sql  //the SQL query
-     * Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
-    "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
-     @exception SQLException	//if the SQL string is invalid
+     *
+     * @param SQL_QUERY //the SQL query
+     *            Example String sql = "INSERT INTO COMPANY (ID,NAME,AGE,ADDRESS,SALARY) " +
+     *            "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
+     * @throws SQLException //if the SQL string is invalid
      */
-    public void execSQL(String sql) throws SQLException {
+    public void execSQL(final String SQL_QUERY) throws SQLException {
 
-        if (c == null)
-            connect();
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement()) {
 
-        stmt = c.createStatement();
-        stmt.executeUpdate(sql);
-        stmt.close();
-        c.commit();
+                stmt.executeUpdate(SQL_QUERY);
+            }
+        }
     }
 
     /**
@@ -147,23 +152,24 @@ public class DesktopDatabaseBridge {
      * If any errors are encountered between this and endTransaction the transaction will still be committed.
      */
     public void setTransactionSuccessful() {
-        transaccionSatisfactoria=true;
+        successfulTransaction = true;
     }
 
     /**
      * End a transaction
-     * @exception SQLException if the database connection is not open
+     *
+     * @throws SQLException if the database connection is not open
      */
     public void endTransaction() {
-        if (transaccionSatisfactoria){
+        if (successfulTransaction) {
             try {
-                c.commit();
+                connection.commit();
             } catch (SQLException ex) {
                 Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
+                throw new RuntimeException(ex);
             }
-            if (c != null)
-               close();
+            if (connection != null)
+                close();
         }
 
     }
@@ -215,49 +221,48 @@ public class DesktopDatabaseBridge {
      * @param recordUpdateList
      * @param whereClause
      * @param whereArg
-     * @exception SQLException if the database is close or the driver is not more available
+     * @throws SQLException if the database is close or the driver is not more available
      */
-    public void update(String tableName, Map<String, Object> recordUpdateList,String whereClause, String[] whereArg) {
+    public void update(String tableName, Map<String, Object> recordUpdateList, String whereClause, String[] whereArg) throws SQLException {
 
         // create our java preparedstatement using a sql update query
         String setVariables = "";
         int limited = recordUpdateList.entrySet().size();
         int i = 1;
         String com;
-        String pk= (whereArg!=null) ?  whereArg[0] : null;
-        for(Map.Entry<String, Object> entry : recordUpdateList.entrySet()) {
+        String pk = (whereArg != null) ? whereArg[0] : null;
+        for (Map.Entry<String, Object> entry : recordUpdateList.entrySet()) {
 
-            if(i !=limited){
-                com=", ";
-            }else{
-                com="";
+            if (i != limited) {
+                com = ", ";
+            } else {
+                com = "";
             }
 
-            if(pk== null || !pk.equalsIgnoreCase(entry.getKey())) {
+            if (pk == null || !pk.equalsIgnoreCase(entry.getKey())) {
                 setVariables += entry.getKey() + "= '" + entry.getValue() + "'" + com;
             }
 
             i++;
         }
 
-        if (c == null){
-            connect();
+        String SQL_QUERY = "UPDATE " + tableName + " SET " + setVariables + whereClause;
+
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement()) {
+
+                stmt.executeUpdate(SQL_QUERY);
+
+            } catch (SQLException ex) {
+
+                Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
+                throw new RuntimeException(ex);
+            }
         }
-
-        ResultSet rs=null;
-        try {
-            stmt = c.createStatement();
-            stmt.executeUpdate("UPDATE " + tableName + " SET " + setVariables + whereClause);
-            stmt.close();
-            c.commit();
-
-        }catch(SQLException ex){
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
-            if (c != null)
-                close();
-        }
-
     }
 
+    public ConnectionPool getConnectionPool() {
+        return connectionPool;
+    }
 }

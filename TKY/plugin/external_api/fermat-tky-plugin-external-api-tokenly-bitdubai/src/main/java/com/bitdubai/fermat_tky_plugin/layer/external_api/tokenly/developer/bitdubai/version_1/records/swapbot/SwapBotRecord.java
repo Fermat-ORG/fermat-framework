@@ -6,13 +6,14 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.ImageDe
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Swap;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.TokenlyBalance;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.Arrays;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/03/16.
  */
-public class SwapBotRecord implements Bot {
+public class SwapBotRecord implements Bot, Serializable {
 
     private String id;
     private String name;
@@ -32,6 +33,7 @@ public class SwapBotRecord implements Bot {
     private long refundsAfterBlocks;
     private Date createdAt;
     private String hash;
+    private String botUrl;
 
     public SwapBotRecord(
             String id,
@@ -70,6 +72,71 @@ public class SwapBotRecord implements Bot {
         this.refundsAfterBlocks = refundsAfterBlocks;
         this.createdAt = createdAt;
         this.hash = hash;
+        //Set the default botURL;
+        this.botUrl = "http://tokenly.com";
+    }
+
+    /**
+     * Default constructor with parameters
+     * @param id
+     * @param name
+     * @param address
+     * @param username
+     * @param description
+     * @param descriptionHtml
+     * @param backgroundImageDetails
+     * @param logoImageDetails
+     * @param backgroundOverlaySettings
+     * @param swaps
+     * @param tokenlyBalances
+     * @param allTokenlyBalancesByType
+     * @param returnFee
+     * @param state
+     * @param confirmationsRequired
+     * @param refundsAfterBlocks
+     * @param createdAt
+     * @param hash
+     * @param botUrl
+     */
+    public SwapBotRecord(
+            String id,
+            String name,
+            String address,
+            String username,
+            String description,
+            String descriptionHtml,
+            ImageDetails backgroundImageDetails,
+            ImageDetails logoImageDetails,
+            String[] backgroundOverlaySettings,
+            Swap[] swaps,
+            TokenlyBalance[] tokenlyBalances,
+            TokenlyBalance[][] allTokenlyBalancesByType,
+            float returnFee,
+            String state,
+            long confirmationsRequired,
+            long refundsAfterBlocks,
+            Date createdAt,
+            String hash,
+            String botUrl) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.username = username;
+        this.description = description;
+        this.descriptionHtml = descriptionHtml;
+        this.backgroundImageDetails = backgroundImageDetails;
+        this.logoImageDetails = logoImageDetails;
+        this.backgroundOverlaySettings = backgroundOverlaySettings;
+        this.swaps = swaps;
+        this.tokenlyBalances = tokenlyBalances;
+        this.allTokenlyBalancesByType = allTokenlyBalancesByType;
+        this.returnFee = returnFee;
+        this.state = state;
+        this.confirmationsRequired = confirmationsRequired;
+        this.refundsAfterBlocks = refundsAfterBlocks;
+        this.createdAt = createdAt;
+        this.hash = hash;
+        this.botUrl = botUrl;
     }
 
     /**
@@ -234,6 +301,23 @@ public class SwapBotRecord implements Bot {
         return this.hash;
     }
 
+    /**
+     * This method returns the botUrl
+     * @return
+     */
+    @Override
+    public String getBotUrl(){
+        return this.botUrl;
+    }
+
+    /**
+     * This method sets the botUrl
+     * @param botUrl
+     */
+    public void setBotUrl(String botUrl){
+        this.botUrl = botUrl;
+    }
+
     @Override
     public String toString() {
         return "SwapBotRecord{" +
@@ -245,7 +329,7 @@ public class SwapBotRecord implements Bot {
                 ", descriptionHtml='" + descriptionHtml + '\'' +
                 ", backgroundImageDetails=" + backgroundImageDetails +
                 ", logoImageDetails=" + logoImageDetails +
-                ", backgroundOverlaySettings=" + backgroundOverlaySettings +
+                ", backgroundOverlaySettings=" + Arrays.toString(backgroundOverlaySettings) +
                 ", swaps=" + Arrays.toString(swaps) +
                 ", tokenlyBalances=" + Arrays.toString(tokenlyBalances) +
                 ", allTokenlyBalancesByType=" + Arrays.toString(allTokenlyBalancesByType) +
@@ -255,6 +339,7 @@ public class SwapBotRecord implements Bot {
                 ", refundsAfterBlocks=" + refundsAfterBlocks +
                 ", createdAt=" + createdAt +
                 ", hash='" + hash + '\'' +
+                ", botUrl='" + botUrl + '\'' +
                 '}';
     }
 }

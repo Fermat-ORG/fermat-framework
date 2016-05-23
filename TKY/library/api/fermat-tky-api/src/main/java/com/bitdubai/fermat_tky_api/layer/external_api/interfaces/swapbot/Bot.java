@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
  */
-public interface Bot {
+public interface Bot extends Serializable {
 
     /**
      * This method returns the bot id.
@@ -114,5 +115,17 @@ public interface Bot {
      * @return
      */
     String getHash();
+
+    /**
+     * This method returns the botUrl
+     * @return
+     */
+    String getBotUrl();
+
+    /**
+     * This method sets the botUrl
+     * @param botUrl
+     */
+    void setBotUrl(String botUrl);
 
 }

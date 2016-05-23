@@ -6,6 +6,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by Franklin Marcano on 21/01/16.
  */
-public class CryptoCustomerWalletPreferenceSettings implements WalletSettings {
+public class CryptoCustomerWalletPreferenceSettings implements WalletSettings, Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
     private CryptoCustomerWalletAssociatedSetting bitcoinWallet;

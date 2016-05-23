@@ -23,7 +23,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_core.CBPPlatform</code>
- * haves all the necessary business logic to start the CBP platform.
+ * contains all the necessary business logic to start the CBP platform.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/11/2015.
  *

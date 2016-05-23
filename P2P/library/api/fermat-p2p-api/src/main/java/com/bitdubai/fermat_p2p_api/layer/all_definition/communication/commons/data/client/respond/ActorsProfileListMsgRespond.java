@@ -1,13 +1,8 @@
-/*
- * @#ActorsProfileListMsgRespond.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 import java.util.List;
 
@@ -24,7 +19,12 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
     /**
      * Represent the profile list
      */
-    private List<ActorProfile> profileList;
+    private List<ResultDiscoveryTraceActor> profileList;
+
+    /**
+     * Represent the networkServiceTypeIntermediate
+     */
+    private NetworkServiceType networkServiceTypeIntermediate;
 
     /**
      * Constructor with parameters
@@ -32,10 +32,12 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
      * @param status
      * @param details
      * @param profileList
+     * @param networkServiceTypeIntermediate
      */
-    public ActorsProfileListMsgRespond(STATUS status, String details, List<ActorProfile> profileList) {
+    public ActorsProfileListMsgRespond(STATUS status, String details, List<ResultDiscoveryTraceActor> profileList, NetworkServiceType networkServiceTypeIntermediate) {
         super(status, details);
         this.profileList = profileList;
+        this.networkServiceTypeIntermediate = networkServiceTypeIntermediate;
     }
 
     /**
@@ -43,12 +45,34 @@ public class ActorsProfileListMsgRespond extends MsgRespond {
      *
      * @return profileList
      */
-    public List<ActorProfile> getProfileList() {
+    public List<ResultDiscoveryTraceActor> getProfileList() {
         return profileList;
     }
 
-    public static ActorsProfileListMsgRespond parseContent(String content) {
+    /**
+     * Gets the value of networkServiceTypeIntermediate and returns
+     * @return networkServiceTypeIntermediate
+     */
+    public NetworkServiceType getNetworkServiceTypeIntermediate() {
+        return networkServiceTypeIntermediate;
+    }
 
-        return new Gson().fromJson(content, ActorsProfileListMsgRespond.class);
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
+
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static ActorsProfileListMsgRespond parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, ActorsProfileListMsgRespond.class);
     }
 }

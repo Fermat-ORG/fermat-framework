@@ -8,6 +8,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.holders.AssetRedeemRedeemPointHolder;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.RedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;

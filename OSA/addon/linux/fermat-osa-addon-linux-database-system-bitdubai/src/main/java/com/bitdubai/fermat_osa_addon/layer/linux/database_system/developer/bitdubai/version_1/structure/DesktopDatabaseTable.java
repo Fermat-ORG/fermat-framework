@@ -1,9 +1,3 @@
-/*
-* @#DesktopDatabaseTable.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
@@ -24,9 +18,15 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.tomcat.jdbc.pool.ConnectionPool;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -50,10 +50,10 @@ public class DesktopDatabaseTable implements DatabaseTable {
      */
     String tableName;
     DesktopDatabaseBridge database;
+    private final ConnectionPool connectionPool;
 
     private List<DatabaseTableFilter> tableFilter;
     private List<DatabaseTableRecord> records;
-    private DatabaseTableRecord tableRecord;
     private List<DataBaseTableOrder> tableOrder;
     private String top = "";
     private String offset = "";
@@ -62,8 +62,8 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     // Public constructor declarations.
     public DesktopDatabaseTable(DesktopDatabaseBridge database, String tableName) {
+        connectionPool = database.getConnectionPool();
         this.tableName = tableName;
-        //this.context = context;
         this.database = database;
     }
 
@@ -133,12 +133,12 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
     @Override
     public DatabaseTableFilter getEmptyTableFilter() {
-        return null;
+        return new DesktopDatabaseTableFilter();
     }
 
     @Override
     public DatabaseTableFilter getNewFilter(String column, DatabaseFilterType type, String value) {
-        return null;
+        return new DesktopDatabaseTableFilter(column, type, value);
     }
 
     @Override
@@ -151,19 +151,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public void updateRecord(DatabaseTableRecord record) throws CantUpdateRecordException {
 
         try {
-            List<DatabaseRecord> records = record.getValues();
 
-            //ContentValues recordUpdateList = new ContentValues();
+            List<DatabaseRecord> records = record.getValues();
             Map<String, Object> recordUpdateList = new HashMap<>();
 
-            /**
-             * I update only the fields marked as modified
-             *
-             */
-
-            for (int i = 0; i < records.size(); ++i) {
-                if (records.get(i).isChange())
-                    recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
+            for (DatabaseRecord item: records) {
+                if (item.isChange()){
+                    recordUpdateList.put(item.getName(), item.getValue());
+                }
             }
 
             if (this.tableFilter != null) {
@@ -173,7 +168,7 @@ public class DesktopDatabaseTable implements DatabaseTable {
             }
 
         } catch (Exception exception) {
-            throw new CantUpdateRecordException();
+            throw new CantUpdateRecordException(exception);
         }
     }
 
@@ -184,55 +179,54 @@ public class DesktopDatabaseTable implements DatabaseTable {
          * First I get the table records with values.
          * and construct de ContentValues array for SqlLite
          */
-        try {
-            StringBuffer strRecords = new StringBuffer("");
-            StringBuffer strValues = new StringBuffer("");
 
-            List<DatabaseRecord> records = record.getValues();
+        List<String> strRecords = new ArrayList<>();
+        List<String> strValues  = new ArrayList<>();
+        List<String> strSigns  = new ArrayList<>();
 
-            Map<String, Object> initialValues = new HashMap<String, Object>();
-            //ContentValues initialValues = new ContentValues();
+        List<DatabaseRecord> records = record.getValues();
 
-            for (int i = 0; i < records.size(); ++i) {
-                initialValues.put(records.get(i).getName(), records.get(i).getValue());
-
-                if (strRecords.length() > 0)
-                    strRecords.append(",");
-                strRecords.append(records.get(i).getName());
-
-                if (strValues.length() > 0)
-                    strValues.append(",");
-
-                strValues.append("'" + records.get(i).getValue() + "'");
-
-            }
-
-            this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
-        } catch (Exception exception) {
-            throw new CantInsertRecordException(exception);
+        for (DatabaseRecord databaseRecord : records) {
+            strRecords.add(databaseRecord.getName());
+            strValues.add(databaseRecord.getValue());
+            strSigns.add("?");
         }
 
+        String SQL_QUERY = "INSERT INTO " + tableName + "(" + StringUtils.join(strRecords, ",") + ")" + " VALUES (" + StringUtils.join(strSigns, ",") + ")";
+
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(SQL_QUERY)) {
+
+                for (int i = 0; i < strSigns.size(); i++)
+                    preparedStatement.setString(i + 1, strValues.get(i));
+
+                preparedStatement.execute();
+
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                throw new CantInsertRecordException(exception);
+            }
+        }
     }
 
     @Override
     public long getCount() throws CantLoadTableToMemoryException {
 
-        ResultSet rs = this.database.rawQuery("SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter(), null);
+        String SQL_QUERY = "SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter();
 
-        try {
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
-            rs.next();
+                rs.next();
 
-            return rs.getLong("COUNT");
+                return rs.getLong("COUNT");
 
-        } catch (Exception e) {
-            throw new CantLoadTableToMemoryException();
-        } finally {
-            try {
-                if (rs != null)
-                    rs.close();
             } catch (Exception e) {
                 e.printStackTrace();
+                throw new CantLoadTableToMemoryException(e);
             }
         }
     }
@@ -243,42 +237,50 @@ public class DesktopDatabaseTable implements DatabaseTable {
         this.records = new ArrayList<>();
 
         String topSentence = "";
+        String offsetSentence = "";
 
-        if (this.top.length() > 0)
+        if (!this.top.isEmpty())
             topSentence = " LIMIT " + this.top;
 
-        ResultSet rs = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence, null);
-        try {
+        if (!this.offset.isEmpty())
+            offsetSentence = " OFFSET " + this.offset;
 
-            if(rs.next()) {
+        String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence  + offsetSentence;
 
-                List<String> columns = getColumns(rs);
+        synchronized (connectionPool) {
+            try (Connection connection = connectionPool.getConnection();
+                 Statement stmt = connection.createStatement();
+                 ResultSet rs = stmt.executeQuery(SQL_QUERY)) {
 
-                do  {
+                if (rs.next()) {
 
-                    DesktopDatabaseRecord tableRecordConsult = new DesktopDatabaseRecord();
+                    List<String> columns = getColumns(rs);
 
-                    for (String nameColumn : columns) {
+                    do {
 
-                        tableRecordConsult.addValue(
-                                new DesktopRecord(
-                                        nameColumn,
-                                        rs.getString(nameColumn),
-                                        false
-                                )
-                        );
-                    }
+                        DesktopDatabaseRecord tableRecordConsult = new DesktopDatabaseRecord();
 
-                    this.records.add(tableRecordConsult);
+                        for (String nameColumn : columns) {
 
-                } while (rs.next());
+                            tableRecordConsult.addValue(
+                                    new DesktopRecord(
+                                            nameColumn,
+                                            rs.getString(nameColumn),
+                                            false
+                                    )
+                            );
+                        }
+
+                        this.records.add(tableRecordConsult);
+
+                    } while (rs.next());
+                }
+            } catch (Exception e) {
+                System.out.println("an error loading to memory");
+                e.printStackTrace();
+                throw new CantLoadTableToMemoryException(e);
             }
-        } catch (Exception e) {
-            System.out.println("an error loading to memory");
-            e.printStackTrace();
-            throw new CantLoadTableToMemoryException(e);
         }
-
     }
 
     /**
@@ -289,24 +291,12 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public boolean isTableExists() {
 
-        ResultSet cursor = this.database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '" + this.tableName + "'", null);
         try {
-            ResultSetMetaData rsmd = cursor.getMetaData();
-
-            if (rsmd.getColumnCount() > 0)
-                return true;
-
+            return database.isTableExists(tableName);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (cursor != null)
-                    cursor.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            return false;
         }
-        return false;
     }
 
     /**
@@ -414,6 +404,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
         );
 
         this.tableFilter.add(filter);
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                this.tableFilter,
+                null            ,
+                null
+        );
 
     }
 
@@ -429,6 +424,12 @@ public class DesktopDatabaseTable implements DatabaseTable {
                         type,
                         value.getCode()
                 )
+        );
+
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                this.tableFilter,
+                null            ,
+                null
         );
 
     }
@@ -458,12 +459,49 @@ public class DesktopDatabaseTable implements DatabaseTable {
         filter.setType(type);
 
         this.tableFilter.add(filter);
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                this.tableFilter,
+                null            ,
+                null
+        );
 
     }
 
     @Override
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
 
+        try {
+
+            List<DatabaseRecord> records = record.getValues();
+
+            String queryWhereClause = "";
+
+            if (!records.isEmpty()) {
+                for (DatabaseRecord record1 : records) {
+
+                    if(record1.getValue() != null) {
+
+                        if (queryWhereClause.length() > 0) {
+                            queryWhereClause += " and ";
+                            queryWhereClause += record1.getName();
+                        } else
+                            queryWhereClause += record1.getName();
+                        queryWhereClause += "=";
+                        queryWhereClause += "'" + record1.getValue() + "'";
+                    }
+                }
+            }else{
+                queryWhereClause = null;
+            }
+
+            String query = "DELETE FROM " + tableName + (queryWhereClause != null ? " WHERE " + queryWhereClause : "");
+
+            database.execSQL(query);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CantDeleteRecordException(e);
+        }
     }
 
     @Override
@@ -481,60 +519,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public void setFilterGroup(List<DatabaseTableFilter> filters, List<DatabaseTableFilterGroup> subGroups, DatabaseFilterOperator operator) {
 
-        DatabaseTableFilterGroup filterGroup = new DesktopDatabaseTableFilterGroup(filters, subGroups, operator);
-
-       /* filterGroup.setFilters(filters);
-        filterGroup.setSubGroups(subGroups);
-        filterGroup.setOperator(operator);*/
-
-        this.tableFilterGroup = filterGroup;
-    }
-
-    /**
-     * DatabaseTable interface public void.
-     */
-
-    @Override
-    public String makeFilter() {
-
-        // I check the definition for the filter object, filter type, filter columns names
-        // and build the WHERE statement
-        String filter = "";
-        StringBuffer strFilter = new StringBuffer();
-
-        if (this.tableFilter != null) {
-            for (int i = 0; i < tableFilter.size(); ++i) {
-
-                strFilter.append(tableFilter.get(i).getColumn());
-
-                switch (tableFilter.get(i).getType()) {
-                    case EQUAL:
-                        strFilter.append(" ='" + tableFilter.get(i).getValue() + "'");
-                        break;
-                    case GREATER_THAN:
-                        strFilter.append(" > " + tableFilter.get(i).getValue());
-                        break;
-                    case LESS_THAN:
-                        strFilter.append(" < " + tableFilter.get(i).getValue());
-                        break;
-                    case LIKE:
-                        strFilter.append(" Like '%" + tableFilter.get(i).getValue() + "%'");
-                        break;
-                    default:
-                        strFilter.append(" ");
-                        break;
-                }
-
-                if (i < tableFilter.size() - 1)
-                    strFilter.append(" AND ");
-
-            }
-        }
-
-        filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = " WHERE " + filter;
-
-        return filter;
+        this.tableFilterGroup = new DesktopDatabaseTableFilterGroup(
+                filters  ,
+                subGroups,
+                operator
+        );
     }
 
     @Override
@@ -560,6 +549,83 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public List<DatabaseAggregateFunction> getTableAggregateFunction() {
         return tableSelectOperator;
+    }
+
+    /**
+     * DatabaseTable interface private void.
+     */
+    public String makeFilter() {
+
+        // I check the definition for the filter object, filter type, filter columns names
+        // and build the WHERE statement
+        String filter = "";
+        StringBuilder strFilter = new StringBuilder();
+
+        if (this.tableFilter != null) {
+            for (int i = 0; i < tableFilter.size(); ++i) {
+
+                strFilter.append(makeInternalCondition(tableFilter.get(i)));
+
+                if (i < tableFilter.size() - 1)
+                    strFilter.append(" AND ");
+            }
+
+
+            filter = strFilter.toString();
+            if (strFilter.length() > 0) filter = " WHERE " + filter;
+
+            return filter;
+        } else {
+            //if set group filter
+            if (this.tableFilterGroup != null) {
+                return makeGroupFilters(this.tableFilterGroup);
+            } else {
+                return filter;
+            }
+        }
+    }
+
+    public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
+
+        StringBuilder strFilter = new StringBuilder();
+        String filter;
+
+        if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
+            strFilter.append("(");
+            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
+
+            int ix = 0;
+
+            if (databaseTableFilterGroup.getSubGroups() != null){
+
+                for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
+                    if (subGroup.getFilters().size() > 0 || ix > 0) {
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
+                    }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
+                }
+
+            }
+
+            strFilter.append(")");
+        }
+
+        filter = strFilter.toString();
+        if (strFilter.length() > 0) filter = " WHERE " + filter;
+
+        return filter;
     }
 
     private String makeOrder() {
@@ -646,14 +712,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
                         .append("'");
                 break;
             default:
-                strFilter.append(" ");
+                throw new RuntimeException("Database Filter Type not implemented yet. "+filter.getType());
         }
         return strFilter.toString();
     }
 
     private String makeInternalConditionGroup(List<DatabaseTableFilter> filters, DatabaseFilterOperator operator) {
 
-        StringBuffer strFilter = new StringBuffer();
+        StringBuilder strFilter = new StringBuilder();
 
         for (DatabaseTableFilter filter : filters) {
             switch (operator) {
@@ -676,43 +742,5 @@ public class DesktopDatabaseTable implements DatabaseTable {
         }
         return strFilter.toString();
     }
-
-    public String makeGroupFilters(DatabaseTableFilterGroup databaseTableFilterGroup) {
-
-        StringBuffer strFilter = new StringBuffer();
-        String filter = "";
-
-        if (databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
-            strFilter.append("(");
-            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
-
-            int ix = 0;
-            for (DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()) {
-                if (subGroup.getFilters().size() > 0 || ix > 0) {
-                    switch (databaseTableFilterGroup.getOperator()) {
-                        case AND:
-                            strFilter.append(" AND ");
-                            break;
-                        case OR:
-                            strFilter.append(" OR ");
-                            break;
-                        default:
-                            strFilter.append(" ");
-                    }
-                }
-                strFilter.append("(");
-                strFilter.append(makeGroupFilters(subGroup));
-                strFilter.append(")");
-                ix++;
-            }
-            strFilter.append(")");
-        }
-
-        filter = strFilter.toString();
-        if (strFilter.length() > 0) filter = " WHERE " + filter;
-
-        return filter;
-    }
-
 
 }

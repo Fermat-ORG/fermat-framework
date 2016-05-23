@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
@@ -11,6 +11,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.e
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantPublishCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CryptoBrokerNotFoundException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -19,7 +20,8 @@ import java.util.List;
  * <p/>
  * Created by natalia on 16/09/15.
  */
-public interface CryptoBrokerIdentityModuleManager extends ModuleManager<IdentityBrokerPreferenceSettings, ActiveActorIdentityInformation> {
+public interface CryptoBrokerIdentityModuleManager extends ModuleManager<IdentityBrokerPreferenceSettings, ActiveActorIdentityInformation>,
+        ModuleSettingsImpl<IdentityBrokerPreferenceSettings>, Serializable {
 
     /**
      * The method <code>createCryptoBrokerIdentity</code> is used to create a new crypto Broker identity

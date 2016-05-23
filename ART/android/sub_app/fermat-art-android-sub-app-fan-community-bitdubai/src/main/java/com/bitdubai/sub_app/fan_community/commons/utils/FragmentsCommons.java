@@ -44,9 +44,9 @@ public class FragmentsCommons {
                                     0,
                                     identity.getImage().length)));
                 } else
-                    Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                    Picasso.with(activity).load(R.drawable.afc_profile_image).into(imageView);
             } else
-                Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                Picasso.with(activity).load(R.drawable.afc_profile_image).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
             fermatTextView.setText(identity.getAlias());
         }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningTransactionsException;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 31/01/2016.
  */
-public interface EarningsSearch {
+public interface EarningsSearch extends Serializable{
 
     /**
      * Through this method you cant execute the search for the given params.

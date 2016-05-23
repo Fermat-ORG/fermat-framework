@@ -27,14 +27,12 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus
 public class NegotiationInformationViewHolder extends ChildViewHolder {
     public final ImageView brokerImage;
     public final FermatTextView brokerName;
-    public final FermatTextView merchandiseAmount;
-    public final FermatTextView merchandise;
+    public final FermatTextView sellingText;
     public final FermatTextView paymentMethod;
-    public final FermatTextView exchangeRateAmount;
-    public final FermatTextView paymentCurrency;
     public final FermatTextView lastUpdateDate;
     public final FermatTextView status;
     public final ProgressBar sendingProgressBar;
+    private final FermatTextView exchangeRateUnit;
     private final Resources res;
     private final View itemView;
 
@@ -52,14 +50,12 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
 
         brokerImage = (ImageView) itemView.findViewById(R.id.ccw_broker_image);
         brokerName = (FermatTextView) itemView.findViewById(R.id.ccw_broker_name);
-        merchandiseAmount = (FermatTextView) itemView.findViewById(R.id.ccw_merchandise_amount);
-        merchandise = (FermatTextView) itemView.findViewById(R.id.ccw_merchandise);
+        sellingText = (FermatTextView) itemView.findViewById(R.id.ccw_selling_text);
         paymentMethod = (FermatTextView) itemView.findViewById(R.id.ccw_type_of_payment);
-        exchangeRateAmount = (FermatTextView) itemView.findViewById(R.id.ccw_exchange_rate_amount);
-        paymentCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_payment_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_update_date);
         status = (FermatTextView) itemView.findViewById(R.id.ccw_negotiation_status);
         sendingProgressBar = (ProgressBar) itemView.findViewById(R.id.ccw_sending_progress_bar);
+        exchangeRateUnit = (FermatTextView) itemView.findViewById(R.id.ccw_merchandise_unit);
     }
 
     public void bind(CustomerBrokerNegotiationInformation itemInfo) {
@@ -80,9 +76,13 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         sendingProgressBar.setVisibility(visibility);
 
         Map<ClauseType, String> negotiationSummary = itemInfo.getNegotiationSummary();
-        merchandiseAmount.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
-        exchangeRateAmount.setText(negotiationSummary.get(ClauseType.EXCHANGE_RATE));
-        merchandise.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY));
+        String exchangeRate = negotiationSummary.get(ClauseType.EXCHANGE_RATE);
+        String merchandise = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY);
+        String paymentCurrency = negotiationSummary.get(ClauseType.BROKER_CURRENCY);
+        String merchandiseAmount = negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY);
+
+        exchangeRateUnit.setText(String.format("1 %1$s @ %2$s %3$s", merchandise, exchangeRate, paymentCurrency));
+        sellingText.setText(String.format("Selling %1$s %2$s", merchandiseAmount, merchandise));
     }
 
     private int getStatusBackgroundColor(NegotiationStatus status) {

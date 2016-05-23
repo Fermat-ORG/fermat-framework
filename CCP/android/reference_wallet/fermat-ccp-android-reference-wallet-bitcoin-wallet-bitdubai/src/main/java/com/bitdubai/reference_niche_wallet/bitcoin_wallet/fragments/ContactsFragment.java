@@ -78,6 +78,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -145,6 +147,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
 
+    private ExecutorService _executor;
+
     public static ContactsFragment newInstance() {
 
         ContactsFragment f = new ContactsFragment();
@@ -160,6 +164,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
+
+        _executor = Executors.newFixedThreadPool(2);
         try {
         cryptoWallet = (CryptoWallet) appSession.getModuleManager();
         } catch (Exception e) {
@@ -179,7 +185,15 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
-            onRefresh();
+
+            _executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    onRefresh();
+
+                }
+            });
+
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable() {
                 public void run() {

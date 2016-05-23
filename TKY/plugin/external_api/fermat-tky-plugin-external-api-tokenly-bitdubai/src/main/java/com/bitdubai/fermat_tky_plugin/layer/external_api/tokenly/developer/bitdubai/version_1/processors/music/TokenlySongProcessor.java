@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
@@ -46,7 +48,9 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
      * @return
      * @throws CantGetSongException
      */
-    public static Song getSongById(String id) throws CantGetSongException {
+    public static Song getSongById(String id) throws
+            CantGetSongException,
+            CantConnectWithTokenlyException {
         //Request URL to get a song by tokenly Id.
         String requestedURL=swabotTokenlyURL+"catalog/songs/"+id;
         try{
@@ -62,7 +66,8 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
     }
 
     public static JsonArray getSongsJsonArrayByAlbumId(String albumId)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         //Request URL to get a song by tokenly Id.
         String requestedURL=swabotTokenlyURL+"catalog/songs/"+albumId;
         JsonArray jSonArray = RemoteJSonProcessor.getJSonArray(requestedURL);
@@ -102,12 +107,19 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
                     "Getting album from tokenly protected api",
                     "Cannot get the Json object from "+mySongsTokenlyURL);
         } catch (HTTPErrorResponseException e) {
+            String errorMessage = e.getErrorMessage();
+            int errorCode = e.getErrorCode();
+            HTTPErrorResponse httpErrorResponse = e.getHttpErrorResponse();
             throw new CantGetAlbumException(
                     e,
                     "Getting album from tokenly protected api",
                     "Error response from Tokenly Api:\n" +
-                            "Error Code: "+e.getErrorCode()+"\n" +
-                            "Error message: "+e.getErrorMessage());
+                            "Error Code: "+errorCode+"\n" +
+                            "Error message: "+errorMessage,
+                    errorMessage,
+                    errorCode,
+                    httpErrorResponse
+            );
         }
 
     }
@@ -131,12 +143,19 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
                     "Getting album from tokenly protected api",
                     "Cannot get the Json object from "+downloadSongTokenlyURL);
         } catch (HTTPErrorResponseException e) {
+            String errorMessage = e.getErrorMessage();
+            int errorCode = e.getErrorCode();
+            HTTPErrorResponse httpErrorResponse = e.getHttpErrorResponse();
             throw new CantGetSongException(
                     e,
                     "Getting album from tokenly protected api",
                     "Error response from Tokenly Api:\n" +
-                            "Error Code: "+e.getErrorCode()+"\n" +
-                            "Error message: "+e.getErrorMessage());
+                            "Error Code: "+errorCode+"\n" +
+                            "Error message: "+errorMessage,
+                    errorMessage,
+                    errorCode,
+                    httpErrorResponse
+                    );
         }
     }
 

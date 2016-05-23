@@ -3,19 +3,21 @@ package com.bitdubai.fermat_tky_api.all_definitions.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
+
 /**
  * The enum <code>com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus</code>
  * represent the different type of song status in song wallet Tokenly.<p/>
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 15/03/16.
  */
-public enum SongStatus implements FermatEnum {
+public enum SongStatus implements FermatEnum, Serializable {
 
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
     AVAILABLE       ("AVA", "AVAILABLE"),
     DELETED         ("DEL", "DELETED"),
-    DOWNLOADED      ("DED", "DOWNLOADED"),
+    CANCELLED      ("CAN", "CANCELLED"),
     DOWNLOADING     ("DNG", "DOWNLOADING"),
     NOT_AVAILABLE   ("NAV", "NOT_AVAILABLE"),
     ;

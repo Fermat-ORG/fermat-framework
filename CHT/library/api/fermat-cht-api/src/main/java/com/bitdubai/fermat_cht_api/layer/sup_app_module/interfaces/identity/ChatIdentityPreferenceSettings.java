@@ -8,6 +8,7 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantSetDefaultSkinException;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -16,7 +17,7 @@ import java.util.UUID;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 29/02/16.
  * @version 1.0
  */
-public class ChatIdentityPreferenceSettings implements FermatSettings {
+public class ChatIdentityPreferenceSettings implements FermatSettings, Serializable {
     private boolean isHomeTutorialDialogEnabled;
     private Actors localActorType;
     private String localPublicKey;
