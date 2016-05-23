@@ -10,6 +10,7 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.DepositBankMoneyTransactionPluginRoot;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -22,15 +23,15 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     String publicKeyCustomer;
     String balanceType;
     String transactionType;
-    float amount;
+    BigDecimal amount;
     String cashCurrencyType;
     String bankOperationType;
     String bankDocumentReference;
     String bankName;
     String bankAccountNumber;
     String bankAccountType;
-    long runningBookBalance;
-    long runningAvailableBalance;
+    BigDecimal runningBookBalance;
+    BigDecimal runningAvailableBalance;
     long timeStamp;
     String memo;
     String status;
@@ -81,7 +82,7 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     }
 
     @Override
-    public float getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
@@ -136,12 +137,12 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     }
 
     @Override
-    public long getRunningBookBalance() {
+    public BigDecimal getRunningBookBalance() {
         return runningBookBalance;
     }
 
     @Override
-    public long getRunningAvailableBalance() {
+    public BigDecimal getRunningAvailableBalance() {
         return runningAvailableBalance;
     }
 

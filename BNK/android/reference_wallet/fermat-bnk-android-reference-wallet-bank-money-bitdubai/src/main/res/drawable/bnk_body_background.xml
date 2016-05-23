@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:left="10px" android:right="10px">
+    <item>
         <shape xmlns:android="http://schemas.android.com/apk/res/android"
             android:shape="rectangle"
             android:useLevel="false" >
@@ -11,7 +11,7 @@
                 android:type="linear" />
         </shape>
     </item>
-    <item>
+    <item android:top="-100dp">
         <bitmap android:src="@drawable/bw_reflex_image"></bitmap>
     </item>
 </layer-list>

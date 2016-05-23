@@ -102,7 +102,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
             dialogTitle.setText(getTransactionTitleText());
             applyBtn.setText(getTransactionButtonText());
 
-            amountText.setFilters(new InputFilter[]{new NumberInputFilter(10, 2)});
+            amountText.setFilters(new InputFilter[]{new NumberInputFilter(11, 2)});
 
 
             cancelBtn.setOnClickListener(this);

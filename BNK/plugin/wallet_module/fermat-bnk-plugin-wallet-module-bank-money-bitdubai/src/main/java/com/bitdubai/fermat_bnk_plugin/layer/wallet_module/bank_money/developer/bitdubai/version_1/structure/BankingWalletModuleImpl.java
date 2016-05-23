@@ -26,7 +26,6 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankingWal
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -122,15 +121,15 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     }
 
     @Override
-    public void makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException{
+    public void makeWithdraw(BankTransactionParameters bankTransactionParameters) throws CantMakeWithdrawTransactionException {
         withdrawManager.makeWithdraw(bankTransactionParameters);
     }
 
     @Override
-    public float getBookBalance(String account) {
-        float balance =0;
+    public BigDecimal getBookBalance(String account) {
+        BigDecimal balance = new BigDecimal(0);
         try {
-            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBookBalance().getBalance(account);
+            balance = bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getBookBalance().getBalance(account);
         }catch (Exception e){
             System.out.println("execption "+e.getMessage());
         }
@@ -138,10 +137,10 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     }
 
     @Override
-    public float getAvailableBalance(String account) {
-        float balance =0;
+    public BigDecimal getAvailableBalance(String account) {
+        BigDecimal balance = new BigDecimal(0);
         try {
-            balance = (float)bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getAvailableBalance().getBalance(account);
+            balance = bankMoneyWalletManager.loadBankMoneyWallet(publicKey).getAvailableBalance().getBalance(account);
         }catch (Exception e){
             System.out.println("exception "+e.getMessage());
         }
@@ -175,10 +174,10 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
                 this.makeDeposit(transaction);
             else
                 this.makeWithdraw(transaction);
-            //TODO: Evento al GUI de actualizar la transaccion indicando que se realizo satisfactoriamente
+            //Send a broadcast to the view so that it refreshes
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW);
         }catch(FermatException e){
-            //TODO: Evento al GUI de actualizar el deposito indicando que hubo una falla y no se pudo realizar
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, BankWalletBroadcasterConstants.BNK_REFERENCE_WALLET_UPDATE_TRANSACTION_VIEW_ERROR);
         }
     }
 
@@ -197,17 +196,19 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     }
 
     @Override
-    public List<BankMoneyTransactionRecord> getPendingTransactions() {
+    public List<BankMoneyTransactionRecord> getPendingTransactions(String account) {
         List<BankMoneyTransactionRecord> list = new ArrayList<>();
         for(BankTransactionParametersImpl data:getQueuedTransactions()){
-            list.add(new BankTransactionRecordImpl(data.getAmount().floatValue(),data.getMemo(),new Date().getTime(),data.getTransactionType(), BankTransactionStatus.PENDING));
+            if (data.getAccount().equals(account)) {
+                list.add(new BankTransactionRecordImpl(data.getAmount(), data.getMemo(), new Date().getTime(), data.getTransactionType(), BankTransactionStatus.PENDING));
+            }
         }
         return list;
     }
 
     @Override
     public void cancelAsyncBankTransaction(BankMoneyTransactionRecord transaction) {
-        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(transaction.getBankTransactionId(),tempLastParameter.getPublicKeyPlugin(),tempLastParameter.getPublicKeyWallet(),tempLastParameter.getPublicKeyActor(),new BigDecimal(transaction.getAmount()),transaction.getBankAccountNumber(),transaction.getCurrencyType(),transaction.getMemo(),TransactionType.DEBIT);
+        BankTransactionParametersImpl parameters= new BankTransactionParametersImpl(transaction.getBankTransactionId(),tempLastParameter.getPublicKeyPlugin(),tempLastParameter.getPublicKeyWallet(),tempLastParameter.getPublicKeyActor(),transaction.getAmount(),transaction.getBankAccountNumber(),transaction.getCurrencyType(),transaction.getMemo(),TransactionType.DEBIT);
         try{
             this.cancelTransaction(parameters);
         }catch (Exception e){

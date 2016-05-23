@@ -18,6 +18,7 @@ import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.*;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,7 +65,7 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
     }
 
     @Override
-    public double getHeldFunds(String account) throws CantGetHeldFundsException {
+    public BigDecimal getHeldFunds(String account) throws CantGetHeldFundsException {
         return bankMoneyWalletDao.getHeldFunds(account);
     }
 

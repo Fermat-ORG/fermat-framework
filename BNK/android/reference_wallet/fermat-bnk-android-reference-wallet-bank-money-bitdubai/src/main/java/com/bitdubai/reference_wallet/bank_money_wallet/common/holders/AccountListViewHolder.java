@@ -9,6 +9,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 /**
@@ -31,6 +32,8 @@ public class AccountListViewHolder extends FermatViewHolder {
     private ImageView imageView;
 
     private BankMoneyWalletModuleManager moduleManager;
+    private static final DecimalFormat moneyFormat = new DecimalFormat("#,##0.00");
+
 
     public AccountListViewHolder(View itemView,BankMoneyWalletModuleManager moduleManager) {
         super(itemView);
@@ -53,10 +56,14 @@ public class AccountListViewHolder extends FermatViewHolder {
         account.setText(itemInfo.getAccount());
         alias.setText(itemInfo.getAlias());
         //currency.setText(itemInfo.getMoneyType().getCode());
-        DecimalFormat df = new DecimalFormat("#");
-        df.setMaximumFractionDigits(8);
-        availableBalance.setText(df.format(moduleManager.getBankingWallet().getAvailableBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
-        bookBalance.setText(df.format(moduleManager.getBankingWallet().getBookBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
+
+        BigDecimal available = moduleManager.getBankingWallet().getAvailableBalance(itemInfo.getAccount());
+        BigDecimal book = moduleManager.getBankingWallet().getBookBalance(itemInfo.getAccount());
+
+        availableBalance.setText(moneyFormat.format(available) + " " + itemInfo.getCurrencyType().getCode());
+        bookBalance.setText(moneyFormat.format(book) + " " + itemInfo.getCurrencyType().getCode());
+
+        //Hide book balance if equal
         if(availableBalance.getText().equals(bookBalance.getText())){
             bookBalance.setVisibility(View.GONE);
             bookText.setVisibility(View.GONE);

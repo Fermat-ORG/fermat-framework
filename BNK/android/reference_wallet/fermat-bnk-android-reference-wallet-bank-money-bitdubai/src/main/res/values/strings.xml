@@ -5,19 +5,23 @@
     <string name="action_settings">Settings</string>
     <string name="action_save">Save</string>
     <string name="home_header">Accounts</string>
-    <string name="no_accounts">You don\'t have any account yet</string>
+    <string name="no_accounts">You don\'t have any accounts yet</string>
     <string name="no_transactions">There are no transactions in this account</string>
     
     <string name="bnk_ctd_title">transaction title</string>
-    <string name="bnk_ctd_amount_tag" translatable="false">Enter amount</string>
-    <string name="bnk_ctd_amount_hint" translatable="false">Amount</string>
-    <string name="bnk_ctd_memo_tag" translatable="false">Enter memo</string>
-    <string name="bnk_ctd_memo_hint" translatable="false">Memo</string>
+    <string name="bnk_ctd_amount_tag" translatable="false">AMOUNT</string>
+    <string name="bnk_ctd_amount_hint" translatable="false">Enter an amount</string>
+    <string name="bnk_ctd_memo_tag" translatable="false">MEMO</string>
+    <string name="bnk_ctd_memo_hint" translatable="false">Enter a memo</string>
 
     <string name="bw_withdrawal_transaction_text" translatable="false">Withdrawal</string>
     <string name="bw_deposit_transaction_text" translatable="false">Deposit</string>
     <string name="bnk_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
     <string name="bnk_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
+
+    <string name="bw_withdrawal_transaction_text_btn" translatable="false">WITHDRAW</string>
+    <string name="bw_deposit_transaction_text_btn" translatable="false">DEPOSIT</string>
+
 
 
     <string name="add_account" translatable="false">Add Account</string>
@@ -28,7 +32,7 @@
     <string name="transaction_description" translatable="false">Concept: </string>
 
     <!--Dialog Help - Init-->
-    <string name="bnk_bank_money_wallet_account_subTitle">This wallet is meant to help you keep track of your Bank accounts. \nWith it you can:</string>
+    <string name="bnk_bank_money_wallet_account_subTitle">This wallet is meant to help you keep track of <b>multiple</b> bank accounts of <b>a single Bank</b>. \nWith it you can:</string>
     <string name="bnk_bank_money_wallet_account_body">* Create bank accounts.\n* See your balances.\n*​ Deposit funds into the wallet.\n* Withdraw funds out of the wallet.\n* Browse your transaction history.</string>
     <string name="bnk_bank_money_wallet_account_footer">prueba footer.</string>
     <!--Dialog Help - End-->

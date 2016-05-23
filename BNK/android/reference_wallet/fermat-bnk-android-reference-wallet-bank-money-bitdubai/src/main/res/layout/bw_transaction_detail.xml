@@ -18,7 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="86dp"
+            android:layout_marginTop="120dp"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp">
 
@@ -33,6 +34,7 @@
             <EditText
                 android:id="@+id/transaction_type"
                 android:layout_width="match_parent"
+                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
@@ -43,6 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp">
 
@@ -57,6 +60,7 @@
             <EditText
                 android:id="@+id/transaction_amount"
                 android:layout_width="match_parent"
+                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
@@ -67,6 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_marginBottom="20dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp">
 
@@ -81,6 +86,7 @@
             <EditText
                 android:id="@+id/transaction_date"
                 android:layout_width="match_parent"
+                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
@@ -105,11 +111,45 @@
             <EditText
                 android:id="@+id/transaction_concept"
                 android:layout_width="match_parent"
+                android:editable="false"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size" />
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/bw_transaction_detail_btn_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
+            <Button
+                android:id="@+id/bw_transaction_detail_delete_btn"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bw_button_background_selector"
+                android:text="Delete"
+                android:textColor="#3E1B69"
+                android:textSize="14sp" />
+
+
+            <Button
+                android:id="@+id/bw_transaction_detail_update_btn"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="40dp"
+                android:layout_weight="1"
+                android:background="@drawable/bw_button_background_selector"
+                android:text="Update"
+                android:textColor="#3E1B69"
+                android:textSize="14sp" />
+
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

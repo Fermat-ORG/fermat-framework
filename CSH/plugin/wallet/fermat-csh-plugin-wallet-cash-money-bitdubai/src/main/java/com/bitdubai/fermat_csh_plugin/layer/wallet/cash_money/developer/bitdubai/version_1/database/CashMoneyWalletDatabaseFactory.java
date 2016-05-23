@@ -87,7 +87,9 @@ public class CashMoneyWalletDatabaseFactory implements DealsWithPluginDatabaseSy
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create Transactions table.
              */
             table = databaseFactory.newTableFactory(ownerId, CashMoneyWalletDatabaseConstants.TRANSACTIONS_TABLE_NAME);
