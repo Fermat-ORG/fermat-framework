@@ -103,7 +103,7 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
         try {
             bankMoneyWalletDao.addNewAccount(bankAccountNumber);
         }catch (CantInsertRecordException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddNewAccountException(CantAddNewAccountException.DEFAULT_MESSAGE,e,null,null);
         }
     }
@@ -113,7 +113,7 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
         try {
             bankMoneyWalletDao.editAccount(originalAccountNumber, newAlias, newAccountNumber, newImageId);
         }catch (CantUpdateRecordException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantEditAccountException(CantEditAccountException.DEFAULT_MESSAGE,e,null,null);
         }
     }

@@ -146,13 +146,13 @@ public class CryptoBrokerWalletDatabaseFactory implements DealsWithPluginDatabas
 
     private DatabaseTableFactory createWalletAssociatedSettingTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException{
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 36, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MONEY_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
-        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME, DatabaseDataType.TEXT, 36, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME, DatabaseDataType.TEXT, 36, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MERCHANDISE_COLUMN_NAME, DatabaseDataType.TEXT, 20, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_MONEY_TYPE_COLUMN_NAME, DatabaseDataType.TEXT, 20, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 255, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BANK_ACCOUNT_COLUMN_NAME, DatabaseDataType.TEXT, 100, false);
+        table.addColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_BROKER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.TEXT, 255, false);
 
 
         return table;

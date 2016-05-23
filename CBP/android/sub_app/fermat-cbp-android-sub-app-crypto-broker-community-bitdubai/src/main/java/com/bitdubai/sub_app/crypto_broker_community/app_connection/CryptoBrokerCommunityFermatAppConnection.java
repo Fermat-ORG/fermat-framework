@@ -56,7 +56,7 @@ public class CryptoBrokerCommunityFermatAppConnection extends AppConnections<Cry
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
 
-        return new BrokerCommunityNavigationViewPainter(getContext(), getActiveIdentity(), getFullyLoadedSession());
+        return new BrokerCommunityNavigationViewPainter(getContext(), getFullyLoadedSession());
     }
 
     @Override

@@ -118,10 +118,7 @@ public class HoldBankMoneyTransactionDao {
                 BankTransaction transaction = constructHoldTransactionFromRecord(record);
                 transactions.add(transaction);
             }
-        } catch (CantCreateHoldTransactionException e) {
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get bank Hold Transaction list. Filter: " + filter.toString(), "");
-        }catch (CantLoadTableToMemoryException e) {
+        } catch (CantCreateHoldTransactionException | CantLoadTableToMemoryException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetHoldTransactionException(CantGetHoldTransactionException.DEFAULT_MESSAGE, e, "Failed to get bank Hold Transaction list. Filter: " + filter.toString(), "");
         }

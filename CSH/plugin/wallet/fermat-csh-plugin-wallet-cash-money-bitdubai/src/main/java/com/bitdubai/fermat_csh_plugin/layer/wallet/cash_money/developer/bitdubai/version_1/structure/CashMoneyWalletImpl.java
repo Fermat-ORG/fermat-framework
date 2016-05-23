@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -23,8 +23,6 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTr
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.WalletCashMoneyPluginRoot;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.database.CashMoneyWalletDao;
 import com.bitdubai.fermat_csh_plugin.layer.wallet.cash_money.developer.bitdubai.version_1.exceptions.CantRegisterCashMoneyWalletTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -41,12 +39,11 @@ public class CashMoneyWalletImpl implements CashMoneyWallet {
     private final WalletCashMoneyPluginRoot pluginRoot;
 
     private CashMoneyWalletDao dao;
-    private CashMoneyWalletBalanceImpl cashMoneyWalletBalanceImpl;
     private String walletPublicKey;
 
 
     public CashMoneyWalletImpl(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId,
-                               final WalletCashMoneyPluginRoot pluginRoot, String walletPublicKey) throws CantGetCashMoneyWalletException {
+                               final WalletCashMoneyPluginRoot pluginRoot, String walletPublicKey) throws CantGetCashMoneyWalletException, CashMoneyWalletDoesNotExistException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.pluginRoot = pluginRoot;
