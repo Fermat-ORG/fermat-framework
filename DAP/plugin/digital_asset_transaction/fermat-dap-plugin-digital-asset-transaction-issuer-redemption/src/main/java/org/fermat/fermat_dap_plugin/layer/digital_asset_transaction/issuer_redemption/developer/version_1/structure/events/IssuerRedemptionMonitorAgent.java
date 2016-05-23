@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.events;
 
 
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.IssuerRedemptionDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDao;
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -40,8 +41,8 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -56,7 +57,7 @@ import java.util.UUID;
  */
 public class IssuerRedemptionMonitorAgent implements Agent {
 
-    private final ErrorManager errorManager;
+    IssuerRedemptionDigitalAssetTransactionPluginRoot issuerRedemptionDigitalAssetTransactionPluginRoot;
     private MonitorAgent agent;
     private IssuerRedemptionDao issuerRedemptionDao;
     private AssetIssuerWalletManager assetIssuerWalletManager;
@@ -79,18 +80,22 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                                         ActorAssetIssuerManager actorAssetIssuerManager,
                                         BitcoinNetworkManager bitcoinNetworkManager,
                                         CryptoAddressBookManager cryptoAddressBookManager,
-                                        ErrorManager errorManager,
+                                        IssuerRedemptionDigitalAssetTransactionPluginRoot issuerRedemptionDigitalAssetTransactionPluginRoot,
                                         UUID pluginId,
                                         PluginDatabaseSystem pluginDatabaseSystem,
                                         AssetVaultManager assetVaultManager,
                                         IssuerAppropriationManager issuerAppropriationManager,
-                                        WalletManagerManager walletMiddlewareManager, AssetTransmissionNetworkServiceManager assetTransmissionManager, ActorAssetUserManager actorAssetUserManager, ActorAssetRedeemPointManager actorAssetRedeemPointManager,
+                                        WalletManagerManager walletMiddlewareManager,
+                                        AssetTransmissionNetworkServiceManager assetTransmissionManager,
+                                        ActorAssetUserManager actorAssetUserManager,
+                                        ActorAssetRedeemPointManager actorAssetRedeemPointManager,
                                         IncomingCryptoManager incomingCryptoManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
+
         this.assetTransmissionManager = assetTransmissionManager;
         this.actorAssetUserManager = actorAssetUserManager;
         this.actorAssetRedeemPointManager = actorAssetRedeemPointManager;
         this.assetIssuerWalletManager = Validate.verifySetter(assetIssuerWalletManager, "assetIssuerWalletManager is null");
-        this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
+        this.issuerRedemptionDigitalAssetTransactionPluginRoot = Validate.verifySetter(issuerRedemptionDigitalAssetTransactionPluginRoot, "errorManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
         this.actorAssetIssuerManager = Validate.verifySetter(actorAssetIssuerManager, "actorAssetIssuerManager is null");
         this.cryptoAddressBookManager = Validate.verifySetter(cryptoAddressBookManager, "cryptoAddressBookManager is null");
@@ -104,6 +109,7 @@ public class IssuerRedemptionMonitorAgent implements Agent {
             InstalledWallet installedWallet = installedWallets.get(0);
             btcWallet = installedWallet.getWalletPublicKey();
         } catch (CantListWalletsException e) {
+            this.issuerRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         this.incomingCryptoManager = incomingCryptoManager;
@@ -141,8 +147,8 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                 try {
                     doTheMainTask();
                 } catch (Exception e) {
+                    issuerRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     e.printStackTrace();
-                    errorManager.reportUnexpectedPluginException(Plugins.ISSUER_REDEMPTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 } finally {
                     try {
                         Thread.sleep(WAIT_TIME);
@@ -151,13 +157,11 @@ public class IssuerRedemptionMonitorAgent implements Agent {
                     /*If this happen there's a chance that the information remains
                     in a corrupt state. That probably would be fixed in a next run.
                     */
-                        errorManager.reportUnexpectedPluginException(Plugins.ISSUER_REDEMPTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+                        issuerRedemptionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
                     }
                 }
             }
-
         }
-
 
         private void doTheMainTask() throws Exception {
             checkPendingCryptoRouterEvents();

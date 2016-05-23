@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
@@ -78,10 +79,21 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     public void init(){
         AppsConfiguration appsConfiguration = new AppsConfiguration(this);
-        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
-        if(appsInstalledInDevice.isEmpty()){
-            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+//        appsInstalledInDevice = appsConfiguration.readAppsCoreInstalled();
+//        //if(appsInstalledInDevice.isEmpty()){
+//            appsInstalledInDevice = appsConfiguration.updateAppsCoreInstalled();
+        try {
+            for (FermatAppType fermatAppType : FermatAppType.values()) {
+                RuntimeManager runtimeManager = selectRuntimeManager(fermatAppType);
+                if (runtimeManager != null)
+                    for (String key : runtimeManager.getListOfAppsPublicKey()) {
+                        appsInstalledInDevice.put(key, fermatAppType);
+                    }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
+        //}
     }
 
     public FermatStructure lastAppStructure() {
@@ -218,7 +230,17 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     @Override
     public FermatStructure getAppStructure(String appPublicKey) {
-        return selectRuntimeManager(appsInstalledInDevice.get(appPublicKey)).getAppByPublicKey(appPublicKey);
+        FermatAppType fermatAppType =appsInstalledInDevice.get(appPublicKey);
+        if(fermatAppType!=null) {
+            return selectRuntimeManager(fermatAppType).getAppByPublicKey(appPublicKey);
+        }else{
+            Log.e(TAG,"App instaled in device null: "+appPublicKey);
+            Log.e(TAG,"If the public key of the app is fine, try removing data and restart app. filesystem problem..");
+            if(appPublicKey.equals("main_desktop")){
+                return selectRuntimeManager(FermatAppType.DESKTOP).getLastApp();
+            }
+            return null;
+        }
     }
 
     @Override

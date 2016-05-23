@@ -9,10 +9,10 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.StockTransactionsCryptoMoneyDestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyDestockDataException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
@@ -28,7 +28,7 @@ public class StockTransactionCryptoMoneyDestockManager implements
         CryptoMoneyDestockManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private StockTransactionsCryptoMoneyDestockPluginRoot pluginRoot;
 
     /**
      * Constructor with params.
@@ -38,10 +38,10 @@ public class StockTransactionCryptoMoneyDestockManager implements
      */
     public StockTransactionCryptoMoneyDestockManager(final PluginDatabaseSystem pluginDatabaseSystem,
                                                      final UUID pluginId,
-                                                     ErrorManager errorManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-        this.errorManager = errorManager;
+                                                     StockTransactionsCryptoMoneyDestockPluginRoot pluginRoot) {
+        this.pluginDatabaseSystem   = pluginDatabaseSystem;
+        this.pluginId               = pluginId            ;
+        this.pluginRoot             = pluginRoot;
     }
 
     @Override
@@ -68,11 +68,11 @@ public class StockTransactionCryptoMoneyDestockManager implements
             StockTransactionCryptoMoneyDestockFactory stockTransactionCryptoMoneyDestockFactory = new StockTransactionCryptoMoneyDestockFactory(pluginDatabaseSystem, pluginId);
             stockTransactionCryptoMoneyDestockFactory.saveCryptoMoneyDestockTransactionData(cryptoMoneyRestockTransaction);
         } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateCryptoMoneyDestockException("Database Operation.", FermatException.wrapException(e), null, null);
 
         } catch (MissingCryptoMoneyDestockDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateCryptoMoneyDestockException("Missing Cash Money Restock Data.", FermatException.wrapException(e), null, null);
 
         }

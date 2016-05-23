@@ -42,8 +42,8 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetAct
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.sub_app.intra_user_community.R;
 import com.bitdubai.sub_app.intra_user_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app.intra_user_community.common.popups.ErrorConnectingFermatNetworkDialog;
@@ -211,14 +211,12 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-        try {
-            List list = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+
+            List list = getSuggestionCache();
             if(list!=null) {
                 dataSet.addAll(list);
             }
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        }
+
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
@@ -246,7 +244,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setDescription("The access to the \\n Fermat Network is disabled.");
+        errorConnectingFermatNetworkDialog.setDescription("The access to the Fermat Network is disabled.");
         errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -524,49 +522,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         List<IntraUserInformation> dataSet = new ArrayList<>();
 
          try {
-            //verifico la cache para mostrar los que tenia antes y los nuevos
-             List<IntraUserInformation> userCacheList = new ArrayList<>();
-             try {
-                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-             } catch (CantGetIntraUsersListException e) {
-                 e.printStackTrace();
-             }
 
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-             //dataSet.addAll(userList);
-
-             if(userList!=null) {
-                 if (userCacheList.size() == 0) {
-                     dataSet.addAll(userList);
-                     moduleManager.saveCacheIntraUsersSuggestions(userList);
-                 } else {
-                     if (userList.size() == 0) {
-                         dataSet.addAll(userCacheList);
-                     } else {
-                         for (IntraUserInformation intraUserCache : userCacheList) {
-                             boolean exist = false;
-                             for (IntraUserInformation intraUser : userList) {
-                                 if (intraUserCache.getPublicKey().equals(intraUser.getPublicKey())) {
-                                     exist = true;
-                                     break;
-                                 }
-                             }
-                             if (!exist)
-                                 userList.add(intraUserCache);
-                         }
-                         //save cache records
-                         try {
-                             moduleManager.saveCacheIntraUsersSuggestions(userList);
-                         } catch (CantGetIntraUsersListException e) {
-                             e.printStackTrace();
-                         }
-
-                         dataSet.addAll(userList);
-                     }
-                 }
-             }
-
-            //set offset if have more than 1 page;
+            dataSet.addAll(userList);
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
@@ -576,6 +534,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         return dataSet;
     }
 
+
+    private List<IntraUserInformation> getSuggestionCache() {
+
+        List<IntraUserInformation> userCacheList = new ArrayList<>();
+        try {
+
+            userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+            return userCacheList;
+
+        } catch (CantGetIntraUsersListException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return userCacheList;
+    }
 
     @Override
     public void onItemClickListener(IntraUserInformation data, int position) {

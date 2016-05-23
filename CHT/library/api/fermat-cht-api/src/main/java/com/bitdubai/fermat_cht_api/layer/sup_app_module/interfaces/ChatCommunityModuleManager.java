@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 /**
- * Created by eorono on 30/03/16.
+ * Created by Eleazar Oroño (eorono@protonmail.com) on 30/03/16.
  */
 
 public interface ChatCommunityModuleManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {

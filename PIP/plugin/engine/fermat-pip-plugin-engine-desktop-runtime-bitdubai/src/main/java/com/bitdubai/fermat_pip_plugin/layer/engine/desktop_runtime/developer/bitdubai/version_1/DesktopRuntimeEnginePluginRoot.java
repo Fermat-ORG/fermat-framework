@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -26,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -52,6 +54,8 @@ import java.util.Set;
  *
  * Created by Matias Furszyfer 16/9/2015
  */
+@PluginInfo(createdBy = "Matias Furszyfer", maintainerMail = "matiasfurszyfer@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+
 public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements DesktopRuntimeManager {
 
     final String NAVIGATION_STRUCTURE_FILE_PATH = "navigation_structure";
@@ -95,10 +99,10 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * functionality based on wallets downloaded by users this wont be an option.
              * * *
              */
-            if(!loadConfig()) {
+//            if(!loadConfig()) {
                 factoryReset();
                 saveFactory();
-            }
+//            }
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantFactoryResetException ex) {

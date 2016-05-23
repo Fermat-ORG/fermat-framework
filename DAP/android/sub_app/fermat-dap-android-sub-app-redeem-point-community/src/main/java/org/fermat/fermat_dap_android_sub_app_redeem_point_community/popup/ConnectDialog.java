@@ -11,17 +11,17 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.AssetRedeemPointCommunitySubAppSession;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.sessions.SessionConstantRedeemPointCommunity;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAskConnectionActorAssetException;
-import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantRequestAlreadySendActorAssetException;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,32 +126,40 @@ public class ConnectDialog extends FermatDialog<AssetRedeemPointCommunitySubAppS
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.positive_button) {
-            try {
-                //image null
-                if (actorRedeem != null) {
-                    redeemConnect = new ArrayList<>();
+            if (actorRedeem != null) {
+                redeemConnect = new ArrayList<>();
+                FermatWorker worker = new FermatWorker() {
+                    @Override
+                    protected Object doInBackground() throws Exception {
+                        redeemConnect.add(actorRedeem);
 
-                    redeemConnect.add(actorRedeem);
+                        getSession().getModuleManager().askActorAssetRedeemForConnection(redeemConnect);
 
-                    getSession().getModuleManager().askActorAssetRedeemForConnection(redeemConnect);
+                        Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
+                        broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                        sendLocalBroadcast(broadcast);
+                        return true;
+                    }
+                };
+                worker.setContext(getActivity());
+                worker.setCallBack(new FermatWorkerCallBack() {
+                    @Override
+                    public void onPostExecute(Object... result) {
+                        dismiss();
+                        Toast.makeText(getContext(), R.string.dap_other_profile_request_send, Toast.LENGTH_SHORT).show();
+                    }
 
-                    Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
-                    broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
-                    sendLocalBroadcast(broadcast);
-                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
-                } else {
-                    super.toastDefaultError();
-                }
-            } catch (CantRequestAlreadySendActorAssetException e) {
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            } catch (CantAskConnectionActorAssetException e) {
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
+                    @Override
+                    public void onErrorOccurred(Exception ex) {
+                        dismiss();
+                        Toast.makeText(getActivity(), R.string.before_action_redeem, Toast.LENGTH_LONG).show();
+
+                    }
+                });
+                worker.execute();
+            } else if (i == R.id.negative_button) {
+                dismiss();
             }
-            dismiss();
-        } else if (i == R.id.negative_button) {
-            dismiss();
         }
     }
 }

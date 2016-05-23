@@ -5,8 +5,9 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/background_gradient"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    >
 
     <LinearLayout
         android:id="@+id/fragment_container2"
@@ -15,7 +16,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="15dp"
-        android:background="@drawable/search_contacts_container"
+        android:background="@drawable/header_bg_gradient_color"
         android:orientation="horizontal">
 
         <ImageView

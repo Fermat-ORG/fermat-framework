@@ -1,9 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Signature;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.util.RandomBigIntegerGenerator;
 
 import org.bitcoinj.core.ECKey;

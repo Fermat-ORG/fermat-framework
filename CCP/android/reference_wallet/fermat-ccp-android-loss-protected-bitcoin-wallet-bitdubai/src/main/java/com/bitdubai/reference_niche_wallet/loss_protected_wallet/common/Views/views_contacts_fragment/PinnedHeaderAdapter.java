@@ -23,8 +23,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.HeaderTypes;
 import com.squareup.picasso.Picasso;
@@ -147,7 +147,7 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
                 holder = new ViewHolder();
                 switch (type) {
                     case TYPE_ITEM:
-                        convertView = mLayoutInflater.inflate(R.layout.row_view, null);
+                        convertView = mLayoutInflater.inflate(R.layout.loss_row_view, null);
                         holder.imageView =(ImageView) convertView.findViewById(R.id.imageView_contact);
                         walletContact = (LossProtectedWalletContact) mListItems.get(position);
                         //guardo el contacto

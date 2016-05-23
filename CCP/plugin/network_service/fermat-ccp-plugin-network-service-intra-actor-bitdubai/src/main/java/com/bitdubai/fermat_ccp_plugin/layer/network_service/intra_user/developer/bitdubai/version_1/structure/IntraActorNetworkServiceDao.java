@@ -64,7 +64,7 @@ public class IntraActorNetworkServiceDao {
              * first delete old cache records
              */
 
-           // deleteIntraUserCache();
+            deleteIntraUserCache();
 
             DatabaseTable table = this.database.getTable(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TABLE_NAME);
             table.getRecords();

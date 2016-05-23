@@ -60,9 +60,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_on
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.exceptions.IncomingOnlineMerchandiseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -79,7 +77,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
         CBPTransactionAgent,
         DealsWithLogger,
         DealsWithEvents,
-        DealsWithErrors,
         DealsWithPluginDatabaseSystem,
         DealsWithPluginIdentity {
 
@@ -88,7 +85,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
     Thread agentThread;
     LogManager logManager;
     EventManager eventManager;
-    ErrorManager errorManager;
+    CustomerAckOnlineMerchandisePluginRoot pluginRoot;
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     TransactionTransmissionManager transactionTransmissionManager;
@@ -99,7 +96,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
     public CustomerAckOnlineMerchandiseMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
             LogManager logManager,
-            ErrorManager errorManager,
+            CustomerAckOnlineMerchandisePluginRoot pluginRoot,
             EventManager eventManager,
             UUID pluginId,
             TransactionTransmissionManager transactionTransmissionManager,
@@ -108,7 +105,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
             CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginId = pluginId;
         this.logManager = logManager;
         this.transactionTransmissionManager = transactionTransmissionManager;
@@ -122,21 +119,18 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
         //Logger LOG = Logger.getGlobal();
         //LOG.info("Customer online payment monitor agent starting");
-        monitorAgent = new MonitorAgent();
+        monitorAgent = new MonitorAgent(pluginRoot);
 
         this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
             this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
@@ -151,13 +145,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
         try {
             this.agentThread.interrupt();
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
+            this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
-    }
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     @Override
@@ -184,18 +173,17 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable {
 
-        ErrorManager errorManager;
+        CustomerAckOnlineMerchandisePluginRoot pluginRoot;
         PluginDatabaseSystem pluginDatabaseSystem;
         public final int SLEEP_TIME = 5000;
         int iterationNumber = 0;
         CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao;
         boolean threadWorking;
 
-        @Override
-        public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        public MonitorAgent(CustomerAckOnlineMerchandisePluginRoot pluginRoot) {
+            this.pluginRoot = pluginRoot;
         }
 
         @Override
@@ -228,10 +216,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     logManager.log(CustomerAckOnlineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (FermatException e) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                            e);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
 
             }
@@ -253,20 +238,16 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     database = customerAckOnlineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(pluginId,
                             CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
                 } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                    errorManager.reportUnexpectedPluginException(
-                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                            cantCreateDatabaseException);
-                    throw new CantInitializeCBPAgent(cantCreateDatabaseException,
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                    throw new CantInitializeCBPAgent(
+                            cantCreateDatabaseException,
                             "Initialize Monitor Agent - trying to create the plugin database",
                             "Please, check the cause");
                 }
             } catch (CantOpenDatabaseException exception) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        exception);
-                throw new CantInitializeCBPAgent(exception,
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantInitializeCBPAgent(
+                        exception,
                         "Initialize Monitor Agent - trying to open the plugin database",
                         "Please, check the cause");
             }
@@ -274,7 +255,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
         private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException, CantSendContractNewStatusNotificationException, CantConfirmNotificationReceptionException {
             try {
-                customerAckOnlineMerchandiseBusinessTransactionDao = new CustomerAckOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+                customerAckOnlineMerchandiseBusinessTransactionDao = new CustomerAckOnlineMerchandiseBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, pluginRoot);
                 String contractHash;
 
                 /**
@@ -344,8 +325,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Unexpected result in database");
             }  catch (IncomingOnlineMerchandiseException e) {
                 //TODO: I need to discuss if I need to raise an event here, for now I going to report the error
-                errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (CantConfirmNotificationReceptionException e) {
                 throw new CantConfirmNotificationReceptionException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
                         e, "Sending Confirmation Notification to the Broker", "Error Sending Notification Confirmation Message");
@@ -363,20 +343,30 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
         private void checkPendingMoneyEvents(String eventId) throws IncomingOnlineMerchandiseException, CantUpdateRecordException {
 
-            try {
-                final IncomingMoneyEventWrapper incomingMoneyEventWrapper = customerAckOnlineMerchandiseBusinessTransactionDao.
-                        getIncomingMoneyEventWrapper(eventId);
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper;
+            BusinessTransactionRecord businessTransactionRecord;
+            long contractCryptoAmount;
+            long incomingCryptoAmount;
+            String contractHash;
+            String receiverActorPublicKey;
+            String expectedActorPublicKey;
 
-                final String senderPublicKey = incomingMoneyEventWrapper.getSenderPublicKey();
-                final BusinessTransactionRecord businessTransactionRecord = customerAckOnlineMerchandiseBusinessTransactionDao.
-                        getBusinessTransactionRecordByBrokerPublicKey(senderPublicKey);
+            try {
+                incomingMoneyEventWrapper = customerAckOnlineMerchandiseBusinessTransactionDao.getIncomingMoneyEventWrapper(eventId);
+
+                contractHash = incomingMoneyEventWrapper.getTransactionHash();
+                businessTransactionRecord = customerAckOnlineMerchandiseBusinessTransactionDao.getBusinessTransactionRecordByContractHash(contractHash);
+
+//                final String senderPublicKey = incomingMoneyEventWrapper.getSenderPublicKey();
+//                final BusinessTransactionRecord businessTransactionRecord = customerAckOnlineMerchandiseBusinessTransactionDao.
+//                        getBusinessTransactionRecordByBrokerPublicKey(senderPublicKey);
 
                 if (businessTransactionRecord == null)
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.
 
-                final String contractHash = businessTransactionRecord.getContractHash();
-                long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
-                long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
+//                final String contractHash = businessTransactionRecord.getContractHash();
+                incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
+                contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
                 //TODO:fix this
                 incomingCryptoAmount = 0;
                 contractCryptoAmount = 0;
@@ -384,8 +374,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     throw new IncomingOnlineMerchandiseException("The incoming crypto amount received is " + incomingCryptoAmount +
                             "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
 
-                final String receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
-                final String expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
+                receiverActorPublicKey = incomingMoneyEventWrapper.getReceiverPublicKey();
+                expectedActorPublicKey = businessTransactionRecord.getCustomerPublicKey();
                 if (!receiverActorPublicKey.equals(expectedActorPublicKey))
                     throw new IncomingOnlineMerchandiseException("The actor public key that receive the money is " + receiverActorPublicKey +
                             "\nThe broker public key in contract " + contractHash + "\nis " + expectedActorPublicKey);

@@ -5,8 +5,6 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -14,7 +12,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdent
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 
 import java.io.Serializable;
@@ -54,8 +51,8 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     }
 
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city) throws CantCreateNewChatIdentityException {
-        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city);
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewChatIdentityException {
+        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city, connectionState);
     }
 
     /**
@@ -67,8 +64,8 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city) throws CantUpdateChatIdentityException {
-        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city);
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
+        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState);
     }
 
     /**
@@ -118,7 +115,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available");
     }
 
     @Override

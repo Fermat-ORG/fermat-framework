@@ -47,8 +47,8 @@ import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRe
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -489,7 +489,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                 @Override
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
-                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.dap_other_profile_request_send, Toast.LENGTH_SHORT).show();
                                     restartButtons();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
@@ -504,7 +504,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                 public void onErrorOccurred(Exception ex) {
                                     dialog.dismiss();
 //                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getActivity(), "Asset User or Redeem Point Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), R.string.before_action_redeem, Toast.LENGTH_LONG).show();
 //                                ex.printStackTrace();
                                 }
                             });

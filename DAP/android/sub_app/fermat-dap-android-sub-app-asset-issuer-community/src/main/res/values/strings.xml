@@ -47,6 +47,7 @@
 
     <string name="connection_request_desc_two">a connection request</string>
     <string name="create_before_action">Redeem Point or Asset Issuer Identities must be created before using this app.</string>
+    <string name="before_action">Redeem Point Identity must be created before action.</string>
     <string name="no_issuers_selected">No Issuers selected to Connect</string>
     <string name="connecting">Connecting please wait...</string>
 

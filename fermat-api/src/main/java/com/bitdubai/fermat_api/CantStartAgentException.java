@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api;
 
-import com.bitdubai.fermat_api.FermatException;
-
 /**
  * The exception <code>com.bitdubai.fermat_api.CantStartAgentException</code>
  * is thrown when there is an error trying to start an agent.

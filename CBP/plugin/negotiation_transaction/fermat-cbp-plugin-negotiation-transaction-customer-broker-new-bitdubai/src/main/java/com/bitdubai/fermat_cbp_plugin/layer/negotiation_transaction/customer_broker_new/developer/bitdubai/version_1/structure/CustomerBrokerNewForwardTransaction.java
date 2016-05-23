@@ -4,13 +4,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerNewPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantProcessPendingConfirmTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -20,22 +20,20 @@ import java.util.UUID;
  */
 public class CustomerBrokerNewForwardTransaction {
 
-    CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
-    ErrorManager                                        errorManager;
-    PluginVersionReference                              pluginVersionReference;
-    Map<UUID,Integer>                                   transactionSend;
+    CustomerBrokerNewNegotiationTransactionDatabaseDao          customerBrokerNewNegotiationTransactionDatabaseDao;
+    private NegotiationTransactionCustomerBrokerNewPluginRoot   pluginRoot;
+    PluginVersionReference                                      pluginVersionReference;
+    Map<UUID,Integer>                                           transactionSend;
 
-    boolean                                             isValidateSend = Boolean.FALSE;
+    boolean                                                     isValidateSend = Boolean.FALSE;
 
     public CustomerBrokerNewForwardTransaction(
             CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao,
-            ErrorManager                                        errorManager,
-            PluginVersionReference                              pluginVersionReference,
+            NegotiationTransactionCustomerBrokerNewPluginRoot   pluginRoot,
             Map<UUID,Integer>                                   transactionSend
     ){
         this.customerBrokerNewNegotiationTransactionDatabaseDao     = customerBrokerNewNegotiationTransactionDatabaseDao;
-        this.errorManager                                           = errorManager;
-        this.pluginVersionReference                                 = pluginVersionReference;
+        this.pluginRoot                                             = pluginRoot;
         this.transactionSend                                        = transactionSend;
     }
 
@@ -83,7 +81,7 @@ public class CustomerBrokerNewForwardTransaction {
             }
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
         }
     }
@@ -123,10 +121,10 @@ public class CustomerBrokerNewForwardTransaction {
             }
 
         } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
         }
 

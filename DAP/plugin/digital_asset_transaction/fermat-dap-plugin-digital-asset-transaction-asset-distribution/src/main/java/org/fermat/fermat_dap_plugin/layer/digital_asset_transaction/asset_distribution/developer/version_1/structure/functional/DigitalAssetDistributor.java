@@ -44,13 +44,14 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantCheckAssetDistributionProgressException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantDeliverDigitalAssetException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantGetActorAssetIssuerException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,16 +66,21 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
     final String LOCAL_STORAGE_PATH = "digital-asset-distribution/";
     ActorAssetIssuerManager actorAssetIssuerManager;
     AssetVaultManager assetVaultManager;
-    ErrorManager errorManager;
+    AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot;
     String digitalAssetFileStoragePath;
     //String digitalAssetMetadataFileStoragePath;
     AssetDistributionDao assetDistributionDao;
     DigitalAssetDistributionVault digitalAssetDistributionVault;
 
-    public DigitalAssetDistributor(AssetVaultManager assetVaultManager, ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem, BitcoinNetworkManager bitcoinNetworkManager) {
+    public DigitalAssetDistributor(AssetVaultManager assetVaultManager,
+                                   AssetDistributionDigitalAssetTransactionPluginRoot assetDistributionDigitalAssetTransactionPluginRoot, 
+                                   UUID pluginId, 
+                                   PluginFileSystem pluginFileSystem, 
+                                   BitcoinNetworkManager bitcoinNetworkManager) {
+        
         super(pluginId, pluginFileSystem);
         this.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
-        this.errorManager = errorManager;
+        this.assetDistributionDigitalAssetTransactionPluginRoot = assetDistributionDigitalAssetTransactionPluginRoot;
         this.assetVaultManager = assetVaultManager;
     }
 
@@ -122,16 +128,19 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                         "digitalAssetMetadata:" + digitalAssetMetadata);
             }
             this.assetDistributionDao.updateDistributionStatusByGenesisTransaction(DistributionStatus.HASH_CHECKED, genesisTransactionFromDigitalAssetMetadata);
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new CantDeliverDigitalAssetException(exception,
+        } catch (CantGetCryptoTransactionException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot get the genesis transaction from Asset vault");
-        } catch (CantExecuteQueryException exception) {
-            throw new CantDeliverDigitalAssetException(exception,
+        } catch (CantExecuteQueryException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Cannot execute a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantDeliverDigitalAssetException(exception,
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e,
                     "Delivering the Digital Asset \n" + digitalAssetMetadata,
                     "Unexpected result in database");
         }
@@ -175,26 +184,36 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             digitalAssetDistributionVault.updateWalletBalance(digitalAssetMetadata, cryptoTransaction, BalanceType.AVAILABLE, TransactionType.DEBIT, DAPTransactionType.DISTRIBUTION, actorAssetUser.getActorPublicKey(), Actors.DAP_ASSET_USER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
             System.out.println("ASSET DISTRIBUTION Begins the deliver to an remote actor");
             deliverToRemoteActor(digitalAssetMetadata, actorAssetUser, cryptoTransaction.getBlockchainNetworkType());
-        } catch (CantPersistDigitalAssetException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into database");
-        } catch (CantCreateDigitalAssetFileException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot persist digital asset into local storage");
-        } catch (CantGetCryptoTransactionException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
-        } catch (CantExecuteQueryException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot execute a database operation");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Unexpected result in database");
-        } catch (CantSendDigitalAssetMetadataException | CantCreateBitcoinTransactionException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
-        } catch (DAPException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Generic DAP Exception");
-        } catch (CantGetTransactionsException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot get the genesis transaction from crypto network");
-        } catch (CantLoadWalletException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot load Asset issuer wallet");
-        } catch (CantRegisterDebitException | CantRegisterCreditException exception) {
-            throw new CantDeliverDigitalAssetException(exception, "Delivering digital assets", "Cannot register a debit in Asset Issuer Wallet");
+        } catch (CantPersistDigitalAssetException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot persist digital asset into database");
+        } catch (CantCreateDigitalAssetFileException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot persist digital asset into local storage");
+        } catch (CantGetCryptoTransactionException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot get the genesisTransaction from Asset Vault");
+        } catch (CantExecuteQueryException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot execute a database operation");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Unexpected result in database");
+        } catch (CantSendDigitalAssetMetadataException | CantCreateBitcoinTransactionException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "There is an error delivering the digital asset through the network layer");
+        } catch (DAPException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Generic DAP Exception");
+        } catch (CantGetTransactionsException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot get the genesis transaction from crypto network");
+        } catch (CantLoadWalletException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot load Asset issuer wallet");
+        } catch (CantRegisterDebitException | CantRegisterCreditException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDeliverDigitalAssetException(e, "Delivering digital assets", "Cannot register a debit in Asset Issuer Wallet");
         }
     }
 
@@ -211,11 +230,14 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
             assetDistributionDao.startDelivering(digitalAssetMetadata.getGenesisTransaction(), digitalAssetMetadata.getDigitalAsset().getPublicKey(), remoteActorAssetUser.getActorPublicKey(), networkType);
             DAPMessage metadataMessage = new DAPMessage(new AssetMetadataContentMessage(digitalAssetMetadata), actorAssetIssuerManager.getActorAssetIssuer(), remoteActorAssetUser, DAPMessageSubject.ASSET_RECEPTION);
             this.assetTransmissionNetworkServiceManager.sendMessage(metadataMessage);
-        } catch (CantExecuteQueryException | CantStartDeliveringException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
-        } catch (UnexpectedResultReturnedFromDatabaseException exception) {
-            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, exception, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
+        } catch (CantExecuteQueryException | CantStartDeliveringException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "There is an error executing a query in database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantSendDigitalAssetMetadataException(UnexpectedResultReturnedFromDatabaseException.DEFAULT_MESSAGE, e, "Delivering Digital Asset Metadata to Remote Actor", "The database return an unexpected result");
         } catch (CantGetAssetIssuerActorsException | CantSetObjectException | CantSendMessageException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -270,7 +292,7 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                         assetDistributionDao.updateActorAssetUser(actorAssetUser, digitalAssetMetadata.getGenesisTransaction());
                     }
                 } catch (TransactionAlreadyDeliveringException | CantPersistDigitalAssetException | CantCreateDigitalAssetFileException | CantCheckAssetDistributionProgressException | RecordsNotFoundException | CantUpdateRecordException | CantLoadTableToMemoryException e) {
-                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                     throw new CantDistributeDigitalAssetsException(e, context, "Something bad happen.");
                 }
                 //Deliver one DigitalAsset
@@ -279,9 +301,9 @@ public class DigitalAssetDistributor extends AbstractDigitalAssetSwap {
                 System.out.println("ASSET DISTRIBUTION ActorAssetUser - Name:" + actorAssetUser.getName());
                 deliverDigitalAssetToRemoteDevice(digitalAssetMetadata, actorAssetUser);
             }
-        } catch (CantDeliverDigitalAssetException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_DISTRIBUTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantDistributeDigitalAssetsException(exception, context, "Something bad happen.");
+        } catch (CantDeliverDigitalAssetException e) {
+            assetDistributionDigitalAssetTransactionPluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantDistributeDigitalAssetsException(e, context, "Something bad happen.");
         }
 
     }

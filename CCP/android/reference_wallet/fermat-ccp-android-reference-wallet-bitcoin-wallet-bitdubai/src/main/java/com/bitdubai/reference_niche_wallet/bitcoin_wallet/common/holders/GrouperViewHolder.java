@@ -14,6 +14,7 @@ import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.BitmapWorkerTask;
@@ -82,7 +83,11 @@ public class GrouperViewHolder extends ParentViewHolder {
             {
                 photo = cryptoWalletTransaction.getInvolvedActor().getPhoto();
                 contactName = cryptoWalletTransaction.getInvolvedActor().getName();
+            }else{
+            if (cryptoWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
+                contactName = "Device User Transaction";
             }
+        }
 
         //TODO Ver porque se cae cuando el contacto tiene algunos bytes
         try {

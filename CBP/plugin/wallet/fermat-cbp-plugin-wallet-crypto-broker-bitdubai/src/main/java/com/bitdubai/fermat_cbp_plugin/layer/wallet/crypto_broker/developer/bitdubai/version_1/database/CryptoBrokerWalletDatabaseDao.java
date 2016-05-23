@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
@@ -46,6 +47,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.util.CurrencyMatchingImp;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantExecuteCryptoBrokerTransactionException;
@@ -66,7 +68,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.all_definition.enums.Plugins.CRYPTO_BROKER_WALLET;
-import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity.NOT_IMPORTANT;
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity.NOT_IMPORTANT;
 
 
 /**
@@ -88,6 +90,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     PluginFileSystem pluginFileSystem;
     UUID plugin;
     private CurrencyExchangeProviderFilterManager providerFilter;
+    private CryptoBrokerWalletPluginRoot pluginRoot;
 
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
@@ -103,11 +106,10 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     private Database database;
-    private ErrorManager errorManager;
 
-    public CryptoBrokerWalletDatabaseDao(Database database, ErrorManager errorManager) {
+    public CryptoBrokerWalletDatabaseDao(Database database, CryptoBrokerWalletPluginRoot pluginRoot) {
         this.database = database;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
     }
 
     public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
@@ -151,7 +153,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                             currencyMatchingList.add(currencyMatchingImp);
 
                         } else {
-                            errorManager.reportUnexpectedPluginException(CRYPTO_BROKER_WALLET, NOT_IMPORTANT, new InvalidParameterException(
+                            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, new InvalidParameterException(
                                     "Cant create a CurrencyMatching for the given currencies", null,
                                     "currencyGiving: " + currencyGiving + "\ncurrencyReceiving: " + currencyReceiving,
                                     "Please verify that the credit and debit transactions are correct in the crypto broker transaction database"));

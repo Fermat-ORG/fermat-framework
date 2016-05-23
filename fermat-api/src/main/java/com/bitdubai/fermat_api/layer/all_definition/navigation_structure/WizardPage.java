@@ -3,9 +3,6 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatWizardPage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Wizard Page
  *

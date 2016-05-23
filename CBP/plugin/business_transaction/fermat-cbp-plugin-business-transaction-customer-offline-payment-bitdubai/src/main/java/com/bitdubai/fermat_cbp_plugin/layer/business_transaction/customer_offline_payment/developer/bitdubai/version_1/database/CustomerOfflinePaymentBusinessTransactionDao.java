@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -21,35 +21,35 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultRet
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure.CustomerOfflinePaymentRecord;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
  */
 public class CustomerOfflinePaymentBusinessTransactionDao {
-    
+
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private CustomerOfflinePaymentPluginRoot pluginRoot;
     private Database database;
 
     public CustomerOfflinePaymentBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database,
-            final ErrorManager errorManager) {
+            final CustomerOfflinePaymentPluginRoot pluginRoot) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-        this.database             = database            ;
-        this.errorManager         = errorManager        ;
+        this.pluginId = pluginId;
+        this.database = database;
+        this.pluginRoot = pluginRoot;
     }
 
     public void initialize() throws CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException {
@@ -72,20 +72,14 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                 );
 
             } catch (CantCreateDatabaseException f) {
-                this.errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        f);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, f);
                 throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(
                         CantCreateDatabaseException.DEFAULT_MESSAGE,
                         f,
                         "",
                         "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                this.errorManager.reportUnexpectedPluginException(
-                        Plugins.CUSTOMER_OFFLINE_PAYMENT,
-                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                        z);
+                this.pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, z);
                 throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(
                         CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE,
                         z,
@@ -94,8 +88,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             }
 
         } catch (CantOpenDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(
@@ -104,8 +97,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     "",
                     "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeCustomerOfflinePaymentBusinessTransactionDatabaseException(
@@ -124,6 +116,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     private Database getDataBase() {
         return database;
     }
+
     /**
      * Returns the Open Contract DatabaseTable
      *
@@ -146,37 +139,37 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
 
-            String stringContractTransactionStatus=getValue(
+            String stringContractTransactionStatus = getValue(
                     contractHash,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException( exception,
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Getting the contract transaction status",
-                    "Unexpected error" );
+                    "Unexpected error");
         }
     }
 
     public List<String> getPendingEvents() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
-            List<String> eventTypeList=new ArrayList<>();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
+            List<String> eventTypeList = new ArrayList<>();
             String eventId;
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
@@ -184,27 +177,27 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return eventTypeList;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getStringValue(
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                eventId = databaseTableRecord.getStringValue(
                         CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME);
                 eventTypeList.add(eventId);
             }
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -216,8 +209,8 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public String getEventType(String eventId)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
@@ -225,22 +218,22 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            String value=records
+            String value = records
                     .get(0)
                     .getStringValue(
                             CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -271,14 +264,14 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public List<CustomerOfflinePaymentRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try{
+        try {
             return getCustomerOfflinePaymentRecordList(
                     ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_NOTIFICATION.getCode(),
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -290,14 +283,14 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public List<CustomerOfflinePaymentRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try{
+        try {
             return getCustomerOfflinePaymentRecordList(
                     ContractTransactionStatus.PENDING_OFFLINE_PAYMENT_CONFIRMATION.getCode(),
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -326,10 +319,13 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a CustomerOnlinePaymentRecordList according the arguments.
-     * @param key String with the search key.
-     * @param keyColumn String with the key column name.
+     *
+     * @param key         String with the search key.
+     * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
+     *
      * @return List<CustomerOfflinePaymentRecord>
+     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -337,14 +333,14 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
-        List<String> pendingContractHash= getStringList(
+        List<String> pendingContractHash = getStringList(
                 key,
                 keyColumn,
                 valueColumn);
-        List<CustomerOfflinePaymentRecord> customerOfflinePaymentRecordList=new ArrayList<>();
+        List<CustomerOfflinePaymentRecord> customerOfflinePaymentRecordList = new ArrayList<>();
         CustomerOfflinePaymentRecord customerOnlinePaymentRecord;
-        for(String contractHash : pendingContractHash){
-            customerOnlinePaymentRecord=getCustomerOfflinePaymentRecord(contractHash);
+        for (String contractHash : pendingContractHash) {
+            customerOnlinePaymentRecord = getCustomerOfflinePaymentRecord(contractHash);
             customerOfflinePaymentRecordList.add(customerOnlinePaymentRecord);
         }
         return customerOfflinePaymentRecordList;
@@ -352,22 +348,24 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a CustomerOfflinePaymentRecord
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
     public List<CustomerOfflinePaymentRecord> getPendingCryptoTransactionList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try{
+        try {
             return getCustomerOfflinePaymentRecordList(
                     ContractTransactionStatus.OFFLINE_PAYMENT_SUBMITTED.getCode(),
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
             );
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -378,18 +376,20 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a List with the parameter in the arguments.
+     *
      * @param key
      * @param keyColumn
      * @param valueColumn
+     *
      * @return
      */
     private List<String> getStringList(
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            List<String> contractHashList=new ArrayList<>();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            List<String> contractHashList = new ArrayList<>();
             String contractHash;
             databaseTable.addStringFilter(
                     keyColumn,
@@ -397,33 +397,33 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return contractHashList;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                contractHash=databaseTableRecord.getStringValue(valueColumn);
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                contractHash = databaseTableRecord.getStringValue(valueColumn);
                 contractHashList.add(contractHash);
             }
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    "Getting "+valueColumn+" based on "+key,
+                    "Getting " + valueColumn + " based on " + key,
                     "Cannot load the table into memory");
         }
     }
 
     public boolean isContractHashInDatabase(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            String contractHashFromDatabase=getValue(
+        try {
+            String contractHashFromDatabase = getValue(
                     contractHash,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-            return contractHashFromDatabase!=null;
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            return contractHashFromDatabase != null;
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -434,10 +434,13 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a String value from parameters in database.
+     *
      * @param key
      * @param keyColumn
      * @param valueColumn
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key,
@@ -445,19 +448,19 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                             String valueColumn)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return null;
             }
             checkDatabaseRecords(records);
-            String value=records
+            String value = records
                     .get(0)
                     .getStringValue(valueColumn);
             return value;
@@ -471,7 +474,9 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method check the database record result.
+     *
      * @param records
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws
@@ -481,39 +486,41 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
          * I'm gonna set this number in 1 for now, because I want to check the records object has
          * one only result.
          */
-        int VALID_RESULTS_NUMBER=1;
+        int VALID_RESULTS_NUMBER = 1;
         int recordsSize;
-        if(records.isEmpty()){
+        if (records.isEmpty()) {
             return;
         }
-        recordsSize=records.size();
-        if(recordsSize>VALID_RESULTS_NUMBER){
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
+        recordsSize = records.size();
+        if (recordsSize > VALID_RESULTS_NUMBER) {
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }
 
     /**
      * This method persists a basic record in database
+     *
      * @param customerBrokerContractPurchase
+     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+            databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractPurchase
             );
             databaseTable.insertRecord(databaseTableRecord);
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -522,10 +529,10 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     public CustomerOfflinePaymentRecord getCustomerOfflinePaymentRecord(String contractHash)
             throws UnexpectedResultReturnedFromDatabaseException {
 
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
-            CustomerOfflinePaymentRecord customerOfflinePaymentRecord=new CustomerOfflinePaymentRecord();
+            CustomerOfflinePaymentRecord customerOfflinePaymentRecord = new CustomerOfflinePaymentRecord();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -541,7 +548,7 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             customerOfflinePaymentRecord.setContractHash(record.getStringValue(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.
                             OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
-            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
+            contractTransactionStatus = ContractTransactionStatus.getByCode(record.getStringValue(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.
                             OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             customerOfflinePaymentRecord.setContractTransactionStatus(contractTransactionStatus);
@@ -556,24 +563,24 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                                     OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
             return customerOfflinePaymentRecord;
         } catch (CantLoadTableToMemoryException e) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         } catch (InvalidParameterException e) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -585,9 +592,9 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     public void updateOnlinePaymentRecord(CustomerOfflinePaymentRecord customerOfflinePaymentRecord)
             throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            String contractHash=customerOfflinePaymentRecord.getContractHash();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            String contractHash = customerOfflinePaymentRecord.getContractHash();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -595,21 +602,21 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
-            record=buildDatabaseTableRecord(record, customerOfflinePaymentRecord);
+            DatabaseTableRecord record = records.get(0);
+            record = buildDatabaseTableRecord(record, customerOfflinePaymentRecord);
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (CantLoadTableToMemoryException exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating databaseTableRecord from a CustomerOfflinePaymentRecord",
                     "Unexpected results in database");
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -620,26 +627,28 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
+     *
      * @param customerBrokerContractSale
+     *
      * @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+            databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractSale
             );
             databaseTable.insertRecord(databaseTableRecord);
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -647,14 +656,16 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method creates a database table record in crypto broker side, only for backup
+     *
      * @param record
      * @param customerBrokerContractSale
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractSale customerBrokerContractSale){
-        UUID transactionId=UUID.randomUUID();
+            CustomerBrokerContractSale customerBrokerContractSale) {
+        UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
@@ -677,13 +688,15 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a complete database table record from a CustomerOfflinePaymentRecord
+     *
      * @param record
      * @param customerOfflinePaymentRecord
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerOfflinePaymentRecord customerOfflinePaymentRecord){
+            CustomerOfflinePaymentRecord customerOfflinePaymentRecord) {
         record.setStringValue(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 customerOfflinePaymentRecord.getBrokerPublicKey());
@@ -709,19 +722,22 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
         return record;
     }
+
     /**
      * This method creates a database table record from a CustomerBrokerContractPurchase object.
      * This record is not complete, is missing the transaction hash,  and the crypto status,
      * this values will after sending the crypto amount, also the timestamp is set at this moment.
+     *
      * @param record
      * @param customerBrokerContractPurchase
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
             CustomerBrokerContractPurchase customerBrokerContractPurchase) {
 
-        UUID transactionId=UUID.randomUUID();
+        UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(
                 CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
@@ -744,18 +760,20 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
     /**
      * This method persists in an existing record in database the transaction UUID from
      * IntraActorCryptoTransactionManager by the contract hash.
+     *
      * @param contractHash
      * @param cryptoTransactionUUID
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
     public void persistsCryptoTransactionUUID(String contractHash,
-                                    UUID cryptoTransactionUUID) throws
+                                              UUID cryptoTransactionUUID) throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
 
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -763,23 +781,23 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setUUIDValue(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                     cryptoTransactionUUID);
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (CantLoadTableToMemoryException exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Persisting crypto transaction in database",
                     "There was an unexpected result in database");
-        }catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -793,24 +811,26 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
+        try {
             updateRecordStatus(contractHash,
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Unexpected error","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
     }
 
     /**
      * This method update a database record by contract hash.
+     *
      * @param contractHash
      * @param statusColumnName
      * @param newStatus
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -820,8 +840,8 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
 
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -829,11 +849,11 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(statusColumnName, newStatus);
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter "+statusColumnName,"");
+        } catch (CantLoadTableToMemoryException exception) {
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter " + statusColumnName, "");
         }
     }
 
@@ -842,8 +862,8 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             EventStatus eventStatus) throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
@@ -851,32 +871,34 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (CantLoadTableToMemoryException exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter "+ CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+                    "Updating parameter " + CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Unexpected error","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
     }
 
     /**
      * This method save an incoming new event in database.
+     *
      * @param eventType
      * @param eventSource
+     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -894,17 +916,17 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
 
         } catch (CantInsertRecordException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
                     exception,
                     "Saving new event.",
                     "Cannot insert a record in Offline Payment database");
-        } catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_OFFLINE_PAYMENT,
+        } catch (Exception exception) {
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -916,15 +938,18 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method returns the completion date from database.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(
             String contractHash)
             throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.
                             OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
@@ -932,11 +957,11 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return 0;
             }
             checkDatabaseRecords(records);
-            long completionDate=records
+            long completionDate = records
                     .get(0)
                     .getLongValue(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.
                             OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
@@ -950,8 +975,11 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
 
     /**
      * This method sets the completion date in the database.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(
@@ -959,8 +987,8 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
             long completionDate)
             throws UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.
                             OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
@@ -968,11 +996,11 @@ public class CustomerOfflinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
-                return ;
+            if (records.isEmpty()) {
+                return;
             }
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setLongValue(
                     CustomerOfflinePaymentBusinessTransactionDatabaseConstants.
                             OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME,

@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -26,9 +26,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.BrokerAckOfflinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,28 +40,26 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private ErrorManager errorManager;
+    private BrokerAckOfflinePaymentPluginRoot pluginRoot;
     private Database database;
 
     public BrokerAckOfflinePaymentBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database,
-            final ErrorManager errorManager) {
+            final BrokerAckOfflinePaymentPluginRoot pluginRoot) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.database             = database            ;
-        this.errorManager         = errorManager        ;
+        this.pluginRoot = pluginRoot        ;
     }
 
     public void initialize() throws CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException {
         try {
 
-            database = this.pluginDatabaseSystem.openDatabase(
-                    this.pluginId,
-                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME
-            );
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId,
+                    BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME);
 
         } catch (DatabaseNotFoundException e) {
 
@@ -76,8 +73,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                 );
 
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                pluginRoot.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         f);
                 throw new CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException(
@@ -86,8 +82,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                         "",
                         "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+                pluginRoot.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         z);
                 throw new CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException(
@@ -98,8 +93,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             }
 
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException(
@@ -108,8 +102,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "",
                     "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeBrokerAckOfflinePaymentBusinessTransactionDatabaseException(
@@ -165,8 +158,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -174,8 +166,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -193,8 +184,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
             return contractHashFromDatabase!=null;
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -284,8 +274,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             databaseTable.insertRecord(eventRecord);
 
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -293,8 +282,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Saving new event.",
                     "Cannot insert a record in Ack Offline Payment database");
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -316,8 +304,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             saveNewEvent(eventType, eventSource, eventRecordID.toString());
 
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -356,8 +343,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (ObjectNotSetException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(
@@ -366,8 +352,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Persisting a contract in database",
                     "An argument in null");
         } catch (InvalidParameterException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(
@@ -376,8 +361,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Persisting a contract in database",
                     "The paymentType is invalid in this plugin");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
@@ -413,8 +397,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (ObjectNotSetException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(
@@ -423,8 +406,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Persisting a contract in database",
                     "An argument in null");
         } catch (InvalidParameterException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(
@@ -433,8 +415,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Persisting a contract in database",
                     "The paymentType is invalid in this plugin");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
@@ -586,8 +567,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                             ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -610,7 +590,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         try{
             return getCustomerBusinessTransactionRecord(contractHash, BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
@@ -757,8 +737,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                             ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         } catch (ObjectNotSetException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantUpdateRecordException(
@@ -767,8 +746,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Updating the contract transaction status",
                     "The contract hash/Id is null");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
@@ -796,8 +774,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     record);
             databaseTable.updateRecord(record);
         } catch (UnexpectedResultReturnedFromDatabaseException | CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantUpdateRecordException(
@@ -805,8 +782,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     exception
                     );
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantUpdateRecordException(CantUpdateRecordException.DEFAULT_MESSAGE,exception,
@@ -951,8 +927,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                             ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME, paymentType.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -960,8 +935,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Updating parameter ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME",
                     "");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -996,8 +970,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                             ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, currency.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1005,8 +978,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Updating parameter ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME",
                     "");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1045,8 +1017,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                             ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME, cbpWalletPublicKey);
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1054,8 +1025,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Updating parameter ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME",
                     "");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1097,8 +1067,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                             ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME, customerAlias);
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1106,8 +1075,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     "Updating parameter ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME",
                     "");
         }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -1132,16 +1100,14 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         }catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingToSubmitNotificationList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1172,10 +1138,10 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             return businessTransactionRecordList;
 
         }catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception, "Getting value from PendingToSubmitNotificationList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
         }
     }
@@ -1195,16 +1161,14 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         }catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingToBankCreditList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1228,16 +1192,14 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         }catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
                     exception,
                     "Getting value from PendingToCashCreditList", "");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1324,16 +1286,14 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME
             );
         }catch (CantGetContractListException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
@@ -1401,16 +1361,12 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                             BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1447,16 +1403,14 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+ BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
@@ -1476,12 +1430,12 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             databaseTable.insertRecord(databaseTableRecord);
 
         }catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception, "Error in persistContractInDatabase", "");
 
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception, "Unexpected error", "Check the cause");
         }

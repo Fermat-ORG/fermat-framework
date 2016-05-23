@@ -149,7 +149,7 @@
             app:typeface="CAVIAR_DREAMS"
             android:textColor="#58595B"
             android:textSize="14sp"
-            android:text="In Fermat you can have multiple profiles.\nFor example you can have a profile for chatting apps, another for job seeking apps, another for dating apps and so on. From the outside no one can link these profiles to you or between each other. This way you are not going to be ridiculed when targeting different audiences with the wrong profile pictures."/>
+            android:text="In Fermat you can have multiple profiles.\nFor example you can have a profile for chatting apps, another for job seeking apps, another for dating apps and so on. From the outside no one can link these profiles to you or between each other. In this way you are not going to be ridiculed when targeting different audiences with the wrong profile pictures."/>
 
 
     </LinearLayout>

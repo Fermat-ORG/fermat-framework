@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -53,8 +54,8 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareManager;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
@@ -68,12 +69,10 @@ import java.util.regex.Pattern;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 10/01/16.
  */
+@PluginInfo(createdBy = "Manuel Perez", maintainerMail = "franklinmarcano1970@gmail.com",platform = Platforms.CHAT_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.CHAT_MIDDLEWARE)
 public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -95,50 +94,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CHAT_ACTOR_CONNECTION)
     private ChatActorConnectionManager chatActorConnectionManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
-    //AssetUserActorNetworkServiceManager assetUserActorNetworkServiceManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_ISSUER)
-    //AssetIssuerActorNetworkServiceManager assetIssuerActorNetworkServiceManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.REDEEM_POINT)
-    //AssetRedeemPointActorNetworkServiceManager assetRedeemPointActorNetworkServiceManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_BROKER_COMMUNITY)
-    //CryptoBrokerCommunitySubAppModuleManager cryptoBrokerCommunitySubAppModuleManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.CRYPTO_CUSTOMER_COMMUNITY)
-    //CryptoCustomerCommunitySubAppModuleManager cryptoCustomerCommunitySubAppModuleManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
-    //ActorAssetUserManager actorAssetUserManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_ISSUER)
-    //ActorAssetIssuerManager actorAssetIssuerManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.REDEEM_POINT)
-    //ActorAssetRedeemPointManager actorAssetRedeemPointManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_BROKER)
-    //CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CRYPTO_CUSTOMER)
-    //CryptoCustomerIdentityManager cryptoCustomerIdentityManager;
-
-    //TODO:Eliminar
-    //@NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.INTRA_WALLET_USER)
-    //private IntraUserModuleManager intraUserModuleManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     Broadcaster broadcaster;
@@ -186,10 +141,12 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     cantOpenDatabaseException);
+//            errorManager.reportUnexpectedPluginException(
+//                    Plugins.CHAT_MIDDLEWARE,
+//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                    cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -215,9 +172,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.CHAT_MIDDLEWARE,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
@@ -233,9 +188,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             returnedClasses.add("com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot");
             return returnedClasses;
         } catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
+            reportError(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
                     FermatException.wrapException(exception));
             //I'll return an empty list
             return returnedClasses;
@@ -262,53 +215,13 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                 }
             }
         } catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
 
     }
 
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    /**
-     * This method initializes the contact factory.
-     */
-    private void initializeContactFactory() throws CantGetCompatiblesActorNetworkServiceListException {
-//TODO:Eliminar
-//        //Configure platforms
-//        HashMap<String, Object> actorNetworkServiceMap=new HashMap<>();
-//        //Include DAP Platform
-//        List dapPlatformManagers=new ArrayList();
-//        dapPlatformManagers.add(assetUserActorNetworkServiceManager);
-//        dapPlatformManagers.add(assetIssuerActorNetworkServiceManager);
-//        dapPlatformManagers.add(assetRedeemPointActorNetworkServiceManager);
-//        actorNetworkServiceMap.put(
-//                Platforms.DIGITAL_ASSET_PLATFORM.getCode(),
-//                dapPlatformManagers);
-//        //Include CCP actors
-//        actorNetworkServiceMap.put(
-//                Platforms.CRYPTO_CURRENCY_PLATFORM.getCode(),
-//                intraUserModuleManager);
-//        //Include CBP Platform
-//        List cbpPlatformManagers=new ArrayList();
-//        cbpPlatformManagers.add(cryptoBrokerCommunitySubAppModuleManager.getCryptoBrokerSearch());
-//        cbpPlatformManagers.add(cryptoCustomerCommunitySubAppModuleManager.getCryptoCustomerSearch());
-//        actorNetworkServiceMap.put(
-//                Platforms.CRYPTO_BROKER_PLATFORM.getCode(),
-//                cbpPlatformManagers);
-//        this.chatMiddlewareContactFactory =
-//                new ChatMiddlewareContactFactory(
-//                        actorNetworkServiceMap,
-//                        errorManager);
-//        //To discover the own DAP Asset User identity.
-//        this.chatMiddlewareContactFactory.setActorAssetUserManager(actorAssetUserManager);
-//        this.chatMiddlewareContactFactory.setActorAssetIssuerManager(actorAssetIssuerManager);
-//        this.chatMiddlewareContactFactory.setActorAssetRedeemPointManager(actorAssetRedeemPointManager);
-//        this.chatMiddlewareContactFactory.setCryptoBrokerIdentityManager(cryptoBrokerIdentityManager);
-//        this.chatMiddlewareContactFactory.setCryptoCustomerIdentityManager(cryptoCustomerIdentityManager);
-    }
 
     @Override
     public void start() throws CantStartPluginException {
@@ -335,7 +248,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     new ChatMiddlewareDatabaseDao(pluginDatabaseSystem,
                             pluginId,
                             database,
-                            errorManager,
+                            this,
                             pluginFileSystem);
             //chatMiddlewareDatabaseDao.initialize();
             /**
@@ -357,7 +270,6 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     this.chatMiddlewareContactFactory,
                     this,
                     this.networkServiceChatManager,
-                    this.errorManager,
                     this.deviceUserManager,
                     this.networkServiceChatManager,
                     this.broadcaster,
@@ -370,7 +282,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             ChatMiddlewareMonitorAgent openContractMonitorAgent=new ChatMiddlewareMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
-                    errorManager,
+                    this,
                     eventManager,
                     pluginId,
                     networkServiceChatManager,
@@ -386,7 +298,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             ChatMiddlewareRecorderService chatMiddlewareRecorderService=new ChatMiddlewareRecorderService(
                     chatMiddlewareDatabaseDao,
                     eventManager,
-                    errorManager,
+                    this,
                     openContractMonitorAgent);
             chatMiddlewareRecorderService.start();
 
@@ -405,9 +317,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
             //getOwnIdentitiesTest();
 
         } catch (CantInitializeDatabaseException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -415,9 +325,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     "Starting open contract plugin",
                     "Cannot initialize plugin database");
         } catch (CantInitializeChatMiddlewareDatabaseException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -425,9 +333,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     "Starting open contract plugin",
                     "Unexpected Exception");
         } catch (CantStartServiceException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -435,9 +341,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     "Starting open contract plugin",
                     "Cannot start recorder service");
         } catch (CantSetObjectException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -445,9 +349,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     "Starting open contract plugin",
                     "Cannot set an object");
         } catch (CantStartAgentException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -455,9 +357,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     "Starting open contract plugin",
                     "Cannot start the monitor agent");
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartPluginException(
                     CantStartPluginException.DEFAULT_MESSAGE,
@@ -492,9 +392,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         try{
             return chatMiddlewareDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             return null;
         }
@@ -506,9 +404,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         try{
             return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             return null;
         }
@@ -519,8 +415,7 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
         try{
             return chatMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
+            reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     FermatException.wrapException(exception));
             return null;

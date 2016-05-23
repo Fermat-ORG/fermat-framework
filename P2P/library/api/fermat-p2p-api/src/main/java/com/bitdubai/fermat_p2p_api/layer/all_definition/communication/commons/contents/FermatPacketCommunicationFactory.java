@@ -37,7 +37,7 @@ public class FermatPacketCommunicationFactory {
     public static FermatPacket constructFermatPacketEncryptedAndSinged(final String destination, final String sender, final String messageContentJsonString, final FermatPacketType fermatPacketType, final String privateKeyToSing) {
 
         String messageHash = AsymmetricCryptography.encryptMessagePublicKey(messageContentJsonString, destination);
-        String signature = AsymmetricCryptography.createMessageSignature(messageHash, privateKeyToSing);
+        String signature = AsymmetricCryptography.createMessageSignature(privateKeyToSing, messageHash);
 
         return new FermatPacketCommunication(destination, sender, fermatPacketType, messageHash, signature);
     }
