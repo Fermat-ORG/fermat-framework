@@ -52,6 +52,9 @@
         android:id="@+id/CropImageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        custom:fixAspectRatio="true"
+        custom:aspectRatioX="3"
+        custom:aspectRatioY="3"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 </LinearLayout>
