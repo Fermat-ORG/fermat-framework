@@ -10,7 +10,7 @@
 //import CryptoWalletWallet;
 //import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 //import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionExecutor;
-//import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
+//import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.executors.CryptoBasicWalletTransactionExecutor;
 //import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionExecutorFactory;
 //
 //import org.junit.Test;
@@ -55,7 +55,7 @@
 //        testExecutor = testExecutorFactory.newTransactionExecutor(ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET, "replace_by_wallet_public_key");
 //        assertThat(testExecutor)
 //                .isNotNull()
-//                .isInstanceOf(BitcoinBasicWalletTransactionExecutor.class);
+//                .isInstanceOf(CryptoBasicWalletTransactionExecutor.class);
 //    }
 //
 //    @Test
