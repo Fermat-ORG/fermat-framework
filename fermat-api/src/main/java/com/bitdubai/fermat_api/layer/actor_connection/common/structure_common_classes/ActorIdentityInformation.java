@@ -23,11 +23,13 @@ public class ActorIdentityInformation {
     private final Actors actorType;
     private final String alias    ;
     private final byte[] image    ;
+    private final String status   ;
 
     public ActorIdentityInformation(final String publicKey,
                                     final Actors actorType,
                                     final String alias    ,
-                                    final byte[] image    ) {
+                                    final byte[] image    ,
+                                    final String status) {
 
         Validate.notNull(publicKey, "The Public Key can't be null.");
         Validate.notNull(actorType, "The Actor Type can't be null.");
@@ -38,6 +40,7 @@ public class ActorIdentityInformation {
         this.actorType = actorType;
         this.alias     = alias    ;
         this.image     = image    ;
+        this.status    = status   ;
     }
 
     /**
@@ -60,5 +63,9 @@ public class ActorIdentityInformation {
 
     public byte[] getImage() {
         return image;
+    }
+
+    public String getStatus() {
+        return status;
     }
 }
