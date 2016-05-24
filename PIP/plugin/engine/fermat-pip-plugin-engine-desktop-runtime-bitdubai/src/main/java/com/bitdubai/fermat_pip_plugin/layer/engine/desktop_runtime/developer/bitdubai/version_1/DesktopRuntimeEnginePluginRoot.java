@@ -447,6 +447,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         runtimeDesktopObject.addActivity(activity);
 
 
+        //settings bitcoin network
         activity = new Activity();
         activity.setBackgroundColor("#000000");
         activity.setActivityType(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode());
@@ -468,6 +469,30 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         runtimeFragment.setType(Fragments.DESKTOP_SETTINGS.getKey());
         runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
         activity.addFragment(Fragments.DESKTOP_SETTINGS.getKey(), runtimeFragment);
+        runtimeDesktopObject.addActivity(activity);
+
+        //settings export/import key
+        activity = new Activity();
+        activity.setBackgroundColor("#000000");
+        activity.setActivityType(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode());
+        activity.setType(Activities.DESKTOP_SETTING_IMPORT_KEY);
+        activity.setStartFragment(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
+        activity.setBackActivity(Activities.CCP_DESKTOP);
+        activity.setBackPublicKey(publicKey);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setColor("#000000");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setLabel("Export Key");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        activity.setTitleBar(runtimeTitleBar);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey());
+        runtimeFragment.setBack(Fragments.DESKTOP_APPS_MAIN.getKey());
+        activity.addFragment(Fragments.DESKTOP_SETTING_IMPORT_KEY.getKey(), runtimeFragment);
         runtimeDesktopObject.addActivity(activity);
 
 

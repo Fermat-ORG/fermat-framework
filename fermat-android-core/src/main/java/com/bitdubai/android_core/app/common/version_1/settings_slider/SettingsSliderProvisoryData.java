@@ -69,7 +69,7 @@ public class SettingsSliderProvisoryData {
 
             SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP, R.drawable.help_buttom_hdpi, "Welcome Help", "");
 
-            SettingsItem settingErrorReport = new SettingsItem(SettingsType.REPORT, R.drawable.icon_suport, "Report ", "");
+            SettingsItem settingErrorReport = new SettingsItem(SettingsType.REPORT, R.drawable.icon_suport, "Export/Import key", "");
 
 
             list.add(settingsItemFermatNetwork);
