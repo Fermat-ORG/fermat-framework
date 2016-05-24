@@ -43,6 +43,23 @@ public class ActorIdentityInformation {
         this.status    = status   ;
     }
 
+    public ActorIdentityInformation(final String publicKey,
+                                    final Actors actorType,
+                                    final String alias    ,
+                                    final byte[] image    ) {
+
+        Validate.notNull(publicKey, "The Public Key can't be null.");
+        Validate.notNull(actorType, "The Actor Type can't be null.");
+        Validate.notNull(alias    , "The alias can't be null."     );
+        Validate.notNull(image    , "The image can't be null."     );
+
+        this.publicKey = publicKey;
+        this.actorType = actorType;
+        this.alias     = alias    ;
+        this.image     = image    ;
+        this.status    = ""       ;
+    }
+
     /**
      * @return a string representing the public key.
      */
