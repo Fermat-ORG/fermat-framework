@@ -636,11 +636,17 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
 //            DatabaseTableFilter filter = null;
             List<Chat> chats = getChatList();
+            List<DatabaseTableRecord> records= new ArrayList<>();
             for(Chat chat : chats){
                 chat.setStatus(ChatStatus.INVISSIBLE);
-                DatabaseTableRecord record = getChatRecord(chat);
-                deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
-                table.updateRecord(record);
+                records.add(getChatRecord(chat));
+            }
+
+            if(records!=null && !records.isEmpty()){
+                for (DatabaseTableRecord record : records) {
+                    table.updateRecord(record);
+                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
+                }
             }
 
 //            List<DatabaseTableRecord> records=getChatData(filter);
