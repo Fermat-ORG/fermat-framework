@@ -57,7 +57,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletAssociatedSettingImpl;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletModuleCryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletProviderSettingImpl;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -139,7 +139,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     CustomerBrokerUpdateManager customerBrokerUpdateManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.CRYPTO_BROKER_ACTOR)
     CryptoBrokerActorManager cryptoBrokerActorManager;
@@ -255,7 +255,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     currencyExchangeProviderFilterManager,
                     cryptoBrokerIdentityManager,
                     customerBrokerUpdateManager,
-                    bitcoinWalletManager,
+                    cryptoWalletManager,
                     cryptoBrokerActorManager,
                     customerOnlinePaymentManager,
                     customerOfflinePaymentManager,

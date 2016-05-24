@@ -28,7 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.exceptions.CantCreateHoldTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.exceptions.CantGetHoldTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
@@ -75,7 +75,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
     private EventManager eventManager;
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET, plugin = Plugins.BITCOIN_WALLET)
-    BitcoinWalletManager bitcoinWalletManager;
+    CryptoWalletManager cryptoWalletManager;
 
 
     @Override
@@ -151,7 +151,7 @@ public class HoldCryptoMoneyTransactionPluginRoot extends AbstractPlugin  implem
             holdCryptoMoneyTransactionMonitorAgent = new HoldCryptoMoneyTransactionMonitorAgent(
                     errorManager,
                     holdCryptoMoneyTransactionManager,
-                    bitcoinWalletManager
+                    cryptoWalletManager
             );
 
             holdCryptoMoneyTransactionMonitorAgent.start();

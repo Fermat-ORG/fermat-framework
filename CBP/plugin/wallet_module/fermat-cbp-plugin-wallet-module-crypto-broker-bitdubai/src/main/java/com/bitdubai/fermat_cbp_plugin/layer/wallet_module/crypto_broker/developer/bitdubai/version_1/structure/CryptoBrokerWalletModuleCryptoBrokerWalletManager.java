@@ -153,7 +153,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.CryptoBrokerWalletPreferenceSettings;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
@@ -210,7 +210,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     private final CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager;
     private final CryptoBrokerIdentityManager cryptoBrokerIdentityManager;
     private final CustomerBrokerUpdateManager customerBrokerUpdateManager;
-    private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
     private final CryptoBrokerActorManager cryptoBrokerActorManager;
     private final CustomerOnlinePaymentManager customerOnlinePaymentManager;
     private final CustomerOfflinePaymentManager customerOfflinePaymentManager;
@@ -239,7 +239,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                                                              CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager,
                                                              CryptoBrokerIdentityManager cryptoBrokerIdentityManager,
                                                              CustomerBrokerUpdateManager customerBrokerUpdateManager,
-                                                             BitcoinWalletManager bitcoinWalletManager,
+                                                             CryptoWalletManager cryptoWalletManager,
                                                              CryptoBrokerActorManager cryptoBrokerActorManager,
                                                              CustomerOnlinePaymentManager customerOnlinePaymentManager,
                                                              CustomerOfflinePaymentManager customerOfflinePaymentManager,
@@ -270,7 +270,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         this.currencyExchangeProviderFilterManager = currencyExchangeProviderFilterManager;
         this.cryptoBrokerIdentityManager = cryptoBrokerIdentityManager;
         this.customerBrokerUpdateManager = customerBrokerUpdateManager;
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoBrokerActorManager = cryptoBrokerActorManager;
         this.customerOnlinePaymentManager = customerOnlinePaymentManager;
         this.customerOfflinePaymentManager = customerOfflinePaymentManager;
@@ -1115,7 +1115,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
     @Override//TODO CCP - CBP
     public long getBalanceBitcoinWallet(String walletPublicKey) throws com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException, CantLoadWalletsException {
         try {
-            return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+            return cryptoWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
         } catch (com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException e) {
             e.printStackTrace();
         }
@@ -1281,7 +1281,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                     walletAssociated = getWalletAssociated(cryptoBrokerPublicKey, merchandiseWalletPlatform, merchandiseCurrency);
                     if (walletAssociated.getWalletPublicKey().isEmpty())
                         throw new CantSubmitMerchandiseException(null, "Submitting the merchandise, Validate Stock", "getPublicKeyWalletAssociated IS NULL");
-                    balance = (double) bitcoinWalletManager.loadWallet(walletAssociated.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).getBalance();
+                    balance = (double) cryptoWalletManager.loadWallet(walletAssociated.getWalletPublicKey()).getBalance(BalanceType.AVAILABLE).getBalance();
                     break;
                 case BANK:
                     //STOCK IN BNK

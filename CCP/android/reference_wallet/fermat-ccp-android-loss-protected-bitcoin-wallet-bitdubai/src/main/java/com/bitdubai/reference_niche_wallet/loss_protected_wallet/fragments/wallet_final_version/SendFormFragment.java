@@ -2,6 +2,7 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wall
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -78,6 +79,8 @@ import com.squareup.picasso.Picasso;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
@@ -131,6 +134,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     boolean lossProtectedEnabled;
 
+    private ExecutorService _executor;
+
     public static SendFormFragment newInstance() {
         return new SendFormFragment();
     }
@@ -141,6 +146,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         bitcoinConverter = new BitcoinConverter();
         setHasOptionsMenu(true);
         try {
+
+            _executor = Executors.newFixedThreadPool(2);
             lossProtectedWalletSession = appSession;
 
             lossProtectedWalletManager = appSession.getModuleManager();
@@ -182,7 +189,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                     case DISCONNECTED:
                         showErrorConnectionDialog();
@@ -190,7 +197,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             }else {
@@ -198,8 +205,19 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 contactName.setText("");
                 setUpActions();
                 setUpUIData();
-                setUpContactAddapter();
+
             }
+
+            _executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    setUpContactAddapter();
+
+                }
+            });
+
+
+
 
             return rootView;
         } catch (Exception e) {
@@ -466,6 +484,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     }
 
     private void setUpContactAddapter() {
+
         contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item, getWalletContactList());
 
         contactName.setAdapter(contactsAdapter);
