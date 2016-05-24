@@ -25,9 +25,11 @@ public final class ArtistConnectionRequest {
     private final String                  destinationPublicKey;
     private final PlatformComponentType   destinationActorType;
     private final RequestType requestType         ;
-    private final ProtocolState protocolState       ;
+    private ProtocolState protocolState       ;
     private final ConnectionRequestAction requestAction       ;
+    private int sentCount                               ;
     private final long                    sentTime            ;
+
 
     public ArtistConnectionRequest(final UUID requestId,
                                    final String senderPublicKey,
@@ -35,23 +37,24 @@ public final class ArtistConnectionRequest {
                                    final String senderAlias,
                                    final byte[] senderImage,
                                    final String destinationPublicKey,
-                                   PlatformComponentType destinationActorType,
+                                   final PlatformComponentType destinationActorType,
                                    final RequestType requestType,
                                    final ProtocolState protocolState,
                                    final ConnectionRequestAction requestAction,
+                                   final int sentCount,
                                    final long sentTime) {
-
-        this.requestId            = requestId           ;
-        this.senderPublicKey      = senderPublicKey     ;
-        this.senderActorType      = senderActorType     ;
-        this.senderAlias          = senderAlias         ;
-        this.senderImage          = senderImage         ;
+        this.requestId = requestId;
+        this.senderPublicKey = senderPublicKey;
+        this.senderActorType = senderActorType;
+        this.senderAlias = senderAlias;
+        this.senderImage = senderImage;
         this.destinationPublicKey = destinationPublicKey;
         this.destinationActorType = destinationActorType;
-        this.requestType          = requestType         ;
-        this.protocolState        = protocolState       ;
-        this.requestAction        = requestAction       ;
-        this.sentTime             = sentTime            ;
+        this.requestType = requestType;
+        this.protocolState = protocolState;
+        this.requestAction = requestAction;
+        this.sentCount = sentCount;
+        this.sentTime = sentTime;
     }
 
     /**
@@ -126,6 +129,18 @@ public final class ArtistConnectionRequest {
 
     public PlatformComponentType getDestinationActorType() {
         return destinationActorType;
+    }
+
+    public int getSentCount() {
+        return sentCount;
+    }
+
+    public void setSentCount(int sentCount) {
+        this.sentCount = sentCount;
+    }
+
+    public void setProtocolState(ProtocolState protocolState) {
+        this.protocolState = protocolState;
     }
 
     @Override
