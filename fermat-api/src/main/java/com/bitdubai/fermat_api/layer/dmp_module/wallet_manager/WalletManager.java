@@ -46,5 +46,5 @@ public interface WalletManager extends AppManager,ModuleSettingsImpl<DesktopMana
     List<InstalledWallet> getInstalledWallets()throws Exception;
 
 
-    List<String> getMnemonicCode() throws CantLoadExistingVaultSeed, Exception;
+    List<String> getMnemonicCode() throws Exception;
 }

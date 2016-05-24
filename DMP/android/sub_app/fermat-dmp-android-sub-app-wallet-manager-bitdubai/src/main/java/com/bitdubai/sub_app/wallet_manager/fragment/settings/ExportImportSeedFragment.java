@@ -21,7 +21,7 @@ import java.util.List;
 
 
 /**
- * Created by mati on 2016.05.24..
+ * Created by Matias Furszyfer on 2016.05.24..
  */
 public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSession,ResourceProviderManager> {
 
@@ -88,5 +88,7 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSess
     }
 
 
-
+    public static AbstractFermatFragment newInstance() {
+        return new ExportImportSeedFragment();
+    }
 }
