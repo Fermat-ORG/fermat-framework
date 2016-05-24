@@ -560,6 +560,9 @@ public class ChatAdapterView extends LinearLayout {
                             newChatId = chatId;
                         }
                         chat.setChatId(newChatId);
+
+                        chat.setChatId(newChatId);
+                        chat.setStatus(ChatStatus.VISSIBLE);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);

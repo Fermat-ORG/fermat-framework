@@ -35,7 +35,7 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
         this.activity = new WeakReference(activity);
         this.chatUserLoginIdentity = chatUserLoginIdentity;
         this.subAppSession = subAppSession;
-        this.moduleManager = subAppSession.getModuleManager();
+        //this.moduleManager = subAppSession.getModuleManager();
     }
 
     @Override
