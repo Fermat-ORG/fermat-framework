@@ -315,7 +315,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     // grant all three uri permissions!
-
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
@@ -349,8 +348,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
-                                                    cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(createSquaredBitmap(dialogCropImage.getCroppedImage()), 250, 250), ExifInterface.ORIENTATION_NORMAL);
-                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
+                                                    cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(dialogCropImage.getCroppedImage(), 250, 250),ExifInterface.ORIENTATION_NORMAL);
+                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(),  cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                                 }else{
                                                     cryptoBrokerBitmap = null;
                                                 }
@@ -395,7 +394,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
-                                            cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(createSquaredBitmap(dialogCropImagee.getCroppedImage()), 250, 250), ExifInterface.ORIENTATION_NORMAL);
+                                            cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(dialogCropImagee.getCroppedImage(), 250, 250),ExifInterface.ORIENTATION_NORMAL);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                         } else {
                                             cryptoBrokerBitmap = null;
@@ -445,7 +444,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if(dialogCropImagee.getCroppedImage() != null){
-                                            cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(createSquaredBitmap(dialogCropImagee.getCroppedImage()), 250, 250),ExifInterface.ORIENTATION_NORMAL);
+                                            cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(dialogCropImagee.getCroppedImage(), 250, 250),ExifInterface.ORIENTATION_NORMAL);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                         }else{
                                             cryptoBrokerBitmap = null;
