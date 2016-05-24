@@ -172,7 +172,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                     case DISCONNECTED:
                         showErrorConnectionDialog();
@@ -180,7 +180,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             }else {
@@ -188,8 +188,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 contactName.setText("");
                 setUpActions();
                 setUpUIData();
-                setUpContactAddapter();
+
             }
+            setUpContactAddapter();
 
             return rootView;
         } catch (Exception e) {
@@ -636,7 +637,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                         cryptoWalletWalletContact.getActorPublicKey(),
                                         cryptoWalletWalletContact.getActorType(),
                                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                        blockchainNetworkType
+                                        blockchainNetworkType,
+                                        CryptoCurrency.BITCOIN
 
                                         // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                                 );

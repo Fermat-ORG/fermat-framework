@@ -46,9 +46,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
@@ -159,7 +157,6 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         try {
             _executor = Executors.newFixedThreadPool(2);
-
             lossWalletSession = (LossProtectedWalletSession) appSession;
             setHasOptionsMenu(true);
             tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
@@ -167,6 +164,8 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             lossProtectedWalletManager = lossWalletSession.getModuleManager();
 
             lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossWalletSession.getAppPublicKey());
+
+
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -188,40 +187,29 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
 
-            _executor.submit(new Runnable() {
-                @Override
+
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
                 public void run() {
-                    try {
-                        walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
-                        if (walletContactRecords.isEmpty()) {
-                            rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
-                            try {
-                                boolean isHelpEnabled = lossProtectedWalletSettings.isContactsHelpEnabled();
+                    onRefresh();
 
-                                if (isHelpEnabled)
-                                    setUpTutorial(true);
-                            } catch (CantGetSettingsException e) {
-                                e.printStackTrace();
-                            } catch (SettingsNotFoundException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
+                    if (walletContactRecords.isEmpty()) {
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
+                        try {
+                            boolean isHelpEnabled = lossProtectedWalletSettings.isContactsHelpEnabled();
+
+                            if (isHelpEnabled)
+                                setUpTutorial(true);
+                        } catch (CantGetSettingsException e) {
+                            e.printStackTrace();
+                        } catch (SettingsNotFoundException e) {
+                            e.printStackTrace();
                         }
-
-                    } catch (CantGetAllLossProtectedWalletContactsException e) {
-                        e.printStackTrace();
-                    } catch (CantListCryptoWalletIntraUserIdentityException e) {
-                        e.printStackTrace();
-                    } catch (CantGetCryptoLossProtectedWalletException e) {
-                        e.printStackTrace();
+                    } else {
+                        rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
                 }
-            });
-
-
-
-
+            }, 300);
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();

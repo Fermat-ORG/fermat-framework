@@ -2,6 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.crypto_wallet.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -32,6 +33,7 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
     private final String memo;
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
+    private final CryptoCurrency cryptoCurrency;
     
     public CryptoWalletTransactionWrapper(final UUID transactionId,
                                           final String transactionHash,
@@ -48,7 +50,7 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
                                           final long runningAvailableBalance,
                                           final long timeStamp,
                                           final String memo,
-                                          BlockchainNetworkType blockchainNetworkType, final TransactionState transactionState) {
+                                          BlockchainNetworkType blockchainNetworkType, final TransactionState transactionState, CryptoCurrency cryptoCurrency) {
         this.transactionId = transactionId;
         this.transactionHash = transactionHash;
         this.transactionType = transactionType;
@@ -66,6 +68,7 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
         this.memo = memo;
         this.blockchainNetworkType = blockchainNetworkType;
         this.transactionState = transactionState;
+        this.cryptoCurrency = cryptoCurrency;
     }
 
     @Override
@@ -148,4 +151,9 @@ public class CryptoWalletTransactionWrapper implements CryptoWalletTransaction {
 
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType; }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return this.cryptoCurrency;
+    }
 }

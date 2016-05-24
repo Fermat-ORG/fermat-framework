@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -118,7 +119,8 @@ public class AssetMetadataFactory implements Callable<Boolean> {
                 Actors.DAP_ASSET_ISSUER,
                 ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                 true,
-                issuingRecord.getNetworkType());
+                issuingRecord.getNetworkType(),
+                CryptoCurrency.BITCOIN);
     }
     //GETTER AND SETTERS
 

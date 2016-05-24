@@ -20,6 +20,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
@@ -63,6 +64,7 @@ public class ConnectionOtherProfileFragment extends
     private Button cancel;
     private Button accept;
     private List<FanActorConnection> actorConnectionList;
+    private UUID requestedActorConnectionId;
 
     /**
      * Create a new instance of this fragment
@@ -127,12 +129,12 @@ public class ConnectionOtherProfileFragment extends
             try{
                 FanCommunitySelectableIdentity selectedIdentity =
                         moduleManager.getSelectedActorIdentity();
-                 actorConnectionList = moduleManager.getRequestActorConnections(
+                 /*actorConnectionList = moduleManager.getRequestActorConnections(
                          selectedIdentity.getPublicKey(),
                          selectedIdentity.getActorType(),
                          fanCommunityInformation.getPublicKey());
-                boolean isActorConnectExists = !actorConnectionList.isEmpty();
-                if(isActorConnectExists){
+                boolean isActorConnectExists = actorConnectionList!=null&&!actorConnectionList.isEmpty();*/
+                /*if(isActorConnectExists){
                     FanActorConnection fanActorConnection = actorConnectionList.get(0);
                     ConnectionState actorConnectionState = fanActorConnection.getConnectionState();
                     switch (actorConnectionState){
@@ -145,6 +147,22 @@ public class ConnectionOtherProfileFragment extends
                     }
                 } else{
                     connect.setVisibility(View.VISIBLE);
+                }*/
+                ConnectionState actorConnectionState = moduleManager.getRequestActorConnectionState(
+                        selectedIdentity.getPublicKey(),
+                        selectedIdentity.getActorType(),
+                        fanCommunityInformation.getPublicKey());
+                switch (actorConnectionState){
+                    case PENDING_LOCALLY_ACCEPTANCE:
+                        accept.setVisibility(View.VISIBLE);
+                        requestedActorConnectionId = moduleManager.getConnectionId(
+                                selectedIdentity.getPublicKey(),
+                                selectedIdentity.getActorType(),
+                                fanCommunityInformation.getPublicKey());
+                        break;
+                    default:
+                        connect.setVisibility(View.VISIBLE);
+                        break;
                 }
             } catch (Exception e) {
                 //For now, not other action required
@@ -232,16 +250,17 @@ public class ConnectionOtherProfileFragment extends
             }
         } else if(i == R.id.afc_btn_accept) {
             try {
-                UUID connectionId=null;
-                String alias="";
-                for(FanActorConnection fanActorConnection : actorConnectionList){
+                UUID connectionId=requestedActorConnectionId;
+                String alias=fanCommunityInformation.getAlias();
+                /*for(FanActorConnection fanActorConnection : actorConnectionList){
                     switch (fanActorConnection.getConnectionState()){
                         case PENDING_LOCALLY_ACCEPTANCE:
                             connectionId = fanActorConnection.getConnectionId();
                             alias = fanActorConnection.getAlias();
                             break;
                     }
-                }
+                }*/
+
                 AcceptDialog acceptDialog = new AcceptDialog(
                         getActivity(),
                         appSession,
@@ -263,8 +282,9 @@ public class ConnectionOtherProfileFragment extends
     @Override
     public void onDismiss(DialogInterface dialog) {
         //Get connectionresult flag, and hide/show connect/disconnect buttons
+        int connectionresult = 0;
         try {
-            int connectionresult = (int) appSession.getData("connectionresult");
+             connectionresult = (int) appSession.getData("connectionresult");
             appSession.removeData("connectionresult");
 
             if(connectionresult == 1) {
@@ -283,7 +303,12 @@ public class ConnectionOtherProfileFragment extends
                 cancel.setVisibility(View.GONE);
                 accept.setVisibility(View.GONE);
             }
-        }catch (Exception e) {}
+        }catch (Exception e) {
+
+        } finally {
+            if(connectionresult > 0)
+                changeActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getCode(), appSession.getAppPublicKey());
+        }
 
     }
 }

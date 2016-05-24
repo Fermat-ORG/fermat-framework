@@ -55,9 +55,8 @@ public class TransactionCompleteInformation {
                     cryptoTransaction         .getCryptoAmount()             ,
                     timestamp                                                ,
                     memo,
-                    cryptoTransaction.getBlockchainNetworkType()
-
-            );
+                    cryptoTransaction.getBlockchainNetworkType(),
+                    cryptoTransaction.getCryptoCurrency());
 
         } catch (CantGetCryptoAddressBookRecordException e) {
 

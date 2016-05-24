@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWal
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
@@ -132,5 +133,10 @@ public class CryptoWalletTransactionWalletRecord implements CryptoWalletTransact
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {
         return BlockchainNetworkType;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return null;
     }
 }

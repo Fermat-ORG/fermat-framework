@@ -20,7 +20,6 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.common.header.WalletAss
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.navigation_drawer.IssuerWalletNavigationViewPainter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.factory.IssuerWalletFragmentFactory;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 /**
@@ -58,7 +57,8 @@ public class WalletAssetIssuerFermatAppConnection extends AppConnections<AssetIs
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new IssuerWalletNavigationViewPainter(getContext(), getActiveIdentity());
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+        return new IssuerWalletNavigationViewPainter(getContext(), null);
     }
 
     @Override

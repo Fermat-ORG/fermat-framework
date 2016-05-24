@@ -76,6 +76,17 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
 
+        if(bottomMenuReveal ==null){
+            findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
+            bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
+            bottomMenuReveal.buildMenuSettings();
+            try {
+                bottomMenuReveal.getOnClickListener().onClick(null);
+                bottomMenuReveal.getOnClickListener().onClick(null);
+            }catch (Exception e){
+
+            }
+        }
     }
     @Override
     protected void onDestroy() {
@@ -350,12 +361,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         try {
 
             if(installedSubApp.getSubAppType() == SubApps.SETTINGS){
-
-                if(bottomMenuReveal ==null){
-                    findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
-                    bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
-                    bottomMenuReveal.buildMenuSettings();
-                }
 
                 bottomMenuReveal.getOnClickListener().onClick(null);
 

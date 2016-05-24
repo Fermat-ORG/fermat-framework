@@ -5,13 +5,16 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
 
+import java.io.Serializable;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
 public abstract class ArtistActorConnectionSearch extends
         ActorConnectionSearch<
                 ArtistLinkedActorIdentity,
-                ArtistActorConnection> {
+                ArtistActorConnection>
+        implements Serializable {
 
     /**
      * Constructor with parameters.

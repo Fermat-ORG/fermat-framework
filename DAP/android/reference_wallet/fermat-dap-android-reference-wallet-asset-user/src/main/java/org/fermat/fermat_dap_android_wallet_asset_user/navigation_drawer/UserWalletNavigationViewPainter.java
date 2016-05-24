@@ -29,7 +29,7 @@ public class UserWalletNavigationViewPainter implements NavigationViewPainter {
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation identityAssetUser) {
+    public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), identityAssetUser);

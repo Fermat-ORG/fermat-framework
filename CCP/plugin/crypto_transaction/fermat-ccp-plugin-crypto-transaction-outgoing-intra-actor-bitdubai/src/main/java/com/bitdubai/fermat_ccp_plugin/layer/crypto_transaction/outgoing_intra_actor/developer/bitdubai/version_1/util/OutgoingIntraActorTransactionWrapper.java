@@ -2,9 +2,11 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_a
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_bch_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_intra_actor.developer.bitdubai.version_1.enums.TransactionState;
@@ -34,6 +36,7 @@ public class OutgoingIntraActorTransactionWrapper implements CryptoWalletTransac
     private String        memo;
     private boolean sameDevice;
     private BlockchainNetworkType blockchainNetworkType;
+    private CryptoCurrency cryptoCurrency;
 
     @Override
     public CryptoAddress getAddressFrom() {
@@ -131,6 +134,13 @@ public class OutgoingIntraActorTransactionWrapper implements CryptoWalletTransac
 
     @Override
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
+
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency){ this.cryptoCurrency = cryptoCurrency; }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
+    }
 
     @Override
     public long getExchangRate() {

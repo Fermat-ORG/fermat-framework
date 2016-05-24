@@ -58,6 +58,8 @@ import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -111,6 +113,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
     List<IntraUserInformation> userCacheList = new ArrayList<>();
+
+
+
+    private ExecutorService _executor;
     /**
      * Create a new instance of this fragment
      *
@@ -124,6 +130,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
+
+            _executor = Executors.newFixedThreadPool(2);
 
             setHasOptionsMenu(true);
             // setting up  module
@@ -215,13 +223,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
 
-        //getSuggestionCache();
-
 
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
+            dataSet = getSuggestionCache();
             showCriptoUsersCache();
+
         }
     }
 
@@ -542,12 +550,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
 
-    private void getSuggestionCache() {
-
-
-        FermatWorker fermatWorker = new FermatWorker(getActivity()) {
-            @Override
-            protected Object doInBackground()  {
+    private List<IntraUserInformation> getSuggestionCache() {
                 List<IntraUserInformation> userCacheList = new ArrayList<>();
                 try{
 
@@ -556,48 +559,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 catch (Exception e) {
                     e.printStackTrace();
                 }
-
                 return userCacheList;
-            }
-        };
-
-        fermatWorker.setCallBack(new FermatWorkerCallBack() {
-            @Override
-            public void onPostExecute(Object... result) {
-                if (result != null && result.length > 0) {
-                        dataSet.addAll((List<IntraUserInformation>) result[0]);
-                        if(dataSet!=null){
-                            if(!dataSet.isEmpty()){
-                                showEmpty(false, emptyView);
-                                adapter.changeDataSet(dataSet);
-                            }else{
-                                showEmpty(true, emptyView);
-                            }
-                        }else{
-                            showEmpty(true, emptyView);
-                        }
-
-                }
-                else {
-                    makeText(getActivity(), "Cant't Get suggestion cache list.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onErrorOccurred(Exception ex) {
-
-
-                if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
-                else
-                    Log.e("Get Suggestion Contact", ex.getMessage(), ex);
-            }
-        });
-
-        fermatWorker.execute();
-
-
     }
 
     @Override
@@ -712,7 +674,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 public void run() {
                     onRefresh();
                 }
-            }, 1500);
+            }, 300);
         }
     }
 

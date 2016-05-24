@@ -49,7 +49,8 @@ public class AppListAdapter extends FermatAdapter<FanCommunityInformation, AppWo
 
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length>0) {
-            Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
+           // Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
             holder.thumbnail.setImageBitmap(bitmap);
         }
         else
