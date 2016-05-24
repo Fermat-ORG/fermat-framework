@@ -315,7 +315,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     // grant all three uri permissions!
-
                     if (imageToUploadUri != null) {
                         String provider = "com.android.providers.media.MediaProvider";
                         Uri selectedImage = imageToUploadUri;
@@ -349,8 +348,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                             @Override
                                             public void onDismiss(DialogInterface dialog) {
                                                 if (dialogCropImage.getCroppedImage() != null) {
-                                                    cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(createSquaredBitmap(dialogCropImage.getCroppedImage()), 250, 250), ExifInterface.ORIENTATION_NORMAL);
-                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
+                                                    cryptoBrokerBitmap = rotateBitmap(dialogCropImage.getCroppedImage(),ExifInterface.ORIENTATION_NORMAL);
+                                                    Picasso.with(getActivity()).load(getImageUri(getActivity(),  cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                                 }else{
                                                     cryptoBrokerBitmap = null;
                                                 }
@@ -395,7 +394,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if (dialogCropImagee.getCroppedImage() != null) {
-                                            cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(createSquaredBitmap(dialogCropImagee.getCroppedImage()), 250, 250), ExifInterface.ORIENTATION_NORMAL);
+                                            cryptoBrokerBitmap =  rotateBitmap(dialogCropImagee.getCroppedImage(),ExifInterface.ORIENTATION_NORMAL);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                         } else {
                                             cryptoBrokerBitmap = null;
@@ -445,7 +444,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                                     @Override
                                     public void onDismiss(DialogInterface dialog) {
                                         if(dialogCropImagee.getCroppedImage() != null){
-                                            cryptoBrokerBitmap = rotateBitmap(getResizedBitmap(createSquaredBitmap(dialogCropImagee.getCroppedImage()), 250, 250),ExifInterface.ORIENTATION_NORMAL);
+                                            cryptoBrokerBitmap =  rotateBitmap(dialogCropImagee.getCroppedImage(),ExifInterface.ORIENTATION_NORMAL);
                                             Picasso.with(getActivity()).load(getImageUri(getActivity(), cryptoBrokerBitmap)).transform(new CircleTransform()).into(mBrokerImage);
                                         }else{
                                             cryptoBrokerBitmap = null;
@@ -468,14 +467,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     }
 
-    private static Bitmap createSquaredBitmap(Bitmap srcBmp) {
-        int dim = Math.max(srcBmp.getWidth(), srcBmp.getHeight());
-        Bitmap dstBmp = Bitmap.createBitmap(dim, dim, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(dstBmp);
-        canvas.drawColor(Color.TRANSPARENT);
-        canvas.drawBitmap(srcBmp, (dim - srcBmp.getWidth()) / 2, (dim - srcBmp.getHeight()) / 2, null);
-        return dstBmp;
-    }
     public static Bitmap rotateBitmap(Bitmap bitmap, int orientation) {
 
         Matrix matrix = new Matrix();
@@ -519,21 +510,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             return null;
         }
     }
-
-    public static Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth){
-        int width = bm.getWidth();
-        int height = bm.getHeight();
-        float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight = ((float) newHeight) / height;
-        Matrix matrix = new Matrix();
-        // RESIZE THE BIT MAP
-        matrix.postScale(scaleWidth, scaleHeight);
-        // RECREATE THE NEW BITMAP
-        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height,
-                matrix, false);
-        return resizedBitmap;
-    }
-
     private void updateIdentityInBackDevice(String donde) throws CantGetChatIdentityException {
         String brokerNameText = mBrokerName.getText().toString();
         String state= mChatConnectionState.getText().toString();
@@ -574,7 +550,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            textViewChtTitle.setText(mBrokerName.getText());
+                            //textViewChtTitle.setText(mBrokerName.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                            // changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
@@ -757,28 +733,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
     }
 
-    public Bitmap getRoundedShape(Bitmap scaleBitmapImage) {
-        int targetWidth = 200;
-        int targetHeight = 200;
-        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(targetBitmap);
-        Path path = new Path();
-        path.addCircle(((float) targetWidth - 1) / 2,
-                ((float) targetHeight - 1) / 2,
-                (Math.min(((float) targetWidth),
-                        ((float) targetHeight)) / 2),
-                Path.Direction.CCW);
-
-        canvas.clipPath(path);
-        Bitmap sourceBitmap = scaleBitmapImage;
-        canvas.drawBitmap(sourceBitmap,
-                new Rect(0, 0, sourceBitmap.getWidth(),
-                        sourceBitmap.getHeight()),
-                new Rect(0, 0, targetWidth, targetHeight), null);
-        return targetBitmap;
-    }
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
@@ -786,11 +740,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         return Uri.parse(path);
     }
 
-    public static Bitmap RotateBitmap(Bitmap source, float angle){
-        Matrix matrix = new Matrix();
-        matrix.postRotate(angle);
-        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
-    }
     private boolean checkWriteExternalPermission()
     {
         String permission = "android.permission.WRITE_EXTERNAL_STORAGE";
