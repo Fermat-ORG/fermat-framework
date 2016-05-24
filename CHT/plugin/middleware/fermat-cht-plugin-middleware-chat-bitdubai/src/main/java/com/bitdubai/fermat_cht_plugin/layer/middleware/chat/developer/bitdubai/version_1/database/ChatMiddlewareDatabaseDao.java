@@ -630,24 +630,28 @@ public class ChatMiddlewareDatabaseDao {
     {
         try
         {
-            database = openDatabase();
-            DatabaseTransaction transaction = database.newTransaction();
+//            database = openDatabase();
+//            DatabaseTransaction transaction = database.newTransaction();
 
-            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+//            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
 //            DatabaseTableFilter filter = null;
             List<Chat> chats = getChatList();
-            List<DatabaseTableRecord> records= new ArrayList<>();
             for(Chat chat : chats){
-                chat.setStatus(ChatStatus.INVISSIBLE);
-                records.add(getChatRecord(chat));
+                deleteChat(chat);
             }
 
-            if(records!=null && !records.isEmpty()){
-                for (DatabaseTableRecord record : records) {
-                    table.updateRecord(record);
-                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
-                }
-            }
+//            List<DatabaseTableRecord> records= new ArrayList<>();
+//            for(Chat chat : chats){
+//                chat.setStatus(ChatStatus.INVISSIBLE);
+//                records.add(getChatRecord(chat));
+//            }
+//
+//            if(records!=null && !records.isEmpty()){
+//                for (DatabaseTableRecord record : records) {
+//                    table.updateRecord(record);
+//                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
+//                }
+//            }
 
 //            List<DatabaseTableRecord> records=getChatData(filter);
 //            if(records!=null && !records.isEmpty()){
@@ -657,8 +661,8 @@ public class ChatMiddlewareDatabaseDao {
 //                }
 //            }
             //I execute the transaction and persist the database side of the chat.
-            database.executeTransaction(transaction);
-            database.closeDatabase();
+//            database.executeTransaction(transaction);
+//            database.closeDatabase();
 
         }catch (Exception e) {
             if (database != null)
