@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Merchan
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.ibm.icu.text.DecimalFormatSymbols;
 
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -35,6 +36,7 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
 
         formatter = DecimalFormat.getInstance();
         formatter.setMaximumFractionDigits(2);
+        formatter.setRoundingMode(RoundingMode.DOWN);
 
         exchangeRateItem = (FermatTextView) itemView.findViewById(R.id.ccw_broker_exchange_rate_item);
     }

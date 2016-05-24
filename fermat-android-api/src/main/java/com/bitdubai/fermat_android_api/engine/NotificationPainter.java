@@ -2,10 +2,12 @@ package com.bitdubai.fermat_android_api.engine;
 
 import android.widget.RemoteViews;
 
+import java.io.Serializable;
+
 /**
- * Created by mati on 2016.02.05..
+ * Created by Matias Furszyfer on 2016.02.05..
  */
-public interface NotificationPainter {
+public interface NotificationPainter extends Serializable{
 
     RemoteViews getNotificationView(String code);
 

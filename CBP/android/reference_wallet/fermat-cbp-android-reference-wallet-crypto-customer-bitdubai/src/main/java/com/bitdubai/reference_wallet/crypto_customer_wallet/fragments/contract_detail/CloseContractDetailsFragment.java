@@ -67,12 +67,12 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoC
         final ContractBasicInformation contractBasicInfo = (ContractBasicInformation) appSession.getData(CryptoCustomerWalletSession.CONTRACT_DATA);
         ContractStatus status = contractBasicInfo.getStatus();
 
-        ImageView customerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);
-        BitmapWorkerTask imgLoader = new BitmapWorkerTask(customerImage, getResources(), R.drawable.person, false);
-        imgLoader.execute(contractBasicInfo.getCryptoCustomerImage());
+        ImageView brokerImage = (ImageView) rootView.findViewById(R.id.ccw_customer_image);
+        BitmapWorkerTask imgLoader = new BitmapWorkerTask(brokerImage, getResources(), R.drawable.person, false);
+        imgLoader.execute(contractBasicInfo.getCryptoBrokerImage());
 
-        FermatTextView customerName = (FermatTextView) rootView.findViewById(R.id.ccw_customer_name);
-        customerName.setText(contractBasicInfo.getCryptoCustomerAlias());
+        FermatTextView brokerName = (FermatTextView) rootView.findViewById(R.id.ccw_customer_name);
+        brokerName.setText(contractBasicInfo.getCryptoBrokerAlias());
 
         FermatTextView amountSoldOrToSellTitle = (FermatTextView) rootView.findViewById(R.id.ccw_amount_bought_or_wanted_to_buy_title);
         amountSoldOrToSellTitle.setText(status.equals(ContractStatus.CANCELLED) ? R.string.ccw_wanted_to_buy : R.string.ccw_you_bought);

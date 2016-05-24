@@ -5,9 +5,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
-
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 /**
  * Created by Nerio on 23/12/15.

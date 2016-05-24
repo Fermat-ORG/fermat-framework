@@ -64,6 +64,7 @@
             android:paddingRight="18dp"
             android:text="Disconnect"
             android:textColor="#0072bc"
+            android:visibility="gone"
             tools:ignore="HardcodedText" />
 
         <Button
@@ -78,6 +79,22 @@
             android:paddingRight="34dp"
             android:text="Cancel"
             android:textColor="#0072bc"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/afc_btn_accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_blue"
+            android:drawableLeft="@drawable/ic_profile_connect"
+            android:drawablePadding="4dp"
+            android:drawableStart="@drawable/ic_profile_connect"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="Accept Request"
+            android:textColor="#ffffff"
+            android:visibility="gone"
             tools:ignore="HardcodedText" />
 
     </RelativeLayout>

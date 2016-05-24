@@ -5,13 +5,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.UUID;
 
 /**
  * Created by Yordin Alayn on 23.12.15.
  */
-public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurchaseNegotiation{
+public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurchaseNegotiation, Serializable{
 
     private final   UUID                negotiationId;
     private final   String              customerPublicKey;

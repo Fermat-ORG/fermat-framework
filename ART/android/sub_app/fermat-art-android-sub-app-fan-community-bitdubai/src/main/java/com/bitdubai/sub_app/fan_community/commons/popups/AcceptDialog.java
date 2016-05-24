@@ -17,6 +17,8 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.fan_community.R;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
 
+import java.util.UUID;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/04/16.
  */
@@ -29,7 +31,6 @@ public class AcceptDialog extends
     /**
      * UI components
      */
-    LinkedFanIdentity fanCommunityInformation;
 
     FanCommunitySelectableIdentity identity;
     private FermatTextView title;
@@ -38,6 +39,9 @@ public class AcceptDialog extends
     private FermatButton positiveBtn;
     private FermatButton negativeBtn;
 
+    //Identity data
+    private UUID connectionId;
+    private String alias;
 
     public AcceptDialog(
             Activity a,
@@ -46,9 +50,24 @@ public class AcceptDialog extends
             LinkedFanIdentity fanInformation,
             FanCommunitySelectableIdentity identity) {
         super(a, fanCommunitySubAppSession, subAppResources);
-        this.fanCommunityInformation = fanInformation;
+        this.connectionId = fanInformation.getConnectionId();
+        this.alias = fanInformation.getAlias();
         this.identity = identity;
     }
+
+    public AcceptDialog(
+            Activity a,
+            FanCommunitySubAppSession fanCommunitySubAppSession,
+            SubAppResourcesProviderManager subAppResources,
+            UUID connectionId,
+            String alias,
+            FanCommunitySelectableIdentity identity) {
+        super(a, fanCommunitySubAppSession, subAppResources);
+        this.connectionId = connectionId;
+        this.alias = alias;
+        this.identity = identity;
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +83,7 @@ public class AcceptDialog extends
 
         title.setText("Connect");
         description.setText("Do you want to accept");
-        userName.setText(fanCommunityInformation.getAlias());
+        userName.setText(alias);
     }
 
     @Override
@@ -83,14 +102,16 @@ public class AcceptDialog extends
         int i = v.getId();
         if (i == R.id.afc_positive_button) {
             try {
-                if (fanCommunityInformation != null && identity != null) {
-                    System.out.println("************* I'm going to accept: "+fanCommunityInformation.getConnectionId());
-                    getSession().getModuleManager().acceptFan(fanCommunityInformation.getConnectionId());
+                if (connectionId != null && alias !=null && identity != null) {
+                    System.out.println("************* I'm going to accept: "+connectionId);
+                    getSession().getModuleManager().acceptFan(
+                            connectionId);
                     Toast.makeText(getContext(),
-                            " Accepted connection request from " + fanCommunityInformation.getAlias(),
+                            " Accepted connection request from " + alias,
                             Toast.LENGTH_SHORT).show();
+                    getSession().setData("connectionresult", 3);
                 } else {
-                    Toast.makeText(getContext(), "There has been an error accepting request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "There has been an error accepting request", Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (CantAcceptRequestException e) {
@@ -99,21 +120,21 @@ public class AcceptDialog extends
             dismiss();
         } else if (i == R.id.afc_negative_button) {
             try {
-                if (fanCommunityInformation != null && identity != null) {
-                    getSession().getModuleManager().denyConnection(fanCommunityInformation.getConnectionId());
+                if (connectionId != null && alias !=null && identity != null) {
+                    getSession().getModuleManager().denyConnection(connectionId);
                 } else {
-                    Toast.makeText(getContext(),
+                    Toast.makeText(getActivity(),
                             "There has been an error denying request",
                             Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
+                onBackPressed();
             } catch (CantDenyActorConnectionRequestException e) {
                 e.printStackTrace();
             }
             dismiss();
         }
     }
-
 
 }
 

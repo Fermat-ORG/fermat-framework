@@ -6,32 +6,49 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcce
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanLinkedActorIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExternalPlatformInformation;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ArtistCancellingFailedException;
@@ -48,50 +65,59 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListIdentitiesToSelectException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils.FanCommunityInformationImpl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
  */
-public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManager,Serializable {
+public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySettings>
+        implements ArtistCommunitySubAppModuleManager,Serializable {
 
     private final ArtistIdentityManager                         artistIdentityManager                 ;
     private final ArtistActorConnectionManager                  artistActorConnectionManager          ;
     private final ArtistManager                                 artistActorNetworkServiceManager      ;
+    private final FanActorConnectionManager                     fanActorConnectionManager             ;
+    private final FanManager                                    fanActorNetworkServiceManager         ;
     private final FanaticIdentityManager                        fanaticIdentityManager                ;
     private final ErrorManager                                  errorManager                          ;
-    private final PluginFileSystem                              pluginFileSystem                      ;
-    private final UUID                                          pluginId                              ;
     private final PluginVersionReference                        pluginVersionReference                ;
 
     private       String                                        subAppPublicKey                       ;
     private       SettingsManager<ArtistCommunitySettings>      settingsManager                       ;
 
+    private boolean isDialog = true;
 
-    public ArtistCommunityManager(final ArtistIdentityManager           artistIdentityManager                 ,
-                                  final ArtistActorConnectionManager    artistActorConnectionManager          ,
-                                  final ArtistManager                   artistActorNetworkServiceManager      ,
-                                  final FanaticIdentityManager          fanaticIdentityManager                ,
-                                  final ErrorManager                    errorManager                          ,
-                                  final PluginFileSystem                pluginFileSystem                      ,
-                                  final UUID                            pluginId                              ,
-                                  final PluginVersionReference          pluginVersionReference                ) {
 
+    public ArtistCommunityManager(
+            final ArtistIdentityManager artistIdentityManager,
+            final ArtistActorConnectionManager artistActorConnectionManager,
+            final ArtistManager artistActorNetworkServiceManager,
+            final FanaticIdentityManager fanaticIdentityManager,
+            final ErrorManager errorManager,
+            final PluginFileSystem pluginFileSystem,
+            final UUID pluginId,
+            final PluginVersionReference pluginVersionReference,
+            final FanManager fanActorNetworkServiceManager,
+            final FanActorConnectionManager fanActorConnectionManager) {
+
+        super(pluginFileSystem, pluginId);
         this.artistIdentityManager                  = artistIdentityManager                 ;
         this.artistActorConnectionManager           = artistActorConnectionManager          ;
         this.artistActorNetworkServiceManager       = artistActorNetworkServiceManager      ;
         this.fanaticIdentityManager                 = fanaticIdentityManager                ;
         this.errorManager                           = errorManager                          ;
-        this.pluginFileSystem                       = pluginFileSystem                      ;
-        this.pluginId                               = pluginId                              ;
         this.pluginVersionReference                 = pluginVersionReference                ;
+        this.fanActorNetworkServiceManager          = fanActorNetworkServiceManager         ;
+        this.fanActorConnectionManager              = fanActorConnectionManager             ;
     }
 
     @Override
@@ -128,7 +154,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
             for(ArtistActorConnection connectedArtist : actorConnections)
             {
                 if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey()))
-                    worldArtistList.set(i, new ArtistCommunityInformationImpl(worldArtist.getPublicKey(), worldArtist.getAlias(), worldArtist.getImage(), connectedArtist.getConnectionState(), connectedArtist.getConnectionId()));
+                    worldArtistList.set(i, new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(worldArtist.getPublicKey(), worldArtist.getAlias(), worldArtist.getImage(), connectedArtist.getConnectionState(), connectedArtist.getConnectionId()));
             }
         }
         return worldArtistList;
@@ -329,26 +355,108 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
     }
 
     @Override
-    public List<ArtistCommunityInformation> listAllConnectedArtists(ArtistCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListArtistsException {
+    public List<ArtCommunityInformation> listAllConnectedArtists(
+            ArtistCommunitySelectableIdentity selectedIdentity,
+            int max,
+            int offset) throws CantListArtistsException {
         try {
 
+            final List<ArtCommunityInformation> allActorConnectedList = new ArrayList<>();
+            final List<String> actorConnectedPublicKeyList = new ArrayList<>();
+            String publicKey;
+            PlatformComponentType platformComponentType;
+            ArtExternalPlatform artExternalPlatform;
+
+            //Artist connected search.
+            ArtistCommunityInformationImpl artistCommunityInformation;
+            final List<ArtistConnectionRequest> artistConnectionRequestList =
+                    artistActorNetworkServiceManager.listAllRequest();
             final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType()
             );
+            ActorSearch<ArtistExposingData> exposingDataActorSearch =
+                    artistActorNetworkServiceManager.getSearch();
+            List<ArtistExposingData> artistExposingDataList=null;
+            if(exposingDataActorSearch !=null){
+                artistExposingDataList = exposingDataActorSearch.getResult(
+                        PlatformComponentType.ART_ARTIST);
+            }
+            final ArtistActorConnectionSearch search =
+                    artistActorConnectionManager.getSearch(linkedActorIdentity);
+            search.addConnectionState(ConnectionState.CONNECTED);
+            final List<ArtistActorConnection> artistActorConnectionList = search.getResult(
+                    max,
+                    offset);
+            for (ArtistActorConnection aac : artistActorConnectionList){
+                publicKey=aac.getPublicKey();
+                if(!actorConnectedPublicKeyList.contains(publicKey)) {
+                    actorConnectedPublicKeyList.add(publicKey);
+                    platformComponentType = getActorTypeFromRequestFromArtist(
+                            artistConnectionRequestList,
+                            publicKey);
+                    artistCommunityInformation = new ArtistCommunityInformationImpl(aac);
+                    switch (platformComponentType) {
+                        case ART_FAN:
+                            artistCommunityInformation.setActorType(Actors.ART_FAN);
+                            break;
+                        case ART_ARTIST:
+                            artistCommunityInformation.setActorType(Actors.ART_ARTIST);
+                            break;
+                    }
+                    artExternalPlatform = getArtExternalPlatform(artistExposingDataList, publicKey);
+                    artistCommunityInformation.setArtExternalPlatform(artExternalPlatform);
+                    allActorConnectedList.add(artistCommunityInformation);
+                }
+            }
 
-            final ArtistActorConnectionSearch search = artistActorConnectionManager.getSearch(linkedActorIdentity);
+            //Fan connected list.
+            final FanLinkedActorIdentity fanLinkedActorIdentity = new FanLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+            FanCommunityInformationImpl fanCommunityInformation;
+            final List<FanConnectionRequest> fanConnectionRequestList =
+                    fanActorNetworkServiceManager.listAllRequest();
+            ActorSearch<FanExposingData> exposingDataFanSearch =
+                    fanActorNetworkServiceManager.getSearch();
+            List<FanExposingData> fanExposingDataList=null;
+            if(exposingDataActorSearch !=null){
+                fanExposingDataList = exposingDataFanSearch.getResult(
+                        PlatformComponentType.ART_ARTIST);
+            }
+            final FanActorConnectionSearch fanActorConnectionSearchSearch =
+                    fanActorConnectionManager.getSearch(fanLinkedActorIdentity);
 
             search.addConnectionState(ConnectionState.CONNECTED);
 
-            final List<ArtistActorConnection> actorConnections = search.getResult(max, offset);
+            final List<FanActorConnection> actorConnections = fanActorConnectionSearchSearch.getResult(max, offset);
 
-            final List<ArtistCommunityInformation> artistCommunityInformationList = new ArrayList<>();
+            //final List<FanCommunityInformation> fanaticCommunityInformationList = new ArrayList<>();
 
-            for (ArtistActorConnection aac : actorConnections)
-                artistCommunityInformationList.add(new ArtistCommunityInformationImpl(aac));
-
-            return artistCommunityInformationList;
+            for (FanActorConnection fac : actorConnections){
+                //fanaticCommunityInformationList.add(new FanCommunityInformationImpl(fac));
+                publicKey=fac.getPublicKey();
+                if(!actorConnectedPublicKeyList.contains(publicKey)){
+                    actorConnectedPublicKeyList.add(publicKey);
+                    platformComponentType = getActorTypeFromRequest(
+                            fanConnectionRequestList,
+                            publicKey);
+                    fanCommunityInformation = new FanCommunityInformationImpl(fac);
+                    switch (platformComponentType){
+                        case ART_FAN:
+                            fanCommunityInformation.setActorType(Actors.ART_FAN);
+                            break;
+                        case ART_ARTIST:
+                            fanCommunityInformation.setActorType(Actors.ART_ARTIST);
+                            break;
+                    }
+                    artExternalPlatform = getFanArtExternalPlatform(fanExposingDataList, publicKey);
+                    fanCommunityInformation.setArtExternalPlatform(artExternalPlatform);
+                    allActorConnectedList.add(fanCommunityInformation);
+                }
+            }
+            return allActorConnectedList;
 
         } catch (final CantListActorConnectionsException e) {
 
@@ -448,81 +556,8 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         } catch (Exception e) {}
 
         return ConnectionState.DISCONNECTED_LOCALLY;    }
-
-    @Override
-    public void createArtistIdentity(String name, String phrase, byte[] profile_img, UUID externalIdentityID) throws Exception {
-        String createdPublicKey = null;
-
-        if(name.equals("Fan"))
-        {
-            try{
-                final Fanatic createdIdentity = fanaticIdentityManager.createFanaticIdentity(name, profile_img,externalIdentityID);
-                createdPublicKey = createdIdentity.getPublicKey();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            fanaticIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch(CantPublishIdentityException | IdentityNotFoundException e) {
-                            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                        }
-                    }
-                }.start();
-            }catch(Exception e) {
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                return;
-            }
-        }
-        else if( name.equals("Artist"))
-        {
-            try{
-                final Artist createdIdentity = artistIdentityManager.createArtistIdentity(name, profile_img, externalIdentityID);
-                createdPublicKey = createdIdentity.getPublicKey();
-
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            artistIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                        } catch(Exception e) {
-                            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                        }
-                    }
-                }.start();
-            }catch(Exception e) {
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                return;
-            }
-        }
-
-
-
-        //Try to get appSettings
-        ArtistCommunitySettings appSettings = null;
-        try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ appSettings = null; }
-
-
-        //If appSettings exist
-        if(appSettings != null){
-            if(createdPublicKey != null)
-                appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
-            if(name.equals("Fan"))
-                appSettings.setLastSelectedActorType(Actors.ART_FAN);
-            else if(name.equals("Artist"))
-                appSettings.setLastSelectedActorType(Actors.ART_ARTIST);
-
-            try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
-            }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
-        }
-    }
-
-    @Override
-    public SettingsManager<ArtistCommunitySettings> getSettingsManager() {
+    
+    /*public SettingsManager<ArtistCommunitySettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 
@@ -532,7 +567,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         );
 
         return this.settingsManager;
-    }
+    }*/
 
     @Override
     public ArtistCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
@@ -557,8 +592,10 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         } catch(CantListArtistIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0)
+        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0 && isDialog){
+            isDialog = false;
             throw new CantGetSelectedActorIdentityException("", null, "", "");
+        }
 
 
 
@@ -593,10 +630,13 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
 
                 return selectedIdentity;
             }
-            else
+            else if(isDialog){
+                isDialog = false;
                 throw new ActorIdentityNotSelectedException("", null, "", "");
+            }
         }
 
+        isDialog = true;
         return null;    }
 
     @Override
@@ -612,5 +652,155 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    /**
+     * This method returns the actor type from a request list.
+     * @param fanConnectionRequestList
+     * @param actorPublicKey
+     * @return
+     */
+    private PlatformComponentType getActorTypeFromRequest(
+            List<FanConnectionRequest> fanConnectionRequestList,
+            String actorPublicKey){
+        for(FanConnectionRequest fanConnectionRequest : fanConnectionRequestList){
+            if(fanConnectionRequest.getSenderPublicKey().equals(actorPublicKey)){
+                return fanConnectionRequest.getSenderActorType();
+            }
+            if(fanConnectionRequest.getDestinationPublicKey().equals(actorPublicKey)){
+                return fanConnectionRequest.getDestinationActorType();
+            }
+        }
+        //For now, I'll return an ART_FAN
+        return PlatformComponentType.ART_FAN;
+    }
+
+    /**
+     * This method returns the actor type from a request list.
+     * @param fanConnectionRequestList
+     * @param actorPublicKey
+     * @return
+     */
+    private PlatformComponentType getActorTypeFromRequestFromArtist(
+            List<ArtistConnectionRequest> fanConnectionRequestList,
+            String actorPublicKey){
+        for(ArtistConnectionRequest artistConnectionRequest : fanConnectionRequestList){
+            if(artistConnectionRequest.getSenderPublicKey().equals(actorPublicKey)){
+                return artistConnectionRequest.getSenderActorType();
+            }
+            if(artistConnectionRequest.getDestinationPublicKey().equals(actorPublicKey)){
+                return artistConnectionRequest.getDestinationActorType();
+            }
+        }
+        //For now, I'll return an ART_FAN
+        return PlatformComponentType.ART_ARTIST;
+    }
+
+    /**
+     * This method checks if an actor connection exists.
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    public List<ArtistActorConnection> getRequestActorConnections(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        return artistActorConnectionManager.getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
+    }
+
+    /**
+     * This method returns the ArtExternalPlatform from a List<ArtistExposingData> by a given
+     * Artist Public Key.
+     * @param artistExposingDataList
+     * @param artistPublicKey
+     * @return
+     */
+    private ArtExternalPlatform getArtExternalPlatform(
+            List<ArtistExposingData> artistExposingDataList,
+            String artistPublicKey){
+        if(artistExposingDataList == null){
+            return ArtExternalPlatform.UNDEFINED;
+        }
+        for(ArtistExposingData artistExposingData : artistExposingDataList){
+            if(artistExposingData.getPublicKey().equals(artistPublicKey)){
+                return getArtExternalPlatform(
+                        artistExposingData.getArtistExternalPlatformInformation());
+            }
+        }
+        return ArtExternalPlatform.UNDEFINED;
+    }
+
+    /**
+     * This method returns the ArtExternalPlatform from a List<ArtistExposingData> by a given
+     * Artist Public Key.
+     * @param fanExposingDataList
+     * @param artistPublicKey
+     * @return
+     */
+    private ArtExternalPlatform getFanArtExternalPlatform(
+            List<FanExposingData> fanExposingDataList,
+            String artistPublicKey){
+        if(fanExposingDataList == null){
+            return ArtExternalPlatform.UNDEFINED;
+        }
+        for(FanExposingData fanExposingData : fanExposingDataList){
+            if(fanExposingData.getPublicKey().equals(artistPublicKey)){
+                return getArtExternalPlatform(
+                        fanExposingData.getFanExternalPlatformInformation());
+            }
+        }
+        return ArtExternalPlatform.UNDEFINED;
+    }
+
+    /**
+     * This method returns the ArtExternalPlatform from an FanExternalPlatformInformation
+     * @param artistExternalPlatformInformation
+     * @return
+     */
+    private ArtExternalPlatform getArtExternalPlatform(
+            ArtistExternalPlatformInformation artistExternalPlatformInformation){
+        HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap =
+                artistExternalPlatformInformation.getExternalPlatformInformationMap();
+        //We should return the default external platform.
+        if(artExternalPlatformStringHashMap.containsKey(
+                ArtExternalPlatform.getDefaultExternalPlatform())){
+            return ArtExternalPlatform.getDefaultExternalPlatform();
+        } else{
+            Set<ArtExternalPlatform> keySet = artExternalPlatformStringHashMap.keySet();
+            for(ArtExternalPlatform key : keySet){
+                //In this version we going to return the first platform that we find.
+                return key;
+            }
+            return ArtExternalPlatform.UNDEFINED;
+        }
+    }
+
+    /**
+     * This method returns the ArtExternalPlatform from a FanExternalPlatformInformation
+     * @param fanExternalPlatformInformation
+     * @return
+     */
+    private ArtExternalPlatform getArtExternalPlatform(
+            FanExternalPlatformInformation fanExternalPlatformInformation){
+        HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap =
+                fanExternalPlatformInformation.getExternalPlatformInformationMap();
+        //We should return the default external platform.
+        if(artExternalPlatformStringHashMap.containsKey(
+                ArtExternalPlatform.getDefaultExternalPlatform())){
+            return ArtExternalPlatform.getDefaultExternalPlatform();
+        } else{
+            Set<ArtExternalPlatform> keySet = artExternalPlatformStringHashMap.keySet();
+            for(ArtExternalPlatform key : keySet){
+                //In this version we going to return the first platform that we find.
+                return key;
+            }
+            return ArtExternalPlatform.UNDEFINED;
+        }
     }
 }

@@ -2,14 +2,17 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 
-public class ECCKeyPair implements KeyPair {
-	
+import java.io.Serializable;
+
+
+public class ECCKeyPair implements KeyPair, Serializable {
+
 	private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
 	private static final int HASH_PRIME_NUMBER_ADD = 2819;
-	
+
 	private final String privateKey;
 	private final String publicKey;
-	
+
 	public ECCKeyPair(final String privateKey, String publicKey) throws IllegalArgumentException{
 		if(publicKey == null || publicKey.isEmpty())
 			throw new IllegalArgumentException();
@@ -18,11 +21,11 @@ public class ECCKeyPair implements KeyPair {
 		this.privateKey = privateKey;
 		this.publicKey = publicKey;
 	}
-	
+
 	public ECCKeyPair(final String privateKey) throws IllegalArgumentException{
 		this(privateKey, AsymmetricCryptography.derivePublicKey(privateKey));
 	}
-	
+
 	public ECCKeyPair(){
 		this(AsymmetricCryptography.createPrivateKey());
 	}
@@ -34,7 +37,7 @@ public class ECCKeyPair implements KeyPair {
 	public String getPublicKey() {
 		return publicKey;
 	}
-	
+
 	@Override
 	public boolean equals(Object o){
 		if(!(o instanceof ECCKeyPair))
@@ -42,7 +45,7 @@ public class ECCKeyPair implements KeyPair {
 		ECCKeyPair compare = (ECCKeyPair) o;
 		return privateKey.equals(compare.getPrivateKey());
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int c = 0;
@@ -50,5 +53,5 @@ public class ECCKeyPair implements KeyPair {
 		c += publicKey.hashCode();
 		return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
 	}
-	
+
 }

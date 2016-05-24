@@ -9,8 +9,8 @@ public class Header implements FermatHeader{
 
     String label;
     boolean hasExpandable = false;
-
-
+    boolean removeHeaderScroll=false;
+    boolean startCollapse;
     public Header() {
     }
 
@@ -31,4 +31,12 @@ public class Header implements FermatHeader{
     public void setLabel(String label) {
         this.label = label;
     }
+
+    public void setRemoveHeaderScroll(boolean removeHeaderScroll){this.removeHeaderScroll=removeHeaderScroll;}
+
+    public boolean getRemoveHeaderScroll(){return this.removeHeaderScroll;    }
+
+    public void setStartCollapse(boolean startCollapse){this.startCollapse=startCollapse;}
+
+    public boolean getStartCollapse(){return this.startCollapse;}
 }

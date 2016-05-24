@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.proviso
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 11/11/15.
  */
-public class ContractBasicInformationImpl implements ContractBasicInformation {
+public class ContractBasicInformationImpl implements ContractBasicInformation, Serializable {
     private static Random random = new Random(321515131);
     private static Calendar instance = Calendar.getInstance();
 

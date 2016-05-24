@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
@@ -27,6 +29,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.ut
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.FanActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
@@ -35,6 +38,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -77,8 +81,20 @@ public final class FanActorNetworkServiceManager implements FanManager {
         this.executorService                    = Executors.newFixedThreadPool(3)   ;
     }
 
-    private ConcurrentHashMap<String, FanExposingData> artistsToExpose;
+    private ConcurrentHashMap<String, FanExposingData> fansToExpose;
 
+    public final void exposeIdentitiesInWait() throws CantExposeIdentityException {
+        if(!Validate.isObjectNull(fansToExpose) && fansToExpose.size() > 0){
+            for (FanExposingData fanExposingData :
+                    fansToExpose.values()) {
+                exposeIdentity(fanExposingData);
+            }
+        }
+    }
+
+    public final boolean areIdentityToExpose(){
+        return (!Validate.isObjectNull(fansToExpose) && fansToExpose.size() > 0);
+    }
     @Override
     public final void exposeIdentity(final FanExposingData fan) throws CantExposeIdentityException {
 
@@ -86,25 +102,23 @@ public final class FanActorNetworkServiceManager implements FanManager {
 
             if (!isRegistered()) {
 
-                addArtistsToExpose(fan);
+                addFansToExpose(fan);
 
             } else {
 
-                final String imageString = Base64.encodeToString(fan.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(fan.getExtraData().getBytes(), Base64.DEFAULT);
 
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         fan.getPublicKey(),
                         (fan.getAlias()),
                         (fan.getAlias().toLowerCase()),
-                        NetworkServiceType.ARTIST_ACTOR,
-                        PlatformComponentType.ART_ARTIST,
+                        NetworkServiceType.FAN_ACTOR,
+                        PlatformComponentType.ART_FAN,
                         imageString
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
-
-                if (artistsToExpose != null && artistsToExpose.containsKey(fan.getPublicKey()))
-                    artistsToExpose.remove(fan.getPublicKey());
+                addFansToExpose(fan);
             }
 
         } catch (final CantRegisterComponentException e) {
@@ -124,15 +138,15 @@ public final class FanActorNetworkServiceManager implements FanManager {
         try {
             if (isRegistered()) {
 
-                final String imageString = Base64.encodeToString(actor.getImage(), Base64.DEFAULT);
+                final String imageString = Base64.encodeToString(actor.getExtraData().getBytes(), Base64.DEFAULT);
 
 
                 final PlatformComponentProfile platformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         actor.getPublicKey(),
                         (actor.getAlias()),
                         (actor.getAlias().toLowerCase() + "_" + this.platformComponentProfile.getName().replace(" ", "_")),
-                        NetworkServiceType.ARTIST_ACTOR,
-                        PlatformComponentType.ART_ARTIST,
+                        NetworkServiceType.FAN_ACTOR,
+                        PlatformComponentType.ART_FAN,
                         imageString);
 
                 Thread thread = new Thread(new Runnable() {
@@ -155,12 +169,12 @@ public final class FanActorNetworkServiceManager implements FanManager {
         }
     }
 
-    private void addArtistsToExpose(final FanExposingData artistExposingData) {
+    private void addFansToExpose(final FanExposingData fanExposingData) {
 
-        if (artistsToExpose == null)
-            artistsToExpose = new ConcurrentHashMap<>();
+        if (fansToExpose == null)
+            fansToExpose = new ConcurrentHashMap<>();
 
-        artistsToExpose.putIfAbsent(artistExposingData.getPublicKey(), artistExposingData);
+        fansToExpose.putIfAbsent(fanExposingData.getPublicKey(), fanExposingData);
     }
 
     @Override
@@ -190,11 +204,11 @@ public final class FanActorNetworkServiceManager implements FanManager {
 
         this.platformComponentProfile = platformComponentProfile;
 
-        if (platformComponentProfile != null && artistsToExpose != null && !artistsToExpose.isEmpty()) {
+        if (platformComponentProfile != null && fansToExpose != null && !fansToExpose.isEmpty()) {
 
             try {
 
-                this.exposeIdentities(artistsToExpose.values());
+                this.exposeIdentities(fansToExpose.values());
 
             } catch (final CantExposeIdentitiesException e){
 
@@ -512,6 +526,16 @@ public final class FanActorNetworkServiceManager implements FanManager {
                 ConnectionRequestAction.REQUEST,
                 aer.getSendingTime()
         ).toJson();
+    }
+
+    /**
+     * This method returns all the request persisted in database
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    public List<FanConnectionRequest> listAllRequest()
+            throws CantListPendingConnectionRequestsException {
+        return fanActorNetworkServiceDao.listAllRequest();
     }
 
 }

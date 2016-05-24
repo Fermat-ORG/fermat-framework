@@ -53,7 +53,7 @@ public class AppListAdapter extends FermatAdapter<FanCommunityInformation, AppWo
             holder.thumbnail.setImageBitmap(bitmap);
         }
         else
-            Picasso.with(context).load(R.drawable.profile_image).into(holder.thumbnail);
+            Picasso.with(context).load(R.drawable.afc_profile_image).into(holder.thumbnail);
 
     }
 

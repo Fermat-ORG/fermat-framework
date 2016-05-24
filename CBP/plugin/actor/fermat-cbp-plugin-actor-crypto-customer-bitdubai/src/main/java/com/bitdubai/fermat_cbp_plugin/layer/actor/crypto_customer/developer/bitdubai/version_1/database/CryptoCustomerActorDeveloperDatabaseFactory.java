@@ -154,27 +154,12 @@ public class CryptoCustomerActorDeveloperDatabaseFactory implements DealsWithPlu
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME);
         quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
+        quoteExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_SUPPORTED_PLATFORMS_COLUMN_NAME);
         /**
          * Table Quote Extra Data addition.
          */
         DeveloperDatabaseTable quoteExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME, quoteExtraDataColumns);
         tables.add(quoteExtraDataTable);
-
-        /**
-         * Table Platforms Extra Data columns.
-         */
-        List<String> platformsExtraDataColumns = new ArrayList<String>();
-
-        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_ID_COLUMN_NAME);
-        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_CURRENCY_COLUMN_NAME);
-        platformsExtraDataColumns.add(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_PLATFORM_COLUMN_NAME);
-        /**
-         * Table Platforms Extra Data addition.
-         */
-        DeveloperDatabaseTable platformsExtraDataTable = developerObjectFactory.getNewDeveloperDatabaseTable(CryptoCustomerActorDatabaseConstants.PLATFORMS_EXTRA_DATA_TABLE_NAME, platformsExtraDataColumns);
-        tables.add(platformsExtraDataTable);
-
 
 
         return tables;

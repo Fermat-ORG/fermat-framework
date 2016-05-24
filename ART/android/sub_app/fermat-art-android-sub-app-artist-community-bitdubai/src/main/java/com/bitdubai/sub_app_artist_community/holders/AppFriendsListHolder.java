@@ -14,6 +14,7 @@ public class AppFriendsListHolder extends FermatViewHolder {
 
     public ImageView friendAvatar;
     public FermatTextView friendName;
+    public ImageView actorIcon;
 
     /**
      * Constructor
@@ -25,5 +26,6 @@ public class AppFriendsListHolder extends FermatViewHolder {
 
         friendName = (FermatTextView) itemView.findViewById(R.id.aac_selectable_identity_username);
         friendAvatar = (ImageView) itemView.findViewById(R.id.aac_selectable_identity_user_avatar);
+        actorIcon = (ImageView) itemView.findViewById(R.id.aac_recycler_icon);
     }
 }

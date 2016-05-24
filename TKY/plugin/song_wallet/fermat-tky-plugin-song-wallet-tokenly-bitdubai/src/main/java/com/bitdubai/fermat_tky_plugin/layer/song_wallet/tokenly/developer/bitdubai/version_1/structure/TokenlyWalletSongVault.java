@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
@@ -200,10 +199,9 @@ public class TokenlyWalletSongVault {
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(BroadcasterNotificationType.SONG_CANCEL.getCode(), "Download canceled by user request");
                     fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
-                    broadcaster.publish(
-                            BroadcasterType.UPDATE_VIEW,
-                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                            fermatBundle);
+                    fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
+                            BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
                     throw new CancelDownloadException();
                 }
                 for(byte byteRead : data){
@@ -218,10 +216,14 @@ public class TokenlyWalletSongVault {
                             downloadPercentage+"%");
                     fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
                     fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(), song);
-                    broadcaster.publish(
-                            BroadcasterType.UPDATE_VIEW,
-                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                            fermatBundle);
+                    fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
+                            BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
+                    try {
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+                    }catch (Exception ex){
+                        System.out.println("TKY_BROADCAST_PERCENTAGE:"+ex);
+                    }
+
                 }
                 //System.out.println("TKY - Download "+reader+" from "+size);
                 bytesRead = is.read(data);
@@ -250,10 +252,13 @@ public class TokenlyWalletSongVault {
             fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(), "100%");
             fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
             fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(), song);
-            broadcaster.publish(
-                    BroadcasterType.UPDATE_VIEW,
-                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                    fermatBundle);
+            fermatBundle.put(BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode(),
+                    BroadcasterNotificationType.FAN_WALLET_BROADCAST_NOTIFICATION.getCode());
+            try {
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, fermatBundle);
+            }catch (Exception ex){
+                System.out.println("TKY_BROADCAST_PERCENTAGE_COMPLETE:"+ex);
+            }
             //Only for testing:
             //testReadFile(fileName);
         } catch (MalformedURLException e) {

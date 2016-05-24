@@ -9,13 +9,14 @@ import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.except
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultSkinException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.interfaces.SubAppSettings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
  */
 
-public class ChatActorCommunitySettings implements SubAppSettings {
+public class ChatActorCommunitySettings implements SubAppSettings, Serializable {
 
     private String lastSelectedIdentityPublicKey;
     private Actors lastSelectedActorType;

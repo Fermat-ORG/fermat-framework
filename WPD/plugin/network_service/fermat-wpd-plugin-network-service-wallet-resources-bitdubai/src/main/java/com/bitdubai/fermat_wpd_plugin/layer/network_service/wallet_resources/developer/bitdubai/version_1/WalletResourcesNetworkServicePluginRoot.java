@@ -40,7 +40,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_wpd_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletNavigationStructureDownloadedEvent;
 import com.bitdubai.fermat_wpd_api.all_definition.events.WalletUninstalledEvent;
@@ -801,22 +801,22 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+            throw new CantGetLanguageFileException("CAN'T GET AppNavigationStructure:", e, "Error write layout file resource  ", "");
         }  catch (CantGetRepositoryPathRecordException e) {
-            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+            throw new CantGetLanguageFileException("CAN'T GET AppNavigationStructure:", e, "Error get repository from database ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetLanguageFileException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+            throw new CantGetLanguageFileException("CAN'T GET AppNavigationStructure:", e, "Error created image file resource ", "");
 
         }
     }
 
 
     @Override
-    public WalletNavigationStructure getNavigationStructure(String walletPublicKey, UUID skinId) throws CantGetWalletNavigationStructureException {
+    public AppNavigationStructure getNavigationStructure(String walletPublicKey, UUID skinId) throws CantGetWalletNavigationStructureException {
         String content = "";
         try {
 
@@ -833,21 +833,21 @@ public class WalletResourcesNetworkServicePluginRoot extends AbstractPlugin impl
 
             content = layoutFile.getContent();
 
-            return (WalletNavigationStructure) XMLParser.parseXML(content, new WalletNavigationStructure());
+            return (AppNavigationStructure) XMLParser.parseXML(content, new AppNavigationStructure());
 
         } catch (FileNotFoundException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error write layout file resource  ", "");
+            throw new CantGetWalletNavigationStructureException("CAN'T GET AppNavigationStructure:", e, "Error write layout file resource  ", "");
         }  catch (CantGetRepositoryPathRecordException e) {
-            throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error get repository from database ", "");
+            throw new CantGetWalletNavigationStructureException("CAN'T GET AppNavigationStructure:", e, "Error get repository from database ", "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            throw new CantGetWalletNavigationStructureException("CAN'T GET WalletNavigationStructure:", e, "Error created image file resource ", "");
+            throw new CantGetWalletNavigationStructureException("CAN'T GET AppNavigationStructure:", e, "Error created image file resource ", "");
 
         }
     }

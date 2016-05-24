@@ -16,6 +16,7 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
     private final Currency merchandise;
     private final Currency paymentCurrency;
     private final Float    price;
+    private       String   supportedPlatforms;
 
     public CryptoBrokerQuote(final Currency merchandise    ,
                              final Currency paymentCurrency,
@@ -24,6 +25,17 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
         this.merchandise     = merchandise    ;
         this.paymentCurrency = paymentCurrency;
         this.price           = price          ;
+    }
+
+    public CryptoBrokerQuote(final Currency merchandise    ,
+                             final Currency paymentCurrency,
+                             final Float    price,
+                             final String   supportedPlatforms) {
+
+        this.merchandise         = merchandise    ;
+        this.paymentCurrency     = paymentCurrency;
+        this.price               = price          ;
+        this.supportedPlatforms  = supportedPlatforms          ;
     }
 
     public CryptoBrokerQuote(Quote quote){
@@ -44,12 +56,17 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
         return price;
     }
 
+    public final String getSupportedPlatforms() {
+        return supportedPlatforms;
+    }
+
     @Override
     public String toString() {
         return "CryptoBrokerQuote{" +
                 "merchandise=" + merchandise +
                 ", paymentCurrency=" + paymentCurrency +
                 ", price=" + price +
+                ", supportedPlatforms=" + supportedPlatforms +
                 '}';
     }
 

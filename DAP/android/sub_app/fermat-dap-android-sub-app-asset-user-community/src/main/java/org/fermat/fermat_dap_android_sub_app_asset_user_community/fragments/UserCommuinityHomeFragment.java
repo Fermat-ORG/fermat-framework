@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,10 +29,11 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
 import org.fermat.fermat_dap_android_sub_app_asset_user_community.adapters.UserCommunityAdapter;
@@ -45,12 +48,10 @@ import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserActorRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +66,15 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         AdapterView.OnItemClickListener,
         FermatListItemListeners<Actor> {
 
+    protected final String TAG = "UserCommunityFragment";
+
     public static final String USER_SELECTED = "user";
-    private static AssetUserCommunitySubAppModuleManager manager;
+    private static AssetUserCommunitySubAppModuleManager moduleManager;
+    AssetUserCommunitySubAppSession assetUserCommunitySubAppSession;
+    AssetUserSettings settings = null;
     private int userNotificationsCount = 0;
 
-    ErrorManager errorManager;
+    static ErrorManager errorManager;
 
     // recycler
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -93,7 +98,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemUnselect;
     private MenuItem menuItemCancel;
 
-    SettingsManager<AssetUserSettings> settingsManager;
+//    SettingsManager<AssetUserSettings> settingsManager;
 
     /**
      * Flags
@@ -107,20 +112,34 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
         try {
-            manager = ((AssetUserCommunitySubAppSession) appSession).getModuleManager();
+            setHasOptionsMenu(true);
+
             actor = (Actor) appSession.getData(USER_SELECTED);
 
+            assetUserCommunitySubAppSession = ((AssetUserCommunitySubAppSession) appSession);
+            moduleManager = assetUserCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            userNotificationsCount = manager.getWaitingYourConnectionActorAssetUserCount();
+            try {
+                settings = assetUserCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetUserCommunitySubAppSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
+
+            if (assetUserCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (settings == null) {
+                    settings = new AssetUserSettings();
+                    settings.setIsPresentationHelpEnabled(true);
+                    assetUserCommunitySubAppSession.getModuleManager().persistSettings(assetUserCommunitySubAppSession.getAppPublicKey(), settings);
+                }
+            }
+
+            userNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetUserCount();
             new FetchCountTask().execute();
-
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
 
@@ -222,36 +241,37 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         onRefresh();
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        AssetUserSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
         if (settings == null) {
             settings = new AssetUserSettings();
             settings.setIsContactsHelpEnabled(true);
-            settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
         }
 
-//        final AssetUserSettings assetUserSettingsTemp = settings;
-//
-//
-//        Handler handlerTimer = new Handler();
-//        handlerTimer.postDelayed(new Runnable() {
-//            public void run() {
-//                if (assetUserSettingsTemp.isPresentationHelpEnabled()) {
-//                    setUpPresentation(false);
-//                }
-//            }
-//        }, 500);
+        final AssetUserSettings assetUserSettingsTemp = settings;
+
+        Handler handlerTimer = new Handler();
+        handlerTimer.postDelayed(new Runnable() {
+            public void run() {
+                if (assetUserSettingsTemp.isPresentationHelpEnabled()) {
+                    setUpPresentation(false);
+                }
+            }
+        }, 500);
 
         return rootView;
     }
@@ -319,7 +339,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 //                                toConnect.add(actor);
 //                        }
 //                        //// TODO: 28/10/15 get Actor asset User
-//                        manager.connectToActorAssetUser(null, toConnect);
+//                        moduleManager.connectToActorAssetUser(null, toConnect);
 //                        return true;
 //                    }
 //                };
@@ -386,16 +406,16 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
         menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
         //}else if(actor.getDapConnectionState() == DAPConnectionState.CONNECTING){
-        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT, 0, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(1, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_DISCONNECT, 1, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING, 0, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(2, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(3, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_SELECT_ALL, 3, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(4, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(4, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_UNSELECT_ALL, 4, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(5, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(5, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION, 5, "Help").setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         menuItemConnect = menu.getItem(0);
@@ -468,13 +488,13 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                         }
                                     }
                                     // TODO: 28/10/15 get Actor asset Redeem Point
-                                    manager.askActorAssetUserForConnection(toConnect);
+                                    moduleManager.askActorAssetUserForConnection(toConnect);
 
                                     Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);
 
-                                    //manager.connectToActorAssetUser(null, toConnect);
+                                    //moduleManager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -542,7 +562,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                             toConnect.add(actor);
                     }
                     //// TODO: 28/10/15 get Actor asset User
-                    manager.connectToActorAssetUser(null, toConnect);
+                    moduleManager.connectToActorAssetUser(null, toConnect);
                     return true;
                 }
             };
@@ -602,14 +622,14 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
                                     }
                                     /*TODO implementar disconnect*/
                                     for (ActorAssetUser actor : toDisconnect) {
-                                        manager.disconnectToActorAssetUser(actor);
+                                        moduleManager.disconnectToActorAssetUser(actor);
                                     }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);*/
 
-//                                    manager.connectToActorAssetUser(null, toConnect);
+//                                    moduleManager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -680,7 +700,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
                                 for (ActorAssetUser actor : actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    manager.cancelActorAssetUser(actor.getActorPublicKey());
+                                    moduleManager.cancelActorAssetUser(actor.getActorPublicKey());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
@@ -734,7 +754,7 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
         try {
             if (id == SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_PRESENTATION) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(assetUserCommunitySubAppSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -747,7 +767,11 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     private void updateNotificationsBadge(int count) {
         userNotificationsCount = count;
-        getActivity().invalidateOptionsMenu();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        } else {
+            Log.e(TAG, "updateNotificationsBadge activity null, please check this, class" + getClass().getName() + " line: " + new Throwable().getStackTrace()[0].getLineNumber());
+        }
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -769,9 +793,6 @@ public class UserCommuinityHomeFragment extends AbstractFermatFragment
 
     }
 
-    /*
-Sample AsyncTask to fetch the notifications count
-*/
     class FetchCountTask extends AsyncTask<Void, Void, Integer> {
 
         @Override
@@ -842,13 +863,20 @@ Sample AsyncTask to fetch the notifications count
     private synchronized List<Actor> getMoreData() throws Exception {
         List<Actor> dataSet = new ArrayList<>();
         List<AssetUserActorRecord> result = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetUserCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetUserRegistered();
-        if (result != null && result.size() > 0) {
-            for (AssetUserActorRecord record : result) {
-                dataSet.add((new Actor(record)));
+
+        try {
+            result = moduleManager.getAllActorAssetUserRegistered();
+            if (result != null && result.size() > 0) {
+                for (AssetUserActorRecord record : result) {
+                    dataSet.add((new Actor(record)));
+                }
             }
+        } catch (CantGetAssetUserActorsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return dataSet;
     }
@@ -856,7 +884,7 @@ Sample AsyncTask to fetch the notifications count
     @Override
     public void onItemClickListener(Actor data, int position) {
         appSession.setData(USER_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_PROFILE.getCode(), assetUserCommunitySubAppSession.getAppPublicKey());
     }
 
     @Override
@@ -880,82 +908,11 @@ Sample AsyncTask to fetch the notifications count
 
     }
 
-    /*private boolean ableToDisconnect(List<Actor> actors){
-        List <Actor> allActors = actors;
-        for (Actor actor : allActors){
-            switch (actor.getDapConnectionState()){
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CANCELLED_REMOTELY: {
-                    return false;
-                }
-                case CONNECTED_ONLINE:
-                case CONNECTED_OFFLINE:
-                case CONNECTED:{
-                    if (actor.getCryptoAddress() != null)
-                    continue;
-                }
-                case CONNECTING:
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR_UNKNOWN:
-                case PENDING_LOCALLY:
-                case PENDING_REMOTELY:
-                case REGISTERED_LOCALLY:
-                case REGISTERED_REMOTELY:
-                case REGISTERED_ONLINE:
-                case REGISTERED_OFFLINE: {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    private boolean ableToConnect(List<Actor> actors){
-        List <Actor> allActors = actors;
-        for (Actor actor : allActors){
-            switch (actor.getDapConnectionState()){
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CONNECTING:
-                case CANCELLED_REMOTELY: {
-                    continue;
-                }
-                case CONNECTED_ONLINE:
-                case CONNECTED_OFFLINE:
-                case CONNECTED:{
-                    if (actor.getCryptoAddress() != null)
-                    return false;
-                }
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR_UNKNOWN:
-                case PENDING_LOCALLY:
-                case PENDING_REMOTELY:
-                case REGISTERED_LOCALLY:
-                case REGISTERED_REMOTELY:
-                case REGISTERED_ONLINE:
-                case REGISTERED_OFFLINE: {
-                    continue;
-                }
-            }
-        }
-        return true;
-    }*/
     private void restartButtons() {
         menuItemCancel.setVisible(false);
         menuItemSelect.setVisible(true);
         menuItemUnselect.setVisible(false);
         menuItemConnect.setVisible(false);
         menuItemDisconnect.setVisible(false);
-
     }
-
-
 }

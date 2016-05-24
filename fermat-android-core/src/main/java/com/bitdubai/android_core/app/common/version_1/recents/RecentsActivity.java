@@ -24,7 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatRecentApp;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;

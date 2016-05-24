@@ -10,8 +10,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -21,11 +19,11 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusB
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.sub_app.wallet_factory.R;
 
 import java.util.ArrayList;
@@ -113,11 +111,11 @@ public class AvailableProjectsFragmentOld extends AbstractFermatFragment impleme
      * @return
      */
 
-    private WalletNavigationStructure startWalletNavigationStructure() {
+    private AppNavigationStructure startWalletNavigationStructure() {
 
         Activity runtimeActivity;
         Fragment runtimeFragment;
-        WalletNavigationStructure runtimeWalletNavigationStructure;
+        AppNavigationStructure runtimeAppNavigationStructure;
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MainMenu runtimeMainMenu;
@@ -129,18 +127,16 @@ public class AvailableProjectsFragmentOld extends AbstractFermatFragment impleme
 
         String publicKey;
 
-        runtimeWalletNavigationStructure = new WalletNavigationStructure();
-        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
-        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeAppNavigationStructure = new AppNavigationStructure();
         publicKey = "test_wallet";
-        runtimeWalletNavigationStructure.setPublicKey(publicKey);
-        //listWallets.put(publicKey, runtimeWalletNavigationStructure);
+        runtimeAppNavigationStructure.setPublicKey(publicKey);
+        //listWallets.put(publicKey, runtimeAppNavigationStructure);
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#8bba9e");
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
+        runtimeAppNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("bitDubai bitcoin Wallet");
@@ -307,7 +303,7 @@ public class AvailableProjectsFragmentOld extends AbstractFermatFragment impleme
         runtimeActivity.setColor("#8bba9e");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
 
-        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeAppNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("bitdubai bitcoin Wallet");
@@ -371,7 +367,7 @@ public class AvailableProjectsFragmentOld extends AbstractFermatFragment impleme
         //fin navigation
 
 
-        return runtimeWalletNavigationStructure;
+        return runtimeAppNavigationStructure;
     }
 
     @Override

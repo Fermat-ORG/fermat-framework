@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_my_identity">
+
+
+    <RelativeLayout
+        android:id="@+id/aai_layout_user_image"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/aai_artist_image"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/bg_circular_other_profile"
+            tools:ignore="ContentDescription"
+
+            />
+        <View
+            android:id="@+id/warning_cirlcle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/warnning_circle"/>
+
+
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/warning_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="missing picture"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/aai_layout_user_image"
+        android:textStyle="bold"
+        android:textColor="#DF0101"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/aai_layout_user_image"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:id="@+id/aai_linearLayout"
+        android:weightSum="1"
+        android:layout_above="@+id/create_art_artist_identity">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@android:color/transparent">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/aai_username_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:background="@android:color/transparent"
+                android:text="Alias"
+                android:textColor="#919090"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
+
+            <EditText
+                android:id="@+id/aai_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Username"
+                android:lines="1"
+                android:padding="8dp"
+                android:singleLine="true"
+                android:textColor="@android:color/black"
+                android:textColorHint="@android:color/darker_gray"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText"
+                android:layout_below="@+id/aai_username_label"
+                android:layout_alignParentStart="true" />
+
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="349dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <!--android:entries="@array/externalPlatforms"/>-->
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/aai_external_identity_layout"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:paddingTop="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/aai_external_platform_label"
+                    android:text="External Platform"
+                    android:textColor="#919090"
+                    tools:ignore="HardcodedText"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentStart="true" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/aai_external_platform"
+                    android:spinnerMode="dropdown"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/aai_external_platform_label"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:paddingTop="15dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/aai_userIdentityName_label"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:text="External Identity"
+                    android:textColor="#919090"
+                    tools:ignore="HardcodedText"
+                    android:layout_below="@+id/aai_external_platform"
+                    android:layout_alignParentLeft="true" />
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/aai_userIdentityName"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/aai_userIdentityName_label"
+                    android:layout_alignParentLeft="true"
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_exposureLevel_label"
+                    android:text="Exposure Level"
+                    android:textStyle="bold"
+                    android:textColor="#919090"
+                    android:layout_below="@+id/aai_userIdentityName"
+                    tools:ignore="HardcodedText"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_artistAcceptConnectionsType_label"
+                    android:text="Connections Type"
+                    android:textColor="#919090"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText"
+                    android:layout_alignBaseline="@+id/art_exposureLevel_label"
+                    android:layout_toRightOf="@+id/art_exposureLevel_label"
+
+                    android:paddingLeft="15dp"/>
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_exposureLevel"
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"
+                    android:layout_below="@+id/art_exposureLevel_label"
+
+                    android:spinnerMode="dropdown"
+                    />
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_artistAcceptConnectionsType"
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"
+                    android:layout_alignBaseline="@+id/art_exposureLevel"
+                    android:layout_toRightOf="@+id/art_exposureLevel"
+                    android:paddingStart="30dp"
+
+                    android:spinnerMode="dropdown"
+                    />
+            </RelativeLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/create_art_artist_identity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:background="#0072bc"
+        android:text="@string/create"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+</RelativeLayout>

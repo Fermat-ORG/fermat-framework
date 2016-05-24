@@ -38,11 +38,20 @@ project(':fermat-dap-plugin-sub-app-module-asset-factory').projectDir = new File
 include ':fermat-dap-plugin-sub-app-module-asset-issuer-community'
 project(':fermat-dap-plugin-sub-app-module-asset-issuer-community').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-issuer-community')
 
+include ':fermat-dap-plugin-sub-app-module-asset-issuer-identity'
+project(':fermat-dap-plugin-sub-app-module-asset-issuer-identity').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-issuer-identity')
+
 include ':fermat-dap-plugin-sub-app-module-asset-user-community'
 project(':fermat-dap-plugin-sub-app-module-asset-user-community').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-user-community')
 
+include ':fermat-dap-plugin-sub-app-module-asset-user-identity'
+project(':fermat-dap-plugin-sub-app-module-asset-user-identity').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-asset-user-identity')
+
 include ':fermat-dap-plugin-sub-app-module-redeem-point-community'
 project(':fermat-dap-plugin-sub-app-module-redeem-point-community').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-redeem-point-community')
+
+include ':fermat-dap-plugin-sub-app-module-redeem-point-identity'
+project(':fermat-dap-plugin-sub-app-module-redeem-point-identity').projectDir = new File('DAP/plugin/sub_app_module/fermat-dap-plugin-sub-app-module-redeem-point-identity')
 
 // middleware
 include ':fermat-dap-plugin-middleware-asset-factory'

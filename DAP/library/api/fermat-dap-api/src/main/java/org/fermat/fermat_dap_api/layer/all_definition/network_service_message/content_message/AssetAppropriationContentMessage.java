@@ -2,6 +2,7 @@ package org.fermat.fermat_dap_api.layer.all_definition.network_service_message.c
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageType;
 
 import java.util.UUID;

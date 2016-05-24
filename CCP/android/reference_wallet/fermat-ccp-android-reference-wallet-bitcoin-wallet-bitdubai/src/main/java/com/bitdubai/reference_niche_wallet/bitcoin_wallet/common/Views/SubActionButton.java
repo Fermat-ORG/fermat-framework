@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
@@ -25,7 +26,7 @@ public class SubActionButton extends LinearLayout {
     public static final int THEME_LIGHTER = 2;
     public static final int THEME_DARKER = 3;
 
-    public SubActionButton(Context context, LayoutParams layoutParams, int theme, Drawable backgroundDrawable, View contentView, LayoutParams contentParams,String text) {
+    public SubActionButton(Context context, LayoutParams layoutParams, int theme, Drawable backgroundDrawable, View contentView, LayoutParams contentParams,String text, int color) {
         super(context);
         //setLayoutParams(layoutParams);
         frameLayout = new FrameLayout(context);
@@ -44,9 +45,12 @@ public class SubActionButton extends LinearLayout {
         textView.setText(text);
         textView.setGravity(Gravity.CENTER_VERTICAL);
         textView.setTextColor(Color.WHITE);
+        textView.setBackgroundColor(color);
         LinearLayout.LayoutParams lps_text = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         lps_text.topMargin = 22;
         textView.setLayoutParams(lps_text);
+        int padding = FermatScreenCalculator.getPx(context, 2);
+        textView.setPadding(padding, 0, padding, 0);
 
         setOrientation(HORIZONTAL);
         addView(textView);
@@ -124,6 +128,7 @@ public class SubActionButton extends LinearLayout {
         private View contentView;
         private LayoutParams contentParams;
         private String text;
+        private int color;
 
         public Builder(Context context) {
             this.context = context;
@@ -167,6 +172,11 @@ public class SubActionButton extends LinearLayout {
             return this;
         }
 
+        public Builder setTextBackgroundColor(int color) {
+            this.color = color;
+            return this;
+        }
+
         public SubActionButton build() {
             return new SubActionButton(context,
                     layoutParams,
@@ -174,7 +184,8 @@ public class SubActionButton extends LinearLayout {
                     backgroundDrawable,
                     contentView,
                     contentParams,
-                    text);
+                    text,
+                    color);
         }
     }
 }

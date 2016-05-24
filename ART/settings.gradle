@@ -1,5 +1,5 @@
 /**
- * Please keep the elements ordered alphabetically.
+ * Please, keep the elements ordered alphabetically.
  * -Type (addon/android/plugin)
  * -Layer name.
  * -Name.
@@ -12,10 +12,6 @@ include ':fermat-art-core'
 project(':fermat-art-core').projectDir = new File('ART/library/core/fermat-art-core')
 
 //Android
-
-//Android-Reference Wallet
-include ':fermat-art-android-reference-wallet-fan-wallet-bitdubai'
-project(':fermat-art-android-reference-wallet-fan-wallet-bitdubai').projectDir = new File('ART/android/reference_wallet/fermat-art-android-reference-wallet-fan-wallet-bitdubai')
 
 //Android-sub-app-music player
 include ':fermat-art-android-sub-app-music-player-bitdubai'

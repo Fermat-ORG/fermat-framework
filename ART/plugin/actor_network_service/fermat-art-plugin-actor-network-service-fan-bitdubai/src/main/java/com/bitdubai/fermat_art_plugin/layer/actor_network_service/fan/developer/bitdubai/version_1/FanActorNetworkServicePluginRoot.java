@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
@@ -35,17 +36,22 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.ut
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.event_handler.FanCustomeP2PCompletedConnectionRegistrationEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.structure.FanActorNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by Gabriel Araujo 1/04/2016.
@@ -60,6 +66,13 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
     FanActorNetworkServiceDao fanActorNetworkServiceDao;
     
     FanActorNetworkServiceManager fanActorNetworkServiceManager;
+
+    /**
+     * Hold the listeners references
+     */
+    private List<FermatEventListener> listenersAdded;
+
+    private ExecutorService executor;
     /**
      * Constructor of the Network Service.
      */
@@ -73,6 +86,9 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
                 "Fan",
                 null
         );
+
+        listenersAdded = new ArrayList<>();
+        executor = Executors.newSingleThreadExecutor();
     }
 
     /**
@@ -95,6 +111,11 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
                     getPluginVersionReference()
             );
 
+            FermatEventListener fermatEventListener = eventManager.getNewListener(P2pEventType.COMPLETE_COMPONENT_REGISTRATION_NOTIFICATION);
+            fermatEventListener.setEventHandler(new FanCustomeP2PCompletedConnectionRegistrationEventHandler(this));
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
         } catch(final CantInitializeDatabaseException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -113,6 +134,8 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
         fanActorNetworkServiceManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().pause();
 
+        executor.shutdownNow();
+
         super.pause();
     }
 
@@ -121,7 +144,7 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
 
         // resume connections manager.
         getCommunicationNetworkServiceConnectionManager().resume();
-
+        executor = Executors.newSingleThreadExecutor();
         super.resume();
     }
 
@@ -130,7 +153,7 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
 
         fanActorNetworkServiceManager.setPlatformComponentProfile(null);
         getCommunicationNetworkServiceConnectionManager().stop();
-
+        executor.shutdownNow();
         super.stop();
     }
 
@@ -339,17 +362,45 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
     protected void onNetworkServiceRegistered() {
 
         fanActorNetworkServiceManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
+        runExposeIdentityThread();
         //testCreateAndList();
 
     }
 
-    private void testCreateAndList(){
+    @Override
+    protected void onClientSuccessfulReconnect() {
+        runExposeIdentityThread();
+    }
+
+    public final void runExposeIdentityThread(){
+
+        final PluginVersionReference pluginReference = getPluginVersionReference();
+
+        if(fanActorNetworkServiceManager.areIdentityToExpose()){
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(3000);
+                        fanActorNetworkServiceManager.exposeIdentitiesInWait();
+                    } catch (CantExposeIdentityException | InterruptedException e) {
+                        errorManager.reportUnexpectedPluginException(pluginReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    }
+
+
+    private void testCreateAndList() {
         ECCKeyPair identity = new ECCKeyPair();
         try {
-            fanActorNetworkServiceManager.exposeIdentity(new FanExposingData(identity.getPublicKey(), "El Gabo fan", new byte[0]));
+            fanActorNetworkServiceManager.exposeIdentity(new FanExposingData(identity.getPublicKey(), "El Gabo fan", ""));
             ActorSearch<FanExposingData> artistActorNetworkServiceSearch = fanActorNetworkServiceManager.getSearch();
             List<FanExposingData> artistExposingDatas = artistActorNetworkServiceSearch.getResult(PlatformComponentType.ART_ARTIST);
-            for (FanExposingData artistExposingData:
+            for (FanExposingData artistExposingData :
                     artistExposingDatas) {
                 System.out.println("#############################\nArtistas registrados:"+artistExposingData.getAlias()+"\nPublicKey:"+artistExposingData.getPublicKey());
             }
