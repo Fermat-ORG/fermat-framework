@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
@@ -112,7 +113,7 @@ public class ConnectionsWorldFragment extends
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = settingsManager.loadAndGetSettings("123456789");
+                    appSettings = settingsManager.loadAndGetSettings("public_key_art_fan_community");
                 }
 
             } catch (Exception e) {
@@ -126,7 +127,7 @@ public class ConnectionsWorldFragment extends
                     if (appSession.getAppPublicKey()!=null){
                         settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        settingsManager.persistSettings("123456789", appSettings);
+                        settingsManager.persistSettings("public_key_art_fan_community", appSettings);
                     }
                 }
             }
@@ -355,10 +356,25 @@ public class ConnectionsWorldFragment extends
             updateNotificationsBadge(count);
         }
     }
-
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
         getActivity().invalidateOptionsMenu();
+    }
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try
+        {
+            //update intra user list
+            if(code.equals(FanActorConnectionNotificationType.ACTOR_CONNECTED.getCode())){
+                invalidate();
+                onRefresh();
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
 }
