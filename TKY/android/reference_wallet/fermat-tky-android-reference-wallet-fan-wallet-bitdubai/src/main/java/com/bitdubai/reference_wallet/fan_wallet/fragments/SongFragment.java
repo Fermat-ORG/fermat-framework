@@ -751,10 +751,13 @@ public class SongFragment extends AbstractFermatFragment  {
 
     void cancelSong(int position){
         try {
+            System.out.println("TKY_Cancell process");
             if(downloadThread !=null){
+                System.out.println("TKY_downloadthread not null");
                 downloadThread.cancel(true);
             }
             else if(syncThread !=null){
+                System.out.println("TKY_syncthread not null");
                 myCancelHandler.post(myRunnableCancel);
             }
 

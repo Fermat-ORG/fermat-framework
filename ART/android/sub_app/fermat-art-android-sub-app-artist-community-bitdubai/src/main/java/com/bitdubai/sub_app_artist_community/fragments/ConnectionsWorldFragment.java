@@ -31,6 +31,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.enums.FanActorConnectionNotificationType;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -114,7 +116,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = settingsManager.loadAndGetSettings("123456789");
+                    appSettings = settingsManager.loadAndGetSettings("sub_app_art_artist_community");
                 }
 
             } catch (Exception e) {
@@ -128,7 +130,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                     if (appSession.getAppPublicKey()!=null){
                         settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        settingsManager.persistSettings("123456789", appSettings);
+                        settingsManager.persistSettings("sub_app_art_artist_community", appSettings);
                     }
                 }
             }
@@ -373,6 +375,24 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try
+        {
+            //update intra user list
+            if(code.equals(ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode())){
+                invalidate();
+                onRefresh();
+            }
+
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 }
 
 

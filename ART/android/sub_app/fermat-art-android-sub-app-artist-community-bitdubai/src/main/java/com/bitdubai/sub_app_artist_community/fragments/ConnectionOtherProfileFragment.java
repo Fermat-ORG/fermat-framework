@@ -270,7 +270,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 onBackPressed();
                 } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                    Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
                 }
         }
     }

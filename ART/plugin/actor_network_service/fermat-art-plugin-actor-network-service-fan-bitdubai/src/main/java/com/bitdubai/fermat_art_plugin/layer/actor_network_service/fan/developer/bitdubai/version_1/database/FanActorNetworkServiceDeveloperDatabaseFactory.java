@@ -152,6 +152,7 @@ public final class FanActorNetworkServiceDeveloperDatabaseFactory {
                 connectionNewsColumns.add(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
                 connectionNewsColumns.add(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
                 connectionNewsColumns.add(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
+                connectionNewsColumns.add(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_SENT_COUNT_COLUMN_NAME    );
                 connectionNewsColumns.add(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             );
                 /**
                  * Table Connection News addition.

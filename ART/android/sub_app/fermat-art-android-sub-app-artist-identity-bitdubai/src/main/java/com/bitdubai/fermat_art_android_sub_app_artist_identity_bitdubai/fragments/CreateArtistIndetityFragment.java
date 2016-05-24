@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -26,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
@@ -42,7 +44,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
@@ -90,7 +91,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private byte[] artistImageByteArray;
     private ArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
-    private Button createButton;
+    private ImageButton createButton;
+    private ImageButton camEditButton;
     private EditText mArtistUserName;
     private ImageView artistImage;
     private RelativeLayout relativeLayout;
@@ -175,6 +177,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         initViews(rootLayout);
         setUpIdentity();
 
+        getToolbar().setBackground(getResources().getDrawable(R.drawable.art_action_bar_background));
+
+
+
+
+
+
         return rootLayout;
     }
 
@@ -193,7 +202,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                 if (identitySelected != null) {
                     loadIdentity();
                     isUpdate = true;
-                    createButton.setText("Save changes");
+                    camEditButton.setImageResource(R.drawable.art_edit_picture_button);
+                    createButton.setImageResource(R.drawable.art_save_changes_button);
                 }
             }
         } catch (Exception e) {
@@ -224,13 +234,16 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         List<String> arraySpinner = new ArrayList<>();
         arraySpinner.add("Select a Platform...");
         arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                getActivity(),
+                R.layout.art_custom_spinner,
+                arraySpinner);
         mArtistExternalPlatform.setAdapter(adapter);
         List<String> arraySpinner2 = new ArrayList<>();
         arraySpinner2.add("Select an Identity...");
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(
                 getActivity(),
-                android.R.layout.simple_spinner_item,
+                R.layout.art_custom_spinner,
                 arraySpinner2
         );
         mArtistExternalName.setAdapter(adapter2);
@@ -253,7 +266,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                             arraySpinner2.addAll(getArtistIdentityByPlatform(externalPlatform));
                             adapter2 = new ArrayAdapter<String>(
                                     getActivity(),
-                                    android.R.layout.simple_spinner_item,
+                                    R.layout.art_custom_spinner,
                                     arraySpinner2
                             );
                         }
@@ -285,7 +298,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             mArtistExternalName.setAdapter(adapter);
         }*/
         arraySpinner = ExposureLevel.getArrayItems();
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.art_custom_spinner,
+                arraySpinner);
         mArtistExposureLevel.setAdapter(adapter);
 
         ExposureLevel[] exposureLevels = ExposureLevel.values();
@@ -297,7 +312,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         }
 
         arraySpinner = ArtistAcceptConnectionsType.getArrayItems();
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.art_custom_spinner,
+                arraySpinner);
         mArtistAcceptConnectionsType.setAdapter(adapter);
 
         ArtistAcceptConnectionsType[] artistAcceptConnectionsTypes = ArtistAcceptConnectionsType.values();
@@ -311,7 +328,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     }
 
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_art_artist_identity);
+        createButton = (ImageButton) layout.findViewById(R.id.create_art_artist_identity);
         mArtistUserName = (EditText) layout.findViewById(R.id.aai_username);
         artistImage = (ImageView) layout.findViewById(R.id.aai_artist_image);
         mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.aai_external_platform);
@@ -319,7 +336,20 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistExposureLevel = (Spinner) layout.findViewById(R.id.art_exposureLevel);
         mArtistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.art_artistAcceptConnectionsType);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.aai_layout_user_image);
-        createButton.setText((!isUpdate) ? "Create" : "Update");
+        camEditButton=(ImageButton)layout.findViewById(R.id.art_cam_edit_image_button);
+
+        mArtistExternalPlatform.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
+        mArtistExternalName.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
+        mArtistExposureLevel.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
+        mArtistAcceptConnectionsType.getBackground().setColorFilter(Color.parseColor("#31C5F2"), PorterDuff.Mode.SRC_ATOP);
+
+        if(!isUpdate){
+            camEditButton.setImageResource(R.drawable.art_add_picture_button);
+            createButton.setImageResource(R.drawable.art_create_button);
+        }else{
+            camEditButton.setImageResource(R.drawable.art_edit_picture_button);
+            createButton.setImageResource(R.drawable.art_save_changes_button);
+        }
         mArtistUserName.requestFocus();
 
 
@@ -367,8 +397,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistExternalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                mArtistExternalName.setBackgroundColor(Color.parseColor(NormalColor));
+            //MIG
+            //    mArtistExternalName.setBackgroundColor(Color.parseColor(NormalColor));
             }
 
             @Override
@@ -381,20 +411,35 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         arraySpinner.add("Select a Platform...");
         arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.art_custom_spinner,
+                arraySpinner);
 
         mArtistExternalPlatform.setAdapter(adapter);
 
         arraySpinner = ExposureLevel.getArrayItems();
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.art_custom_spinner,
+                arraySpinner);
         mArtistExposureLevel.setAdapter(adapter);
 
         arraySpinner = ArtistAcceptConnectionsType.getArrayItems();
-        adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.art_custom_spinner,
+                arraySpinner);
         mArtistAcceptConnectionsType.setAdapter(adapter);
         externalPlatformSpinnerListener();
         mArtistUserName.requestFocus();
         registerForContextMenu(artistImage);
+
+        camEditButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                WarningLabel.setVisibility(View.GONE);
+                CommonLogger.debug(TAG, "Entrando en CamImagenIcon.setOnClickListener");
+                getActivity().openContextMenu(artistImage);
+            }
+        });
 
         artistImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -430,13 +475,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                         }
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Error creating the identity", Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
                         Toast.makeText(getActivity(), "fill required items", Toast.LENGTH_LONG).show();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "The module manager is null", Toast.LENGTH_LONG).show();
                         break;
 
 
@@ -553,13 +598,16 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             UUID externalIdentityID) {
 
         if (ArtistImageBytes == null){
-           // WarningCircle.setVisibility(View.VISIBLE);
+            WarningCircle.setVisibility(View.VISIBLE);
             WarningLabel.setVisibility(View.VISIBLE);
         }
 
         if(mArtistExternalPlatform.getSelectedItemPosition()==0){
             //mArtistExternalPlatform.setBackgroundColor(Color.parseColor(WarningColor));
-        }else{mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));}
+        }else{
+            //MIG
+            //mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
+        }
 
 
         /*
@@ -608,14 +656,15 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
         mArtistExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
+                //MIG
+            //    mArtistExternalPlatform.setBackgroundColor(Color.parseColor(NormalColor));
                 try {
                     if (!updateCheck) {
                         List<String> arraySpinner = new ArrayList<>();
                         arraySpinner.add("Select an Identity...");
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                                 getActivity(),
-                                android.R.layout.simple_spinner_item,
+                                R.layout.art_custom_spinner,
                                 arraySpinner
                         );
                         if (!mArtistExternalPlatform.getSelectedItem().equals(mArtistExternalPlatform.getItemAtPosition(0))) {
@@ -626,7 +675,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                                     arraySpinner.addAll(identityByPlatformList);
                                     adapter = new ArrayAdapter<String>(
                                             getActivity(),
-                                            android.R.layout.simple_spinner_item,
+                                            R.layout.art_custom_spinner,
                                             arraySpinner
                                     );
                                 }
