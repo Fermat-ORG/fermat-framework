@@ -601,10 +601,13 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+            chat.setStatus(ChatStatus.INVISSIBLE);
             DatabaseTableRecord record = getChatRecord(chat);
+            deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
+//            DatabaseTableRecord record = getChatRecord(chat);
 
-            table.deleteRecord(record);
-
+//            table.deleteRecord(record);
+            table.updateRecord(record);
             //I execute the transaction and persist the database side of the chat.
             database.executeTransaction(transaction);
             database.closeDatabase();
@@ -631,14 +634,22 @@ public class ChatMiddlewareDatabaseDao {
             DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
-            DatabaseTableFilter filter = null;
-            List<DatabaseTableRecord> records=getChatData(filter);
-            if(records!=null && !records.isEmpty()){
-                for (DatabaseTableRecord record : records) {
-                    table.deleteRecord(record);
-                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
-                }
+//            DatabaseTableFilter filter = null;
+            List<Chat> chats = getChatList();
+            for(Chat chat : chats){
+                chat.setStatus(ChatStatus.INVISSIBLE);
+                DatabaseTableRecord record = getChatRecord(chat);
+                table.updateRecord(record);
+                deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
             }
+
+//            List<DatabaseTableRecord> records=getChatData(filter);
+//            if(records!=null && !records.isEmpty()){
+//                for (DatabaseTableRecord record : records) {
+//                    table.deleteRecord(record);
+//                    deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
+//                }
+//            }
             //I execute the transaction and persist the database side of the chat.
             database.executeTransaction(transaction);
             database.closeDatabase();
