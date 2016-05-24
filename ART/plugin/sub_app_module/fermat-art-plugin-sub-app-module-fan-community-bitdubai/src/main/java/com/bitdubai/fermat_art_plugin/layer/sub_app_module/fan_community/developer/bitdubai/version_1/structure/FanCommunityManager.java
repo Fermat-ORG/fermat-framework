@@ -79,10 +79,10 @@ public class FanCommunityManager
     private final FanActorConnectionManager            fanActorConnectionManager                ;
     private final FanManager                           fanActorNetworkServiceManager            ;
     private final FanaticIdentityManager               fanaticIdentityManager                   ;
-    private final ErrorManager                         errorManager                             ;
+    //private final ErrorManager                         errorManager                             ;
     private final PluginVersionReference               pluginVersionReference                   ;
 
-    private SettingsManager<FanCommunitySettings> settingsManager                               ;
+    //private SettingsManager<FanCommunitySettings> settingsManager                               ;
 
     private       String                              subAppPublicKey                           ;
 
@@ -93,7 +93,6 @@ public class FanCommunityManager
             final FanActorConnectionManager fanActorConnectionManager,
             final FanManager fanActorNetworkServiceManager,
             final FanaticIdentityManager fanaticIdentityManager,
-            final ErrorManager errorManager,
             final PluginFileSystem pluginFileSystem,
             final UUID pluginId,
             final PluginVersionReference pluginVersionReference,
@@ -104,7 +103,7 @@ public class FanCommunityManager
         this.fanActorConnectionManager                = fanActorConnectionManager                ;
         this.fanActorNetworkServiceManager            = fanActorNetworkServiceManager            ;
         this.fanaticIdentityManager                   = fanaticIdentityManager                   ;
-        this.errorManager                             = errorManager                             ;
+        //this.errorManager                             = errorManager                             ;
         this.pluginVersionReference                   = pluginVersionReference                   ;
         this.artistActorConnectionManager             = artistActorConnectionManager             ;
         this.artistActorNetworkServiceManager         = artistActorNetworkServiceManager         ;
@@ -116,23 +115,27 @@ public class FanCommunityManager
         List<FanActorConnection> actorConnections;
 
         try{
-            worldFanaticList = getFanaticSearch().getResult();
+            worldFanaticList = getFanaticSearch().getResult(
+                    fanActorNetworkServiceManager.getSearch());
         } catch (CantGetFanSearchResult e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListFansException(e, "", "Error in listWorldFan trying to list world Fanatics");
         }
 
-
         try {
 
-            final FanLinkedActorIdentity linkedActorIdentity = new FanLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
+            final FanLinkedActorIdentity linkedActorIdentity = new FanLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType());
             final FanActorConnectionSearch search = fanActorConnectionManager.getSearch(linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
 
         } catch (final CantListActorConnectionsException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListFansException(e, "", "Error trying to list actor connections.");
         }
 
@@ -144,7 +147,12 @@ public class FanCommunityManager
             for(FanActorConnection connectedFan : actorConnections)
             {
                 if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldFanaticList.set(i, new com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils.FanCommunityInformationImpl(worldFanatic.getPublicKey(), worldFanatic.getAlias(), worldFanatic.getImage(), connectedFan.getConnectionState(), connectedFan.getConnectionId()));
+                    worldFanaticList.set(i, new FanCommunityInformationImpl(
+                            worldFanatic.getPublicKey(),
+                            worldFanatic.getAlias(),
+                            worldFanatic.getImage(),
+                            connectedFan.getConnectionState(),
+                            connectedFan.getConnectionId()));
             }
         }
 
@@ -169,12 +177,12 @@ public class FanCommunityManager
             return selectableIdentities;
 
         } catch (final CantListArtistIdentitiesException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesToSelectException(e, "", "Error in DAO trying to list identities.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesToSelectException(e, "", "Unhandled Exception.");
         }    }
 
@@ -182,7 +190,7 @@ public class FanCommunityManager
     public void setSelectedActorIdentity(FanCommunitySelectableIdentity identity) {
         FanCommunitySettings appSettings = null;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
         //If appSettings exist, save identity
@@ -192,9 +200,10 @@ public class FanCommunityManager
             if(identity.getActorType() != null)
                 appSettings.setLastSelectedActorType(identity.getActorType());
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                //TODO: to report error
+                //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
@@ -222,12 +231,12 @@ public class FanCommunityManager
             return linkedFanaticIdentityList;
 
         } catch (final CantListActorConnectionsException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetFanListException("", e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetFanListException("", e, "", "Unhandled Exception.");
         }    }
 
@@ -254,12 +263,12 @@ public class FanCommunityManager
             return linkedFanaticIdentityList;
 
         } catch (final CantListActorConnectionsException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetFanListException("", e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetFanListException("", e, "", "Unhandled Exception.");
         }
     }
@@ -350,12 +359,12 @@ public class FanCommunityManager
             return allActorConnectedList;
 
         } catch (final CantListActorConnectionsException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetFanListException("", e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetFanListException("", e, "", "Unhandled Exception.");
         }    }
 
@@ -387,7 +396,7 @@ public class FanCommunityManager
 
     @Override
     public FanCommunitySearch getFanaticSearch() {
-        return new FanCommunitySearchImpl(fanActorNetworkServiceManager);
+        return new FanCommunitySearchImpl();
     }
 
     @Override
@@ -419,13 +428,16 @@ public class FanCommunityManager
             );
 
         } catch (ConnectionAlreadyRequestedException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestConnectionException(e, "", "Error trying to request the actor connection.");
         } catch (CantRequestActorConnectionException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ActorTypeNotSupportedException(e, "", "Actor type is not supported.");
         } catch (UnsupportedActorTypeException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestConnectionException(e, "", "Unhandled Exception.");
         }
     }
@@ -436,43 +448,49 @@ public class FanCommunityManager
             fanActorConnectionManager.disconnect(requestId);
 
         } catch (final CantDisconnectFromActorException | UnexpectedConnectionStateException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new FanDisconnectingFailedException("", e, "", "Error trying to disconnect the actor connection.");
         } catch (final ActorConnectionNotFoundException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new FanDisconnectingFailedException("", e, "", "Connection request not found.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new FanDisconnectingFailedException("", e, "", "Unhandled Exception.");
         }
     }
 
     @Override
     public void cancelFan(String fanToCancelPublicKey) throws FanCancellingFailedException {
-
+        //TODO: to implement
     }
 
     @Override
     public List<FanCommunityInformation> getAllFanatics(int max, int offset) throws CantGetFanListException {
-        return null;
+        //TODO: to improve
+        List returnList=new ArrayList();
+        return returnList;
     }
 
     @Override
     public List<FanCommunityInformation> getFansWaitingYourAcceptance(int max, int offset) throws CantGetFanListException {
-        return null;
+        //TODO: to improve
+        List returnList=new ArrayList();
+        return returnList;
     }
 
     @Override
     public List<FanCommunityInformation> getFansWaitingTheirAcceptance(int max, int offset) throws CantGetFanListException {
-        return null;
+        //TODO: to improve
+        List returnList=new ArrayList();
+        return returnList;
     }
 
     @Override
     public void login(String fanPublicKey) throws CantLoginFanException {
-
+        //TODO: to implement
     }
 
     /**
@@ -494,6 +512,40 @@ public class FanCommunityManager
                 actorPublicKey);
     }
 
+    public ConnectionState getRequestActorConnectionState(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        List<FanActorConnection> fanActorConnectionList = getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
+        boolean isActorConnectExists = fanActorConnectionList!=null&&!fanActorConnectionList.isEmpty();
+        if(isActorConnectExists){
+            return fanActorConnectionList.get(0).getConnectionState();
+        }else{
+            return ConnectionState.INTRA_USER_NOT_FOUND;
+        }
+    }
+
+    public UUID getConnectionId(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        List<FanActorConnection> fanActorConnectionList = getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
+        boolean isActorConnectExists = fanActorConnectionList!=null&&!fanActorConnectionList.isEmpty();
+        if(isActorConnectExists){
+            return fanActorConnectionList.get(0).getConnectionId();
+        }else{
+            throw new CantGetActorConnectionException(
+                    "Cannot find the connection ID",
+                    "The actor connection doesn't exist");
+        }
+    }
+
     /*@Override
     public SettingsManager<FanCommunitySettings> getSettingsManager() {
 
@@ -510,10 +562,11 @@ public class FanCommunityManager
     @Override
     public FanCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         //Try to get appSettings
-        FanCommunitySettings appSettings = null;
+        FanCommunitySettings appSettings;
+        FanCommunitySelectableIdentity selectedIdentity = null;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ return null; }
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
+        }catch (Exception e){ return selectedIdentity; }
 
 
         //Get all Fanatics identities on local device
@@ -544,7 +597,7 @@ public class FanCommunityManager
 
             if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null) {
 
-                FanCommunitySelectableIdentityImpl selectedIdentity = null;
+
 
                 if(lastSelectedActorType == Actors.ART_ARTIST)
                 {
@@ -574,7 +627,8 @@ public class FanCommunityManager
         }
 
         isDialog = true;
-        return null;
+        selectedIdentity = null;
+        return selectedIdentity;
     }
 
     @Override

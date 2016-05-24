@@ -10,7 +10,6 @@ import android.widget.ImageButton;
 
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
-import com.bitdubai.android_core.app.common.version_1.dialogs.WelcomeScrennDialog;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsCallback;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsItem;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSlider;
@@ -46,13 +45,19 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
     private WeakReference<FermatActivity> fermatActivity;
     private View.OnClickListener onClickListener;
     private SettingsSlider settingsSlider;
-    private WelcomeScrennDialog welcomeScreenDialog;
     private AppStatusCallbackChanges appStatusListener;
     AndroidCoreSettings androidCoreSettings;
 
+    private boolean isStart;
+
+    int cx;
+    int cy;
+    int radius;
+
     public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
-        this.hidden = false;
+        this.hidden = true;
         this.mRevealView = mRevealView;
+        this.isStart = false;
         this.fermatActivity = new WeakReference<FermatActivity>(activity);
     }
 
@@ -61,6 +66,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
         onClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 int cx = (mRevealView.getLeft() + mRevealView.getRight());
                 //                int cy = (mRevealView.getTop() + mRevealView.getBottom())/2;
                 int cy = mRevealView.getBottom();
@@ -81,6 +87,10 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                         mRevealView.setVisibility(View.VISIBLE);
                         animator.start();
                         hidden = false;
+                        if (!isStart){
+                            onClickListener.onClick(null);
+                            isStart = true;
+                        }
                     } else {
                         animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
                             @Override
@@ -136,43 +146,8 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
             }
         };
         fermatActivity.get().findViewById(R.id.btn_settings_bottom_menu).setOnClickListener(onClickListener);
-
-
         backgroundShadow.setOnClickListener(onClickListener);
-
         initRecyclerview();
-
-
-//        final AndroidCoreModule androidCoreModule = FermatSystemUtils.getAndroidCoreModule();
-
-//        if(appStatusListener==null){
-//            appStatusListener = new AppStatusListener(fermatActivity.get(),btn_fermat_apps_status);
-//        }
-
-//        try {
-//            AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
-//            switch (androidCoreSettings.getAppsStatus()){
-//                case RELEASE:
-//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
-//                    break;
-//                case BETA:
-//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.beta_icon);
-//                    break;
-//                case ALPHA:
-//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.alfa_icon);
-//                    break;
-//                case DEV:
-//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.developer_icon);
-//                    break;
-//                default:
-//                    btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
-//                    break;
-//            }
-//        } catch (CantGetSettingsException | SettingsNotFoundException e) {
-//            btn_fermat_apps_status.setBackgroundResource(R.drawable.relese_icon);
-//            // e.printStackTrace();
-//        }
-
     }
 
     private void initRecyclerview(){

@@ -41,9 +41,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
@@ -252,24 +249,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 //                Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
                 Activity activity = appStructure.getLastActivity();
 //                Log.i("APP ACTIVITY loadUI", "getLastActivity " + System.currentTimeMillis());
-                executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            ActiveActorIdentityInformation activeActorIdentityInformation = fermatSession.getModuleManager().getSelectedActorIdentity();
-                            fermatAppConnection.setActiveIdentity(activeActorIdentityInformation);
-                            if (activeActorIdentityInformation==null){
-                                Log.e(TAG,"activeActorIdentityInformation null, please report this if you have an identity created");
-                            }
-                            refreshSideMenu(fermatAppConnection);
-                        } catch (CantGetSelectedActorIdentityException e) {
-                            e.printStackTrace();
-                        } catch (ActorIdentityNotSelectedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
 //                Log.i("APP ACTIVITY loadUI", "getSelectedActorIdentity " + System.currentTimeMillis());
                 loadBasicUI(activity, fermatAppConnection);
 //                Log.i("APP ACTIVITY loadUI", "loadBasicUI " + System.currentTimeMillis());

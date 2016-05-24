@@ -33,7 +33,7 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader() {
         try {
 
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()

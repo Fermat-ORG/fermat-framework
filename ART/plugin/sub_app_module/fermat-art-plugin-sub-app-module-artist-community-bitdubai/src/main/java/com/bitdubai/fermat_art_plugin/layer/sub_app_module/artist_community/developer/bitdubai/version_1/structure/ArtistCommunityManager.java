@@ -88,11 +88,11 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
     private final FanActorConnectionManager                     fanActorConnectionManager             ;
     private final FanManager                                    fanActorNetworkServiceManager         ;
     private final FanaticIdentityManager                        fanaticIdentityManager                ;
-    private final ErrorManager                                  errorManager                          ;
+    //private final ErrorManager                                  errorManager                          ;
     private final PluginVersionReference                        pluginVersionReference                ;
 
     private       String                                        subAppPublicKey                       ;
-    private       SettingsManager<ArtistCommunitySettings>      settingsManager                       ;
+    //private       SettingsManager<ArtistCommunitySettings>      settingsManager                       ;
 
     private boolean isDialog = true;
 
@@ -102,7 +102,6 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             final ArtistActorConnectionManager artistActorConnectionManager,
             final ArtistManager artistActorNetworkServiceManager,
             final FanaticIdentityManager fanaticIdentityManager,
-            final ErrorManager errorManager,
             final PluginFileSystem pluginFileSystem,
             final UUID pluginId,
             final PluginVersionReference pluginVersionReference,
@@ -114,28 +113,45 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
         this.artistActorConnectionManager           = artistActorConnectionManager          ;
         this.artistActorNetworkServiceManager       = artistActorNetworkServiceManager      ;
         this.fanaticIdentityManager                 = fanaticIdentityManager                ;
-        this.errorManager                           = errorManager                          ;
+        //this.errorManager                           = errorManager                          ;
         this.pluginVersionReference                 = pluginVersionReference                ;
         this.fanActorNetworkServiceManager          = fanActorNetworkServiceManager         ;
         this.fanActorConnectionManager              = fanActorConnectionManager             ;
     }
 
+    /**
+     * This method returns the World Artist list.
+     * @param selectedIdentity
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListArtistsException
+     */
     @Override
-    public List<ArtistCommunityInformation> listWorldArtists(ArtistCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListArtistsException {
+    public List<ArtistCommunityInformation> listWorldArtists(
+            ArtistCommunitySelectableIdentity selectedIdentity,
+            int max,
+            int offset) throws CantListArtistsException {
         List<ArtistCommunityInformation> worldArtistList;
         List<ArtistActorConnection> actorConnections;
 
         try{
-            worldArtistList = getArtistSearch().getResult();
+            worldArtistList = getArtistSearch().getResult(artistActorNetworkServiceManager.getSearch());
         } catch (CantGetArtistSearchResult e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantListArtistsException(e, "", "Error in listWorldArtists trying to list world Artists");
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(
+                    e,
+                    "",
+                    "Error in listWorldArtists trying to list world Artists");
         }
 
 
         try {
 
-            final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
+            final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType());
             final ArtistActorConnectionSearch search = artistActorConnectionManager.getSearch(linkedActorIdentity);
             //search.addConnectionState(ConnectionState.CONNECTED);
             //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
@@ -143,8 +159,12 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
 
         } catch (final CantListActorConnectionsException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantListArtistsException(e, "", "Error trying to list actor connections.");
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListArtistsException(
+                    e,
+                    "",
+                    "Error trying to list actor connections.");
         }
 
         ArtistCommunityInformation worldArtist;
@@ -154,7 +174,12 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             for(ArtistActorConnection connectedArtist : actorConnections)
             {
                 if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey()))
-                    worldArtistList.set(i, new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(worldArtist.getPublicKey(), worldArtist.getAlias(), worldArtist.getImage(), connectedArtist.getConnectionState(), connectedArtist.getConnectionId()));
+                    worldArtistList.set(i, new ArtistCommunityInformationImpl(
+                            worldArtist.getPublicKey(),
+                            worldArtist.getAlias(),
+                            worldArtist.getImage(),
+                            connectedArtist.getConnectionState(),
+                            connectedArtist.getConnectionId()));
             }
         }
         return worldArtistList;
@@ -182,12 +207,12 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             return selectableIdentities;
 
         } catch (final CantListArtistIdentitiesException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesToSelectException(e, "", "Error in DAO trying to list identities.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListIdentitiesToSelectException(e, "", "Unhandled Exception.");
         }    }
 
@@ -196,7 +221,7 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
         //Try to get appSettings
         ArtistCommunitySettings appSettings = null;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
         //If appSettings exist, save identity
@@ -206,26 +231,36 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             if(identity.getActorType() != null)
                 appSettings.setLastSelectedActorType(identity.getActorType());
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                //TODO: to report error
+                //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
 
     @Override
     public ArtistCommunitySearch getArtistSearch() {
-        return new ArtistCommunitySearchImpl(artistActorNetworkServiceManager);
+        ArtistCommunitySearch artistCommunitySearch = new ArtistCommunitySearchImpl();
+        return artistCommunitySearch;
+        //return artistCommunitySearch.getResult(artistActorNetworkServiceManager.getSearch());
 
     }
 
     @Override
     public ArtistCommunitySearch searchConnectedArtist(ArtistCommunitySelectableIdentity selectedIdentity) {
-        return null;
+        ArtistCommunitySearch artistCommunitySearch = new ArtistCommunitySearchImpl();
+        //TODO: to improve
+        return artistCommunitySearch;
     }
 
     @Override
-    public void requestConnectionToArtist(ArtistCommunitySelectableIdentity selectedIdentity, ArtistCommunityInformation artistToContact) throws CantRequestConnectionException, ActorConnectionAlreadyRequestedException, ActorTypeNotSupportedException {
+    public void requestConnectionToArtist(
+            ArtistCommunitySelectableIdentity selectedIdentity,
+            ArtistCommunityInformation artistToContact)
+            throws CantRequestConnectionException,
+            ActorConnectionAlreadyRequestedException,
+            ActorTypeNotSupportedException {
         try {
 
             final ActorIdentityInformation actorSending = new ActorIdentityInformation(
@@ -248,20 +283,20 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             );
 
         } catch (final CantRequestActorConnectionException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestConnectionException(e, "", "Error trying to request the actor connection.");
         } catch (final UnsupportedActorTypeException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ActorTypeNotSupportedException(e, "", "Actor type is not supported.");
         } catch (final ConnectionAlreadyRequestedException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ActorConnectionAlreadyRequestedException(e, "", "Connection already requested.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRequestConnectionException(e, "", "Unhandled Exception.");
         }
     }
@@ -274,16 +309,16 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
 
         } catch (final CantAcceptActorConnectionRequestException |
                 UnexpectedConnectionStateException        e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptRequestException(e, "", "Error trying to accept the actor connection.");
         } catch (final ActorConnectionNotFoundException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ConnectionRequestNotFoundException(e, "", "Connection already requested.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAcceptRequestException(e, "", "Unhandled Exception.");
         }
     }
@@ -296,16 +331,16 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
 
         } catch (final CantDenyActorConnectionRequestException |
                 UnexpectedConnectionStateException      e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ArtistConnectionDenialFailedException(e, "", "Error trying to deny the actor connection.");
         } catch (final ActorConnectionNotFoundException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ConnectionRequestNotFoundException(e, "", "Connection request not found.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ArtistConnectionDenialFailedException(e, "", "Unhandled Exception.");
         }
     }
@@ -318,16 +353,16 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
 
         } catch (final CantDisconnectFromActorException   |
                 UnexpectedConnectionStateException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ArtistDisconnectingFailedException(e, "", "Error trying to disconnect the actor connection.");
         } catch (final ActorConnectionNotFoundException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ConnectionRequestNotFoundException(e, "", "Connection request not found.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ArtistDisconnectingFailedException(e, "", "Unhandled Exception.");
         }
     }
@@ -340,16 +375,16 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
 
         } catch (final CantCancelActorConnectionRequestException |
                 UnexpectedConnectionStateException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ArtistCancellingFailedException(e, "", "Error trying to disconnect the actor connection.");
         } catch (final ActorConnectionNotFoundException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ConnectionRequestNotFoundException(e, "", "Connection request not found.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new ArtistCancellingFailedException(e, "", "Unhandled Exception.");
         }
     }
@@ -459,12 +494,12 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             return allActorConnectedList;
 
         } catch (final CantListActorConnectionsException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Unhandled Exception.");
         }    }
 
@@ -491,12 +526,12 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             return artistCommunityInformationList;
 
         } catch (final CantListActorConnectionsException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Unhandled Exception.");
         }    }
 
@@ -523,12 +558,12 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             return artistCommunityInformationList;
 
         } catch (final CantListActorConnectionsException e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Error trying to list actor connections.");
         } catch (final Exception e) {
-
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantListArtistsException(e, "", "Unhandled Exception.");
         }    }
 
@@ -551,7 +586,8 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
             }
 
         } catch (final CantListActorConnectionsException e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            //TODO: to report error
+            //this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantValidateConnectionStateException(e, "", "Error trying to list actor connections.");
         } catch (Exception e) {}
 
@@ -573,9 +609,10 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
     public ArtistCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         //Try to get appSettings
         ArtistCommunitySettings appSettings = null;
+        ArtistCommunitySelectableIdentity selectedIdentity = null;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ return null; }
+            appSettings = loadAndGetSettings(this.subAppPublicKey);
+        }catch (Exception e){ return selectedIdentity; }
 
 
         //Get all Fanatics identities on local device
@@ -607,7 +644,7 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
 
             if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null) {
 
-                ArtistCommunitySelectableIdentityImpl selectedIdentity = null;
+                //ArtistCommunitySelectableIdentityImpl selectedIdentity = null;
 
                 if(lastSelectedActorType == Actors.ART_ARTIST)
                 {
@@ -637,7 +674,8 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
         }
 
         isDialog = true;
-        return null;    }
+        selectedIdentity=null;
+        return selectedIdentity;    }
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
@@ -801,6 +839,40 @@ public class ArtistCommunityManager extends ModuleManagerImpl<ArtistCommunitySet
                 return key;
             }
             return ArtExternalPlatform.UNDEFINED;
+        }
+    }
+
+    public ConnectionState getRequestActorConnectionState(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        List<ArtistActorConnection> fanActorConnectionList = getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
+        boolean isActorConnectExists = fanActorConnectionList!=null&&!fanActorConnectionList.isEmpty();
+        if(isActorConnectExists){
+            return fanActorConnectionList.get(0).getConnectionState();
+        }else{
+            return ConnectionState.INTRA_USER_NOT_FOUND;
+        }
+    }
+
+    public UUID getConnectionId(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException{
+        List<ArtistActorConnection> fanActorConnectionList = getRequestActorConnections(
+                linkedIdentityPublicKey,
+                linkedIdentityActorType,
+                actorPublicKey);
+        boolean isActorConnectExists = fanActorConnectionList!=null&&!fanActorConnectionList.isEmpty();
+        if(isActorConnectExists){
+            return fanActorConnectionList.get(0).getConnectionId();
+        }else{
+            throw new CantGetActorConnectionException(
+                    "Cannot find the connection ID",
+                    "The actor connection doesn't exist");
         }
     }
 }
