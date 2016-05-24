@@ -604,10 +604,25 @@ public class ChatMiddlewareDatabaseDao {
             chat.setStatus(ChatStatus.INVISSIBLE);
             DatabaseTableRecord record = getChatRecord(chat);
             deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
+
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chat.getChatId().toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
+
+            if (isNewRecord(table, filter))
+                transaction.addRecordToInsert(table, record);
+            else {
+                table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                transaction.addRecordToUpdate(table, record);
+            }
+
 //            DatabaseTableRecord record = getChatRecord(chat);
 
 //            table.deleteRecord(record);
-            table.updateRecord(record);
+
+            //transaction.addRecordToUpdate(par, record);
+            //table.updateRecord(record);
             //I execute the transaction and persist the database side of the chat.
             database.executeTransaction(transaction);
             database.closeDatabase();
