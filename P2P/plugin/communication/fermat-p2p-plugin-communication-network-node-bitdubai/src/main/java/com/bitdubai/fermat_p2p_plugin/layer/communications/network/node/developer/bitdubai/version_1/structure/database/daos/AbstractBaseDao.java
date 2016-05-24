@@ -679,7 +679,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
             final DatabaseTable table = this.getDatabaseTable();
             table.loadToMemory();
             if (table.getRecords() != null && !table.getRecords().isEmpty())
-                table.deleteRecord(table.getRecords().get(0));
+                table.deleteAllRecord();
 
         } catch (CantDeleteRecordException e) {
 

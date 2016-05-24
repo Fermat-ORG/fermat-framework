@@ -233,6 +233,17 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM, pluginFileSystem);
             NodeContext.add(NodeContextItem.PLUGIN_ROOT, this);
 
+
+            /*
+             * Delete all checked in components
+             * when node starts
+             */
+            daoFactory.getCheckedInActorDao().deleteAll();
+            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
+            daoFactory.getCheckedInClientDao().deleteAll();
+            daoFactory.getCheckedNetworkServicesHistoryDao().deleteAll();
+            daoFactory.getCheckedActorsHistoryDao().deleteAll();
+
             /*
              * Process the node catalog
              */
