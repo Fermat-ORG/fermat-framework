@@ -212,7 +212,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
 //                }
 //
 //                androidCoreSettings.setIsErrorReportEnabled(!androidCoreSettings.isErrorReportEnabled());
-                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_EXPORT_KEY.getCode(),null,null);
+                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_IMPORT_KEY.getCode(),null,null);
                 break;
         }
     }

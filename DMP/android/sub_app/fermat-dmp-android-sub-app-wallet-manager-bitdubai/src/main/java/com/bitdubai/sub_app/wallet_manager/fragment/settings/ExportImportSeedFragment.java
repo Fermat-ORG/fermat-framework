@@ -50,10 +50,15 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSess
         spinnerArray.add("Fermat");
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, spinnerArray);
         spinnerKeyType.setAdapter(spinnerArrayAdapter);
-        spinnerKeyType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        spinnerKeyType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 vaultType = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
         btn_show_seed.setOnClickListener(new View.OnClickListener() {
@@ -67,8 +72,9 @@ public class ExportImportSeedFragment extends AbstractFermatFragment<DesktopSess
                             getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    txt_mnemonic.setText("");
                                     for (String s : mnemonicCode) {
-                                        txt_mnemonic.append(s+" ");
+                                        txt_mnemonic.append(s + " ");
                                     }
                                 }
                             });
