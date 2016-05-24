@@ -639,6 +639,8 @@ public class ChatMiddlewareDatabaseDao {
             for(Chat chat : chats){
                 chat.setStatus(ChatStatus.INVISSIBLE);
                 DatabaseTableRecord record = getChatRecord(chat);
+                deleteMessagesByChatId(record.getUUIDValue(ChatMiddlewareDatabaseConstants.CHATS_ID_CHAT_COLUMN_NAME));
+                table.updateRecord(record);
             }
 
 //            List<DatabaseTableRecord> records=getChatData(filter);
