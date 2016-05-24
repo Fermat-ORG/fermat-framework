@@ -115,6 +115,7 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
     public List<FanCommunityInformation> listWorldFan(FanCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListFansException {
         List<FanCommunityInformation> worldFanaticList;
         List<FanActorConnection> actorConnections;
+        List<ArtistActorConnection> artistActorConnections;
 
         try{
             worldFanaticList = getFanaticSearch().getResult();
@@ -125,12 +126,24 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
 
         try {
-
-            final FanLinkedActorIdentity linkedActorIdentity = new FanLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
-            final FanActorConnectionSearch search = fanActorConnectionManager.getSearch(linkedActorIdentity);
+            //Fan connections
+            final FanLinkedActorIdentity linkedActorIdentity = new FanLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType());
+            final FanActorConnectionSearch search = fanActorConnectionManager.getSearch(
+                    linkedActorIdentity);
             search.addConnectionState(ConnectionState.CONNECTED);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+            //Artist connections
+            final ArtistLinkedActorIdentity artistLinkedActorIdentity = new ArtistLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType());
+            final ArtistActorConnectionSearch artistSearch = artistActorConnectionManager.getSearch(
+                    artistLinkedActorIdentity);
+            artistSearch.addConnectionState(ConnectionState.CONNECTED);
+
+            artistActorConnections = artistSearch.getResult(Integer.MAX_VALUE, 0);
 
         } catch (final CantListActorConnectionsException e) {
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -142,10 +155,27 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
         for(int i = 0; i < worldFanaticList.size(); i++)
         {
             worldFanatic = worldFanaticList.get(i);
+            //Check connections from Fan Actor Connection
             for(FanActorConnection connectedFan : actorConnections)
             {
                 if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldFanaticList.set(i, new com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.utils.FanCommunityInformationImpl(worldFanatic.getPublicKey(), worldFanatic.getAlias(), worldFanatic.getImage(), connectedFan.getConnectionState(), connectedFan.getConnectionId()));
+                    worldFanaticList.set(i, new FanCommunityInformationImpl(
+                            worldFanatic.getPublicKey(),
+                            worldFanatic.getAlias(),
+                            worldFanatic.getImage(),
+                            connectedFan.getConnectionState(),
+                            connectedFan.getConnectionId()));
+            }
+            //check connection from Artist Actor connections
+            for(ArtistActorConnection connectedFan : artistActorConnections)
+            {
+                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
+                    worldFanaticList.set(i, new FanCommunityInformationImpl(
+                            worldFanatic.getPublicKey(),
+                            worldFanatic.getAlias(),
+                            worldFanatic.getImage(),
+                            connectedFan.getConnectionState(),
+                            connectedFan.getConnectionId()));
             }
         }
 
