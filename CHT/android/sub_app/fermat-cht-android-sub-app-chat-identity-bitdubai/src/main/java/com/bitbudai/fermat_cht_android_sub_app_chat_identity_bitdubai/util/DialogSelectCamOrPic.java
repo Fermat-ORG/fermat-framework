@@ -43,8 +43,8 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
         super.onCreate(savedInstanceState);
         galleryBtn = (ImageView) findViewById(R.id.img_gallery);
         camBtn = (ImageView) findViewById(R.id.img_cam);
-        rotateBtn = (ImageView) findViewById(R.id.img_rotate);
-        rotateBtn.setOnClickListener(this);
+       // rotateBtn = (ImageView) findViewById(R.id.img_rotate);
+      //  rotateBtn.setOnClickListener(this);
         galleryBtn.setOnClickListener(this);
         camBtn.setOnClickListener(this);
         getWindow().setTitle("");
@@ -81,9 +81,9 @@ public class DialogSelectCamOrPic extends FermatDialog implements View.OnClickLi
             setButtonTouch(TOUCH_CAM);
             dismiss();
         }
-        if(i == R.id.img_rotate){
+     /*   if(i == R.id.img_rotate){
             setButtonTouch(TOUCH_ROTATE);
             dismiss();
-        }
+        }*/
     }
 }
