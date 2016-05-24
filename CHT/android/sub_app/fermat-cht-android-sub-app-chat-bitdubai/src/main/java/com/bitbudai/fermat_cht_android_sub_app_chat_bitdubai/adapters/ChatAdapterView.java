@@ -691,7 +691,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void checkStatus(){
         try {
-           if(chatSession.getData("whocallme").equals("chatlist")) {
+           if(chatId != null) {
                if (chatManager.checkWritingStatus(chatId)) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null);
                } else if(chatManager.checkOnlineStatus(remotePk)){
@@ -700,13 +700,15 @@ public class ChatAdapterView extends LinearLayout {
                    String date = chatManager.checkLastConnection(remotePk);
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
                }
-           }else {
-               if(chatManager.checkOnlineStatus(remotePk)){
-                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
-               }else{
-                   String date = chatManager.checkLastConnection(remotePk);
+           }
+           else {
+                   if (chatManager.checkOnlineStatus(remotePk)) {
+                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
+                   } else {
+                       String date = chatManager.checkLastConnection(remotePk);
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
-               }
+                   }
+
            }
         } catch (CantGetWritingStatus cantGetWritingStatus) {
             cantGetWritingStatus.printStackTrace();
