@@ -812,7 +812,7 @@ public class ChatMiddlewareDatabaseDao {
         String text = message.getMessage();
         char a = 39;
         char b = 182;
-        text.replace(a,b);
+        text = text.replace(a,b);
         message.setMessage(text);
     }
 
@@ -820,7 +820,7 @@ public class ChatMiddlewareDatabaseDao {
         String text = message.getMessage();
         char a = 39;
         char b = 182;
-        text.replace(b,a);
+        text = text.replace(b,a);
         message.setMessage(text);
     }
 
