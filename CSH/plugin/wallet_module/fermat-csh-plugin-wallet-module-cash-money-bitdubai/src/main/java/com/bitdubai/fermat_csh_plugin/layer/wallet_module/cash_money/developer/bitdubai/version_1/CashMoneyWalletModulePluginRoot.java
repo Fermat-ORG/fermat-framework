@@ -130,7 +130,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
         }
         serviceStatus = ServiceStatus.STARTED;
 
-        //testCERPlatform();
+        testCERPlatform();
     }
 
 
@@ -298,6 +298,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
                         UUID bter = null;
                         UUID btce = null;
                         UUID ccex = null;
+                        UUID fermatEx = null;
 
                         System.out.println("CERTEST - ---Listing ALL CER Providers and their supported currencies---");
                         for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
@@ -320,8 +321,35 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
                                 btce = provider.getKey();
                             if(provider.getValue().toString().equals("Ccex"))
                                 ccex = provider.getKey();
+                            if(provider.getValue().toString().equals("FermatExchange"))
+                                fermatEx = provider.getKey();
                         }
                         System.out.println(" ");
+
+
+
+
+//
+//
+//                        try{
+//                            System.out.println("CERTEST - FermEx ---Getting all ExchangeRates from Fermat Exchange Provider");
+//                            CurrencyExchangeRateProviderManager feProvider = providerFilter.getProviderReference(fermatEx);
+//                            for(CurrencyPair p : feProvider.getSupportedCurrencyPairs()){
+//
+//                                System.out.println("CERTEST - FermEx    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+//                                System.out.println("CERTEST - FermEx    Current Exchange: " + feProvider.getCurrentExchangeRate(p).getPurchasePrice());
+//                                System.out.println("CERTEST - FermEx    Exchange for: " + formatter.format(oneYearAgo.getTime()) + " is: " + feProvider.getExchangeRateFromDate(p, oneYearAgo).getPurchasePrice());
+//                                System.out.println("CERTEST - FermEx    Getting daily exchange rates for period: " + formatter.format(startTenDaysAgo.getTime()) + " till " + formatter.format(endToday.getTime()));
+//                                for( ExchangeRate exr : feProvider.getDailyExchangeRatesForPeriod(p, startTenDaysAgo, endToday))
+//                                {
+//                                    System.out.println("CERTEST - FermEx  Day:" + DateHelper.getDateStringFromTimestamp(exr.getTimestamp()) + " Purchase: " + exr.getPurchasePrice() + " Sale: " + exr.getSalePrice());
+//                                }
+//                            }
+//                        }catch (Exception e) {
+//                            System.out.println("CERTEST - FermEx - Exception!!! " + e.toString());
+//                        }
+//
+
 
 
 
