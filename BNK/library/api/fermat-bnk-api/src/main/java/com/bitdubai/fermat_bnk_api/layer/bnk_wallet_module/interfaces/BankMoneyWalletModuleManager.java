@@ -14,6 +14,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.BankMoneyWalletPreferenceSettings;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -25,7 +26,7 @@ public interface BankMoneyWalletModuleManager extends ModuleManager<BankMoneyWal
 
     List<BankAccountNumber> getAccounts() throws CantLoadBankMoneyWalletException;
 
-    void addNewAccount(BankAccountType bankAccountType, String alias, String account, FiatCurrency fiatCurrency);
+    void addNewAccount(BankAccountType bankAccountType, String alias, String account, FiatCurrency fiatCurrency, String selectedImageId);
 
     List<BankMoneyTransactionRecord> getTransactions(String account) throws CantLoadBankMoneyWalletException;
 
@@ -39,9 +40,9 @@ public interface BankMoneyWalletModuleManager extends ModuleManager<BankMoneyWal
 
     void makeAsyncWithdraw(BankTransactionParameters bankTransactionParameters);
 
-    float getBookBalance(String account);
+    BigDecimal getBookBalance(String account);
 
-    float getAvailableBalance(String account);
+    BigDecimal getAvailableBalance(String account);
 
     void createBankName(String bankName);
 

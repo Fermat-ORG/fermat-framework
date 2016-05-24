@@ -1096,8 +1096,8 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         //customerBrokerSaleNegotiationManager.deleteBankAccount(bankAccount);
     }
 
-    @Override //TODO BNK
-    public double getBalanceBankWallet(String walletPublicKey, String accountNumber) throws CantCalculateBalanceException, CantLoadBankMoneyWalletException {
+    @Override
+    public BigDecimal getBalanceBankWallet(String walletPublicKey, String accountNumber) throws CantCalculateBalanceException, CantLoadBankMoneyWalletException {
         final BankMoneyWalletBalance availableBalance = bankMoneyWalletManager.getAvailableBalance();
         return availableBalance.getBalance(accountNumber);
     }
@@ -1258,10 +1258,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
         try {
 
             CryptoBrokerWalletAssociatedSetting walletAssociated;
-            Platforms merchandiseWalletPlatform = null;
+            Platforms merchandiseWalletPlatform;
             double balance = 0;
             String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
-            Currency merchandiseCurrency = null;
+            Currency merchandiseCurrency;
 
             CustomerBrokerContractSale customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
             String negotiationId = customerBrokerContractSale.getNegotiatiotId();
@@ -1294,23 +1294,23 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager
                             throw new CantSubmitMerchandiseException(null, "Submitting the merchandise, Validate Stock", "getPublicKeyWalletAssociated IS NULL");
 
                         final BankMoneyWalletBalance availableBalance = bankMoneyWalletManager.getAvailableBalance();
-                        balance = availableBalance.getBalance(walletAssociated.getBankAccount());
+                        balance = availableBalance.getBalance(walletAssociated.getBankAccount()).doubleValue();
                     }
-
                     break;
                 default:
                     //STOCK IN CSH
                     merchandiseWalletPlatform = Platforms.CASH_PLATFORM;
                     merchandiseCurrency = FiatCurrency.getByCode(merchandiseCurrencyCode);
                     walletAssociated = getWalletAssociated(cryptoBrokerPublicKey, merchandiseWalletPlatform, merchandiseCurrency);
-                    if (walletAssociated.getWalletPublicKey().isEmpty())
-                        throw new CantSubmitMerchandiseException(null, "Submitting the merchandise, Validate Stock", "getPublicKeyWalletAssociated IS NULL");
-                    balance = cashMoneyWalletManager.loadCashMoneyWallet(walletAssociated.getWalletPublicKey()).getAvailableBalance().getBalance().doubleValue();
+                    if (walletAssociated != null) {
+                        if (walletAssociated.getWalletPublicKey().isEmpty())
+                            throw new CantSubmitMerchandiseException(null, "Submitting the merchandise, Validate Stock", "getPublicKeyWalletAssociated IS NULL");
+                        balance = cashMoneyWalletManager.loadCashMoneyWallet(walletAssociated.getWalletPublicKey()).getAvailableBalance().getBalance().doubleValue();
+                    }
                     break;
             }
 
-            if (balance >= amount) return Boolean.TRUE;
-            return Boolean.FALSE;
+            return balance >= amount;
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             throw new CantSubmitMerchandiseException(e, "Submitting the merchandise, Validate Stock", "Cannot get the contract");

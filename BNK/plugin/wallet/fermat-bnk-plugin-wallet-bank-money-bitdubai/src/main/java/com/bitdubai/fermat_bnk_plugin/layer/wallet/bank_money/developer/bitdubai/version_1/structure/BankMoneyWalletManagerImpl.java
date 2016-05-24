@@ -2,16 +2,15 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitduba
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantEditAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetBankMoneyWalletTransactionsException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantGetHeldFundsException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterHoldException;
@@ -19,13 +18,15 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRe
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletBalance;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.WalletBankMoneyPluginRoot;
 import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.database.BankMoneyWalletDao;
-import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.*;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetAccountsException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_bnk_plugin.layer.wallet.bank_money.developer.bitdubai.version_1.exceptions.CantInitializeBankMoneyWalletDatabaseException;
 
-import java.math.BigDecimal;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,13 +34,14 @@ import java.util.UUID;
 /**
  * Created by memo on 23/11/15.
  */
-public class BankMoneyWalletImpl implements BankMoneyWallet, Serializable {
+public class BankMoneyWalletManagerImpl implements BankMoneyWalletManager, Serializable {
     private WalletBankMoneyPluginRoot pluginRoot;
     BankMoneyWalletDao bankMoneyWalletDao;
 
-    public BankMoneyWalletImpl(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, WalletBankMoneyPluginRoot pluginRoot, String publicKey) throws CantStartPluginException {
+    public BankMoneyWalletManagerImpl(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, WalletBankMoneyPluginRoot pluginRoot, String publicKey) throws CantStartPluginException {
         this.pluginRoot = pluginRoot;
         this.bankMoneyWalletDao = new BankMoneyWalletDao(pluginId, pluginDatabaseSystem, pluginRoot, publicKey);
+
         try {
             this.bankMoneyWalletDao.initialize();
         } catch (CantInitializeBankMoneyWalletDatabaseException e) {
@@ -109,9 +111,9 @@ public class BankMoneyWalletImpl implements BankMoneyWallet, Serializable {
         System.out.println("registrando bankAccountNumber = " + bankAccountNumber.getAccount());
         try {
             bankMoneyWalletDao.addNewAccount(bankAccountNumber);
-        }catch (CantInsertRecordException e){
+        } catch (CantInsertRecordException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantAddNewAccountException(CantAddNewAccountException.DEFAULT_MESSAGE,e,null,null);
+            throw new CantAddNewAccountException(CantAddNewAccountException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 
@@ -119,9 +121,9 @@ public class BankMoneyWalletImpl implements BankMoneyWallet, Serializable {
     public void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException {
         try {
             bankMoneyWalletDao.editAccount(originalAccountNumber, newAlias, newAccountNumber, newImageId);
-        }catch (CantUpdateRecordException e){
+        } catch (CantUpdateRecordException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantEditAccountException(CantEditAccountException.DEFAULT_MESSAGE,e,null,null);
+            throw new CantEditAccountException(CantEditAccountException.DEFAULT_MESSAGE, e, null, null);
         }
     }
 

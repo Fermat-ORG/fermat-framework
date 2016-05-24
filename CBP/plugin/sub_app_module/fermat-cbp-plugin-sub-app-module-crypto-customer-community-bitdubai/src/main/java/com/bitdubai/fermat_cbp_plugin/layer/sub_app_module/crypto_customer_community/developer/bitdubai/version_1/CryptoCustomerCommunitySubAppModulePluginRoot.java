@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -54,7 +53,6 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
                     cryptoBrokerIdentityManager,
                     cryptoCustomerActorConnectionManager,
                     cryptoCustomerNetworkServiceManager,
-                    cryptoCustomerIdentityManager,
                     this,
                     pluginFileSystem,
                     pluginId);

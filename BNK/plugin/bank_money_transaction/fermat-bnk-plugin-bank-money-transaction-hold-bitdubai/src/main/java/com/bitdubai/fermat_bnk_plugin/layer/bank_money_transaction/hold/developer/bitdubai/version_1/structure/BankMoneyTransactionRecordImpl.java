@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
@@ -8,10 +7,9 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.BankOperationType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
-import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.HoldBankMoneyTransactionPluginRoot;
 
-import java.math.BigDecimal;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
@@ -20,8 +18,6 @@ import java.util.UUID;
 public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecord, Serializable {
 
     UUID bankTransactionId;
-    String publicKeyBroker;
-    String publicKeyCustomer;
     String balanceType;
     String transactionType;
     BigDecimal amount;
@@ -36,9 +32,8 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
     long timeStamp;
     String memo;
     String status;
-    HoldBankMoneyTransactionPluginRoot pluginRoot;
 
-    public BankMoneyTransactionRecordImpl(HoldBankMoneyTransactionPluginRoot pluginRoot,UUID bankTransactionId, String balanceType, String transactionType, BigDecimal amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, BigDecimal runningBookBalance, BigDecimal runningAvailableBalance, long timeStamp, String memo, String status) {
+    public BankMoneyTransactionRecordImpl(UUID bankTransactionId, String balanceType, String transactionType, BigDecimal amount, String cashCurrencyType, String bankOperationType, String bankDocumentReference, String bankName, String bankAccountNumber, String bankAccountType, BigDecimal runningBookBalance, BigDecimal runningAvailableBalance, long timeStamp, String memo, String status) {
         this.bankTransactionId = bankTransactionId;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
@@ -54,7 +49,6 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         this.timeStamp = timeStamp;
         this.memo = memo;
         this.status = status;
-        this.pluginRoot =pluginRoot;
     }
 
     @Override
@@ -67,9 +61,8 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try{
             return BankTransactionStatus.getByCode(status);
         }catch (Exception e){
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -82,9 +75,8 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try{
             return TransactionType.getByCode(transactionType);
         }catch (Exception e){
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -97,9 +89,8 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try {
             return FiatCurrency.getByCode(cashCurrencyType);
         }catch (Exception e){
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -107,9 +98,8 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try{
             return BankOperationType.getByCode(bankOperationType);
         }catch (Exception e){
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -132,9 +122,8 @@ public class BankMoneyTransactionRecordImpl implements BankMoneyTransactionRecor
         try {
             return BankAccountType.getByCode(bankAccountType);
         }catch (Exception e){
-            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return null;
         }
-        return null;
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.devel
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -119,9 +117,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.CryptoCustomerWalletModulePluginRoot;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -171,8 +169,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
     private final CryptoWalletManager cryptoWalletManager;
-    private final PluginVersionReference pluginVersionReference;
-    private final ErrorManager errorManager;
 
     private String merchandise = null;
     private String typeOfPayment = null;
@@ -202,7 +198,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                                                                  BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
                                                                  BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                                  BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
-                                                                 BitcoinWalletManager bitcoinWalletManager,
+                                                                 CryptoWalletManager cryptoWalletManager,
                                                                  final CryptoCustomerWalletModulePluginRoot pluginRoot,
                                                                  PluginFileSystem pluginFileSystem,
                                                                  UUID pluginId) {
@@ -228,7 +224,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
         this.cryptoWalletManager = cryptoWalletManager;
         this.pluginRoot = pluginRoot;
-        this.pluginVersionReference = pluginVersionReference;
     }
 
     @Override
@@ -886,20 +881,14 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
             bank = bankAccountInfo.substring(bankAccountInfo.indexOf("Bank: ") + 6, bankAccountInfo.indexOf("\n"));
             bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n") + 1);
 
-            try {
-                String accountType = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ") + 14, bankAccountInfo.indexOf("\n"));
-                bankAccountType = BankAccountType.getByCode(accountType);
-            } catch (FermatException ignore) {
-            }
-            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n") + 1);
+            String accountTypeString = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ") + 14, bankAccountInfo.indexOf("\n"));
 
+            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n") + 1);
             accountNumber = bankAccountInfo.substring(bankAccountInfo.indexOf("Number: ") + 8);
 
-            BankAccountData ban = new BankAccountData(ba.getCurrencyType(), bankAccountType, bank, accountNumber, "");
-
-            if( accountTypeString.equalsIgnoreCase("Checking") ){
+            if (accountTypeString.equalsIgnoreCase("Checking")) {
                 accountTypeString = "CHC";
-            }else{
+            } else {
                 accountTypeString = "SAV";
             }
 
@@ -907,7 +896,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager
                 accountType = BankAccountType.getByCode(accountTypeString);
                 BankAccountData ban = new BankAccountData(ba.getCurrencyType(), accountType, bank, accountNumber, "", "");
                 bankAccounts.add(ban);
-            } catch (InvalidParameterException e) {
+            } catch (InvalidParameterException ignore) {
 
             }
 

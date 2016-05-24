@@ -615,7 +615,7 @@ public class CryptoBrokerCommunityManager
                 appSettings.setLastSelectedActorType(Actors.CBP_CRYPTO_BROKER);
 
             try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+                persistSettings(this.subAppPublicKey, appSettings);
             } catch (CantPersistSettingsException e) {
                 pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }

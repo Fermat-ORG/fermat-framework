@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
@@ -46,7 +44,7 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
 
         this.dao = dao;
         this.pluginRoot = pluginRoot;
-        earningExtractorManager = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
+        earningExtractorManager = new EarningExtractorManagerImpl(cryptoBrokerWalletManager, dao);
     }
 
     @Override

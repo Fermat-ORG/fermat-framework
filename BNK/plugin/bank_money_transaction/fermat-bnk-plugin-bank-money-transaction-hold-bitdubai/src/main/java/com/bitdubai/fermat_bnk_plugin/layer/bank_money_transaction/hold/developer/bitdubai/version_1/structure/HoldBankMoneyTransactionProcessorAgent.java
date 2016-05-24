@@ -106,8 +106,24 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
 
             try {
                 availableBalance = bankMoneyWalletManager.getAvailableBalance().getBalance(transaction.getAccountNumber());
-                if(availableBalance >= transaction.getAmount()) {
-                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
+                if(availableBalance.compareTo(transaction.getAmount()) >= 0) {
+                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(
+                            transaction.getTransactionId(),
+                            BalanceType.AVAILABLE.getCode(),
+                            TransactionType.HOLD.getCode(),
+                            transaction.getAmount(),
+                            transaction.getCurrency().getCode(),
+                            BankOperationType.HOLD.getCode(),
+                            "testing reference",
+                            "test BNK name",
+                            transaction.getAccountNumber(),
+                            BankAccountType.SAVINGS.getCode(),
+                            BigDecimal.ZERO,
+                            BigDecimal.ZERO,
+                            transaction.getTimestamp(),
+                            transaction.getMemo(),
+                            BankTransactionStatus.CONFIRMED.getCode());
+
                     bankMoneyWalletManager.hold(bankMoneyTransactionRecord);
                     holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 } else {

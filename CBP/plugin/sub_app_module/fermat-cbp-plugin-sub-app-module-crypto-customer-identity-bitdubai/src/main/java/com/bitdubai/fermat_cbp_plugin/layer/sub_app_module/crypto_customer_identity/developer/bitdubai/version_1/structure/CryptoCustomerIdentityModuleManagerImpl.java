@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -19,8 +19,6 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CouldNotPublishCryptoCustomerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.interfaces.CryptoCustomerIdentityModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_identity.developer.bitdubai.version_1.CryptoCustomerIdentitySubAppModulePluginRoot;
 
 import java.io.Serializable;
@@ -35,15 +33,18 @@ import java.util.UUID;
 public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<IdentityCustomerPreferenceSettings>
         implements CryptoCustomerIdentityModuleManager, Serializable {
 
-    private CryptoCustomerIdentityManager   identityManager;
+    private CryptoCustomerIdentityManager identityManager;
     private CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot;
 
-    public CryptoCustomerIdentityModuleManagerImpl(
-            CryptoCustomerIdentityManager   identityManager,
-            CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot
-    ){
-        this.identityManager        = identityManager;
-        this.pluginRoot           = pluginRoot;
+
+    public CryptoCustomerIdentityModuleManagerImpl(CryptoCustomerIdentityManager identityManager,
+                                                   PluginFileSystem pluginFileSystem,
+                                                   UUID pluginId,
+                                                   CryptoCustomerIdentitySubAppModulePluginRoot pluginRoot) {
+        super(pluginFileSystem, pluginId);
+
+        this.identityManager = identityManager;
+        this.pluginRoot = pluginRoot;
     }
 
     @Override
@@ -94,7 +95,7 @@ public class CryptoCustomerIdentityModuleManagerImpl extends ModuleManagerImpl<I
             return cryptoCustomers;
         } catch (CantListCryptoCustomerIdentityException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException(CantGetCryptoCustomerListException.DEFAULT_MESSAGE, e, "Crypto Customer Identity Module Manager","Cant Get List All Crypto Customer Identity");
+            throw new com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_identity.exceptions.CantGetCryptoCustomerListException(CantGetCryptoCustomerListException.DEFAULT_MESSAGE, e, "Crypto Customer Identity Module Manager", "Cant Get List All Crypto Customer Identity");
         }
     }
 

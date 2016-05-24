@@ -35,7 +35,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure.CryptoCustomerWalletModuleCryptoCustomerWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 
@@ -142,7 +141,7 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractModule<CryptoC
                     brokerAckOfflinePaymentManager,
                     brokerSubmitOnlineMerchandiseManager,
                     brokerSubmitOfflineMerchandiseManager,
-                    bitcoinWalletManager,
+                    cryptoWalletManager,
                     this,
                     pluginFileSystem,
                     pluginId
