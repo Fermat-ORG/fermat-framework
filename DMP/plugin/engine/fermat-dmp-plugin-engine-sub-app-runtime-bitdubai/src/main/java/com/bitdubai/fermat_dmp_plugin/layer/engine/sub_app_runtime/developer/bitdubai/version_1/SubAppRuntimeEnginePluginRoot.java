@@ -831,7 +831,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Artist Identity");
             runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setTitleColor("#3A3A3A");
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
