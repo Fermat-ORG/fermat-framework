@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -32,11 +33,15 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.event_handler.FanCustomeP2PCompletedConnectionRegistrationEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.InformationMessage;
@@ -122,7 +127,44 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
             throw new CantStartPluginException(e, "", "Problem initializing artist ans dao.");
         }
     }
+    private void checkFailedDeliveryTime(String destinationPublicKey)
+    {
+        try{
 
+            List<FanConnectionRequest> fanConnectionRequests = fanActorNetworkServiceDao.getConnectionRequestByDestinationPublicKey(destinationPublicKey);
+
+            //if I try to send more than 5 times I put it on hold
+            for (FanConnectionRequest record : fanConnectionRequests) {
+
+                if(!record.getProtocolState().getCode().equals(ProtocolState.WAITING_RECEIPT_CONFIRMATION.getCode()))
+                {
+                    if(record.getSentCount() > 10 )
+                    {
+                        //  if(record.getSentCount() > 20)
+                        //  {
+                        //reprocess at two hours
+                        //  reprocessTimer =  2 * 3600 * 1000;
+                        // }
+
+                        fanActorNetworkServiceDao.delete(record.getRequestId());
+                    }
+                    else
+                    {
+                        record.setSentCount(record.getSentCount() + 1);
+                        fanActorNetworkServiceDao.updateConnectionRequest(record);
+                    }
+                }
+            }
+
+
+        }
+        catch(Exception e)
+        {
+            System.out.println("INTRA USER NS EXCEPCION VERIFICANDO WAIT MESSAGE");
+            e.printStackTrace();
+        }
+
+    }
     @Override
     public FermatManager getManager() {
         return fanActorNetworkServiceManager;
@@ -337,11 +379,13 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
                     requestMessage.getSentTime()
             );
 
+            int sentCount = 1;
             fanActorNetworkServiceDao.createConnectionRequest(
                     connectionInformation,
                     state,
                     type,
-                    requestMessage.getRequestAction()
+                    requestMessage.getRequestAction(),
+                    sentCount
             );
 
             FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ARTIST_CONNECTION_REQUEST_NEWS);
@@ -370,6 +414,45 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
     @Override
     protected void onClientSuccessfulReconnect() {
         runExposeIdentityThread();
+    }
+
+    @Override
+    protected void onFailureComponentConnectionRequest(final PlatformComponentProfile remoteParticipant) {
+        if(isRegister()){
+            final PluginVersionReference pluginVersionReference = getPluginVersionReference();
+            executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(90000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
+                    try {
+                        FanConnectionRequest fanConnectionRequest = fanActorNetworkServiceDao.getConnectionRequestByDestinationPublicKey(remoteParticipant.getIdentityPublicKey()).get(0);
+                        final FanConnectionInformation connectionInformation = new FanConnectionInformation(
+                                fanConnectionRequest.getRequestId(),
+                                fanConnectionRequest.getSenderPublicKey(),
+                                fanConnectionRequest.getSenderActorType(),
+                                fanConnectionRequest.getSenderAlias(),
+                                fanConnectionRequest.getSenderImage(),
+                                fanConnectionRequest.getDestinationPublicKey(),
+                                fanConnectionRequest.getDestinationActorType(),
+                                fanConnectionRequest.getSentTime()
+                        );
+                        if(connectionInformation.getConnectionId() != null)
+                            fanActorNetworkServiceManager.sendFailedMessage(connectionInformation);
+                    } catch (CantFindRequestException e) {
+                        e.printStackTrace();
+                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    } catch (ConnectionRequestNotFoundException e) {
+                        e.printStackTrace();
+                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    }
+                }
+            });
+        }
     }
 
     public final void runExposeIdentityThread(){

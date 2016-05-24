@@ -35,7 +35,7 @@ public class CreateConnectionRequestTest {
         doCallRealMethod().when(fanActorNetworkServiceDao).createConnectionRequest(fanConnectionInformation,
                                                                                     state,
                                                                                     type,
-                                                                                    action);
+                                                                                    action, );
     }
 
 }

@@ -21,7 +21,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
@@ -29,7 +29,6 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.ut
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.FanActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database.FanActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
@@ -38,7 +37,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.Ca
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -236,12 +234,13 @@ public final class FanActorNetworkServiceManager implements FanManager {
             final ProtocolState state  = ProtocolState          .PROCESSING_SEND;
             final RequestType type   = RequestType            .SENT           ;
             final ConnectionRequestAction action = ConnectionRequestAction.REQUEST        ;
-
+            final int sentCount = 1;
             fanActorNetworkServiceDao.createConnectionRequest(
                     fanConnectionInformation,
                     state,
                     type,
-                    action
+                    action,
+                    sentCount
             );
 
             sendMessage(
@@ -538,4 +537,17 @@ public final class FanActorNetworkServiceManager implements FanManager {
         return fanActorNetworkServiceDao.listAllRequest();
     }
 
+    /**
+     *
+     * @param fanConnectionInformation
+     */
+    public final void sendFailedMessage(FanConnectionInformation fanConnectionInformation){
+        sendMessage(
+                buildJsonRequestMessage(fanConnectionInformation),
+                fanConnectionInformation.getSenderPublicKey(),
+                fanConnectionInformation.getSenderActorType(),
+                fanConnectionInformation.getDestinationPublicKey(),
+                fanConnectionInformation.getDestinationActorType()
+        );
+    }
 }

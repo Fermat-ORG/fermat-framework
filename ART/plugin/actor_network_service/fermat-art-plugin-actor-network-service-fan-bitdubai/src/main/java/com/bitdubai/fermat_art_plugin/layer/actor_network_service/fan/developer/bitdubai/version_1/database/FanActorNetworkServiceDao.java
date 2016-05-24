@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -10,8 +11,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -34,6 +37,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
@@ -44,6 +48,7 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.fan.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -369,9 +374,9 @@ public final class FanActorNetworkServiceDao {
     }
 
     public final void createConnectionRequest(final FanConnectionInformation fanConnectionInformation,
-                                              final ProtocolState                     state            ,
-                                              final RequestType type             ,
-                                              final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
+                                              final ProtocolState state,
+                                              final RequestType type,
+                                              final ConnectionRequestAction action, int sentCount) throws CantRequestConnectionException {
 
         try {
 
@@ -386,6 +391,7 @@ public final class FanActorNetworkServiceDao {
                     type                                       ,
                     state                                      ,
                     action                                     ,
+                    sentCount,
                     fanConnectionInformation.getSendingTime()
             );
 
@@ -765,6 +771,34 @@ public final class FanActorNetworkServiceDao {
         }
     }
 
+    public List<FanConnectionRequest> getConnectionRequestByDestinationPublicKey(final String publickey) throws CantFindRequestException, ConnectionRequestNotFoundException {
+
+        if (publickey == null)
+            throw new CantFindRequestException(null, "", "The requestId is required, can not be null");
+
+        try {
+
+            final DatabaseTable connectionRequestTable = database.getTable(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionRequestTable.addStringFilter(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, publickey, DatabaseFilterType.EQUAL);
+
+            connectionRequestTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return Collections.singletonList(buildConnectionNewRecord(records.get(0)));
+            else
+                throw new ConnectionRequestNotFoundException(null, "publickey: "+publickey, "Cannot find an actor Connection request with that requestId.");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantFindRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantFindRequestException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
+        }
+    }
     private DatabaseTableRecord buildConnectionNewDatabaseRecord(final DatabaseTableRecord           record       ,
                                                                  final FanConnectionRequest connectionNew) {
 
@@ -779,7 +813,8 @@ public final class FanActorNetworkServiceDao {
             record.setFermatEnum (FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType())         ;
             record.setFermatEnum (FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState())       ;
             record.setFermatEnum (FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , connectionNew.getRequestAction())       ;
-            record.setLongValue  (FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , connectionNew.getSentTime())            ;
+            record.setIntegerValue(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_SENT_COUNT_COLUMN_NAME, connectionNew.getSentCount());
+            record.setLongValue(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME, connectionNew.getSentTime())            ;
 
             if (connectionNew.getSenderImage() != null && connectionNew.getSenderImage().length > 0)
                 persistNewUserProfileImage(connectionNew.getSenderPublicKey(), connectionNew.getSenderImage());
@@ -806,6 +841,7 @@ public final class FanActorNetworkServiceDao {
             String requestTypeString     = record.getStringValue(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
             String protocolStateString   = record.getStringValue(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
             String requestActionString   = record.getStringValue(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
+            int sentCount                = record.getIntegerValue(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_SENT_COUNT_COLUMN_NAME   );
             Long   sentTime              = record.getLongValue(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME);
 
             PlatformComponentType senderActorType = PlatformComponentType.getByCode(senderActorTypeString);
@@ -833,6 +869,7 @@ public final class FanActorNetworkServiceDao {
                     requestType,
                     state,
                     action,
+                    sentCount,
                     sentTime
             );
 
@@ -922,6 +959,64 @@ public final class FanActorNetworkServiceDao {
                     "Unhandled Exception"
             );
         }
+    }
+
+    public final void updateConnectionRequest(FanConnectionRequest fanConnectionRequest){
+        if (fanConnectionRequest == null) {
+            throw new IllegalArgumentException("The entity is required, can not be null");
+        }
+
+        try {
+
+
+            DatabaseTable databaseTable = database.getTable(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+            DatabaseTableRecord emptyRecord =  database.getTable(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME).getEmptyRecord();
+            /*
+             * 1- Create the record to the entity
+             */
+            DatabaseTableRecord entityRecord = buildConnectionNewDatabaseRecord(emptyRecord, fanConnectionRequest);
+
+            /**
+             * 2.- Create a new transaction and execute
+             */
+            DatabaseTransaction transaction = database.newTransaction();
+
+            //set filter
+
+            databaseTable.addUUIDFilter(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, fanConnectionRequest.getRequestId(), DatabaseFilterType.EQUAL);
+
+            transaction.addRecordToUpdate(databaseTable, entityRecord);
+            database.executeTransaction(transaction);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(UUID notificationId) throws CantDeleteRecordException {
+
+        try {
+
+            DatabaseTable table = database.getTable(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+            table.addUUIDFilter(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+
+            for (DatabaseTableRecord record : records) {
+                table.deleteRecord(record);
+            }
+
+
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(CantLoadTableToMemoryException exception){
+
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
+        }
+
     }
 
     private String buildProfileImageFileName(final String publicKey) {
