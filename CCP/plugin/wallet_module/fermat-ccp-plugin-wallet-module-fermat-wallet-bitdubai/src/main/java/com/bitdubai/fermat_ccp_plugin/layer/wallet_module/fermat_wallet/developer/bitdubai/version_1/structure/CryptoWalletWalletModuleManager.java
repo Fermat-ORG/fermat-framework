@@ -41,10 +41,10 @@ import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntr
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.IntraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionSummary;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionSummary;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
@@ -113,6 +113,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.structure.CryptoWalletWalletModuleWalletContact;
@@ -156,7 +157,7 @@ import java.util.UUID;
 @PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_WALLET)
 public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWalletSettings> implements CryptoWallet,Serializable {
 
-    private final CryptoWalletManager cryptoWalletManager;
+    private final BitcoinWalletManager           bitcoinWalletManager          ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
@@ -179,7 +180,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     private final List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    public CryptoWalletWalletModuleManager(final CryptoWalletManager cryptoWalletManager,
+    public CryptoWalletWalletModuleManager(final BitcoinWalletManager bitcoinWalletManager,
                                            final CryptoAddressBookManager cryptoAddressBookManager,
                                            final CryptoAddressesManager cryptoAddressesNSManager,
                                            final CryptoPaymentManager cryptoPaymentManager,
@@ -196,7 +197,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                            final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
         super(pluginFileSystem,pluginId);
 
-        this.cryptoWalletManager = cryptoWalletManager;
+        this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
         this.cryptoAddressesNSManager       = cryptoAddressesNSManager      ;
         this.cryptoPaymentManager           = cryptoPaymentManager          ;
@@ -790,8 +791,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                            String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType) throws CantGetBalanceException {
         try {
-            CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
-            return cryptoWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
         } catch (CantLoadWalletsException e) {
             throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
         }  catch (CantCalculateBalanceException e) {
@@ -803,18 +804,18 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
     @Override
 
-    public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,
+    public List<CryptoWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,
                                                          BalanceType balanceType, final TransactionType transactionType,
                                                          String walletPublicKey,
                                                          int max,
                                                          int offset) throws CantListTransactionsException {
-        List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+        List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null) {
-                CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
-                List<CryptoWalletTransaction> bitcoinWalletTransactionList = cryptoWalletWallet.listTransactions(balanceType, transactionType, max, offset);
+                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(balanceType, transactionType, max, offset);
 
-                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -825,18 +826,18 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
+    public List<CryptoWalletTransaction> listTransactionsByActor(BalanceType balanceType,
                                                                  String walletPublicKey,
                                                                  String actorPublicKey,
                                                                  String intraUserLoggedInPublicKey,
                                                                  int max,
                                                                  int offset) throws CantListTransactionsException {
         try {
-            CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
-            List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<CryptoWalletTransaction> bitcoinWalletTransactionList = cryptoWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActor(actorPublicKey, balanceType, max, offset);
 
-            for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
+            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -849,7 +850,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
+    public List<CryptoWalletTransaction> listTransactionsByActorAndType(BalanceType balanceType,
                                                                         TransactionType transactionType,
                                                                         String walletPublicKey,
                                                                         String actorPublicKey, String intraUserLoggedInPublicKey,
@@ -857,17 +858,17 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                                                         int max,
                                                                         int offset) throws CantListTransactionsException {
         try {
-            CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
-            List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
-            List<CryptoWalletTransaction> bitcoinWalletTransactionList = cryptoWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+            List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactionsByActorAndType(actorPublicKey, balanceType, transactionType, max, offset);
 
 
-                List<CryptoWalletTransaction> cryptoWalletTransactionList1 = new ArrayList<>();
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
-                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
 
                     if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        cryptoWalletTransactionList1.add(bwt);
+                        bitcoinWalletTransactionList1.add(bwt);
                     }
                 }
 
@@ -876,7 +877,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
 
-            for (CryptoWalletTransaction bwt : cryptoWalletTransactionList1) {
+            for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                 cryptoWalletTransactionList.add(enrichTransaction(bwt,walletPublicKey,intraUserLoggedInPublicKey));
             }
 
@@ -893,8 +894,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                                               String walletPublicKey,
                                                               String actorPublicKey) throws CantGetActorTransactionHistoryException {
         try {
-            CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
-            return constructActorTransactionSummary(cryptoWalletWallet.getActorTransactionSummary(actorPublicKey, balanceType));
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            return constructActorTransactionSummary(bitcoinWalletWallet.getActorTransactionSummary(actorPublicKey, balanceType));
         } catch (CantLoadWalletsException | CantGetActorTransactionSummaryException e) {
             throw new CantGetActorTransactionHistoryException(CantGetActorTransactionHistoryException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
@@ -906,7 +907,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
     @Override
-    public List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
+    public List<CryptoWalletTransaction> listLastActorTransactionsByTransactionType(BalanceType balanceType,
                                                                                     final TransactionType transactionType,
                                                                                     String walletPublicKey,
                                                                                     String intraUserLoggedInPublicKey,
@@ -915,33 +916,33 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                                                                     int offset) throws CantListTransactionsException {
 
 
-        List<com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
+        List<CryptoWalletTransaction> cryptoWalletTransactionList = new ArrayList<>();
         try {
             if(intraUserLoggedInPublicKey!=null){
-                CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
-                List<CryptoWalletTransaction> bitcoinWalletTransactionList = cryptoWalletWallet.listLastActorTransactionsByTransactionType(
+                BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listLastActorTransactionsByTransactionType(
                         balanceType,
                         transactionType,
                         max,
                         offset
                 );
 
-                List<CryptoWalletTransaction> cryptoWalletTransactionList1 = new ArrayList<>();
+                List<BitcoinWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
 
-                for (CryptoWalletTransaction bwt : bitcoinWalletTransactionList) {
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList) {
 
                     if (bwt.getBlockchainNetworkType().getCode().equals(blockchainNetworkType.getCode())){
-                        if (cryptoWalletTransactionList1.isEmpty()){
-                            cryptoWalletTransactionList1.add(bwt);
+                        if (bitcoinWalletTransactionList1.isEmpty()){
+                            bitcoinWalletTransactionList1.add(bwt);
                         }else {
                             int count = 0;
-                            for (CryptoWalletTransaction bwt1 : cryptoWalletTransactionList1) {
+                            for (BitcoinWalletTransaction bwt1 : bitcoinWalletTransactionList1) {
                                 if (bwt1.getActorToPublicKey().equals(bwt.getActorToPublicKey())) {
                                     count++;
                                 }
                             }
                             if (count == 0)
-                                cryptoWalletTransactionList1.add(bwt);
+                                bitcoinWalletTransactionList1.add(bwt);
 
                         }
                     }
@@ -949,7 +950,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
 
 
 
-                for (CryptoWalletTransaction bwt : cryptoWalletTransactionList1) {
+                for (BitcoinWalletTransaction bwt : bitcoinWalletTransactionList1) {
                     cryptoWalletTransactionList.add(enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey));
                 }
             }
@@ -960,15 +961,15 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
     }
 
     @Override
-    public com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction getTransaction(UUID transactionId, String walletPublicKey,String intraUserLoggedInPublicKey) throws CantListTransactionsException
+    public CryptoWalletTransaction getTransaction(UUID transactionId, String walletPublicKey,String intraUserLoggedInPublicKey) throws CantListTransactionsException
     {
 
         try {
-            com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction cryptoWalletTransaction;
-            CryptoWalletWallet cryptoWalletWallet;
-            cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
+            CryptoWalletTransaction cryptoWalletTransaction;
+            BitcoinWalletWallet bitcoinWalletWallet;
+            bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            CryptoWalletTransaction bwt = cryptoWalletWallet.getTransactionById(transactionId);
+            BitcoinWalletTransaction bwt = bitcoinWalletWallet.getTransactionById(transactionId);
             cryptoWalletTransaction =enrichTransaction(bwt, walletPublicKey, intraUserLoggedInPublicKey);
 
             return  cryptoWalletTransaction;
@@ -989,8 +990,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                                           String description) throws CantSaveTransactionDescriptionException, TransactionNotFoundException {
 
         try {
-            CryptoWalletWallet cryptoWalletWallet = cryptoWalletManager.loadWallet(walletPublicKey);
-            cryptoWalletWallet.setTransactionDescription(transactionID, description);
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            bitcoinWalletWallet.setTransactionDescription(transactionID, description);
         } catch (CantLoadWalletsException | CantStoreMemoException e) {
             throw new CantSaveTransactionDescriptionException(CantSaveTransactionDescriptionException.DEFAULT_MESSAGE, e);
         } catch (CantFindTransactionException e) {
@@ -1000,7 +1001,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         }
     }
 
-    private ActorTransactionSummary constructActorTransactionSummary(CryptoWalletTransactionSummary transactionSummary) {
+    private ActorTransactionSummary constructActorTransactionSummary(BitcoinWalletTransactionSummary transactionSummary) {
         return new CryptoWalletWalletModuleActorTransactionSummary(
                 transactionSummary.getSentTransactionsNumber(),
                 transactionSummary.getReceivedTransactionsNumber(),
@@ -1385,23 +1386,21 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
         }
     }
 
-    private com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction enrichTransaction(CryptoWalletTransaction cryptoWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
+    private CryptoWalletTransaction enrichTransaction(BitcoinWalletTransaction bitcoinWalletTransaction, String walletPublicKey, String intraUserLoggedInPublicKey) throws CantEnrichTransactionException {
         try {
             Actor involvedActor = null;
             UUID contactId = null;
             WalletContactRecord walletContactRecord = null;
-            switch (cryptoWalletTransaction.getTransactionType()) {
+            switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-
-                        if(cryptoWalletTransaction.getActorFromType() == Actors.INTRA_USER){
-                            involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorToPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                        if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER){
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                             if(involvedActor==null)
                             {
-                                involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
+                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
                             }
                         }else {
                             involvedActor = null;
@@ -1415,8 +1414,8 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                         contactId = null;
                     } catch ( CantGetActorException e) {
                         try{
-                            involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                             if (walletContactRecord != null)
                                 contactId = walletContactRecord.getContactId();
                         }catch (CantGetActorException exe){
@@ -1428,14 +1427,12 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                     break;
                 case DEBIT:
                     try {
-
-                        if (cryptoWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
-                            involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorToPublicKey(), cryptoWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                        if (bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER) {
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
                             if (involvedActor == null) {
-                                involvedActor = getActorByActorPublicKeyAndType(cryptoWalletTransaction.getActorFromPublicKey(), cryptoWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(cryptoWalletTransaction.getActorFromPublicKey(), walletPublicKey);
-
+                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
                             }
                         }else {
                             involvedActor = null;
@@ -1450,7 +1447,7 @@ public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWa
                     }
                     break;
             }
-            return new CryptoWalletWalletModuleTransaction(cryptoWalletTransaction, contactId, involvedActor);
+            return new CryptoWalletWalletModuleTransaction(bitcoinWalletTransaction, contactId, involvedActor);
         } catch (Exception e) {
             throw new CantEnrichTransactionException(CantEnrichTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
