@@ -125,7 +125,7 @@ public class ContactFragment extends AbstractFermatFragment {
 
             ContactAdapter adapter = new ContactAdapter(getActivity(), contactname, contactalias, contactid, "detail", errorManager);
             FermatTextView name = (FermatTextView) layout.findViewById(R.id.contact_name);
-            if(contactalias != null) {
+            if(contactalias.get(0) != null) {
                 name.setText(contactalias.get(0));
             }
             FermatTextView id = (FermatTextView) layout.findViewById(R.id.uuid);
