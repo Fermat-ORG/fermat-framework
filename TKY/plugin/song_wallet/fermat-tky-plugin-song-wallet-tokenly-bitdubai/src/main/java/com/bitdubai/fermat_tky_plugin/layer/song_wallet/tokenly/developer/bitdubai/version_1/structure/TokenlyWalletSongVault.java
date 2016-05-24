@@ -64,9 +64,9 @@ public class TokenlyWalletSongVault {
     private final String DIRECTORY_NAME = "tokenly-wallet-song";
     /**
      * Represents the file privacy.
-     * TODO: for testing, I'll put this as public file.
+     * TODO: for testing, I'll put this as private file.
      */
-    private final FilePrivacy FILE_PRIVACY = FilePrivacy.PUBLIC;
+    private final FilePrivacy FILE_PRIVACY = FilePrivacy.PRIVATE;
 
     /**
      * Represents the file life span.
