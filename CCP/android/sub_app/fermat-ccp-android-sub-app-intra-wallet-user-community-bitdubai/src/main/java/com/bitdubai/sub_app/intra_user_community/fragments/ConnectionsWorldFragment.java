@@ -227,14 +227,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
-
-            _executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    dataSet = getSuggestionCache();
-                    showCriptoUsersCache();
-                }
-            });
+            dataSet = getSuggestionCache();
+            showCriptoUsersCache();
 
         }
     }

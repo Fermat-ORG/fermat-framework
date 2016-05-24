@@ -222,6 +222,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                     adapter.changeDataSet(openNegotiationList);
                     adapter.notifyDataSetChanged();
+                    recyclerView.setVisibility(View.VISIBLE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
                 }
             });
 

@@ -139,7 +139,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                 adapter.changeDataSet(openNegotiationList);
                 adapter.notifyDataSetChanged();
-                recyclerView.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
             }
         });
@@ -337,7 +337,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 if(openNegotiationList.size() > 0)
                 {
-                    recyclerView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
                 }
             }else {

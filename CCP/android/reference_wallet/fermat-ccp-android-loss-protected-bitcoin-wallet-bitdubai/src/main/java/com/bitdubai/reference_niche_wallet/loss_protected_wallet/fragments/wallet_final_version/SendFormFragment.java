@@ -209,18 +209,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             }
 
-            _executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    walletContactList = getWalletContactList();
 
-                    contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item,  walletContactList);
-                    contactsAdapter.notifyDataSetChanged();
-                   // contactName.setAdapter(contactsAdapter);
-
-
-                }
-            });
             setUpContactAddapter();
 
 
