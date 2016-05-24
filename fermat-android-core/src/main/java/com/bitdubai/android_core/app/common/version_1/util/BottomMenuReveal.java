@@ -80,6 +80,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                             ViewAnimationUtils.createCircularReveal(mRevealView.getChildAt(0), 0, cy, 0, radius);
                     animator.setInterpolator(new AccelerateDecelerateInterpolator());
                     animator.setDuration(650);
+                    animator.setupStartValues();
 
                     SupportAnimator animator_reverse = animator.reverse();
 
@@ -90,6 +91,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                         if (!isStart){
                             onClickListener.onClick(null);
                             isStart = true;
+                            onClickListener.onClick(null);
                         }
                     } else {
                         animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
