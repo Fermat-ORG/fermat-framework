@@ -2,11 +2,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.develop
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletWalletModuleSettings;
 
 /**
  * Created by Matias Furszyfer on 2015.12.22..
  */
-public class CryptoWalletWalletModuleSettings implements FermatSettings, com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletModuleSettings {
+public class CryptoWalletWalletModuleSettings implements FermatSettings, FermatWalletWalletModuleSettings {
 
     private ActiveActorIdentityInformation activeActorIdentityInformation;
     private boolean isVisiblePresentationHelp;

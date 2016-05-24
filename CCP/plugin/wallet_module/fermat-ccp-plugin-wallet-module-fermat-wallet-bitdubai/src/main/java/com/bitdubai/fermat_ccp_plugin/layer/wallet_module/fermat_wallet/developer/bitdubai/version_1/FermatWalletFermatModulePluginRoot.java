@@ -197,7 +197,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<BitcoinWa
     public ModuleManager<BitcoinWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException{
         try {
 
-            logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
+            logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation started...", null, null);
 
             if(walletModuleCryptoWallet == null) {
                 walletModuleCryptoWallet = new CryptoWalletWalletModuleManager(
@@ -222,7 +222,7 @@ public class FermatWalletFermatModulePluginRoot extends AbstractModule<BitcoinWa
                 walletModuleCryptoWallet.initialize();
             }
 
-            logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
+            logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "FermatWallet instantiation finished successfully.", null, null);
 
             return walletModuleCryptoWallet;
         } catch (final Exception e) {
