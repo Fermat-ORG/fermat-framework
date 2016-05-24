@@ -23,10 +23,6 @@ include ':fermat-bnk-plugin-wallet-module-bank-money-bitdubai'
 project(':fermat-bnk-plugin-wallet-module-bank-money-bitdubai').projectDir = new File('BNK/plugin/wallet_module/fermat-bnk-plugin-wallet-module-bank-money-bitdubai')
 
 //Bank Money Transaction
-include ':fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai'
-project(':fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-make-offline-bank-transfer-bitdubai')
-include ':fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai'
-project(':fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-receive-offline-bank-transfer-bitdubai')
 
 include ':fermat-bnk-plugin-bank-money-transaction-hold-bitdubai'
 project(':fermat-bnk-plugin-bank-money-transaction-hold-bitdubai').projectDir = new File('BNK/plugin/bank_money_transaction/fermat-bnk-plugin-bank-money-transaction-hold-bitdubai')

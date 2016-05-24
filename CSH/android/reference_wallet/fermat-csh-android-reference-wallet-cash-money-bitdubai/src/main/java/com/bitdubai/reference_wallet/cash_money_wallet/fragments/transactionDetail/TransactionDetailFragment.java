@@ -12,18 +12,16 @@ import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
-import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyWalletModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
@@ -39,11 +37,9 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     // Fermat Managers
     private CashMoneyWalletSession walletSession;
     private CashMoneyWalletModuleManager moduleManager;
-    private SettingsManager<CashMoneyWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
 
     //Data
-    private CashMoneyWalletPreferenceSettings walletSettings;
     private CashMoneyWalletTransaction transaction;
     private boolean transactionIsEditable;
 
@@ -70,7 +66,6 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
         try {
             walletSession = ((CashMoneyWalletSession) appSession);
             moduleManager = walletSession.getModuleManager();
-            settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception e) {

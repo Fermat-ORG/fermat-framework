@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,11 +29,13 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
+
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.adapters.RedeemPointCommunityAdapter;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.interfaces.AdapterChangeListener;
 import org.fermat.fermat_dap_android_sub_app_redeem_point_community.models.Actor;
@@ -44,11 +48,10 @@ import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.redeem_point_community.interfaces.RedeemPointCommunitySubAppModuleManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,15 +66,19 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         AdapterView.OnItemClickListener,
         FermatListItemListeners<Actor> {
 
+    protected final String TAG = "RedeemCommunityFragment";
+
     public static final String REDEEM_POINT_SELECTED = "redeemPoint";
-    private static RedeemPointCommunitySubAppModuleManager manager;
+    private static RedeemPointCommunitySubAppModuleManager moduleManager;
+    AssetRedeemPointCommunitySubAppSession assetRedeemPointCommunitySubAppSession;
+    RedeemPointSettings settings = null;
     private int redeemNotificationsCount = 0;
 
     private List<Actor> actorsConnecting;
     private List<ActorAssetRedeemPoint> actorsToConnect;
     private List<Actor> actors;
     private Actor actor;
-    ErrorManager errorManager;
+    static ErrorManager errorManager;
 
     // recycler
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -89,7 +96,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private MenuItem menuItemDisconnect;
     private MenuItem menuItemCancel;
 
-    SettingsManager<RedeemPointSettings> settingsManager;
+//    SettingsManager<RedeemPointSettings> settingsManager;
 
     /**
      * Flags
@@ -103,20 +110,34 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-
         try {
-            manager = ((AssetRedeemPointCommunitySubAppSession) appSession).getModuleManager();
+            setHasOptionsMenu(true);
+
             actor = (Actor) appSession.getData(REDEEM_POINT_SELECTED);
 
+            assetRedeemPointCommunitySubAppSession = ((AssetRedeemPointCommunitySubAppSession) appSession);
+            moduleManager = assetRedeemPointCommunitySubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            redeemNotificationsCount = manager.getWaitingYourConnectionActorAssetRedeemCount();
+            try {
+                settings = assetRedeemPointCommunitySubAppSession.getModuleManager().loadAndGetSettings(assetRedeemPointCommunitySubAppSession.getAppPublicKey());
+            } catch (Exception e) {
+                settings = null;
+            }
+
+            if (assetRedeemPointCommunitySubAppSession.getAppPublicKey() != null) //the identity not exist yet
+            {
+                if (settings == null) {
+                    settings = new RedeemPointSettings();
+                    settings.setIsPresentationHelpEnabled(true);
+                    assetRedeemPointCommunitySubAppSession.getModuleManager().persistSettings(assetRedeemPointCommunitySubAppSession.getAppPublicKey(), settings);
+                }
+            }
+
+            redeemNotificationsCount = moduleManager.getWaitingYourConnectionActorAssetRedeemCount();
             new FetchCountTask().execute();
-
         } catch (Exception ex) {
-            ex.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
         }
     }
 
@@ -133,28 +154,27 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         adapter.setAdapterChangeListener(new AdapterChangeListener<Actor>() {
             @Override
             public void onDataSetChanged(List<Actor> dataSet) {
-                actors = dataSet;
 
+                actors = dataSet;
                 boolean someSelected = false;
-                int selectedActors=0;
+                int selectedActors = 0;
                 int cheackeableActors = 0;
                 List<Actor> actorsSelected = new ArrayList<>();
                 actorsConnecting = new ArrayList<>();
                 actorsToConnect = new ArrayList<>();
 
                 for (Actor actor : actors) {
-                    if (actor.getCryptoAddress() == null){
+                    if (actor.getCryptoAddress() == null) {
                         cheackeableActors++;
                     }
 
                     if (actor.selected) {
 
                         actorsSelected.add(actor);
-                        if (actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))
-                        {
+                        if (actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING)) {
                             actorsConnecting.add(actor);
                         }
-                        if (!(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
+                        if (!(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
                             actorsToConnect.add(actor);
                         }
                         someSelected = true;
@@ -162,27 +182,24 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                     }
                 }
 
-                if (actorsConnecting.size() > 0)
-                {
+                if (actorsConnecting.size() > 0) {
                     menuItemCancel.setVisible(true);
 
-                }
-                else {
+                } else {
                     menuItemCancel.setVisible(false);
                 }
 
                 if (someSelected) {
                     if (actorsConnecting.size() == selectedActors) {
                         menuItemConnect.setVisible(false);
-                    }else if(actorsConnecting.size() == 0){
+                    } else if (actorsConnecting.size() == 0) {
                         menuItemConnect.setVisible(true);
                     }
-                    if (selectedActors > actorsConnecting.size()){
+                    if (selectedActors > actorsConnecting.size()) {
                         menuItemConnect.setVisible(true);
                     }
                     menuItemUnselect.setVisible(true);
-                    if (selectedActors == cheackeableActors)
-                    {
+                    if (selectedActors == cheackeableActors) {
                         menuItemSelect.setVisible(false);
                     } else {
                         menuItemSelect.setVisible(true);
@@ -225,10 +242,10 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         onRefresh();
 
         //Initialize settings
-        settingsManager = appSession.getModuleManager().getSettingsManager();
-        RedeemPointSettings settings = null;
+//        settingsManager = appSession.getModuleManager().getSettingsManager();
+//        RedeemPointSettings settings = null;
         try {
-            settings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             settings = null;
         }
@@ -236,25 +253,28 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
             settings = new RedeemPointSettings();
             settings.setIsContactsHelpEnabled(true);
             settings.setIsPresentationHelpEnabled(true);
+            settings.setNotificationEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
+                if (moduleManager != null) {
+                    moduleManager.persistSettings(appSession.getAppPublicKey(), settings);
+                    moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+                }
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
         }
 
-//        final RedeemPointSettings redeemPointSettingsTemp = settings;
-//
-//
-//        Handler handlerTimer = new Handler();
-//        handlerTimer.postDelayed(new Runnable() {
-//            public void run() {
-//                if (redeemPointSettingsTemp.isPresentationHelpEnabled()) {
-//                    setUpPresentation(false);
-//                }
-//            }
-//        }, 500);
+        final RedeemPointSettings redeemPointSettingsTemp = settings;
+
+        Handler handlerTimer = new Handler();
+        handlerTimer.postDelayed(new Runnable() {
+            public void run() {
+                if (redeemPointSettingsTemp.isPresentationHelpEnabled()) {
+                    setUpPresentation(false);
+                }
+            }
+        }, 500);
 
         return rootView;
     }
@@ -322,7 +342,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 //                                toConnect.add(actor);
 //                        }
 //                        //// TODO: 28/10/15 get Actor asset Redeem Point
-//                        manager.connectToActorAssetRedeemPoint(null, toConnect);
+//                        moduleManager.connectToActorAssetRedeemPoint(null, toConnect);
 //                        return true;
 //                    }
 //                };
@@ -389,16 +409,16 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         this.menu = menu;
         menu.add(0, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CONNECT, 0, "Connect").setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_DISCONNECT, 0, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(1, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_DISCONNECT, 1, "Disconnect")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(2, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CANCEL_CONNECTING, 0, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
+        menu.add(2, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CANCEL_CONNECTING, 2, "Cancel Connecting")//.setIcon(R.drawable.ic_sub_menu_connect)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(3, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL, 0, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(3, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL, 3, "Select All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        menu.add(4, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL, 0, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
+        menu.add(4, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_UNSELECT_ALL, 4, "Unselect All")//.setIcon(R.drawable.dap_community_user_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        menu.add(5, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 0, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
+        menu.add(5, SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION, 5, "Help").setIcon(R.drawable.dap_community_redeem_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
         menuItemConnect = menu.getItem(0);
@@ -419,7 +439,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_SELECT_ALL) {
 
             for (Actor actorIssuer : actors) {
-                if(actorIssuer.getCryptoAddress() == null) {
+                if (actorIssuer.getCryptoAddress() == null) {
                     actorIssuer.selected = true;
                 }
             }
@@ -469,18 +489,18 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                 protected Object doInBackground() throws Exception {
                                     List<ActorAssetRedeemPoint> toConnect = new ArrayList<>();
                                     for (Actor actor : actors) {
-                                        if (actor.selected && !(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))){
-                                        toConnect.add(actor);
+                                        if (actor.selected && !(actor.getDapConnectionState().equals(DAPConnectionState.CONNECTING))) {
+                                            toConnect.add(actor);
                                         }
                                     }
                                     //// TODO: 28/10/15 get Actor asset Redeem Point
-                                  manager.askActorAssetRedeemForConnection(toConnect);
+                                    moduleManager.askActorAssetRedeemForConnection(toConnect);
 
-                                  Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
-                                  broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
-                                  sendLocalBroadcast(broadcast);
+                                    Intent broadcast = new Intent(SessionConstantRedeemPointCommunity.LOCAL_BROADCAST_CHANNEL);
+                                    broadcast.putExtra(SessionConstantRedeemPointCommunity.BROADCAST_CONNECTED_UPDATE, true);
+                                    sendLocalBroadcast(broadcast);
 
-//                                    manager.connectToActorAssetRedeemPoint(null, toConnect);
+//                                    moduleManager.connectToActorAssetRedeemPoint(null, toConnect);
                                     return true;
                                 }
                             };
@@ -536,11 +556,11 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 if (actor.selected)
                     actorsSelected.add(actor);
             }
-            if(actorsSelected.size() > 0) {
+            if (actorsSelected.size() > 0) {
 
                 DisconnectDialog disconnectDialog;
 
-                disconnectDialog = new DisconnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null){
+                disconnectDialog = new DisconnectDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
                     @Override
                     public void onClick(View v) {
                         int i = v.getId();
@@ -559,15 +579,15 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                             toDisconnect.add(actor);
                                     }
                                     /*TODO implementar disconnect*/
-                                    for(ActorAssetRedeemPoint actor: toDisconnect) {
-                                        manager.disconnectToActorAssetRedeemPoint(actor);
+                                    for (ActorAssetRedeemPoint actor : toDisconnect) {
+                                        moduleManager.disconnectToActorAssetRedeemPoint(actor);
                                     }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
                                     broadcast.putExtra(SessionConstantsAssetUserCommunity.BROADCAST_CONNECTED_UPDATE, true);
                                     sendLocalBroadcast(broadcast);*/
 
-//                                    manager.connectToActorAssetUser(null, toConnect);
+//                                    moduleManager.connectToActorAssetUser(null, toConnect);
                                     return true;
                                 }
                             };
@@ -611,7 +631,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                 //connectDialog.setSecondDescription("a connection request");
                 disconnectDialog.show();
                 return true;
-            }else {
+            } else {
                 Toast.makeText(getActivity(), "No Redeem point selected to disconnect.", Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -622,7 +642,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
         if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_CANCEL_CONNECTING) {
             CancelDialog cancelDialog;
 
-            cancelDialog = new CancelDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null){
+            cancelDialog = new CancelDialog(getActivity(), (AssetRedeemPointCommunitySubAppSession) appSession, null) {
                 @Override
                 public void onClick(View v) {
                     int i = v.getId();
@@ -637,9 +657,9 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                             protected Object doInBackground() throws Exception {
 
 
-                                for(Actor actor: actorsConnecting) {
+                                for (Actor actor : actorsConnecting) {
                                     //TODO revisar si esto es asi
-                                    manager.cancelActorAssetRedeem(actor.getActorPublicKey());
+                                    moduleManager.cancelActorAssetRedeem(actor.getActorPublicKey());
                                 }
 
                                     /*Intent broadcast = new Intent(SessionConstantsAssetUserCommunity.LOCAL_BROADCAST_CHANNEL);
@@ -693,8 +713,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
         try {
             if (id == SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_COMMUNITY_HELP_PRESENTATION) {
-//            if (item.getItemId() == R.id.action_community_redeem_help) {
-                setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(assetRedeemPointCommunitySubAppSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
         } catch (Exception e) {
@@ -707,7 +726,11 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
     private void updateNotificationsBadge(int count) {
         redeemNotificationsCount = count;
-        getActivity().invalidateOptionsMenu();
+        if (getActivity() != null) {
+            getActivity().invalidateOptionsMenu();
+        } else {
+            Log.e(TAG, "updateNotificationsBadge activity null, please check this, class" + getClass().getName() + " line: " + new Throwable().getStackTrace()[0].getLineNumber());
+        }
     }
 
     public void showEmpty(boolean show, View emptyView) {
@@ -729,9 +752,6 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
     }
 
-    /*
-     *Sample AsyncTask to fetch the notifications count
-     */
     class FetchCountTask extends AsyncTask<Void, Void, Integer> {
 
         @Override
@@ -801,13 +821,20 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     private synchronized List<Actor> getMoreData() throws Exception {
         List<Actor> dataSet = new ArrayList<>();
         List<RedeemPointActorRecord> result = null;
-        if (manager == null)
+        if (moduleManager == null)
             throw new NullPointerException("AssetRedeemPointCommunitySubAppModuleManager is null");
-        result = manager.getAllActorAssetRedeemPointRegistered();
-        if (result != null && result.size() > 0) {
-            for (RedeemPointActorRecord record : result) {
-                dataSet.add((new Actor(record)));
+
+        try {
+            result = moduleManager.getAllActorAssetRedeemPointRegistered();
+            if (result != null && result.size() > 0) {
+                for (RedeemPointActorRecord record : result) {
+                    dataSet.add((new Actor(record)));
+                }
             }
+        } catch (CantGetAssetRedeemPointActorsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return dataSet;
     }
@@ -815,7 +842,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
     @Override
     public void onItemClickListener(Actor data, int position) {
         appSession.setData(REDEEM_POINT_SELECTED, data);
-        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_PROFILE.getCode(), assetRedeemPointCommunitySubAppSession.getAppPublicKey());
     }
 
     @Override
@@ -839,82 +866,11 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
 
     }
 
-    /*private boolean ableToDisconnect(List<Actor> actors){
-        List <Actor> allActors = actors;
-        for (Actor actor : allActors){
-            switch (actor.getDapConnectionState()){
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CANCELLED_REMOTELY: {
-                    return false;
-                }
-                case CONNECTED_ONLINE:
-                case CONNECTED_OFFLINE:
-                case CONNECTED:{
-                    if (actor.getCryptoAddress() != null)
-                        continue;
-                }
-                case CONNECTING:
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR_UNKNOWN:
-                case PENDING_LOCALLY:
-                case PENDING_REMOTELY:
-                case REGISTERED_LOCALLY:
-                case REGISTERED_REMOTELY:
-                case REGISTERED_ONLINE:
-                case REGISTERED_OFFLINE: {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    private boolean ableToConnect(List<Actor> actors){
-        List <Actor> allActors = actors;
-        for (Actor actor : allActors){
-            switch (actor.getDapConnectionState()){
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CONNECTING:
-                case CANCELLED_REMOTELY: {
-                    continue;
-                }
-                case CONNECTED_ONLINE:
-                case CONNECTED_OFFLINE:
-                case CONNECTED:{
-                    if (actor.getCryptoAddress() != null)
-                        return false;
-                }
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR_UNKNOWN:
-                case PENDING_LOCALLY:
-                case PENDING_REMOTELY:
-                case REGISTERED_LOCALLY:
-                case REGISTERED_REMOTELY:
-                case REGISTERED_ONLINE:
-                case REGISTERED_OFFLINE: {
-                    continue;
-                }
-            }
-        }
-        return true;
-    }*/
-    private void restartButtons()
-    {
+    private void restartButtons() {
         menuItemCancel.setVisible(false);
         menuItemSelect.setVisible(true);
         menuItemUnselect.setVisible(false);
         menuItemConnect.setVisible(false);
         menuItemDisconnect.setVisible(false);
-
     }
-
 }

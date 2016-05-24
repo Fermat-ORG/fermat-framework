@@ -9,9 +9,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
 
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -23,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class LossProtectedWalletModuleWalletContact implements LossProtectedWalletContact {
+public class LossProtectedWalletModuleWalletContact implements Serializable,LossProtectedWalletContact {
 
     private final String              actorName            ;
     private final String              actorPublicKey       ;

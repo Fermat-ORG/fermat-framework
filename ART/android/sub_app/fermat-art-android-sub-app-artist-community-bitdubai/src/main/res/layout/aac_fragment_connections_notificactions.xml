@@ -17,12 +17,12 @@
 
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/afc_swipeRefresh"
+            android:id="@+id/aac_swipeRefresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/aac_recycler_view"
+                android:id="@+id/aac_recyclerview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scrollbars="vertical"
@@ -31,7 +31,7 @@
 
         <!--Empty view-->
         <LinearLayout
-            android:id="@+id/aac_empty_view"
+            android:id="@+id/aac_emptyview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#010c12"

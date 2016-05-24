@@ -33,7 +33,10 @@ public class DeviceLocationManager implements LocationManager {
 
     @Override
     public Location getLastKnownLocation() throws CantGetDeviceLocationException {
-        return lastKnownLocation;
+        if (lastKnownLocation != null)
+            return lastKnownLocation;
+        else
+            return getLocation();
     }
 
     @Override

@@ -1,7 +1,8 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.node.respond.AddNodeToCatalogMsjRespond</code>
@@ -14,9 +15,14 @@ import com.google.gson.Gson;
 public class AddNodeToCatalogMsjRespond extends MsgRespond {
 
     /**
-     * Represent the identityPublicKey of the profile
+     * Represent the nodeProfileAdded
      */
-    private String identityPublicKey;
+    private NodeProfile nodeProfileAdded;
+
+    /**
+     * Represent the alreadyExists
+     */
+    private Boolean alreadyExists;
 
     /**
      * Constructor with parameters
@@ -24,21 +30,46 @@ public class AddNodeToCatalogMsjRespond extends MsgRespond {
      * @param status
      * @param details
      */
-    public AddNodeToCatalogMsjRespond(STATUS status, String details, String identityPublicKey) {
+    public AddNodeToCatalogMsjRespond(STATUS status, String details, NodeProfile nodeProfileAdded, Boolean alreadyExists) {
         super(status, details);
-        this.identityPublicKey = identityPublicKey;
+        this.nodeProfileAdded = nodeProfileAdded;
+        this.alreadyExists = alreadyExists;
     }
 
     /**
-     * Get the IdentityPublicKey
-     * @return String
+     * Get the NodeProfileAdded value
+     *
+     * @return NodeProfileAdded
      */
-    public String getIdentityPublicKey() {
-        return identityPublicKey;
+    public NodeProfile getNodeProfileAdded() {
+        return nodeProfileAdded;
     }
 
-    public static AddNodeToCatalogMsjRespond parseContent(String content) {
+    /**
+     * Get the AlreadyExists value
+     *
+     * @return AlreadyExists
+     */
+    public Boolean getAlreadyExists() {
+        return alreadyExists;
+    }
 
-        return new Gson().fromJson(content, AddNodeToCatalogMsjRespond.class);
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
+
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static AddNodeToCatalogMsjRespond parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, AddNodeToCatalogMsjRespond.class);
     }
 }

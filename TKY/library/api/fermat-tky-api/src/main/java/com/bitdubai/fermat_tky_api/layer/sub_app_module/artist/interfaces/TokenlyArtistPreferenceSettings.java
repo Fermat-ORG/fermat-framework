@@ -8,12 +8,14 @@ import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.except
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantSetDefaultSkinException;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Juan Sulbaran sulbaranja@gmail.com on 23/03/16.
  */
-public class TokenlyArtistPreferenceSettings implements FermatSettings {
+
+public class TokenlyArtistPreferenceSettings implements FermatSettings, Serializable {
 
     private boolean isHomeTutorialDialogEnabled;
     private Actors localActorType;

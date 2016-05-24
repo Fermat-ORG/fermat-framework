@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 import org.fermat.fermat_dap_android_wallet_asset_user.fragments.AssetNegotiationDetailFragment;
 import org.fermat.fermat_dap_android_wallet_asset_user.fragments.AssetRedeemRedeemFragment;
@@ -22,7 +23,6 @@ import org.fermat.fermat_dap_android_wallet_asset_user.v2.fragments.HomeFragment
 import org.fermat.fermat_dap_android_wallet_asset_user.v2.fragments.RedeemPointsFragment;
 import org.fermat.fermat_dap_android_wallet_asset_user.v3.fragments.HomeCardFragment;
 import org.fermat.fermat_dap_android_wallet_asset_user.v3.fragments.TransactionsFragment;
-import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 /**
  * Wallet Asset User Fragment Factory

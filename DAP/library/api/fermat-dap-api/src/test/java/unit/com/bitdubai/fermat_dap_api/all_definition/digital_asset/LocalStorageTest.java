@@ -19,6 +19,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset
 import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import org.junit.Test;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -27,8 +28,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
-
-import org.junit.Test;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 05/11/15.

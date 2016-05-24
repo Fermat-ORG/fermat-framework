@@ -3,7 +3,10 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 import android.util.Log;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -16,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+
 
 public class StockStatisticsData {
     private List<CryptoBrokerStockTransaction> stockTransactions;
@@ -38,6 +42,9 @@ public class StockStatisticsData {
             currency = associatedWallet.getMerchandise();
 
             balance = walletManager.getAvailableBalance(currency, walletPublicKey);
+
+            if (currency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currency.getCode()))
+                balance = (float) BitcoinConverter.convert(balance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
             final int offset = 31;
             stockTransactions = walletManager.getStockHistory(

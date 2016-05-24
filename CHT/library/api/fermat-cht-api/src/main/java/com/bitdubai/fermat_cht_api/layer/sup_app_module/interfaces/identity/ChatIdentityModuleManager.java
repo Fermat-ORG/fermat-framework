@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity;
 
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
@@ -9,6 +10,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentit
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ import java.util.List;
  * Developed by Lozadaa on 30/03/16.
  */
 
-public interface ChatIdentityModuleManager extends ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> {
+public interface ChatIdentityModuleManager extends ModuleManager, ModuleSettingsImpl<ChatIdentityPreferenceSettings>, Serializable {
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
      *
@@ -55,12 +57,4 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatIdentityPre
      */
     void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException;
 
-    /**
-     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
-     * settings class parametrized.
-     *
-     * @return a new instance of the settings manager for the specified fermat settings object.
-     */
-    @Override
-    SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager();
 }

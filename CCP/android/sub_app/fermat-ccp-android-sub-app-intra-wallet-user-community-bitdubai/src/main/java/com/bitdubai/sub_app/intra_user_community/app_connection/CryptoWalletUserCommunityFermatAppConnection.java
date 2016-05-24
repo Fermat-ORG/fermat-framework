@@ -51,7 +51,7 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new IntraUserCommunityNavigationViewPainter(getContext(),getActiveIdentity());
+        return new IntraUserCommunityNavigationViewPainter(getContext(),getActiveIdentity(),getApplicationManager());
     }
 
     @Override

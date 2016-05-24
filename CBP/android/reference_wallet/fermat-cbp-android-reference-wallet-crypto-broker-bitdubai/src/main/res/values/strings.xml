@@ -37,7 +37,7 @@
     <string name="cbw_contract_history_action_filter_succeed_text">Succeed</string>
     <string name="cbw_contract_history_action_filter_canceled_text">Canceled</string>
     <string name="title_activity_broker_list">BrokerListActivity</string>
-    <string name="delivery_date_title">Delivery Date</string>
+    <string name="delivery_date_title">Customer Delivery Date</string>
     <string name="delivery_date_text">Delivery Date: </string>
     <string name="notes">Notes</string>
     <string name="exchange_rate_reference">Exchange Rate Reference</string>
@@ -60,7 +60,7 @@
     <string name="selected_bank_account">Selected Bank Account: </string>
     <string name="customer_locations_title">Customer Locations</string>
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
-    <string name="payment_date_title">Payment Date</string>
+    <string name="payment_date_title">Broker Delivery Date</string>
     <string name="payment_date">Payment Date: </string>
     <string name="add_a_note_button">ADD A NOTE</string>
     <string name="payment_methods_title">Payment Method</string>
@@ -148,13 +148,13 @@
     <string name="cbw_crypto_address_title">Crypto Address</string>
     <string name="cbw_bank_account_title">Bank Account</string>
     <string name="cbw_cash_place_to_deliver">Merchandise\'s Delivery Place</string>
-    <string name="cbw_cash_place_to_receive">Payment\'s Reception Place</string>
+    <string name="cbw_cash_place_to_receive">Payment Reception Place</string>
     <string name="cbw_insert_note">Insert Note</string>
     <string name="hint">hint</string>
     <string name="title">title</string>
     <string name="cancel">Cancel</string>
     <string name="accept">Accept</string>
-    <string name="cbw_your_exchange_rate">Your Exchange Rate</string>
+    <string name="cbw_your_exchange_rate">Selected Rate</string>
     <string name="cbw_value">value</string>
     <string name="cbw_cancel_negotiation">Cancel Negotiation</string>
     <string name="cbw_reason">Reason</string>

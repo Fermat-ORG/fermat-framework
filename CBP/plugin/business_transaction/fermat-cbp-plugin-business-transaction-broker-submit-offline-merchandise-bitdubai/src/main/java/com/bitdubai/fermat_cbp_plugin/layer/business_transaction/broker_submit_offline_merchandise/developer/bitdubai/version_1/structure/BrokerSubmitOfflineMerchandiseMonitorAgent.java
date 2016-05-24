@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
@@ -51,6 +52,9 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListSaleNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
@@ -111,6 +115,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
     CustomerBrokerContractSaleManager customerBrokerContractSaleManager;
     CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
+    CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager;
     CashMoneyDestockManager cashMoneyDestockManager;
     BankMoneyDestockManager bankMoneyDestockManager;
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
@@ -127,7 +132,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
             CashMoneyDestockManager cashMoneyDestockManager,
             BankMoneyDestockManager bankMoneyDestockManager,
-            CryptoBrokerWalletManager cryptoBrokerWalletManager) {
+            CryptoBrokerWalletManager cryptoBrokerWalletManager,CustomerBrokerPurchaseNegotiationManager customerBrokerPurchaseNegotiationManager) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -140,6 +145,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
         this.bankMoneyDestockManager = bankMoneyDestockManager;
         this.cashMoneyDestockManager = cashMoneyDestockManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
+        this.customerBrokerPurchaseNegotiationManager=customerBrokerPurchaseNegotiationManager;
     }
 
     @Override
@@ -630,13 +636,21 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             CustomerBrokerContractPurchase customerBrokerContractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
                             //If the contract is null, I cannot handle with this situation
                             ObjectChecker.checkArgument(customerBrokerContractPurchase);
-                            brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
-                            Date date = new Date();
-                            brokerSubmitOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
-                            //TODO: I'm going to set BANK, I need to look a better way to set this
-                            raisePaymentConfirmationEvent(contractHash, MoneyType.BANK);
 
+                            String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+                            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+                                    getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+                            Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
+                            String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClauses, ClauseType.BROKER_PAYMENT_METHOD);
+                            if (!MoneyType.CRYPTO.getCode().equals(clauseValue)){
+                                brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
+                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
+                                Date date = new Date();
+                                brokerSubmitOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                                //TODO: I'm going to set BANK, I need to look a better way to set this
+                                raisePaymentConfirmationEvent(contractHash, MoneyType.BANK);
+                            }
                         }
 
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -682,6 +696,16 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 }
 
                 //TODO: look a better way to deal with this exceptions
+            } catch (CantGetListPurchaseNegotiationsException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the database");
+            } catch (CantGetListClauseException exception) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        exception,
+                        "Checking pending events",
+                        "Cannot update the database");
             } catch (CantUpdateRecordException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,

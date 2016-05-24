@@ -6,6 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.bitdubai.fermat_android_api.engine.FermatApplicationCaller;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -22,17 +24,20 @@ public class IntraUserCommunityNavigationViewPainter implements NavigationViewPa
 
     private WeakReference<Context> activity;
     private final ActiveActorIdentityInformation intraUserLoginIdentity;
+    private WeakReference<FermatApplicationCaller> applicationsHelper;
 
-    public IntraUserCommunityNavigationViewPainter(Context activity,ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public IntraUserCommunityNavigationViewPainter(Context activity,ActiveActorIdentityInformation intraUserLoginIdentity,FermatApplicationCaller applicationsHelper) {
         this.activity = new WeakReference(activity);
         this.intraUserLoginIdentity = intraUserLoginIdentity;
+        this.applicationsHelper = new WeakReference<FermatApplicationCaller>(applicationsHelper);
     }
 
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
+
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), intraUserLoginIdentity);
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), intraUserLoginIdentity,applicationsHelper.get());
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
             return null;

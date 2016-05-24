@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -53,7 +52,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
     /**
      * MANAGERS
      */
-    private LossProtectedWallet lossProtectedWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
     /**
      * DATA
      */
@@ -68,7 +67,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
     private View rootView;
     private LinearLayout empty;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
+    LossProtectedWalletSettings lossProtectedWalletSettings;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -91,19 +90,12 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
 
         lstWalletTransaction = new ArrayList<LossProtectedWalletTransaction>();
         try {
-            lossProtectedWallet = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
-
-            lstWalletTransaction = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
-
-
-            settingsManager = lossProtectedWalletSession.getModuleManager().getSettingsManager();
-
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
+            lossProtectedWalletManager = lossProtectedWalletSession.getModuleManager();
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-            } catch (CantGetSettingsException e) {
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
+            }
+            catch (CantGetSettingsException e) {
                 makeText(getActivity(), "Oooops! recovering from system error: CantGetSettingsException", Toast.LENGTH_SHORT).show();
                 lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
             }
@@ -174,7 +166,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
             adapter = new TransactionsHistoryAdapter(
                     getActivity(),
                     lstWalletTransaction,
-                    lossProtectedWallet,
+                    lossProtectedWalletManager,
                     lossProtectedWalletSession,this);
             adapter.setFermatListEventListener(this);
         }
@@ -207,7 +199,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
                     intraUserPk = intraUserLoginIdentity.getPublicKey();
                 }
 
-                lstTransaction = lossProtectedWallet.listAllActorTransactionsByTransactionType(
+                lstTransaction = lossProtectedWalletManager.listAllActorTransactionsByTransactionType(
                         BalanceType.AVAILABLE,
                         TransactionType.CREDIT,
                         lossProtectedWalletSession.getAppPublicKey(),
@@ -215,7 +207,7 @@ public class ReceiveTransactionHistoryFragment extends FermatWalletListFragment<
                         blockchainNetworkType,
                         MAX_TRANSACTIONS,0);
 
-                offset += MAX_TRANSACTIONS;
+               // offset += MAX_TRANSACTIONS;
             } catch (Exception e) {
                 lossProtectedWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

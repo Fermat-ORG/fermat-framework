@@ -18,7 +18,6 @@ import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
@@ -31,6 +30,8 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_CUSTOMER_WALLET;
 
 
 /**
@@ -71,10 +72,10 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             //contractHistoryList = (ArrayList) TestData.getContractsHistory(null);
 
         } catch (Exception ex) {
-            CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_CUSTOMER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            else
+                CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
     }
 
@@ -189,7 +190,6 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
     public void onItemClickListener(ContractBasicInformation data, int position) {
         appSession.setData(CryptoCustomerWalletSession.CONTRACT_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CLOSE_CONTRACT_DETAILS, appSession.getAppPublicKey());
-        //changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override
@@ -206,12 +206,10 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
                 data.addAll(moduleManager.getContractsHistory(filterContractStatus, 20, 0));
 
             } catch (Exception ex) {
-                CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(
-                            Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
-                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                            ex);
+                    errorManager.reportUnexpectedWalletException(CBP_CRYPTO_CUSTOMER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                else
+                    CommonLogger.exception(TAG, ex.getMessage(), ex);
             }
         } else {
             Toast.makeText(getActivity(),

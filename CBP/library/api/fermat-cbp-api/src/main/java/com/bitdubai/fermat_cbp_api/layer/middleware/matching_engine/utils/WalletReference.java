@@ -1,12 +1,15 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils;
 
+import java.io.Serializable;
+
+
 /**
  * The class <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference</code>
  * contains the information needed to identify a wallet.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/02/2016.
  */
-public final class WalletReference {
+public final class WalletReference implements Serializable {
 
     private final String publicKey;
 

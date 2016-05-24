@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_user.holders.DigitalAssetViewHolder;
 import org.fermat.fermat_dap_android_wallet_asset_user.interfaces.PopupMenu;
 import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;

@@ -106,14 +106,14 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
         subappSettings = null;
         try {
-            subappSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            subappSettings = this.moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e){ subappSettings = null; }
 
         if(subappSettings == null){
             subappSettings = new IdentityCustomerPreferenceSettings();
             subappSettings.setIsPresentationHelpEnabled(true);
             try {
-                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(),subappSettings);
+                moduleManager.persistSettings(appSession.getAppPublicKey(),subappSettings);
             }catch (Exception e){
 
             }
@@ -121,7 +121,7 @@ public class CryptoCustomerIdentityListFragment extends FermatListFragment<Crypt
 
         boolean showDialog;
         try{
-            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
             if(showDialog){
                 presentationDialog.show();
             }

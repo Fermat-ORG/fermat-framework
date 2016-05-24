@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -47,6 +48,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -80,6 +83,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 import static com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUtils.showMessage;
@@ -147,6 +152,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
     private boolean connectionDialogIsShow = false;
     private boolean isScrolled = false;
 
+    private ExecutorService _executor;
+
     public static ContactsFragment newInstance() {
 
         ContactsFragment f = new ContactsFragment();
@@ -162,6 +169,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
+
+        _executor = Executors.newFixedThreadPool(2);
         try {
         cryptoWallet = (CryptoWallet) appSession.getModuleManager();
         } catch (Exception e) {
@@ -181,17 +190,27 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             mItems = new ArrayList<>();
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
-            onRefresh();
-            Handler handlerTimer = new Handler();
-            handlerTimer.postDelayed(new Runnable() {
+
+            _executor.submit(new Runnable() {
+                @Override
                 public void run() {
+                    try {
+                        walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                    } catch (CantGetAllWalletContactsException e) {
+                        e.printStackTrace();
+                    } catch (CantListCryptoWalletIntraUserIdentityException e) {
+                        e.printStackTrace();
+                    } catch (CantGetCryptoWalletException e) {
+                        e.printStackTrace();
+                    }
+
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
                             boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
 
-                            if(isHelpEnabled)
-                              setUpTutorial(true);
+                            if (isHelpEnabled)
+                                setUpTutorial(true);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -201,7 +220,9 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
                 }
-            }, 300);
+            });
+
+
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
