@@ -411,6 +411,7 @@ public class TokenlyArtistIdentityCreateProfile extends AbstractFermatFragment {
 
             if (pictureView != null && imageBitmap != null)
                 pictureView.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), imageBitmap));
+            contextMenuInUse = false;
 
         }
     }
