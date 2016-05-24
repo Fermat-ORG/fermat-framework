@@ -67,8 +67,8 @@ public class CancelDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
         positiveBtn = (FermatButton) findViewById(R.id.aac_positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.aac_negative_button);
         mTitle.setText("Cancel");
-        mDescription.setText("Want to cancel connection with");
-        mUsername.setText(artistCommunityInformation.getAlias());
+        mDescription.setText("Do you want to cancel connection with");
+        mUsername.setText(artistCommunityInformation.getAlias()+"?");
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 

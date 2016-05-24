@@ -82,8 +82,8 @@ public class AcceptDialog extends
         negativeBtn.setOnClickListener(this);
 
         title.setText("Connect");
-        description.setText("Do you want to accept");
-        userName.setText(alias);
+        description.setText("Do you want to accept the connection request from");
+        userName.setText(alias+"?");
     }
 
     @Override
