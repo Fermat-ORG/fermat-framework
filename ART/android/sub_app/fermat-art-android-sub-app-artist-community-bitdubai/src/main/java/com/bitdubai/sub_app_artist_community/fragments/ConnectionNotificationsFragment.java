@@ -3,10 +3,12 @@ package com.bitdubai.sub_app_artist_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +106,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            //rootView.setBackgroundColor(Color.parseColor("#363636"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.aac_emptyview);
 
             onRefresh();
@@ -116,7 +118,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
             ex.printStackTrace();
 
         }
-
+        configureToolbar();
         return rootView;
     }
 
@@ -240,4 +242,16 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
     public void onDismiss(DialogInterface dialog) {
         onRefresh();
     }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
 }
