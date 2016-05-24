@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * The class <code>CryptoWalletWalletModuleIntraUserActor</code>
- * implements the interface CryptoWalletIntraUserActor and all its methods.
+ * implements the interface FermatWalletIntraUserActor and all its methods.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 22/09/15.
  * @version 1.0

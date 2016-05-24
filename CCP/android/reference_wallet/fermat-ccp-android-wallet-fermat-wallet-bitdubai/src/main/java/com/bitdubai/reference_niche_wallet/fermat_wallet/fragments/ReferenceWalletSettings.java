@@ -64,7 +64,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             //noinspection unchecked
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
+            showMessage(getActivity(), "CantGetFermatWalletException- " + e.getMessage());
         }
     }
 

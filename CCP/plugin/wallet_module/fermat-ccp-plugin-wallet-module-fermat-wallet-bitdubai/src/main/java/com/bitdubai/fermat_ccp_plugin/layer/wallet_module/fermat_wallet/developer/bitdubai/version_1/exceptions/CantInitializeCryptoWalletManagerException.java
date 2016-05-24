@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CryptoWalletException;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.exceptions.FermatWalletException;
 
 /**
  * The Class <code>CantInitializeCryptoWalletManagerException</code>
@@ -12,7 +13,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantInitializeCryptoWalletManagerException extends CryptoWalletException {
+public class CantInitializeCryptoWalletManagerException extends FermatWalletException {
 
     public static final String DEFAULT_MESSAGE = "CAN'T INITIALIZE CRYPTO WALLET MANAGER EXCEPTION";
 
