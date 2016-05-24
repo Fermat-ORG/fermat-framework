@@ -22,7 +22,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.LinkedFanIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -62,7 +62,7 @@ public class ConnectionNotificationsFragment extends
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private FanCommunityInformation fanCommunityInformation;
+    private ArtCommunityInformation fanCommunityInformation;
     private List<LinkedFanIdentity> linkedFanIdentities;
 
     /**
@@ -78,7 +78,7 @@ public class ConnectionNotificationsFragment extends
         super.onCreate(savedInstanceState);
         // setting up  module
         fanCommunitySubAppSession = appSession;
-        fanCommunityInformation = (FanCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        fanCommunityInformation = (ArtCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = fanCommunitySubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         linkedFanIdentities = new ArrayList<>();

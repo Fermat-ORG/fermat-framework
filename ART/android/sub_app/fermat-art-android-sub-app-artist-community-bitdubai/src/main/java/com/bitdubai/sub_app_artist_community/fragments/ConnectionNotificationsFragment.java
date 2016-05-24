@@ -21,6 +21,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -58,7 +59,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
     private ArtistCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
-    private ArtistCommunityInformation artistCommunityInformation;
+    private ArtCommunityInformation artistCommunityInformation;
     private List<ArtistCommunityInformation> artistCommunityInformations;
 
     /**
@@ -75,7 +76,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         // setting up  module
-        artistCommunityInformation = (ArtistCommunityInformation) appSession.getData(ACTOR_SELECTED);
+        artistCommunityInformation = (ArtCommunityInformation) appSession.getData(ACTOR_SELECTED);
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
         artistCommunityInformations = new ArrayList<>();

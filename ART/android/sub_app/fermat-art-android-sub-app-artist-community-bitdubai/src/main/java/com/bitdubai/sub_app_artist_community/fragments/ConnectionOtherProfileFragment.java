@@ -21,10 +21,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
@@ -56,7 +56,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
     private FermatTextView externalPlatform;
     private ArtistCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ArtistCommunityInformation artistCommunityInformation;
+    private ArtCommunityInformation artistCommunityInformation;
     private Button connect;
     private Button disconnect;
     private Button cancel;
@@ -79,7 +79,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         // setting up  module
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        artistCommunityInformation = (ArtistCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
+        artistCommunityInformation = (ArtCommunityInformation) appSession.getData(ConnectionsWorldFragment.ACTOR_SELECTED);
 
     }
 
@@ -203,9 +203,9 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         if(i == R.id.aac_btn_connect) {
             try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
-                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (ArtistCommunityInformation)artistCommunityInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
-                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setDescription("Do you want to send to");
                 connectDialog.setUsername(artistCommunityInformation.getAlias());
                 connectDialog.setSecondDescription("a connection request");
                 connectDialog.setOnDismissListener(this);
@@ -217,10 +217,10 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
         } else if(i == R.id.aac_btn_disconnect) {
             try {
                 DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(), appSession, null,
-                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (ArtistCommunityInformation)artistCommunityInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(artistCommunityInformation.getAlias());
+                disconnectDialog.setUsername(artistCommunityInformation.getAlias() + "?");
                 disconnectDialog.setOnDismissListener(this);
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
@@ -231,10 +231,10 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
 
             try {
                 CancelDialog cancelDialog = new CancelDialog(getActivity(), appSession, null,
-                        artistCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (ArtistCommunityInformation)artistCommunityInformation, moduleManager.getSelectedActorIdentity());
                 cancelDialog.setTitle("Cancel");
                 cancelDialog.setDescription("Want to cancel connection with");
-                cancelDialog.setUsername(artistCommunityInformation.getAlias());
+                cancelDialog.setUsername(artistCommunityInformation.getAlias()+"?");
                 cancelDialog.setOnDismissListener(this);
                 cancelDialog.show();
             } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {

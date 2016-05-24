@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
@@ -58,7 +59,7 @@ public class ConnectionOtherProfileFragment extends
     private FermatTextView externalPlatform;
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private FanCommunityInformation fanCommunityInformation;
+    private ArtCommunityInformation fanCommunityInformation;
     private Button connect;
     private Button disconnect;
     private Button cancel;
@@ -80,7 +81,7 @@ public class ConnectionOtherProfileFragment extends
         // setting up  module
         moduleManager = appSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        fanCommunityInformation = (FanCommunityInformation) appSession.getData(
+        fanCommunityInformation = (ArtCommunityInformation) appSession.getData(
                 ConnectionsWorldFragment.ACTOR_SELECTED);
 
     }
@@ -206,11 +207,11 @@ public class ConnectionOtherProfileFragment extends
         if(i == R.id.afc_btn_connect) {
             try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
-                        fanCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (FanCommunityInformation)fanCommunityInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
                 connectDialog.setUsername(fanCommunityInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(this);
                 connectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
@@ -221,10 +222,10 @@ public class ConnectionOtherProfileFragment extends
             try {
                 DisconnectDialog disconnectDialog = new DisconnectDialog(
                         getActivity(), appSession, null,
-                        fanCommunityInformation, moduleManager.getSelectedActorIdentity());
+                        (FanCommunityInformation) fanCommunityInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(fanCommunityInformation.getAlias());
+                disconnectDialog.setUsername(fanCommunityInformation.getAlias()+"?");
                 disconnectDialog.setOnDismissListener(this);
                 disconnectDialog.show();
             } catch (CantGetSelectedActorIdentityException |ActorIdentityNotSelectedException e) {
