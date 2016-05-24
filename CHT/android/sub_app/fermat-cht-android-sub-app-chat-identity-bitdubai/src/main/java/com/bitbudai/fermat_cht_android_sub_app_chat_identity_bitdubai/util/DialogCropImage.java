@@ -52,10 +52,11 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
             cropImageView.setImageBitmap(image);
             cropImageView.setGuidelines(2);
             Button btnCrop = (Button) findViewById(R.id.btnCrop);
+              Button btnRotate = (Button) findViewById(R.id.btnRotateCropper);
             Button btnCancel = (Button) findViewById(R.id.btnCancel);
             btnCrop.setOnClickListener(this);
             btnCancel.setOnClickListener(this);
-
+            btnRotate.setOnClickListener(this);
     }
 
     @Override
@@ -85,6 +86,9 @@ public class DialogCropImage extends FermatDialog implements View.OnClickListene
         }
         if (i == R.id.btnCancel) {
             dismiss();
+        }
+        if( i == R.id.btnRotateCropper){
+            cropImageView.rotateImage(90);
         }
     }
 }
