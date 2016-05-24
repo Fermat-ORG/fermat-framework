@@ -387,7 +387,7 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     private void handleWidhtrawalFabVisibilityAccordingToBalance()
     {
         if(this.walletBalances.getAvailableBalance().compareTo(new BigDecimal(0)) == 0 && this.walletBalances.getBookBalance().compareTo(new BigDecimal(0)) == 0)
-            fabWithdraw.setVisibility(View.INVISIBLE);
+            fabWithdraw.setVisibility(View.GONE);
         else
             fabWithdraw.setVisibility(View.VISIBLE);
 

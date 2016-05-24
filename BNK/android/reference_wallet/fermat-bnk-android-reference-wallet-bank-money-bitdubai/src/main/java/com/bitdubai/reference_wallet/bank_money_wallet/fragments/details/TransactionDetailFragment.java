@@ -1,7 +1,8 @@
-package com.bitdubai.reference_wallet.bank_money_wallet.fragments.summary;
+package com.bitdubai.reference_wallet.bank_money_wallet.fragments.details;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,15 +29,15 @@ import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSe
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
-import org.bitcoinj.core.Utils;
-
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by memo on 19/01/16.
  */
-public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
+public class TransactionDetailFragment extends AbstractFermatFragment {
 
 
     private static final String TAG = "updatetransactionFragment";
@@ -52,8 +53,8 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
     private BankMoneyWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
-    public static UpdateTransactionRecordFragment newInstance() {
-        return new UpdateTransactionRecordFragment();
+    public static TransactionDetailFragment newInstance() {
+        return new TransactionDetailFragment();
     }
 
     @Override
@@ -84,7 +85,7 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
 
         transactionAmount.setText(String.valueOf(transactionRecord.getAmount()));
         transactionType.setText(transactionRecord.getTransactionType().getCode());
-        transactionDate.setText(Utils.dateTimeFormat(transactionRecord.getTimestamp()));
+        transactionDate.setText(getPrettyTime(transactionRecord.getTimestamp()));
         transactionConcept.setText(transactionRecord.getMemo());
         configureToolbar();
         transactionType.setEnabled(false);
@@ -128,6 +129,14 @@ public class UpdateTransactionRecordFragment extends AbstractFermatFragment {
         super.onCreateOptionsMenu(menu, inflater);
         menu.add(0, ReferenceWalletConstants.UPDATE_RECORD_ACTION, 0, "Save")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    }
+
+    private String getPrettyTime(long timestamp)
+    {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        return sdf.format(new Date(transactionRecord.getTimestamp()))
+                + " - "
+                + DateUtils.getRelativeTimeSpanString(timestamp).toString();
     }
 
     private void makeTransaction(boolean transactionUpdateCancelled) {

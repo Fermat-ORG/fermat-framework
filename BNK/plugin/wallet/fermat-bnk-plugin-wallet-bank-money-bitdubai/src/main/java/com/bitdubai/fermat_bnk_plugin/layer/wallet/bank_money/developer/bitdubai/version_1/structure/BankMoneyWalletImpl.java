@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.*;
@@ -103,6 +104,16 @@ public class BankMoneyWalletImpl implements BankMoneyWallet {
         } catch (CantInsertRecordException e) {
             pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAddNewAccountException(CantInsertRecordException.DEFAULT_MESSAGE, e, null, null);
+        }
+    }
+
+    @Override
+    public void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException {
+        try {
+            bankMoneyWalletDao.editAccount(originalAccountNumber, newAlias, newAccountNumber, newImageId);
+        }catch (CantUpdateRecordException e){
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantEditAccountException(CantEditAccountException.DEFAULT_MESSAGE,e,null,null);
         }
     }
 
