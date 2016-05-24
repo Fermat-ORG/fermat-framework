@@ -22,6 +22,7 @@
         android:paddingRight="12dp"
         android:paddingTop="22dp"
         app:typeface="CAVIAR_DREAMS"
+        android:textColor="#000"
         />
 
 
@@ -56,6 +57,7 @@
             android:textAlignment="center"
             android:layout_gravity="center"
             android:entries="@array/seed_export_import_array"
+            android:backgroundTint="#000"
             />
 
 
@@ -68,6 +70,8 @@
         android:id="@+id/btn_show_seed"
         android:text="Press to see the mnemonic code"
         android:layout_marginTop="20dp"
+        android:textColor="#000"
+
 
         />
 

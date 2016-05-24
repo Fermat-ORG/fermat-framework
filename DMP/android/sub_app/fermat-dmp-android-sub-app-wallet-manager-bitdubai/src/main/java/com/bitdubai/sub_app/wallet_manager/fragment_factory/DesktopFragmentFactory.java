@@ -51,7 +51,7 @@ public class DesktopFragmentFactory extends FermatFragmentFactory<DesktopSession
                 break;
             case SETTINGS_IMPORT_KEY:
                 abstractFermatFragment = ExportImportSeedFragment.newInstance();
-
+                break;
             default:
                 abstractFermatFragment = DesktopFragment.newInstance();
         }
