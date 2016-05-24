@@ -126,7 +126,7 @@ public class ActorConnectionEventsActions {
                         this.handleAcceptConnection(request.getRequestId());
                         broadcaster.publish(
                                 BroadcasterType.NOTIFICATION_SERVICE,
-                                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                                SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                                 ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
                         break;
                     case DENY:
