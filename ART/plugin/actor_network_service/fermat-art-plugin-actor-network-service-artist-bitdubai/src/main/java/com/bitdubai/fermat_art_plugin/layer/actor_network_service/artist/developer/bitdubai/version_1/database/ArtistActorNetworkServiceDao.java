@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -54,8 +56,10 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.InformationRequestNotFoundException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -396,7 +400,8 @@ public final class ArtistActorNetworkServiceDao {
     public final void createConnectionRequest(final ArtistConnectionInformation artistConnectionInformation,
                                               final ProtocolState                     state            ,
                                               final RequestType type             ,
-                                              final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
+                                              final ConnectionRequestAction           action,
+                                              final int sentCount) throws CantRequestConnectionException {
 
         try {
 
@@ -411,6 +416,7 @@ public final class ArtistActorNetworkServiceDao {
                     type                                       ,
                     state                                      ,
                     action                                     ,
+                    sentCount,
                     artistConnectionInformation.getSendingTime()
             );
 
@@ -598,6 +604,35 @@ public final class ArtistActorNetworkServiceDao {
                 return buildConnectionNewRecord(records.get(0));
             else
                 throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantFindRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantFindRequestException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
+        }
+    }
+
+    public List<ArtistConnectionRequest> getConnectionRequestByDestinationPublicKey(final String publickey) throws CantFindRequestException, ConnectionRequestNotFoundException {
+
+        if (publickey == null)
+            throw new CantFindRequestException(null, "", "The requestId is required, can not be null");
+
+        try {
+
+            final DatabaseTable connectionRequestTable = database.getTable(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionRequestTable.addStringFilter(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, publickey, DatabaseFilterType.EQUAL);
+
+            connectionRequestTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return Collections.singletonList(buildConnectionNewRecord(records.get(0)));
+            else
+                throw new ConnectionRequestNotFoundException(null, "publickey: "+publickey, "Cannot find an actor Connection request with that requestId.");
 
         } catch (final CantLoadTableToMemoryException e) {
 
@@ -846,6 +881,7 @@ public final class ArtistActorNetworkServiceDao {
             record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType())         ;
             record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState())       ;
             record.setFermatEnum(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, connectionNew.getRequestAction())       ;
+            record.setIntegerValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_SENT_COUNT_COLUMN_NAME, connectionNew.getSentCount());
             record.setLongValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME, connectionNew.getSentTime())            ;
 
             if (connectionNew.getSenderImage() != null && connectionNew.getSenderImage().length > 0)
@@ -873,6 +909,7 @@ public final class ArtistActorNetworkServiceDao {
             String requestTypeString     = record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          );
             String protocolStateString   = record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         );
             String requestActionString   = record.getStringValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        );
+            int sentCount                = record.getIntegerValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_SENT_COUNT_COLUMN_NAME   );
             Long   sentTime              = record.getLongValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME);
 
             PlatformComponentType senderActorType = PlatformComponentType.getByCode(senderActorTypeString);
@@ -900,6 +937,7 @@ public final class ArtistActorNetworkServiceDao {
                     requestType,
                     state,
                     action,
+                    sentCount,
                     sentTime
             );
 
@@ -1379,6 +1417,64 @@ public final class ArtistActorNetworkServiceDao {
                     "",
                     "There is a problem with some enum code."                                                                                );
         }
+    }
+
+    public final void updateConnectionRequest(ArtistConnectionRequest artistConnectionRequest){
+        if (artistConnectionRequest == null) {
+            throw new IllegalArgumentException("The entity is required, can not be null");
+        }
+
+        try {
+
+
+            DatabaseTable databaseTable = database.getTable(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+            DatabaseTableRecord emptyRecord =  database.getTable(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME).getEmptyRecord();
+            /*
+             * 1- Create the record to the entity
+             */
+            DatabaseTableRecord entityRecord = buildConnectionNewDatabaseRecord(emptyRecord, artistConnectionRequest);
+
+            /**
+             * 2.- Create a new transaction and execute
+             */
+            DatabaseTransaction transaction = database.newTransaction();
+
+            //set filter
+
+            databaseTable.addUUIDFilter(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, artistConnectionRequest.getRequestId(), DatabaseFilterType.EQUAL);
+
+            transaction.addRecordToUpdate(databaseTable, entityRecord);
+            database.executeTransaction(transaction);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(UUID notificationId) throws CantDeleteRecordException {
+
+        try {
+
+            DatabaseTable table = database.getTable(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+            table.addUUIDFilter(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, notificationId, DatabaseFilterType.EQUAL);
+
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+
+            for (DatabaseTableRecord record : records) {
+                table.deleteRecord(record);
+            }
+
+
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(CantLoadTableToMemoryException exception){
+
+            throw new CantDeleteRecordException(CantDeleteRecordException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
+        }
+
     }
 
 }
