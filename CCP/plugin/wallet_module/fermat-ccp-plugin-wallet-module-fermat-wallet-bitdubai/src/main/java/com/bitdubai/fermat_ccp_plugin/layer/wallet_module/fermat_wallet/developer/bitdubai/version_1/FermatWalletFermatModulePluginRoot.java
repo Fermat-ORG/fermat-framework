@@ -38,7 +38,7 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.int
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
+import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 
@@ -62,7 +62,7 @@ import java.util.regex.Pattern;
 
 @PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 
-public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWalletSettings, ActiveActorIdentityInformation> implements
+public class FermatWalletFermatModulePluginRoot extends AbstractModule<BitcoinWalletSettings, ActiveActorIdentityInformation> implements
         LogManagerForDevelopers {
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET    , plugin = Plugins.BITCOIN_WALLET)
@@ -131,7 +131,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
 
     private static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    public CryptoWalletCryptoModulePluginRoot() {
+    public FermatWalletFermatModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
 
     }
@@ -158,11 +158,11 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
             /**
              * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (CryptoWalletCryptoModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                CryptoWalletCryptoModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                CryptoWalletCryptoModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            if (FermatWalletFermatModulePluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                FermatWalletFermatModulePluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                FermatWalletFermatModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             } else {
-                CryptoWalletCryptoModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                FermatWalletFermatModulePluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
     }
@@ -179,7 +179,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
              * I need to ignore whats after this.
              */
             String[] correctedClass = className.split(Pattern.quote("$"));
-            return CryptoWalletCryptoModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
+            return FermatWalletFermatModulePluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
@@ -197,7 +197,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
     public ModuleManager<BitcoinWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException{
         try {
 
-            logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
+            logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
 
             if(walletModuleCryptoWallet == null) {
                 walletModuleCryptoWallet = new CryptoWalletWalletModuleManager(
@@ -222,7 +222,7 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
                 walletModuleCryptoWallet.initialize();
             }
 
-            logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
+            logManager.log(FermatWalletFermatModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
 
             return walletModuleCryptoWallet;
         } catch (final Exception e) {
