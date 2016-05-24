@@ -178,7 +178,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             } else {
@@ -188,6 +188,8 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                 setUpUIData();
 
             }
+
+            setUpContactAddapter();
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();

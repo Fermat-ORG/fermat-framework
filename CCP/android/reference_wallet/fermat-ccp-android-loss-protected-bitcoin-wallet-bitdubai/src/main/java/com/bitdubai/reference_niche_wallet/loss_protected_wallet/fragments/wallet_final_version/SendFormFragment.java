@@ -133,6 +133,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     private BlockchainNetworkType blockchainNetworkType;
 
     boolean lossProtectedEnabled;
+    private List<WalletContact> walletContactList = new ArrayList<>();
 
     private ExecutorService _executor;
 
@@ -211,11 +212,16 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
             _executor.execute(new Runnable() {
                 @Override
                 public void run() {
-                    setUpContactAddapter();
+                    walletContactList = getWalletContactList();
+
+                    contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item,  walletContactList);
+                    contactsAdapter.notifyDataSetChanged();
+                   // contactName.setAdapter(contactsAdapter);
+
 
                 }
             });
-
+            setUpContactAddapter();
 
 
 
@@ -485,7 +491,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     private void setUpContactAddapter() {
 
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item, getWalletContactList());
+        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.loss_fragment_contacts_list_item,  walletContactList);
 
         contactName.setAdapter(contactsAdapter);
         //autocompleteContacts.setTypeface(tf);

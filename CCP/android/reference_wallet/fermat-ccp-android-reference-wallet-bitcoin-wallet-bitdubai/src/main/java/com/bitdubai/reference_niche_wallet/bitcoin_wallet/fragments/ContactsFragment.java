@@ -47,8 +47,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -138,7 +136,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
      * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
-    List<CryptoWalletWalletContact> walletContactRecords;
+    List<CryptoWalletWalletContact> walletContactRecords = new ArrayList<>();
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
@@ -171,6 +169,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         _executor = Executors.newFixedThreadPool(2);
         try {
         cryptoWallet = (CryptoWallet) appSession.getModuleManager();
+
+
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "Unexpected error get Contact list - " + e.getMessage());
@@ -189,19 +189,11 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
 
-            _executor.submit(new Runnable() {
-                @Override
+            Handler handlerTimer = new Handler();
+            handlerTimer.postDelayed(new Runnable() {
                 public void run() {
-                    try {
-                        walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                    } catch (CantGetAllWalletContactsException e) {
-                        e.printStackTrace();
-                    } catch (CantListCryptoWalletIntraUserIdentityException e) {
-                        e.printStackTrace();
-                    } catch (CantGetCryptoWalletException e) {
-                        e.printStackTrace();
-                    }
 
+                    onRefresh();
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
@@ -218,9 +210,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                     }
                 }
-            });
-
-
+            }, 300);
             return rootView;
         } catch (Exception e) {
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();

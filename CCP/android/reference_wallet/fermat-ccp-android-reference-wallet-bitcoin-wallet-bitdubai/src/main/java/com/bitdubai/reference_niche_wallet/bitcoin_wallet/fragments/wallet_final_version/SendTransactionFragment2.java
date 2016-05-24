@@ -220,6 +220,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 @Override
                 public void run() {
                     openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                    adapter.changeDataSet(openNegotiationList);
+                    adapter.notifyDataSetChanged();
                 }
             });
 

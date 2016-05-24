@@ -172,7 +172,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                     case DISCONNECTED:
                         showErrorConnectionDialog();
@@ -180,7 +180,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         contactName.setText("");
                         setUpActions();
                         setUpUIData();
-                        setUpContactAddapter();
+
                         break;
                 }
             }else {
@@ -188,8 +188,9 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                 contactName.setText("");
                 setUpActions();
                 setUpUIData();
-                setUpContactAddapter();
+
             }
+            setUpContactAddapter();
 
             return rootView;
         } catch (Exception e) {
