@@ -10,33 +10,30 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exc
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
-import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.developer.bitdubai.version_1.WithdrawBankMoneyTransactionPluginRoot;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.developer.bitdubai.version_1.database.WithdrawBankMoneyTransactionDao;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.withdraw.developer.bitdubai.version_1.exceptions.CantInitializeWithdrawBankMoneyTransactionDatabaseException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by memo on 19/11/15.
  */
-public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
+public class WithdrawBankMoneyTransactionManager implements WithdrawManager, Serializable {
 
 
-    private UUID pluginId;
-    private PluginDatabaseSystem pluginDatabaseSystem;
     private WithdrawBankMoneyTransactionPluginRoot pluginRoot;
     private WithdrawBankMoneyTransactionDao withdrawBankMoneyTransactionDao;
-    private BankMoneyWallet bankMoneyWallet;
+    private BankMoneyWalletManager bankMoneyWalletManager;
 
     public WithdrawBankMoneyTransactionManager(UUID pluginId, PluginDatabaseSystem pluginDatabaseSystem, WithdrawBankMoneyTransactionPluginRoot pluginRoot) throws CantStartPluginException {
-        this.pluginId = pluginId;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginRoot =pluginRoot;
-        withdrawBankMoneyTransactionDao = new WithdrawBankMoneyTransactionDao(pluginId,pluginDatabaseSystem,pluginRoot);
+        withdrawBankMoneyTransactionDao = new WithdrawBankMoneyTransactionDao(pluginId,pluginDatabaseSystem,errorManager);
         try {
             withdrawBankMoneyTransactionDao.initialize();
         }catch (CantInitializeWithdrawBankMoneyTransactionDatabaseException e){
@@ -73,8 +70,5 @@ public class WithdrawBankMoneyTransactionManager implements WithdrawManager {
         }
         return new BankTransactionImpl(bankTransactionParameters.getTransactionId(),bankTransactionParameters.getPublicKeyPlugin(),bankTransactionParameters.getPublicKeyWallet(),
                 bankTransactionParameters.getAmount(),bankTransactionParameters.getAccount(),bankTransactionParameters.getCurrency(),bankTransactionParameters.getMemo(), BankOperationType.WITHDRAW, TransactionType.DEBIT,new Date().getTime(), BankTransactionStatus.CONFIRMED);
-    }
-    public void setBankMoneyWallet(BankMoneyWallet bankMoneyWallet) {
-        this.bankMoneyWallet = bankMoneyWallet;
     }
 }

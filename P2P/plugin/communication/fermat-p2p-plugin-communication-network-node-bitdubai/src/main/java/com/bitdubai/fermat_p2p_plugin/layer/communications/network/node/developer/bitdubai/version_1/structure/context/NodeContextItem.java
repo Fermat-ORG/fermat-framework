@@ -14,12 +14,11 @@ public enum NodeContextItem {
      */
     DAO_FACTORY                ,
     DEVELOPER_DATABASE_FACTORY ,
-    ERROR_MANAGER              ,
     EVENT_MANAGER              ,
     FERMAT_EMBEDDED_NODE_SERVER,
     PLUGIN_DATABASE_SYSTEM     ,
     PLUGIN_FILE_SYSTEM         ,
-
+    PLUGIN_ROOT                ,
     ;
 
 }

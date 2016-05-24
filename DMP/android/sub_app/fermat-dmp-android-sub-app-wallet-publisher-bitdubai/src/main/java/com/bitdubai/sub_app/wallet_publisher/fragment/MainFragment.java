@@ -26,7 +26,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
-import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
+import com.bitdubai.fermat_wpd_api.all_definition.AppNavigationStructure;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Language;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -436,13 +436,13 @@ public class MainFragment extends FermatListFragment<WalletFactoryProject>
 
 
                 @Override
-                public WalletNavigationStructure getNavigationStructure() {
+                public AppNavigationStructure getNavigationStructure() {
                     //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
                     return null;
                 }
 
                 @Override
-                public void setNavigationStructure(WalletNavigationStructure navigationStructure) {
+                public void setNavigationStructure(AppNavigationStructure navigationStructure) {
 
                 }
             };

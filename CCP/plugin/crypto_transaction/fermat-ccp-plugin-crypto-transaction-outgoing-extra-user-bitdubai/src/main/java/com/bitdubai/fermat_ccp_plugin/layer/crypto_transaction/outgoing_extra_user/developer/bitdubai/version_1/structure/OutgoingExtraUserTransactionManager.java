@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.TransactionManager;
@@ -30,19 +30,19 @@ import java.util.UUID;
  */
 public class OutgoingExtraUserTransactionManager implements TransactionManager {
 
-    private final BitcoinWalletManager bitcoinWalletManager;
+    private final CryptoWalletManager cryptoWalletManager;
     private final ErrorManager         errorManager        ;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID                 pluginId            ;
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
-    public OutgoingExtraUserTransactionManager(final BitcoinWalletManager bitcoinWalletManager,
+    public OutgoingExtraUserTransactionManager(final CryptoWalletManager cryptoWalletManager,
                                                final ErrorManager         errorManager        ,
                                                final PluginDatabaseSystem pluginDatabaseSystem,
                                                final UUID                 pluginId            ,
                                                BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager) {
 
-        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.errorManager         = errorManager        ;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
@@ -79,8 +79,8 @@ public class OutgoingExtraUserTransactionManager implements TransactionManager {
 
             switch (referenceWallet) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(walletPublicKey);
-                    funds = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+                    CryptoWalletWallet cryptoWalletWallet = this.cryptoWalletManager.loadWallet(walletPublicKey);
+                    funds = cryptoWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
                     break;
 
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:

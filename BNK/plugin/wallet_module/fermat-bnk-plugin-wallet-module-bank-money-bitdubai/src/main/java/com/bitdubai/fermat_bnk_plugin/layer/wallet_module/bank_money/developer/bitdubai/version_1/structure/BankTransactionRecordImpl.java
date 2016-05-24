@@ -9,12 +9,13 @@ import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
 
 import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by guillermo on 03/02/16.
  */
-public class BankTransactionRecordImpl implements BankMoneyTransactionRecord {
+public class BankTransactionRecordImpl implements BankMoneyTransactionRecord, Serializable {
 
     private BigDecimal amount;
     private String memo;

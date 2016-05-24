@@ -1,17 +1,22 @@
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Created by ciencias on 2/23/15.
+ * The enum <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels</code>
+ * enumerates all the possible communication channels in the Fermat System.
+ *
+ * Created by Leon Acosta (laion.cj91@gmail.com) on 03/05/2015.
+ *
+ * @version 1.0
+ * @since   Java JDK 1.7
  */
-public enum CommunicationChannels {
+public enum CommunicationChannels implements FermatEnum {
     
-    CLOUD("C"),
-    LAN("L"),
-    BLUETOOH("B"),
-    P2P("P"),
-    GEO_FENCED_P2P("GFP");
+    P2P_SERVERS     ("P2PSV"),
+
+    ;
 
     private final String code;
 
@@ -19,18 +24,22 @@ public enum CommunicationChannels {
         this.code = code;
     }
 
+    public static CommunicationChannels getByCode(final String code) throws InvalidParameterException {
+
+        for (CommunicationChannels channel : CommunicationChannels.values()) {
+            if(channel.getCode().equals(code))
+                return channel;
+        }
+
+        throw new InvalidParameterException(
+                "Code Received: " + code,
+                "This code is not valid for the CommunicationChannels enum."
+        );
+    }
+
+    @Override
     public String getCode(){
         return code;
     }
 
-    public static CommunicationChannels getByCode(final String code) throws InvalidParameterException{
-        switch (code){
-            case "B": return CommunicationChannels.BLUETOOH;
-            case "C": return CommunicationChannels.CLOUD;
-            case "GFP": return CommunicationChannels.GEO_FENCED_P2P;
-            case "P": return CommunicationChannels.P2P;
-            default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code: " + code, null);
-        }
-    }
-    
 }

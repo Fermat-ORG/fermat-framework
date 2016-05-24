@@ -3,7 +3,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_u
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by eze on 2015.09.15..
  * Modified by Leon Acosta (laion.cj91@gmail.com) on 29/09/2015.
  */
-public class IncomingIntraUserTransactionWrapper implements BitcoinWalletTransactionRecord {
+public class IncomingIntraUserTransactionWrapper implements CryptoWalletTransactionRecord {
 
     private final UUID          transactionId     ;
     private final UUID          requestId     ;

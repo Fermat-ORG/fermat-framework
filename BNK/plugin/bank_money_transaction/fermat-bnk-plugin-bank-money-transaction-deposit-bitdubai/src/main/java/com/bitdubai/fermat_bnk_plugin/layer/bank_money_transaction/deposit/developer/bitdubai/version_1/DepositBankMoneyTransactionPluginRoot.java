@@ -22,11 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exceptions.CantMakeDepositTransactionException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.database.DepositBankMoneyTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.deposit.developer.bitdubai.version_1.exceptions.CantInitializeDepositBankMoneyTransactionDatabaseException;
@@ -38,7 +33,7 @@ import java.util.List;
  * Created by memo on 19/11/15.
  */
 @PluginInfo(createdBy = "guillermo20", maintainerMail = "guillermo20@gmail.com", platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION)
-public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implements DepositManager,DatabaseManagerForDevelopers {
+public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
 
     @NeededPluginReference(platform = Platforms.BANKING_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET)
@@ -56,15 +51,17 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
     }
 
     @Override
+    public FermatManager getManager() {
+        return depositBankMoneyTransactionManager;
+    }
+
+    @Override
     public void start() throws CantStartPluginException {
         System.out.println("platform = Platforms.BANKING_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION");
         try {
-            this.depositBankMoneyTransactionManager = new DepositBankMoneyTransactionManager(pluginId, pluginDatabaseSystem, this);
-            this.depositBankMoneyTransactionManager.setBankMoneyWallet(bankMoneyWalletManager.loadBankMoneyWallet("13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv"));
+            this.depositBankMoneyTransactionManager = new DepositBankMoneyTransactionManager(pluginId,pluginDatabaseSystem,errorManager, bankMoneyWalletManager);
         }catch (CantStartPluginException innerException){
             throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException,"Starting Deposit Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
-        }catch (CantLoadBankMoneyWalletException innerException){
-            throw new CantStartPluginException(CantLoadBankMoneyWalletException.DEFAULT_MESSAGE, innerException,"Starting Deposit Bank Transaction  plugin - "+this.pluginId, "Cannot open or create the plugin database");
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -100,11 +97,6 @@ public class DepositBankMoneyTransactionPluginRoot extends AbstractPlugin implem
             this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         return tableRecordList;
-    }
-
-    @Override
-    public BankTransaction makeDeposit(BankTransactionParameters parameters) throws CantMakeDepositTransactionException {
-        return depositBankMoneyTransactionManager.makeDeposit(parameters);
     }
 }
 

@@ -7,12 +7,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
  */
-public class ContractPurchaseRecord implements CustomerBrokerContractPurchase {
+public class ContractPurchaseRecord implements CustomerBrokerContractPurchase, Serializable {
 
     Collection<ContractClause> contractClauses;
     long dayTime;

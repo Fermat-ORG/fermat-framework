@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import BitcoinWalletBalance;
+import BitcoinWalletWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_ccp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
@@ -39,9 +39,9 @@ public class ExecuteTransactionTest {
     @Mock
     private ActorAddressBookRegistry mockActorAddressBookRegistry;
     @Mock
-    private BitcoinWalletWallet mockBitcoinWallet;
+    private CryptoWalletWallet mockBitcoinWallet;
     @Mock
-    private BitcoinWalletBalance mockBalance;
+    private CryptoWalletBalance mockBalance;
 
     private Transaction<CryptoTransaction> testTransaction;
 

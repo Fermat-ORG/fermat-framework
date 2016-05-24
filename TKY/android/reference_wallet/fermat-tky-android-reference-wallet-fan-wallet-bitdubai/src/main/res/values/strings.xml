@@ -2,5 +2,7 @@
     <string name="app_name">Fan Wallet</string>
     <string name="action_settings">Settings</string>
     <string name="action_search">Search</string>
-
+    <string name="fan_wallet_dialog_subtitle">Welcome to Fan Wallet</string>
+    <string name="fan_wallet_dialog_body">If you do not have any identity registered, please register one in tokenly fan</string>
+    <string name="fan_wallet_footer">Fan Wallet</string>
 </resources>

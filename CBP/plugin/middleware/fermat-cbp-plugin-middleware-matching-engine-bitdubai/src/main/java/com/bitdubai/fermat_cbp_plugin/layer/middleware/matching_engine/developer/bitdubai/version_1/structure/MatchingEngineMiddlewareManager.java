@@ -1,20 +1,27 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.MatchingEngineMiddlewarePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.EarningExtractorManagerImpl;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -31,6 +38,7 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
     private final MatchingEngineMiddlewareDao dao;
     private final MatchingEngineMiddlewarePluginRoot pluginRoot;
     private final EarningExtractorManager earningExtractorManager;
+    private List<InputTransaction> inputTransactions;
 
     public MatchingEngineMiddlewareManager(final MatchingEngineMiddlewareDao dao,
                                            final MatchingEngineMiddlewarePluginRoot pluginRoot,
@@ -90,6 +98,20 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
     @Override
     public EarningExtractorManager getEarningsExtractorManager() {
         return earningExtractorManager;
+    }
+
+    @Override
+    public EarningsSearch getSearch(EarningsPair earningsPair) {
+        return new MatchingEngineMiddlewareEarningsSearch(dao, earningsPair);
+    }
+
+    @Override
+    public List<InputTransaction> listInputTransactions(UUID earningTransactionId) throws CantListInputTransactionsException {
+
+        if (inputTransactions == null)
+            inputTransactions = dao.listInputsTransactionByEarningTransaction(earningTransactionId);
+
+        return inputTransactions;
     }
 
     public void addEarningsExtractor(EarningExtractor extractor){

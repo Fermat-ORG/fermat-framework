@@ -11,10 +11,8 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
-import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
-import com.bitdubai.sub_app.crypto_customer_community.common.utils.FragmentsCommons;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 
 import java.lang.ref.WeakReference;
@@ -34,26 +32,34 @@ public class CustomerCommunityNavigationViewPainter implements NavigationViewPai
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation actorIdentityInformation) {
+    public View addNavigationViewHeader() {
         View headerView = null;
 
-        try {
-            final Context context = activity.get();
-            final Object layoutInflaterService = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) layoutInflaterService, context, actorIdentityInformation);
-            headerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    try{
-                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(context, subAppSession, null);
-                        listIdentitiesDialog.setTitle("Connection Request");
-                        listIdentitiesDialog.show();
-                    }catch(Exception ignore){ }
-                }
-            });
-        } catch (CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+//        try {
+//            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+//                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentityInformation);
+//            headerView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    try{
+//                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity.get(), subAppSession, null);
+//                        listIdentitiesDialog.setTitle("Connection Request");
+//                        listIdentitiesDialog.show();
+//                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                            @Override
+//                            public void onDismiss(DialogInterface dialog) {
+//                                //Chamo olvidate que te deje recrear la actividad desde acá, tenes un metodo que se llama invalidate que hace esto
+//                                //activity.get().recreate();
+//                            }
+//                        });
+//                        listIdentitiesDialog.show();
+//                    }catch(Exception e){ }
+//                }
+//            });
+//        } catch (CantGetActiveLoginIdentityException e) {
+//            e.printStackTrace();
+//        }
         return headerView;
     }
 

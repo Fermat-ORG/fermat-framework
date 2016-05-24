@@ -57,8 +57,8 @@ public class AccountListViewHolder extends FermatViewHolder {
         alias.setText(itemInfo.getAlias());
         //currency.setText(itemInfo.getMoneyType().getCode());
 
-        BigDecimal available = moduleManager.getBankingWallet().getAvailableBalance(itemInfo.getAccount());
-        BigDecimal book = moduleManager.getBankingWallet().getBookBalance(itemInfo.getAccount());
+        BigDecimal available = moduleManager.getAvailableBalance(itemInfo.getAccount());
+        BigDecimal book = moduleManager.getBookBalance(itemInfo.getAccount());
 
         availableBalance.setText(moneyFormat.format(available) + " " + itemInfo.getCurrencyType().getCode());
         bookBalance.setText(moneyFormat.format(book) + " " + itemInfo.getCurrencyType().getCode());

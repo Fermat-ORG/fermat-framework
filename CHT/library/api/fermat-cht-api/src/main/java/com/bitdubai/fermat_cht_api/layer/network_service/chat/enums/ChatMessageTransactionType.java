@@ -25,6 +25,7 @@ public enum ChatMessageTransactionType {
     MESSAGE_METADATA_TRANSMIT("MMDT"),
     TRANSACTION_STATUS_UPDATE ("TSU"),
     TRANSACTION_WRITING_STATUS ("TWS");
+//    TRANSACTION_ONLINE_STATUS ("TOS");
 
     /**
      * Represent the code of the message status

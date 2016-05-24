@@ -50,6 +50,8 @@ public abstract class ChatSearch {
      */
     public abstract List<ChatExposingData> getResult(final Integer max) throws CantListChatException;
 
+    public abstract ChatExposingData getResult(final String publicKey) throws CantListChatException;
+
     /**
      * Through the method <code>resetFilters</code> you can reset the filters set,
      */

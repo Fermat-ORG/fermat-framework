@@ -4,10 +4,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantSignExtraUserMessageException;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2015.10.15..
  */
-public class Identity implements Actor {
+public class Identity implements Actor,Serializable {
 
 
     private String publicKey;

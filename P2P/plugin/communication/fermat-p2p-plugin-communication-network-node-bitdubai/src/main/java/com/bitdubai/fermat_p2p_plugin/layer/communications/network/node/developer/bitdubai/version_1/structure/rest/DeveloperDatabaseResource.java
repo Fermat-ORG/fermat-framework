@@ -50,9 +50,9 @@ public class DeveloperDatabaseResource implements RestFulServices {
                 StringBuilder stringBuilder = new StringBuilder();
 
                 for (String tableName : tableList) {
-                    stringBuilder.append("<a href=\"developerDatabase/");
-                    stringBuilder.append(tableName);
-                    stringBuilder.append("\">"     );
+                    stringBuilder.append("<a href=\"");
+                    stringBuilder.append("developerDatabase/" + tableName);
+                    stringBuilder.append("\" target=\"_blank\" >"     );
                     stringBuilder.append(tableName);
                     stringBuilder.append("</a>");
                     stringBuilder.append("</br>");

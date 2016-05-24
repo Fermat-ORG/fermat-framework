@@ -45,7 +45,7 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         this.pluginId = pluginId;
     }
 
-    public ChatActorConnection chatActorConnectionExists(final ChatLinkedActorIdentity linkedIdentity,
+    public ChatActorConnection chatActorConnectionExists(ChatLinkedActorIdentity linkedIdentity,
                                          final String publicKey) throws CantGetActorConnectionException {
 
         if (linkedIdentity == null)
@@ -77,12 +77,12 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             throw new CantGetActorConnectionException(
                     e,
-                    "linkedIdentity: " + linkedIdentity + " - publicKey: " + publicKey,
+                    "linkedIdentity: - publicKey: " + publicKey,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (InvalidParameterException e) {
             throw new CantGetActorConnectionException(
                     e,
-                    "linkedIdentity: " + linkedIdentity + " - publicKey: " + publicKey,
+                    "linkedIdentity: - publicKey: " + publicKey,
                     "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
@@ -92,10 +92,9 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
         try {
 
-            ChatActorConnection oldActorConnection = chatActorConnectionExists(actorConnection.getLinkedIdentity(),actorConnection.getPublicKey());
+            ChatActorConnection oldActorConnection = chatActorConnectionExists(actorConnection.getLinkedIdentity(), actorConnection.getPublicKey());
 
-            if (oldActorConnection != null && !oldActorConnection.getConnectionState().equals(ConnectionState.DISCONNECTED_LOCALLY)
-                    && !oldActorConnection.getConnectionState().equals(ConnectionState.DISCONNECTED_REMOTELY)) {
+            if (oldActorConnection != null && oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED)) {
 
                 throw new ActorConnectionAlreadyExistsException(
                         "actorConnection: " + actorConnection,
@@ -106,24 +105,20 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
             DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
-            DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
-
             entityRecord = buildDatabaseRecord(
                     entityRecord,
                     actorConnection
             );
 
-            if(oldActorConnection == null) {
-                actorConnectionsTable.insertRecord(entityRecord);
-            }
-            else {
+            if (oldActorConnection != null) {
+                DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
                 entityRecordOld = buildDatabaseRecord(
                         entityRecordOld,
                         oldActorConnection
                 );
                 actorConnectionsTable.deleteRecord(entityRecordOld);
-                actorConnectionsTable.insertRecord(entityRecord);
             }
+            actorConnectionsTable.insertRecord(entityRecord);
 
             return buildActorConnectionNewRecord(entityRecord);
 

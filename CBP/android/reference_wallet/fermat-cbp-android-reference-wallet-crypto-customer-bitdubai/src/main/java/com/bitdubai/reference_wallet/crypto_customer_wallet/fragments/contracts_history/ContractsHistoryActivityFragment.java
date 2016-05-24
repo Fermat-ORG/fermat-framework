@@ -74,7 +74,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
         } catch (Exception ex) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_CUSTOMER_WALLET, DISABLES_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_CUSTOMER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
             else
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
         }
@@ -208,7 +208,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
             } catch (Exception ex) {
                 if (errorManager != null)
-                    errorManager.reportUnexpectedWalletException(CBP_CRYPTO_CUSTOMER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+                    errorManager.reportUnexpectedWalletException(CBP_CRYPTO_CUSTOMER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 else
                     CommonLogger.exception(TAG, ex.getMessage(), ex);
             }

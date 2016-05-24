@@ -105,10 +105,10 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
         for(BankTransaction transaction : transactionList) {
 
             try {
-                availableBalance = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getAvailableBalance().getBalance(transaction.getAccountNumber());
-                if(availableBalance.compareTo(transaction.getAmount()) >= 0) {
-                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(pluginRoot, transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),new BigDecimal(0), new BigDecimal(0),transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
-                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).hold(bankMoneyTransactionRecord);
+                availableBalance = bankMoneyWalletManager.getAvailableBalance().getBalance(transaction.getAccountNumber());
+                if(availableBalance >= transaction.getAmount()) {
+                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
+                    bankMoneyWalletManager.hold(bankMoneyTransactionRecord);
                     holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 } else {
                     holdTransactionManager.setTransactionStatusToRejected(transaction.getTransactionId());

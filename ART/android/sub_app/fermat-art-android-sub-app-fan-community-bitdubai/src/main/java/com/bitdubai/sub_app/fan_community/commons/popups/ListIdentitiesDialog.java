@@ -59,9 +59,9 @@ public class ListIdentitiesDialog extends
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        List<FanCommunitySelectableIdentity> cryptoCustomerCommunitySelectableIdentitiesList = new ArrayList<>();
+        List<FanCommunitySelectableIdentity> fanCommunitySelectableIdentities = new ArrayList<>();
         try {
-            cryptoCustomerCommunitySelectableIdentitiesList = manager.listSelectableIdentities();
+            fanCommunitySelectableIdentities = manager.listSelectableIdentities();
         } catch (final CantListIdentitiesToSelectException cantListIdentitiesToSelectException) {
             getSession().getErrorManager().reportUnexpectedUIException(
                     UISource.ADAPTER,
@@ -70,12 +70,12 @@ public class ListIdentitiesDialog extends
             );
         }
 
-        adapter = new AppSelectableIdentitiesListAdapter(getActivity(), cryptoCustomerCommunitySelectableIdentitiesList);
+        adapter = new AppSelectableIdentitiesListAdapter(getActivity(), fanCommunitySelectableIdentities);
         adapter.setFermatListEventListener(this);
 
-        adapter.changeDataSet(cryptoCustomerCommunitySelectableIdentitiesList);
+        adapter.changeDataSet(fanCommunitySelectableIdentities);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.afcrecycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getActivity(),

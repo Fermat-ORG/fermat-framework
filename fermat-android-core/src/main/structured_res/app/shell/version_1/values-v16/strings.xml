@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open">open</string>
+    <string name="close">close</string>
+    <string name="crash_toast_text">Crash occurs, the problems were reported!. Thanks for the help.</string>
+</resources>

@@ -23,12 +23,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantGetHoldTransactionException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.exceptions.CantMakeHoldTransactionException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.hold.interfaces.HoldManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.database.HoldBankMoneyTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.exceptions.CantInitializeHoldBankMoneyTransactionDatabaseException;
@@ -36,15 +30,13 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.develope
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.hold.developer.bitdubai.version_1.structure.HoldBankMoneyTransactionProcessorAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by memo on 25/11/15.
  */
 @PluginInfo(createdBy = "guillermo20", maintainerMail = "guillermo20@gmail.com", platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_HOLD_MONEY_TRANSACTION)
-public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers,HoldManager {
+public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -67,6 +59,10 @@ public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implement
         super(new PluginVersionReference(new Version()));
     }
 
+    @Override
+    public FermatManager getManager() {
+        return holdTransactionManager;
+    }
 
     @Override
     public void start() throws CantStartPluginException {
@@ -88,16 +84,6 @@ public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implement
     public void stop() {
         processorAgent.stop();
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public BankTransaction hold(BankTransactionParameters parameters) throws CantMakeHoldTransactionException {
-        return holdTransactionManager.hold(parameters);
-    }
-
-    @Override
-    public BankTransactionStatus getHoldTransactionsStatus(UUID transactionId) throws CantGetHoldTransactionException {
-        return holdTransactionManager.getHoldTransactionsStatus(transactionId);
     }
 
     @Override
@@ -125,64 +111,4 @@ public class HoldBankMoneyTransactionPluginRoot extends AbstractPlugin implement
         }
         return tableRecordList;
     }
-
-    @Override
-    public boolean isTransactionRegistered(UUID transactionId) {
-        return holdTransactionManager.isTransactionRegistered(transactionId);
-    }
-
-    private void test(){
-         final UUID id=UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-        BankTransactionParameters t = new BankTransactionParameters() {
-
-            @Override
-            public UUID getTransactionId() {
-                return UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-            }
-
-            @Override
-            public String getPublicKeyPlugin() {
-                return "foo";
-            }
-
-            @Override
-            public String getPublicKeyWallet() {
-                return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
-            }
-
-            @Override
-            public String getPublicKeyActor() {
-                return "bar";
-            }
-
-            @Override
-            public BigDecimal getAmount() {
-                return new BigDecimal("30.0");
-            }
-
-            @Override
-            public String getAccount() {
-                return "1234123412341";
-            }
-
-            @Override
-            public FiatCurrency getCurrency() {
-                return FiatCurrency.ARGENTINE_PESO;
-            }
-
-            @Override
-            public String getMemo() {
-                return "test";
-            }
-        };
-        try {
-            hold(t);
-            BankTransactionStatus status=getHoldTransactionsStatus(id);
-            System.out.println("( bank testing getHoldTransactionsStatus) =" + status.getCode());
-        }catch (FermatException e){
-            System.out.println("(bank hold) exception "+e.getMessage());
-        }
-
-    }
-
 }

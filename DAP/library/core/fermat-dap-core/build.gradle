@@ -44,8 +44,11 @@ dependencies {
 
     compile project(':fermat-dap-plugin-sub-app-module-asset-factory')
     compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-community')
+    compile project(':fermat-dap-plugin-sub-app-module-asset-issuer-identity')
     compile project(':fermat-dap-plugin-sub-app-module-asset-user-community')
+    compile project(':fermat-dap-plugin-sub-app-module-asset-user-identity')
     compile project(':fermat-dap-plugin-sub-app-module-redeem-point-community')
+    compile project(':fermat-dap-plugin-sub-app-module-redeem-point-identity')
 
     compile project(':fermat-dap-plugin-wallet-assets-issuer-wallet')
     compile project(':fermat-dap-plugin-wallet-assets-user-wallet')

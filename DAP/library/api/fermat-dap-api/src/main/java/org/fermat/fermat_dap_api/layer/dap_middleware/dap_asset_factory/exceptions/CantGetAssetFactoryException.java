@@ -14,7 +14,8 @@ public class CantGetAssetFactoryException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    static final String DEFAULT_MESSAGE = "There was an error Get Asset Factory.";
+    public static final String DEFAULT_MESSAGE = "There was an error Get Asset Factory.";
+
     public CantGetAssetFactoryException(String message, Exception cause, String context, String possibleReason) {
         super(DEFAULT_MESSAGE, cause, context, possibleReason);
     }

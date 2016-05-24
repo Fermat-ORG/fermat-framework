@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
@@ -12,12 +12,12 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewOnlineStatusUpdate;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewWritingStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -138,7 +138,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
         //LOG.info("CHECK THE DATABASE");
     }
 
-    public void IncomingNewWritingStatusUpdateEventHandler(IncomingNewChatStatusUpdate event) throws CantSaveEventException {
+    public void IncomingNewWritingStatusUpdateEventHandler(IncomingNewWritingStatusUpdate event) throws CantSaveEventException {
         try{
             chatMiddlewareMonitorAgent.checkIncomingWritingStatus(event.getChatId());
         } catch (Exception exception) {
@@ -150,6 +150,8 @@ public class ChatMiddlewareRecorderService implements CHTService {
                     "Unexpected Exception");
         }
     }
+
+
 
     @Override
     public void start() throws CantStartServiceException {
@@ -180,6 +182,20 @@ public class ChatMiddlewareRecorderService implements CHTService {
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);
+
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_WRITING_STATUS);
+            fermatEventHandler = new IncomingNewWritingStatusUpdateEventHandler();
+            ((IncomingNewWritingStatusUpdateEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+//            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_ONLINE_STATUS);
+//            fermatEventHandler = new IncomingNewOnlineStatusUpdateEventHandler();
+//            ((IncomingNewOnlineStatusUpdateEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
+//            fermatEventListener.setEventHandler(fermatEventHandler);
+//            eventManager.addListener(fermatEventListener);
+//            listenersAdded.add(fermatEventListener);
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){

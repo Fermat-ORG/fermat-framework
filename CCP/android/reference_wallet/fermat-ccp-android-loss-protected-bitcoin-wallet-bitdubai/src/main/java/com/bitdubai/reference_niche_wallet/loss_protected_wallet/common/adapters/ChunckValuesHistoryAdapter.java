@@ -20,7 +20,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.Wa
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -113,7 +112,7 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         final int percentage = getSpendingPercentage(transaction);
 
-        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()) + "  Spend " + percentage+"%");
+        holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), lossProtectedWalletSession.getTypeAmount()) + "  ("+percentage+"% Spend)" );
         holder.getTxt_amount().setTypeface(tf) ;
 
         if (lossProtectedWalletSession.getActualExchangeRate() >= data.getExchangeRate())

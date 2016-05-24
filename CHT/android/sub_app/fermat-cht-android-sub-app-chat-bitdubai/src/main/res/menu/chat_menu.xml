@@ -3,19 +3,19 @@
     <item
         android:id="@+id/menu_search"
         android:title="@string/menu_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/cht_ic_action_search"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
-    <item
+    <!--item
         android:id="@+id/menu_block_contact"
         android:title="@string/menu_block_contact"
-        app:showAsAction="collapseActionView"/>
+        app:showAsAction="collapseActionView"/-->
     <item
         android:id="@+id/menu_clean_chat"
         android:title="@string/menu_clean_chat"
         app:showAsAction="collapseActionView"/>
-    <item
+    <!--item
        android:id="@+id/menu_send_chat_email"
        android:title="@string/menu_send_chat_email"
-       app:showAsAction="collapseActionView"/>
+       app:showAsAction="collapseActionView"/-->
 </menu>

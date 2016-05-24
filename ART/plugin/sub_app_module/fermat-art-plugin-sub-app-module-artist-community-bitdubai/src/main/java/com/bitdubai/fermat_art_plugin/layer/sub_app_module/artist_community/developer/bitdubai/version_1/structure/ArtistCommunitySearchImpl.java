@@ -6,21 +6,23 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantGetArtistSearchResult;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySearch;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/6/16.
  */
-public class ArtistCommunitySearchImpl implements ArtistCommunitySearch {
+public class ArtistCommunitySearchImpl implements ArtistCommunitySearch, Serializable {
 
-    private final ArtistManager artistActorNetworkServiceManager;
+    /*private final ArtistManager artistActorNetworkServiceManager;
 
     public ArtistCommunitySearchImpl(final ArtistManager artistActorNetworkServiceManager) {
 
         this.artistActorNetworkServiceManager = artistActorNetworkServiceManager;
-    }
+    }*/
 
 
     @Override
@@ -29,10 +31,10 @@ public class ArtistCommunitySearchImpl implements ArtistCommunitySearch {
     }
 
     @Override
-    public List<ArtistCommunityInformation> getResult() throws CantGetArtistSearchResult {
+    public List<ArtistCommunityInformation> getResult(ActorSearch artistSearch) throws CantGetArtistSearchResult {
         try {
 
-            ActorSearch artistSearch = artistActorNetworkServiceManager.getSearch();
+            //ActorSearch artistSearch = artistActorNetworkServiceManager.getSearch();
 
             final List<ArtistExposingData> artistExposingDataList = artistSearch.getResult();
 
