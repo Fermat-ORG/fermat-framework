@@ -143,15 +143,13 @@ public class ActorConnectionEventActions {
                     Actors.CHAT
             );
 
-//            ActorConnection actorConnectionCache = dao.chatActorConnectionExists(linkedIdentity,request.getSenderPublicKey());
-            ConnectionState connectionState = null;
             ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, request.getSenderPublicKey());
-            if(oldActorConnection.getConnectionState().equals(ConnectionState.CONNECTED)) return;
-//            if(actorConnectionCache!=null)
-//                connectionState = actorConnectionCache.getStatus();
+            ConnectionState connectionState = null;
+            if(oldActorConnection!=null)
+                connectionState = oldActorConnection.getConnectionState();
 //
-//            if(connectionState != null && connectionState.equals(ConnectionState.PENDING_REMOTELY_ACCEPTANCE))
-//                connectionState = ConnectionState.CONNECTED;
+            if(connectionState != null && connectionState.equals(ConnectionState.CONNECTED))
+                return;
 //            else
                 connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
 
