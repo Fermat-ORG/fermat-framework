@@ -48,6 +48,8 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
     private AppStatusCallbackChanges appStatusListener;
     AndroidCoreSettings androidCoreSettings;
 
+    private boolean isStart;
+
     int cx;
     int cy;
     int radius;
@@ -55,6 +57,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
     public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
         this.hidden = true;
         this.mRevealView = mRevealView;
+        this.isStart = false;
         this.fermatActivity = new WeakReference<FermatActivity>(activity);
     }
 
@@ -84,6 +87,10 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                         mRevealView.setVisibility(View.VISIBLE);
                         animator.start();
                         hidden = false;
+                        if (!isStart){
+                            onClickListener.onClick(null);
+                            isStart = true;
+                        }
                     } else {
                         animator_reverse.addListener(new SupportAnimator.AnimatorListener() {
                             @Override

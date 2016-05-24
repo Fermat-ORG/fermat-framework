@@ -355,6 +355,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
                     bottomMenuReveal = new BottomMenuReveal((ViewGroup) findViewById(R.id.reveal),this);
                     bottomMenuReveal.buildMenuSettings();
+                 //   bottomMenuReveal.getOnClickListener().onClick(null);
                 }
 
                 bottomMenuReveal.getOnClickListener().onClick(null);
