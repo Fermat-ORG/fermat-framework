@@ -4,11 +4,13 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +83,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
     private View rootView;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -177,7 +179,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             rootView = inflater.inflate(R.layout.aac_fragment_connections_world, container, false);
 
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            layoutManager  = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             adapter = new AppListAdapter(getActivity(), artistCommunityInformationList);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.aac_gridView);
@@ -190,7 +192,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#363636"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.aac_empty_view);
 
 
@@ -235,6 +237,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 
+        configureToolbar();
         return rootView;
     }
 
@@ -359,6 +362,17 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
     private void updateNotificationsBadge(int count) {
         mNotificationsCount = count;
         getActivity().invalidateOptionsMenu();
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override

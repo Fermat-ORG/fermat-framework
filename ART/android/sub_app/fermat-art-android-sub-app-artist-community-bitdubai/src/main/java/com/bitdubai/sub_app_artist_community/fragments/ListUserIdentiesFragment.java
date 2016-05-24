@@ -1,11 +1,13 @@
 package com.bitdubai.sub_app_artist_community.fragments;
 
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,6 +99,7 @@ public class ListUserIdentiesFragment extends AbstractFermatFragment<ArtistSubAp
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
+        configureToolbar();
         return rootView;
     }
 
@@ -116,5 +119,16 @@ public class ListUserIdentiesFragment extends AbstractFermatFragment<ArtistSubAp
     public void onLongItemClickListener(ArtistCommunitySelectableIdentity data, int position) {
         moduleManager.setSelectedActorIdentity(data);
         changeActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getCode(), appSession.getAppPublicKey());
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.degrade_colorj));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 }
