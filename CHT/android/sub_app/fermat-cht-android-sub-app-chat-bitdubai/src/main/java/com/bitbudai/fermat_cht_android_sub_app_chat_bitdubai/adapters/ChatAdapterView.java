@@ -534,6 +534,19 @@ public class ChatAdapterView extends LinearLayout {
 
                 messageText = messageText.trim();
 
+//                String text = "";
+//                char c = 39; // char ' in ASCII code
+//                for (int i = 0; i < messageText.length(); i++){
+//                    if(messageText.charAt(i) == c){
+//                        text = (String) text.concat("''");
+//                    }
+//                    else {
+//                        text = text + Character.toString(messageText.charAt(i));
+//                    }
+//                }
+//
+//                messageText = text;
+
                 try {
                     ChatImpl chat = new ChatImpl();
                     final MessageImpl message = new MessageImpl();

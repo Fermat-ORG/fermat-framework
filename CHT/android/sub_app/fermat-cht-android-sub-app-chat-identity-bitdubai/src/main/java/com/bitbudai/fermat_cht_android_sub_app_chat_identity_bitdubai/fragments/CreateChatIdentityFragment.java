@@ -528,8 +528,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 switch (resultKey) {
                     case SUCCESS:
                         if (donde.equalsIgnoreCase("onClick")) {
-                            textViewChtTitle.setText(mBrokerName.getText());
-                            statusView.setText(mChatConnectionState.getText());
+//                            textViewChtTitle.setText(mBrokerName.getText());
+//                            statusView.setText(mChatConnectionState.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
                             getActivity().onBackPressed();
                             //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
