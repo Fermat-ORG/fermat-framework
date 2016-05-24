@@ -33,6 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -117,83 +118,85 @@ public class ChatListFragment extends AbstractFermatFragment{
                 noReadMsgs.clear();
                 imgId.clear();
                 for (Chat chat : chats) {
-                    chatidtemp = chat.getChatId();
-                    if (chatidtemp != null) {
-                        noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
-                        contactId.add(chat.getRemoteActorPublicKey());
-                        if(chatIdentity!= null) {
-                            List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
-                            for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
-                                String pk1 = cont.getPublicKey();
-                                String pk2 = chat.getRemoteActorPublicKey();
-                                if (pk2.equals(pk1)) {
-                                    contactName.add(cont.getAlias());
-                                    Message mess=null;
-                                    try {
-                                        mess = chatManager.getMessageByChatId(chatidtemp);
-                                    }catch (Exception e){
-                                        mess=null;
-                                    }
-                                    if (mess != null) {
-                                        if(chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Typing...");
-                                        }else{
-                                            message.add(mess.getMessage());
+                    if (chat.getStatus() != ChatStatus.INVISSIBLE) {
+                        chatidtemp = chat.getChatId();
+                        if (chatidtemp != null) {
+                            noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
+                            contactId.add(chat.getRemoteActorPublicKey());
+                            if (chatIdentity != null) {
+                                List<ChatActorCommunityInformation> chatActorCommunityInformations = chatManager.listAllConnectedChatActor(chatIdentity, MAX, offset);
+                                for (ChatActorCommunityInformation cont : chatActorCommunityInformations) {
+                                    String pk1 = cont.getPublicKey();
+                                    String pk2 = chat.getRemoteActorPublicKey();
+                                    if (pk2.equals(pk1)) {
+                                        contactName.add(cont.getAlias());
+                                        Message mess = null;
+                                        try {
+                                            mess = chatManager.getMessageByChatId(chatidtemp);
+                                        } catch (Exception e) {
+                                            mess = null;
                                         }
-                                        status.add(mess.getStatus().toString());
-                                        typeMessage.add(mess.getType().toString());
-                                    }else{
-                                        if(chatManager.checkWritingStatus(chatidtemp)) {
-                                            message.add("Typing...");
-                                        }else {
-                                            message.add("");
+                                        if (mess != null) {
+                                            if (chatManager.checkWritingStatus(chatidtemp)) {
+                                                message.add("Typing...");
+                                            } else {
+                                                message.add(mess.getMessage());
+                                            }
+                                            status.add(mess.getStatus().toString());
+                                            typeMessage.add(mess.getType().toString());
+                                        } else {
+                                            if (chatManager.checkWritingStatus(chatidtemp)) {
+                                                message.add("Typing...");
+                                            } else {
+                                                message.add("");
+                                            }
+                                            status.add("");
+                                            typeMessage.add("");
                                         }
-                                        status.add("");
-                                        typeMessage.add("");
-                                    }
-                                    long timemess = chat.getLastMessageDate().getTime();
-                                    long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                    long milliseconds = timemess + nanos;
-                                    Date dated = new java.util.Date(milliseconds);
-                                    DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-                                    formatter.setTimeZone(TimeZone.getDefault());
-                                    String datef = formatter.format(new java.util.Date(milliseconds));
-                                    if (Validate.isDateToday(dated)) {
+                                        long timemess = chat.getLastMessageDate().getTime();
+                                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                        long milliseconds = timemess + nanos;
+                                        Date dated = new java.util.Date(milliseconds);
+                                        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+                                        formatter.setTimeZone(TimeZone.getDefault());
+                                        String datef = formatter.format(new java.util.Date(milliseconds));
                                         if (Validate.isDateToday(dated)) {
-                                            if (Build.VERSION.SDK_INT < 23) {
-                                                if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
-                                                    formatter = new SimpleDateFormat("HH:mm");
+                                            if (Validate.isDateToday(dated)) {
+                                                if (Build.VERSION.SDK_INT < 23) {
+                                                    if (android.text.format.DateFormat.is24HourFormat(getActivity())) {
+                                                        formatter = new SimpleDateFormat("HH:mm");
+                                                    } else {
+                                                        formatter = new SimpleDateFormat("hh:mm aa");
+                                                    }
                                                 } else {
-                                                    formatter = new SimpleDateFormat("hh:mm aa");
-                                                }
-                                            }else{
-                                                if (android.text.format.DateFormat.is24HourFormat(getContext())) {
-                                                    formatter = new SimpleDateFormat("HH:mm");
-                                                } else {
-                                                    formatter = new SimpleDateFormat("hh:mm aa");
+                                                    if (android.text.format.DateFormat.is24HourFormat(getContext())) {
+                                                        formatter = new SimpleDateFormat("HH:mm");
+                                                    } else {
+                                                        formatter = new SimpleDateFormat("hh:mm aa");
+                                                    }
                                                 }
                                             }
+                                            formatter.setTimeZone(TimeZone.getDefault());
+                                            datef = formatter.format(new java.util.Date(milliseconds));
+                                        } else {
+                                            Date old = new Date(datef);
+                                            Date today = new Date();
+                                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                            if (dias == 1) {
+                                                datef = "YESTERDAY";
+                                            }
                                         }
-                                        formatter.setTimeZone(TimeZone.getDefault());
-                                        datef = formatter.format(new java.util.Date(milliseconds));
-                                    } else {
-                                        Date old = new Date(datef);
-                                        Date today = new Date();
-                                        long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                        if (dias == 1) {
-                                            datef = "YESTERDAY";
-                                        }
+                                        dateMessage.add(datef);
+                                        chatId.add(chatidtemp);
+                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                        imgId.add(bmd.getBitmap());
+                                        chatscounter++;
+                                        break;
                                     }
-                                    dateMessage.add(datef);
-                                    chatId.add(chatidtemp);
-                                    ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                    imgId.add(bmd.getBitmap());
-                                    chatscounter++;
-                                    break;
                                 }
-                            }
-                        }else setUpHelpChat(false);
+                            } else setUpHelpChat(false);
+                        }
                     }
                 }
                 if (chatscounter==0)
