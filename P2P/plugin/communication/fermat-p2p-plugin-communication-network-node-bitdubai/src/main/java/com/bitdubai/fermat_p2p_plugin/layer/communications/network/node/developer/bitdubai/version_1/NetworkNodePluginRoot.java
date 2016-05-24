@@ -783,6 +783,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         if (daoFactory.getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())) {
 
+            // create transaction for
+            DatabaseTransaction databaseTransaction = daoFactory.getNodesCatalogDao().getNewTransaction();
+            DatabaseTransactionStatementPair pair;
+
             /*
              * Create the NodesCatalog entity
              */
@@ -796,13 +800,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             nodeCatalog.setLocation(nodeProfile.getLocation());
 
             /*
-             * Save into the data base
+             * Insert NodesCatalog into data base
              */
-            daoFactory.getNodesCatalogDao().update(nodeCatalog);
+            pair = daoFactory.getNodesCatalogDao().createUpdateTransactionStatementPair(nodeCatalog);
+            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
-            /*
-             * Create the NodesCatalogTransaction entity
-             */
+            // create the node catalog transaction
             NodesCatalogTransaction transaction = new NodesCatalogTransaction();
             transaction.setIp(nodeProfile.getIp());
             transaction.setDefaultPort(nodeProfile.getDefaultPort());
@@ -814,14 +817,18 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             transaction.setLocation(nodeProfile.getLocation());
 
             /*
-             * Save into the data base
+             * Insert NodesCatalogTransaction into data base
              */
-            daoFactory.getNodesCatalogTransactionDao().create(transaction);
+            pair = daoFactory.getNodesCatalogTransactionDao().createInsertTransactionStatementPair(transaction);
+            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
 
             /*
-             * Save into the data base
+             * Insert NodesCatalogTransactionsPendingForPropagation into data base
              */
-            daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
+            pair = daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().createInsertTransactionStatementPair(transaction);
+            databaseTransaction.addRecordToInsert(pair.getTable(), pair.getRecord());
+
+            databaseTransaction.execute();
 
             ConfigurationManager.updateValue(ConfigurationManager.REGISTERED_IN_CATALOG, String.valueOf(Boolean.TRUE));
             ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
