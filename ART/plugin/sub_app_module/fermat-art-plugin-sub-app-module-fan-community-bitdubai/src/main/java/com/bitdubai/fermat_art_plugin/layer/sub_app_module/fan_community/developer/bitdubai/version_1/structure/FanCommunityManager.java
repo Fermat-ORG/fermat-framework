@@ -166,7 +166,7 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
                             connectedFan.getConnectionState(),
                             connectedFan.getConnectionId()));
             }
-            //check connection from Artist Actor connections
+            //Check connection from Artist Actor connections
             for(ArtistActorConnection connectedFan : artistActorConnections)
             {
                 if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))

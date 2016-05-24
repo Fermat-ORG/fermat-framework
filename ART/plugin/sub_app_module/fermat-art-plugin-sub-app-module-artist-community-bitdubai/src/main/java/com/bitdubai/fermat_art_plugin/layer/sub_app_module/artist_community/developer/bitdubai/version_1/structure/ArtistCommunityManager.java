@@ -125,23 +125,40 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
     public List<ArtistCommunityInformation> listWorldArtists(ArtistCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListArtistsException {
         List<ArtistCommunityInformation> worldArtistList;
         List<ArtistActorConnection> actorConnections;
+        List<FanActorConnection> fanActorConnections;
 
         try{
             worldArtistList = getArtistSearch().getResult();
         } catch (CantGetArtistSearchResult e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantListArtistsException(e, "", "Error in listWorldArtists trying to list world Artists");
+            this.errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantListArtistsException(
+                    e,
+                    "",
+                    "Error in listWorldArtists trying to list world Artists");
         }
 
 
         try {
-
+            //Artist connections
             final ArtistLinkedActorIdentity linkedActorIdentity = new ArtistLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
             final ArtistActorConnectionSearch search = artistActorConnectionManager.getSearch(linkedActorIdentity);
             //search.addConnectionState(ConnectionState.CONNECTED);
             //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
+
+            //Fan connections
+            final FanLinkedActorIdentity fanLinkedActorIdentity = new FanLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType());
+            final FanActorConnectionSearch fanSearch = fanActorConnectionManager.getSearch(
+                    fanLinkedActorIdentity);
+            fanSearch.addConnectionState(ConnectionState.CONNECTED);
+
+            fanActorConnections = fanSearch.getResult(Integer.MAX_VALUE, 0);
 
         } catch (final CantListActorConnectionsException e) {
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -152,10 +169,27 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         for(int i = 0; i < worldArtistList.size(); i++)
         {
             worldArtist = worldArtistList.get(i);
+            //Check connection from Artist Actor connections
             for(ArtistActorConnection connectedArtist : actorConnections)
             {
                 if(worldArtist.getPublicKey().equals(connectedArtist.getPublicKey()))
-                    worldArtistList.set(i, new com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.utils.ArtistCommunityInformationImpl(worldArtist.getPublicKey(), worldArtist.getAlias(), worldArtist.getImage(), connectedArtist.getConnectionState(), connectedArtist.getConnectionId()));
+                    worldArtistList.set(i, new ArtistCommunityInformationImpl(
+                            worldArtist.getPublicKey(),
+                            worldArtist.getAlias(),
+                            worldArtist.getImage(),
+                            connectedArtist.getConnectionState(),
+                            connectedArtist.getConnectionId()));
+            }
+            //Check connections from Fan Actor Connection
+            for(FanActorConnection connectedFan : fanActorConnections)
+            {
+                if(worldArtist.getPublicKey().equals(connectedFan.getPublicKey()))
+                    worldArtistList.set(i, new ArtistCommunityInformationImpl(
+                            worldArtist.getPublicKey(),
+                            worldArtist.getAlias(),
+                            worldArtist.getImage(),
+                            connectedFan.getConnectionState(),
+                            connectedFan.getConnectionId()));
             }
         }
         return worldArtistList;
