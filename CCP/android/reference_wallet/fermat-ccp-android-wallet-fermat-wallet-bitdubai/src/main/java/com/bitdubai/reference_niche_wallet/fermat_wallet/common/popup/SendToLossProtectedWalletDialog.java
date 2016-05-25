@@ -360,16 +360,16 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
 
 
                         if (operator.compareTo(minSatoshis) == 1) {
-                            cryptoWallet.sendToWallet(
-                                    operator.longValueExact(),
-                                    walletContact.getActorPublicKey(),
-                                    wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
-                                    notes,
-                                    Actors.DEVICE_USER,
-                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                    blockchainNetworkType
-                            );
+//                            cryptoWallet.sendToWallet(
+//                                    operator.longValueExact(),
+//                                    walletContact.getActorPublicKey(),
+//                                    wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
+//                                    notes,
+//                                    Actors.DEVICE_USER,
+//                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+//                                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
+//                                    blockchainNetworkType
+//                            );
                             Toast.makeText(activity, "Sending btc to Loss Protected Wallet...", Toast.LENGTH_SHORT).show();
                             dismiss();
                         } else {
@@ -383,14 +383,14 @@ public class SendToLossProtectedWalletDialog extends Dialog implements View.OnCl
                     }
 
 
-                } catch (LossProtectedInsufficientFundsException e) {
-                    Toast.makeText(activity, "Insufficient funds", Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
-                    dismiss();
-                } catch (CantSendLossProtectedCryptoException e) {
-                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                    Toast.makeText(activity, "Error Send not Complete", Toast.LENGTH_LONG).show();
-                    dismiss();
+//                } catch (LossProtectedInsufficientFundsException e) {
+//                    Toast.makeText(activity, "Insufficient funds", Toast.LENGTH_LONG).show();
+//                    e.printStackTrace();
+//                    dismiss();
+//                } catch (CantSendLossProtectedCryptoException e) {
+//                    appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                    Toast.makeText(activity, "Error Send not Complete", Toast.LENGTH_LONG).show();
+//                    dismiss();
                 } catch (Exception e) {
                     appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     Toast.makeText(activity, "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();

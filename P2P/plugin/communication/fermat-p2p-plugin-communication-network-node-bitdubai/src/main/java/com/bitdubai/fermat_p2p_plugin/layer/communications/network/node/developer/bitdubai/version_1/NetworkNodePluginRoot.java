@@ -202,6 +202,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp developerDatabaseFactory = new CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp(pluginDatabaseSystem, pluginId);
 
             /*
+             * Delete all checked in components
+             * when node starts
+             */
+            daoFactory.getCheckedInActorDao().deleteAll();
+            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
+            daoFactory.getCheckedInClientDao().deleteAll();
+            daoFactory.getCheckedNetworkServicesHistoryDao().deleteAll();
+            daoFactory.getCheckedActorsHistoryDao().deleteAll();
+
+            /*
              * Get the server ip
              */
             serverIp = IPAddressHelper.getCurrentIPAddress();
@@ -235,16 +245,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM, pluginDatabaseSystem);
             NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM, pluginFileSystem);
             NodeContext.add(NodeContextItem.PLUGIN_ROOT, this);
-
-            /*
-             * Delete all checked in components
-             * when node starts
-             */
-            daoFactory.getCheckedInActorDao().deleteAll();
-            daoFactory.getCheckedInNetworkServiceDao().deleteAll();
-            daoFactory.getCheckedInClientDao().deleteAll();
-            daoFactory.getCheckedNetworkServicesHistoryDao().deleteAll();
-            daoFactory.getCheckedActorsHistoryDao().deleteAll();
 
             /*
              * Process the node catalog

@@ -578,8 +578,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         } else if (id == R.id.btn_expand_send_form) {
             Object[] objects = new Object[1];
             objects[0] = walletContact;
-            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,
-                    appSession.getCommunityConnection(), objects);
+//            changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY,
+//                    appSession.getCommunityConnection(), objects);
         }
 
 

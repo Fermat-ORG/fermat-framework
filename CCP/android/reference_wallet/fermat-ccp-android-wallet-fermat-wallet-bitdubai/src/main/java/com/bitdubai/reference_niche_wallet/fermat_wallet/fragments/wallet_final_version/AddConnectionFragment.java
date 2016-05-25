@@ -40,7 +40,7 @@ import com.bitdubai.reference_niche_wallet.fermat_wallet.common.adapters.AddConn
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.common.utils.AddConnectionCallback;
 import com.bitdubai.reference_niche_wallet.fermat_wallet.session.ReferenceWalletSession;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+//import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -144,7 +144,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             public void onClick(View v) {
                 try {
                     Object[] object = new Object[2];
-                    changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, referenceWalletSession.getCommunityConnection(), object);
+//                    changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, referenceWalletSession.getCommunityConnection(), object);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -156,13 +156,13 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
         frameLayout.addView(view);
         frameLayout.setOnClickListener(onClickListener);
         view.setOnClickListener(onClickListener);
-        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
-                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_add_connection_selector)
-                .build();
-
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
-                .attachTo(actionButton)
-                .build();
+//        final com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+//                .setContentView(frameLayout).setBackgroundDrawable(R.drawable.btn_add_connection_selector)
+//                .build();
+//
+//        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+//                .attachTo(actionButton)
+//                .build();
     }
 
     private void setUpScreen(View layout) {
