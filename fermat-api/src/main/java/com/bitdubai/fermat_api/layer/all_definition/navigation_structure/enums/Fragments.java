@@ -435,6 +435,7 @@ public enum Fragments implements FermatFragments {
     DESKTOP_SOCIAL_MAIN("DSM"),
     COMMUNITIES_FRAGMENT("CF"),
     DESKTOP_SETTING_IMPORT_KEY("DSIK"),
+    DESKTOP_SETTING_EXPORT_KEY("DSEK"),
 
 
     // Welcome wizard
