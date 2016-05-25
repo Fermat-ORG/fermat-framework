@@ -20,7 +20,8 @@ public enum CryptoCurrency implements Currency {
     BITCOIN     ("BTC", "Bitcoin"),
     DOGECOIN    ("DOGE", "Dogecoin"),
     ETHEREUM    ("ETH", "Ethereum"),
-    LITECOIN    ("LTC", "Litecoin")
+    LITECOIN    ("LTC", "Litecoin"),
+    FERMAT      ("FER", "Fermat")       // TODO: temporal Fermat Wallet
 
     ;
 
@@ -43,6 +44,7 @@ public enum CryptoCurrency implements Currency {
             case "DOGE": return CryptoCurrency.DOGECOIN;
             case "ETH": return CryptoCurrency.ETHEREUM;
             case "LTC": return CryptoCurrency.LITECOIN;
+            case "FER": return CryptoCurrency.FERMAT;       // TODO: temporal Fermat Wallet
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
