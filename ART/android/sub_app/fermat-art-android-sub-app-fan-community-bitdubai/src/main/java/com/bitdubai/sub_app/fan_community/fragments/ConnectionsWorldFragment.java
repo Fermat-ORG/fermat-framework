@@ -64,7 +64,7 @@ public class ConnectionsWorldFragment extends
     //Managers
     private FanCommunityModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<FanCommunitySettings> settingsManager;
+    //private SettingsManager<FanCommunitySettings> settingsManager;
 
     //Data
     private FanCommunitySettings appSettings;
@@ -81,7 +81,7 @@ public class ConnectionsWorldFragment extends
     private View rootView;
     private LinearLayout emptyView;
     private RecyclerView recyclerView;
-    private GridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private AppListAdapter adapter;
     private SwipeRefreshLayout swipeRefresh;
 
@@ -102,7 +102,7 @@ public class ConnectionsWorldFragment extends
             //Get managers
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = moduleManager.getSettingsManager();
+            //settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
 
@@ -110,9 +110,9 @@ public class ConnectionsWorldFragment extends
             appSettings = null;
             try {
                 if (appSession.getAppPublicKey()!= null){
-                    appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                    appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = settingsManager.loadAndGetSettings("123456789");
+                    appSettings = moduleManager.loadAndGetSettings("123456789");
                 }
 
             } catch (Exception e) {
@@ -122,11 +122,11 @@ public class ConnectionsWorldFragment extends
             if (appSettings == null) {
                 appSettings = new FanCommunitySettings();
                 appSettings.setIsPresentationHelpEnabled(false);
-                if(settingsManager != null){
+                if(moduleManager != null){
                     if (appSession.getAppPublicKey()!=null){
-                        settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        settingsManager.persistSettings("123456789", appSettings);
+                        moduleManager.persistSettings("123456789", appSettings);
                     }
                 }
             }
@@ -155,7 +155,7 @@ public class ConnectionsWorldFragment extends
             rootView = inflater.inflate(R.layout.afc_fragment_connections_world, container, false);
 
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            layoutManager  = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             adapter = new AppListAdapter(getActivity(), fanCommunityInformationArrayList);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_gridView);
@@ -168,7 +168,7 @@ public class ConnectionsWorldFragment extends
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#000b12"));
+            rootView.setBackgroundColor(Color.parseColor("#F1F2F2"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.afc_empty_view);
 
             if(launchActorCreationDialog) {

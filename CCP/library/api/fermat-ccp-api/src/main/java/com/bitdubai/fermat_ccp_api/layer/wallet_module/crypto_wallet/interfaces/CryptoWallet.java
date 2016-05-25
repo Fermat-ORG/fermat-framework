@@ -319,7 +319,8 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType) throws CantSendCryptoException, InsufficientFundsException;
+              BlockchainNetworkType blockchainNetworkType,
+              CryptoCurrency cryptoCurrency) throws CantSendCryptoException, InsufficientFundsException;
 
 
     /**
@@ -522,7 +523,8 @@ public interface CryptoWallet  extends Serializable,ModuleManager<BitcoinWalletS
                                    final String                description      ,
                                    final long                  amount           ,
                                    final BlockchainNetworkType networkType      ,
-                                   final ReferenceWallet       referenceWallet) throws CantSendCryptoPaymentRequestException;
+                                   final ReferenceWallet       referenceWallet,
+                                   final CryptoCurrency         cryptoCurrency) throws CantSendCryptoPaymentRequestException;
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 

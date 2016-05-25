@@ -51,7 +51,8 @@ public class AssetFactoryFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new AssetFactoryNavigationViewPainter(getContext(), getActiveIdentity());
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+        return new AssetFactoryNavigationViewPainter(getContext(), null);
     }
 
     @Override

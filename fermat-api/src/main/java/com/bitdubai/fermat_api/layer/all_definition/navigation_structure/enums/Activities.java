@@ -347,11 +347,13 @@ public enum Activities implements FermatEnum {
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAFCCN"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD("ASAFCCW"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAFCCOP"),
+    ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST("ASAFCLIL"),
 
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST("ASAACCFL"),
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAACCN"),
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD("ASAACCW"),
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAACCOP"),
+    ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST("ASAACLIL"),
 
     ART_FAN_IDENTITY_CREATE_PROFILE("AFICP"),
 
@@ -365,6 +367,8 @@ public enum Activities implements FermatEnum {
 
     WPD_DESKTOP("WPD"),
     DESKTOP_SETTING_FERMAT_NETWORK("DSFN"),
+    DESKTOP_SETTING_EXPORT_KEY("DSEK"),
+    DESKTOP_SETTING_IMPORT_KEY("DSIK"),
     CCP_DESKTOP_P2P("DP2P"),
     CCP_DESKTOP_SOCIAL("DSOCIAL"),
     DESKTOP_COMMUNITY_ACTIVITY("DESCA"),
@@ -939,6 +943,8 @@ public enum Activities implements FermatEnum {
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST;
             case "ASAFCCN":
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS;
+            case "ASAFCLIL":
+                return ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST;
             case "ASAACCFL":
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST;
             case "ASAACCN":
@@ -947,6 +953,8 @@ public enum Activities implements FermatEnum {
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD;
             case "ASAACCOP":
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE;
+            case "ASAACLIL":
+                return ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST;
             case "AFICP":
                 return ART_FAN_IDENTITY_CREATE_PROFILE;
             case "ARTMPMA":
@@ -954,6 +962,10 @@ public enum Activities implements FermatEnum {
 
             case "DWW":
                 return DESKTOP_WIZZARD_WELCOME;
+            case "DSEK":
+                return DESKTOP_SETTING_EXPORT_KEY;
+            case "DSIK":
+                return DESKTOP_SETTING_IMPORT_KEY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

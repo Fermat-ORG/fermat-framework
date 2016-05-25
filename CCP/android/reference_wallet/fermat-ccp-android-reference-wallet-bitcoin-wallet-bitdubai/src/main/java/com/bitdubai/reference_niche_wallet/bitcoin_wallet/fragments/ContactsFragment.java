@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -36,6 +37,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -67,6 +69,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.ContactsT
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.popup.CreateContactFragmentDialog;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 
@@ -135,7 +138,7 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
      * Resources
      */
     WalletResourcesProviderManager walletResourcesProviderManager;
-    List<CryptoWalletWalletContact> walletContactRecords;
+    List<CryptoWalletWalletContact> walletContactRecords = new ArrayList<>();
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
@@ -168,6 +171,8 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         _executor = Executors.newFixedThreadPool(2);
         try {
         cryptoWallet = (CryptoWallet) appSession.getModuleManager();
+
+
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "Unexpected error get Contact list - " + e.getMessage());
@@ -186,24 +191,18 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
             mListSectionPos = new ArrayList<Integer>();
             mListItems = new ArrayList<Object>();
 
-            _executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    onRefresh();
-
-                }
-            });
-
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable() {
                 public void run() {
+
+                    onRefresh();
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
                             boolean isHelpEnabled = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
 
-                            if(isHelpEnabled)
-                              setUpTutorial(true);
+                            if (isHelpEnabled)
+                                setUpTutorial(true);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -231,33 +230,40 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         frameLayout.setLayoutParams(lbs);
 
-        int padding = FermatScreenCalculator.getPx(getActivity(), 15);
-        frameLayout.setPadding(0, 0, padding, 0);
+        int padding = FermatScreenCalculator.getPx(getActivity(), 30);
+        int width = FermatScreenCalculator.getPx(getActivity(), 56);
+        //noinspection SuspiciousNameCombination
+        FloatingActionButton.LayoutParams actionButtonParams = new FloatingActionButton.LayoutParams(width, width);
+        actionButtonParams.setMargins(0,0,padding,padding);
 
         ImageView icon = new ImageView(getActivity());
         frameLayout.addView(icon);
         actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
+                .setLayoutParams(actionButtonParams)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
 
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
 
-        ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.drawable.extra_user_button);
+        padding = FermatScreenCalculator.getPx(getActivity(), 50);
         button1 = itemBuilder
-                .setContentView(itemIcon)
-                .setBackgroundDrawable(getResources().getDrawable(R.drawable.extra_user_button))
+                .setSize(65)
+                .setPadding(0,0,padding,0)
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.extra_user_button))
                 .setText("External User")
+                .setTextColor(Color.WHITE)
                 .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
-        ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.drawable.intra_user_button);
-        button2 = itemBuilder.setContentView(itemIcon2)
-                .setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button))
+        padding = FermatScreenCalculator.getPx(getActivity(), 84);
+        button2 = itemBuilder
+                .setSize(65)
+                .setPadding(0,0,padding,0)
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.intra_user_button))
                 .setText("Fermat User")
+                .setTextColor(Color.WHITE)
                 .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);

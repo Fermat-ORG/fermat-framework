@@ -21,6 +21,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.excepti
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListIdentitiesToSelectException;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,7 +31,9 @@ import java.util.UUID;
 public interface ArtistCommunitySubAppModuleManager extends
         ModuleManager<
                 ArtistCommunitySettings,
-                ArtistCommunitySelectableIdentity>,ModuleSettingsImpl<ArtistCommunitySettings> {
+                ArtistCommunitySelectableIdentity>,
+        ModuleSettingsImpl<ArtistCommunitySettings>,
+        Serializable {
 
     /**
      * The method <code>listWorldArtists</code> returns the list of all Artist in the world,
@@ -220,5 +223,32 @@ public interface ArtistCommunitySubAppModuleManager extends
             String linkedIdentityPublicKey,
             Actors linkedIdentityActorType,
             String actorPublicKey) throws CantGetActorConnectionException;
+
+    /**
+     * This method returns the ConnectionState from an actor connection.
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    ConnectionState getRequestActorConnectionState(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException;
+
+    /**
+     * This method returns the connection Id
+     * @param linkedIdentityPublicKey
+     * @param linkedIdentityActorType
+     * @param actorPublicKey
+     * @return
+     * @throws CantGetActorConnectionException
+     */
+    UUID getConnectionId(
+            String linkedIdentityPublicKey,
+            Actors linkedIdentityActorType,
+            String actorPublicKey) throws CantGetActorConnectionException;
+
 
 }

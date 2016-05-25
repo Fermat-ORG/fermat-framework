@@ -1053,7 +1053,7 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                         blockchainNetworkType
                 );
 
-                List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList1 = new ArrayList<>();
+
 
         //get actor to data
                 for (BitcoinLossProtectedWalletTransaction bwt : bitcoinWalletTransactionList) {
@@ -1739,17 +1739,24 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet,
+                     BlockchainNetworkType blockchainNetworkType,
+                     CryptoCurrency cryptoCurrency) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
                 case EXTRA_USER:
                     System.out.println("Sending throw outgoing Extra User ...");
-                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey, deliveredToActorType, referenceWallet,blockchainNetworkType);
+                    outgoingExtraUserManager.getTransactionManager().send(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey, deliveredByActorType, deliveredToActorPublicKey,
+                            deliveredToActorType, referenceWallet,blockchainNetworkType,
+                            cryptoCurrency);
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress,
+                            cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType,
+                            deliveredToActorType,referenceWallet,blockchainNetworkType,
+                            cryptoCurrency);
 
                     break;
             }
@@ -2210,7 +2217,8 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                                                final String                description      ,
                                                final long                  amount           ,
                                                final BlockchainNetworkType networkType      ,
-                                               final ReferenceWallet       referenceWallet) throws CantSendLossProtectedPaymentRequestException {
+                                               final ReferenceWallet       referenceWallet,
+                                               final CryptoCurrency         cryptoCurrency) throws CantSendLossProtectedPaymentRequestException {
 
         try {
 
@@ -2224,7 +2232,8 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                     description,
                     amount,
                     networkType,
-                    referenceWallet
+                    referenceWallet,
+                    cryptoCurrency
             );
         } catch (CantGenerateCryptoPaymentRequestException e) {
 

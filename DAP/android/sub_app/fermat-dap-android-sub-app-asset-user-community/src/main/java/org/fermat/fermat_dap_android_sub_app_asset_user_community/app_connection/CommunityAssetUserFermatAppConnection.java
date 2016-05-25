@@ -57,7 +57,8 @@ public class CommunityAssetUserFermatAppConnection extends AppConnections<AssetU
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new UserCommunityNavigationViewPainter(getContext(), getActiveIdentity());
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+        return new UserCommunityNavigationViewPainter(getContext(), null);
     }
 
     @Override

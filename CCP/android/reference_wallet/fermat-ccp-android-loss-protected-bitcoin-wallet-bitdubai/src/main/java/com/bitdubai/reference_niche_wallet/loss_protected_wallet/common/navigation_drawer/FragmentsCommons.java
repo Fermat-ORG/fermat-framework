@@ -18,6 +18,10 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -26,20 +30,21 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,ActiveActorIdentityInformation intraUserLoginIdentity,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater,Context activity,LossProtectedWalletSession lossWalletSession,final FermatApplicationCaller applicationsHelper) throws CantGetActiveLoginIdentityException {
         View view = inflater.inflate(R.layout.loss_navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
+            LossProtectedWalletIntraUserIdentity identityModule = lossWalletSession.getIntraUserModuleManager();
             ImageView imageView = (ImageView) view.findViewById(R.id.image_view_photo);
-            if (intraUserLoginIdentity != null) {
-                if (intraUserLoginIdentity.getImage() != null) {
-                    if (intraUserLoginIdentity.getImage().length > 0) {
-                           imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(activity.getResources(),intraUserLoginIdentity.getImage()));
+            if (identityModule != null) {
+                if (identityModule.getProfileImage() != null) {
+                    if (identityModule.getProfileImage().length > 0) {
+                           imageView.setImageDrawable(ImagesUtils.getRoundedBitmap(activity.getResources(),identityModule.getProfileImage()));
 
                     } else
                         Picasso.with(activity).load(R.drawable.profile_image_male_lossp).transform(new CircleTransform()).into(imageView); //default image by param
                 }
-                fermatTextView.setText(intraUserLoginIdentity.getAlias());
+                fermatTextView.setText(identityModule.getAlias());
             }else{
                 fermatTextView.setText("");
             }
@@ -59,6 +64,10 @@ public class FragmentsCommons {
         }catch (OutOfMemoryError outOfMemoryError){
             outOfMemoryError.printStackTrace();
             Toast.makeText(activity,"Error: out of memory ",Toast.LENGTH_SHORT).show();
+        } catch (CantListCryptoWalletIntraUserIdentityException e) {
+            e.printStackTrace();
+        } catch (CantGetCryptoLossProtectedWalletException e) {
+            e.printStackTrace();
         }
         return view;
     }
