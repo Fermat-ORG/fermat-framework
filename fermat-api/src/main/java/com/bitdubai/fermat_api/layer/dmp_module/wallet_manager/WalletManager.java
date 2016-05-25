@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
@@ -47,4 +48,6 @@ public interface WalletManager extends AppManager,ModuleSettingsImpl<DesktopMana
 
 
     List<String> getMnemonicCode() throws Exception;
+
+    public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception;
 }

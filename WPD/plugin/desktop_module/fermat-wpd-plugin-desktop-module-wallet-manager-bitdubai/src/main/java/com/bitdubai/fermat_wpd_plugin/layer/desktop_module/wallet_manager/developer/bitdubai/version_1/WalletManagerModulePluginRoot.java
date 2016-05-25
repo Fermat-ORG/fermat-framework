@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -386,6 +387,11 @@ public class WalletManagerModulePluginRoot extends AbstractModule<DesktopManager
         } catch (CantLoadExistingVaultSeed cantLoadExistingVaultSeed) {
             throw new Exception(cantLoadExistingVaultSeed);
         }
+    }
+
+    @Override
+    public void importMnemonicCode(List<String> mnemonicCode,long date,BlockchainNetworkType blockchainNetworkType) throws Exception {
+        cryptoVaultManager.importSeedFromMnemonicCode(mnemonicCode,date,null,blockchainNetworkType);
     }
 
     /**
