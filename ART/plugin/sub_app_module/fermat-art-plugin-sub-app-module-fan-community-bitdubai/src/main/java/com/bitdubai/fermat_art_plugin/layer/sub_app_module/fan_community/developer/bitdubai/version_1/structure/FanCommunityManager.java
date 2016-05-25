@@ -3,6 +3,7 @@ package com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.develo
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantCancelActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantGetActorConnectionException;
@@ -482,8 +483,19 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
     }
 
     @Override
-    public void cancelFan(String fanToCancelPublicKey) throws FanCancellingFailedException {
-
+    public void cancelFan(UUID connectionID) throws FanCancellingFailedException {
+        try {
+            fanActorConnectionManager.cancelConnection(connectionID);
+        } catch (CantCancelActorConnectionRequestException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new FanCancellingFailedException("", e, "", "Error trying to cancel the actor connection.");
+        } catch (ActorConnectionNotFoundException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new FanCancellingFailedException("", e, "", "Connection request not found.");
+        } catch (UnexpectedConnectionStateException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new FanCancellingFailedException("", e, "", "Unhandled Exception.");
+        }
     }
 
     @Override

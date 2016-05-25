@@ -32,6 +32,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ConnectionR
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
@@ -546,7 +547,48 @@ public final class FanActorNetworkServiceDao {
             throw new CantFindRequestException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
         }
     }
+    public void cancelConnection(final UUID          requestId,
+                                 final ProtocolState state    ) throws CantCancelConnectionRequestException,
+            ConnectionRequestNotFoundException {
 
+        if (requestId == null)
+            throw new CantCancelConnectionRequestException(null, "", "The requestId is required, can not be null");
+
+        if (state == null)
+            throw new CantCancelConnectionRequestException(null, "", "The state is required, can not be null");
+
+        try {
+
+            final ConnectionRequestAction action = ConnectionRequestAction.CANCEL;
+
+            final DatabaseTable connectionNewsTable = database.getTable(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionNewsTable.addUUIDFilter(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                final DatabaseTableRecord record = records.get(0);
+
+                record.setFermatEnum(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME , state );
+                record.setFermatEnum(FanActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action);
+
+                connectionNewsTable.updateRecord(record);
+
+            } else
+                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantCancelConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantCancelConnectionRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
     /**
      * change the protocol state
      *
