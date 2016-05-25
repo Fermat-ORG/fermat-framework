@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -28,9 +28,8 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfo
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantInitializeProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
+import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.ProviderFermatExchangePluginRoot;
 import com.bitdubai.fermat_cer_plugin.layer.provider.fermatexchange.developer.bitdubai.version_1.exceptions.CantInitializeFermatExchangeProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,16 +41,16 @@ import java.util.UUID;
 public class FermatExchangeProviderDao {
 
 
-    private final ErrorManager errorManager;
+    private final ProviderFermatExchangePluginRoot pluginRoot;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
 
     private Database database;
 
-    public FermatExchangeProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ErrorManager errorManager) {
+    public FermatExchangeProviderDao(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId, final ProviderFermatExchangePluginRoot pluginRoot) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
     }
 
 
@@ -63,14 +62,14 @@ public class FermatExchangeProviderDao {
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.FERMAT_EXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
             }
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_EXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.FERMAT_EXCHANGE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeFermatExchangeProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + FermatExchangeProviderDatabaseConstants.DAILY_EXCHANGE_RATES_TABLE_NAME, "");
         }
     }
