@@ -16,6 +16,8 @@ public enum DesktopFragmentsEnumType implements FermatFragmentsEnumType<DesktopF
 
     //settings
     SETTINGS_IMPORT_KEY("DSIK"),
+    SETTINGS_EXPORT_KEY("DSEK"),
+
 
     // Welcome wizard
     WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT("WWFISF"),
