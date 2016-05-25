@@ -63,10 +63,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
-
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -645,7 +644,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 Intent chooserIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 File f = new File(Environment.getExternalStorageDirectory(), "POST_IMAGE.jpg");
                 chooserIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
-                imageToUploadUri = Uri.fromFile(f);
+            imageToUploadUri = Uri.fromFile(f);
                 startActivityForResult(chooserIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
