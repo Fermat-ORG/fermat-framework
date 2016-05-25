@@ -74,6 +74,7 @@ public class SongFragment extends AbstractFermatFragment  {
     SwipeRefreshLayout swipeContainer;
     ImageView headerImage;
     TextView headerText;
+    ImageView backgroundImage;
     String TAG="SONGFRAGMENT";
     View view;
     private Paint p = new Paint();
@@ -90,6 +91,7 @@ public class SongFragment extends AbstractFermatFragment  {
     PresentationDialog presentationDialog;
     Boolean firstTime=true;
     Boolean downloading=false;
+    boolean noBackground=true;
     /**
      * This flag represents if this fragment can access to the Fan identity.
      */
@@ -127,6 +129,7 @@ public class SongFragment extends AbstractFermatFragment  {
                 downloading=fanwalletSession.getDownloading();
                 items=fanwalletSession.getItems();
                 firstTime=false;
+                noBackground=fanwalletSession.getNobackground();
             }
 
             fanWalletModule=fanwalletSession.getModuleManager();
@@ -156,7 +159,8 @@ public class SongFragment extends AbstractFermatFragment  {
     }
 
     void initValues(){
-
+        headerImage.setPadding(0,0,0,0);
+        headerImage.setImageResource(R.drawable.tky_background_no_songs_found);
         compareViewAndDatabase();
         syncTokenlyAndUpdateThreads(true);
 
@@ -178,9 +182,25 @@ public class SongFragment extends AbstractFermatFragment  {
         }
     }
 
+
+
     @Override
     public void onUpdateViewUIThred(FermatBundle bundle) {
-            this.bundle = bundle;
+        this.bundle = bundle;
+
+                if(backgroundImage.isShown()){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            System.out.println("TKY_NO_BG");
+                            backgroundImage.setVisibility(View.GONE);
+                            noBackground=false;
+                        }
+                    });
+
+                }
+
+
         if (swipeContainer.isRefreshing()){
             swipeContainer.setRefreshing(false);
         }
@@ -217,6 +237,8 @@ public class SongFragment extends AbstractFermatFragment  {
     //
 
         fanwalletSession.setItems(items);
+
+        fanwalletSession.setNobackground(noBackground);
     }
 
     @Override
@@ -228,6 +250,9 @@ public class SongFragment extends AbstractFermatFragment  {
             swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
             swipeContainer.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+            if(noBackground) {
+                backgroundImage = (ImageView) view.findViewById(R.id.no_songs_imageView);
+            }
             headerImage=(ImageView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_image);
             headerText=(TextView)getToolbarHeader().getRootView().findViewById(R.id.tky_header_TextView);
             lManager = new LinearLayoutManager(view.getContext());
@@ -381,7 +406,6 @@ public class SongFragment extends AbstractFermatFragment  {
         return view;
     }
 
-
     private void loadHeaderinfo(int position){
 
         for(int i=0;i<items.size();i++ ){
@@ -390,13 +414,12 @@ public class SongFragment extends AbstractFermatFragment  {
                 adapter.setFilter(items.get(i),true,i);
             }
         }
-
+        headerImage.setPadding(0,140,0,0);
         headerImage.setImageBitmap(items.get(position).getImagen());
         headerText.setText(items.get(position).getDescription());
         items.get(position).setItemSelected(true);
         adapter.setFilter(items.get(position),true,position);
     }
-
 
     private void setUpHelpFanWallet(boolean checkButton) {
         try {
@@ -847,11 +870,6 @@ public class SongFragment extends AbstractFermatFragment  {
     }
 
 
-    /* AsyncTask
-    Variable type
-    Void for the parameters
-    Float for the onprogressupdate
-    Boolen for the  onPostExecute   */
     public class DownloadThreadClass extends AsyncTask<Void, Float, Boolean> {
         int position;
         HTTPErrorResponse httpErrorResponse;
@@ -962,11 +980,7 @@ public class SongFragment extends AbstractFermatFragment  {
 
     }
 
-    /* AsyncTask
-   Variable type
-   Void for the parameters
-   Float for the onprogressupdate
-   Boolen for the  onPostExecute   */
+
     public class SyncThreadClass extends AsyncTask<Void, WalletSong, Boolean> {
         boolean autoSync;
 

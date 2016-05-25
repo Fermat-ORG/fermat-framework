@@ -179,7 +179,7 @@ public class ProvisoryData {
                 AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.icon_bitcoin_network_active);
+        item2.setIconResource(R.drawable.subapp_art_artist_icon);
         item2.setPosition(7);
         lstIdentities.add(item2);
 
@@ -195,7 +195,7 @@ public class ProvisoryData {
                 Platforms.ART_PLATFORM,
                 AppsStatus.ALPHA);
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.subapp_art_fan_icon);
+        item2.setIconResource(R.drawable.fan);
         item2.setPosition(8);
         lstIdentities.add(item2);
 
@@ -380,7 +380,7 @@ public class ProvisoryData {
                 AppsStatus.ALPHA);
 
         item1 = new Item(installedSubApp);
-        item1.setIconResource(R.drawable.artist_banner);
+        item1.setIconResource(R.drawable.banner_artist_community);
         item1.setPosition(6);
         lstCommunities.add(item1);
 
