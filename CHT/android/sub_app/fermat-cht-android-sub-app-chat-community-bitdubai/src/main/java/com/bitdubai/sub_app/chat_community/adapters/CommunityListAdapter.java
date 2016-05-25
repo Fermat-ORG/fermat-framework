@@ -147,7 +147,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                     break;
             }
             //holder.row_connection_state.setText(connectionState.toString());//data.getState()
-//            if(data.getConnectionState().toString().equals("Offline"))
+//            if(data.getStatus().toString().equals("Offline"))
 //                holder.row_connection_state.setTextColor(Color.RED);
 //            else
 //                holder.row_connection_state.setTextColor(Color.WHITE);

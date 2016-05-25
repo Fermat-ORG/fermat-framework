@@ -313,8 +313,6 @@ public class ChatIdentityDatabaseDao {
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME),
                         getChatIdentityPrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
                         getChatProfileImagePrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
-                        pluginFileSystem,
-                        pluginId,
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME),

@@ -135,7 +135,9 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
         }
         try {
+            //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e) {
             chatSettings = null;
         }
@@ -313,12 +315,11 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.contact_list_menu, menu);
-        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
         // Locate the search item
         MenuItem searchItem = menu.findItem(R.id.menu_search);
         searchView = (SearchView) searchItem.getActionView();
-        //searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
+        searchView.setQueryHint(getResources().getString(R.string.cht_search_hint));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -355,18 +356,18 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         if(id == ChtConstants.CHT_ICON_HELP){
             setUpHelpChat(false);
         }
-        if(id == ChtConstants.CHT_ICON_HELP){
-            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                    .setBannerRes(R.drawable.cht_banner)
-                    .setIconRes(R.drawable.chat_subapp)
-                    .setSubTitle(R.string.cht_chat_subtitle)
-                    .setBody(R.string.cht_chat_body)
-                    .setTextFooter(R.string.cht_chat_footer)
-                    .build();
-            presentationDialog.show();
-            return true;
-        }
+//        if(id == ChtConstants.CHT_ICON_HELP){
+//            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+//                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+//                    .setBannerRes(R.drawable.cht_banner)
+//                    .setIconRes(R.drawable.chat_subapp)
+//                    .setSubTitle(R.string.cht_chat_subtitle)
+//                    .setBody(R.string.cht_chat_body)
+//                    .setTextFooter(R.string.cht_chat_footer)
+//                    .build();
+//            presentationDialog.show();
+//            return true;
+//        }
 
         if (id == R.id.menu_search) {
             return true;

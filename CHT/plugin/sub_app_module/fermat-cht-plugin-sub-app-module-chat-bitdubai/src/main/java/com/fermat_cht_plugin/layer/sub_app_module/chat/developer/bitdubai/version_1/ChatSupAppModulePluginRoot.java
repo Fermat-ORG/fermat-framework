@@ -20,7 +20,6 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure.ChatSupAppModuleManager;
 
 
@@ -52,12 +51,15 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CHAT_ACTOR_CONNECTION  )
     private ChatActorConnectionManager chatActorConnectionManager;
 
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE  )
+    private com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager;
+
     @Override
     public void start(){
         /**
          * Init the plugin manager
          */
-        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this);
+        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this, chatActorNetworkServiceManager);
 
         System.out.println("******* Init Chat Sup App Module Chat ******");
     }
@@ -65,7 +67,7 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
     @Override
     public ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if (chatManager == null)
-            chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this);
+            chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorConnectionManager, pluginId, this, chatActorNetworkServiceManager);
         return chatManager;
     }
 }

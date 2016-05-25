@@ -12,7 +12,7 @@
         android:layout_height="350dp"
         android:paddingBottom="0dp"
         android:clickable="false"
-        android:background="@drawable/cht_comm_background_drawer">
+        android:background="@drawable/cht_comm_background_profile_drawer">
 
         <ImageView
             android:id="@+id/image_view_circle"
@@ -62,10 +62,11 @@
                 android:layout_height="wrap_content"
                 android:background="#47BF73"
                 android:paddingBottom="12dp"
-                android:paddingLeft="25dp"
+                android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:clickable="false"
                 android:paddingTop="12dp"
+                android:gravity="center"
                 android:text="Unknown"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
