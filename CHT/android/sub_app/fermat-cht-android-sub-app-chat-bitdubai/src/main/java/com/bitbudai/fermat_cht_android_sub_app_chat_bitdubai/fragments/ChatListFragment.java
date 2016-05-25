@@ -254,6 +254,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
                 chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
+                //chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

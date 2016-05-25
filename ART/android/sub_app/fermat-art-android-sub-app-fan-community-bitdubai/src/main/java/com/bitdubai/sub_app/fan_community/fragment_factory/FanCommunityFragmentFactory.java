@@ -10,6 +10,7 @@ import com.bitdubai.sub_app.fan_community.fragments.ConnectionOtherProfileFragme
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsWorldFragment;
+import com.bitdubai.sub_app.fan_community.fragments.ListUserIdentiesFragment;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
 
 /**
@@ -48,6 +49,9 @@ public class FanCommunityFragmentFactory extends
                 break;
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST:
                 currentFragment = ConnectionsListFragment.newInstance();
+                break;
+            case ART_SUB_APP_FAN_COMMUNITY_LOCAL_IDENTITIES_LIST:
+                currentFragment = ListUserIdentiesFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException(

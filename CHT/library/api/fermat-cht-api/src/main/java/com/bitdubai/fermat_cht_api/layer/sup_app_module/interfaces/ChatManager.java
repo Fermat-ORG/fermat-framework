@@ -46,6 +46,7 @@ import java.util.UUID;
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
+//public interface ChatManager extends ModuleManager, Serializable, ModuleSettingsImpl<ChatPreferenceSettings> {
     //TODO: Implementar los metodos que necesiten manejar el module
     //Documentar
     List<Chat> getChats() throws CantGetChatException;

@@ -71,7 +71,6 @@ public class ArtistCommunityPluginRoot extends AbstractModule<ArtistCommunitySet
                 artistActorConnectionManager,
                 artistNetworkServiceManager,
                 fanaticIdentityManager,
-                errorManager,
                 pluginFileSystem,
                 pluginId,
                 this.getPluginVersionReference(),

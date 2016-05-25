@@ -32,6 +32,8 @@ public class MusicPlayerSession extends AbstractFermatSession<InstalledSubApp,Mu
     TextView song=null;
     TextView tiempo;
 
+    boolean pause;
+
     View view=null;
 
 
@@ -67,5 +69,8 @@ public class MusicPlayerSession extends AbstractFermatSession<InstalledSubApp,Mu
 
     public void setAdapter(MusicPlayerAdapter adapter){this.adapter=adapter;}
     public MusicPlayerAdapter getAdapter(){return adapter;}
+
+    public void setPause(boolean pause){this.pause=pause;}
+    public boolean getPause(){return pause;}
 
 }

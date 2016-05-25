@@ -82,20 +82,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
             holder.progressBar.setVisibility(View.INVISIBLE);
         }
 
-        for (int x=0;x<items.size();x++){
-            if(items.get(x).isItemSelected() && i==x){
-                holder.songName.setTextColor(Color.WHITE);
-                holder.cardview.setCardBackgroundColor(Color.parseColor("#FF187C"));
-                holder.cardview.setAlpha(0.1F);
-                items.get(x).setItemSelected(false);
-            }else{
-                holder.songName.setTextColor(Color.parseColor("#FF187C"));
-                holder.cardview.setCardBackgroundColor(Color.TRANSPARENT);
-                holder.cardview.setAlpha(1);
-
-            }
-
+        if(items.get(i).isItemSelected()){
+            holder.songName.setTextColor(Color.WHITE);
+            holder.cardview.setCardBackgroundColor(Color.parseColor("#966078"));
+   //         holder.cardview.setAlpha(0.1F);
+        }else{
+            holder.songName.setTextColor(Color.parseColor("#FF187C"));
+            holder.cardview.setCardBackgroundColor(Color.TRANSPARENT);
+   //         holder.cardview.setAlpha(1);
         }
+
+
 
 
 

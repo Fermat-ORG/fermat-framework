@@ -138,6 +138,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         try {
             chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
             //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         }catch (Exception e) {
             chatSettings = null;
         }

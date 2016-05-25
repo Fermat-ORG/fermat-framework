@@ -62,7 +62,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
     //Managers
     private ArtistCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ArtistCommunitySettings> settingsManager;
+    //private SettingsManager<ArtistCommunitySettings> settingsManager;
 
     //Data
     private ArtistCommunitySettings appSettings;
@@ -102,7 +102,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             //Get managers
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            settingsManager = moduleManager.getSettingsManager();
+            //settingsManager = moduleManager.getSettingsManager();
             moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
 
@@ -110,9 +110,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             appSettings = null;
             try {
                 if (appSession.getAppPublicKey()!= null){
-                    appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                    appSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    appSettings = settingsManager.loadAndGetSettings("123456789");
+                    appSettings = moduleManager.loadAndGetSettings("123456789");
                 }
 
             } catch (Exception e) {
@@ -122,11 +122,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
             if (appSettings == null) {
                 appSettings = new ArtistCommunitySettings();
                 appSettings.setIsPresentationHelpEnabled(false);
-                if(settingsManager != null){
+                if(moduleManager != null){
                     if (appSession.getAppPublicKey()!=null){
-                        settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                        moduleManager.persistSettings(appSession.getAppPublicKey(), appSettings);
                     }else{
-                        settingsManager.persistSettings("123456789", appSettings);
+                        moduleManager.persistSettings("123456789", appSettings);
                     }
                 }
             }
