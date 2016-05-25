@@ -364,16 +364,18 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
         _executor.submit(new Runnable() {
             @Override
             public void run() {
+
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
                         try {
                             walletContactRecords = cryptoWallet.listWalletContacts(referenceWalletSession.getAppPublicKey(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-
-
-                            if (walletContactRecords.isEmpty()) {
+                           if (walletContactRecords.isEmpty()) {
                                 mEmptyView.setVisibility(View.VISIBLE);
                                 mListView.setVisibility(View.GONE);
                             } else {
                                 mListView.setVisibility(View.VISIBLE);
                                 mEmptyView.setVisibility(View.GONE);
+                                rootView.findViewById(R.id.fragment_container2).setVisibility(View.VISIBLE);
                             }
                             refreshAdapter();
                         }
@@ -381,8 +383,12 @@ public class ContactsFragment extends AbstractFermatFragment<ReferenceWalletSess
                         {
                             e.printStackTrace();
                         }
+                    }
+                });
+
             }
         });
+
     }
 
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
