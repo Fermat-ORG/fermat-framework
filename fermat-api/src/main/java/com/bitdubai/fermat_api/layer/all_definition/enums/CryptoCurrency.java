@@ -20,6 +20,7 @@ public enum CryptoCurrency implements Currency {
     BITCOIN     ("BTC", "Bitcoin"),
     DOGECOIN    ("DOGE", "Dogecoin"),
     ETHEREUM    ("ETH", "Ethereum"),
+    FERMAT      ("FER", "Fermat"),
     LITECOIN    ("LTC", "Litecoin")
 
     ;
