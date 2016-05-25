@@ -234,6 +234,22 @@ public class ImageUtil {
         return bytes;
     }
 
+    /**
+     * Create a BufferedImage from byte array
+     *
+     * @param data
+     * @return BufferedImage
+     * @throws IOException
+     */
+    public static BufferedImage getBufferedImage(byte [] data) throws IOException {
+
+        InputStream inputStream = new ByteArrayInputStream(data);
+        BufferedImage bufferedImage = ImageIO.read(inputStream);
+        inputStream.close();
+
+        return bufferedImage;
+    }
+
 
     public static void main(String [] args){
 
@@ -242,30 +258,30 @@ public class ImageUtil {
             File file = new File("/home/rrequena/Imágenes/Test/original_image.jpg");
             BufferedImage originalImage = ImageIO.read(file);
 
-            System.out.println("Original image Size = " + bytesIntoHumanReadable(file.length()));
+            System.out.println("Original image Size = " + ImageUtil.bytesIntoHumanReadable(file.length()));
 
-            BufferedImage resizeImage = resize(originalImage, 100, 100);
-            System.out.println("Resize image Size = " + bytesIntoHumanReadable(getSize(originalImage, JPG_FORMAT)));
+            BufferedImage resizeImage = ImageUtil.resize(originalImage, 100, 100);
+            System.out.println("Resize image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(originalImage, JPG_FORMAT)));
             ImageIO.write(resizeImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/resize_image.jpg"));
 
-            BufferedImage compressImageHigh = compress(originalImage, JPG_FORMAT, HIGH_QUALITY);
-            System.out.println("Compress high quality image Size = " + bytesIntoHumanReadable(getSize(compressImageHigh, JPG_FORMAT)));
+            BufferedImage compressImageHigh = ImageUtil.compress(originalImage, JPG_FORMAT, HIGH_QUALITY);
+            System.out.println("Compress high quality image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(compressImageHigh, JPG_FORMAT)));
             ImageIO.write(compressImageHigh, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/compress_high_image.jpg"));
 
-            BufferedImage compressMediumImage = compress(originalImage, JPG_FORMAT, MEDIUM_QUALITY);
-            System.out.println("Compress medium quality image Size = " + bytesIntoHumanReadable(getSize(compressMediumImage, JPG_FORMAT)));
+            BufferedImage compressMediumImage = ImageUtil.compress(originalImage, JPG_FORMAT, MEDIUM_QUALITY);
+            System.out.println("Compress medium quality image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(compressMediumImage, JPG_FORMAT)));
             ImageIO.write(compressMediumImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/compress_medium_image.jpg"));
 
-            BufferedImage compressLowImage = compress(originalImage, JPG_FORMAT, LOW_QUALITY);
-            System.out.println("Compress low quality image Size = " + bytesIntoHumanReadable(getSize(compressLowImage, JPG_FORMAT)));
+            BufferedImage compressLowImage = ImageUtil.compress(originalImage, JPG_FORMAT, LOW_QUALITY);
+            System.out.println("Compress low quality image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(compressLowImage, JPG_FORMAT)));
             ImageIO.write(compressLowImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/compress_low_image.jpg"));
 
-            BufferedImage compressCustomImage = compress(originalImage, JPG_FORMAT, new Float(0.001f));
-            System.out.println("Compress custom quality image Size = " + bytesIntoHumanReadable(getSize(compressCustomImage, JPG_FORMAT)));
+            BufferedImage compressCustomImage = ImageUtil.compress(originalImage, JPG_FORMAT, new Float(0.001f));
+            System.out.println("Compress custom quality image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(compressCustomImage, JPG_FORMAT)));
             ImageIO.write(compressCustomImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/compress_custom_image.jpg"));
 
-            BufferedImage resizeCompressImage = resize(compressImageHigh, 100, 100);
-            System.out.println("Resize and compress image Size = " + bytesIntoHumanReadable(getSize(resizeCompressImage, JPG_FORMAT)));
+            BufferedImage resizeCompressImage = ImageUtil.resize(compressImageHigh, 100, 100);
+            System.out.println("Resize and compress image Size = " + ImageUtil.bytesIntoHumanReadable(getSize(resizeCompressImage, JPG_FORMAT)));
             ImageIO.write(resizeCompressImage, JPG_FORMAT, new File("/home/rrequena/Imágenes/Test/resize_compress_image.jpg"));
 
         } catch (IOException e) {
