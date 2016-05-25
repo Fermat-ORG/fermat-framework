@@ -163,8 +163,6 @@ public abstract class AbstractNetworkService extends AbstractPlugin implements N
      */
     private NetworkServicePendingMessagesSupervisorAgent networkServicePendingMessagesSupervisorAgent;
 
-    protected ActorProfile actorProfile;
-
     /**
      * Constructor with parameters
      *
