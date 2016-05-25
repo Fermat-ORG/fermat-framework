@@ -392,7 +392,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                                                                    String actorToPublicKey,
                                                                                    Actors actorToType,
                                                                                    Actors actorFromType,
-                                                                                   com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
+                                                                                   com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType
+                                                                            ) {
 
 
 
@@ -409,7 +410,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 actorToType,
                 actorFromType,
                 blockchainNetworkType,
-                0);
+                0,
+                CryptoCurrency.BITCOIN);
 
         return bitcoinLossProtectedWalletTransactionRecord;
 

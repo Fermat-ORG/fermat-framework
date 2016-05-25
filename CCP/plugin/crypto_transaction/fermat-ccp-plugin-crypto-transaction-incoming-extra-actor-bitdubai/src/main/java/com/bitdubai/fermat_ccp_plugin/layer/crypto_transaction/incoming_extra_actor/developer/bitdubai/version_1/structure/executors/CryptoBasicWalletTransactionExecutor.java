@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.executors;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -120,7 +121,7 @@ public class CryptoBasicWalletTransactionExecutor implements com.bitdubai.fermat
             cryptoWalletTransactionRecord.setActorToPublicKey(cryptoAddressBookRecord.getDeliveredToActorPublicKey());
             cryptoWalletTransactionRecord.setActorToType(cryptoAddressBookRecord.getDeliveredToActorType());
             cryptoWalletTransactionRecord.setBlockchainNetworkType(cryptoTransaction.getBlockchainNetworkType());
-            cryptoWalletTransactionRecord.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
+            cryptoWalletTransactionRecord.setCryptoCurrency(CryptoCurrency.BITCOIN);
             return cryptoWalletTransactionRecord;
 
         } catch (CantGetCryptoAddressBookRecordException e) {

@@ -304,6 +304,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     protected void loadBasicUI(Activity activity, final AppConnections appConnections) {
         // rendering UI components
+        if(activity==null) Log.e(TAG,"Error, runtime activity is null, please check your app in the AppRuntime.");
         try {
            // Log.i("FERMAT ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
             TabStrip tabs = activity.getTabStrip();

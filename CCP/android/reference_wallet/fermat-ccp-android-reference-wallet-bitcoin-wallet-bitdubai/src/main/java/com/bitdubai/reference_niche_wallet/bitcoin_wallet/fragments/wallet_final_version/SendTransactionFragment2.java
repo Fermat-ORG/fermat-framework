@@ -216,14 +216,32 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
+            //list transaction on background
+
             getExecutor().submit(new Runnable() {
                 @Override
                 public void run() {
-                    openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                    adapter.changeDataSet(openNegotiationList);
-                    adapter.notifyDataSetChanged();
-                    recyclerView.setVisibility(View.VISIBLE);
-                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                            adapter.changeDataSet(openNegotiationList);
+                            adapter.notifyDataSetChanged();
+
+
+                            if(openNegotiationList!=null) {
+                                if (openNegotiationList.isEmpty()) {
+                                    recyclerView.setVisibility(View.GONE);
+                                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                                }
+                            }else{
+                                recyclerView.setVisibility(View.GONE);
+                                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                                emptyListViewsContainer.setVisibility(View.GONE);
+                            }
+                        }
+                    });
+
                 }
             });
 
@@ -677,7 +695,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.bit_help_icon)
+        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.ic_menu_help_icon)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }
@@ -710,15 +728,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         if(openNegotiationList!=null) {
             if (openNegotiationList.isEmpty()) {
-               // recyclerView.setVisibility(View.GONE);
+               recyclerView.setVisibility(View.GONE);
                 emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                //emptyListViewsContainer.setVisibility(View.VISIBLE);
+                emptyListViewsContainer.setVisibility(View.VISIBLE);
             }
         }else{
-          //  recyclerView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
