@@ -87,6 +87,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
 
         try {
 
+            listenersAdded = new ArrayList<>();
             chatActorNetworkServiceDao = new ChatActorNetworkServiceDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
             chatActorNetworkServiceDao.initialize();

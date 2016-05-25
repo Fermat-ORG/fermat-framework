@@ -3,12 +3,13 @@ package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitd
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 13/03/16.
  */
-public class AlbumRecord implements Album {
+public class AlbumRecord implements Album, Serializable {
 
     String id;
     String name;

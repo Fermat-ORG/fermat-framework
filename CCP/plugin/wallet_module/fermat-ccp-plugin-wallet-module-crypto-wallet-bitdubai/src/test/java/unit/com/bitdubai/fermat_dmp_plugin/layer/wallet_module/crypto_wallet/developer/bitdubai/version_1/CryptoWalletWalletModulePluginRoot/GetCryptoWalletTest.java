@@ -1,6 +1,6 @@
 //package unit.com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.CryptoWalletWalletModulePluginRoot;
 //
-//import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+//import CryptoWalletManager;
 //<<<<<<< HEAD:CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-crypto-wallet-bitdubai/src/test/java/unit/com/bitdubai/fermat_dmp_plugin/layer/wallet_module/crypto_wallet/developer/bitdubai/version_1/CryptoWalletWalletModulePluginRoot/GetCryptoWalletTest.java
 //import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 //import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -36,7 +36,7 @@
 //     * DealsWithBitcoinWallet interface Mocked
 //     */
 //    @Mock
-//    BitcoinWalletManager bitcoinWalletManager;
+//    CryptoWalletManager cryptoWalletManager;
 //
 //    /**
 //     * DealsWithCryptoVault interface Mocked
@@ -86,7 +86,7 @@
 //    @Before
 //    public void setUp() throws Exception {
 //        cryptoWalletWalletModulePluginRoot = new CryptoWalletCryptoModulePluginRoot();
-//        cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(bitcoinWalletManager);
+//        cryptoWalletWalletModulePluginRoot.setBitcoinWalletManager(cryptoWalletManager);
 //        cryptoWalletWalletModulePluginRoot.setCryptoVaultManager(cryptoVaultManager);
 //        cryptoWalletWalletModulePluginRoot.setErrorManager(errorManager);
 //        cryptoWalletWalletModulePluginRoot.setExtraUserManager(extraUserManager);

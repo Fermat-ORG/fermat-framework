@@ -856,6 +856,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 quotesRecord.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     , quote.getPaymentCurrency()          );
                 quotesRecord.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, quote.getPaymentCurrency().getType());
                 quotesRecord.setFloatValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                , quote.getPrice()                    );
+                quotesRecord.setStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_SUPPORTED_PLATFORMS_COLUMN_NAME, quote.getSupportedPlatforms());
 
                 databaseTransaction.addRecordToInsert(quotesTable, quotesRecord);
             }
@@ -975,7 +976,8 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
                 String paymentCurrencyString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
                 String paymentCurrencyTypeString = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
-                Float  price                     = record.getFloatValue (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );
+                Float  price                     = record.getFloatValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                 );
+                String supportedPlatforms        = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_SUPPORTED_PLATFORMS_COLUMN_NAME);
 
                 Currency merchandise     = CurrencyHelper.getCurrency(merchandiseTypeString    , merchandiseString    );
                 Currency paymentCurrency = CurrencyHelper.getCurrency(paymentCurrencyTypeString, paymentCurrencyString);
@@ -984,7 +986,8 @@ public final class CryptoBrokerActorNetworkServiceDao {
                         new CryptoBrokerQuote(
                                 merchandise,
                                 paymentCurrency,
-                                price
+                                price,
+                                supportedPlatforms
                         )
                 );
             }

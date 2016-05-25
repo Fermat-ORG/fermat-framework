@@ -19,7 +19,6 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
@@ -161,12 +160,13 @@ public class PresentationIntraUserCommunityDialog extends FermatDialog<IntraUser
     private void saveSettings(){
         if(type!=TYPE_PRESENTATION)
                 if(dontShowAgainCheckBox.isChecked()){
-                    SettingsManager<IntraUserWalletSettings> settingsManager = moduleManager.getSettingsManager();
                     try {
 
-                        IntraUserWalletSettings intraUserWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                        intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                        settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserWalletSettings);
+                        IntraUserWalletSettings intraUserWalletSettings = intraUserSubAppSession.getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
+                        if(intraUserWalletSettings!=null) {
+                            intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+                            intraUserSubAppSession.getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserWalletSettings);
+                        }
                     } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         e.printStackTrace();
                     }

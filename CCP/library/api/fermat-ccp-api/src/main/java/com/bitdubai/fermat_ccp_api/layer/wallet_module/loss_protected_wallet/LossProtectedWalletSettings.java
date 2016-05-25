@@ -10,10 +10,11 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptio
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
-public class LossProtectedWalletSettings implements WalletSettings {
+public class LossProtectedWalletSettings implements WalletSettings,Serializable {
 
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;

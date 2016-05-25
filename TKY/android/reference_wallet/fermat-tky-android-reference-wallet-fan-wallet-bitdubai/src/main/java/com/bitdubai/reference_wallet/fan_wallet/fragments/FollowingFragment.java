@@ -7,11 +7,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,32 +19,40 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.FollowingAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Created by Miguel Payarez on 16/03/16.
@@ -54,6 +61,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     //FermatManager
     private FanWalletSession fanwalletSession;
+    private FanWalletModule fanWalletModuleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -67,7 +75,10 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     List<FollowingItems> items=new ArrayList<>();
     List<Fan> fanList=new ArrayList<>();
     Bot artistBot;
-    final Handler searchArttisList = new Handler();
+    final Handler myHandler = new Handler();
+    SearchView searchView;
+
+
     public static FollowingFragment newInstance(){
         return new FollowingFragment();
     }
@@ -78,13 +89,16 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         try {
             fanwalletSession = ((FanWalletSession) appSession);
+            fanWalletModuleManager =  fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FOLLOWING");
 
             try {
-                fanWalletSettings =  fanwalletSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanWalletModuleManager.loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -93,7 +107,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanWalletModuleManager.persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -111,16 +125,58 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tky_fan_wallet_menu, menu);
-        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.fanwallet_background_viewpager);
-        final MenuItem item = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        MenuItem item = menu.findItem(R.id.action_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(item);
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+      //  changeColorSearchView(searchView);
+
+   /*     for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item2 = menu.getItem(i);
+
+            Drawable drawable = item2.getIcon();
+            if (drawable != null) {
+                // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
+                drawable.mutate();
+
+                drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+
+            }
+
+        }
+
+
+        for (int i = 0, size = menu.size(); i < size; i++) {
+            MenuItem item2 = menu.getItem(i);
+
+            Drawable drawable = item2.getIcon();
+            if (drawable != null) {
+                // If we don't mutate the drawable, then all drawables with this id will have the ColorFilter
+                drawable.mutate();
+
+                drawable.setColorFilter(Color.BLACK, PorterDuff.Mode.SRC_ATOP);
+
+            }
+
+        }
+
+        try {
+            Field searchField = SearchView.class.getDeclaredField("mCloseButton");
+            searchField.setAccessible(true);
+            ImageView closebutton = (ImageView) searchField.get(searchView);
+            closebutton.setImageDrawable(getResources().getDrawable(R.drawable.clearbutton));
+        } catch (Exception e) {
+            Log.e("OncreatedMenu", "Error finding close button", e);
+        }*/
+
+
+
+
         searchView.setOnQueryTextListener(this);
 
         MenuItemCompat.setOnActionExpandListener(item,
                 new MenuItemCompat.OnActionExpandListener() {
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem item) {
-
                         return true; // Return true to collapse action view
                     }
 
@@ -130,40 +186,27 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                         return true; // Return true to expand action view
                     }
                 });
+
+
+
+
+
     }
 
     void loaditems(){
-        searchArttisList.post(myRunnable);
+
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Above Api Level 13
+        {
+            new BotRequester(view).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            syncThread.execute();
+        }
+        else // Below Api Level 13
+        {
+            new BotRequester(view).execute();
+        }
+
 
     }
-
-    final Runnable myRunnable = new Runnable() {
-
-        public void run() {
-            try {
-                fanList=fanwalletSession.getModuleManager().listIdentitiesFromCurrentDeviceUser();
-                for(Fan artistUsername:fanList){
-                    //artistBot=fanwalletmoduleManager.getFanWalletModule().getBotBySwapbotUsername(artistusername.getUsername());
-                    //System.out.println("tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl() +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
-                    //items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),artistBot.getAddress(), artistBot.getName()));
-                    //TODO: Payarez, I Fix a bomb in the previous line, please, check this.
-                    List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
-                    for(String botUsername : connectedArtistTKYUsername){
-                        //TODO: implement the next line in background
-                        new BotRequester(botUsername).execute();
-
-                    }
-                    //END OF TODO
-                }
-            } catch (CantListFanIdentitiesException e) {
-                System.out.println("tky_loaditem_fanidentity_exception:"+e);
-                e.printStackTrace();
-            } /*catch (CantGetBotException e) {
-                System.out.println("tky_loaditem_Bot_exception:"+e);
-                e.printStackTrace();
-            }*/
-        }
-    };
 
 
     @Nullable
@@ -177,9 +220,11 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         loaditems();
         adapter = new FollowingAdapter(items);
         recyclerView.setAdapter(adapter);
-
-
+    //    recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
         swipe_effect();
+
+
+    //    getToolbar().setNavigationIcon(getColoredArrow());
 
         recyclerView.addOnItemTouchListener(
                 new ManageRecyclerviewClick(view.getContext(), new ManageRecyclerviewClick.OnItemClickListener() {
@@ -188,7 +233,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                     public void onItemClick(View view, int position) {
 
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse(items.get(position).getArtist_url()));
+                        intent.setData(Uri.parse(items.get(position).getURL()));
                         startActivity(intent);
 
                     }
@@ -197,9 +242,36 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
 
 
-
         return view;
     }
+
+
+/*    private Drawable getColoredArrow() {
+        Drawable arrowDrawable = getResources().getDrawable(R.drawable.abc_ic_ab_back_mtrl_am_alpha);
+        Drawable wrapped = DrawableCompat.wrap(arrowDrawable);
+
+        if (arrowDrawable != null && wrapped != null) {
+            // This should avoid tinting all the arrows
+            arrowDrawable.mutate();
+            DrawableCompat.setTintList(wrapped, ColorStateList.valueOf(this.getResources().getColor(R.color.color_black)));
+        }
+
+
+    return wrapped;
+}*/
+
+   /* void changeColorSearchView(SearchView searchview){
+
+        LinearLayout ll=(LinearLayout)searchview.getChildAt(0);
+        LinearLayout ll2=(LinearLayout)ll.getChildAt(2);
+        LinearLayout ll3=(LinearLayout)ll2.getChildAt(1);
+        SearchView.SearchAutoComplete autoComplete=((SearchView.SearchAutoComplete)ll3.getChildAt(0));
+        autoComplete.setTextColor(Color.BLACK);
+        autoComplete.setBackgroundResource(R.drawable.textbackground);
+
+
+
+    }*/
 
     List<FollowingItems> reload(){
         List<FollowingItems> data=new ArrayList<>();
@@ -207,11 +279,20 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         return data;
     }
 
+    void refreshAdapter(boolean noFollowing){
+        if(noFollowing){
+            Toast.makeText(view.getContext(),"Your are not following artist",Toast.LENGTH_SHORT).show();
+        }else {
+            adapter.setFilter(items);
+        }
+    }
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setHasOptionsMenu(true);
+
     }
 
     @Override
@@ -262,7 +343,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
             @Override
             public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
-                Bitmap icon;
+               /* Bitmap icon;
                 if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
 
                     View itemView = viewHolder.itemView;
@@ -271,27 +352,26 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
                     if(dX > 0){
                         p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-
-                    } else {
-
-                        p.setColor(Color.parseColor("#388E3C"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
                         //Start draw left-top to right-bottom     RectF (left,top,right,bottom)
                         RectF icon_dest = new RectF((float) itemView.getLeft() + (width/4) ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getLeft()+ 2f*width,(float)itemView.getBottom() -0.75f*width);
                         c.drawBitmap(icon,null,icon_dest,p);
+
+
+                    } else {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+
                     }
                 }
-                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);*/
             }
-
-
 
         };
 
@@ -300,42 +380,42 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
    void ask(int position, final List<FollowingItems> original){
-       AlertDialog.Builder dialogo1 = new AlertDialog.Builder(view.getContext());
-       dialogo1.setTitle("FanWallet");
-       dialogo1.setMessage("Do you really want to to chat with '" + items.get(position).getArtist_name() + "'?");
-       dialogo1.setCancelable(false);
-       dialogo1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+       AlertDialog.Builder dialog1 = new AlertDialog.Builder(view.getContext());
+       dialog1.setTitle("FanWallet");
+       dialog1.setMessage("Do you really want to to chat with '" + items.get(position).getUsername() + "'?");
+       dialog1.setCancelable(false);
+       dialog1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialogo1, int id) {
                //     items.remove(position);
                adapter.setFilter(original);
-               tochat();
+               toChat();
            }
        });
-       dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+       dialog1.setNegativeButton("No", new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialogo1, int id) {
                adapter.setFilter(original);
            }
        });
-       dialogo1.show();
+       dialog1.show();
        
    }
 
     // TODO: 23/03/16  
-    void tochat(){
-        
-        
+    void toChat(){
+        //TODO: to implement
     }
     // TODO: 01/04/16
     void getMyConnection(){
-
+        //TODO: to implement
     }
+
 
     private List<FollowingItems> filter(List<FollowingItems> models, String query) {
         query = query.toLowerCase();
 
         final List<FollowingItems> filteredModelList = new ArrayList<>();
         for (FollowingItems model : models) {
-            final String text = model.getArtist_name().toLowerCase();
+            final String text = model.getUsername().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }
@@ -343,30 +423,96 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         return filteredModelList;
     }
 
-    private class BotRequester extends AsyncTask {
+    private class BotRequester extends AsyncTask <Void, Void, Boolean> {
 
-        String username;
-        public BotRequester(String username){
-            this.username = username;
+        View view;
+        boolean noFollowing =false;
+        public BotRequester(View view){
+            this.view = view;
+        }
+        @Override
+        protected void onPreExecute() {
+
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Boolean doInBackground(Void... notUsingObject) {
             try {
-                artistBot=fanwalletSession.getModuleManager().
-                        getBotBySwapbotUsername(this.username);
-                System.out.println(
-                        "tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl()
-                                +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
-                items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),
-                        artistBot.getAddress(), artistBot.getName()));
-            } catch (CantGetBotException e) {
-                errorManager.reportUnexpectedUIException(
-                        UISource.VIEW,
-                        UnexpectedUIExceptionSeverity.UNSTABLE,
-                        e);
-            }
+                try {
+                    fanList= fanWalletModuleManager.listIdentitiesFromCurrentDeviceUser();
+                    if(fanList.size()==0){
+                        noFollowing =true;
+                    }
+                    for(Fan artistUsername:fanList){
+                        List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
+                        if(connectedArtistTKYUsername!=null&&!connectedArtistTKYUsername.isEmpty()){
+                            for(String botUsername : connectedArtistTKYUsername){
+                                artistBot= fanWalletModuleManager.getBotBySwapbotUsername(botUsername);
+                                System.out.println(
+                                        "tky_artistBot:" + artistBot);
+                                items.add(new FollowingItems(convertUrlToBMP(artistBot.getLogoImageDetails().originalUrl()),
+                                        //extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
+                                        artistBot.getBotUrl(),
+                                        artistBot.getName(),
+                                        artistBot.getDescriptionHtml()));
+
+                            }
+                        }
+                    }
+                    } catch (CantGetBotException e) {
+                    errorManager.reportUnexpectedUIException(
+                            UISource.VIEW,
+                            UnexpectedUIExceptionSeverity.NOT_IMPORTANT,
+                            e);
+                } catch (CantConnectWithTokenlyException e) {
+                    Toast.makeText(
+                            getActivity(),
+                            "Connection Problem",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+
+            } catch (CantListFanIdentitiesException e) {
+                    System.out.println("tky_loaditem_fanidentity_exception:"+e);
+                    e.printStackTrace();
+                }
+
             return null;
+        }
+
+
+
+
+        public  String[] extractLinks(String text) {
+            List<String> links = new ArrayList<String>();
+            Matcher m = Patterns.WEB_URL.matcher(text);
+            while (m.find()) {
+                String url = m.group();
+             //   Log.d("TKY_", "URL extracted: " + url);
+                links.add(url);
+            }
+
+            return links.toArray(new String[links.size()]);
+        }
+
+        Bitmap convertUrlToBMP(String imageUrl){
+            URL url;
+            Bitmap bmp=null;
+            try {
+                url = new URL(imageUrl);
+                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bmp;
+        }
+
+        protected void onPostExecute(Boolean ready) {
+
+                refreshAdapter(noFollowing);
+
         }
     }
 

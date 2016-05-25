@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextUtils;
@@ -25,15 +27,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.support.v7.widget.Toolbar;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ConstantSubtitle;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
@@ -73,8 +77,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.UUID;
 
 /**
@@ -141,6 +143,7 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr);
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public ChatAdapterView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }

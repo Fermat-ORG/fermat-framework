@@ -244,6 +244,8 @@ public class ChatListFragment extends AbstractFermatFragment{
         chatSettings = null;
         try {
             chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            chatSettings = chatManager.loadAndGetSettings(appSession.getAppPublicKey());
+            //chatSettings = (ChatPreferenceSettings) chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             chatSettings = null;
         }
@@ -252,7 +254,8 @@ public class ChatListFragment extends AbstractFermatFragment{
             chatSettings = new ChatPreferenceSettings();
             chatSettings.setIsPresentationHelpEnabled(true);
             try {
-                chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                chatManager.persistSettings(appSession.getAppPublicKey(), chatSettings);
+                //chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

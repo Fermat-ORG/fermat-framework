@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantConnectWithTokenlyException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.google.gson.JsonArray;
@@ -15,6 +17,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -35,7 +38,8 @@ public abstract class RemoteJSonProcessor {
      */
     public static JsonElement getJSonElement(
             String requestURL)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         try{
             String jSonString=getJSonString(requestURL);
             JsonParser jsonParser=new JsonParser();
@@ -57,14 +61,23 @@ public abstract class RemoteJSonProcessor {
      */
     public static String getJSonString(
             String requestURL)
-            throws IOException {
-        URL url=new URL(requestURL);
-        Scanner scanner = new Scanner(url.openStream());
-        String jSonString = new String();
-        while (scanner.hasNext())
-            jSonString += scanner.nextLine();
-        scanner.close();
-        return jSonString;
+            throws IOException,
+            CantConnectWithTokenlyException {
+        try{
+            URL url=new URL(requestURL);
+            Scanner scanner = new Scanner(url.openStream());
+            String jSonString = new String();
+            while (scanner.hasNext())
+                jSonString += scanner.nextLine();
+            scanner.close();
+            return jSonString;
+        } catch (UnknownHostException e){
+            throw new CantConnectWithTokenlyException(
+                    e,
+                    "Getting a json string from remote URL",
+                    "Cannot find "+requestURL);
+        }
+
     }
 
     /**
@@ -75,7 +88,8 @@ public abstract class RemoteJSonProcessor {
      */
     public static JsonObject getJSonObject(
             String requestURL)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         return getJSonElement(requestURL).getAsJsonObject();
     }
 
@@ -87,7 +101,8 @@ public abstract class RemoteJSonProcessor {
      */
     public static JsonArray getJSonArray(
             String requestURL)
-            throws CantGetJSonObjectException {
+            throws CantGetJSonObjectException,
+            CantConnectWithTokenlyException {
         return getJSonElement(requestURL).getAsJsonArray();
     }
 
@@ -113,16 +128,18 @@ public abstract class RemoteJSonProcessor {
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) urlObject.openConnection();
             //Add request headers - In this kind of request I'll use POST request
             httpsURLConnection.setRequestMethod(TokenlyRequestMethod.POST.getCode());
-            Iterator it = parameters.entrySet().iterator();
-            while(it.hasNext()){
-                Map.Entry parameter = (Map.Entry)it.next();
-                httpsURLConnection.addRequestProperty(
-                        parameter.getKey().toString(),
-                        parameter.getValue().toString());
+            if(parameters!=null){
+                Iterator it = parameters.entrySet().iterator();
+                while(it.hasNext()){
+                    Map.Entry parameter = (Map.Entry)it.next();
+                    httpsURLConnection.addRequestProperty(
+                            parameter.getKey().toString(),
+                            parameter.getValue().toString());
+                }
             }
             //Send post request
             httpsURLConnection.setDoOutput(true);
-            if(!urlParameters.isEmpty()){
+            if(urlParameters!=null && !urlParameters.isEmpty()){
                 DataOutputStream dataOutputStream = new DataOutputStream(
                         httpsURLConnection.getOutputStream());
                 dataOutputStream.writeBytes(urlParameters);
@@ -135,9 +152,11 @@ public abstract class RemoteJSonProcessor {
             System.out.println("Response Code : " + responseCode);
             if(responseCode!=200){
                 String errorResponse = httpsURLConnection.getResponseMessage();
+                HTTPErrorResponse httpErrorResponse = HTTPErrorResponse.getByCode(""+responseCode);
                 throw new HTTPErrorResponseException(
                         responseCode,
-                        errorResponse);
+                        errorResponse,
+                        httpErrorResponse);
             }
             //Get the response String
             BufferedReader bufferedReader = new BufferedReader(
@@ -185,12 +204,14 @@ public abstract class RemoteJSonProcessor {
             HttpsURLConnection httpsURLConnection = (HttpsURLConnection) urlObject.openConnection();
             //Add request headers
             httpsURLConnection.setRequestMethod(TokenlyRequestMethod.GET.getCode());
-            Iterator it = parameters.entrySet().iterator();
-            while(it.hasNext()){
-                Map.Entry parameter = (Map.Entry)it.next();
-                httpsURLConnection.addRequestProperty(
-                        parameter.getKey().toString(),
-                        parameter.getValue().toString());
+            if(parameters!=null){
+                Iterator it = parameters.entrySet().iterator();
+                while(it.hasNext()){
+                    Map.Entry parameter = (Map.Entry)it.next();
+                    httpsURLConnection.addRequestProperty(
+                            parameter.getKey().toString(),
+                            parameter.getValue().toString());
+                }
             }
             if(!urlParameters.isEmpty()){
                 DataOutputStream dataOutputStream = new DataOutputStream(
@@ -203,9 +224,11 @@ public abstract class RemoteJSonProcessor {
             int responseCode = httpsURLConnection.getResponseCode();
             if(responseCode!=200){
                 String errorResponse = httpsURLConnection.getResponseMessage();
+                HTTPErrorResponse httpErrorResponse = HTTPErrorResponse.getByCode("" + responseCode);
                 throw new HTTPErrorResponseException(
                         responseCode,
-                        errorResponse);
+                        errorResponse,
+                        httpErrorResponse);
             }
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(httpsURLConnection.getInputStream()));

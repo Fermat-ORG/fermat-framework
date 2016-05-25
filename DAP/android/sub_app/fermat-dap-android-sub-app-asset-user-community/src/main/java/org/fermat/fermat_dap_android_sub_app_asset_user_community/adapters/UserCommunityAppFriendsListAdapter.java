@@ -7,10 +7,10 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
-import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserAppFriendsListHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.holders.UserAppFriendsListHolder;
+import org.fermat.fermat_dap_android_sub_app_asset_user_community.models.Actor;
 
 import java.util.List;
 

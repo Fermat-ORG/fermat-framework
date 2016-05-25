@@ -22,12 +22,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.err
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
@@ -52,7 +50,8 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     /**
      * MANAGERS
      */
-    private LossProtectedWallet cryptoWallet;
+    private LossProtectedWallet lossProtectedWalletManager;
+    private LossProtectedWalletSettings lossProtectedWalletSettings;
     /**
      * DATA
      */
@@ -67,7 +66,6 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     private View rootView;
     private LinearLayout empty;
 
-    SettingsManager<LossProtectedWalletSettings> settingsManager;
 
     BlockchainNetworkType blockchainNetworkType;
 
@@ -90,7 +88,6 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
 
         lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
 
-        lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
         getExecutor().execute(new Runnable() {
             @Override
@@ -105,14 +102,11 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             }
         });
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+            lossProtectedWalletManager = referenceWalletSession.getModuleManager();
 
-
-            LossProtectedWalletSettings bitcoinWalletSettings;
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                lossProtectedWalletSettings = lossProtectedWalletManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = lossProtectedWalletSettings.getBlockchainNetworkType();
             } catch (Exception e) {
 
             }
@@ -120,7 +114,6 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
-            //CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
 
         }
@@ -192,7 +185,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, cryptoWallet, referenceWalletSession, this);
+            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest, lossProtectedWalletManager, referenceWalletSession, this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
@@ -216,7 +209,7 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
                 if (refreshType.equals(FermatRefreshTypes.NEW))
                     offset = 0;
 
-                lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
+                lstPaymentRequest = lossProtectedWalletManager.listSentPaymentRequest(walletPublicKey, blockchainNetworkType, 10, offset);
                 offset += MAX_TRANSACTIONS;
             } catch (Exception e) {
                 referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -284,10 +277,10 @@ public class RequestSendHistoryFragment2 extends FermatWalletListFragment<LossPr
             int id = v.getId();
             if (id == R.id.btn_refuse_request) {
 
-                cryptoWallet.refuseRequest(paymentRequest.getRequestId());
+                lossProtectedWalletManager.refuseRequest(paymentRequest.getRequestId());
                 Toast.makeText(getActivity(), "Denegado", Toast.LENGTH_SHORT).show();
             } else if (id == R.id.btn_accept_request) {
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+                lossProtectedWalletManager.approveRequest(paymentRequest.getRequestId(), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
                 Toast.makeText(getActivity(), "Aceptado", Toast.LENGTH_SHORT).show();
             }
 

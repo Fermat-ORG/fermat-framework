@@ -7,20 +7,30 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by nelson on 05/11/15.
  */
-public class CryptoCustomerWalletModuleClauseInformation implements ClauseInformation {
+public class CryptoCustomerWalletModuleClauseInformation implements ClauseInformation, Serializable {
     private ClauseType clauseType;
     private String value;
     private ClauseStatus status;
+    private UUID clauseId;
 
     public CryptoCustomerWalletModuleClauseInformation(ClauseType clauseType, String value, ClauseStatus status) {
         this.clauseType = clauseType;
         this.value = value;
         this.status = status;
+        this.clauseId = UUID.randomUUID();
+    }
+
+    public CryptoCustomerWalletModuleClauseInformation(ClauseInformation clauseInformation) {
+        this.clauseType = clauseInformation.getType();
+        this.value = clauseInformation.getValue();
+        this.status = clauseInformation.getStatus();
+        this.clauseId = clauseInformation.getClauseID();
     }
 
     public CryptoCustomerWalletModuleClauseInformation(Clause clause) {
@@ -30,12 +40,12 @@ public class CryptoCustomerWalletModuleClauseInformation implements ClauseInform
             case CUSTOMER_PAYMENT_METHOD:
                 try {
                     this.value = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                } catch (InvalidParameterException e) {}
+                } catch (InvalidParameterException ignored) {}
             break;
             case BROKER_PAYMENT_METHOD:
                 try {
                     this.value = MoneyType.getByCode(clause.getValue()).getFriendlyName();
-                } catch (InvalidParameterException e) {}
+                } catch (InvalidParameterException ignored) {}
             break;
             default:
                 this.value = clause.getValue();
@@ -47,7 +57,7 @@ public class CryptoCustomerWalletModuleClauseInformation implements ClauseInform
 
     @Override
     public UUID getClauseID() {
-        return null;
+        return clauseId;
     }
 
     @Override
@@ -63,5 +73,21 @@ public class CryptoCustomerWalletModuleClauseInformation implements ClauseInform
     @Override
     public ClauseStatus getStatus() {
         return status;
+    }
+
+    public void setClauseType(ClauseType clauseType) {
+        this.clauseType = clauseType;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public void setStatus(ClauseStatus status) {
+        this.status = status;
+    }
+
+    public void setClauseId(UUID clauseId) {
+        this.clauseId = clauseId;
     }
 }

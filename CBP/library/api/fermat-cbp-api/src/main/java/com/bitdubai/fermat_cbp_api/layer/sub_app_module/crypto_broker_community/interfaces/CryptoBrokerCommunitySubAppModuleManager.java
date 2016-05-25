@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.modules.ModuleSettingsImpl;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.ActorTypeNotSupportedException;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CryptoBrokerDisconnectingFailedException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,7 +29,9 @@ import java.util.UUID;
  * @author lnacosta
  * @version 1.0.0
  */
-public interface CryptoBrokerCommunitySubAppModuleManager extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> {
+public interface CryptoBrokerCommunitySubAppModuleManager
+        extends ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity>,
+        ModuleSettingsImpl<CryptoBrokerCommunitySettings>, Serializable {
 
     /**
      * The method <code>listWorldCryptoBrokers</code> returns the list of all crypto brokers in the world,

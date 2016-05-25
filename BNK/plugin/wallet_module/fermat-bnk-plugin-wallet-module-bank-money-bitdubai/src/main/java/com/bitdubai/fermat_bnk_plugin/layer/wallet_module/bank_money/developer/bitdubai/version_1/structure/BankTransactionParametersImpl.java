@@ -1,17 +1,17 @@
 package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
  * Created by guillermo on 26/01/16.
  */
-public class BankTransactionParametersImpl implements BankTransactionParameters {
+public class BankTransactionParametersImpl implements BankTransactionParameters, Serializable {
 
 
     private UUID transactionId;
@@ -76,6 +76,7 @@ public class BankTransactionParametersImpl implements BankTransactionParameters 
         return memo;
     }
 
+    @Override
     public TransactionType getTransactionType() {
         return transactionType;
     }

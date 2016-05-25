@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
@@ -20,17 +20,17 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
  */
 public class IncomingIntraUserTransactionHandler {
     private EventManager             eventManager;
-    private BitcoinWalletManager     bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
     private Broadcaster broadcaster;
     private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
 
-    public IncomingIntraUserTransactionHandler(EventManager eventManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
+    public IncomingIntraUserTransactionHandler(EventManager eventManager, CryptoWalletManager cryptoWalletManager, CryptoAddressBookManager cryptoAddressBookManager,CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
                                                Broadcaster broadcaster,
                                                BitcoinLossProtectedWalletManager lossProtectedWalletManager) {
         this.eventManager             = eventManager;
-        this.bitcoinWalletManager     = bitcoinWalletManager;
+        this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
         this.broadcaster = broadcaster;
@@ -45,7 +45,7 @@ public class IncomingIntraUserTransactionHandler {
                 ReferenceWallet         referenceWallet         = cryptoAddressBookRecord.getWalletType();
                 String                  walletPublicKey         = cryptoAddressBookRecord.getWalletPublicKey();
 
-                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory(this.bitcoinWalletManager, this.cryptoAddressBookManager,
+                com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory executorFactory = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.util.IncomingIntraUserTransactionExecutorFactory(this.cryptoWalletManager, this.cryptoAddressBookManager,
                                                                                                                                                                                                                                                                                                                                                             this.eventManager,
                                                                                                                                                                                                                                                                                                                                                             cryptoTransmissionNetworkServiceManager,
                                                                                                                                                                                                                                                                                                                                                               lossProtectedWalletManager);

@@ -6,7 +6,6 @@
 */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events;
 
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 

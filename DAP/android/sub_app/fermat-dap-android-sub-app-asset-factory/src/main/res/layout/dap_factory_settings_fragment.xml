@@ -35,28 +35,28 @@
         tools:ignore="HardcodedText" />
 
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/dap_wallet_asset_issuer_notification_action"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_marginBottom="4dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:background="#f3f3f4"
-        android:gravity="center_vertical"
-        android:paddingBottom="8dp"
-        android:paddingEnd="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingStart="20dp"
-        android:paddingTop="8dp"
-        android:text="notifications"
-        android:textAllCaps="true"
-        android:textColor="#4f4f4f"
-        app:typeface="ROBOTO_REGULAR"
-        tools:ignore="HardcodedText" />
+    <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+        <!--android:id="@+id/dap_wallet_asset_issuer_notification_action"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:layout_marginBottom="4dp"-->
+        <!--android:layout_marginEnd="16dp"-->
+        <!--android:layout_marginLeft="16dp"-->
+        <!--android:layout_marginRight="16dp"-->
+        <!--android:layout_marginStart="16dp"-->
+        <!--android:layout_marginTop="4dp"-->
+        <!--android:background="#f3f3f4"-->
+        <!--android:gravity="center_vertical"-->
+        <!--android:paddingBottom="8dp"-->
+        <!--android:paddingEnd="20dp"-->
+        <!--android:paddingLeft="20dp"-->
+        <!--android:paddingRight="20dp"-->
+        <!--android:paddingStart="20dp"-->
+        <!--android:paddingTop="8dp"-->
+        <!--android:text="notifications"-->
+        <!--android:textAllCaps="true"-->
+        <!--android:textColor="#4f4f4f"-->
+        <!--app:typeface="ROBOTO_REGULAR"-->
+        <!--tools:ignore="HardcodedText" />-->
 
 </LinearLayout>

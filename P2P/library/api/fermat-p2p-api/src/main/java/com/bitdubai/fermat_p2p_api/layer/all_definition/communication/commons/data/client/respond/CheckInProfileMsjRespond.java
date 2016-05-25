@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
-import com.google.gson.Gson;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond</code>
@@ -38,9 +38,23 @@ public class CheckInProfileMsjRespond extends MsgRespond {
         return identityPublicKey;
     }
 
-    public static CheckInProfileMsjRespond parseContent(String content) {
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
 
-        return new Gson().fromJson(content, CheckInProfileMsjRespond.class);
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static CheckInProfileMsjRespond parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, CheckInProfileMsjRespond.class);
     }
 
 }

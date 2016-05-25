@@ -3,7 +3,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
-import java.util.UUID;
 
 
 /**
@@ -13,8 +12,6 @@ import java.util.UUID;
 public class CheckedInNetworkService extends AbstractBaseEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-    private UUID uuid;
 
 	private String identityPublicKey;
 
@@ -30,7 +27,6 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 
 	public CheckedInNetworkService() {
 		super();
-		this.uuid = UUID.randomUUID();
 		this.checkedInTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
@@ -82,17 +78,9 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 		this.networkServiceType = networkServiceType;
 	}
 
-	public UUID getUuid() {
-		return uuid;
-	}
-
-	public void setUuid(UUID uuid) {
-		this.uuid = uuid;
-	}
-
 	@Override
     public String getId() {
-        return uuid.toString();
+        return identityPublicKey;
     }
 
 	@Override
@@ -100,18 +88,12 @@ public class CheckedInNetworkService extends AbstractBaseEntity implements Seria
 		if (this == o) return true;
 		if (!(o instanceof CheckedInNetworkService)) return false;
 		CheckedInNetworkService that = (CheckedInNetworkService) o;
-		return Objects.equals(getLatitude(), that.getLatitude()) &&
-				Objects.equals(getLongitude(), that.getLongitude()) &&
-				Objects.equals(getUuid(), that.getUuid()) &&
-				Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey()) &&
-				Objects.equals(getCheckedInTimestamp(), that.getCheckedInTimestamp()) &&
-				Objects.equals(getNetworkServiceType(), that.getNetworkServiceType()) &&
-				Objects.equals(getClientIdentityPublicKey(), that.getClientIdentityPublicKey());
+		return Objects.equals(getIdentityPublicKey(), that.getIdentityPublicKey());
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getUuid(), getIdentityPublicKey(), getCheckedInTimestamp(), getLatitude(), getLongitude(), getNetworkServiceType(), getClientIdentityPublicKey());
+		return Objects.hash(getIdentityPublicKey());
 	}
 
 	@Override

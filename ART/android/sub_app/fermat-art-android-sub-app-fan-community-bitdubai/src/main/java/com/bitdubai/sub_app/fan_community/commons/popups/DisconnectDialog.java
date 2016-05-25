@@ -46,11 +46,11 @@ public class DisconnectDialog extends
     FanCommunitySelectableIdentity identity;
 
     public DisconnectDialog(Activity a,
-                            FanCommunitySubAppSession cryptoCustomerCommunitySubAppSession,
+                            FanCommunitySubAppSession fanCommunitySubAppSession,
                             SubAppResourcesProviderManager subAppResources,
                             FanCommunityInformation cryptoCustomerCommunityInformation,
                             FanCommunitySelectableIdentity identity) {
-        super(a, cryptoCustomerCommunitySubAppSession, subAppResources);
+        super(a, fanCommunitySubAppSession, subAppResources);
         this.fanCommunityInformation = cryptoCustomerCommunityInformation;
         this.identity = identity;
     }
@@ -107,24 +107,24 @@ public class DisconnectDialog extends
                     getSession().getModuleManager().disconnectFan(
                             fanCommunityInformation.getConnectionId());
                     Toast.makeText(
-                            getContext(),
+                            getActivity(),
                             "Disconnected successfully",
                             Toast.LENGTH_SHORT).show();
                     //set flag so that the preceding fragment reads it on dismiss()
                     getSession().setData("connectionresult", 0);
                 } else {
                     Toast.makeText(
-                            getContext(),
+                            getActivity(),
                             "Oooops! recovering from system error - ",
                             Toast.LENGTH_SHORT).show();
                 }
                 dismiss();
             } catch (FanDisconnectingFailedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Could not disconnect, please try again", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                Toast.makeText(getContext(), "There has been an error. Could not disconnect.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "There has been an error. Could not disconnect.", Toast.LENGTH_SHORT).show();
             }
 
             dismiss();

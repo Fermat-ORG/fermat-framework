@@ -1,12 +1,11 @@
 package org.fermat.fermat_dap_android_sub_app_asset_issuer_community.sessions;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
-import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
 /**
  * Created by francisco on 21/10/15.
  */
-public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,AssetIssuerCommunitySubAppModuleManager,SubAppResourcesProviderManager> {
+public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp, AssetIssuerCommunitySubAppModuleManager, SubAppResourcesProviderManager> {
 
     public static final String BASIC_DATA = "catalog_item_issuer";
     public static final String PREVIEW_IMGS = "preview_images_issuer";
@@ -22,37 +21,32 @@ public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<Ins
 
 //    private final InstalledWallet installedWallet;
 
+    private Map<String, Object> data;
+
     public AssetIssuerCommunitySubAppSession() {
         data = new HashMap<String, Object>();
 //        installedWallet = null;
     }
 
-    public AssetIssuerCommunitySubAppSession(String publicKey,
-                                           InstalledSubApp fermatApp,
-                                           ErrorManager errorManager,
-                                             AssetIssuerCommunitySubAppModuleManager moduleManager,
-                                           SubAppResourcesProviderManager resourceProviderManager) {
-
-        super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
+    public AssetIssuerCommunitySubAppSession(String publicKey, InstalledSubApp installedSubApp, ErrorManager errorManager, AssetIssuerCommunitySubAppModuleManager manager, SubAppResourcesProviderManager subAppResourcesProviderManager) {
+        super(publicKey, installedSubApp, errorManager, manager, subAppResourcesProviderManager);
+        data = new HashMap<String, Object>();
     }
-    private AssetIssuerCommunitySubAppModuleManager manager;
+//    private AssetIssuerCommunitySubAppModuleManager manager;
 
 
     /**
      * Active objects in wallet session
      */
-    private Map<String, Object> data;
-
     /**
      * Error manager
      */
-    private ErrorManager errorManager;
+//    private ErrorManager errorManager;
 
     /**
-     *  Wallet Settings
+     * Wallet Settings
      */
-    private WalletSettings settings;
-
+//    private WalletSettings settings;
     @Override
     public void setData(String key, Object object) {
         data.put(key, object);
@@ -63,18 +57,34 @@ public class AssetIssuerCommunitySubAppSession extends AbstractFermatSession<Ins
         return data.get(key);
     }
 
+
     @Override
-    public ErrorManager getErrorManager() {
-        return errorManager;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssetIssuerCommunitySubAppSession that = (AssetIssuerCommunitySubAppSession) o;
+
+        return getFermatApp() == that.getFermatApp();
     }
 
-    public void setSettings(WalletSettings settings) {
-        this.settings = settings;
+    @Override
+    public int hashCode() {
+        return getFermatApp().hashCode();
     }
 
-    public AssetIssuerCommunitySubAppModuleManager getManager() {
-        return manager;
-    }
+//    @Override
+//    public ErrorManager getErrorManager() {
+//        return errorManager;
+//    }
+//
+//    public void setSettings(WalletSettings settings) {
+//        this.settings = settings;
+//    }
+//
+//    public AssetIssuerCommunitySubAppModuleManager getManager() {
+//        return manager;
+//    }
 
     //    private AssetIssuerCommunitySubAppModuleManager manager;
 //

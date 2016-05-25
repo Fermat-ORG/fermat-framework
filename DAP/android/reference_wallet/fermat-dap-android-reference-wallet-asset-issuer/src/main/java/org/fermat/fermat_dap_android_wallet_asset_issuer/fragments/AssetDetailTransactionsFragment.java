@@ -36,11 +36,14 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
+
 import org.fermat.fermat_dap_android_wallet_asset_issuer.common.adapters.AssetDetailTransactionAdapter;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Data;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.models.DigitalAsset;
@@ -48,14 +51,10 @@ import org.fermat.fermat_dap_android_wallet_asset_issuer.models.Transaction;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.AssetIssuerSession;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.sessions.SessionConstantsAssetIssuer;
 import org.fermat.fermat_dap_android_wallet_asset_issuer.util.CommonLogger;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -95,7 +94,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 
     private DigitalAsset digitalAsset;
 
-    SettingsManager<AssetIssuerSettings> settingsManager;
+//    SettingsManager<AssetIssuerSettings> settingsManager;
 
     private View noTransactionsView;
     private List<Transaction> transactions;
@@ -117,7 +116,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         moduleManager = assetIssuerSession.getModuleManager();
         errorManager = appSession.getErrorManager();
 
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        moduleManager = assetIssuerSession.getModuleManager();
 
         transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
@@ -447,7 +446,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
             int id = item.getItemId();
 
             if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_DETAIL) {
-                setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpHelpAssetDetail(moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             } else if (id == SessionConstantsAssetIssuer.IC_ACTION_ISSUER_DELIVER) {
                 changeActivity(Activities.DAP_WALLET_ASSET_ISSUER_ASSET_DELIVERY, appSession.getAppPublicKey());

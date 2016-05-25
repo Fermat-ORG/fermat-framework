@@ -9,8 +9,6 @@ import android.view.View;
 /**
  * Created by miguel on 10/03/16.
  */
-
-
 public class ManageRecyclerviewClick implements RecyclerView.OnItemTouchListener {
     private OnItemClickListener mListener;
 
@@ -29,6 +27,8 @@ public class ManageRecyclerviewClick implements RecyclerView.OnItemTouchListener
             }
         });
     }
+
+
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView view, MotionEvent e) {

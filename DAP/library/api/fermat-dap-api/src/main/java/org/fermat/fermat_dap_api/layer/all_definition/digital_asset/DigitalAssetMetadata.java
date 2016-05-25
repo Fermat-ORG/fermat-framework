@@ -4,10 +4,11 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
-
 import com.thoughtworks.xstream.XStream;
 
+import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
+
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -20,7 +21,7 @@ import java.util.UUID;
  * <p/>
  * Created by rodrigo on 9/4/15.
  */
-public class DigitalAssetMetadata {
+public class DigitalAssetMetadata implements Serializable {
 
     //VARIABLE DECLARATION
     /**

@@ -4,12 +4,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * Created by Yordin Alayn on 30.03.16.
  */
-public class ContractSaleRecord implements CustomerBrokerContractSale {
+public class ContractSaleRecord implements CustomerBrokerContractSale, Serializable {
 
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1117;
     private static final int HASH_PRIME_NUMBER_ADD = 3001;

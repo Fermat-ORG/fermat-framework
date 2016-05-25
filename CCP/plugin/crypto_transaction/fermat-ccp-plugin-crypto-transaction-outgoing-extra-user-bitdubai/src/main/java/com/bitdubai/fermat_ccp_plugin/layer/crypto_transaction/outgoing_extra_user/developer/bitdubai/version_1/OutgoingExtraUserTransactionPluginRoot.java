@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 
@@ -30,7 +30,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.developerUtils.OutgoingExtraUserDeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
@@ -44,7 +43,7 @@ import java.util.List;
  * Created by Ezequiel.Postan on 20/02/15.
  * Modified by lnacosta (laion.cj91@gmail.com) on 15/10/2015.
  */
-@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
+@PluginInfo(createdBy = "Leon Acosta", maintainerMail = "nattyco@gmail.com", platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.TRANSACTION, plugin = Plugins.OUTGOING_EXTRA_USER)
 
 public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers ,
@@ -52,7 +51,7 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
 
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.BITCOIN_WALLET)
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM         , addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -94,7 +93,7 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
         this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent(
-                bitcoinWalletManager,
+                cryptoWalletManager,
                 cryptoVaultManager  ,
                 bitcoinNetworkManager,
                 getErrorManager()        ,
@@ -109,7 +108,7 @@ public class OutgoingExtraUserTransactionPluginRoot extends AbstractPlugin imple
     public TransactionManager getTransactionManager() {
 
         return new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionManager(
-                bitcoinWalletManager,
+                cryptoWalletManager,
                 getErrorManager(),
                 pluginDatabaseSystem,
                 pluginId,

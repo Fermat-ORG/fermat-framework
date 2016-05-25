@@ -49,34 +49,23 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom">
-
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:id="@+id/txt_balance_amount"
                     android:textSize="20sp"
                     android:text="14.5201"
                     android:textColor="#fff" />
-                </LinearLayout>
 
->
-
-                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="2dp"
-                        android:id="@+id/txt_balance_amount_type"
-                        android:textSize="15sp"
-                        android:text="BTC"
-                        android:textColor="#fff"
-                        />
-
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:id="@+id/txt_balance_amount_type"
+                    android:textSize="14sp"
+                    android:text="BTC"
+                    android:textColor="#fff" />
             </LinearLayout>
-
 
         </LinearLayout>
 

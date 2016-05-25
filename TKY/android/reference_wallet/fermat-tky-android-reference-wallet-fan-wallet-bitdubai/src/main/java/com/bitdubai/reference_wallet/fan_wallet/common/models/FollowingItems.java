@@ -1,45 +1,103 @@
 package com.bitdubai.reference_wallet.fan_wallet.common.models;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by Miguel Payarez on 16/03/16.
+ * Updated by Manuel Perez on 18/04/2016.
  */
 public class FollowingItems {
-    private String artist_url;
-    private String imageUrl;
-    private String artist_name;
+    private String url;
+    private Bitmap image;
+    private String username;
+    private String description;
 
-    public FollowingItems(String imageUrl, String artist_url, String artist_name){
-
-        this.imageUrl = imageUrl;
-        this.artist_url = artist_url;
-        this.artist_name=artist_name;
-
+    /**
+     * Default constructor with parameters.
+     * @param image
+     * @param url
+     * @param username
+     */
+    public FollowingItems(
+            Bitmap image,
+            String url,
+            String username){
+        this.image = image;
+        this.url = url;
+        this.username = username;
     }
 
-    public Bitmap getImagen(){
-        URL url;
-        Bitmap bmp=null;
-        try {
-            url = new URL(imageUrl);
-            bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    /**
+     * Default constructor with parameters.
+     * @param url
+     * @param image
+     * @param username
+     * @param description
+     */
+    public FollowingItems(
+            Bitmap image,
+            String url,
+            String username,
+            String description) {
+        this.url = url;
+        this.image = image;
+        this.username = username;
+        this.description = description;
+    }
+
+    /**
+     * This method returns the following item image.
+     * @return
+     */
+    public Bitmap getImage(){
+        return image;
+    }
+
+    /**
+     * This method returns the following item URL.
+     * @return
+     */
+    public String getURL(){
+        return url;
+    }
+
+    /**
+     * This method returns the following item username.
+     * @return
+     */
+    public String getUsername(){
+        return username;
+    }
+
+    /**
+     * This method returns the following item description.
+     * @return
+     */
+    public String getDescription() {
+        return description;
+    }
+
+    /**
+     * This method returns the the following item description inside the <html> tags.
+     * @return
+     */
+    public String getDescriptionHTML(){
+        String descriptionHTML = this.description.replace("<p>","").replace("</p>","");
+        int stringSize = descriptionHTML.length();
+        if(stringSize>=100){
+            stringSize=100;
         }
+        descriptionHTML = "<html>"+descriptionHTML.substring(0,stringSize)+"...</html>";
+        return descriptionHTML;
+    }
 
-        return bmp;}
-
-    public String getArtist_url(){return artist_url;}
-
-    public String getArtist_name(){return artist_name;}
-
-
+    @Override
+    public String toString() {
+        return "FollowingItems{" +
+                "url='" + url + '\'' +
+                ", image=" + image +
+                ", username='" + username + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

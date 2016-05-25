@@ -8,6 +8,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetDefaultSkin
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantSetDefaultLanguageException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantSetDefaultSkinException;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -16,7 +17,7 @@ import java.util.UUID;
  * @author Gabriel Araujo 18/03/16.
  * @version 1.0
  */
-public class TokenlyFanPreferenceSettings implements FermatSettings {
+public class TokenlyFanPreferenceSettings implements FermatSettings, Serializable {
     private boolean isHomeTutorialDialogEnabled;
     private Actors localActorType;
     private String localPublicKey;
