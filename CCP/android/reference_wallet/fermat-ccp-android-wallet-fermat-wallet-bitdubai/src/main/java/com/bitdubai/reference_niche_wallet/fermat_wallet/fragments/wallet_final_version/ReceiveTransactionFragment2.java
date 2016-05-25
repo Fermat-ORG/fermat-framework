@@ -134,12 +134,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         }
 
 
-        getExecutor().execute(new Runnable() {
-            @Override
-            public void run() {
-                openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            }
-        });
+        onRefresh();
 
     }
 
@@ -208,12 +203,21 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
+        emptyListViewsContainer = layout.findViewById(R.id.empty);
 
-        if (openNegotiationList.isEmpty()) {
-            recyclerView.setVisibility(View.GONE);
-            emptyListViewsContainer = layout.findViewById(R.id.empty);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-        }
+        getExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                openNegotiationList = (ArrayList<GrouperItem>) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
+                if (openNegotiationList.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -327,7 +331,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 if(openNegotiationList.size() > 0)
                 {
-                    recyclerView.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.VISIBLE);
                     FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
                 }
             }else {
