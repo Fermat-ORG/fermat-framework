@@ -216,24 +216,32 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
             });
 
+            //list transaction on background
+
             getExecutor().submit(new Runnable() {
                 @Override
                 public void run() {
 
-                  /*  getActivity().runOnUiThread(new Runnable() {
+                    getActivity().runOnUiThread(new Runnable() {
                         public void run() {
                             openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                             adapter.changeDataSet(openNegotiationList);
                             adapter.notifyDataSetChanged();
-                            recyclerView.setVisibility(View.VISIBLE);
-                            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+
+
+                            if(openNegotiationList!=null) {
+                                if (openNegotiationList.isEmpty()) {
+                                    recyclerView.setVisibility(View.GONE);
+                                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                                }
+                            }else{
+                                recyclerView.setVisibility(View.GONE);
+                                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+                                emptyListViewsContainer.setVisibility(View.GONE);
+                            }
                         }
-                    });*/
-                    openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-                    adapter.changeDataSet(openNegotiationList);
-                    adapter.notifyDataSetChanged();
-                    recyclerView.setVisibility(View.VISIBLE);
-                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                    });
+
                 }
             });
 
@@ -720,15 +728,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         if(openNegotiationList!=null) {
             if (openNegotiationList.isEmpty()) {
-               // recyclerView.setVisibility(View.GONE);
+               recyclerView.setVisibility(View.GONE);
                 emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
-                //emptyListViewsContainer.setVisibility(View.VISIBLE);
+                emptyListViewsContainer.setVisibility(View.VISIBLE);
             }
         }else{
-          //  recyclerView.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer = (LinearLayout) layout.findViewById(R.id.empty);
             FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
