@@ -7,4 +7,5 @@ public final class ChatActorConnectionDatabaseConstants {
     public static final String ACTOR_CONNECTIONS_COUNTRY_COLUMN_NAME          = "country";
     public static final String ACTOR_CONNECTIONS_STATE_LOCALITY_COLUMN_NAME   = "state";
     public static final String ACTOR_CONNECTIONS_CITY_COLUMN_NAME             = "city";
+    public static final String ACTOR_CONNECTIONS_STATUS_COLUMN_NAME             = "status";
 }

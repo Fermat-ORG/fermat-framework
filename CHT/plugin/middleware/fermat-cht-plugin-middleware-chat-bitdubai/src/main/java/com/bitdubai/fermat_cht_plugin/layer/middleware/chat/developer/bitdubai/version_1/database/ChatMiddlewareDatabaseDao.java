@@ -785,7 +785,7 @@ public class ChatMiddlewareDatabaseDao {
             }
             for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
-
+                despurifyMessage(message);
                 messages.add(message);
             }
 
@@ -806,6 +806,22 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+    public void purifyMessage(Message message){
+        String text = message.getMessage();
+        char a = 39;
+        char b = 182;
+        text = text.replace(a,b);
+        message.setMessage(text);
+    }
+
+    public void despurifyMessage(Message message){
+        String text = message.getMessage();
+        char a = 39;
+        char b = 182;
+        text = text.replace(b,a);
+        message.setMessage(text);
+    }
+
     public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException, DatabaseOperationException
     {
         Database database = null;
@@ -824,7 +840,7 @@ public class ChatMiddlewareDatabaseDao {
             }
             for (DatabaseTableRecord record : records) {
                 final Message message = getMessageTransaction(record);
-
+                despurifyMessage(message);
                 messages.add(message);
             }
 
@@ -833,7 +849,6 @@ public class ChatMiddlewareDatabaseDao {
             if(messages.isEmpty()){
                 return null;
             }
-
             return messages;
         }
         catch (Exception e) {
@@ -876,6 +891,7 @@ public class ChatMiddlewareDatabaseDao {
                 return null;
             }
 
+            despurifyMessage(message);
             return message;
         }
         catch (Exception e) {
@@ -970,6 +986,7 @@ public class ChatMiddlewareDatabaseDao {
             if(messages.isEmpty()){
                 return null;
             }
+            despurifyMessage(messages.get(0));
 
             return messages.get(0);
         }
@@ -1007,9 +1024,10 @@ public class ChatMiddlewareDatabaseDao {
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(message.getMessageId().toString());
             filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
-
+            purifyMessage(message);
             if (isNewRecord(table, filter)) {
                 message.setCount(getLastMessageCount() + 1);
+
                 record = getMessageRecord(message);
                 transaction.addRecordToInsert(table, record);
             }

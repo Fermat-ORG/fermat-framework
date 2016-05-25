@@ -86,7 +86,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 //            ActorConnection actorConnectionCache = dao.chatActorConnectionExists(linkedIdentity,actorReceiving.getPublicKey());
             ConnectionState connectionState = null;
 //            if(actorConnectionCache!=null)
-//            connectionState = actorConnectionCache.getConnectionState();
+//            connectionState = actorConnectionCache.getStatus();
 //
 //            if(connectionState != null && connectionState.equals(ConnectionState.PENDING_LOCALLY_ACCEPTANCE))
 //                connectionState = ConnectionState.CONNECTED;
@@ -94,7 +94,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
 
             ChatActorConnection oldActorConnection = dao.chatActorConnectionExists(linkedIdentity, actorReceiving.getPublicKey());
             if(oldActorConnection != null) {
-                //if (!oldActorConnection.getConnectionState().getCode().equals(ConnectionState.CONNECTED.getCode()))
+                //if (!oldActorConnection.getStatus().getCode().equals(ConnectionState.CONNECTED.getCode()))
                 connectionState = oldActorConnection.getConnectionState();//ConnectionState.CONNECTED;
 
                 //TODO: Vilchez esto debemos de analizar todo lo que estaba no funcionaba, pero de esta forma quedo estable
@@ -118,7 +118,8 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
                     actorReceiving.getImage(),
                     connectionState,
                     currentTime,
-                    currentTime
+                    currentTime,
+                    actorReceiving.getStatus()
             );
 
             /**
