@@ -1,17 +1,18 @@
 package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.fermat_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.fermat_wallet.interfaces.FermatWalletIntraUserIdentity;
 
 /**
  * Created by natalia on 01/10/15.
  */
-public class CryptoWalletWalletIntraUserIdentity  implements CryptoWalletIntraUserIdentity {
+public class FermatWalletWalletIntraUserIdentity implements FermatWalletIntraUserIdentity {
 
     String publicKey;
     String alias;
     byte[] profileImage;
 
-    public CryptoWalletWalletIntraUserIdentity(String publicKey, String alias, byte[] profileImage)
+    public FermatWalletWalletIntraUserIdentity(String publicKey, String alias, byte[] profileImage)
     {
         this.publicKey = publicKey;
         this.alias = alias;
