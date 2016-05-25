@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -1294,10 +1295,18 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws
             CantGetListClauseException, CantGetCryptoAmountException {
         UUID transactionId = UUID.randomUUID();
+
+        //Get information from negotiation clauses.
+        Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
+        double cryptoAmountSatoshi = BitcoinConverter.convert(
+                getCryptoAmountFromNegotiationClauses(negotiationClauses),
+                BitcoinConverter.Currency.BITCOIN,
+                BitcoinConverter.Currency.SATOSHI);
+        long cryptoAmount = (long) cryptoAmountSatoshi;
+
         record.setUUIDValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
-        //For the business transaction this value represents the contract hash.
         record.setStringValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
                 customerBrokerContractPurchase.getContractId());
@@ -1310,9 +1319,6 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_ONLINE_MERCHANDISE_CONFIRMATION.getCode());
-        //Get information from negotiation clauses.
-        Collection<Clause> negotiationClauses = customerBrokerPurchaseNegotiation.getClauses();
-        long cryptoAmount = getCryptoAmountFromNegotiationClauses(negotiationClauses);
         record.setLongValue(
                 CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME,
                 cryptoAmount);
@@ -1320,14 +1326,14 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         return record;
     }
 
-    private long getCryptoAmountFromNegotiationClauses(
+    private double getCryptoAmountFromNegotiationClauses(
             Collection<Clause> negotiationClauses) throws
             CantGetCryptoAmountException {
         try {
-            long cryptoAmount;
+            double cryptoAmount;
             for (Clause clause : negotiationClauses) {
                 if (clause.getType().equals(ClauseType.CUSTOMER_CURRENCY_QUANTITY)) {
-                    cryptoAmount = parseToLong(clause.getValue());
+                    cryptoAmount = parseToDouble(clause.getValue());
                     return cryptoAmount;
                 }
             }
@@ -1356,6 +1362,34 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         } else {
             try {
                 return Long.valueOf(stringValue);
+            } catch (Exception exception) {
+                pluginRoot.reportError(
+                        UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                        exception);
+                throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE,
+                        FermatException.wrapException(exception),
+                        "Parsing String object to long",
+                        "Cannot parse " + stringValue + " string value to long");
+            }
+
+        }
+    }
+
+    /**
+     * This method parse a String object to a long object
+     *
+     * @param stringValue
+     *
+     * @return
+     *
+     * @throws InvalidParameterException
+     */
+    public double parseToDouble(String stringValue) throws InvalidParameterException {
+        if (stringValue == null) {
+            throw new InvalidParameterException("Cannot parse a null string value to long");
+        } else {
+            try {
+                return Double.valueOf(stringValue);
             } catch (Exception exception) {
                 pluginRoot.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
