@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -29,6 +30,8 @@ public class BusinessTransactionRecord {
     private long cryptoAmount;
 
     private CryptoStatus cryptoStatus;
+
+    private CryptoCurrency cryptoCurrency;
 
     private String customerPublicKey;
 
@@ -406,5 +409,13 @@ public class BusinessTransactionRecord {
                 ", paymentType=" + paymentType +
                 ", actorPublicKey='" + actorPublicKey + '\'' +
                 '}';
+    }
+
+    public CryptoCurrency getCryptoCurrency() {
+        return cryptoCurrency;
+    }
+
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
+        this.cryptoCurrency = cryptoCurrency;
     }
 }

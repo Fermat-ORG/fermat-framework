@@ -432,7 +432,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                 /**
                  * Check if ON_BLOCKCHAIN crypto status (last crypto status)
                  */
-                List<BusinessTransactionRecord> pendingOnBlockchainContractList = brokerSubmitOnlineMerchandiseBusinessTransactionDao.getOnBlockchainkCryptoStatusList();
+                List<BusinessTransactionRecord> pendingOnBlockchainContractList = brokerSubmitOnlineMerchandiseBusinessTransactionDao.getOnBlockchainCryptoStatusList();
                 for (BusinessTransactionRecord onBlockchainContractRecord : pendingOnBlockchainContractList) {
                     cryptoStatus = outgoingIntraActorManager.getTransactionStatus(onBlockchainContractRecord.getTransactionHash());
                     onBlockchainContractRecord.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
