@@ -7,20 +7,21 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySearch;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/5/16.
  */
-public class FanCommunitySearchImpl implements FanCommunitySearch {
+public class FanCommunitySearchImpl implements FanCommunitySearch, Serializable {
 
-    private final FanManager artistManagerActorNetworkServiceManager;
+    /*private final FanManager artistManagerActorNetworkServiceManager;
 
     public FanCommunitySearchImpl(final FanManager artistManagerActorNetworkServiceManager) {
 
         this.artistManagerActorNetworkServiceManager = artistManagerActorNetworkServiceManager;
-    }
+    }*/
 
     @Override
     public void addAlias(String alias) {
@@ -28,10 +29,10 @@ public class FanCommunitySearchImpl implements FanCommunitySearch {
     }
 
     @Override
-    public List<FanCommunityInformation> getResult() throws CantGetFanSearchResult {
+    public List<FanCommunityInformation> getResult(ActorSearch actorSearch) throws CantGetFanSearchResult {
         try {
 
-            ActorSearch actorSearch = artistManagerActorNetworkServiceManager.getSearch();
+            //ActorSearch actorSearch = artistManagerActorNetworkServiceManager.getSearch();
 
             final List<FanExposingData> fanExposingDataList = actorSearch.getResult();
 

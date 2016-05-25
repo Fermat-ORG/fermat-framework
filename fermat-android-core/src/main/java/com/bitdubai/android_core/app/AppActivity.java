@@ -1,11 +1,9 @@
 package com.bitdubai.android_core.app;
 
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -20,12 +18,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
-import com.bitdubai.fermat.BuildConfig;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
@@ -46,8 +41,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
@@ -256,20 +249,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 //                Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
                 Activity activity = appStructure.getLastActivity();
 //                Log.i("APP ACTIVITY loadUI", "getLastActivity " + System.currentTimeMillis());
-                executor.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
-                            //refreshSideMenu(fermatAppConnection);
-                        } catch (CantGetSelectedActorIdentityException e) {
-                            e.printStackTrace();
-                        } catch (ActorIdentityNotSelectedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-
 //                Log.i("APP ACTIVITY loadUI", "getSelectedActorIdentity " + System.currentTimeMillis());
                 loadBasicUI(activity, fermatAppConnection);
 //                Log.i("APP ACTIVITY loadUI", "loadBasicUI " + System.currentTimeMillis());
@@ -367,39 +346,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
                 Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
-                if(BuildConfig.DEBUG) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle("Error");
-                    builder.setMessage("An error occur, do you want to report this issue?");
-                    final EditText input = new EditText(AppActivity.this);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.MATCH_PARENT,
-                            LinearLayout.LayoutParams.MATCH_PARENT);
-                    input.setLayoutParams(lp);
-                    builder.setView(input);
-                    builder.setIcon(R.drawable.help_icon);
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            try {
-                                reportError(input.getText().toString());
-                            } catch (Exception e1) {
-                                e1.printStackTrace();
-                                Toast.makeText(AppActivity.this,"Error sendind the report, please try again",Toast.LENGTH_SHORT).show();
-                            }
-                            handleExceptionAndRestart();
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            handleExceptionAndRestart();
-                        }
-                    });
-                    builder.show();
-                }else{
-                    handleExceptionAndRestart();
-                }
+                handleExceptionAndRestart();
 
             }
         } catch (Throwable throwable) {

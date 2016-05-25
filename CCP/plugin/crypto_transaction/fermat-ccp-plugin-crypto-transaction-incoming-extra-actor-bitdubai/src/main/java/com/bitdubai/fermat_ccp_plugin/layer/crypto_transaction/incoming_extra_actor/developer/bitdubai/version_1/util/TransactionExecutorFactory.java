@@ -3,10 +3,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_a
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.TransactionExecutor;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.executors.BitcoinBasicWalletTransactionExecutor;
@@ -17,12 +16,12 @@ import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_ac
  */
 public class TransactionExecutorFactory {
 
-    private BitcoinWalletManager bitcoinWalletManager;
+    private CryptoWalletManager cryptoWalletManager;
     private CryptoAddressBookManager cryptoAddressBookManager;
     private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
 
-    public TransactionExecutorFactory(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final BitcoinLossProtectedWalletManager lossProtectedWalletManager){
-        this.bitcoinWalletManager = bitcoinWalletManager;
+    public TransactionExecutorFactory(final CryptoWalletManager cryptoWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final BitcoinLossProtectedWalletManager lossProtectedWalletManager){
+        this.cryptoWalletManager = cryptoWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.lossProtectedWalletManager = lossProtectedWalletManager;
     }
@@ -47,7 +46,7 @@ public class TransactionExecutorFactory {
     }
 
     private TransactionExecutor createBitcoinBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletsException {
-        return new BitcoinBasicWalletTransactionExecutor(bitcoinWalletManager.loadWallet(walletPublicKey), this.cryptoAddressBookManager);
+        return new BitcoinBasicWalletTransactionExecutor(cryptoWalletManager.loadWallet(walletPublicKey), this.cryptoAddressBookManager);
     }
 
     private TransactionExecutor createLossProtectedBasicWalletExecutor(final String walletPublicKey) throws CantLoadWalletException {

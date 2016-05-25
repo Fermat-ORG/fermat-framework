@@ -9,12 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.constants.ApplicationConstants;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -77,17 +76,9 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         Bundle bundle = getIntent().getExtras();
-
         appNavigationStructure = (AppNavigationStructure) bundle.getSerializable(WALLET_NAVIGATION_STRUCTURE);
-
         lastWallet = (InstalledWallet) bundle.getSerializable(INSTALLED_WALLET);
-
-
-        setActivityType(ActivityType.ACTIVITY_TYPE_WALLET);
-
         try {
             loadUI(createOrCallWalletSession());
         } catch (Exception e) {

@@ -4,12 +4,15 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnection;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/03/16.
  */
-public final class ArtistActorConnection extends ActorConnection<ArtistLinkedActorIdentity> {
+public final class ArtistActorConnection
+        extends ActorConnection<ArtistLinkedActorIdentity>
+        implements Serializable {
 
     private ArtExternalPlatform artExternalPlatform;
 

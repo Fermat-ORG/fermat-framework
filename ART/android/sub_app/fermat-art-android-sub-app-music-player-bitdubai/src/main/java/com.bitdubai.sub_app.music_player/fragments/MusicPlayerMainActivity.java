@@ -1,10 +1,14 @@
 package com.bitdubai.sub_app.music_player.fragments;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -72,7 +76,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     MediaPlayer mp = new MediaPlayer();
     private final String TAG="art_mplayer";
     ThreadSong songPlayerThread;
-    boolean pause=false;
+    boolean pause;
     int songposition=0;
 
     Map<String,Integer> rela=new HashMap<String,Integer>();
@@ -110,6 +114,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                 view=musicPlayerSession.getView();
 
                 firstTime=false;
+
+                pause=musicPlayerSession.getPause();
 
                 System.out.println("ART_ I CAN LISTEN");
             }
@@ -162,6 +168,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         musicPlayerSession.setView(view);
 
+        musicPlayerSession.setPause(pause);
+
     }
 
     public static MusicPlayerMainActivity newInstance() {
@@ -184,6 +192,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             tiempo = (TextView) view.findViewById((R.id.tiempo));
             recyclerView = (RecyclerView) view.findViewById(R.id.rv);
             song = (TextView) view.findViewById(R.id.songname);
+            pause=true;
 
 
             /*final TextView titlebar=((TextView)getToolbar().getRootView().findViewById(R.id.txt_title));
@@ -251,13 +260,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                     })
             );
 
-            if(items.isEmpty()){
-                recyclerView.setBackgroundResource(R.drawable.nomusic);
-                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
-            }else{
-                recyclerView.setBackgroundResource(R.drawable.musicplayer_background_viewpager);
-                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
-            }
+
 
 
             bplay.setOnClickListener(new View.OnClickListener() {
@@ -301,23 +304,106 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
     void loadmysong(){
+        int i=0;
         List<WalletSong> mysong=new ArrayList<>();
         List<MusicPlayerItems> songview=new ArrayList<>();
+        List<MusicPlayerItems> newsongview=new ArrayList<>();
+        TextView noMusicFound=(TextView) view.findViewById(R.id.no_music_found);
+        boolean songErase=true;
         try {
             mysong=musicPlayermoduleManager.getAvailableSongs();
             if(mysong.size()<1){
-                Toast.makeText(view.getContext(),"No song, dowload with the FanWallet",Toast.LENGTH_LONG).show();
+                Toast.makeText(view.getContext(),"Dowload Songs with the FanWallet",Toast.LENGTH_LONG).show();
+                adapter.setFilter(null);
+                //       recyclerView.setBackgroundResource(R.drawable.nomusic);
+                noMusicFound.setVisibility(View.VISIBLE);
+                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
+
             }else{
-                for(WalletSong walletSong:mysong){
-                    songview.add(new MusicPlayerItems(walletSong.getComposers(), walletSong.getName(),R.drawable.adam,walletSong.getSongBytes(),walletSong.getSongId()));
+                noMusicFound.setVisibility(View.GONE);
+                recyclerView.setBackgroundResource(R.drawable.musicplayer_background_viewpager);
+                view.findViewById(R.id.contents).setBackgroundResource(R.drawable.musicplayer_background_viewpager);
+
+               /* for(WalletSong walletSong:mysong){
+                    songview.add(new MusicPlayerItems(walletSong.getComposers(),
+                            walletSong.getName(),
+                            BitmapFactory.decodeResource(view.getContext().getResources(),
+                                    R.drawable.adam),
+                            walletSong.getSongBytes(),
+                            walletSong.getSongId()));
+                    i=i+1;
                 }
-                adapter.setFilter(songview);
+                adapter.setFilter(songview);*/
+                for (int x=0;x<mysong.size();x++){
+                    newsongview.add(new MusicPlayerItems(mysong.get(x).getComposers(),
+                            mysong.get(x).getName(),
+                            downloadBitmapAlbumArt(x),
+                            mysong.get(x).getSongBytes(),
+                            mysong.get(x).getSongId()));
+                    System.out.println("TKY_:"+song.getText()+"="+mysong.get(x).getName());
+                    if(song.getText().equals(mysong.get(x).getName())){
+                        songErase=false;
+                    }
+                }
+                System.out.println("TKY_ERASE:"+songErase);
+                if(songErase){
+                    System.out.println("TKY_playin:"+mp.isPlaying()+" PAUSE:"+pause);
+                    if (mp.isPlaying() || pause) {
+                        stop();
+                        mp.reset();
+                        song.setText("");
+                    }
+                }
+
+                adapter.setFilter(newsongview);
             }
         } catch (CantGetSongListException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.ART_MUSIC_PLAYER, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 
         }
     }
+
+
+    Bitmap downloadBitmapAlbumArt(int position){
+
+        try{
+        File tempMp3 = File.createTempFile("tempfermatmusic", "mp3", view.getContext().getCacheDir());
+        tempMp3.deleteOnExit();
+        FileOutputStream fos = new FileOutputStream(tempMp3);
+        fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
+        fos.close();
+
+
+        FileInputStream fis = new FileInputStream(tempMp3);
+
+
+        final MediaMetadataRetriever metaRetriever = new MediaMetadataRetriever();
+
+
+        metaRetriever.setDataSource(fis.getFD());
+
+
+            //    final AssetFileDescriptor afd=getResources().openRawResourceFd(R.raw.calido_y_frio);
+            //    metaRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+
+            //Other Scenarios
+            //    final String uriPath="android.resource://"+getPackageName()+"/raw/t";
+            //   final Uri uri=Uri.parse(uriPath);
+            //   mediaMetadataRetriever.setDataSource(getApplication(),uri);
+
+            //   final AssetFileDescriptor afd=getAssets().openFd("t.mp4");
+            //   mediaMetadataRetriever.setDataSource(afd.getFileDescriptor(),afd.getStartOffset(),afd.getLength());
+
+      //      System.out.println("TKY_URL_SONG:"+url);
+            final byte[] art = metaRetriever.getEmbeddedPicture();
+            return BitmapFactory.decodeByteArray(art, 0, art.length);
+        } catch (Exception e) {
+            System.out.println("Couldn't create album art: " + e.getMessage());
+            return BitmapFactory.decodeResource(getResources(), R.drawable.no_found_art);
+        }
+
+    }
+
 
 
     private void clickplay(int position) {
@@ -355,8 +441,15 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
                 pb.setMax((int) (mp.getDuration() / 1000));
 
+
                 songPlayerThread = new ThreadSong(false);
                 songPlayerThread.execute();
+
+
+
+                pause=false;
+                bplay.setBackgroundResource(R.drawable.button_pause);
+
 
 
             }
@@ -378,11 +471,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             if(mp.isPlaying()){
                 mp.pause();
                 pause=true;
-                bplay.setBackgroundResource(R.drawable.button_pause);
+                bplay.setBackgroundResource(R.drawable.button_play);
             }else if(pause){
                 mp.start();
                 pause=false;
-                bplay.setBackgroundResource(R.drawable.button_play);
+                bplay.setBackgroundResource(R.drawable.button_pause);
             }
 
         } catch (IllegalArgumentException e) {
