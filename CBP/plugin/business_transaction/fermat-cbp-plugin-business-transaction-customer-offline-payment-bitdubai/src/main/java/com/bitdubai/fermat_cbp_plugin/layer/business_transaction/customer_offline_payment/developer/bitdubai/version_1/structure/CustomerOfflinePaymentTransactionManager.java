@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
@@ -12,9 +12,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_p
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.CustomerOfflinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database.CustomerOfflinePaymentBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
 /**
@@ -35,15 +34,15 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
     /**
      * Represents the ErrorManager
      */
-    ErrorManager errorManager;
+    CustomerOfflinePaymentPluginRoot pluginRoot;
 
     public CustomerOfflinePaymentTransactionManager(CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager,
                                                     CustomerOfflinePaymentBusinessTransactionDao customerOfflinePaymentBusinessTransactionDao,
-                                                    ErrorManager errorManager) {
+                                                    CustomerOfflinePaymentPluginRoot pluginRoot) {
 
         this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
         this.customerOfflinePaymentBusinessTransactionDao = customerOfflinePaymentBusinessTransactionDao;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
     }
 
     @Override
@@ -57,22 +56,22 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
             this.customerOfflinePaymentBusinessTransactionDao.persistContractInDatabase(purchaseContract);
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendPaymentException(e, "Sending online payment", "Cannot get the CustomerBrokerContractPurchase");
 
         } catch (CantInsertRecordException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendPaymentException(e, "Sending online payment", "Cannot insert a database record.");
 
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendPaymentException(e, "Sending online payment", "The contract hash/Id is null.");
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendPaymentException(e, "Sending online payment", "Unexpected error");
         }
@@ -85,12 +84,12 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
             return this.customerOfflinePaymentBusinessTransactionDao.getContractTransactionStatus(contractHash);
 
         } catch (ObjectNotSetException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException("Cannot check a null contractHash/Id");
 
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "", "Unexpected result");
         }
@@ -104,12 +103,12 @@ public class CustomerOfflinePaymentTransactionManager implements CustomerOffline
             return this.customerOfflinePaymentBusinessTransactionDao.getCompletionDateByContractHash(contractHash);
 
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCompletionDateException(e, "Getting completion date", "Unexpected exception from database");
 
         } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_OFFLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCompletionDateException(e, "Getting completion date", "The contract hash argument is null");
         }

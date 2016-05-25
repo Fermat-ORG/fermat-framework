@@ -23,12 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 /**
  * Created by Lozadaa on 20/01/16.
@@ -53,12 +51,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  @Override
      public void onCreate(Bundle savedInstanceState) {
      super.onCreate(savedInstanceState);
-         ChatModuleManager moduleManager = ((ChatSession) appSession).getModuleManager();
-         try {
-             walletManager = moduleManager.getChatManager();
-         } catch (CHTException e) {
-             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-         }
+     ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
+     //TODO:Revisar esto
+//         try {
+//             walletManager = moduleManager;
+//         } catch (CHTException e) {
+//             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//         }
          errorManager = appSession.getErrorManager();
      toolbar = getToolbar();
      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));

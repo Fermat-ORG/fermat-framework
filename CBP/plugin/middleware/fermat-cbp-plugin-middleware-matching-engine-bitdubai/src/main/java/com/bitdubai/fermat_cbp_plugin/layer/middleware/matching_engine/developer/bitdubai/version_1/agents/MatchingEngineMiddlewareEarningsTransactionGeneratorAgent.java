@@ -12,12 +12,13 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.E
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.MatchingEngineMiddlewarePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantGetInputTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareEarningTransaction;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,17 +40,14 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final MatchingEngineMiddlewarePluginRoot pluginRoot;
     private final MatchingEngineMiddlewareDao dao;
-    private final PluginVersionReference pluginVersionReference;
 
-    public MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(final ErrorManager errorManager,
-                                                                     final MatchingEngineMiddlewareDao dao,
-                                                                     final PluginVersionReference pluginVersionReference) {
+    public MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(final MatchingEngineMiddlewarePluginRoot pluginRoot,
+                                                                     final MatchingEngineMiddlewareDao dao) {
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.dao = dao;
-        this.pluginVersionReference = pluginVersionReference;
 
         this.agentThread = new Thread(new Runnable() {
             @Override
@@ -105,7 +103,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
         } catch (CantListWalletsException cantListWalletsException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantListWalletsException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantListWalletsException);
             return;
         }
 
@@ -127,7 +125,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
         } catch (CantListEarningsPairsException cantListEarningsPairsException) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantListEarningsPairsException);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantListEarningsPairsException);
             return;
         }
 
@@ -337,7 +335,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
                     dao.executeTransaction(databaseTransaction);
                 } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
-                    errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
+                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
                 }
 
                 unmatchedSellInputTransaction = dao.getNextUnmatchedSellInputTransaction(earningsPair);
@@ -345,7 +343,7 @@ public final class MatchingEngineMiddlewareEarningsTransactionGeneratorAgent ext
 
         } catch (CantGetInputTransactionException | CantListInputTransactionsException e) {
 
-            errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

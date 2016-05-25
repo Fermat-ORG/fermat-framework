@@ -2,16 +2,16 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bit
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestQuotesException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerManager;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.CryptoCustomerActorPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.database.CryptoCustomerActorDao;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantAgentExtraDataUpdateException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Collection;
 
@@ -24,18 +24,18 @@ public class CryptoBrokerExtraDataUpdateAgent implements Agent {
     MonitorAgentExtraData monitor;
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoCustomerActorDao dao;
-    private final ErrorManager errorManager;
+    private CryptoCustomerActorPluginRoot pluginRoot;
     private final PluginVersionReference pluginVersionReference;
 
     public CryptoBrokerExtraDataUpdateAgent(
             final CryptoBrokerManager cryptoBrokerANSManager,
             final CryptoCustomerActorDao dao,
-            final ErrorManager errorManager,
+            final CryptoCustomerActorPluginRoot pluginRoot,
             final PluginVersionReference pluginVersionReference
     ){
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.dao = dao;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginVersionReference = pluginVersionReference;
     }
 
@@ -45,7 +45,7 @@ public class CryptoBrokerExtraDataUpdateAgent implements Agent {
 
         monitor.setManagers(
             this.cryptoBrokerANSManager,
-            this.errorManager,
+            this.pluginRoot,
             this.pluginVersionReference
         );
         monitor.setDao(this.dao);
@@ -68,8 +68,8 @@ class MonitorAgentExtraData implements Runnable {
 
     private CryptoBrokerManager cryptoBrokerANSManager;
     private CryptoCustomerActorDao dao;
-    private ErrorManager errorManager;
     private PluginVersionReference pluginVersionReference;
+    private CryptoCustomerActorPluginRoot pluginRoot;
 
     @Override
     public void run() {
@@ -84,18 +84,18 @@ class MonitorAgentExtraData implements Runnable {
             try {
                 doTheMainTask();
             } catch (CantAgentExtraDataUpdateException e) {
-                this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
         }
     }
 
     public void setManagers(
             CryptoBrokerManager cryptoBrokerANSManager,
-            ErrorManager errorManager,
+            CryptoCustomerActorPluginRoot pluginRoot,
             PluginVersionReference pluginVersionReference
     ){
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.pluginVersionReference = pluginVersionReference;
     }
 
@@ -111,11 +111,8 @@ class MonitorAgentExtraData implements Runnable {
                     this.cryptoBrokerANSManager.requestQuotes(actor.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actor.getBrokerIdentity().getPublicKey());
                 }
             }
-        } catch (CantGetListActorExtraDataException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantAgentExtraDataUpdateException(e.getMessage(), e, "", "");
-        } catch (CantRequestQuotesException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantGetListActorExtraDataException | CantRequestQuotesException e) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantAgentExtraDataUpdateException(e.getMessage(), e, "", "");
         }
     }

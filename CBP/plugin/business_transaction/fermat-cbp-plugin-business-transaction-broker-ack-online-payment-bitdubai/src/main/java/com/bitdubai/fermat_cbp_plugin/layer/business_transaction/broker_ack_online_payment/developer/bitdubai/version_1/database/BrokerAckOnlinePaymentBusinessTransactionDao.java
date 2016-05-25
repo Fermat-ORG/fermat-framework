@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -21,40 +21,40 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.BrokerAckOnlinePaymentPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.exceptions.CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.IncomingMoneyEventWrapper;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/12/15.
  */
 public class BrokerAckOnlinePaymentBusinessTransactionDao {
-    
+
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private final ErrorManager errorManager;
+    private final BrokerAckOnlinePaymentPluginRoot pluginRoot;
     private Database database;
 
     public BrokerAckOnlinePaymentBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database,
-            final ErrorManager errorManager) {
+            final BrokerAckOnlinePaymentPluginRoot pluginRoot) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
-        this.database             = database            ;
-        this.errorManager         = errorManager        ;
+        this.pluginId = pluginId;
+        this.database = database;
+        this.pluginRoot = pluginRoot;
     }
 
     public void initialize() throws CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException {
@@ -77,8 +77,8 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 );
 
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                pluginRoot.reportError(
+
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         f);
                 throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
@@ -87,8 +87,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                         "",
                         "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                pluginRoot.reportError(
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         z);
                 throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
@@ -99,8 +98,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             }
 
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
@@ -109,8 +107,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     "",
                     "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(
@@ -162,56 +159,61 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns the contract transaction status
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public ContractTransactionStatus getContractTransactionStatus(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
 
-            String stringContractTransactionStatus=getValue(
+            String stringContractTransactionStatus = getValue(
                     contractHash,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     e,
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException( exception,
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
                     "Getting the contract transaction status",
-                    "Unexpected error" );
+                    "Unexpected error");
         }
     }
 
     /**
      * This method returns the recorded pending events
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
     public List<String> getPendingIncomingMoneyEvents() throws CantGetContractListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseIncomingMoneyTable();
 
             return getPendingGenericsEvents(databaseTable,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME);
 
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(exception,
@@ -222,57 +224,60 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns pending generic events by given parameters
+     *
      * @return
      */
     private List<String> getPendingGenericsEvents(DatabaseTable databaseTable, String statusColumn, String idColumn) throws CantGetContractListException {
-        try{
-            List<String> eventTypeList=new ArrayList<>();
+        try {
+            List<String> eventTypeList = new ArrayList<>();
             String eventId;
             databaseTable.addStringFilter(statusColumn, EventStatus.PENDING.getCode(), DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
 
-            if(records.isEmpty())
+            if (records.isEmpty())
                 return eventTypeList; //There is no records in database, I'll return an empty list.
 
-            for(DatabaseTableRecord databaseTableRecord : records){
-                eventId=databaseTableRecord.getStringValue(idColumn);
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                eventId = databaseTableRecord.getStringValue(idColumn);
                 eventTypeList.add(eventId);
             }
 
             return eventTypeList;
 
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetContractListException(e, "Getting events in EventStatus.PENDING in table "+ databaseTable.getTableName(),
+            throw new CantGetContractListException(e, "Getting events in EventStatus.PENDING in table " + databaseTable.getTableName(),
                     "Cannot load the table into memory");
         }
     }
 
     /**
      * This method returns the recorded pending events
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetContractListException
      */
     public List<String> getPendingEvents() throws CantGetContractListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             return getPendingGenericsEvents(
                     databaseTable,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME
             );
         } catch (CantGetContractListException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
                     "Getting events in getPendingEvents",
                     "Cannot load the table into memory");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(exception,
@@ -283,38 +288,41 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns the event type by event Id
+     *
      * @param eventId
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public String getEventType(String eventId)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
-            String value=records
+//            checkDatabaseRecords(records);
+            String value = records
                     .get(0)
                     .getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -327,22 +335,22 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public List<String> getPendingToAckCryptoList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try{
+        try {
             return getStringList(
                     ContractTransactionStatus.PENDING_PAYMENT.getCode(),
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantGetContractListException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(exception,
                     "Unexpected error",
                     "Getting Value From Ack Crypto List");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -363,21 +371,21 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try{
+        try {
             return getBusinessTransactionRecordList(
                     ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_NOTIFICATION.getCode(),
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantGetContractListException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantGetContractListException.DEFAULT_MESSAGE,
-                    exception,"Getting value from PendingTosSubmitNotificationList","");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    exception, "Getting value from PendingTosSubmitNotificationList", "");
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -389,21 +397,21 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public List<BusinessTransactionRecord> getPendingToSubmitConfirmList() throws
             UnexpectedResultReturnedFromDatabaseException,
             CantGetContractListException {
-        try{
+        try {
             return getBusinessTransactionRecordList(
                     ContractTransactionStatus.PENDING_ACK_ONLINE_PAYMENT_CONFIRMATION.getCode(),
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        }catch(CantGetContractListException exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantGetContractListException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantGetContractListException(CantGetContractListException.DEFAULT_MESSAGE,
-                    exception,"Getting value from PendingToSubmitConfirmList","");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    exception, "Getting value from PendingToSubmitConfirmList", "");
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -414,10 +422,13 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a CustomerOnlinePaymentRecordList according the arguments.
-     * @param key String with the search key.
-     * @param keyColumn String with the key column name.
+     *
+     * @param key         String with the search key.
+     * @param keyColumn   String with the key column name.
      * @param valueColumn String with the value searched column name.
+     *
      * @return List<BusinessTransactionRecord>
+     *
      * @throws CantGetContractListException
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
@@ -425,13 +436,13 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException, UnexpectedResultReturnedFromDatabaseException {
-        List<String> pendingContractHash= getStringList(
+        List<String> pendingContractHash = getStringList(
                 key,
                 keyColumn,
                 valueColumn);
-        List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
+        List<BusinessTransactionRecord> businessTransactionRecordList = new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
-        for(String contractHash : pendingContractHash){
+        for (String contractHash : pendingContractHash) {
             businessTransactionRecord = getBusinessTransactionRecordByContractHash(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
@@ -456,18 +467,20 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a List with the parameter in the arguments.
+     *
      * @param key
      * @param keyColumn
      * @param valueColumn
+     *
      * @return
      */
     private List<String> getStringList(
             String key,
             String keyColumn,
             String valueColumn) throws CantGetContractListException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            List<String> contractHashList=new ArrayList<>();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            List<String> contractHashList = new ArrayList<>();
             String contractHash;
             databaseTable.addStringFilter(
                     keyColumn,
@@ -475,33 +488,33 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 //There is no records in database, I'll return an empty list.
                 return contractHashList;
             }
-            for(DatabaseTableRecord databaseTableRecord : records){
-                contractHash=databaseTableRecord.getStringValue(valueColumn);
+            for (DatabaseTableRecord databaseTableRecord : records) {
+                contractHash = databaseTableRecord.getStringValue(valueColumn);
                 contractHashList.add(contractHash);
             }
             return contractHashList;
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetContractListException(e,
-                    "Getting "+valueColumn+" based on "+key,
+                    "Getting " + valueColumn + " based on " + key,
                     "Cannot load the table into memory");
         }
     }
 
     public boolean isContractHashInDatabase(String contractHash) throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            String contractHashFromDatabase=getValue(
+        try {
+            String contractHashFromDatabase = getValue(
                     contractHash,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-            return contractHashFromDatabase!=null;
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            return contractHashFromDatabase != null;
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -512,10 +525,13 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a String value from parameters in database.
+     *
      * @param key
      * @param keyColumn
      * @param valueColumn
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private String getValue(String key,
@@ -523,19 +539,19 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                             String valueColumn)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     keyColumn,
                     key,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return null;
             }
             checkDatabaseRecords(records);
-            String value=records
+            String value = records
                     .get(0)
                     .getStringValue(valueColumn);
             return value;
@@ -549,7 +565,9 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method check the database record result.
+     *
      * @param records
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws
@@ -559,47 +577,49 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
          * I'm gonna set this number in 1 for now, because I want to check the records object has
          * one only result.
          */
-        int VALID_RESULTS_NUMBER=0;
+        int VALID_RESULTS_NUMBER = 1;
         int recordsSize;
-        if(records.isEmpty()){
+        if (records.isEmpty()) {
             return;
         }
-        recordsSize=records.size();
-        if(recordsSize<VALID_RESULTS_NUMBER){
-            throw new UnexpectedResultReturnedFromDatabaseException("I excepted "+VALID_RESULTS_NUMBER+", but I got "+recordsSize);
+        recordsSize = records.size();
+        if (recordsSize > VALID_RESULTS_NUMBER) {
+            throw new UnexpectedResultReturnedFromDatabaseException("I excepted " + VALID_RESULTS_NUMBER + ", but I got " + recordsSize);
         }
     }
 
     /**
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
+     *
      * @param customerBrokerContractSale
+     *
      * @throws CantInsertRecordException
      */
     //SAME NAME
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale)
             throws CantInsertRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+            databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractSale
             );
             databaseTable.insertRecord(databaseTableRecord);
-        }catch(CantInsertRecordException exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantInsertRecordException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
-                    exception,"Error in persistContractInDatabase","");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    exception, "Error in persistContractInDatabase", "");
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -608,33 +628,35 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
+     *
      * @param customerBrokerContractPurchase
+     *
      * @throws CantInsertRecordException
      */
     //SAME NAME
     public void persistContractInDatabase(
             CustomerBrokerContractPurchase customerBrokerContractPurchase)
             throws CantInsertRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(databaseTableRecord, customerBrokerContractPurchase);
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+            databaseTableRecord = buildDatabaseTableRecord(databaseTableRecord, customerBrokerContractPurchase);
 
             databaseTable.insertRecord(databaseTableRecord);
 
-        }catch(CantInsertRecordException exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantInsertRecordException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
-                    exception,"Error in persistContractInDatabase","");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    exception, "Error in persistContractInDatabase", "");
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -642,7 +664,9 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method persists a basic record in database
+     *
      * @param customerBrokerContractPurchase
+     *
      * @throws CantInsertRecordException
      */
     //SAME NAME
@@ -652,10 +676,10 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             String walletPublicKey,
             long cryptoAmount)
             throws CantInsertRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            DatabaseTableRecord databaseTableRecord=databaseTable.getEmptyRecord();
-            databaseTableRecord= buildDatabaseTableRecord(
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            DatabaseTableRecord databaseTableRecord = databaseTable.getEmptyRecord();
+            databaseTableRecord = buildDatabaseTableRecord(
                     databaseTableRecord,
                     customerBrokerContractPurchase,
                     brokerCryptoAddress,
@@ -663,19 +687,19 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     cryptoAmount
             );
             databaseTable.insertRecord(databaseTableRecord);
-        }catch(CantInsertRecordException exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantInsertRecordException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
-                    exception,"Error in persistContractInDatabase","");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    exception, "Error in persistContractInDatabase", "");
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,exception,
+            throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE, exception,
                     "Unexpected error",
                     "Check the cause");
         }
@@ -684,9 +708,9 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     public IncomingMoneyEventWrapper getIncomingMoneyEventWrapper(
             String eventId)
             throws
-            UnexpectedResultReturnedFromDatabaseException{
-        try{
-            DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
+            UnexpectedResultReturnedFromDatabaseException {
+        try {
+            DatabaseTable databaseTable = getDatabaseIncomingMoneyTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
                     eventId,
@@ -695,43 +719,45 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
             DatabaseTableRecord record = records.get(0);
-            IncomingMoneyEventWrapper incomingMoneyEventWrapper=new IncomingMoneyEventWrapper(
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper = new IncomingMoneyEventWrapper(
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME),
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_RECEIVER_PUBLIC_KEY_COLUMN_NAME),
                     record.getLongValue(
-                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME),
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_AMOUNT_COLUMN_NAME),
                     CryptoCurrency.getByCode(
                             record.getStringValue(
                                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME)),
                     record.getStringValue(
-                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME),
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME),
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME),
                     record.getLongValue(
-                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME)
-                    );
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME),
+                    record.getStringValue(
+                            BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME)
+            );
             return incomingMoneyEventWrapper;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Invalid parameter in ContractTransactionStatus");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -742,19 +768,21 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a BusinessTransactionRecord by the parameters given.
+     *
      * @param keyValue
      * @param keyColumn
+     *
      * @return
      */
     private BusinessTransactionRecord getBusinessTransactionRecord(
             String keyValue,
             String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             ContractTransactionStatus contractTransactionStatus;
             CryptoAddress brokerCryptoAddress;
             String cryptoAddressString;
-            BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
+            BusinessTransactionRecord businessTransactionRecord = new BusinessTransactionRecord();
             databaseTable.addStringFilter(
                     keyColumn,
                     keyValue,
@@ -762,7 +790,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return null;
             }
             DatabaseTableRecord record = records.get(0);
@@ -773,7 +801,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             businessTransactionRecord.setContractHash(record.getStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME));
-            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
+            contractTransactionStatus = ContractTransactionStatus.getByCode(record.getStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
@@ -790,11 +818,11 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     record.getStringValue(
                             BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                                     ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME));
-            cryptoAddressString=record.getStringValue(
+            cryptoAddressString = record.getStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
             //I going to set the money as bitcoin in this version
-            brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
+            brokerCryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
             businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
@@ -820,68 +848,68 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             String contractHash)
             throws
             UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
             return getBusinessTransactionRecord(
                     contractHash,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Getting value from database","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Getting value from database", "Check the cause");
         }
     }
 
     public BusinessTransactionRecord getBusinessTransactionRecordByCustomerPublicKey(
             String customerPublicKey) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
             return getBusinessTransactionRecord(customerPublicKey, BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                     ACK_ONLINE_PAYMENT_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Getting value from database","Check the cause");
+        } catch (Exception exception) {
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Getting value from database", "Check the cause");
         }
     }
 
     public BusinessTransactionRecord getBusinessTransactionRecordByWalletPublicKey(
             String walletPublicKey) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
             return getBusinessTransactionRecord(
                     walletPublicKey,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Getting value from database","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Getting value from database", "Check the cause");
         }
     }
 
     public BusinessTransactionRecord getBusinessTransactionRecordByBrokerPublicKey(
             String walletPublicKey) throws UnexpectedResultReturnedFromDatabaseException {
-        try{
+        try {
             return getBusinessTransactionRecord(
                     walletPublicKey,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME);
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Getting value from database","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Getting value from database", "Check the cause");
         }
     }
 
     public void updateBusinessTransactionRecord(BusinessTransactionRecord businessTransactionRecord)
             throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
-            String contractHash= businessTransactionRecord.getContractHash();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
+            String contractHash = businessTransactionRecord.getContractHash();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -889,24 +917,24 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
-            record=buildDatabaseTableRecord(record, businessTransactionRecord);
+            DatabaseTableRecord record = records.get(0);
+            record = buildDatabaseTableRecord(record, businessTransactionRecord);
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantLoadTableToMemoryException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Getting value from database","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Getting value from database", "Check the cause");
         }
     }
 
@@ -930,14 +958,16 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method creates a database table record in crypto broker side, only for backup
+     *
      * @param record
      * @param customerBrokerContractSale
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractSale customerBrokerContractSale){
-        UUID transactionId=UUID.randomUUID();
+            CustomerBrokerContractSale customerBrokerContractSale) {
+        UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
@@ -960,14 +990,16 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method creates a database table record in crypto broker side, only for backup
+     *
      * @param record
      * @param customerBrokerContractPurchase
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            CustomerBrokerContractPurchase customerBrokerContractPurchase){
-        UUID transactionId=UUID.randomUUID();
+            CustomerBrokerContractPurchase customerBrokerContractPurchase) {
+        UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
@@ -990,13 +1022,15 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method returns a complete database table record from a BusinessTransactionRecord
+     *
      * @param record
      * @param businessTransactionRecord
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            BusinessTransactionRecord businessTransactionRecord){
+            BusinessTransactionRecord businessTransactionRecord) {
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getBrokerPublicKey());
@@ -1013,8 +1047,8 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         record.setLongValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME,
                 businessTransactionRecord.getCryptoAmount());
-        CryptoStatus cryptoStatus=businessTransactionRecord.getCryptoStatus();
-        if(cryptoStatus!=null){
+        CryptoStatus cryptoStatus = businessTransactionRecord.getCryptoStatus();
+        if (cryptoStatus != null) {
             record.setStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
                     cryptoStatus.getCode());
@@ -1037,12 +1071,15 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
         return record;
     }
+
     /**
      * This method creates a database table record from a CustomerBrokerContractPurchase object.
      * This record is not complete, is missing the transaction hash,  and the crypto status,
      * this values will after sending the crypto amount, also the timestamp is set at this moment.
+     *
      * @param record
      * @param customerBrokerContractPurchase
+     *
      * @return
      */
     private DatabaseTableRecord buildDatabaseTableRecord(
@@ -1052,7 +1089,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             String walletPublicKey,
             long cryptoAmount) {
 
-        UUID transactionId=UUID.randomUUID();
+        UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
@@ -1084,18 +1121,20 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
     /**
      * This method persists in an existing record in database the transaction UUID from
      * IntraActorCryptoTransactionManager by the contract hash.
+     *
      * @param contractHash
      * @param cryptoTransactionUUID
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
     public void persistsCryptoTransactionUUID(String contractHash,
-                                    UUID cryptoTransactionUUID) throws
+                                              UUID cryptoTransactionUUID) throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
 
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -1103,7 +1142,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setUUIDValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TRANSACTION_ID_COLUMN_NAME,
                     cryptoTransactionUUID);
@@ -1111,21 +1150,21 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_STATUS_COLUMN_NAME,
                     CryptoStatus.PENDING_SUBMIT.getCode());
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantLoadTableToMemoryException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Persisting crypto transaction in database",
                     "There was an unexpected result in database");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,"Getting value from database","Check the cause");
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Getting value from database", "Check the cause");
         }
     }
 
@@ -1134,23 +1173,23 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
+        try {
             updateRecordStatus(contractHash,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
 
-        }catch (CantUpdateRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantUpdateRecordException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Update Contract Transaction Status in database",
                     "There was an unexpected result in database");
-        }catch (Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1161,9 +1200,11 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method update a database record by contract hash.
+     *
      * @param contractHash
      * @param statusColumnName
      * @param newStatus
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantUpdateRecordException
      */
@@ -1173,8 +1214,8 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
 
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
                     contractHash,
@@ -1182,12 +1223,12 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(statusColumnName, newStatus);
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
+        } catch (CantLoadTableToMemoryException exception) {
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    "Updating parameter "+statusColumnName,"");
+                    "Updating parameter " + statusColumnName, "");
         }
     }
 
@@ -1196,31 +1237,31 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             EventStatus eventStatus) throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseEventsTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseEventsTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME,
                     eventId,
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+//            checkDatabaseRecords(records);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantLoadTableToMemoryException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter "+ BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    "Updating parameter " + BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, "");
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1235,8 +1276,8 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             EventStatus eventStatus) throws
             UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseIncomingMoneyTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseIncomingMoneyTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
                     eventId,
@@ -1244,22 +1285,22 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setStringValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
-        }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (CantLoadTableToMemoryException exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
-                    "Updating parameter "+ BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,"");
-        }catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+                    "Updating parameter " + BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME, "");
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(exception,
@@ -1270,35 +1311,42 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method save an incoming new event in database. You can set the event Id with this method
+     *
      * @param eventType
      * @param eventSource
      * @param eventId
+     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource, String eventId) throws CantSaveEventException {
         try {
-            DatabaseTable databaseTable = getDatabaseEventsTable();
-            DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
-            long unixTime = System.currentTimeMillis();
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
-            eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
-            eventRecord.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
-            databaseTable.insertRecord(eventRecord);
+
+            if(!eventExists(eventId)) {
+//                throw new UnexpectedResultReturnedFromDatabaseException("Cant Save New Event Broker Ack Payment Transaction, Event Id exists.");
+
+                DatabaseTable databaseTable = getDatabaseEventsTable();
+                DatabaseTableRecord eventRecord = databaseTable.getEmptyRecord();
+                long unixTime = System.currentTimeMillis();
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId);
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_EVENT_COLUMN_NAME, eventType);
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_SOURCE_COLUMN_NAME, eventSource);
+                eventRecord.setStringValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_STATUS_COLUMN_NAME, EventStatus.PENDING.getCode());
+                eventRecord.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, unixTime);
+                databaseTable.insertRecord(eventRecord);
+            }
 
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
                     exception,
                     "Saving new event.",
                     "Cannot insert a record in Ack Online Payment database");
-        } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -1310,8 +1358,10 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method save an incoming new event in database.
+     *
      * @param eventType
      * @param eventSource
+     *
      * @throws CantSaveEventException
      */
     public void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
@@ -1319,9 +1369,9 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             UUID eventRecordID = UUID.randomUUID();
             saveNewEvent(eventType, eventSource, eventRecordID.toString());
 
-        } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
+
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -1331,9 +1381,30 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
         }
     }
 
+
+    private boolean eventExists(String eventId) throws CantSaveEventException {
+
+        try {
+
+            DatabaseTable table = getDatabaseEventsTable();
+
+            table.addStringFilter(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            return table.getRecords().size() > 0;
+
+        } catch (CantLoadTableToMemoryException em) {
+            throw new CantSaveEventException(em.getMessage(), em, "Broker Ack Online Payment Transaction Event Id Not Exists", "Cant load " + BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_EVENTS_RECORDED_TABLE_NAME + " table in memory.");
+        } catch (Exception e) {
+            throw new CantSaveEventException(e.getMessage(), FermatException.wrapException(e), "Broker Ack Online Payment Transaction Event Id Not Exists", "unknown failure.");
+        }
+
+    }
+
     /**
      * This method save an incoming money event in database. You can set the event Id with this method
+     *
      * @param event
+     *
      * @throws CantSaveEventException
      */
     public void saveIncomingMoneyEvent(IncomingMoneyNotificationEvent event) throws CantSaveEventException {
@@ -1345,11 +1416,11 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             databaseTable.insertRecord(eventRecord);
 
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantSaveEventException(exception, "Saving new event.", "Cannot insert a record in Ack Online Payment database");
-        } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(Plugins.BROKER_ACK_ONLINE_PAYMENT,
+        } catch (Exception exception) {
+            pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantSaveEventException(FermatException.wrapException(exception), "Saving new event.", "Unexpected exception");
         }
@@ -1357,7 +1428,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
-            IncomingMoneyEventWrapper incomingMoneyEventWrapper){
+            IncomingMoneyEventWrapper incomingMoneyEventWrapper) {
 
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_EVENT_ID_COLUMN_NAME,
@@ -1370,8 +1441,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 incomingMoneyEventWrapper.getCryptoAmount());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME,
-                incomingMoneyEventWrapper.getCryptoCurrency().getCode()
-        );
+                incomingMoneyEventWrapper.getCryptoCurrency().getCode());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME,
                 incomingMoneyEventWrapper.getSenderPublicKey());
@@ -1379,27 +1449,32 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
                 EventStatus.PENDING.getCode());
         record.setStringValue(
-                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
-                incomingMoneyEventWrapper.getWalletPublicKey()
-        );
-        record.setLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME,
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_WALLET_PUBLIC_KEY_COLUMN_NAME,
+                incomingMoneyEventWrapper.getWalletPublicKey());
+        record.setLongValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TIMESTAMP_COLUMN_NAME,
                 incomingMoneyEventWrapper.getTimestamp());
-
+        record.setStringValue(
+                BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_TRANSACTION_HASH_COLUMN_NAME,
+                incomingMoneyEventWrapper.getTransactionHash());
         return record;
 
     }
 
     /**
      * This method returns the completion date from database.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public long getCompletionDateByContractHash(
             String contractHash)
             throws UnexpectedResultReturnedFromDatabaseException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
@@ -1407,11 +1482,11 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
+            if (records.isEmpty()) {
                 return 0;
             }
-            checkDatabaseRecords(records);
-            long completionDate=records
+//            checkDatabaseRecords(records);
+            long completionDate = records
                     .get(0)
                     .getLongValue(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
@@ -1425,8 +1500,11 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
 
     /**
      * This method sets the completion date in the database.
+     *
      * @param contractHash
+     *
      * @return
+     *
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
     public void setCompletionDateByContractHash(
@@ -1434,8 +1512,8 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             long completionDate)
             throws UnexpectedResultReturnedFromDatabaseException,
             CantUpdateRecordException {
-        try{
-            DatabaseTable databaseTable=getDatabaseContractTable();
+        try {
+            DatabaseTable databaseTable = getDatabaseContractTable();
             databaseTable.addStringFilter(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
@@ -1443,11 +1521,11 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                     DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
-            if(records.isEmpty()){
-                return ;
+            if (records.isEmpty()) {
+                return;
             }
             checkDatabaseRecords(records);
-            DatabaseTableRecord record=records.get(0);
+            DatabaseTableRecord record = records.get(0);
             record.setLongValue(
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME,

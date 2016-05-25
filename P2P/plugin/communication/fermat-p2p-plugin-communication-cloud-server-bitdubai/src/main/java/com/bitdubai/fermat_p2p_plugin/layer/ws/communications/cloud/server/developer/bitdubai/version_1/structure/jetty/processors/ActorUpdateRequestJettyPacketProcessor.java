@@ -94,7 +94,7 @@ public class ActorUpdateRequestJettyPacketProcessor extends FermatJettyPacketPro
             LOG.info("Identity = " + platformComponentProfileToUpdate.getIdentityPublicKey());
             LOG.info("Alias    = " + platformComponentProfileToUpdate.getAlias());
             LOG.info("Name     = " + platformComponentProfileToUpdate.getName());
-            LOG.info("Extra     = " + platformComponentProfileToUpdate.getExtraData());
+            //LOG.info("Extra     = " + platformComponentProfileToUpdate.getExtraData());
             LOG.info("Type     = " + platformComponentProfileToUpdate.getPlatformComponentType());
             LOG.info("NSType   = " + platformComponentProfileToUpdate.getNetworkServiceType());
 

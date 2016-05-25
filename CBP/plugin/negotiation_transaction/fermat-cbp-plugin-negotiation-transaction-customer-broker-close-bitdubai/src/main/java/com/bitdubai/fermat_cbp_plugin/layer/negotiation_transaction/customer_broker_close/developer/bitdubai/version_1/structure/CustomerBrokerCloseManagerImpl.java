@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantCreateCustomerBrokerContractPurchaseException;
@@ -16,13 +15,13 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.exceptions.CantGetListCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerClose;
 import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_close.interfaces.CustomerBrokerCloseManager;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerClosePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantCloseSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.List;
@@ -57,13 +56,10 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
     /*Represent Wallet Manager*/
     private WalletManagerManager                                    walletManagerManager;
 
-    /*Represent the Error Manager*/
-    private ErrorManager                                            errorManager;
+    /*Represent the NegotiationTransactionCustomerBrokerClosePluginRoot*/
+    private NegotiationTransactionCustomerBrokerClosePluginRoot     pluginRoot;
 
-    /*Represent the Plugins Version*/
-    private PluginVersionReference                                  pluginVersionReference;
-
-    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+    private IntraWalletUserIdentityManager                          intraWalletUserIdentityManager;
 
     public CustomerBrokerCloseManagerImpl(
             CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
@@ -72,9 +68,8 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             CryptoAddressBookManager                                cryptoAddressBookManager,
             CryptoVaultManager                                      cryptoVaultManager,
             WalletManagerManager                                    walletManagerManager,
-            ErrorManager                                            errorManager,
-            PluginVersionReference                                  pluginVersionReference,
-            IntraWalletUserIdentityManager intraWalletUserIdentityManager
+            NegotiationTransactionCustomerBrokerClosePluginRoot     pluginRoot,
+            IntraWalletUserIdentityManager                          intraWalletUserIdentityManager
     ){
         this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
         this.customerBrokerPurchaseNegotiationManager               = customerBrokerPurchaseNegotiationManager;
@@ -82,9 +77,8 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
         this.cryptoAddressBookManager                               = cryptoAddressBookManager;
         this.cryptoVaultManager                                     = cryptoVaultManager;
         this.walletManagerManager                                   = walletManagerManager;
-        this.errorManager                                           = errorManager;
-        this.pluginVersionReference                                 = pluginVersionReference;
-        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+        this.pluginRoot                                             = pluginRoot;
+        this.intraWalletUserIdentityManager                         = intraWalletUserIdentityManager;
     }
 
     @Override
@@ -101,16 +95,16 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
                     cryptoAddressBookManager,
                     cryptoVaultManager,
                     walletManagerManager,
-                    errorManager,
-                    pluginVersionReference,intraWalletUserIdentityManager
+                    pluginRoot,
+                    intraWalletUserIdentityManager
             );
             customerBrokerClosePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
         } catch (CantClosePurchaseNegotiationTransactionException e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCustomerBrokerPurchaseNegotiationException(e.getMessage(),e, CantCreateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCustomerBrokerPurchaseNegotiationException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerContractPurchaseException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
@@ -130,16 +124,16 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
                     cryptoAddressBookManager,
                     cryptoVaultManager,
                     walletManagerManager,
-                    errorManager,
-                    pluginVersionReference,intraWalletUserIdentityManager
+                    pluginRoot,
+                    intraWalletUserIdentityManager
             );
             customerBrokerCloseSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 
         } catch (CantCloseSaleNegotiationTransactionException e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCustomerBrokerSaleNegotiationException(e.getMessage(),e, CantCreateCustomerBrokerContractSaleException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCreateCustomerBrokerSaleNegotiationException(e.getMessage(), FermatException.wrapException(e), CantCreateCustomerBrokerContractSaleException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
@@ -154,10 +148,10 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             return customerBrokerCloseNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerCloseNegotiationTranasction(transactionId);
 
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, CantGetCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantGetCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 
@@ -172,10 +166,10 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
            return customerBrokerCloseNegotiationTransactionDatabaseDao.getAllRegisterCustomerBrokerCloseNegotiationTranasction();
 
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetListCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), e, CantGetListCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET LIST CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetListCustomerBrokerCloseNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantGetListCustomerBrokerCloseNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR GET LIST CUSTOMER BROKER CLOSE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         }
 

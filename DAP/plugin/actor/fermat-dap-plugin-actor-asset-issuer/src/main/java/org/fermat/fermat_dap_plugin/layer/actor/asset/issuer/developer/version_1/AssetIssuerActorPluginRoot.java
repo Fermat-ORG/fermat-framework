@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -76,8 +77,8 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.redeem_point.in
 import org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.event_handlers.ActorAssetIssuerCompleteRegistrationNotificationEventHandler;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantAddPendingAssetIssuerException;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.structure.AssetIssuerActorDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 
@@ -89,6 +90,12 @@ import java.util.Random;
 /**
  * Created by Nerio on 09/09/15.
  */
+@PluginInfo(difficulty = PluginInfo.Dificulty.MEDIUM,
+        maintainerMail = "nerioindriago@gmail.com",
+        createdBy = "nindriago",
+        layer = Layers.ACTOR,
+        platform = Platforms.DIGITAL_ASSET_PLATFORM,
+        plugin = Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR)
 public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         ActorAssetIssuerManager,
         DatabaseManagerForDevelopers {
@@ -102,9 +109,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -164,7 +168,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             //testGenerateAndInitializeWatchOnlyVault();
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR);
         }
     }
@@ -186,6 +190,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                 return assetIssuerActorDao.getActorByPublicKey(actorPublicKey);
             }
         } catch (CantGetAssetIssuerActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "Cant Get Actor Asset Issuer from Data Base", null);
         }
     }
@@ -255,10 +260,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                 System.out.println("***************************************************************");
             }
         } catch (CantAddPendingAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER", e, "", "");
         } catch (CantGetAssetIssuerActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetIssuerException("CAN'T GET ACTOR ASSET ISSUER", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER unknow Cause", FermatException.wrapException(e), "", "");
         }
     }
@@ -268,6 +276,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             assetIssuerActorDao.createNewAssetIssuerRegisterInNetworkServiceByList(actorAssetIssuers);
         } catch (CantAddPendingAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetIssuerException("CAN'T ADD NEW ACTOR ASSET ISSUER REGISTERED", e, "", "");
         }
     }
@@ -286,6 +295,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             actorAssetIssuer = this.assetIssuerActorDao.getActorAssetIssuer();
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("", FermatException.wrapException(e), "There is a problem I can't identify.", null);
         }
 
@@ -304,8 +314,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             else
                 return DAPConnectionState.ERROR_UNKNOWN;
         } catch (CantGetAssetIssuerActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("CAN'T GET ACTOR ASSET ISSUER STATE", e, "Error get database info", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("CAN'T GET ACTOR ASSET ISSUER STATE", FermatException.wrapException(e), "", "");
         }
     }
@@ -317,6 +329,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.assetIssuerActorDao.getAllAssetIssuerActorRegistered();
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantGetAssetIssuersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET ISSUER REGISTERED ACTOR", e, "", "");
         }
 
@@ -329,6 +342,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.assetIssuerActorDao.getAllAssetIssuerActorConnected();
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantGetAssetIssuersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
 
@@ -342,6 +356,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             list = this.assetIssuerActorDao.getAllAssetIssuerActorConnectedWithExtendedpk();
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantGetAssetIssuersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("CAN'T GET ASSET USER ACTORS CONNECTED WITH CRYPTOADDRESS ", e, "", "");
         }
 
@@ -359,8 +374,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                         actorAssetRedeemPoint);
                 assetRedeemPointActorNetworkServiceManager.sendMessage(dapMessage);
             } catch (CantSendMessageException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantConnectToActorAssetRedeemPointException("CAN'T SEND MESSAGE TO ACTOR ASSET REDEEM POINT", e, "", "");
             } catch (CantSetObjectException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }
@@ -376,6 +393,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             assetIssuerActorDao.updateExtendedPublicKey(issuerPublicKey, extendedPublicKey);
         } catch (CantGetUserDeveloperIdentitiesException | CantLoadTableToMemoryException | CantUpdateRecordException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantUpdateActorAssetIssuerException(e, context, "Probably this issuer pk wasn't registered...");
         }
     }
@@ -386,6 +404,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             assetIssuerActorDao.updateAssetIssuerDAPConnectionStateActorNetworkService(assetIssuerActorDao.getActorByPublicKey(issuerPublicKey), connectionState);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantUpdateAssetIssuerException | CantGetAssetIssuerActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantUpdateActorAssetIssuerException(e, context, "Cant update Connection State of Issuer");
         }
     }
@@ -416,8 +435,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             }
 
         } catch (CantUpdateActorAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
 
@@ -428,8 +449,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {//TODO Probar el estado REGISTERED_LOCALLY
             this.assetIssuerActorDao.updateRegisteredConnectionState(actorAssetIssuerInPublicKey, actorAssetIssuerToAddPublicKey, DAPConnectionState.REGISTERED_ONLINE);
         } catch (CantUpdateActorAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantAcceptActorAssetUserException("CAN'T ACCEPT ACTOR ASSET USER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -439,8 +462,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetIssuerActorDao.updateRegisteredConnectionState(actorAssetIssuerLoggedInPublicKey, actorAssetIssuerToRejectPublicKey, DAPConnectionState.DENIED_LOCALLY);
         } catch (CantUpdateActorAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET ISSUER CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantDenyConnectionActorAssetException("CAN'T DENY ACTOR ASSET ISSUER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -475,8 +500,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 
             }
         } catch (CantUpdateActorAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET USER REQUEST CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateActorAssetReceiveException("CAN'T ADD NEW ACTOR ASSET USER REQUEST CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -486,8 +513,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetIssuerActorDao.updateRegisteredConnectionState(actorAssetUserToCancelPublicKey, actorAssetUserToCancelPublicKey, DAPConnectionState.CANCELLED_LOCALLY);
         } catch (CantUpdateActorAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCancelConnectionActorAssetException("CAN'T CANCEL ACTOR ASSET ISSUER CONNECTION", FermatException.wrapException(e), "", "");
         }
     }
@@ -497,8 +526,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             return this.assetIssuerActorDao.getAllWaitingActorAssetIssuer(actorAssetIssuerLoggedPublicKey, DAPConnectionState.PENDING_LOCALLY, max, offset);
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET ISSUER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET ISSUER ACCEPTED CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
@@ -508,8 +539,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             return this.assetIssuerActorDao.getAllWaitingActorAssetIssuer(actorAssetIssuerLoggedPublicKey, DAPConnectionState.PENDING_REMOTELY, max, offset);
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET ISSUER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET ISSUER PENDING_HIS_ACCEPTANCE CONNECTIONS", FermatException.wrapException(e), "", "");
         }
     }
@@ -519,8 +552,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             return assetIssuerActorDao.getLastNotification(actorAssetIssuerPublicKey);
         } catch (CantGetAssetUserActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET ISSUER LAST NOTIFICATION", e, "Error get database info", "");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T GET ACTOR ASSET ISSUER LAST NOTIFICATION", FermatException.wrapException(e), "", "");
         }
     }
@@ -536,8 +571,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                 assetIssuerActorNetworkServiceManager.registerActorAssetIssuer(actorAssetIssuer);
 
         } catch (CantRegisterActorAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetIssuerException("CAN'T Register Actor Asset Issuer in Actor Network Service", e, "", "");
         } catch (CantGetAssetIssuerActorsException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantRegisterActorAssetIssuerException("CAN'T GET ACTOR ASSET ISSUER", e, "", "");
         }
     }
@@ -552,6 +589,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                     actorAssetIssuer.getActorPublicKey(),
                     DAPConnectionState.REGISTERED_ONLINE);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantUpdateAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
         System.out.println("***************************************************************");
@@ -568,10 +606,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 //        }
 //    }
 
-    private void receiveNewAssetAppropriated(DAPMessage dapMessage) {
-
-    }
-
     private void newRequestExtendedPublicKey(ActorNotification actorNotification) {
         System.out.println("*****Actor Asset Redeem Point Solicita*****");
         System.out.println("Actor Asset Redeem Point Key: " + actorNotification.getActorSenderPublicKey());
@@ -586,6 +620,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             extendedPublicKey = assetVaultManager.getRedeemPointExtendedPublicKey(actorNotification.getActorSenderPublicKey());
 
         } catch (CantGetExtendedPublicKeyException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             /**
              * if there was an error and we coulnd't get the ExtendedPublicKey, then we will send a null public Key
              * and this will be handle by the Redeem Point.
@@ -602,6 +637,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             try {
                 monitorAgent.start();
             } catch (CantStartAgentException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 /**
                  * If there was a problem, I will continue.
                  */
@@ -618,6 +654,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 //            } catch (CantSetObjectException e) {
 //                e.printStackTrace();
             } catch (Exception e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }
@@ -640,6 +677,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             try {
                 cryptoAddressBookManager.registerCryptoAddress(cryptoAddress, issuerPublicKey, Actors.DAP_ASSET_ISSUER, reddemPointPublicKey, Actors.DAP_ASSET_REDEEM_POINT, Platforms.DIGITAL_ASSET_PLATFORM, VaultType.WATCH_ONLY_VAULT, "WatchOnlyVault", "", ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET);
             } catch (CantRegisterCryptoAddressBookRecordException e) {
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 e.printStackTrace();
             }
         }
@@ -677,7 +715,7 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                     break;
             }
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_ISSUER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             e.printStackTrace();
         }
     }
@@ -704,9 +742,9 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         } catch (Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empry list
         return Collections.EMPTY_LIST;
@@ -720,7 +758,6 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
 //            String userPublicKey = this.deviceUserManager.getLoggedInDeviceUser().getActorPublicKey();
             this.actorAssetIssuerMonitorAgent = new org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.agent.ActorAssetIssuerMonitorAgent(this.eventManager,
                     this.pluginDatabaseSystem,
-                    this.errorManager,
                     this.pluginId,
                     this.assetIssuerActorNetworkServiceManager,
                     this.assetIssuerActorDao,
@@ -781,8 +818,10 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
         try {
             this.assetIssuerActorDao.updateOfflineIssuerRegisterInNetworkService(actorAssetIssuers);
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantGetAssetIssuersListException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("CAN'T GET LIST ASSET ISSUER REGISTERED", e, "", "");
         } catch (org.fermat.fermat_dap_plugin.layer.actor.asset.issuer.developer.version_1.exceptions.CantUpdateAssetIssuerException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetAssetIssuerActorsException("CAN'T UPDATE ACTOR ASSET ISSUER REGISTERED", e, "", "");
         }
     }
@@ -876,10 +915,13 @@ public class AssetIssuerActorPluginRoot extends AbstractPlugin implements
                 assetIssuerActorNetworkServiceManager.confirmActorAssetNotification(notification.getId());
             }
         } catch (CantAcceptActorAssetUserException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Accepted");
         } catch (CantDenyConnectionActorAssetException e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", e, "", "Error Update Contact State to Denied");
         } catch (Exception e) {
+            reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetActorAssetNotificationException("CAN'T PROCESS NETWORK SERVICE NOTIFICATIONS", FermatException.wrapException(e), "", "");
         }
     }

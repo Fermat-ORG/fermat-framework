@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -24,9 +24,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.CloseContractPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.exceptions.CantInitializeCloseContractBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +38,19 @@ public class CloseContractBusinessTransactionDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId            ;
-    private final ErrorManager errorManager;
+    private final CloseContractPluginRoot pluginRoot;
 
     private Database database;
 
     public CloseContractBusinessTransactionDao(final PluginDatabaseSystem pluginDatabaseSystem,
                                               final UUID                 pluginId           ,
                                               final Database database,
-                                               final ErrorManager errorManager) {
+                                               final CloseContractPluginRoot pluginRoot) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.database = database;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
     }
 
     public void initialize() throws CantInitializeCloseContractBusinessTransactionDatabaseException {
@@ -387,19 +386,13 @@ public class CloseContractBusinessTransactionDao {
             databaseTable.updateRecord(record);
 
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating databaseTableRecord from a BusinessTransactionRecord",
                     "Unexpected results in database");
         }catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Getting value from database",
@@ -509,18 +502,12 @@ public class CloseContractBusinessTransactionDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CLOSE_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }

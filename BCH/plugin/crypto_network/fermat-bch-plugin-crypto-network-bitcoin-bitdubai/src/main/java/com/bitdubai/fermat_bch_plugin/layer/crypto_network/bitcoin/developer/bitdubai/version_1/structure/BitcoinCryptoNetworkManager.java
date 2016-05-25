@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
@@ -40,8 +39,8 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
 
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.google.common.collect.Lists;
 
@@ -103,7 +102,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
-    Broadcaster broadcaster;
+
+
 
     /**
      * Constructor
@@ -111,21 +111,18 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @param pluginFileSystem
      * @param pluginId
      * @param errorManager
-     * @param broadcaster
      * @param bitcoinCryptoNetworkDatabaseDao
      */
     public BitcoinCryptoNetworkManager(EventManager eventManager,
                                        PluginFileSystem pluginFileSystem,
                                        UUID pluginId,
                                        ErrorManager errorManager,
-                                       Broadcaster broadcaster,
                                        BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
         this.eventManager = eventManager;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
         this.WALLET_PATH = pluginFileSystem.getAppPath();
-        this.broadcaster = broadcaster;
         this.dao = bitcoinCryptoNetworkDatabaseDao;
 
         runningAgents = new HashMap<>();
@@ -166,6 +163,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 wallet = getWallet(blockchainNetworkType, keyList);
             } catch (UnreadableWalletException e) {
                 CantStartAgentException exception = new CantStartAgentException(e, "Unable to load wallet from file for network " + blockchainNetworkType.getCode(), "IO error");
+
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 e.printStackTrace();
                 throw exception;
@@ -206,6 +204,9 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  */
                 if (areNewKeysAdded(wallet, keyList)) {
                     wallet.importKeys(keyList);
+                    for (ECKey key : keyList){
+                        wallet.addWatchedAddress(key.toAddress(context.getParams()));
+                    }
                     try {
                         wallet.saveToFile(walletFile);
                     } catch (IOException e) {
@@ -239,7 +240,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao);;
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);;
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -249,7 +250,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, dao, eventManager);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
@@ -317,8 +318,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         Wallet wallet = null;
         File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        // will get the context for this wallet.
-        Context context = new Context(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
+        final NetworkParameters NETWORK_PARAMETER = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
@@ -327,15 +327,22 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             if (monitor != null)
                 wallet = monitor.getWallet();
             else
-
                 wallet = Wallet.loadFromFile(walletFile);
 
 
             return wallet;
             }
          else {
+            // will get the context for this wallet.
+            Context context = new Context(NETWORK_PARAMETER);
+
             wallet = new Wallet(context);
             wallet.importKeys(keyList);
+
+            for (ECKey key : keyList){
+                wallet.addWatchedAddress(key.toAddress(NETWORK_PARAMETER));
+            }
+
 
             /**
              * Will set the autosave information and save it.

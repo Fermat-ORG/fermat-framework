@@ -1,5 +1,5 @@
 <!-- all links tested by laderuner -->
-![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/00135845a9d1fbe3696c98454834efbd7b4329fb/MediaKit/Logotype/fermat_logo_3D/Fermat_logo_v2_readme_1024x466.png "Fermat Logo")
 
 # *Fermat*
 *A Decentralized, Collaborative, Blockchain-Enabled, Modular App Platform To Unleash the P2P “Internet of People” Economy*
@@ -14,21 +14,20 @@ The reason is that digital information can be cloned, and if digital cash could 
 
 We firmly believe that the next decade will witness governments issuing digital currency based on blockchain technology. We expect paper money is going to disappear within the next 5 to 10 years. Thus a strong consumer demand for digital wallets will inevitably emerge.
 
-In order to meet this demand thousands of wallets should be available. Wallets will evolve into sophisticated financial applications. Such a wide variety of wallets / financial applications are indispensable owing to the diversity characterizing the world's population and its financial needs. In fact most of current mobile APPs will turn into financial APPs once Fermat provides them with the ability to easily handle digital cash and digital assets. 
+Wallets that will evolve into sophisticated financial applications to serve the diverse needs of the world's population. To faciliate this Fermat provides APPs with the ability to easily handle digital cash and digital assets.
 
 #### The Master Plan
 
-Fermat is a master plan to avoid getting into that future by waiting for independent entrepreneurs to build each of these wallets and financial apps one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these APPs. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create niche wallets and financial APPs on top of its shared infrastructure.
+Fermat is a master plan to avoid getting into that future by waiting for independent entrepreneurs to build each of these APPSs one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these APPs. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create white label blockchain-enabled APPs on top of its shared infrastructure.
 
-Fermat offers a new approach, allowing us to achieve large-scale and systematic cooperation in an entirely distributed and decentralized manner. Our goal is to move from competition to collaboration by creating the infraestructure needed to decentralize not only software development, but also analysis and design. 
+Fermat offers a new approach, allowing us to achieve large-scale and systematic cooperation in an entirely distributed and decentralized manner. Our goal is to move from competition to collaboration by creating the infraestructure needed to decentralize not only software development, but also analysis and design, and adding new layers on top, also to enable a true P2P economy where third parties are optional. This will evolve the actual web of servers into an Internet of People.
 
 #### The System
 The Fermat System has three major architectural pillars: 
 
-1. *The Network*: a peer-to-peer infrastructure that allows data flows between Fermat apps without going through central servers
-2. *The Framework*: the technology that runs the collection of reusable atomic components that can be added to or drawn upon for use in Fermat-powered applications (apps)
-3. *The Ecosystem of Fermat Apps*: where end users interact with each other. These apps are made up of dozens of components
-
+1. *The P2P Network*: a peer-to-peer infrastructure that allows data flows between Fermat apps without going through central servers
+2. *The Component Framework*: the technology that runs the collection of reusable atomic components that can be added to or drawn upon for use in Fermat-powered applications (apps)
+3. *The Ecosystem of Fermat Apps*: where end users interact with each other. Fermat apps are white label P2P apps that allow customization, and are made up of dozens of components.
 
 #### The Network
 
@@ -57,7 +56,7 @@ The Fermat system is downloaded as a whole, but each Fermat App is activated whe
 
 * To act as a local back-end not only for native-Fermat-APPs and wallets, but also for any other mobile app.
 
-* To be a full-stack Framework in the development of financial applications making them unbannable, reliable and not easy to hack as they are fully decentralized. 
+* To be a full-stack Framework (an extension of actual OS) in the development of P2P block-chain enabled APPS making them unbannable, reliable and not easy to hack as they are fully decentralized. 
 
 
 #### Open Source
@@ -72,7 +71,7 @@ We believe the open source community collectively has more influence than any of
 
 We are asking each of you to help lead the way. Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology that people need to become financially independent, have access from any country to financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in true financial freedom.
 
-We want to hear from you on how we can build this network. We are by now about 100+ developers / designers / academics / entrepreneurs working full time on Fermat and our goal is to reach 500. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/Fermat-ORG/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
+We want to hear from you on how we can build this network. We are already dozens of developers / designers / academics / entrepreneurs collaborating full and part time on Fermat, and every day a new members coming on board. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/Fermat-ORG/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
 
 We believe in people with passion who are crazy enough to think they can change the world. With a lot of hard work, we believe we can accomplish this.
 
@@ -260,8 +259,7 @@ For instructions on how to install and run the source code, see the [Installatio
 
 #### Need Help?
 
-Having problems compiling or running Fermat the first time, or not sure how to use Fermat?  Please
-log into the [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/), and we will help you to fix common problems and find extra help if needed.
+Having problems compiling or running Fermat the first time, or not sure how to use Fermat?  Please contact any of our developers teams at [Dev Teams](https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md)
 
 #### Learn More?
 
@@ -286,7 +284,7 @@ Awesome!
 #### Developers
 
 If you are a developer and want to contribute either from a bug-fix up to building a whole financial APP on top of Fermat, please read the [Contributing Guide](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md),
-then learn how to pull the repo and hack on Fermat. Then say hi at our [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/) or you can also find us on [Facebook](https://www.facebook.com/FermatOrg/). 
+then learn how to pull the repo and hack on Fermat. Or you can also find us on [Facebook](https://www.facebook.com/FermatOrg/). 
 
 #### Others
 

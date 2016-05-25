@@ -19,15 +19,13 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.SettingsStockManagementMerchandisesAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockDestockAdapter;
@@ -35,12 +33,10 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.common.dialogs.CreateR
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
-import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
+import static com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
 
 
 /**
@@ -53,9 +49,6 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     private int spreadValue;
     private boolean automaticRestock;
-    private List<InstalledWallet> stockWallets;
-    private Map<String, FiatCurrency> bankCurrencies;
-    private Map<String, String> bankAccounts;
     private List<CryptoBrokerWalletAssociatedSetting> associatedSettings;
     private CryptoBrokerWalletSettingSpread spreadSettings;
     // Fermat Managers
@@ -75,9 +68,6 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         spreadValue = 0;
         automaticRestock = false;
         associatedSettings = new ArrayList<>();
-        stockWallets = new ArrayList<>();
-        bankCurrencies = new HashMap<>();
-        bankAccounts = new HashMap<>();
 
         try {
             moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
@@ -86,8 +76,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        DISABLES_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, ex);
         }
         try {
             System.out.println("associatedSettings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
@@ -105,7 +94,6 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                         ex);
             }
         }
-
     }
 
     @Override

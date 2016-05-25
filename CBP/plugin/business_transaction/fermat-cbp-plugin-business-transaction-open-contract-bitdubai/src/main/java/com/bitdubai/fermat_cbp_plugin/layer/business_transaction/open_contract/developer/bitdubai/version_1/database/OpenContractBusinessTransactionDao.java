@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -20,13 +20,12 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatu
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.OpenContractPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CannotFindKeyValueException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.exceptions.CantInitializeOpenContractBusinessTransactionDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,19 +38,19 @@ public class OpenContractBusinessTransactionDao {
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId            ;
-    private ErrorManager errorManager;
+    private OpenContractPluginRoot pluginRoot;
     private Database database;
 
     public OpenContractBusinessTransactionDao(
             final PluginDatabaseSystem pluginDatabaseSystem,
             final UUID pluginId,
             final Database database,
-            final ErrorManager errorManager) {
+            final OpenContractPluginRoot pluginRoot) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId;
         this.database             = database;
-        this.errorManager         = errorManager;
+        this.pluginRoot = pluginRoot;
     }
 
     public void initialize() throws CantInitializeOpenContractBusinessTransactionDatabaseException {
@@ -73,28 +72,28 @@ public class OpenContractBusinessTransactionDao {
                 );
 
             } catch (CantCreateDatabaseException f) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
+                pluginRoot.reportError(
+                        
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         f);
                 throw new CantInitializeOpenContractBusinessTransactionDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, f, "", "There is a problem and i cannot create the database.");
             } catch (Exception z) {
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.OPEN_CONTRACT,
+                pluginRoot.reportError(
+                        
                         UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                         z);
                 throw new CantInitializeOpenContractBusinessTransactionDatabaseException(CantInitializeOpenContractBusinessTransactionDatabaseException.DEFAULT_MESSAGE, z, "", "Generic Exception.");
             }
 
         } catch (CantOpenDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeOpenContractBusinessTransactionDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInitializeOpenContractBusinessTransactionDatabaseException(CantInitializeOpenContractBusinessTransactionDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
@@ -141,16 +140,16 @@ public class OpenContractBusinessTransactionDao {
                     contractType);
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInsertRecordException(CantInsertRecordException.DEFAULT_MESSAGE,
                     e,
                     "Cant Insert Recort in persist Contract Record","Check the cause");
         }catch(Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantInsertRecordException(CantCreateDatabaseException.DEFAULT_MESSAGE,
@@ -168,8 +167,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_XML_COLUMN_NAME);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -184,8 +183,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_NEGOTIATION_ID_COLUMN_NAME);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -197,8 +196,8 @@ public class OpenContractBusinessTransactionDao {
             String stringFromDatabase=getContractXML(contractHash);
             return stringFromDatabase!=null;
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -210,8 +209,8 @@ public class OpenContractBusinessTransactionDao {
             ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
             return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_CONFIRMATION.getCode());
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -223,8 +222,8 @@ public class OpenContractBusinessTransactionDao {
             ContractTransactionStatus contractTransactionStatus=getContractTransactionStatus(contractHash);
             return contractTransactionStatus.getCode().equals(ContractTransactionStatus.PENDING_RESPONSE.getCode());
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -241,8 +240,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -250,8 +249,8 @@ public class OpenContractBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -268,8 +267,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
             return ContractTransactionStatus.getByCode(stringContractTransactionStatus);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -277,8 +276,8 @@ public class OpenContractBusinessTransactionDao {
                     "Getting the contract transaction status",
                     "Invalid code in ContractTransactionStatus enum");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -293,8 +292,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_ID_COLUMN_NAME);
             return UUID.fromString(transactionId);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -310,8 +309,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_TYPE_COLUMN_NAME);
             return ContractType.getByCode(contractTypeCode);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(
@@ -319,8 +318,8 @@ public class OpenContractBusinessTransactionDao {
                     "Getting Contract Type from database",
                     "The contractType in database is invalid");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -373,16 +372,16 @@ public class OpenContractBusinessTransactionDao {
                     .getStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_EVENT_COLUMN_NAME);
             return value;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",
                     "Cannot load the database table");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -420,8 +419,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -435,8 +434,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -450,8 +449,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -465,8 +464,8 @@ public class OpenContractBusinessTransactionDao {
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -483,8 +482,8 @@ public class OpenContractBusinessTransactionDao {
 //
 //
 //        }catch (Exception e){
-//            errorManager.reportUnexpectedPluginException(
-//                    Plugins.OPEN_CONTRACT,
+//            pluginRoot.reportError(
+//                    
 //                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
 //                    e);
 //            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -550,16 +549,16 @@ public class OpenContractBusinessTransactionDao {
             }
             return eventTypeList;
         } catch (CantLoadTableToMemoryException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantGetContractListException(e,
                     "Getting events in EventStatus.PENDING",
                     "Cannot load the table into memory");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -582,16 +581,16 @@ public class OpenContractBusinessTransactionDao {
                     eventStatus.getCode());
             databaseTable.updateRecord(record);
         }  catch (CantLoadTableToMemoryException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new UnexpectedResultReturnedFromDatabaseException(
                     exception,
                     "Updating parameter "+OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
         }catch (Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
@@ -668,8 +667,8 @@ public class OpenContractBusinessTransactionDao {
             //LOG.info("record:" + eventRecord.getStringValue(OpenContractBusinessTransactionDatabaseConstants.OPEN_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME));
             
         } catch (CantInsertRecordException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(
@@ -677,8 +676,8 @@ public class OpenContractBusinessTransactionDao {
                     "Saving new event.",
                     "Cannot insert a record in Open Contract database");
         } catch(Exception exception){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
+            pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(

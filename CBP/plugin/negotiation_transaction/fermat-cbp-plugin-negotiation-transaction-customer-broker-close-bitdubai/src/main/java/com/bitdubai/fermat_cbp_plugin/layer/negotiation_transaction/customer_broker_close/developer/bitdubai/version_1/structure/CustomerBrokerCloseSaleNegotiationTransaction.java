@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -11,13 +10,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantUpdateCustomerBrokerSaleException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.NegotiationTransactionCustomerBrokerClosePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.database.CustomerBrokerCloseNegotiationTransactionDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantCloseSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantReceiveConfirmNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import java.util.UUID;
@@ -45,13 +44,10 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
     /*Represent Negotiation Crypto Address*/
     private CustomerBrokerCloseNegotiationCryptoAddress             negotiationCryptoAdreess;
 
-    /*Represent the Error Manager*/
-    private ErrorManager                                            errorManager;
+    /*Represent the NegotiationTransactionCustomerBrokerClosePluginRoot*/
+    private NegotiationTransactionCustomerBrokerClosePluginRoot     pluginRoot;
 
-    /*Represent the Plugins Version*/
-    private PluginVersionReference                                  pluginVersionReference;
-
-    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+    private IntraWalletUserIdentityManager                          intraWalletUserIdentityManager;
 
     public CustomerBrokerCloseSaleNegotiationTransaction(
             CustomerBrokerSaleNegotiationManager                    customerBrokerSaleNegotiationManager,
@@ -59,18 +55,16 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             CryptoAddressBookManager                                cryptoAddressBookManager,
             CryptoVaultManager                                      cryptoVaultManager,
             WalletManagerManager                                    walletManagerManager,
-            ErrorManager                                            errorManager,
-            PluginVersionReference                                  pluginVersionReference,
-            IntraWalletUserIdentityManager intraWalletUserIdentityManager
+            NegotiationTransactionCustomerBrokerClosePluginRoot     pluginRoot,
+            IntraWalletUserIdentityManager                          intraWalletUserIdentityManager
     ){
             this.customerBrokerSaleNegotiationManager                   = customerBrokerSaleNegotiationManager;
             this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
             this.cryptoAddressBookManager                               = cryptoAddressBookManager;
             this.cryptoVaultManager                                     = cryptoVaultManager;
             this.walletManagerManager                                   = walletManagerManager;
-            this.errorManager                                           = errorManager;
-            this.pluginVersionReference                                 = pluginVersionReference;
-            this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
+            this.pluginRoot                                           = pluginRoot;
+            this.intraWalletUserIdentityManager                         = intraWalletUserIdentityManager;
     }
 
     //PROCESS THE NEW SALE NEGOTIATION TRANSACTION
@@ -95,11 +89,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             System.out.println(" - Clauses = \n" + changeClause);
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                this.cryptoAddressBookManager,
-                this.cryptoVaultManager,
-                this.walletManagerManager,
-                this.errorManager,
-                this.pluginVersionReference,intraWalletUserIdentityManager
+                cryptoAddressBookManager,
+                cryptoVaultManager,
+                walletManagerManager,
+                pluginRoot,
+                intraWalletUserIdentityManager
             );
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.CUSTOMER_PAYMENT_METHOD)) {
@@ -122,13 +116,13 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCloseSaleNegotiationTransactionException(e.getMessage(),e, CantCloseSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCloseSaleNegotiationTransactionException(e.getMessage(),e, CantCloseSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCloseSaleNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCloseSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         }
 
@@ -138,11 +132,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
         try {
 
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                this.cryptoAddressBookManager,
-                this.cryptoVaultManager,
-                this.walletManagerManager,
-                this.errorManager,
-                this.pluginVersionReference,intraWalletUserIdentityManager
+                cryptoAddressBookManager,
+                cryptoVaultManager,
+                walletManagerManager,
+                pluginRoot,
+                intraWalletUserIdentityManager
             );
 
             System.out.print("\n --- Negotiation Mock XML Date" +
@@ -185,13 +179,13 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             );
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCloseSaleNegotiationTransactionException(e.getMessage(),e, CantCloseSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR CREATE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (CantRegisterCustomerBrokerCloseNegotiationTransactionException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCloseSaleNegotiationTransactionException(e.getMessage(),e, CantCloseSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR REGISTER CUSTOMER BROKER SALE NEGOTIATION TRANSACTION, UNKNOWN FAILURE.");
         } catch (Exception e){
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCloseSaleNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantCloseSaleNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR PROCESS CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }
@@ -203,11 +197,11 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
 
             System.out.print("\n**** 28.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - RECEIVE CONFIRM PURCHASE  ****\n");
             negotiationCryptoAdreess = new CustomerBrokerCloseNegotiationCryptoAddress(
-                this.cryptoAddressBookManager,
-                this.cryptoVaultManager,
-                this.walletManagerManager,
-                this.errorManager,
-                this.pluginVersionReference,intraWalletUserIdentityManager
+                cryptoAddressBookManager,
+                cryptoVaultManager,
+                walletManagerManager,
+                pluginRoot,
+                intraWalletUserIdentityManager
             );
 
             String changeClause = "";
@@ -229,10 +223,10 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
 
         } catch (CantUpdateCustomerBrokerSaleException e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantReceiveConfirmNegotiationTransactionException(e.getMessage(), e, CantReceiveConfirmNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantReceiveConfirmNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), CantReceiveConfirmNegotiationTransactionException.DEFAULT_MESSAGE, "ERROR RECEIVE CUSTOMER BROKER SALE NEGOTIATION, UNKNOWN FAILURE.");
         }
     }

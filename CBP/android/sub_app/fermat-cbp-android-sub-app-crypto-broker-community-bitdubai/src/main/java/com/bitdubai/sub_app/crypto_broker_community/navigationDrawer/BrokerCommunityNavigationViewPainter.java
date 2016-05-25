@@ -1,17 +1,16 @@
 package com.bitdubai.sub_app.crypto_broker_community.navigationDrawer;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
@@ -20,21 +19,18 @@ import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunit
 
 import java.lang.ref.WeakReference;
 
+
 /**
  * Created by mati on 2015.11.24..
  */
 public class BrokerCommunityNavigationViewPainter implements NavigationViewPainter {
 
     private WeakReference<Context> activity;
-    private ActiveActorIdentityInformation actorIdentity;
     CryptoBrokerCommunitySubAppSession subAppSession;
-    private CryptoBrokerCommunitySubAppModuleManager moduleManager;
 
-    public BrokerCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation actorIdentity, CryptoBrokerCommunitySubAppSession subAppSession) {
-        this.activity = new WeakReference<Context>(activity);
-        this.actorIdentity = actorIdentity;
+    public BrokerCommunityNavigationViewPainter(Context activity, CryptoBrokerCommunitySubAppSession subAppSession) {
+        this.activity = new WeakReference<>(activity);
         this.subAppSession = subAppSession;
-        this.moduleManager = subAppSession.getModuleManager();
 
     }
 
@@ -43,31 +39,25 @@ public class BrokerCommunityNavigationViewPainter implements NavigationViewPaint
         View headerView = null;
 
         try {
-            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentityInformation);
+            final Context context = activity.get();
+            final Object layoutInflaterService = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) layoutInflaterService, context, actorIdentityInformation);
             headerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    try{
-                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity.get(), subAppSession, null);
+                    try {
+                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(context, subAppSession, null);
                         listIdentitiesDialog.setTitle("Connection Request");
                         listIdentitiesDialog.show();
-                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                //chamo olvidate que te haga hacer esto, hay un metodo que se llama invalidate() que lo hace
-                                //activity.recreate();
-                            }
-                        });
-                        listIdentitiesDialog.show();
-                    }catch(Exception e){ }
+                    } catch (Exception ignore) {
+                    }
                 }
             });
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
-        return headerView;
 
+        return headerView;
     }
 
     @Override

@@ -12,9 +12,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.BrokerSubmitOnlineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_online_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOnlineMerchandiseBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     BrokerSubmitOnlineMerchandiseBusinessTransactionDao brokerSubmitOnlineMerchandiseBusinessTransactionDao;
-    private ErrorManager errorManager;
+    private BrokerSubmitOnlineMerchandisePluginRoot pluginRoot;
     /**
      * TransactionService Interface member variables.
      */
@@ -39,21 +39,21 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
     public BrokerSubmitOnlineMerchandiseRecorderService(
             BrokerSubmitOnlineMerchandiseBusinessTransactionDao brokerSubmitOnlineMerchandiseBusinessTransactionDao,
             EventManager eventManager,
-            ErrorManager errorManager) throws CantStartServiceException {
+            BrokerSubmitOnlineMerchandisePluginRoot pluginRoot) throws CantStartServiceException {
         try {
-            this.errorManager = errorManager;
+            this.pluginRoot = pluginRoot;
             setDatabaseDao(brokerSubmitOnlineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(exception,
                     "Cannot set the broker submit online merchandise recorder service",
                     "The database handler is null");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
@@ -83,12 +83,12 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming new Contract Status Update Event Handler CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -106,12 +106,12 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Response CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -145,7 +145,7 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(
@@ -153,7 +153,7 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
                     "Starting the BrokerSubmitOnlineMerchandiseRecorderService",
                     "The BrokerSubmitOnlineMerchandiseRecorderService is probably null");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
@@ -169,8 +169,8 @@ public class    BrokerSubmitOnlineMerchandiseRecorderService implements CBPServi
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(
-                    Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
+                    
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }

@@ -17,6 +17,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.StockTransactionsCryptoMoneyRestockPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyRestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.StockTransactionCryptoMoneyRestockFactory;
@@ -27,8 +28,7 @@ import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.exceptions.CantCreateUnHoldTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.exceptions.CantGetUnHoldTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransactionManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.Date;
 import java.util.Objects;
@@ -45,7 +45,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
 
     private Thread agentThread;
 
-    private final ErrorManager errorManager;
+    private final StockTransactionsCryptoMoneyRestockPluginRoot pluginRoot;
     private final StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager;
     private final CryptoBrokerWalletManager cryptoBrokerWalletManager;
     private final CryptoUnholdTransactionManager cryptoUnholdTransactionManager;
@@ -54,14 +54,14 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
 
     public final int SLEEP_TIME = 5000;
 
-    public StockTransactionsCryptoMoneyRestockMonitorAgent(ErrorManager errorManager,
+    public StockTransactionsCryptoMoneyRestockMonitorAgent(StockTransactionsCryptoMoneyRestockPluginRoot pluginRoot,
                                                            StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager,
                                                            CryptoBrokerWalletManager cryptoBrokerWalletManager,
                                                            CryptoUnholdTransactionManager cryptoUnholdTransactionManager,
                                                            PluginDatabaseSystem pluginDatabaseSystem,
                                                            UUID pluginId) {
 
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.stockTransactionCryptoMoneyRestockManager = stockTransactionCryptoMoneyRestockManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cryptoUnholdTransactionManager = cryptoUnholdTransactionManager;
@@ -148,9 +148,9 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
 //
 //                    doTheMainTask();
 //                } catch (InterruptedException e) {
-//                    errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 //                } catch (Exception e) {
-//                    errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                    pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 //                }
 //
 //            }
@@ -251,23 +251,23 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
                 }
             }
         } catch (CryptoBrokerWalletNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetStockCryptoBrokerWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantAddCreditCryptoBrokerWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (MissingCryptoMoneyRestockDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantCreateUnHoldTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetUnHoldTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
 

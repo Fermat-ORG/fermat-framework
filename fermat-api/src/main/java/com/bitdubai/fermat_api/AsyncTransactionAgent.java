@@ -1,14 +1,12 @@
 package com.bitdubai.fermat_api;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Created by Alejandro Bicelis on 21/1/2016.

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -17,26 +18,25 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cer_api.all_definition.enums.ExchangeRateType;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.ExchangeRateImpl;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
-import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantSaveExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.CurrencyPairHelper;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.HttpReader;
 import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.database.EuropeanCentralBankProviderDao;
 import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.database.EuropeanCentralBankProviderDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cer_plugin.layer.provider.europeancentralbank.developer.bitdubai.version_1.exceptions.CantInitializeEuropeanCentralBankProviderDatabaseException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.json.JSONException;
@@ -49,9 +49,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by Alejandro Bicelis on 11/2/2015.
  */
+@PluginInfo(createdBy = "abicelis", maintainerMail = "abicelis@gmail.com", platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.EUROPEAN_CENTRAL_BANK)
 public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
@@ -59,9 +61,6 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
@@ -102,11 +101,11 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         supportedCurrencyPairs = CurrencyPairHelper.permuteCurrencyList(supported);
 
         try {
-            dao = new EuropeanCentralBankProviderDao(pluginDatabaseSystem, pluginId, errorManager);
+            dao = new EuropeanCentralBankProviderDao(pluginDatabaseSystem, pluginId, this);
             dao.initialize();
             dao.initializeProvider("EuropeanCentralBank");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
@@ -146,29 +145,29 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
     @Override
     public ExchangeRate getCurrentExchangeRate(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
 
-        if(!isCurrencyPairSupported(currencyPair))
+        if (!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
         String url = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode();
         double price = 0;
         String aux;
 
-        try{
+        try {
             JSONObject json = new JSONObject(HttpReader.getHTTPContent(url));
 
             aux = json.getJSONObject("rates").get(currencyPair.getTo().getCode()).toString();
             price = Double.valueOf(aux);
 
-        }catch (JSONException e) {
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"EuropeanCentralBank CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
+        } catch (JSONException e) {
+            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, e, "EuropeanCentralBank CER Provider", "Cant Get exchange rate for" + currencyPair.getFrom().getCode() + "-" + currencyPair.getTo().getCode());
         }
 
 
         ExchangeRateImpl exchangeRate = new ExchangeRateImpl(currencyPair.getFrom(), currencyPair.getTo(), price, price, (new Date().getTime() / 1000));
         try {
             dao.saveCurrentExchangeRate(exchangeRate);
-        }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantSaveExchangeRateException e) {
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -178,19 +177,19 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
 
         long timestamp = calendar.getTimeInMillis() / 1000L;
 
-        if(DateHelper.timestampIsInTheFuture(timestamp))
+        if (DateHelper.timestampIsInTheFuture(timestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided timestamp is in the future");
 
-        if(!isCurrencyPairSupported(currencyPair))
+        if (!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
         ExchangeRate requiredExchangeRate = null;
 
         //Try to find ExchangeRate in database
-        try{
+        try {
             requiredExchangeRate = dao.getDailyExchangeRateFromDate(currencyPair, DateHelper.getStandarizedTimestampFromTimestamp(timestamp));
             return requiredExchangeRate;
-        }catch(CantGetExchangeRateException e) {
+        } catch (CantGetExchangeRateException e) {
 
             String stdDateStr = DateHelper.getDateStringFromTimestamp(timestamp);
             String url = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode() + "&date=" + stdDateStr;
@@ -212,7 +211,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             try {
                 dao.saveDailyExchangeRate(requiredExchangeRate);
             } catch (CantSaveExchangeRateException exx) {
-                errorManager.reportUnexpectedPluginException(Plugins.EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exx);
+                this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exx);
             }
         }
 
@@ -225,10 +224,10 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         long startTimestamp = startCalendar.getTimeInMillis() / 1000L;
         long endTimestamp = endCalendar.getTimeInMillis() / 1000L;
 
-        if(DateHelper.timestampIsInTheFuture(startTimestamp))
+        if (DateHelper.timestampIsInTheFuture(startTimestamp))
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE, "Provided startTimestamp is in the future");
 
-        if(!isCurrencyPairSupported(currencyPair))
+        if (!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
         long stdStartTimestamp = DateHelper.getStandarizedTimestampFromTimestamp(startTimestamp);
@@ -237,11 +236,11 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         int requiredNumberOfDays = DateHelper.calculateDaysBetweenTimestamps(startTimestamp, endTimestamp);
 
         //Try to find ExchangeRates in database
-        try{
+        try {
             requiredExchangeRates = dao.getDailyExchangeRatesForPeriod(currencyPair, stdStartTimestamp, stdEndTimestamp);
-            if(requiredExchangeRates.size() == requiredNumberOfDays)
+            if (requiredExchangeRates.size() == requiredNumberOfDays)
                 return requiredExchangeRates;
-        }catch(CantGetExchangeRateException e) {/*Cant get them, continue*/}
+        } catch (CantGetExchangeRateException e) {/*Cant get them, continue*/}
 
         //IF ExchangeRate not in database
 
@@ -250,8 +249,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         String baseUrl = "http://api.fixer.io/latest?base=" + currencyPair.getFrom().getCode() + "&symbols=" + currencyPair.getTo().getCode() + "&date=";
         double price;
         String aux;
-        while(loopTimestamp <= endTimestamp)
-        {
+        while (loopTimestamp <= endTimestamp) {
             try {
                 JSONObject json = new JSONObject(HttpReader.getHTTPContent(baseUrl + DateHelper.getDateStringFromTimestamp(loopTimestamp)));
                 aux = json.getJSONObject("rates").get(currencyPair.getTo().getCode()).toString();
@@ -266,7 +264,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
         try {
             dao.updateDailyExchangeRateTable(currencyPair, requiredExchangeRates);
         } catch (CantSaveExchangeRateException exx) {
-            errorManager.reportUnexpectedPluginException(Plugins.EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exx);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exx);
         }
 
         return requiredExchangeRates;
@@ -275,12 +273,11 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
 
     @Override
     public Collection<ExchangeRate> getQueriedExchangeRates(CurrencyPair currencyPair) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
-        if(!isCurrencyPairSupported(currencyPair))
+        if (!isCurrencyPairSupported(currencyPair))
             throw new UnsupportedCurrencyPairException();
 
         return dao.getQueriedExchangeRateHistory(ExchangeRateType.CURRENT, currencyPair);
     }
-
 
 
     /*
@@ -306,7 +303,7 @@ public class ProviderEuropeanCentralBankPluginRoot extends AbstractPlugin implem
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeEuropeanCentralBankProviderDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.EUROPEAN_CENTRAL_BANK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

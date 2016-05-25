@@ -2,19 +2,6 @@ package unit.com.bitdubai.fermat_api.layer.all_definition.resources_structure.Sk
 
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.StatusBar;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Tab;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TabStrip;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.TitleBar;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Wizard;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardPage;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardPageTypes;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.WizardTypes;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Layout;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Skin;
@@ -25,20 +12,11 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.VersionCompatibility;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 
-
 import junit.framework.TestCase;
-import junit.framework.TestResult;
 
-import org.junit.Ignore;
-import org.junit.Test;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import org.junit.Test;
 
 
 /**

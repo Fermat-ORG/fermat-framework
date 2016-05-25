@@ -13,16 +13,16 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerContractPurchaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.database.CustomerBrokerPurchaseContractDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.exceptions.CantInitializeCustomerBrokerPurchaseContractDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.contract.customer_broker_purchase.developer.bitdubai.version_1.structure.CustomerBrokerPurchaseManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +30,8 @@ import java.util.List;
 /**
  * Created by angel on 02/11/15.
  */
+@PluginInfo(createdBy = "vlzangel", maintainerMail = "vlzangel91@gmail.com", platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
 public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
-    private ErrorManager errorManager;
-
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
-    private DeviceUserManager deviceUserManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -62,7 +57,7 @@ public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin imp
                 this.CustomerBrokerContractPurchaseDao = new CustomerBrokerContractPurchaseDao(pluginDatabaseSystem, this.pluginId);
                 this.CustomerBrokerContractPurchaseDao.initializeDatabase();
             } catch (CantInitializeCustomerBrokerPurchaseContractDatabaseException e) {
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException();
             }
         }
@@ -71,8 +66,7 @@ public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin imp
         public FermatManager getManager() {
             return new CustomerBrokerPurchaseManager(
                 this.CustomerBrokerContractPurchaseDao,
-                this.errorManager,
-                this.getPluginVersionReference()
+                this
             );
         }
 
@@ -99,7 +93,7 @@ public class CustomerBrokerContractPurchasePluginRoot extends AbstractPlugin imp
                 dbFactory.initializeDatabase();
                 return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
             } catch (CantInitializeCustomerBrokerPurchaseContractDatabaseException e) {
-                this.errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             }
             return new ArrayList<>();
         }

@@ -14,9 +14,9 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceExc
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingNewContractStatusUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.CustomerAckOnlineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_online_merchandise.developer.bitdubai.version_1.database.CustomerAckOnlineMerchandiseBusinessTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -33,7 +33,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao;
-    private ErrorManager errorManager;
+    private CustomerAckOnlineMerchandisePluginRoot pluginRoot;
 
     /**
      * TransactionService Interface member variables.
@@ -43,20 +43,20 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
     public CustomerAckOnlineMerchandiseRecorderService(
             CustomerAckOnlineMerchandiseBusinessTransactionDao customerAckOnlineMerchandiseBusinessTransactionDao,
             EventManager eventManager,
-            ErrorManager errorManager) throws CantStartServiceException {
+            CustomerAckOnlineMerchandisePluginRoot pluginRoot) throws CantStartServiceException {
         try {
-            this.errorManager = errorManager;
+            this.pluginRoot = pluginRoot;
             setDatabaseDao(customerAckOnlineMerchandiseBusinessTransactionDao);
             setEventManager(eventManager);
         } catch (CantSetObjectException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(exception,
                     "Cannot set the customer ack offline merchandise database handler",
                     "The database handler is null");
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
@@ -95,12 +95,12 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
                 //LOG.info("CHECK THE DATABASE");
             }
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Confirm Business Transaction Response EventHandler CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -119,12 +119,12 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
             }
             //LOG.info("CHECK THE DATABASE");
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,"incoming Money Notification CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -143,13 +143,13 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
                     event.getContractHash());
             //LOG.info("CHECK THE DATABASE");
         }catch (CantSaveEventException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,
                     exception,"broker Ack Payment Confirmed EventHandler CantSaveException","");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE,exception,
@@ -205,7 +205,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantSetObjectException exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(
@@ -213,7 +213,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
                     "Starting the CustomerAckOnlineMerchandiseRecorderService",
                     "The CustomerAckOnlineMerchandiseRecorderService is probably null");
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
             throw new CantStartServiceException(CantStartServiceException.DEFAULT_MESSAGE,exception,
@@ -229,7 +229,7 @@ public class CustomerAckOnlineMerchandiseRecorderService implements CBPService {
             removeRegisteredListeners();
             this.serviceStatus = ServiceStatus.STOPPED;
         }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+            this.pluginRoot.reportError(
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }

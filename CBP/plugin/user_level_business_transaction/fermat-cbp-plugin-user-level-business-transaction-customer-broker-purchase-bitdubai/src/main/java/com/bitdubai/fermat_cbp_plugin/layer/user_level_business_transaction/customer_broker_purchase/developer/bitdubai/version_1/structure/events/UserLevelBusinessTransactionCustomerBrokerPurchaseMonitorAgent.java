@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cus
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -49,8 +51,6 @@ import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Collection;
 import java.util.Date;
@@ -58,7 +58,14 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
-import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.*;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.CANCELLED;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.COMPLETED;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.IN_CONTRACT_SUBMIT;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.IN_MERCHANDISE_SUBMIT;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.IN_OPEN_CONTRACT;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.IN_PAYMENT_SUBMIT;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.IN_PENDING_MERCHANDISE;
+import static com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus.IN_PROCESS;
 
 
 /**

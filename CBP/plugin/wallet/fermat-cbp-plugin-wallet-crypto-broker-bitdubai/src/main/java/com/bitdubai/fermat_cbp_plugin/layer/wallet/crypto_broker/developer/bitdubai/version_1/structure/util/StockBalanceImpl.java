@@ -18,12 +18,13 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGet
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetBookedBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletBalanceRecord;
+import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.CryptoBrokerWalletPluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddCreditException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantAddDebitException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.exceptions.CantGetBalanceRecordException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,8 +38,9 @@ public class StockBalanceImpl implements StockBalance {
     private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
     UUID plugin;
     PluginFileSystem pluginFileSystem;
-    ErrorManager errorManager;
     private Broadcaster broadcaster;
+    private CryptoBrokerWalletPluginRoot pluginRoot;
+
 
     /**
      * Constructor for StockBalanceImpl
@@ -47,13 +49,13 @@ public class StockBalanceImpl implements StockBalance {
      * @param plugin
      * @param pluginFileSystem
      */
-    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, ErrorManager errorManager,Broadcaster broadcaster) {
+    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, CryptoBrokerWalletPluginRoot pluginRoot, Broadcaster broadcaster) {
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
-        this.errorManager = errorManager;
+        this.pluginRoot = pluginRoot;
         this.broadcaster=broadcaster;
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database, errorManager);
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database, pluginRoot);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.plugin);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
     }
@@ -66,11 +68,11 @@ public class StockBalanceImpl implements StockBalance {
         try {
             return cryptoBrokerWalletDatabaseDao.getBookedBalance(merchandise);
         }catch (CantGetBookedBalanceCryptoBrokerWalletException e){
-        this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         throw new CantGetBookedBalanceCryptoBrokerWalletException(CantGetBookedBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
         }
         catch(Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
     }
@@ -83,11 +85,11 @@ public class StockBalanceImpl implements StockBalance {
        try{
         return cryptoBrokerWalletDatabaseDao.geAvailableBalance(merchandise);
        }catch(CantGetAvailableBalanceCryptoBrokerWalletException e) {
-           this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
            throw new CantGetAvailableBalanceCryptoBrokerWalletException(CantGetAvailableBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
        }
        catch(Exception e) {
-           this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+           pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
        }
     }
@@ -100,11 +102,11 @@ public class StockBalanceImpl implements StockBalance {
         try{
         return cryptoBrokerWalletDatabaseDao.getAvailableBalanceFrozen(merchandise);
         }catch(CantGetAvailableBalanceCryptoBrokerWalletException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetAvailableBalanceCryptoBrokerWalletException(CantGetAvailableBalanceCryptoBrokerWalletException.DEFAULT_MESSAGE, e, null, null);
         }
         catch(Exception e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
     }
@@ -118,15 +120,15 @@ public class StockBalanceImpl implements StockBalance {
         try {
             cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getAvailableBalanceByMerchandise();
         } catch (CantCalculateBalanceException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
         catch (CantGetBalanceRecordException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
 
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
         return cryptoBrokerWalletBalanceRecords;
@@ -141,15 +143,15 @@ public class StockBalanceImpl implements StockBalance {
         try {
             cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getBookBalanceByMerchandise();
         } catch (CantCalculateBalanceException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
         catch (CantGetBalanceRecordException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
 
         } catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
         return cryptoBrokerWalletBalanceRecords;
@@ -164,13 +166,13 @@ public class StockBalanceImpl implements StockBalance {
         try {
             cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getBookBalanceByMerchandiseFrozen();
         } catch (CantCalculateBalanceException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCalculateBalanceException("Cant Calculate Balance Exception.", FermatException.wrapException(e), null, null);
 
         }
 
         catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
         return cryptoBrokerWalletBalanceRecords;
@@ -185,13 +187,13 @@ public class StockBalanceImpl implements StockBalance {
         try {
             cryptoBrokerWalletBalanceRecords = cryptoBrokerWalletDatabaseDao.getAvailableBalanceByMerchandiseFrozen();
         } catch (CantCalculateBalanceException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCalculateBalanceException("CAnt Calculate Balance Exception.", FermatException.wrapException(e), null, null);
 
         }
 
         catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
         return cryptoBrokerWalletBalanceRecords;
@@ -206,11 +208,11 @@ public class StockBalanceImpl implements StockBalance {
             cryptoBrokerWalletDatabaseDao.addDebit(cryptoBrokerStockTransactionRecord, balanceType);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW);
         } catch (CantAddDebitException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
         }
         catch (Exception exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
@@ -224,7 +226,7 @@ public class StockBalanceImpl implements StockBalance {
             cryptoBrokerWalletDatabaseDao.addCredit(cryptoBrokerStockTransactionRecord, balanceType);
             broadcaster.publish(BroadcasterType.UPDATE_VIEW,CBPBroadcasterConstants.CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW);
         } catch (CantAddCreditException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            pluginRoot.reportError(UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
 
         }
