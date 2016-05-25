@@ -216,7 +216,6 @@ public abstract class AbstractActorNetworkService extends AbstractNetworkService
     public final void onActorRegistered(String publicKey) {
 
         ActorProfile registeredActor = (registeredActors != null ? registeredActors.get(publicKey) : null);
-        actorProfile = registeredActor;
 
         if (registeredActor != null)
             onActorRegistered(registeredActor);
