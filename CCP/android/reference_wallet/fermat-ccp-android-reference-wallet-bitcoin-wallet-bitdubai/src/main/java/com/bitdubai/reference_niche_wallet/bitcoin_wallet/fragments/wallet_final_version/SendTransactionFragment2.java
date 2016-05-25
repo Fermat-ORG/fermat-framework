@@ -219,6 +219,16 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             getExecutor().submit(new Runnable() {
                 @Override
                 public void run() {
+
+                  /*  getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+                            adapter.changeDataSet(openNegotiationList);
+                            adapter.notifyDataSetChanged();
+                            recyclerView.setVisibility(View.VISIBLE);
+                            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                        }
+                    });*/
                     openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
                     adapter.changeDataSet(openNegotiationList);
                     adapter.notifyDataSetChanged();

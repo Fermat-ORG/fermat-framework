@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
@@ -140,7 +141,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     private boolean isScrolled = false;
     private FrameLayout contacts_container;
     private boolean connectionDialogIsShow = false;
-
+    private boolean isRefreshing = false;
     private ExecutorService _executor;
 
     public static ContactsFragment newInstance() {
@@ -191,8 +192,8 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable() {
                 public void run() {
-                    onRefresh();
 
+                    onRefresh();
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
@@ -347,6 +348,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     private void onRefresh() {
         try {
+            isRefreshing = true;
             walletContactRecords = lossProtectedWalletManager.listWalletContacts(lossWalletSession.getAppPublicKey(), lossWalletSession.getIntraUserModuleManager().getPublicKey());
         } catch (CantGetCryptoLossProtectedWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

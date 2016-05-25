@@ -112,7 +112,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private LinearLayout noNetworkView;
     private LinearLayout noFermatNetworkView;
     private Handler handler = new Handler();
-    List<IntraUserInformation> userCacheList = new ArrayList<>();
+    List<IntraUserInformation> userList = new ArrayList<>();
 
 
 
@@ -227,8 +227,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if (intraUserWalletSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
-            dataSet = getSuggestionCache();
-            showCriptoUsersCache();
+            isRefreshing = true;
+            _executor.submit(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        dataSet = getSuggestionCache();
+
+                        showCriptoUsersCache();
+                        isRefreshing = false;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
 
         }
     }
@@ -307,10 +320,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             if (lstIntraUserInformations.isEmpty()) {
                                 //todo: no se lo que haces acá, esto tiene que ir en background y no deberia estar acá...
                                 try {
-                                    List list = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-                                    if(list!=null) {
-                                        if (!list.isEmpty()) {
-                                            lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                                     if(dataSet!=null) {
+                                        if (!dataSet.isEmpty()) {
+                                            lstIntraUserInformations.addAll(dataSet);
                                             showEmpty(false, emptyView);
                                             showEmpty(false, searchEmptyView);
                                         } else {
@@ -318,7 +330,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                             showEmpty(false, searchEmptyView);
                                         }
                                     }
-                                } catch (CantGetIntraUsersListException e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
 
@@ -328,13 +340,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             }
                         }
                     } else {
-                        try {
                             showEmpty(false, emptyView);
                             showEmpty(false, searchEmptyView);
-                            lstIntraUserInformations.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-                        } catch (CantGetIntraUsersListException e) {
-                            e.printStackTrace();
-                        }
+                            lstIntraUserInformations.addAll(dataSet);
+
                     }
                 }
 
@@ -667,14 +676,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             });
         } else {
-            adapter.changeDataSet(dataSet);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
+
+            getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    onRefresh();
+                    adapter.changeDataSet(dataSet);
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            onRefresh();
+                        }
+                    }, 800);
                 }
-            }, 300);
+            });
+
+
         }
     }
 
