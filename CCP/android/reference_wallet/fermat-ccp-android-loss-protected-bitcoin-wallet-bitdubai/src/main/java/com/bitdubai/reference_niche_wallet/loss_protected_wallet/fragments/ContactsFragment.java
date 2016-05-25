@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.ContextMenu;
@@ -36,6 +38,7 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_android_api.utils.FermatScreenCalculator;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -67,6 +70,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.Cr
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 
 import java.util.ArrayList;
@@ -227,33 +231,44 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     private void setUpFAB() {
         // in Activity Context
         FrameLayout frameLayout = new FrameLayout(getActivity());
-
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         frameLayout.setLayoutParams(lbs);
+
+        int padding = FermatScreenCalculator.getPx(getActivity(), 20);
+        int width = FermatScreenCalculator.getPx(getActivity(), 56);
+        //noinspection SuspiciousNameCombination
+        FloatingActionButton.LayoutParams actionButtonParams = new FloatingActionButton.LayoutParams(width, width);
+        actionButtonParams.setMargins(0,0,padding,padding);
 
         ImageView icon = new ImageView(getActivity());
         frameLayout.addView(icon);
         actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
+                .setLayoutParams(actionButtonParams)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
 
         SubActionButton.Builder itemBuilder = new SubActionButton.Builder(getActivity());
 
-        ImageView itemIcon = new ImageView(getActivity());
-        itemIcon.setImageResource(R.drawable.loss_externaluser_button);
+        padding = FermatScreenCalculator.getPx(getActivity(), 50);
         button1 = itemBuilder
-                .setContentView(itemIcon)
-                .setBackgroundDrawable(getResources().getDrawable(R.drawable.loss_externaluser_button))
+                .setSize(82)
+                .setPadding(0,0,padding,0)
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.loss_externaluser_button))
                 .setText("External User")
+                .setTextColor(Color.WHITE)
+                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
                 .build();
         button1.setId(ID_BTN_EXTRA_USER);
 
-        ImageView itemIcon2 = new ImageView(getActivity());
-        itemIcon2.setImageResource(R.drawable.loss_fermatuser_button);
-        button2 = itemBuilder.setContentView(itemIcon2)
-                .setBackgroundDrawable(getResources().getDrawable(R.drawable.loss_fermatuser_button))
+        padding = FermatScreenCalculator.getPx(getActivity(), 80);
+        button2 = itemBuilder
+                .setSize(82)
+                .setPadding(0,0,padding,0)
+                .setBackgroundDrawable(ContextCompat.getDrawable(getActivity(),R.drawable.loss_fermatuser_button))
                 .setText("Fermat User")
+                .setTextColor(Color.WHITE)
+                .setTextBackgroundColor(ContextCompat.getColor(getActivity(), R.color.black_translucent))
                 .build();
         button2.setId(ID_BTN_INTRA_USER);
 
