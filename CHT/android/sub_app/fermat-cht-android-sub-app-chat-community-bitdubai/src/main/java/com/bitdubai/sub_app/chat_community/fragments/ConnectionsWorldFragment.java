@@ -33,6 +33,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
