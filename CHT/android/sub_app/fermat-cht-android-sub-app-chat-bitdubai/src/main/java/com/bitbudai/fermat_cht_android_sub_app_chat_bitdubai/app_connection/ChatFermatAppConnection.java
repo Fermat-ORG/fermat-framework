@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
 
 import android.content.Context;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentFactory;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainterBuilder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -19,6 +20,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+
+import static com.bitdubai.fermat_cht_api.all_definition.util.ChatBroadcasterConstants.CHAT_NEW_INCOMING_MESSAGE;
 
 /**
  * ChatFermatAppConnection
@@ -73,22 +76,29 @@ public class ChatFermatAppConnection extends AppConnections {
 
     @Override
     public NotificationPainter getNotificationPainter(String code){
+        switch (code){
+            case CHAT_NEW_INCOMING_MESSAGE:
+                return new ChatNotificationPainterBuilder("New Message.","New message in Chat.","");
 
-        NotificationPainter notification = null;
-        try
-        {
-
-            String usersend = code.split("@#@#")[0];
-            String message = code.split("@#@#")[1];
-            //find last transaction
-            notification = new ChatNotificationPainter("New Message Receive", usersend+" : "+message ,"","", android.R.drawable.ic_notification_overlay);
-
+            default:
+                return super.getNotificationPainter(code);
         }
-        catch(Exception e)
-        {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-
-        return notification;
+//
+//        NotificationPainter notification = null;
+//        try
+//        {
+//
+//            String usersend = code.split("@#@#")[0];
+//            String message = code.split("@#@#")[1];
+//            //find last transaction
+//            notification = new ChatNotificationPainter("New Message Receive", usersend+" : "+message ,"","", android.R.drawable.ic_notification_overlay);
+//
+//        }
+//        catch(Exception e)
+//        {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
+//
+//        return notification;
     }
 }

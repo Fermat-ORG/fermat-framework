@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
+import java.util.UUID;
 
 
 /**
@@ -41,6 +44,8 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	public NodesCatalogTransaction() {
         super();
+        this.hashId = UUID.randomUUID().toString();
+        this.lastConnectionTimestamp = new Timestamp(System.currentTimeMillis());
         this.registeredTimestamp = new Timestamp(System.currentTimeMillis());
 	}
 
@@ -122,6 +127,15 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
     public void setTransactionType(String transactionType) {
         this.transactionType = transactionType;
+    }
+
+    public void setLocation(Location location) {
+
+        if(location != null) {
+
+            this.lastLatitude  = location.getLatitude() ;
+            this.lastLongitude = location.getLongitude();
+        }
     }
 
     @Override

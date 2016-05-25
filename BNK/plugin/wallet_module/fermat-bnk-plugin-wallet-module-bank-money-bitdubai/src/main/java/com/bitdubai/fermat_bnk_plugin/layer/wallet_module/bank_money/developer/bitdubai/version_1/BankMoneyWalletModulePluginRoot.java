@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -73,13 +74,11 @@ public class BankMoneyWalletModulePluginRoot extends AbstractModule<BankMoneyWal
 
     @Override
     public BankMoneyWalletModuleManager getModuleManager() throws CantGetModuleManagerException {
-        if (moduleManager == null)
+        if(moduleManager == null)
             moduleManager = new BankMoneyWalletModuleManagerImpl(
                     bankMoneyWalletManager,
                     depositManager,
                     withdrawManager,
-                    holdManager,
-                    unholdManager,
                     pluginFileSystem,
                     pluginId,
                     broadcaster);

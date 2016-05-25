@@ -15,8 +15,8 @@ include ':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai'
 project(':fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai').projectDir = new File('WPD/plugin/desktop_module/fermat-wpd-plugin-desktop-module-wallet-manager-bitdubai')
 
 //engine
-include ':fermat-wpd-plugin-engine-wallet-runtime-bitdubai'
-project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai').projectDir = new File('WPD/plugin/engine/fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
+include ':fermat-wpd-plugin-engine-app-runtime-bitdubai'
+project(':fermat-wpd-plugin-engine-app-runtime-bitdubai').projectDir = new File('WPD/plugin/engine/fermat-wpd-plugin-engine-app-runtime-bitdubai')
 
 // identity
 

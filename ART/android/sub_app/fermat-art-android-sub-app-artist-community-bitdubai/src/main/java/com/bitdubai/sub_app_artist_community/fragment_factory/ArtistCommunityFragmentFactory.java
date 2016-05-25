@@ -9,6 +9,7 @@ import com.bitdubai.sub_app_artist_community.fragments.ConnectionOtherProfileFra
 import com.bitdubai.sub_app_artist_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app_artist_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app_artist_community.fragments.ConnectionsWorldFragment;
+import com.bitdubai.sub_app_artist_community.fragments.ListUserIdentiesFragment;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
 
 /**
@@ -19,9 +20,9 @@ public class ArtistCommunityFragmentFactory extends FermatFragmentFactory<Artist
     protected AbstractFermatFragment getFermatFragment(ArtistCommunityFragmentEnumType fragments) throws FragmentNotFoundException {
         AbstractFermatFragment currentFragment = null;
         switch (fragments) {
-            case ART_ARTIST_WALLET_STORE_ALL_FRAGMENT:
+            /*case ART_ARTIST_WALLET_STORE_ALL_FRAGMENT:
                 currentFragment = ConnectionsWorldFragment.newInstance();
-                break;
+                break;*/
             case ART_SUB_APP_ARTIST_COMMUNITY_CONNECTIONS:
                 currentFragment = ConnectionsFragment.newInstance();
                 break;
@@ -39,6 +40,9 @@ public class ArtistCommunityFragmentFactory extends FermatFragmentFactory<Artist
                 break;
             case ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST:
                 currentFragment = ConnectionsListFragment.newInstance();
+                break;
+            case ART_SUB_APP_ARTIST_COMMUNITY_LOCAL_IDENTITIES_LIST:
+                currentFragment = ListUserIdentiesFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException(

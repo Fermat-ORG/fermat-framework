@@ -67,13 +67,13 @@ public class NavigationAdapter extends FermatAdapter<MenuItem, NavigationHolder>
             holder.getLabel().setText(data.getLabel());
             switch (position) {
                 case 0:
-                    holder.getIcon().setImageResource(R.drawable.cht_ic_home);//ic_nav_friends
+                    holder.getIcon().setImageResource(R.drawable.cht_comm_icon_home);//ic_nav_friends
                     break;
                 case 1:
-                    holder.getIcon().setImageResource(R.drawable.cht_ic_connections);//ic_nav_connections
+                    holder.getIcon().setImageResource(R.drawable.cht_comm_icon_contacts);//ic_nav_connections
                     break;
                 case 2:
-                    holder.getIcon().setImageResource(R.drawable.cht_ic_notifications);//ic_nav_notifications
+                    holder.getIcon().setImageResource(R.drawable.cht_comm_icon_notifications);//ic_nav_notifications
                     holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).setPosition(BadgeDrawable.Position.CENTER).build());
                     break;
                 case 3:

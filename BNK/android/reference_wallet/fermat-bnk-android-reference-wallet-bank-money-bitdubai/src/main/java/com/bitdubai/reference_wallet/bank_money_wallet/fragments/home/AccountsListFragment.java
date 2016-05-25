@@ -55,7 +55,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         return new AccountsListFragment();
     }
 
-    private View emtyView;
+    private View emptyView;
     private FermatTextView header;
 
     private PresentationDialog presentationDialog;
@@ -78,13 +78,12 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     protected void initViews(View layout) {
         super.initViews(layout);
         configureToolbar();
-        this.emtyView =  layout.findViewById(R.id.bw_empty_accounts_view);
+        this.emptyView =  layout.findViewById(R.id.bw_empty_accounts_view);
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
-        header.setText(moduleManager.getBankingWallet().getBankName());
+        header.setText(moduleManager.getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
                 .setBannerRes(R.drawable.bw_banner_bank).setIconRes(R.drawable.bw_icon)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
-                .setTitle("prueba Title")
                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
                .setTextFooter(R.string.bnk_bank_money_wallet_account_footer).setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                .build();
@@ -97,7 +96,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         });*/
         boolean showDialog;
         try{
-            showDialog = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
+            showDialog = moduleManager.loadAndGetSettings(appSession.getAppPublicKey()).isHomeTutorialDialogEnabled();
             if(showDialog){
                 presentationDialog.show();
             }
@@ -211,7 +210,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         String grouperText="accounts";
         if(moduleManager!=null) {
             try {
-                bankAccountNumbers = moduleManager.getBankingWallet().getAccounts();
+                bankAccountNumbers = moduleManager.getAccounts();
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null) {
@@ -230,10 +229,10 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
     private void showOrHideNoAccountListView(boolean show) {
         if (show) {
             recyclerView.setVisibility(View.GONE);
-            emtyView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.VISIBLE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
-            emtyView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.GONE);
         }
     }
 

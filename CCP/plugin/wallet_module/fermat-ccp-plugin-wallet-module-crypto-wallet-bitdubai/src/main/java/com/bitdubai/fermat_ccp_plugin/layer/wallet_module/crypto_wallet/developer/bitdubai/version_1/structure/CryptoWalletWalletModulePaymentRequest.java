@@ -4,12 +4,13 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaym
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.09.17..
  */
-public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest{
+public class CryptoWalletWalletModulePaymentRequest implements PaymentRequest,Serializable {
 
     private String date;
 

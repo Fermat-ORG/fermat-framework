@@ -27,6 +27,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by nelson on 03/01/16.
  */
@@ -127,16 +128,12 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
             List<BankAccountNumber> bankAccounts = (List<BankAccountNumber>) appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
             bankAccounts.add(data);
 
-            if( moduleManager != null) {
+            if (moduleManager != null) {
                 for (BankAccountNumber bankAccount : bankAccounts) {
-                    NegotiationBankAccount negotiationBankAccount = null;
                     try {
-                        negotiationBankAccount = moduleManager.newEmptyNegotiationBankAccount(
-                                bankAccount.toString(),
-                                bankAccount.getCurrencyType()
-                        );
-                        moduleManager.createNewBankAccount(negotiationBankAccount);
-                    } catch (CantCreateBankAccountPurchaseException e) {}
+                        moduleManager.createNewBankAccount(bankAccount.getAccount(), bankAccount.getCurrencyType());
+                    } catch (CantCreateBankAccountPurchaseException ignore) {
+                    }
                 }
             }
 

@@ -23,7 +23,7 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core-api')
 
-    compile project(':fermat-wpd-plugin-engine-wallet-runtime-bitdubai')
+    compile project(':fermat-wpd-plugin-engine-app-runtime-bitdubai')
 
     compile project(':fermat-wpd-plugin-identity-publisher-bitdubai')
 

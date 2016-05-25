@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -33,6 +35,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
+import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -46,7 +49,7 @@ import java.util.UUID;
 public class ActorConnectionEventsActions {
 
     private final ArtistManager actorArtistNetworkServiceManager;
-    private final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao dao;
+    private final ArtistActorConnectionDao dao;
     private final ErrorManager errorManager;
     private final EventManager eventManager;
     private final Broadcaster broadcaster;
@@ -63,7 +66,7 @@ public class ActorConnectionEventsActions {
      */
     public ActorConnectionEventsActions(
             final ArtistManager actorArtistNetworkServiceManager,
-            final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao dao,
+            final ArtistActorConnectionDao dao,
             final ErrorManager errorManager,
             final EventManager eventManager,
             final Broadcaster broadcaster,
@@ -82,8 +85,16 @@ public class ActorConnectionEventsActions {
      */
     public void handleNewsEvent() throws CantHandleNewsEventException {
         try {
-            final List<ArtistConnectionRequest> list = actorArtistNetworkServiceManager.
+            //Here we got all the Artist request
+            List<ArtistConnectionRequest> list = actorArtistNetworkServiceManager.
                     listPendingConnectionNews(PlatformComponentType.ART_ARTIST);
+
+            for (final ArtistConnectionRequest request : list)
+                this.handleRequestConnection(request);
+
+            //Now the fans request
+            list = actorArtistNetworkServiceManager.
+                    listPendingConnectionNews(PlatformComponentType.ART_FAN);
 
             for (final ArtistConnectionRequest request : list)
                 this.handleRequestConnection(request);
@@ -113,7 +124,6 @@ public class ActorConnectionEventsActions {
             for (final ArtistConnectionRequest request : list) {
 
                 switch (request.getRequestAction()) {
-                    //TODO: I'll use ART_ARTIST_IDENTITY until the Art community is ready
                     case ACCEPT:
                         this.handleAcceptConnection(request.getRequestId());
                         broadcaster.publish(
@@ -125,8 +135,12 @@ public class ActorConnectionEventsActions {
                         this.handleDenyConnection(request.getRequestId());
                         break;
                     case DISCONNECT:
-                        if (request.getRequestType() == RequestType.SENT)
+                        //if (request.getRequestType() == RequestType.SENT)
                             this.handleDisconnect(request.getRequestId());
+                        break;
+                    case CANCEL:
+                        if(request.getRequestType() == RequestType.RECEIVED)
+                            this.handleCancelConnection(request.getRequestId());
                         break;
                 }
             }
@@ -135,7 +149,8 @@ public class ActorConnectionEventsActions {
                 UnexpectedConnectionStateException |
                 CantAcceptActorConnectionRequestException |
                 CantDenyActorConnectionRequestException |
-                CantDisconnectFromActorException e) {
+                CantDisconnectFromActorException |
+                CantCancelActorConnectionRequestException e) {
 
             throw new CantHandleNewsEventException(
                     e,
@@ -178,7 +193,7 @@ public class ActorConnectionEventsActions {
 
             switch(request.getSenderActorType()) {
                 case ART_ARTIST:
-                    dao.registerActorConnection(actorConnection);
+                    dao.registerConnection(actorConnection);
                     actorArtistNetworkServiceManager.confirm(request.getRequestId());
                     break;
                 case ART_FAN:
@@ -189,10 +204,9 @@ public class ActorConnectionEventsActions {
                     throw new UnsupportedActorTypeException(
                             "request: "+request, "Unsupported actor type exception.");
             }
-            //TODO: I'll use ART_ARTIST_IDENTITY until the Art community is ready
             broadcaster.publish(
                     BroadcasterType.NOTIFICATION_SERVICE,
-                    SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                    SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                     ArtistActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
 

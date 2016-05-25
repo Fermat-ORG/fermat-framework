@@ -42,34 +42,68 @@
                 android:textColor="#fff"
                 android:textSize="@dimen/text_size" />
 
-            <EditText
-                android:id="@+id/account_number"
-                android:layout_width="300dp"
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:maxLength="25"
-                android:gravity="center_horizontal"
-                android:hint="Enter account number"
-                android:textColor="#fff"
-                android:textSize="@dimen/text_size" />
+                android:layout_gravity="center_horizontal"
+                >
 
-            <EditText
-                android:id="@+id/account_alias"
-                android:layout_width="300dp"
+                <EditText
+                    android:id="@+id/account_number"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:hint="Enter account number"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/text_size" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/account_number_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="25"
+                    android:textColor="#bbb"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="30dp"
-                android:maxLength="10"
-                android:gravity="center_horizontal"
-                android:hint="Enter alias"
-                android:textColor="#fff"
-                android:textSize="@dimen/text_size" />
+                android:layout_gravity="center_horizontal"
+                >
+
+                <EditText
+                    android:id="@+id/account_alias"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center_horizontal"
+                    android:hint="Enter alias"
+                    android:textColor="#fff"
+                    android:textSize="@dimen/text_size" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/account_alias_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:text="10"
+                    android:textColor="#bbb"
+                    android:textSize="12dp" />
+            </LinearLayout>
+
+
 
             <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_marginTop="30dp"
                 android:orientation="vertical"
                 android:paddingLeft="60dp"
                 android:paddingRight="60dp">

@@ -4,13 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Created by franklin on 05/10/15.
  */
-public interface AssetUserWalletList {
+public interface AssetUserWalletList extends Serializable {
 
     DigitalAsset getDigitalAsset();
 

@@ -3,11 +3,13 @@ package com.bitdubai.fermat_api.layer.actor_connection.common.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.io.Serializable;
+
 /**
  * The enum <code>com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState</code>
  * enumerates the states of connection of a common Fermat Actor.
  */
-public enum ConnectionState implements FermatEnum {
+public enum ConnectionState implements FermatEnum, Serializable {
 
     /*
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
@@ -18,7 +20,6 @@ public enum ConnectionState implements FermatEnum {
     CANCELLED_LOCALLY           ("CAL"),
     CANCELLED_REMOTELY          ("CAR"),
     CONNECTED                   ("CTD"),
-    CONNECTED_ONLINE            ("CTDO"),
     NO_CONNECTED                ("NCTD"),
     DENIED_LOCALLY              ("DNL"),
     DENIED_REMOTELY             ("DNR"),

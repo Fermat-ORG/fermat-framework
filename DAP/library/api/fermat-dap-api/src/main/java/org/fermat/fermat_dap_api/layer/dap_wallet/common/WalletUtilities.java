@@ -2,12 +2,13 @@ package org.fermat.fermat_dap_api.layer.dap_wallet.common;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 2/02/16.
  */
-public final class WalletUtilities {
+public final class WalletUtilities implements Serializable{
 
     //VARIABLE DECLARATION
     public static String WALLET_PUBLIC_KEY = "walletPublicKeyTest";

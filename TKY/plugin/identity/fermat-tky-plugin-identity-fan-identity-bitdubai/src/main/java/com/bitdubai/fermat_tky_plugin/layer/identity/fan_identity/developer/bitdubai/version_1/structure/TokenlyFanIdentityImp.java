@@ -1,9 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -18,6 +16,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.TokenlyFanIdentityPluginRoot;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +24,8 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 10/03/16.
  */
-public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWithPluginIdentity, Fan {
+public class TokenlyFanIdentityImp implements
+        Fan, Serializable {
 
     private UUID id;
     private String tokenlyID;
@@ -56,7 +56,14 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
      * @param imageProfile
      * @param externalPlatform
      */
-    public TokenlyFanIdentityImp(User user, UUID id, String publicKey, byte[] imageProfile, ExternalPlatform externalPlatform,PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public TokenlyFanIdentityImp(
+            User user,
+            UUID id,
+            String publicKey,
+            byte[] imageProfile,
+            ExternalPlatform externalPlatform,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId) {
         this.id = id;
         this.tokenlyID = user.getTokenlyId();
         this.publicKey = publicKey;
@@ -83,7 +90,17 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
      * @param externalPlatform
      * @param email
      */
-    public TokenlyFanIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, String externalPassword, ExternalPlatform externalPlatform, String email) {
+    public TokenlyFanIdentityImp(
+            UUID id,
+            String tokenlyID,
+            String publicKey,
+            byte[] imageProfile,
+            String externalUserName,
+            String externalAccessToken,
+            String apiSecretKey,
+            String externalPassword,
+            ExternalPlatform externalPlatform,
+            String email) {
         this.id = id;
         this.tokenlyID = tokenlyID;
         this.publicKey = publicKey;
@@ -109,7 +126,18 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
      * @param pluginFileSystem
      * @param pluginId
      */
-    public TokenlyFanIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, ExternalPlatform externalPlatform, String email, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public TokenlyFanIdentityImp(
+            UUID id,
+            String tokenlyID,
+            String publicKey,
+            byte[] imageProfile,
+            String externalUserName,
+            String externalAccessToken,
+            String apiSecretKey,
+            ExternalPlatform externalPlatform,
+            String email,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId) {
         this.id = id;
         this.tokenlyID = tokenlyID;
         this.publicKey = publicKey;
@@ -202,13 +230,33 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
          * method is full implemented.
          */
         //TODO: Hardoced User
-        MusicUser hardocedUser = new TokenlyUserImp(
+        /*MusicUser hardocedUser = new TokenlyUserImp(
                 "18873727-da0f-4b50-a213-cc40c6b4562d",
                 "pereznator",
                 "darkpriestrelative@gmail.com",
                 "Tvn1yFjTsisMHnlI",
                 "K0fW5UfvrrEVQJQnK27FbLgtjtWHjsTsq3kQFB6Y");
-        return hardocedUser;
+        return hardocedUser;*/
+        //TODO: this is the real implementation
+        //We're going to check if all Music parameters are set
+        Object[] objects = new Object[]{this.tokenlyID,
+                this.externalUserName,
+                this.email,
+                this.externalAccessToken,
+                this.apiSecretKey};
+        try{
+            ObjectChecker.checkArguments(objects);
+        } catch (ObjectNotSetException e) {
+            //In theory, this cannot be to happen, I'll return null
+            return null;
+        }
+        MusicUser musicUser = new TokenlyUserImp(
+                this.tokenlyID,
+                this.externalUserName,
+                this.email,
+                this.externalAccessToken,
+                this.apiSecretKey);
+        return musicUser;
     }
 
     @Override
@@ -218,16 +266,6 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
 
     public void setExternalPlatform(ExternalPlatform externalPlatform) {
         this.externalPlatform = externalPlatform;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
     @Override
@@ -272,16 +310,17 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
     @Override
     public List<String> getConnectedArtists() {
         //TODO: to implement and remove this hardcode
-        List<String> hardcodedList=new ArrayList<>();
+        /*List<String> hardcodedList=new ArrayList<>();
         hardcodedList.add("TatianaMoroz");
         hardcodedList.add("adam");
-        return hardcodedList;
+        hardcodedList.add("mordorteam");
+        return hardcodedList;*/
         //TODO: this is the real implementation.
-        /*if(this.artistsConnectedList==null || this.artistsConnectedList.isEmpty()){
+        if(this.artistsConnectedList==null || this.artistsConnectedList.isEmpty()){
             return new ArrayList<>();
         } else{
             return this.artistsConnectedList;
-        }*/
+        }
     }
 
     /**

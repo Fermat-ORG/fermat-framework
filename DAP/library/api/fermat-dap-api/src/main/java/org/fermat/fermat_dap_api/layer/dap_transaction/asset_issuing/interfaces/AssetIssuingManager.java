@@ -1,6 +1,5 @@
 package org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.InsufficientCryptoFundsException;
 
@@ -10,7 +9,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExe
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/08/15.
  * Updated by Víctor Mars (marsvicam@gmail.com) on 09/03/16
  */
-public interface AssetIssuingManager extends FermatManager {
+public interface AssetIssuingManager {//extends FermatManager {
     /**
      * This method will start the issuing, generating the needed
      * amount of digital asset metadata.

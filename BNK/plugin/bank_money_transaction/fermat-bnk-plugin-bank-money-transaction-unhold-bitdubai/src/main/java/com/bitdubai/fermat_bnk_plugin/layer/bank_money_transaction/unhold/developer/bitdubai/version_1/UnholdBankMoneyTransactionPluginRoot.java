@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -13,22 +14,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransaction;
-import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
-import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantMakeUnholdTransactionException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.database.UnholdBankMoneyTransactionDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.exceptions.CantInitializeUnholdBankMoneyTransactionDatabaseException;
@@ -36,16 +29,15 @@ import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.develo
 import com.bitdubai.fermat_bnk_plugin.layer.bank_money_transaction.unhold.developer.bitdubai.version_1.structure.UnholdBankMoneyTransactionProcessorAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
+
 
 
 /**
  * Created by memo on 25/11/15.
  */
 @PluginInfo(createdBy = "guillermo20", maintainerMail = "guillermo20@gmail.com", platform = Platforms.BANKING_PLATFORM, layer = Layers.BANK_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION)
-public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, UnholdManager {
+public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -64,6 +56,11 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
 
     public UnholdBankMoneyTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
+    }
+
+    @Override
+    public FermatManager getManager() {
+        return unholdTransactionManager;
     }
 
     @Override
@@ -90,16 +87,6 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
 
 
     @Override
-    public BankTransaction unHold(BankTransactionParameters parameters) throws CantMakeUnholdTransactionException {
-        return unholdTransactionManager.unHold(parameters);
-    }
-
-    @Override
-    public BankTransactionStatus getUnholdTransactionsStatus(UUID transactionId) throws CantGetUnholdTransactionException {
-        return unholdTransactionManager.getUnholdTransactionsStatus(transactionId);
-    }
-
-    @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         UnholdBankMoneyTransactionDeveloperDatabaseFactory factory = new UnholdBankMoneyTransactionDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
         return factory.getDatabaseList(developerObjectFactory);
@@ -124,64 +111,4 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
         }
         return tableRecordList;
     }
-
-    @Override
-    public boolean isTransactionRegistered(UUID transactionId) {
-        return unholdTransactionManager.isTransactionRegistered(transactionId);
-    }
-
-    private void test() {
-        final UUID id = UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-        BankTransactionParameters t = new BankTransactionParameters() {
-
-            @Override
-            public UUID getTransactionId() {
-                return UUID.fromString("38400000-8cf0-11bd-b23e-10b96e4ef00d");
-            }
-
-            @Override
-            public String getPublicKeyPlugin() {
-                return "foo";
-            }
-
-            @Override
-            public String getPublicKeyWallet() {
-                return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
-            }
-
-            @Override
-            public String getPublicKeyActor() {
-                return "bar";
-            }
-
-            @Override
-            public BigDecimal getAmount() {
-                return new BigDecimal("30.0");
-            }
-
-            @Override
-            public String getAccount() {
-                return "1234123412341";
-            }
-
-            @Override
-            public FiatCurrency getCurrency() {
-                return FiatCurrency.ARGENTINE_PESO;
-            }
-
-            @Override
-            public String getMemo() {
-                return "test";
-            }
-        };
-        try {
-            unHold(t);
-            BankTransactionStatus status = getUnholdTransactionsStatus(id);
-            System.out.println("( bank testing getHoldTransactionsStatus) =" + status.getCode());
-        } catch (FermatException e) {
-            System.out.println("(bank hold) exception " + e.getMessage());
-        }
-
-    }
-
 }

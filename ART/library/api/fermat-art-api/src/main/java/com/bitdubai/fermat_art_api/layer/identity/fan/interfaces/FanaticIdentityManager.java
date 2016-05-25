@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_api.layer.identity.fan.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -35,7 +36,7 @@ public interface FanaticIdentityManager extends FermatManager {
      * @return
      * @throws CantListArtistIdentitiesException
      */
-    HashMap<ExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    HashMap<ArtExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
      * Return an Object with the basic data from the linked identity and its respectible
@@ -45,7 +46,7 @@ public interface FanaticIdentityManager extends FermatManager {
     ArtIdentity getLinkedIdentity(String publicKey);
 
     /**
-     * Through the method <code>createFanaticIdentity</code> you can create a new artist identity.
+     * Through the method <code>createFanaticIdentity</code> you can create a new Fan identity.
      * @param alias
      * @param imageBytes
      * @param externalIdentityID
@@ -54,9 +55,13 @@ public interface FanaticIdentityManager extends FermatManager {
      */
     Fanatic createFanaticIdentity(
             final String alias,
-            final byte[] imageBytes, UUID externalIdentityID) throws
+            final byte[] imageBytes,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantCreateFanIdentityException,
             FanIdentityAlreadyExistsException;
+
     /**
      * This method updates the fan identity
      * @param alias
@@ -68,7 +73,9 @@ public interface FanaticIdentityManager extends FermatManager {
             String alias,
             String publicKey,
             byte[] imageProfile,
-            UUID externalIdentityID) throws
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantUpdateFanIdentityException;
 
     /**

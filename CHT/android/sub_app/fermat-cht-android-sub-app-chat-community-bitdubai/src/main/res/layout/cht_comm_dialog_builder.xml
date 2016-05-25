@@ -22,7 +22,7 @@
             android:singleLine="true"
             android:text="Connection"
             android:textColor="#ffffff"
-            android:textSize="16sp"
+            android:textSize="20sp"
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
@@ -42,10 +42,10 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
-            android:paddingTop="16dp"
+            android:paddingTop="40dp"
             android:text="Description of dialog"
-            android:textColor="#2d3e50"
-            android:textSize="14sp"
+            android:textColor="#212121"
+            android:textSize="20sp"
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -57,10 +57,10 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:paddingStart="8dp"
+            android:paddingBottom="40dp"
             android:text="User name"
-            android:textColor="#47BF73"
-            android:textStyle="bold"
-            android:textSize="14sp"
+            android:textColor="#212121"
+            android:textSize="20sp"
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -73,8 +73,8 @@
             android:paddingRight="8dp"
             android:paddingStart="8dp"
             android:text="Description of dialog"
-            android:textColor="#2d3e50"
-            android:textSize="14sp"
+            android:textColor="#212121"
+            android:textSize="20sp"
             android:visibility="gone"
             tools:ignore="HardcodedText" />
 

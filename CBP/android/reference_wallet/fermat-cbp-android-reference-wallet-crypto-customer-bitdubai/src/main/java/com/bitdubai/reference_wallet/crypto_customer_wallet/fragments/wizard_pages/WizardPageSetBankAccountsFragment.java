@@ -15,15 +15,14 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
@@ -185,17 +184,16 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
         try {
             for (BankAccountNumber bankAccount : bankAccountList) {
                 BankAccountData bankAccountData = (BankAccountData) bankAccount;
-                NegotiationBankAccount negotiationBankAccount = moduleManager.newEmptyNegotiationBankAccount(
-                        bankAccountData.toString(), bankAccount.getCurrencyType());
-
-                moduleManager.createNewBankAccount(negotiationBankAccount);
+                moduleManager.createNewBankAccount(bankAccountData.toString(), bankAccount.getCurrencyType());
             }
 
 
             //Obtain walletSettings and persist isWalletConfigured = true
-            CryptoCustomerWalletPreferenceSettings walletSettings = appSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            final CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
+
+            CryptoCustomerWalletPreferenceSettings walletSettings = moduleManager.loadAndGetSettings(appSession.getAppPublicKey());
             walletSettings.setIsWalletConfigured(true);
-            appSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), walletSettings);
+            moduleManager.persistSettings(appSession.getAppPublicKey(), walletSettings);
 
 
         } catch (FermatException ex) {

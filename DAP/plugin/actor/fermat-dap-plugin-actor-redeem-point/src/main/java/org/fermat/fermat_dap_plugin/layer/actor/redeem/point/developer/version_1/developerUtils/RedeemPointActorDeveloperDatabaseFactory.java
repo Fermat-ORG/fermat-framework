@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.database.RedeemPointActorDatabaseConstants;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.database.RedeemPointActorDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.exceptions.CantInitializeRedeemPointActorDatabaseException;

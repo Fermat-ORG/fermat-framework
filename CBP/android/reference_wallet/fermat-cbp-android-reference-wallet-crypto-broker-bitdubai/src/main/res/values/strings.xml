@@ -220,5 +220,8 @@
     <string name="cbw_wizard_other_settings_dialog_body">This page allows you to configure: \n* Automatic restock of funds to the broker wallet. \n* The Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
     <string name="cbw_wizard_other_settings_title">Other settings</string>
     <string name="cbw_wizard_other_settings_description">Set a Spread and Automatic Restock. These settings can be changed later.</string>
+    <string name="cbw_transaction">Transaction</string>
+    <string name="cbw_restock_title">Restock</string>
+    <string name="cbw_destock_title">Destock</string>
 
 </resources>

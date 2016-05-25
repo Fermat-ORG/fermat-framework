@@ -11,7 +11,7 @@
         android:scaleType="centerCrop"
         android:padding="10dp"
         style="@style/quickContactBadgeStyle"
-        android:src="@drawable/cht_profile_list_icon"/>
+        android:src="@drawable/cht_center_profile_icon_center"/>
 
 
     <TextView
@@ -42,7 +42,7 @@
         android:layout_below="@+id/tvtitle"
         android:layout_toRightOf="@+id/imagetick"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="1"
         android:text="desc"
         android:textColor="#757575"
         android:textSize="12dip" />

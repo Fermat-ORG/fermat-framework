@@ -7,12 +7,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ReferenceCurrency;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 27/11/15.
  */
-public class ContractSaleRecord implements CustomerBrokerContractSale {
+public class ContractSaleRecord implements CustomerBrokerContractSale, Serializable {
 
     Collection<ContractClause> contractClauses;
     long dayTime;
@@ -28,7 +29,8 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
     ReferenceCurrency referenceCurrency;
     float referencePrice;
     ContractStatus status;
-    String contractHash;Boolean nearExpirationDatetime;
+    String contractHash;
+    Boolean nearExpirationDatetime;
     String cancelReason;
 
     /**

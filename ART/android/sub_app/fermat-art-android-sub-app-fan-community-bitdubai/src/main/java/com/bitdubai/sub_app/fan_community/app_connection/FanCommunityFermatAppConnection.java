@@ -51,9 +51,10 @@ public class FanCommunityFermatAppConnection extends AppConnections<FanCommunity
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
         return new FanCommunityNavigationViewPainter(
                 getContext(),
-                getActiveIdentity(),
+                null,
                 getFullyLoadedSession());
     }
 
@@ -70,7 +71,8 @@ public class FanCommunityFermatAppConnection extends AppConnections<FanCommunity
     @Override
     public NotificationPainter getNotificationPainter(final String code) {
         return CommunityNotificationPainterBuilder.getNotification(
-                code
+                code,
+                getFullyLoadedSession()
         );
     }
 }

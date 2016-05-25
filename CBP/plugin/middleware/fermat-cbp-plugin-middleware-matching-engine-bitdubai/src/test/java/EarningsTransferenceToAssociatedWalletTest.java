@@ -99,7 +99,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         doNothing().when(dao).markEarningTransactionAsExtracted(any(UUID.class));
 
-        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
+        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager, dao);
         transaction.addEarningExtractor(new BankEarningExtractor(bankMoneyDestockManager));
         transaction.addEarningExtractor(new CashEarningExtractor(cashMoneyDestockManager));
         transaction.addEarningExtractor(new CryptoEarningExtractor(cryptoMoneyDestockManager));
@@ -117,7 +117,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -185,7 +184,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -232,7 +230,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -278,7 +275,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -313,7 +309,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -359,7 +354,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -395,7 +389,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -481,7 +474,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -508,7 +500,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -555,7 +546,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
@@ -601,10 +591,9 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 linkedCurrency,
                 new WalletReference(earningWalletPublicKey),
                 EarningPairState.ASSOCIATED,
-                dao,
                 new WalletReference(BROKER_WALLET_PUBLIC_KEY));
 
-        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
+        transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager, dao);
 
         // exercise
         catchException(transaction).extractEarnings(earningsPair, earningTransactions);

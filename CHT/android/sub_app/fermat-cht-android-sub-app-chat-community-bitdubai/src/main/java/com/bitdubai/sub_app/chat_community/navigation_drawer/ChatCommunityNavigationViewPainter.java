@@ -33,7 +33,7 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation chatUserLoginIdentity) {
+    public View addNavigationViewHeader() {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),
@@ -76,6 +76,6 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
 
     @Override
     public boolean hasClickListener() {
-        return true;
+        return false;
     }
 }

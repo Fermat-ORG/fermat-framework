@@ -15,6 +15,9 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -44,6 +47,8 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     boolean addcontact = false;
     public boolean delete_contact = false;
     public boolean delete_chat = false;
+    public boolean clean_chat = false;
+    public boolean delete_chats = false;
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
@@ -95,14 +100,20 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
         title = txt;
     }
     public void setType(String txt){
+        if(txt.equals("clean-chat")){
+            AlertType = 5;
+        }
         if(txt.equals("delete-chat")){
-        AlertType = 3;
+            AlertType = 4;
+        }
+        if(txt.equals("delete-chats")){
+            AlertType = 3;
         }
         if(txt.equals("delete-contact")){
-        AlertType = 2;
+            AlertType = 2;
         }
         if(txt.equals("add-connections")){
-        AlertType = 1;
+            AlertType = 1;
         }
     }
     protected int setLayoutId() {
@@ -117,8 +128,14 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     public boolean getStatusDeleteContact(){
         return delete_contact;
     }
+    public boolean getStatusCleanChat(){
+        return clean_chat;
+    }
     public boolean getStatusDeleteChat(){
         return delete_chat;
+    }
+    public boolean getStatusDeleteChats(){
+        return delete_chats;
     }
 
     public void onClick(View v) {
@@ -129,7 +146,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 try {
                     //appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
                     //Contact conn = chatSession.getSelectedConnection();
-                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                    //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                     if (true) {
                     //if (chatManager.getContactByLocalPublicKey(contactConn.getRemoteActorPublicKey()) == null) {
                         ContactImpl newContact = new ContactImpl();
@@ -141,7 +158,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                         newContact.setCreationDate(System.currentTimeMillis());
                         newContact.setContactStatus(contactConn.getContactStatus());
                         newContact.setProfileImage(contactConn.getProfileImage());
-                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        //TODO: metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                         //chatManager.saveContact(newContact);
                         addcontact = true;
                         Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
@@ -165,7 +182,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 }else if(AlertType == 2){
 //                try {
 //                    Contact con = chatSession.getSelectedContact();
-//                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                    //TODO: metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
 //                    //chatManager.deleteContact(con);
 //                    List<Contact> cont=  null;//chatManager.getContacts();
 //                    if (cont.size() > 0) {
@@ -189,11 +206,56 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 delete_contact = true;
             }else if(AlertType == 3){
                 try {
+                    try {
+                        // Delete chats and refresh view
+                        chatManager.deleteChats();
+                    } catch (CantDeleteChatException e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
+                    dismiss();
+                }catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+                delete_chats = true;
+            }else if(AlertType == 4){
+                try {
+                    try {
+                        // Get the info of chat selected from session
+                        Chat chat = chatSession.getSelectedChat();
+                        // Delete chat and refresh view
+                        chatManager.deleteMessagesByChatId(chat.getChatId());
+                        chatManager.deleteChat(chat);
+                    } catch (CantDeleteChatException e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    } catch (CantDeleteMessageException e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
                     dismiss();
                 }catch (Exception e){
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
                 delete_chat = true;
+            }else if(AlertType == 5){
+                try {
+                    try {
+                        // Get the info of chat selected from session
+                        Chat chat = chatSession.getSelectedChat();
+                        // Delete chat and refresh view
+                        chatManager.deleteMessagesByChatId(chat.getChatId());
+                    } catch (CantDeleteMessageException e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }catch (Exception e) {
+                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    }
+                    dismiss();
+                }catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+                clean_chat = true;
             }
         }
 
