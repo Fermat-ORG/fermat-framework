@@ -410,14 +410,16 @@ public class ChatSupAppModuleManager extends ModuleManagerImpl<ChatPreferenceSet
                     selectedIdentity.getPublicKey(),
                     selectedIdentity.getActorType(),
                     selectedIdentity.getAlias(),
-                    selectedIdentity.getImage()
+                    selectedIdentity.getImage(),
+                    ""
             );
 
             final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
                     chatActorToContact.getPublicKey(),
                     Actors.CHAT,
                     chatActorToContact.getAlias(),
-                    chatActorToContact.getImage()
+                    chatActorToContact.getImage(),
+                    chatActorToContact.getStatus()
             );
 
             chatActorConnectionManager.requestConnection(
