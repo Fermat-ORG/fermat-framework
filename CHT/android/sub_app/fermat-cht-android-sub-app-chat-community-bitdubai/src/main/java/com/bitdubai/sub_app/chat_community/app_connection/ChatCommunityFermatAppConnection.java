@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
@@ -43,8 +44,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
     private ChatUserSubAppSession chatUserSubAppSession;
     private ChatActorCommunitySubAppModuleManager moduleManager;
     private ChatActorCommunitySelectableIdentity activeIdentity;
-
-
+    private ChatCommunityNavigationViewPainter navPainter;
 
     public ChatCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -76,7 +76,50 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
         //return new ChatCommunityNavigationViewPainter(getContext(),getActiveIdentity(),getFullyLoadedSession());
         getChtActiveIdentity();
         //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
-        return new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
+        if(navPainter!=null)
+            return new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
+        else
+            return navPainter;
+//        try {
+//
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ChatActorCommunitySelectableIdentity result = null;
+//                    try {
+//                        this.chatUserSubAppSession = getFullyLoadedSession();
+//                        if(chatUserSubAppSession!=  null)
+//                            moduleManager = chatUserSubAppSession.getModuleManager();
+//                        result = moduleManager.getSelectedActorIdentity();
+//                    }catch (CantGetSelectedActorIdentityException e){
+//                        //There are no identities in device
+//                        e.printStackTrace();
+//                    }catch (ActorIdentityNotSelectedException e){
+//                        //There are identities in device, but none selected
+//                        e.printStackTrace();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    if(result!=null){
+//                        activeIdentity = result;
+//                    }
+//                    getContext().runOnUiThread(new Runnable() {
+//                                                    @Override
+//                                                    public void run() {
+//                                                        if (activeIdentity != null) {
+//                                                            navPainter= new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
+//                                                        }
+//                                                    }
+//                                                }
+//                    );
+//
+//                }
+//            }).start();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return navPainter;
     }
 
     @Override
@@ -112,7 +155,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
             final ProgressDialog progressDialog = new ProgressDialog(getContext());
             progressDialog.setMessage("Please wait");
             progressDialog.setCancelable(false);
-            progressDialog.show();
+            //progressDialog.show();
             FermatWorker worker = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
@@ -128,8 +171,9 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
                     if (result != null &&
                             result.length > 0) {
                         progressDialog.dismiss();
-                        if (getContext() != null) {
+                        if (getContext() != null && navPainter==null && activeIdentity==null) {
                             activeIdentity = (ChatActorCommunitySelectableIdentity) result[0];
+                            navPainter = new ChatCommunityNavigationViewPainter(getContext(),activeIdentity, null);
                         }
                     } else
                         activeIdentity = null;
@@ -150,7 +194,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
     private synchronized ChatActorCommunitySelectableIdentity getMoreData() {
         ChatActorCommunitySelectableIdentity result = null;
         try {
-            this.chatUserSubAppSession = (ChatUserSubAppSession)this.getSession();
+            this.chatUserSubAppSession = getFullyLoadedSession();
             if(chatUserSubAppSession!=  null)
                 moduleManager = chatUserSubAppSession.getModuleManager();
             result = moduleManager.getSelectedActorIdentity();
