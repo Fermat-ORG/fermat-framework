@@ -15,6 +15,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.exce
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.deposit.interfaces.DepositManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.exceptions.CantMakeWithdrawTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.withdraw.interfaces.WithdrawManager;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantEditAccountException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyTransactionRecord;
@@ -231,5 +232,10 @@ public class BankMoneyWalletModuleManagerImpl extends ModuleManagerImpl<BankMone
             System.out.println(" exception trying to cancel async transaction");
         }
 
+    }
+
+    @Override
+    public void editAccount(String originalAccountNumber, String newAlias, String newAccountNumber, String newImageId) throws CantEditAccountException {
+        bankMoneyWalletManager.editAccount(originalAccountNumber, newAlias, newAccountNumber, newImageId);
     }
 }

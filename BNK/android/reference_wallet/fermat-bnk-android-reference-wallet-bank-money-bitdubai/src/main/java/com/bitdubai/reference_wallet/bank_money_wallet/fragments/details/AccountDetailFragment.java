@@ -330,8 +330,8 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
     private void handleWidhtrawalFabVisibilityAccordingToBalance()
     {
-        if(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount()).compareTo(new BigDecimal(0)) == 0
-                && moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount()).compareTo(new BigDecimal(0)) == 0 )
+        if(moduleManager.getAvailableBalance(bankAccountNumber.getAccount()).compareTo(new BigDecimal(0)) == 0
+                && moduleManager.getBookBalance(bankAccountNumber.getAccount()).compareTo(new BigDecimal(0)) == 0 )
             fabWithdraw.setVisibility(View.GONE);
         else
             fabWithdraw.setVisibility(View.VISIBLE);

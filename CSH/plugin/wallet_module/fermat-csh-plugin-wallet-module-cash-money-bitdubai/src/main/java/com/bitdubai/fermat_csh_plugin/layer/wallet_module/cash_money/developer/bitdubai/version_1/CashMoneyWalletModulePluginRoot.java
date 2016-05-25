@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -16,8 +15,6 @@ import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.layer.csh_cash_money_transaction.deposit.interfaces.CashDepositTransactionManager;
@@ -29,7 +26,6 @@ import com.bitdubai.fermat_csh_plugin.layer.wallet_module.cash_money.developer.b
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -42,18 +38,8 @@ import java.util.UUID;
 @PluginInfo(createdBy = "abicelis", maintainerMail = "abicelis@gmail.com", platform = Platforms.CASH_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.BITDUBAI_CSH_MONEY_WALLET_MODULE)
 public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWalletPreferenceSettings, ActiveActorIdentityInformation>  {
 
-//public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> implements
-//        LogManagerForDevelopers,
-//        CashMoneyWalletModuleManager {
-//>>>>>>> 45574f0626f40bbdd26d1e15f2d0335f252ccb70
-
-    static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
-
-    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.LOG_MANAGER)
-    private LogManager logManager;
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
-    private PluginFileSystem pluginFileSystem;
+    PluginFileSystem pluginFileSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     Broadcaster broadcaster;
@@ -61,18 +47,17 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
 
     /* CASH PLUGINS */
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL)
-    private CashWithdrawalTransactionManager cashWithdrawalTransactionManager;
+    CashWithdrawalTransactionManager cashWithdrawalTransactionManager;
 
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.CASH_MONEY_TRANSACTION, plugin = Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT)
-    private CashDepositTransactionManager cashDepositTransactionManager;
+    CashDepositTransactionManager cashDepositTransactionManager;
 
     @NeededPluginReference(platform = Platforms.CASH_PLATFORM, layer = Layers.WALLET, plugin = Plugins.BITDUBAI_CSH_WALLET_CASH_MONEY)
-    private CashMoneyWalletManager cashMoneyWalletManager;
-
+    CashMoneyWalletManager cashMoneyWalletManager;
 
     /* CER PLUGINS */
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
-    private CurrencyExchangeProviderFilterManager providerFilter;
+    CurrencyExchangeProviderFilterManager providerFilter;
 
 
     private CashMoneyWalletModuleManager moduleManager;
@@ -103,7 +88,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
                     cashMoneyWalletManager,
                     pluginId,
                     pluginFileSystem,
-                    errorManager,
+                    this,
                     cashDepositTransactionManager,
                     cashWithdrawalTransactionManager,
                     broadcaster);

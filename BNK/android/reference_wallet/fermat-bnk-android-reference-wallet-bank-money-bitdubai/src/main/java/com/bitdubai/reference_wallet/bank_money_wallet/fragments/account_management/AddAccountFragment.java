@@ -94,7 +94,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
         setHasOptionsMenu(true);
         try {
             moduleManager = ((BankMoneyWalletSession) appSession).getModuleManager();
-            bankAccounts = moduleManager.getBankingWallet().getAccounts();
+            bankAccounts = moduleManager.getAccounts();
 
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {
