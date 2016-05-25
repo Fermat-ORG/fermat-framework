@@ -69,9 +69,10 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     /**
      * MANAGERS
      */
-    private WalletStoreModuleManager moduleManager;
-    private ErrorManager errorManager;
-
+    private static WalletStoreModuleManager moduleManager;
+    private static ErrorManager errorManager;
+    WalletStoreSubAppSession walletStoreSubAppSession;
+    BasicWalletSettings settings = null;
     /**
      * DATA
      */
@@ -103,8 +104,10 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         super.onCreate(savedInstanceState);
         try {
             // setting up  module
-            moduleManager = ((WalletStoreSubAppSession) appSession).getModuleManager();
-            errorManager = appSession.getErrorManager();
+            walletStoreSubAppSession = ((WalletStoreSubAppSession) appSession);
+            moduleManager = walletStoreSubAppSession.getModuleManager();
+            errorManager = walletStoreSubAppSession.getErrorManager();
+
             catalogueItemList = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -396,26 +399,22 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     }
 
     private BasicWalletSettings getPreferenceSettings() {
-        final SettingsManager<BasicWalletSettings> settingsManager = moduleManager.getSettingsManager();
-
-        BasicWalletSettings preferenceSettings;
         try {
-            preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            settings = walletStoreSubAppSession.getModuleManager().loadAndGetSettings(walletStoreSubAppSession.getAppPublicKey());
         } catch (Exception e) {
-            preferenceSettings = null;
+            settings = null;
         }
 
-        if (preferenceSettings == null) {
-            preferenceSettings = new BasicWalletSettings();
-            preferenceSettings.setIsPresentationHelpEnabled(true);
+        if (settings == null) {
+            settings = new BasicWalletSettings();
+            settings.setIsPresentationHelpEnabled(true);
 
             try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), preferenceSettings);
+                walletStoreSubAppSession.getModuleManager().persistSettings(walletStoreSubAppSession.getAppPublicKey(), settings);
             } catch (Exception e) {
-                preferenceSettings = null;
+                settings = null;
             }
         }
-
-        return preferenceSettings;
+        return settings;
     }
 }

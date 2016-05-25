@@ -21,7 +21,7 @@ import com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession;
  *
  * @since 2015.12.17
  */
-public class WalletStoreFermatAppConnection extends AppConnections {
+public class WalletStoreFermatAppConnection extends AppConnections<WalletStoreSubAppSession> {
 
     public WalletStoreFermatAppConnection(Context activity) {
         super(activity);
