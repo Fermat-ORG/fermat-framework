@@ -68,9 +68,11 @@ public class ChatActorNetworkServiceSearchTest extends ChatSearch {
 
                 String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
 
+                String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
+
                 String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY),String.class);
 
-                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city));
+                chatExposingDataArrayList.add(new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status));
             }
 
             return chatExposingDataArrayList;
@@ -114,13 +116,11 @@ public class ChatActorNetworkServiceSearchTest extends ChatSearch {
             final List<ActorProfile> list = pluginRoot.getConnection().listRegisteredActorProfiles(discoveryQueryParameters);
 
             ActorProfile actorProfile;
-            System.out.println("12345 CHECKING ONLINE STATUS SO FAR SO GOOD");
+
             if(list !=null && !list.isEmpty()) {
                 actorProfile = list.get(0);
             }
             else return null;
-            System.out.println("12345 CHECKING ONLINE STATUS SO FAR SO GOOD IS OK");
-            System.out.println("************** I'm a chat searched: "+actorProfile);
 
             JsonParser parser = new JsonParser();
 
@@ -132,9 +132,11 @@ public class ChatActorNetworkServiceSearchTest extends ChatSearch {
 
             String state = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATE), String.class);
 
+            String status= gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.STATUS),String.class);
+
             String city = gson.fromJson(extraData.get(ChatExtraDataJsonAttNames.CITY), String.class);
 
-            return new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city);
+            return new ChatExposingData(actorProfile.getIdentityPublicKey(), actorProfile.getAlias(), actorProfile.getPhoto(), country, state, city, status);
 
         } catch (final CantRequestProfileListException e) {
 

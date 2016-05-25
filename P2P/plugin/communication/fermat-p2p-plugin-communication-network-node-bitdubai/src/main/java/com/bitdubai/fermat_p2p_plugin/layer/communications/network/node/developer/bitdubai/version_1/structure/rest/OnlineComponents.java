@@ -1,11 +1,7 @@
-/*
-* @#AvailableComponents.java - 2016
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.NodeSessionMemoryCache;
@@ -15,13 +11,19 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.RecordNotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +57,8 @@ public class OnlineComponents implements RestFulServices {
      */
     private DaoFactory daoFactory;
 
+    private NetworkNodePluginRoot pluginRoot;
+
     /**
      * Represent the gson
      */
@@ -65,6 +69,7 @@ public class OnlineComponents implements RestFulServices {
      */
     public OnlineComponents(){
         daoFactory = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
+        pluginRoot = (NetworkNodePluginRoot) NodeContext.get(NodeContextItem.PLUGIN_ROOT);
         gson = new Gson();
     }
 
@@ -141,6 +146,21 @@ public class OnlineComponents implements RestFulServices {
 
     }
 
+    /**
+     * We'll ask the node if an actor is online.
+     *
+     * We'll check if the actor is registered.
+     *    - If it is registered We'll return: isOnline:TRUE, sameNode:TRUE
+     * If the actor is not registered, I will check the Actor Catalog, then:
+     *    - If it is persisted in the same node, then We'll return:  isOnline:FALSE, sameNode:TRUE
+     * If it is persisted in other node, then We'll check in the other node, then we will return: isOnline:(isOnline), sameNode:FALSE
+     *
+     * If an exception occurs We'll return its message in the json, like "details".
+     *
+     * @param identityPublicKey of the actor
+     *
+     * @return a json response.
+     */
     @GET
     @Path("/actor/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -154,30 +174,112 @@ public class OnlineComponents implements RestFulServices {
             daoFactory.getCheckedInActorDao().findById(identityPublicKey);
 
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("success", Boolean.TRUE);
-            jsonObject.addProperty("isOnline",Boolean.TRUE);
+            jsonObject.addProperty("success" , Boolean.TRUE);
+            jsonObject.addProperty("isOnline", Boolean.TRUE);
+            jsonObject.addProperty("sameNode", Boolean.TRUE);
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
         } catch (RecordNotFoundException recordNotFoundException ) {
 
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("success", Boolean.TRUE);
-            jsonObject.addProperty("isOnline",Boolean.FALSE);
+            String nodePublicKey = getNodePublicKeyFromActor(identityPublicKey);
 
-            return Response.status(200).entity(gson.toJson(jsonObject)).build();
+            if (nodePublicKey.equals(pluginRoot.getIdentity().getPublicKey())) {
+
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("success", Boolean.TRUE);
+                jsonObject.addProperty("isOnline", Boolean.FALSE);
+                jsonObject.addProperty("sameNode", Boolean.TRUE);
+
+                return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+            } else {
+
+                String nodeUrl = getNodeUrl(nodePublicKey);
+
+                Boolean isOnline = isActorOnline(identityPublicKey, nodeUrl);
+
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("success" , Boolean.TRUE);
+                jsonObject.addProperty("isOnline", isOnline);
+                jsonObject.addProperty("sameNode", Boolean.FALSE);
+
+                return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+            }
+
         } catch (Exception e) {
 
             e.printStackTrace();
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("success", Boolean.FALSE);
+            jsonObject.addProperty("success" , Boolean.FALSE);
             jsonObject.addProperty("isOnline", Boolean.FALSE);
-            jsonObject.addProperty("details", e.getMessage());
+            jsonObject.addProperty("details" , e.getMessage());
 
             return Response.status(200).entity(gson.toJson(jsonObject)).build();
 
         }
 
+    }
+
+    private String getNodePublicKeyFromActor(final String publicKey) {
+
+        try {
+
+            ActorsCatalog actorsCatalog = daoFactory.getActorsCatalogDao().findById(publicKey);
+            return actorsCatalog.getNodeIdentityPublicKey();
+
+        } catch (RecordNotFoundException exception) {
+
+            throw new RuntimeException("Actor not found in catalog: "+exception.getMessage());
+        } catch (Exception exception) {
+
+            throw new RuntimeException("Problem trying to find the actor in the catalog: "+exception.getMessage());
+        }
+    }
+
+    private String getNodeUrl(final String publicKey) {
+
+        try {
+
+            NodesCatalog nodesCatalog = daoFactory.getNodesCatalogDao().findById(publicKey);
+            return nodesCatalog.getIp()+":"+nodesCatalog.getDefaultPort();
+
+        } catch (RecordNotFoundException exception) {
+
+            throw new RuntimeException("Node not found in catalog: "+exception.getMessage());
+        } catch (Exception exception) {
+
+            throw new RuntimeException("Problem trying to find the node in the catalog: "+exception.getMessage());
+        }
+    }
+
+    private Boolean isActorOnline(final String publicKey,
+                                  final String nodeUrl  ) {
+
+        try {
+            URL url = new URL("http://" + nodeUrl + "/fermat/rest/api/v1/online/component/actor/" + publicKey);
+
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("success")) {
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.trim());
+
+                return respondJsonObject.get("isOnline").getAsBoolean();
+
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
