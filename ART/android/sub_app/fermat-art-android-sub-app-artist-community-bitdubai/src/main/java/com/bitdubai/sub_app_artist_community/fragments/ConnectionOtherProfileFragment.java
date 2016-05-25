@@ -211,7 +211,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send to");
                 connectDialog.setUsername(artistCommunityInformation.getAlias());
-                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setSecondDescription("a connection request?");
                 connectDialog.setOnDismissListener(this);
                 connectDialog.show();
             } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
