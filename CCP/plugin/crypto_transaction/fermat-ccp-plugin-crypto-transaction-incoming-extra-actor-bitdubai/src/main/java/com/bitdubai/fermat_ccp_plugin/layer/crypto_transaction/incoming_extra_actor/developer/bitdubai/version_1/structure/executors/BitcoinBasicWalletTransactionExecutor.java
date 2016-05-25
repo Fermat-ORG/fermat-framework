@@ -1,15 +1,14 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.structure.executors;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.crypto_wallet.interfaces.CryptoWalletWallet;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CryptoAddressBookRecordNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -21,10 +20,10 @@ import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.inter
  */
 public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.interfaces.TransactionExecutor {
 
-    private BitcoinWalletWallet bitcoinWallet;
+    private CryptoWalletWallet bitcoinWallet;
     private CryptoAddressBookManager cryptoAddressBookManager;
 
-    public BitcoinBasicWalletTransactionExecutor(final BitcoinWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager){
+    public BitcoinBasicWalletTransactionExecutor(final CryptoWalletWallet bitcoinWallet, final CryptoAddressBookManager cryptoAddressBookManager){
         this.bitcoinWallet = bitcoinWallet;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
     }
@@ -61,7 +60,7 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
 
     private void processOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException {
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
+            CryptoWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
             bitcoinWallet.getBalance(BalanceType.BOOK).credit(record);
         } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
@@ -70,7 +69,7 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
 
     private void processOnBlockChainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterCreditException{
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
+            CryptoWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.CREDIT);
             bitcoinWallet.getBalance(BalanceType.AVAILABLE).credit(record);
         } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException e) {
             throw new CantRegisterCreditException("I couldn't generate the transaction",e,"","");
@@ -79,7 +78,7 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
 
     private void processReversedOnCryptoNetworkTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitException {
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
+            CryptoWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
             bitcoinWallet.getBalance(BalanceType.BOOK).debit(record);
         } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException e) {
             throw new CantRegisterDebitException("I couldn't generate the transaction",e,"","");
@@ -88,7 +87,7 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
 
     private void processReversedOnBlockchainTransaction(Transaction<CryptoTransaction> transaction) throws CantRegisterDebitException {
         try {
-            BitcoinWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
+            CryptoWalletTransactionRecord record = generateBitcoinTransaction(transaction, TransactionType.DEBIT);
             bitcoinWallet.getBalance(BalanceType.AVAILABLE).debit(record);
         } catch (com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException e) {
             throw new CantRegisterDebitException("I couldn't generate the transaction",e,"","");
@@ -96,7 +95,7 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
     }
 
 
-    private BitcoinWalletTransactionRecord generateBitcoinTransaction(final Transaction<CryptoTransaction> transaction, final TransactionType transactionType) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException {
+    private CryptoWalletTransactionRecord generateBitcoinTransaction(final Transaction<CryptoTransaction> transaction, final TransactionType transactionType) throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.exceptions.CantGenerateTransactionException {
 
         try {
             CryptoTransaction cryptoTransaction = transaction.getInformation();

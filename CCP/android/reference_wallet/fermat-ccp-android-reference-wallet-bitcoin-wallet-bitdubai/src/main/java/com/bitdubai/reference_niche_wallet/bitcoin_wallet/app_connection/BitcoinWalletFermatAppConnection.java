@@ -58,9 +58,11 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
 
-
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
        // return new BitcoinWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new BitcoinWalletNavigationViewPainter(getContext(),getActiveIdentity());
+
+        return new BitcoinWalletNavigationViewPainter(getContext(),null,getApplicationManager()); //getApplicationManager()
+
     }
 
     @Override

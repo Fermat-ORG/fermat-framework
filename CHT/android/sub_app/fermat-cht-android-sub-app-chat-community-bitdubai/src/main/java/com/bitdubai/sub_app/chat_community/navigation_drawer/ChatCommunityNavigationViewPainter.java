@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.sub_app.chat_community.adapters.NavigationAdapter;
 import com.bitdubai.sub_app.chat_community.common.utils.FragmentsCommons;
@@ -36,11 +35,12 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
         this.activity = new WeakReference(activity);
         this.chatUserLoginIdentity = chatUserLoginIdentity;
         this.subAppSession = subAppSession;
-        this.moduleManager = subAppSession.getModuleManager();
+        //this.moduleManager = subAppSession.getModuleManager();
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation chatUserLoginIdentity) {
+    public View addNavigationViewHeader() {
+//    public View addNavigationViewHeader(ActiveActorIdentityInformation chatUserLoginIdentity) {
         View headerView = null;
         try {
             headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()

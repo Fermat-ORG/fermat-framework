@@ -543,6 +543,19 @@ public class ChatAdapterView extends LinearLayout {
 
                 messageText = messageText.trim();
 
+//                String text = "";
+//                char c = 39; // char ' in ASCII code
+//                for (int i = 0; i < messageText.length(); i++){
+//                    if(messageText.charAt(i) == c){
+//                        text = (String) text.concat("''");
+//                    }
+//                    else {
+//                        text = text + Character.toString(messageText.charAt(i));
+//                    }
+//                }
+//
+//                messageText = text;
+
                 try {
                     ChatImpl chat = new ChatImpl();
                     final MessageImpl message = new MessageImpl();
@@ -560,6 +573,7 @@ public class ChatAdapterView extends LinearLayout {
                             newChatId = chatId;
                         }
                         chat.setChatId(newChatId);
+                        chat.setStatus(ChatStatus.VISSIBLE);
                         chatManager.saveChat(chat);
 
                         message.setChatId(newChatId);
@@ -700,7 +714,7 @@ public class ChatAdapterView extends LinearLayout {
 
     public void checkStatus(){
         try {
-           if(chatSession.getData("whocallme").equals("chatlist")) {
+           if(chatId != null) {
                if (chatManager.checkWritingStatus(chatId)) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_WRITING, null);
                } else if(chatManager.checkOnlineStatus(remotePk)){
@@ -709,12 +723,13 @@ public class ChatAdapterView extends LinearLayout {
                    String date = chatManager.checkLastConnection(remotePk);
                        ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
                }
-           }else {
-               if(chatManager.checkOnlineStatus(remotePk)){
+           }
+           else {
+               if (chatManager.checkOnlineStatus(remotePk)) {
                    ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_ONLINE, null);
-               }else{
+               } else {
                    String date = chatManager.checkLastConnection(remotePk);
-                       ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
+                   ChangeStatusOnTheSubtitleBar(ConstantSubtitle.IS_OFFLINE, date);
                }
            }
         } catch (CantGetWritingStatus cantGetWritingStatus) {

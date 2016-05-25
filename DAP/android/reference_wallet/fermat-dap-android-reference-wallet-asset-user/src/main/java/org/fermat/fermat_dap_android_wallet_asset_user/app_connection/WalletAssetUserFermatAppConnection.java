@@ -61,7 +61,8 @@ public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUser
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new UserWalletNavigationViewPainter(getContext(), getActiveIdentity());
+        //TODO: el actorIdentityInformation lo podes obtener del module en un hilo en background y hacer un lindo loader mientras tanto
+        return new UserWalletNavigationViewPainter(getContext(), null);
     }
 
     @Override
