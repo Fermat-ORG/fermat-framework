@@ -2140,7 +2140,16 @@ public class LossProtectedWalletModuleManager extends ModuleManagerImpl<LossProt
                         contactId = null;
 
                     } catch ( CantGetLossProtectedActorException e) {
-                        contactId = null;
+                        try{
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                            if (walletContactRecord != null)
+                                contactId = walletContactRecord.getContactId();
+                        }catch (CantGetLossProtectedActorException exe){
+                            contactId = null;
+                        }catch (Exception ex){
+                            contactId = null;
+                        }
                     }
 
                     break;
